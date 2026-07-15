@@ -9,6 +9,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -41,6 +47,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +61,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -65,36 +75,72 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.core.Geometry2D
 import com.indianservers.aiexplorer.core.Geometry3D
+import com.indianservers.aiexplorer.core.CrossSection3D
 import com.indianservers.aiexplorer.core.Graph3D
 import com.indianservers.aiexplorer.core.GraphAnalysis
+import com.indianservers.aiexplorer.core.GraphDefinitionKind
+import com.indianservers.aiexplorer.core.StatisticsEngine
+import com.indianservers.aiexplorer.core.ProbabilityEngine
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.SolidMeshFactory
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.core.Vector3D
 import com.indianservers.aiexplorer.core.stripEquation
 import com.indianservers.aiexplorer.core.trim
+import com.indianservers.aiexplorer.learning.Assignment
+import com.indianservers.aiexplorer.learning.ClassroomEngine
+import com.indianservers.aiexplorer.learning.LearnerProgress
+import com.indianservers.aiexplorer.learning.LearningActivity
+import com.indianservers.aiexplorer.learning.LearningCatalog
+import com.indianservers.aiexplorer.learning.LearningEvaluator
+import com.indianservers.aiexplorer.learning.LearningPackage
+import com.indianservers.aiexplorer.learning.LearningOperation
+import com.indianservers.aiexplorer.learning.LearningOperationType
+import com.indianservers.aiexplorer.learning.LearningRole
+import com.indianservers.aiexplorer.learning.LearningValidation
+import com.indianservers.aiexplorer.learning.OfflineLearningQueue
+import com.indianservers.aiexplorer.learning.PackageValidation
+import com.indianservers.aiexplorer.learning.ProgressStatus
 import com.indianservers.aiexplorer.workspace.AddVector3DCommand
 import com.indianservers.aiexplorer.workspace.AddConstructionCommand
+import com.indianservers.aiexplorer.workspace.AddDependentPointCommand
+import com.indianservers.aiexplorer.workspace.AddFunctionCommand
 import com.indianservers.aiexplorer.workspace.AddPointCommand
 import com.indianservers.aiexplorer.workspace.AddSolidCommand
 import com.indianservers.aiexplorer.workspace.CommandHistory
 import com.indianservers.aiexplorer.workspace.EditExpressionCommand
+import com.indianservers.aiexplorer.workspace.DeleteShapeCommand
+import com.indianservers.aiexplorer.workspace.DeleteFunctionCommand
 import com.indianservers.aiexplorer.workspace.MathModule
 import com.indianservers.aiexplorer.workspace.MovePointCommand
+import com.indianservers.aiexplorer.workspace.MovePointsCommand
 import com.indianservers.aiexplorer.workspace.MoveSolidCommand
 import com.indianservers.aiexplorer.workspace.MoveVector3DCommand
 import com.indianservers.aiexplorer.workspace.Shape2D
 import com.indianservers.aiexplorer.workspace.Shape2DType
+import com.indianservers.aiexplorer.workspace.PointDependencyType
 import com.indianservers.aiexplorer.workspace.TransformSolidCommand
 import com.indianservers.aiexplorer.workspace.TransformVector3DCommand
+import com.indianservers.aiexplorer.workspace.TransformShape2DCommand
+import com.indianservers.aiexplorer.workspace.UpdateShapeCommand
+import com.indianservers.aiexplorer.workspace.UpdateFunctionCommand
 import com.indianservers.aiexplorer.workspace.WorkspaceJson
 import com.indianservers.aiexplorer.workspace.WorkspaceState
+import com.indianservers.aiexplorer.workspace.recomputed
+import com.indianservers.aiexplorer.workspace.resolvePointDependency
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.hypot
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.tan
+import kotlin.math.round
 
 private val Ink = Color(0xFFEAF5FF)
 private val Muted = Color(0xFFB8C4D8)
@@ -108,21 +154,17 @@ private val Amber = Color(0xFFFFC857)
 private val Grid = Color(0x3341C8F5)
 
 enum class PanelSlot { Left, Right, Bottom, Chrome }
-enum class GeometryTool { Select, Point, Line, Segment, Ray, Triangle, Polygon, Rectangle, Square, Circle, Arc, Measure }
-enum class GraphTool { Plot, Trace, Tangent, Derivative, Integral, Intersections }
+enum class GeometryTool {
+    Select, Point, Midpoint, Intersection, Centroid, Circumcenter, Incenter, Orthocenter,
+    Line, Segment, Ray, Vector, Parallel, Perpendicular, AngleBisector,
+    Triangle, Polygon, RegularPolygon, Rectangle, Square, Circle, CircleThreePoints, Arc, Ellipse, Measure,
+}
+enum class GraphTool { Plot, Trace, Tangent, Normal, Derivative, Integral, AreaBetween, Intersections, Extrema, Table, Data, Probability }
 enum class SurfaceTool { Surface, Wireframe, Contours, Slice, Gradient, BoundingBox, Trace }
-
-data class LearningActivity(
-    val id: String,
-    val title: String,
-    val module: MathModule,
-    val objective: String,
-    val target: String,
-    val hint: String,
-    val proof: String,
-)
-
-data class LearningValidation(val passed: Boolean, val message: String)
+enum class Transform3DMode { Move, Rotate, Scale }
+enum class Selection3DMode { Object, Vertex, Edge, Face }
+enum class CameraProjection { Perspective, Orthographic }
+private data class SubObjectSelection(val solidIndex: Int, val mode: Selection3DMode, val index: Int)
 
 data class AppSettings(
     val haptics: Boolean = true,
@@ -131,6 +173,14 @@ data class AppSettings(
     val reducedMotion: Boolean = false,
     val decimalPrecision: Int = 2,
 )
+
+private data class PointGesture(
+    val indices: List<Int>,
+    val from: List<Vec2>,
+)
+
+private data class SolidGesture(val index: Int, val from: Solid)
+private data class VectorGesture(val index: Int, val from: Vector3D)
 
 data class SavedWorkspace(
     val id: String,
@@ -141,68 +191,18 @@ data class SavedWorkspace(
     val updatedAt: Long,
 )
 
-private val LearningActivities = listOf(
-    LearningActivity(
-        id = "midpoint-distance",
-        title = "Midpoint And Distance",
-        module = MathModule.Geometry2D,
-        objective = "Drag two points and explain midpoint, slope, and distance from the same construction.",
-        target = "Create or move A and B, then inspect M, slope, and distance.",
-        hint = "The midpoint is the average of x-values and y-values.",
-        proof = "M = ((x1 + x2) / 2, (y1 + y2) / 2); distance follows Pythagoras on dx and dy.",
-    ),
-    LearningActivity(
-        id = "triangle-angle-sum",
-        title = "Triangle Angle Sum",
-        module = MathModule.Geometry2D,
-        objective = "Construct a triangle and verify its side lengths, altitude, and angle relationships.",
-        target = "Use Triangle: 3 taps. Drag vertices and watch measurements update.",
-        hint = "A triangle can be compared with a parallel-line construction to see why angles sum to 180 degrees.",
-        proof = "Translate the base line through the top vertex; alternate interior angles complete a straight angle.",
-    ),
-    LearningActivity(
-        id = "quadratic-roots",
-        title = "Quadratic Roots And Vertex",
-        module = MathModule.Graph2D,
-        objective = "Use sliders to see how a, b, and c move roots, vertex, and intersections.",
-        target = "Set f(x)=x^2-4x+3 and trace roots at x=1 and x=3.",
-        hint = "The vertex x-coordinate is -b / 2a.",
-        proof = "Completing the square transforms ax^2+bx+c into vertex form and reveals the minimum or maximum.",
-    ),
-    LearningActivity(
-        id = "unit-circle",
-        title = "Unit Circle Trigonometry",
-        module = MathModule.Trigonometry,
-        objective = "Connect angle, radians, sin, cos, tan, projections, and the sine wave.",
-        target = "Snap to 30, 45, 60, and 90 degrees and compare values.",
-        hint = "On the unit circle, the point is (cos theta, sin theta).",
-        proof = "Since radius is 1, x^2 + y^2 = 1 becomes cos^2(theta) + sin^2(theta) = 1.",
-    ),
-    LearningActivity(
-        id = "solid-volume",
-        title = "3D Volume Lab",
-        module = MathModule.Geometry3D,
-        objective = "Place solids, resize them, and compare volume and surface area.",
-        target = "Add a cube, cylinder, cone, and sphere. Drag and resize each selected solid.",
-        hint = "Volume changes cubically when every dimension scales together.",
-        proof = "A prism volume is base area times height; cones and pyramids are one third of the related prism.",
-    ),
-    LearningActivity(
-        id = "paraboloid-slices",
-        title = "Paraboloid Slices",
-        module = MathModule.Graph3D,
-        objective = "Explore z = x^2 + y^2 with contours, trace point, gradient, and z-slices.",
-        target = "Move the slice slider and trace point to see circular level curves.",
-        hint = "For z = x^2 + y^2, each horizontal slice is x^2 + y^2 = constant.",
-        proof = "A fixed z level gives a circle with radius sqrt(z), proving rotational symmetry.",
-    ),
-)
+private val LearningActivities = LearningCatalog.lessons
 
 private fun GeometryTool.requiredTapCount(): Int = when (this) {
     GeometryTool.Point -> 1
-    GeometryTool.Line, GeometryTool.Segment, GeometryTool.Ray, GeometryTool.Rectangle, GeometryTool.Square, GeometryTool.Circle -> 2
-    GeometryTool.Triangle, GeometryTool.Arc -> 3
+    GeometryTool.Midpoint -> 2
+    GeometryTool.Line, GeometryTool.Segment, GeometryTool.Ray, GeometryTool.Vector,
+    GeometryTool.Rectangle, GeometryTool.Square, GeometryTool.Circle, GeometryTool.RegularPolygon -> 2
+    GeometryTool.Centroid, GeometryTool.Circumcenter, GeometryTool.Incenter, GeometryTool.Orthocenter,
+    GeometryTool.Parallel, GeometryTool.Perpendicular, GeometryTool.AngleBisector,
+    GeometryTool.Triangle, GeometryTool.CircleThreePoints, GeometryTool.Arc, GeometryTool.Ellipse -> 3
     GeometryTool.Polygon -> 4
+    GeometryTool.Intersection -> 4
     GeometryTool.Select, GeometryTool.Measure -> 0
 }
 
@@ -210,12 +210,29 @@ private fun GeometryTool.toShape2DType(): Shape2DType? = when (this) {
     GeometryTool.Line -> Shape2DType.Line
     GeometryTool.Segment -> Shape2DType.Segment
     GeometryTool.Ray -> Shape2DType.Ray
+    GeometryTool.Vector -> Shape2DType.Vector
+    GeometryTool.Parallel -> Shape2DType.Parallel
+    GeometryTool.Perpendicular -> Shape2DType.Perpendicular
+    GeometryTool.AngleBisector -> Shape2DType.AngleBisector
     GeometryTool.Triangle -> Shape2DType.Triangle
     GeometryTool.Polygon -> Shape2DType.Polygon
+    GeometryTool.RegularPolygon -> Shape2DType.RegularPolygon
     GeometryTool.Rectangle -> Shape2DType.Rectangle
     GeometryTool.Square -> Shape2DType.Square
     GeometryTool.Circle -> Shape2DType.Circle
+    GeometryTool.CircleThreePoints -> Shape2DType.CircleThreePoints
     GeometryTool.Arc -> Shape2DType.Arc
+    GeometryTool.Ellipse -> Shape2DType.Ellipse
+    else -> null
+}
+
+private fun GeometryTool.toPointDependencyType(): PointDependencyType? = when (this) {
+    GeometryTool.Midpoint -> PointDependencyType.Midpoint
+    GeometryTool.Centroid -> PointDependencyType.Centroid
+    GeometryTool.Circumcenter -> PointDependencyType.Circumcenter
+    GeometryTool.Incenter -> PointDependencyType.Incenter
+    GeometryTool.Orthocenter -> PointDependencyType.Orthocenter
+    GeometryTool.Intersection -> PointDependencyType.Intersection
     else -> null
 }
 
@@ -223,9 +240,14 @@ private fun defaultSolid(type: SolidType): Solid = when (type) {
     SolidType.Cube -> Solid(type, width = 2.0)
     SolidType.Cuboid -> Solid(type, width = 2.4, height = 1.6, depth = 1.4, radius = .8)
     SolidType.Sphere -> Solid(type, width = 2.0, height = 2.0, depth = 2.0, radius = 1.0)
+    SolidType.Hemisphere -> Solid(type, width = 2.0, height = 1.0, depth = 2.0, radius = 1.0)
     SolidType.Cylinder -> Solid(type, width = 2.0, height = 2.4, depth = 2.0, radius = .9)
     SolidType.Cone -> Solid(type, width = 2.0, height = 2.5, depth = 2.0, radius = .9)
+    SolidType.Frustum -> Solid(type, width = 2.0, height = 2.4, depth = 2.0, radius = 1.0, topRadius = .55)
     SolidType.Pyramid -> Solid(type, width = 2.2, height = 2.4, depth = 2.2, radius = .9)
+    SolidType.TriangularPrism -> Solid(type, width = 2.2, height = 2.0, depth = 2.6)
+    SolidType.Tetrahedron -> Solid(type, width = 2.4)
+    SolidType.Octahedron -> Solid(type, width = 2.4)
     SolidType.Torus -> Solid(type, width = 1.15, height = 1.0, depth = 1.0, radius = .42)
 }
 
@@ -238,9 +260,15 @@ class MainActivity : ComponentActivity() {
 
 class ExplorerViewModel : ViewModel() {
     private val history = CommandHistory()
+    private val learningQueue = OfflineLearningQueue()
+    private var pointGesture: PointGesture? = null
+    private var solidGesture: SolidGesture? = null
+    private var vectorGesture: VectorGesture? = null
     var state by mutableStateOf(WorkspaceState())
         private set
     var selectedPoint by mutableIntStateOf(1)
+        private set
+    var selectedShape by mutableIntStateOf(-1)
         private set
     var status by mutableStateOf("Ready")
         private set
@@ -262,9 +290,14 @@ class ExplorerViewModel : ViewModel() {
         private set
     var pendingConstruction by mutableStateOf<List<Vec2>>(emptyList())
         private set
+    private var pendingPointIndices by mutableStateOf<List<Int?>>(emptyList())
     var activeActivityId by mutableStateOf(LearningActivities.first().id)
         private set
-    var completedActivities by mutableStateOf<Set<String>>(emptySet())
+    var lessonProgress by mutableStateOf<Map<String, LearnerProgress>>(emptyMap())
+        private set
+    var learningRole by mutableStateOf(LearningRole.Learner)
+        private set
+    var assignments by mutableStateOf<List<Assignment>>(LearningCatalog.defaultAssignments)
         private set
     var savedWorkspaces by mutableStateOf<List<SavedWorkspace>>(emptyList())
         private set
@@ -272,9 +305,21 @@ class ExplorerViewModel : ViewModel() {
         private set
     var lastValidation by mutableStateOf(LearningValidation(false, "Start an activity and validate your construction."))
         private set
+    var lastPackageValidation by mutableStateOf(PackageValidation(true, "Package ready for validation.", LearningPackage.schemaVersion))
+        private set
 
     val activeActivity: LearningActivity
         get() = LearningActivities.firstOrNull { it.id == activeActivityId } ?: LearningActivities.first()
+    val completedActivities: Set<String>
+        get() = lessonProgress.filterValues { it.status == ProgressStatus.Completed }.keys
+    val activeProgress: LearnerProgress?
+        get() = lessonProgress[activeActivityId]
+    val teacherSummary
+        get() = ClassroomEngine.summarize(assignments.first(), LearningActivities, lessonProgress)
+    val pendingLearningOperations: Int
+        get() = learningQueue.pending().size
+
+    val constructionProtocol: List<String> get() = history.protocol
 
     fun open(module: MathModule) {
         state = state.copy(module = module)
@@ -314,11 +359,21 @@ class ExplorerViewModel : ViewModel() {
         showLearningPanel = true
         hideWorkspacePanelsOnly()
         geometryTool = if (activity.id == "triangle-angle-sum") GeometryTool.Triangle else geometryTool
+        val now = System.currentTimeMillis()
+        learningQueue.enqueue(LearningOperation("attempt-$activeActivityId-$now", activeActivityId, LearningOperationType.Attempt, now))
+        if (lessonProgress[activity.id] == null) {
+            lessonProgress = lessonProgress + (activity.id to LearnerProgress(activity.id, ProgressStatus.InProgress, startedAt = now, updatedAt = now))
+        }
+        lastValidation = LearningValidation(false, activity.checkpoints.firstOrNull()?.instruction ?: activity.objective)
         status = "Activity: ${activity.title}"
     }
 
     fun validateActiveActivity(): LearningValidation {
         val result = validateActivity(activeActivity)
+        val now = System.currentTimeMillis()
+        lessonProgress = lessonProgress + (
+            activeActivityId to LearningEvaluator.recordAttempt(activeActivity, lessonProgress[activeActivityId], result, now)
+        )
         lastValidation = result
         status = if (result.passed) "Validation passed" else result.message
         return result
@@ -327,42 +382,33 @@ class ExplorerViewModel : ViewModel() {
     fun completeActiveActivity() {
         val result = validateActiveActivity()
         if (result.passed) {
-            completedActivities = completedActivities + activeActivityId
+            val now = System.currentTimeMillis()
+            learningQueue.enqueue(LearningOperation("complete-$activeActivityId-$now", activeActivityId, LearningOperationType.Complete, now))
             status = "Completed ${activeActivity.title}"
         }
     }
 
-    private fun validateActivity(activity: LearningActivity): LearningValidation = when (activity.id) {
-        "midpoint-distance" -> {
-            val ok = state.points.size >= 2 && state.points[0].distanceTo(state.points[1]) > .1
-            LearningValidation(ok, if (ok) "Two movable points define midpoint, slope, and distance." else "Place or separate two points first.")
-        }
-        "triangle-angle-sum" -> {
-            val triangle = state.shapes.any { it.type == Shape2DType.Triangle } || state.points.size >= 3
-            val ok = triangle && state.points.size >= 3
-            LearningValidation(ok, if (ok) "Triangle construction is ready for angle-sum proof." else "Use Triangle: tap three vertices.")
-        }
-        "quadratic-roots" -> {
-            val expression = state.functions.firstOrNull()?.expression?.replace(" ", "").orEmpty()
-            val ok = "x^2" in expression && "-4" in expression && "+3" in expression
-            LearningValidation(ok, if (ok) "Quadratic target detected. Trace roots and vertex." else "Set f(x) close to x^2 - 4x + 3.")
-        }
-        "unit-circle" -> LearningValidation(state.module == MathModule.Trigonometry, "Unit circle workspace is open; compare sin, cos, tan.")
-        "solid-volume" -> {
-            val ok = state.solids.size >= 4 || state.solids.any { it.type == SolidType.Sphere }
-            LearningValidation(ok, if (ok) "Multiple solids are ready for volume comparison." else "Add one more solid, ideally a sphere.")
-        }
-        "paraboloid-slices" -> {
-            val normalized = stripEquation(state.surfaceExpression).replace(" ", "")
-            val ok = normalized in setOf("x^2+y^2", "x*x+y*y")
-            LearningValidation(ok, if (ok) "Paraboloid target detected. Use contours, trace, and slices." else "Choose Paraboloid or enter x^2 + y^2.")
-        }
-        else -> LearningValidation(false, "No validator for this activity yet.")
+    private fun validateActivity(activity: LearningActivity): LearningValidation = LearningEvaluator.evaluate(activity, state)
+
+    fun revealHint() {
+        val current = lessonProgress[activeActivityId] ?: LearnerProgress(activeActivityId, ProgressStatus.InProgress)
+        val hint = LearningEvaluator.nextHint(activeActivity, lastValidation, current.hintsUsed)
+        val now = System.currentTimeMillis()
+        lessonProgress = lessonProgress + (activeActivityId to current.copy(hintsUsed = current.hintsUsed + 1, updatedAt = now))
+        learningQueue.enqueue(LearningOperation("hint-$activeActivityId-$now", activeActivityId, LearningOperationType.HintUsed, now))
+        lastValidation = lastValidation.copy(message = hint)
+        status = "Hint ${current.hintsUsed + 1} revealed"
+    }
+
+    fun switchLearningRole(role: LearningRole) {
+        learningRole = role
+        status = "${role.name} view"
     }
 
     fun selectGeometryTool(tool: GeometryTool) {
         geometryTool = tool
         pendingConstruction = emptyList()
+        pendingPointIndices = emptyList()
         status = "${tool.name.lowercase().replaceFirstChar { it.uppercase() }} tool selected"
     }
 
@@ -372,25 +418,50 @@ class ExplorerViewModel : ViewModel() {
         status = "Added point ${selectedPoint + 1}"
     }
 
-    fun handleGeometryTap(point: Vec2) {
+    fun handleGeometryTap(point: Vec2, hitPointIndex: Int?) {
+        val snapped = hitPointIndex?.let(state.points::getOrNull) ?: if (settings.snap) {
+            Vec2(round(point.x * 2.0) / 2.0, round(point.y * 2.0) / 2.0)
+        } else point
         when (geometryTool) {
             GeometryTool.Select, GeometryTool.Measure -> return
             GeometryTool.Point -> {
-                state = history.execute(state, AddConstructionCommand(listOf(point), null))
+                if (hitPointIndex != null) {
+                    selectedPoint = hitPointIndex
+                    status = "Selected point ${hitPointIndex + 1}"
+                    return
+                }
+                state = history.execute(state, AddConstructionCommand(listOf(snapped), null))
                 selectedPoint = state.points.lastIndex
                 status = "Point placed"
             }
             else -> {
-                val next = pendingConstruction + point
+                val dependencyType = geometryTool.toPointDependencyType()
+                if (dependencyType != null && hitPointIndex == null) {
+                    status = "${geometryTool.name}: tap an existing point"
+                    return
+                }
+                val next = pendingConstruction + snapped
+                val nextIndices = pendingPointIndices + hitPointIndex
                 val required = geometryTool.requiredTapCount()
                 if (next.size >= required) {
-                    val shapeType = geometryTool.toShape2DType()
-                    state = history.execute(state, AddConstructionCommand(next.take(required), shapeType))
-                    selectedPoint = state.points.lastIndex
+                    if (dependencyType != null) {
+                        val inputs = nextIndices.take(required).filterNotNull()
+                        state = history.execute(state, AddDependentPointCommand(inputs, dependencyType))
+                        selectedPoint = state.points.lastIndex
+                    } else {
+                        val shapeType = geometryTool.toShape2DType()
+                        state = history.execute(
+                            state,
+                            AddConstructionCommand(next.take(required), shapeType, nextIndices.take(required)),
+                        )
+                        selectedShape = state.shapes.lastIndex
+                    }
                     pendingConstruction = emptyList()
+                    pendingPointIndices = emptyList()
                     status = "${geometryTool.name.lowercase().replaceFirstChar { it.uppercase() }} created"
                 } else {
                     pendingConstruction = next
+                    pendingPointIndices = nextIndices
                     status = "${geometryTool.name}: tap ${next.size + 1} of $required"
                 }
             }
@@ -404,10 +475,136 @@ class ExplorerViewModel : ViewModel() {
         status = "Moved point ${index + 1}"
     }
 
+    fun beginPointDrag(index: Int) {
+        val point = state.points.getOrNull(index) ?: return
+        state.shapes.firstOrNull { it.locked && index in it.pointIndices }?.let {
+            selectedPoint = index
+            status = "${it.name} is locked"
+            return
+        }
+        if (state.pointDependencies.any { it.outputIndex == index }) {
+            selectedPoint = index
+            status = "Dependent point: move its parent points"
+            return
+        }
+        pointGesture = PointGesture(listOf(index), listOf(point))
+        selectedPoint = index
+        selectedShape = -1
+    }
+
+    fun beginShapeDrag(shapeIndex: Int) {
+        val shape = state.shapes.getOrNull(shapeIndex) ?: return
+        selectedShape = shapeIndex
+        if (shape.locked) {
+            status = "${shape.name} is locked"
+            return
+        }
+        val indices = shape.pointIndices.distinct().filterNot { index -> state.pointDependencies.any { it.outputIndex == index } }
+        if (indices.isEmpty()) return
+        pointGesture = PointGesture(indices, indices.mapNotNull(state.points::getOrNull))
+    }
+
+    fun previewPointDrag(index: Int, point: Vec2) {
+        val gesture = pointGesture ?: return
+        if (index !in gesture.indices) return
+        state = state.copy(
+            points = state.points.mapIndexed { i, old -> if (i == index) point else old },
+            modifiedAt = System.currentTimeMillis(),
+        ).recomputed()
+        selectedPoint = index
+    }
+
+    fun previewShapeDrag(delta: Vec2) {
+        val gesture = pointGesture ?: return
+        val replacements = gesture.indices.zip(gesture.from.map { it + delta }).toMap()
+        state = state.copy(
+            points = state.points.mapIndexed { index, old -> replacements[index] ?: old },
+            modifiedAt = System.currentTimeMillis(),
+        ).recomputed()
+    }
+
+    fun endPointDrag() {
+        val gesture = pointGesture ?: return
+        val final = gesture.indices.mapNotNull(state.points::getOrNull)
+        if (final != gesture.from) history.recordApplied(MovePointsCommand(gesture.indices, gesture.from, final))
+        pointGesture = null
+        status = "Moved object"
+    }
+
+    fun cancelPointDrag() {
+        val gesture = pointGesture ?: return
+        val replacements = gesture.indices.zip(gesture.from).toMap()
+        state = state.copy(points = state.points.mapIndexed { index, old -> replacements[index] ?: old }).recomputed()
+        pointGesture = null
+        status = "Move cancelled"
+    }
+
+    fun selectShape(index: Int) {
+        if (index !in state.shapes.indices) return
+        selectedShape = index
+        status = "Selected ${state.shapes[index].name}"
+    }
+
+    fun updateSelectedShape(transform: (Shape2D) -> Shape2D) {
+        val index = selectedShape.takeIf { it in state.shapes.indices } ?: return
+        val from = state.shapes[index]
+        val to = transform(from)
+        if (from == to) return
+        state = history.execute(state, UpdateShapeCommand(index, from, to))
+        status = "Updated ${to.name}"
+    }
+
+    fun deleteSelectedShape() {
+        val index = selectedShape.takeIf { it in state.shapes.indices } ?: return
+        val shape = state.shapes[index]
+        state = history.execute(state, DeleteShapeCommand(index, shape))
+        selectedShape = (index - 1).coerceAtMost(state.shapes.lastIndex)
+        status = "Deleted ${shape.name}"
+    }
+
+    fun transformSelectedShape(type: PointDependencyType, parameters: List<Double> = emptyList()) {
+        val index = selectedShape.takeIf { it in state.shapes.indices } ?: return
+        state = history.execute(state, TransformShape2DCommand(index, type, parameters))
+        selectedShape = state.shapes.lastIndex
+        status = "${type.name} created"
+    }
+
     fun editExpression(index: Int, expression: String) {
         val from = state.functions[index].expression
         state = history.execute(state, EditExpressionCommand(index, from, expression))
         status = "Expression updated"
+    }
+
+    fun addFunction(expression: String = "sin(x)") {
+        val index = state.functions.size
+        val name = ('f'.code + index).toChar().toString() + "(x)"
+        val color = listOf("cyan", "violet", "green", "amber")[index % 4]
+        state = history.execute(
+            state,
+            AddFunctionCommand(
+                com.indianservers.aiexplorer.core.FunctionDefinition(
+                    id = "function-${System.currentTimeMillis()}",
+                    name = name,
+                    expression = expression,
+                    colorKey = color,
+                ),
+            ),
+        )
+        status = "Added $name"
+    }
+
+    fun updateFunction(index: Int, transform: (com.indianservers.aiexplorer.core.FunctionDefinition) -> com.indianservers.aiexplorer.core.FunctionDefinition) {
+        val from = state.functions.getOrNull(index) ?: return
+        val to = transform(from)
+        if (from == to) return
+        state = history.execute(state, UpdateFunctionCommand(index, from, to))
+        status = "Updated ${to.name}"
+    }
+
+    fun deleteFunction(index: Int) {
+        val function = state.functions.getOrNull(index) ?: return
+        state = history.execute(state, DeleteFunctionCommand(index, function))
+        status = "Deleted ${function.name}"
     }
 
     fun addSolid(type: SolidType) {
@@ -428,6 +625,61 @@ class ExplorerViewModel : ViewModel() {
         state = history.execute(state, MoveSolidCommand(index, solid.position, to))
         selectedSolid = index
         status = "Moved ${solid.type.name}"
+    }
+
+    fun beginSolidDrag(index: Int) {
+        val solid = state.solids.getOrNull(index) ?: return
+        solidGesture = SolidGesture(index, solid)
+        selectSolid(index)
+    }
+
+    fun previewSolidDrag(index: Int, delta: Vec3) {
+        val gesture = solidGesture?.takeIf { it.index == index } ?: return
+        state = state.copy(
+            solids = state.solids.mapIndexed { i, old -> if (i == index) gesture.from.copy(position = gesture.from.position + delta) else old },
+            modifiedAt = System.currentTimeMillis(),
+        )
+    }
+
+    fun previewSolidRotation(index: Int, deltaDegrees: Vec3) {
+        val gesture = solidGesture?.takeIf { it.index == index } ?: return
+        val base = gesture.from.rotation
+        val rotated = gesture.from.copy(rotation = base + deltaDegrees)
+        state = state.copy(
+            solids = state.solids.mapIndexed { i, old -> if (i == index) rotated else old },
+            modifiedAt = System.currentTimeMillis(),
+        )
+    }
+
+    fun previewSolidScale(index: Int, factor: Double) {
+        val gesture = solidGesture?.takeIf { it.index == index } ?: return
+        val f = factor.coerceIn(.2, 5.0)
+        val scaled = gesture.from.copy(
+            width = (gesture.from.width * f).coerceIn(.2, 12.0),
+            height = (gesture.from.height * f).coerceIn(.2, 12.0),
+            depth = (gesture.from.depth * f).coerceIn(.2, 12.0),
+            radius = (gesture.from.radius * f).coerceIn(.1, 6.0),
+            topRadius = (gesture.from.topRadius * f).coerceIn(.05, 6.0),
+        )
+        state = state.copy(
+            solids = state.solids.mapIndexed { i, old -> if (i == index) scaled else old },
+            modifiedAt = System.currentTimeMillis(),
+        )
+    }
+
+    fun endSolidDrag() {
+        val gesture = solidGesture ?: return
+        val final = state.solids.getOrNull(gesture.index)
+        if (final != null && final != gesture.from) history.recordApplied(TransformSolidCommand(gesture.index, gesture.from, final))
+        solidGesture = null
+        status = "Moved ${gesture.from.type.name}"
+    }
+
+    fun cancelSolidDrag() {
+        val gesture = solidGesture ?: return
+        state = state.copy(solids = state.solids.mapIndexed { i, old -> if (i == gesture.index) gesture.from else old })
+        solidGesture = null
+        status = "Move cancelled"
     }
 
     fun transformSolid(index: Int, transform: (Solid) -> Solid) {
@@ -463,6 +715,36 @@ class ExplorerViewModel : ViewModel() {
         state = history.execute(state, MoveVector3DCommand(index, from, to))
         selectedVector3D = index
         status = "Moved vector ${from.name}"
+    }
+
+    fun beginVectorDrag(index: Int) {
+        val vector = state.vectors3D.getOrNull(index) ?: return
+        vectorGesture = VectorGesture(index, vector)
+        selectVector3D(index)
+    }
+
+    fun previewVectorDrag(index: Int, delta: Vec3) {
+        val gesture = vectorGesture?.takeIf { it.index == index } ?: return
+        val moved = gesture.from.copy(start = gesture.from.start + delta, end = gesture.from.end + delta)
+        state = state.copy(
+            vectors3D = state.vectors3D.mapIndexed { i, old -> if (i == index) moved else old },
+            modifiedAt = System.currentTimeMillis(),
+        )
+    }
+
+    fun endVectorDrag() {
+        val gesture = vectorGesture ?: return
+        val final = state.vectors3D.getOrNull(gesture.index)
+        if (final != null && final != gesture.from) history.recordApplied(TransformVector3DCommand(gesture.index, gesture.from, final))
+        vectorGesture = null
+        status = "Moved vector ${gesture.from.name}"
+    }
+
+    fun cancelVectorDrag() {
+        val gesture = vectorGesture ?: return
+        state = state.copy(vectors3D = state.vectors3D.mapIndexed { i, old -> if (i == gesture.index) gesture.from else old })
+        vectorGesture = null
+        status = "Move cancelled"
     }
 
     fun transformVector3D(index: Int, transform: (Vector3D) -> Vector3D) {
@@ -536,32 +818,21 @@ class ExplorerViewModel : ViewModel() {
     }
 
     fun exportLearningPackage(): String {
-        status = "Learning package generated"
-        return learningPackageJson()
+        val source = learningPackageJson()
+        lastPackageValidation = LearningPackage.validate(source)
+        status = lastPackageValidation.message
+        return source
     }
 
     fun exportLearningPackagePreview(): String = learningPackageJson().lineSequence().take(8).joinToString("\n")
 
-    private fun learningPackageJson(): String {
-        return buildString {
-            appendLine("{")
-            appendLine("  \"schemaVersion\": 2,")
-            appendLine("  \"workspace\": ${WorkspaceJson.export(state).prependIndent("  ").trim()},")
-            appendLine("  \"learning\": {")
-            appendLine("    \"activeActivityId\": \"$activeActivityId\",")
-            appendLine("    \"completedActivityIds\": [${completedActivities.joinToString { "\"$it\"" }}],")
-            appendLine("    \"lastValidation\": {\"passed\": ${lastValidation.passed}, \"message\": \"${lastValidation.message}\"}")
-            appendLine("  },")
-            appendLine("  \"settings\": {")
-            appendLine("    \"haptics\": ${settings.haptics},")
-            appendLine("    \"snap\": ${settings.snap},")
-            appendLine("    \"highContrast\": ${settings.highContrast},")
-            appendLine("    \"reducedMotion\": ${settings.reducedMotion},")
-            appendLine("    \"decimalPrecision\": ${settings.decimalPrecision}")
-            appendLine("  }")
-            appendLine("}")
-        }
+    fun validateLearningPackage(source: String): Boolean {
+        lastPackageValidation = LearningPackage.validate(source)
+        status = lastPackageValidation.message
+        return lastPackageValidation.valid
     }
+
+    private fun learningPackageJson(): String = LearningPackage.export(state, activeActivityId, lessonProgress, assignments)
 }
 
 @Composable
@@ -650,19 +921,44 @@ private fun LearningCoachPanel(vm: ExplorerViewModel, modifier: Modifier = Modif
             .padding(top = 112.dp, end = 8.dp),
     ) {
         PanelHeader("Learning Coach", vm::hidePanels, Green)
-        Text("Progress $progress", color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            GlowButton(if (vm.learningRole == LearningRole.Learner) "• Learner" else "Learner", onClick = { vm.switchLearningRole(LearningRole.Learner) })
+            GlowButton(if (vm.learningRole == LearningRole.Teacher) "• Teacher" else "Teacher", onClick = { vm.switchLearningRole(LearningRole.Teacher) })
+        }
+        Text("Progress $progress · ${vm.activeProgress?.percent(activity) ?: 0}% current", color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
         Text(activity.title, color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Text(activity.objective, color = Muted, fontSize = 13.sp)
-        Insight("Target", activity.target, Cyan)
-        Insight("Hint", activity.hint, Amber)
+        Insight("Allowed", activity.allowedTools.joinToString().ifBlank { "Open exploration" }, Cyan)
         Insight("Proof", activity.proof, Violet)
         Insight("Validation", vm.lastValidation.message, if (vm.lastValidation.passed) Green else Amber)
+        activity.checkpoints.forEach { checkpoint ->
+            val result = vm.lastValidation.checkpoints.firstOrNull { it.checkpointId == checkpoint.id }
+            val completed = checkpoint.id in vm.activeProgress?.completedCheckpointIds.orEmpty()
+            Insight(
+                if (completed || result?.passed == true) "✓ ${checkpoint.title}" else "○ ${checkpoint.title}",
+                result?.message ?: checkpoint.instruction,
+                if (completed || result?.passed == true) Green else Cyan,
+            )
+            result?.misconception?.let { Insight("Why not yet", it, Amber) }
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GlowButton("Go", onClick = { vm.startActivity(activity) })
             GlowButton("Check", onClick = { vm.validateActiveActivity() })
+            GlowButton("Hint", onClick = vm::revealHint)
             GlowButton("Done", onClick = vm::completeActiveActivity)
             GlowButton("Save", onClick = vm::saveWorkspace)
             GlowButton("Package", onClick = { vm.exportLearningPackage() })
+        }
+        vm.activeProgress?.let {
+            Text("Attempts ${it.attempts} · hints ${it.hintsUsed} · offline changes ${vm.pendingLearningOperations}", color = Muted, fontSize = 11.sp)
+        }
+        if (vm.learningRole == LearningRole.Teacher) {
+            val summary = vm.teacherSummary
+            Text("Teacher dashboard", color = Ink, fontWeight = FontWeight.SemiBold)
+            Insight("Assignment", vm.assignments.first().title, Violet)
+            Insight("Completion", "${summary.completedLessons}/${summary.assignedLessons} lessons · ${summary.checkpointsCompleted} checkpoints", Green)
+            Insight("Support", "${summary.attempts} attempts · ${summary.hintsUsed} hints", Amber)
+            Insight("Needs attention", summary.needsAttention.joinToString().ifBlank { "No learner flags" }, summary.needsAttention.takeIf { it.isNotEmpty() }?.let { Amber } ?: Green)
         }
         Text("Settings", color = Ink, fontWeight = FontWeight.SemiBold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -703,6 +999,7 @@ private fun LearningCoachPanel(vm: ExplorerViewModel, modifier: Modifier = Modif
             }
         }
         Text("Workspace package", color = Ink, fontWeight = FontWeight.SemiBold)
+        Insight("Package validation", vm.lastPackageValidation.message, if (vm.lastPackageValidation.valid) Green else Muted)
         Text(
             text = vm.exportLearningPackagePreview(),
             color = Muted,
@@ -803,14 +1100,33 @@ private fun BottomModeSelector(active: MathModule, onSelect: (MathModule) -> Uni
 
 @Composable
 private fun Geometry2DScreen(vm: ExplorerViewModel) {
+    val haptic = LocalHapticFeedback.current
     val a = vm.state.points[0]
     val b = vm.state.points[1]
     val m = Geometry2D.segment(a, b)
     val third = Vec2(4.0, -1.5)
+    val selectedShape = vm.state.shapes.getOrNull(vm.selectedShape)
+    val dependenciesByOutput = vm.state.pointDependencies.associateBy { it.outputIndex }
+    val invalidDependencyOutputs = vm.state.pointDependencies.filter {
+        resolvePointDependency(vm.state.points, it.inputIndices, it.type, it.parameters) == null
+    }.mapTo(mutableSetOf()) { it.outputIndex }
     Box(Modifier.fillMaxSize()) {
         CoordinateCanvas(
             modifier = Modifier.fillMaxSize().semantics { contentDescription = "Interactive coordinate geometry canvas" },
-            onPointDrag = vm::movePoint,
+            shapes = vm.state.shapes,
+            interactionEnabled = vm.geometryTool == GeometryTool.Select,
+            onPointDragStart = {
+                if (vm.settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                vm.beginPointDrag(it)
+            },
+            onPointDrag = vm::previewPointDrag,
+            onShapeDragStart = {
+                if (vm.settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                vm.beginShapeDrag(it)
+            },
+            onShapeDrag = vm::previewShapeDrag,
+            onDragEnd = vm::endPointDrag,
+            onDragCancel = vm::cancelPointDrag,
             onCanvasTap = vm::handleGeometryTap,
             points = vm.state.points,
         ) { tx ->
@@ -818,9 +1134,18 @@ private fun Geometry2DScreen(vm: ExplorerViewModel) {
             val pb = tx(b)
             val pm = tx(m.midpoint)
             drawLine(Violet, pa, pb, 5f, cap = StrokeCap.Round)
-            drawStoredShapes(vm.state.points, vm.state.shapes, tx)
+            drawStoredShapes(vm.state.points, vm.state.shapes, vm.selectedShape, tx)
             drawConstructionPreview(vm.pendingConstruction, vm.geometryTool, tx)
-            vm.state.points.drop(2).forEachIndexed { index, point -> drawRadiantPoint(tx(point), Green, "P${index + 3}") }
+            vm.state.points.drop(2).forEachIndexed { index, point ->
+                val pointIndex = index + 2
+                val dependency = dependenciesByOutput[pointIndex]
+                val invalid = pointIndex in invalidDependencyOutputs
+                drawRadiantPoint(
+                    tx(point),
+                    if (invalid) Color.Red else if (dependency == null) Green else Amber,
+                    if (invalid) "${dependency?.name} undefined" else dependency?.name ?: "P${pointIndex + 1}",
+                )
+            }
             drawLine(Cyan, tx(Vec2(a.x, a.y)), tx(Vec2(b.x, a.y)), 2f, pathEffect = null)
             drawLine(Cyan.copy(alpha = .8f), tx(Vec2(b.x, a.y)), pb, 2f)
             drawRadiantPoint(pa, Cyan, "A (${trim(a.x)}, ${trim(a.y)})")
@@ -828,6 +1153,10 @@ private fun Geometry2DScreen(vm: ExplorerViewModel) {
             drawRadiantPoint(pm, Violet, "M (${trim(m.midpoint.x)}, ${trim(m.midpoint.y)})")
             drawCircle(Cyan.copy(alpha = .8f), radius = a.distanceTo(third).toFloat() * 42f, center = tx(Vec2(1.5, 1.0)), style = Stroke(2f))
         }
+        InteractionHint(
+            "Drag points or shapes · two fingers pan/zoom · double-tap fit",
+            Modifier.align(Alignment.BottomEnd),
+        )
         FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
             leftLabel = "Tools",
@@ -837,38 +1166,63 @@ private fun Geometry2DScreen(vm: ExplorerViewModel) {
             onRight = { vm.togglePanel(PanelSlot.Right) },
             onBottom = { vm.togglePanel(PanelSlot.Bottom) },
         )
-        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(190.dp)) {
-            PanelHeader("Point Tools", vm::hidePanels, Cyan)
+        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(270.dp)) {
+            PanelHeader("Dynamic Geometry", vm::hidePanels, Cyan)
             Text("Tap flow: ${vm.geometryTool.name} needs ${vm.geometryTool.requiredTapCount()} tap(s)", color = Muted, fontSize = 12.sp)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                GlowButton("A", onClick = { vm.movePoint(0, a + Vec2(.5, .0)) })
-                GlowButton("B", onClick = { vm.movePoint(1, b + Vec2(.0, -.5)) })
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                GeometryTool.entries.filterNot { it == GeometryTool.Measure }.forEach {
+                    GlowButton(if (vm.geometryTool == it) "• ${it.name}" else it.name, onClick = { vm.selectGeometryTool(it) })
+                }
             }
-            listOf(
-                GeometryTool.Select,
-                GeometryTool.Point,
-                GeometryTool.Line,
-                GeometryTool.Segment,
-                GeometryTool.Ray,
-                GeometryTool.Triangle,
-                GeometryTool.Circle,
-                GeometryTool.Arc,
-            ).forEach {
-                GlowButton(if (vm.geometryTool == it) "• ${it.name}" else it.name, onClick = { vm.selectGeometryTool(it) })
+            Text("Objects", color = Ink, fontWeight = FontWeight.SemiBold)
+            vm.state.shapes.forEachIndexed { index, shape ->
+                Text(
+                    text = "${if (index == vm.selectedShape) "• " else ""}${shape.name}${if (!shape.visible) " (hidden)" else ""}${if (shape.locked) " 🔒" else ""}",
+                    color = if (index == vm.selectedShape) Amber else Muted,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable { vm.selectShape(index) }
+                        .padding(7.dp),
+                )
             }
-            ToggleRow("Snap", true)
-            ToggleRow("Grid", true)
-            ToggleRow("Labels", true)
         }
-        if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(220.dp)) {
-            PanelHeader("Geometry Insights", vm::hidePanels, Violet)
+        if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(260.dp)) {
+            PanelHeader("Object Inspector", vm::hidePanels, Violet)
             Insight("Active tool", vm.geometryTool.name, Green)
             Insight("Pending taps", "${vm.pendingConstruction.size}/${vm.geometryTool.requiredTapCount()}", Cyan)
             Insight("Objects", "${vm.state.shapes.size}", Violet)
+            Insight("Dependencies", "${vm.state.pointDependencies.size}", Amber)
+            Insight("Undefined", "${invalidDependencyOutputs.size}", if (invalidDependencyOutputs.isEmpty()) Green else Color.Red)
             Insight("Midpoint", "(${trim(m.midpoint.x)}, ${trim(m.midpoint.y)})", Cyan)
             Insight("Slope", m.slope?.let(::trim) ?: "undefined", Violet)
             Insight("Distance AB", "${m.exactDistance} ≈ ${trim(m.distance)}", Cyan)
             Insight("Triangle area", "${trim(Geometry2D.polygonArea(listOf(a, b, third)))} u²", Violet)
+            selectedShape?.let { shape ->
+                OutlinedTextField(
+                    value = shape.name,
+                    onValueChange = { name -> vm.updateSelectedShape { it.copy(name = name.take(32)) } },
+                    label = { Text("Object name") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    GlowButton(if (shape.visible) "Hide" else "Show", onClick = { vm.updateSelectedShape { it.copy(visible = !it.visible) } })
+                    GlowButton(if (shape.locked) "Unlock" else "Lock", onClick = { vm.updateSelectedShape { it.copy(locked = !it.locked) } })
+                    GlowButton("Style", onClick = {
+                        vm.updateSelectedShape {
+                            val next = when (it.styleKey) { "default" -> "cyan"; "cyan" -> "violet"; "violet" -> "green"; else -> "default" }
+                            it.copy(styleKey = next)
+                        }
+                    })
+                    GlowButton("Delete", onClick = vm::deleteSelectedShape)
+                    GlowButton("Translate", onClick = { vm.transformSelectedShape(PointDependencyType.Translate, listOf(1.0, 1.0)) })
+                    GlowButton("Rotate 30°", onClick = { vm.transformSelectedShape(PointDependencyType.Rotate, listOf(30.0, 0.0, 0.0)) })
+                    GlowButton("Reflect X", onClick = { vm.transformSelectedShape(PointDependencyType.ReflectX) })
+                    GlowButton("Dilate", onClick = { vm.transformSelectedShape(PointDependencyType.Dilate, listOf(1.25, 0.0, 0.0)) })
+                }
+            }
         }
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
             PanelHeader("Geometry Controls", vm::hidePanels, Ink)
@@ -890,6 +1244,10 @@ private fun Geometry2DScreen(vm: ExplorerViewModel) {
                 }
                 GlowButton("Reset", onClick = { vm.reset() })
             }
+            if (vm.constructionProtocol.isNotEmpty()) {
+                Text("Construction Protocol", color = Ink, fontWeight = FontWeight.SemiBold)
+                Text(vm.constructionProtocol.takeLast(8).mapIndexed { index, label -> "${index + 1}. $label" }.joinToString("  ·  "), color = Muted, fontSize = 12.sp)
+            }
         }
     }
 }
@@ -900,38 +1258,41 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
     val engine = remember { ExpressionEngine() }
     var traceX by remember { mutableFloatStateOf(2f) }
     var graphTool by remember { mutableStateOf(GraphTool.Trace) }
-    var qa by remember { mutableFloatStateOf(1f) }
-    var qb by remember { mutableFloatStateOf(-4f) }
-    var qc by remember { mutableFloatStateOf(3f) }
-    var lm by remember { mutableFloatStateOf(1f) }
-    var lb by remember { mutableFloatStateOf(-1f) }
-    val liveFunctions = remember(qa, qb, qc, lm, lb) {
-        listOf(
-            vm.state.functions[0].copy(expression = "${trim(qa.toDouble())}*x^2 + ${trim(qb.toDouble())}*x + ${trim(qc.toDouble())}"),
-            vm.state.functions[1].copy(expression = "${trim(lm.toDouble())}*x + ${trim(lb.toDouble())}"),
-        )
+    var parameterA by remember { mutableFloatStateOf(1f) }
+    var dataText by remember { mutableStateOf("-2,4; -1,1; 0,0; 1,1; 2,4") }
+    val liveFunctions = vm.state.functions.map { function ->
+        function.copy(expression = function.expression.replace(Regex("\\ba\\b"), trim(parameterA.toDouble())))
     }
-    val fInsight = graph.quadratic(qa.toDouble(), qb.toDouble(), qc.toDouble())
-    val gInsight = graph.linear(lm.toDouble(), lb.toDouble())
+    val visibleFunctions = liveFunctions.filter { it.visible }
+    val explicitFunctions = visibleFunctions.filter { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }
+    val primaryExpression = explicitFunctions.firstOrNull()?.expression
+    val roots = remember(primaryExpression) {
+        primaryExpression?.let { runCatching { graph.roots(it, -10.0, 10.0) }.getOrDefault(emptyList()) }.orEmpty()
+    }
+    val extrema = remember(primaryExpression) {
+        primaryExpression?.let { runCatching { graph.extrema(it, -10.0, 10.0) }.getOrDefault(emptyList()) }.orEmpty()
+    }
     val intersections = remember(liveFunctions) {
-        runCatching {
-            graph.intersections(
-                engine.compile(liveFunctions[0].expression),
-                engine.compile(liveFunctions[1].expression),
-                -6.0,
-                6.0,
-            )
+        if (explicitFunctions.size < 2) emptyList() else runCatching {
+            graph.intersections(engine.compile(explicitFunctions[0].expression), engine.compile(explicitFunctions[1].expression), -10.0, 10.0)
         }.getOrDefault(emptyList())
     }
+    val dataPoints = remember(dataText) { parseDataPoints(dataText) }
+    val dataSummary = remember(dataPoints) { StatisticsEngine.summarize(dataPoints) }
     Box(Modifier.fillMaxSize()) {
         GraphCanvas(
             modifier = Modifier.fillMaxSize(),
             functions = liveFunctions,
+            dataPoints = if (graphTool == GraphTool.Data) dataPoints else emptyList(),
             traceX = traceX.toDouble(),
             graphTool = graphTool,
-            onTraceChange = { traceX = it.toFloat().coerceIn(-6f, 6f) },
+            onTraceChange = { traceX = it.toFloat().coerceIn(-1_000f, 1_000f) },
         )
-        EquationChips(Modifier.align(Alignment.TopCenter), liveFunctions.map { "${it.name} = ${it.expression}" })
+        InteractionHint(
+            "Trace mode drags the trace · Plot pans · pinch zooms",
+            Modifier.align(Alignment.BottomEnd),
+        )
+        EquationChips(Modifier.align(Alignment.TopCenter), visibleFunctions.map { "${it.name} = ${it.expression}" })
         GraphToolChips(
             modifier = Modifier.align(Alignment.TopCenter),
             active = graphTool,
@@ -946,9 +1307,9 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             onRight = { vm.togglePanel(PanelSlot.Right) },
             onBottom = { vm.togglePanel(PanelSlot.Bottom) },
         )
-        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(260.dp)) {
-            PanelHeader("Equations", vm::hidePanels, Cyan)
-            liveFunctions.forEachIndexed { index, fn ->
+        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(300.dp)) {
+            PanelHeader("Equations & Definitions", vm::hidePanels, Cyan)
+            vm.state.functions.forEachIndexed { index, fn ->
                 OutlinedTextField(
                     value = fn.expression,
                     onValueChange = { vm.editExpression(index, it) },
@@ -956,17 +1317,39 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    GlowButton(if (fn.visible) "Hide" else "Show", onClick = { vm.updateFunction(index) { it.copy(visible = !it.visible) } })
+                    GlowButton("Delete", onClick = { vm.deleteFunction(index) })
+                }
+            }
+            Text("Add definition", color = Ink, fontWeight = FontWeight.SemiBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                GlowButton("Function", onClick = { vm.addFunction("sin(x)") })
+                GlowButton("Parameter", onClick = { vm.addFunction("a*sin(x)") })
+                GlowButton("Piecewise", onClick = { vm.addFunction("if(x<0,-x,x)") })
+                GlowButton("Polar", onClick = { vm.addFunction("r = 2*cos(3*t)") })
+                GlowButton("Parametric", onClick = { vm.addFunction("x(t)=3*cos(t); y(t)=2*sin(t)") })
+                GlowButton("Implicit", onClick = { vm.addFunction("x^2 + y^2 = 9") })
             }
         }
-        if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(240.dp)) {
+        if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(270.dp)) {
             PanelHeader("Graph Insights", vm::hidePanels, Violet)
             Insight("Tool", graphTool.name, Green)
-            Insight("Vertex", "(${trim(fInsight.vertex.x)}, ${trim(fInsight.vertex.y)})", Cyan)
-            Insight("Axis", "x = ${trim(fInsight.axis)}", Violet)
-            Insight("Roots", fInsight.roots.joinToString { "x = ${trim(it)}" }, Cyan)
-            Insight("f y-intercept", "(0, ${trim(fInsight.yIntercept)})", Cyan)
-            Insight("g slope", trim(gInsight.slope), Violet)
+            Insight("Definitions", "${visibleFunctions.size} visible", Cyan)
+            Insight("Kinds", visibleFunctions.map { graph.definitionKind(it.expression).name }.distinct().joinToString(), Violet)
+            Insight("Roots", roots.joinToString { trim(it) }.ifBlank { "none detected" }, Cyan)
+            Insight("Extrema", extrema.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }.ifBlank { "none detected" }, Green)
+            primaryExpression?.let {
+                Insight("Derivative", runCatching { trim(graph.derivative(it, traceX.toDouble())) }.getOrDefault("undefined"), Amber)
+                Insight("Integral 0→x", runCatching { trim(graph.integral(it, 0.0, traceX.toDouble())) }.getOrDefault("undefined"), Cyan)
+            }
             Insight("Intersections", intersections.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }, Violet)
+            if (graphTool == GraphTool.Data) {
+                Insight("Data", "${dataSummary.count} points", Cyan)
+                Insight("Mean", "(${trim(dataSummary.meanX)}, ${trim(dataSummary.meanY)})", Green)
+                Insight("σ y", trim(dataSummary.standardDeviationY), Violet)
+                dataSummary.regression?.let { Insight("Regression", "y=${trim(it.slope)}x+${trim(it.intercept)} · r=${trim(it.correlation)}", Amber) }
+            }
         }
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
             PanelHeader("Graph Controls", vm::hidePanels, Ink)
@@ -974,11 +1357,32 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
                 Text("Trace x = ${trim(traceX.toDouble())}", color = Muted, modifier = Modifier.width(120.dp))
                 Slider(value = traceX, onValueChange = { traceX = it }, valueRange = -6f..6f, modifier = Modifier.weight(1f))
             }
-            AxisSlider("a", qa, -5f..5f) { qa = it.coerceAtLeast(.1f) }
-            AxisSlider("b", qb, -10f..10f) { qb = it }
-            AxisSlider("c", qc, -10f..10f) { qc = it }
-            AxisSlider("m", lm, -5f..5f) { lm = it }
-            AxisSlider("line b", lb, -10f..10f) { lb = it }
+            if (vm.state.functions.any { Regex("\\ba\\b").containsMatchIn(it.expression) }) {
+                AxisSlider("Parameter a", parameterA, -8f..8f) { parameterA = it }
+            }
+            if (graphTool == GraphTool.Table) {
+                Text("Value table", color = Ink, fontWeight = FontWeight.SemiBold)
+                val rows = (-4..4).joinToString("\n") { x ->
+                    val values = explicitFunctions.joinToString("  ") { fn ->
+                        val y = runCatching { engine.compile(fn.expression).eval(mapOf("x" to x.toDouble())) }.getOrDefault(Double.NaN)
+                        "${fn.name}:${trim(y)}"
+                    }
+                    "x=$x  $values"
+                }
+                Text(rows, color = Muted, fontSize = 12.sp)
+            }
+            if (graphTool == GraphTool.Data) {
+                OutlinedTextField(
+                    value = dataText,
+                    onValueChange = { dataText = it },
+                    label = { Text("Data points: x,y; x,y") },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (graphTool == GraphTool.Probability) {
+                Text("Normal PDF at x=${trim(traceX.toDouble())}: ${trim(ProbabilityEngine.normalPdf(traceX.toDouble()))}", color = Cyan)
+                Text("Binomial P(X=3), n=10, p=.5: ${trim(ProbabilityEngine.binomialPmf(3, 10, .5))}", color = Violet)
+            }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 GraphTool.entries.forEach { tool ->
                     GlowButton(if (graphTool == tool) "• ${tool.name}" else tool.name, onClick = { graphTool = tool })
@@ -989,13 +1393,29 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
     }
 }
 
+private fun parseDataPoints(source: String): List<Vec2> = source
+    .split(';', '\n')
+    .mapNotNull { entry ->
+        val values = entry.trim().split(',').mapNotNull { it.trim().toDoubleOrNull() }
+        if (values.size >= 2) Vec2(values[0], values[1]) else null
+    }
+
 @Composable
 private fun Geometry3DScreen(vm: ExplorerViewModel) {
+    val haptic = LocalHapticFeedback.current
     var rotateX by remember { mutableFloatStateOf(25f) }
     var rotateY by remember { mutableFloatStateOf(-35f) }
     var rotateZ by remember { mutableFloatStateOf(15f) }
     var zoom by remember { mutableFloatStateOf(1.0f) }
+    var cameraPan by remember { mutableStateOf(Offset.Zero) }
+    var transformMode by remember { mutableStateOf(Transform3DMode.Move) }
     var wire by remember { mutableStateOf(true) }
+    var projection by remember { mutableStateOf(CameraProjection.Perspective) }
+    var selectionMode by remember { mutableStateOf(Selection3DMode.Object) }
+    var subSelection by remember { mutableStateOf<SubObjectSelection?>(null) }
+    var sectionEnabled by remember { mutableStateOf(false) }
+    var clipSection by remember { mutableStateOf(false) }
+    var sectionY by remember { mutableFloatStateOf(0f) }
     val selectedIndex = vm.selectedSolid.coerceIn(0, vm.state.solids.lastIndex.coerceAtLeast(0))
     val selectedSolid = vm.state.solids.getOrNull(selectedIndex)
     val selectedVectorIndex = vm.selectedVector3D.coerceIn(0, vm.state.vectors3D.lastIndex.coerceAtLeast(0))
@@ -1011,13 +1431,66 @@ private fun Geometry3DScreen(vm: ExplorerViewModel) {
             ry = rotateY,
             rz = rotateZ,
             zoom = zoom,
+            cameraPan = cameraPan,
+            transformMode = transformMode,
             wire = wire,
+            perspective = projection == CameraProjection.Perspective,
+            selectionMode = selectionMode,
+            subSelection = subSelection,
+            sectionEnabled = sectionEnabled,
+            sectionY = sectionY.toDouble(),
+            clipSection = clipSection,
             onSelect = vm::selectSolid,
-            onMove = { index, position -> vm.moveSolid(index, position) },
+            onSubSelect = { subSelection = it },
             onSelectVector = vm::selectVector3D,
-            onMoveVector = { index, delta -> vm.moveVector3D(index, delta) },
+            onSolidDragStart = {
+                if (vm.settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                vm.beginSolidDrag(it)
+            },
+            onSolidMove = vm::previewSolidDrag,
+            onSolidRotate = vm::previewSolidRotation,
+            onSolidScale = vm::previewSolidScale,
+            onSolidDragEnd = vm::endSolidDrag,
+            onSolidDragCancel = vm::cancelSolidDrag,
+            onVectorDragStart = {
+                if (vm.settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                vm.beginVectorDrag(it)
+            },
+            onVectorMove = vm::previewVectorDrag,
+            onVectorDragEnd = vm::endVectorDrag,
+            onVectorDragCancel = vm::cancelVectorDrag,
+            onOrbit = { dx, dy ->
+                rotateY = (rotateY + dx).wrapDegrees()
+                rotateX = (rotateX + dy).coerceIn(-89f, 89f)
+            },
+            onPan = { delta -> cameraPan += delta },
+            onZoom = { factor -> zoom = (zoom * factor).coerceIn(.35f, 4f) },
+            onResetCamera = {
+                rotateX = 25f
+                rotateY = -35f
+                rotateZ = 15f
+                zoom = 1f
+                cameraPan = Offset.Zero
+            },
         )
         SolidAddStrip(Modifier.align(Alignment.TopCenter), vm::addSolid, vm::addVector3D)
+        Transform3DChips(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            active = transformMode,
+            onSelect = { transformMode = it },
+        )
+        Selection3DChips(
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 62.dp, end = 12.dp),
+            active = selectionMode,
+            onSelect = {
+                selectionMode = it
+                subSelection = null
+            },
+        )
+        InteractionHint(
+            "Drag empty space to orbit · two fingers pan/zoom · drag object to transform",
+            Modifier.align(Alignment.BottomEnd),
+        )
         FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
             leftLabel = "Solids",
@@ -1096,6 +1569,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel) {
                 Insight("Faces", measure.faces.toString(), Violet)
                 Insight("Edges", measure.edges.toString(), Violet)
                 Insight("Vertices", measure.vertices.toString(), Violet)
+                subSelection?.takeIf { selection -> selection.solidIndex == selectedIndex }?.let { selection ->
+                    Insight("Sub-object", "${selection.mode.name} ${selection.index + 1}", Amber)
+                }
             }
             selectedVector?.let {
                 Insight("Vector", it.name, Amber)
@@ -1109,8 +1585,13 @@ private fun Geometry3DScreen(vm: ExplorerViewModel) {
             AxisSlider("Rotate Y", rotateY, -180f..180f) { rotateY = it }
             AxisSlider("Rotate Z", rotateZ, -180f..180f) { rotateZ = it }
             AxisSlider("Zoom", zoom, .6f..1.8f) { zoom = it }
-            ToggleRow("Perspective", true)
-            ToggleRow("Wireframe", wire)
+            TogglePill("Perspective", projection == CameraProjection.Perspective) {
+                projection = if (it) CameraProjection.Perspective else CameraProjection.Orthographic
+            }
+            TogglePill("Wireframe", wire) { wire = it }
+            TogglePill("Cross-section", sectionEnabled) { sectionEnabled = it }
+            TogglePill("Clip below plane", clipSection) { clipSection = it }
+            if (sectionEnabled || clipSection) AxisSlider("Section Y", sectionY, -3f..3f) { sectionY = it }
             selectedSolid?.let { solid ->
                 Text("Selected ${solid.type.name}", color = Cyan, fontWeight = FontWeight.SemiBold)
                 AxisSlider("Width", solid.width.toFloat(), .4f..4f) { value ->
@@ -1124,6 +1605,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel) {
                 }
                 AxisSlider("Radius", solid.radius.toFloat(), .2f..2f) { value ->
                     vm.transformSolid(selectedIndex) { it.copy(radius = value.toDouble()) }
+                }
+                if (solid.type == SolidType.Frustum) AxisSlider("Top radius", solid.topRadius.toFloat(), .1f..2f) { value ->
+                    vm.transformSolid(selectedIndex) { it.copy(topRadius = value.toDouble()) }
                 }
             }
             selectedVector?.let { vector ->
@@ -1148,6 +1632,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var density by remember { mutableFloatStateOf(26f) }
     var rotation by remember { mutableFloatStateOf(35f) }
     var zoom by remember { mutableFloatStateOf(1f) }
+    var cameraPan by remember { mutableStateOf(Offset.Zero) }
     var tilt by remember { mutableFloatStateOf(55f) }
     var sliceZ by remember { mutableFloatStateOf(2f) }
     var traceX by remember { mutableFloatStateOf(1f) }
@@ -1170,6 +1655,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             rotation = rotation,
             tilt = tilt,
             zoom = zoom,
+            cameraPan = cameraPan,
             sliceZ = sliceZ.toDouble(),
             trace = Vec2(traceX.toDouble(), traceY.toDouble()),
             showWireframe = showWireframe,
@@ -1180,6 +1666,14 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             activeTool = activeTool,
             onRotate = { delta -> rotation = (rotation + delta).coerceIn(-180f, 180f) },
             onTilt = { delta -> tilt = (tilt + delta).coerceIn(25f, 78f) },
+            onPan = { delta -> cameraPan += delta },
+            onZoom = { factor -> zoom = (zoom * factor).coerceIn(.35f, 4f) },
+            onResetCamera = {
+                zoom = 1f
+                rotation = 35f
+                tilt = 55f
+                cameraPan = Offset.Zero
+            },
             onTrace = { point ->
                 traceX = point.x.toFloat().coerceIn(-3f, 3f)
                 traceY = point.y.toFloat().coerceIn(-3f, 3f)
@@ -1188,6 +1682,10 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         SurfaceExampleChips(
             modifier = Modifier.align(Alignment.TopCenter),
             onSelect = vm::setSurfaceExpression,
+        )
+        InteractionHint(
+            "Drag to orbit · Trace drags a point · two fingers pan/zoom",
+            Modifier.align(Alignment.BottomEnd),
         )
         FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
@@ -1355,46 +1853,169 @@ private fun SurfaceExampleChips(modifier: Modifier = Modifier, onSelect: (String
 private fun CoordinateCanvas(
     modifier: Modifier,
     points: List<Vec2>,
+    shapes: List<Shape2D>,
+    interactionEnabled: Boolean,
+    onPointDragStart: (Int) -> Unit,
     onPointDrag: (Int, Vec2) -> Unit,
-    onCanvasTap: (Vec2) -> Unit,
+    onShapeDragStart: (Int) -> Unit,
+    onShapeDrag: (Vec2) -> Unit,
+    onDragEnd: () -> Unit,
+    onDragCancel: () -> Unit,
+    onCanvasTap: (Vec2, Int?) -> Unit,
     content: androidx.compose.ui.graphics.drawscope.DrawScope.(toScreen: (Vec2) -> Offset) -> Unit,
 ) {
-    var dragIndex by remember { mutableStateOf<Int?>(null) }
+    var cameraCenter by remember { mutableStateOf(Vec2(0.0, 0.0)) }
+    var cameraZoom by remember { mutableFloatStateOf(1f) }
+    var lastTapAt by remember { mutableStateOf(0L) }
+    val currentPoints by rememberUpdatedState(points)
+    val currentShapes by rememberUpdatedState(shapes)
     Canvas(
         modifier
-            .pointerInput(points) {
-                detectTapGestures { tap ->
-                    val scale = size.width / 14f
-                    val origin = Offset(size.width / 2f, size.height / 2f)
-                    onCanvasTap(Vec2(((tap.x - origin.x) / scale).toDouble(), ((origin.y - tap.y) / scale).toDouble()))
-                }
-            }
-            .pointerInput(points) {
-                detectDragGestures(
-                    onDragStart = { start ->
-                        val scale = size.width / 14f
-                        val origin = Offset(size.width / 2f, size.height / 2f)
-                        dragIndex = points.indexOfFirst {
-                            val p = Offset(origin.x + it.x.toFloat() * scale, origin.y - it.y.toFloat() * scale)
-                            (p - start).getDistance() < 36f
-                        }.takeIf { it >= 0 }
-                    },
-                    onDragEnd = { dragIndex = null },
-                ) { change, _ ->
-                    val scale = size.width / 14f
-                    val origin = Offset(size.width / 2f, size.height / 2f)
-                    dragIndex?.let {
-                        onPointDrag(it, Vec2(((change.position.x - origin.x) / scale).toDouble(), ((origin.y - change.position.y) / scale).toDouble()))
+            .pointerInput(interactionEnabled) {
+                awaitEachGesture {
+                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val baseScale = size.width / 14f
+                    fun scale() = baseScale * cameraZoom
+                    fun origin() = Offset(
+                        size.width / 2f - cameraCenter.x.toFloat() * scale(),
+                        size.height / 2f + cameraCenter.y.toFloat() * scale(),
+                    )
+                    fun world(screen: Offset): Vec2 {
+                        val o = origin()
+                        return Vec2(((screen.x - o.x) / scale()).toDouble(), ((o.y - screen.y) / scale()).toDouble())
+                    }
+                    fun screen(point: Vec2): Offset {
+                        val o = origin()
+                        return Offset(o.x + point.x.toFloat() * scale(), o.y - point.y.toFloat() * scale())
+                    }
+
+                    val startWorld = world(down.position)
+                    val gesturePoints = currentPoints
+                    val gestureShapes = currentShapes
+                    val tappedPointIndex = gesturePoints.indices
+                        .minByOrNull { (screen(gesturePoints[it]) - down.position).getDistance() }
+                        ?.takeIf { (screen(gesturePoints[it]) - down.position).getDistance() <= 38f }
+                    var pointIndex: Int? = null
+                    var shapeIndex: Int? = null
+                    if (interactionEnabled) {
+                        pointIndex = tappedPointIndex
+                        if (pointIndex == null) {
+                            shapeIndex = gestureShapes.indices.filter { gestureShapes[it].visible }
+                                .minByOrNull { shapeScreenDistance(gestureShapes[it], gesturePoints, down.position, ::screen) }
+                                ?.takeIf { shapeScreenDistance(gestureShapes[it], gesturePoints, down.position, ::screen) <= 42f }
+                        }
+                        pointIndex?.let(onPointDragStart)
+                        shapeIndex?.let(onShapeDragStart)
+                    }
+
+                    var moved = false
+                    var transformed = false
+                    var cancelledObjectDrag = false
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val pressed = event.changes.filter { it.pressed }
+                        if (pressed.size >= 2) {
+                            if (!cancelledObjectDrag && (pointIndex != null || shapeIndex != null)) {
+                                onDragCancel()
+                                pointIndex = null
+                                shapeIndex = null
+                                cancelledObjectDrag = true
+                            }
+                            val pan = event.calculatePan()
+                            val centroid = event.calculateCentroid()
+                            val oldScale = scale()
+                            cameraCenter = Vec2(cameraCenter.x - pan.x / oldScale, cameraCenter.y + pan.y / oldScale)
+                            val beforeZoom = world(centroid)
+                            cameraZoom = (cameraZoom * event.calculateZoom()).coerceIn(.35f, 5f)
+                            val afterZoom = world(centroid)
+                            cameraCenter += beforeZoom - afterZoom
+                            transformed = true
+                            event.changes.forEach { it.consume() }
+                        } else {
+                            val change = event.changes.firstOrNull()
+                            val delta = change?.positionChange() ?: Offset.Zero
+                            if (delta.getDistance() > 0f) {
+                                moved = moved || (change!!.position - down.position).getDistance() > 8f
+                                when {
+                                    pointIndex != null -> onPointDrag(pointIndex, world(change!!.position))
+                                    shapeIndex != null -> onShapeDrag(world(change!!.position) - startWorld)
+                                    interactionEnabled -> cameraCenter = Vec2(cameraCenter.x - delta.x / scale(), cameraCenter.y + delta.y / scale())
+                                }
+                                change!!.consume()
+                            }
+                        }
+                        if (event.changes.none { it.pressed }) break
+                    }
+
+                    when {
+                        pointIndex != null || shapeIndex != null -> onDragEnd()
+                        !moved && !transformed -> {
+                            val now = System.currentTimeMillis()
+                            if (interactionEnabled && now - lastTapAt < 320L) {
+                                cameraCenter = Vec2(0.0, 0.0)
+                                cameraZoom = 1f
+                                lastTapAt = 0L
+                            } else {
+                                onCanvasTap(startWorld, tappedPointIndex)
+                                lastTapAt = if (interactionEnabled) now else 0L
+                            }
+                        }
                     }
                 }
             },
     ) {
-        val scale = size.width / 14f
-        val origin = Offset(size.width / 2f, size.height / 2f)
+        val scale = size.width / 14f * cameraZoom
+        val origin = Offset(size.width / 2f - cameraCenter.x.toFloat() * scale, size.height / 2f + cameraCenter.y.toFloat() * scale)
         val tx: (Vec2) -> Offset = { Offset(origin.x + it.x.toFloat() * scale, origin.y - it.y.toFloat() * scale) }
         drawGrid(origin, scale)
         content(tx)
     }
+}
+
+private fun shapeScreenDistance(shape: Shape2D, points: List<Vec2>, target: Offset, screen: (Vec2) -> Offset): Float {
+    val worldPoints = shape.pointIndices.mapNotNull(points::getOrNull)
+    val vertices = worldPoints.map(screen)
+    if (vertices.isEmpty()) return Float.MAX_VALUE
+    if (shape.type in setOf(Shape2DType.Circle, Shape2DType.Arc) && vertices.size >= 2) {
+        val radius = (vertices[1] - vertices[0]).getDistance()
+        return abs((target - vertices[0]).getDistance() - radius)
+    }
+    if (shape.type == Shape2DType.CircleThreePoints && worldPoints.size >= 3) {
+        val centerWorld = Geometry2D.circumcenter(worldPoints[0], worldPoints[1], worldPoints[2]) ?: return Float.MAX_VALUE
+        val center = screen(centerWorld)
+        return abs((target - center).getDistance() - (vertices[0] - center).getDistance())
+    }
+    if (shape.type in setOf(Shape2DType.Parallel, Shape2DType.Perpendicular) && worldPoints.size >= 3) {
+        val base = worldPoints[1] - worldPoints[0]
+        val direction = if (shape.type == Shape2DType.Parallel) base else Vec2(-base.y, base.x)
+        val a = screen(worldPoints[2] - direction * 100.0)
+        val b = screen(worldPoints[2] + direction * 100.0)
+        return pointSegmentDistance(target, a, b)
+    }
+    if (shape.type == Shape2DType.AngleBisector && worldPoints.size >= 3) {
+        val u = worldPoints[0] - worldPoints[1]
+        val v = worldPoints[2] - worldPoints[1]
+        val direction = u * (1.0 / u.distanceTo(Vec2(0.0, 0.0)).coerceAtLeast(1e-9)) +
+            v * (1.0 / v.distanceTo(Vec2(0.0, 0.0)).coerceAtLeast(1e-9))
+        return pointSegmentDistance(target, screen(worldPoints[1]), screen(worldPoints[1] + direction * 100.0))
+    }
+    val edges = when {
+        vertices.size == 1 -> emptyList()
+        shape.type in setOf(Shape2DType.Triangle, Shape2DType.Polygon, Shape2DType.Rectangle, Shape2DType.Square) ->
+            vertices.indices.map { vertices[it] to vertices[(it + 1) % vertices.size] }
+        else -> vertices.zipWithNext()
+    }
+    return edges.minOfOrNull { (a, b) -> pointSegmentDistance(target, a, b) }
+        ?: (vertices.first() - target).getDistance()
+}
+
+private fun pointSegmentDistance(point: Offset, start: Offset, end: Offset): Float {
+    val dx = end.x - start.x
+    val dy = end.y - start.y
+    val lengthSquared = dx * dx + dy * dy
+    if (lengthSquared <= 1e-6f) return (point - start).getDistance()
+    val t = (((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared).coerceIn(0f, 1f)
+    return hypot(point.x - (start.x + t * dx), point.y - (start.y + t * dy))
 }
 
 @Composable
@@ -1434,54 +2055,212 @@ private fun SolidAddStrip(modifier: Modifier = Modifier, onAdd: (SolidType) -> U
 }
 
 @Composable
+private fun Transform3DChips(modifier: Modifier = Modifier, active: Transform3DMode, onSelect: (Transform3DMode) -> Unit) {
+    Row(
+        modifier = modifier
+            .padding(bottom = 108.dp)
+            .clip(RoundedCornerShape(22.dp))
+            .background(SurfaceA)
+            .border(1.dp, Color(0x5548BFFF), RoundedCornerShape(22.dp))
+            .padding(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Transform3DMode.entries.forEach { mode ->
+            Text(
+                text = mode.name,
+                color = if (mode == active) Ink else Muted,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(if (mode == active) Color(0x6630D9FF) else Color.Transparent)
+                    .clickable { onSelect(mode) }
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun Selection3DChips(modifier: Modifier = Modifier, active: Selection3DMode, onSelect: (Selection3DMode) -> Unit) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(SurfaceA)
+            .border(1.dp, Color(0x5548BFFF), RoundedCornerShape(18.dp))
+            .padding(5.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Selection3DMode.entries.forEach { mode ->
+            Text(
+                text = mode.name,
+                color = if (mode == active) Ink else Muted,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(13.dp))
+                    .background(if (mode == active) Color(0x6630D9FF) else Color.Transparent)
+                    .clickable { onSelect(mode) }
+                    .padding(horizontal = 9.dp, vertical = 6.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun InteractionHint(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        color = Muted,
+        fontSize = 11.sp,
+        modifier = modifier
+            .padding(end = 16.dp, bottom = 68.dp)
+            .clip(RoundedCornerShape(14.dp))
+            .background(SurfaceB)
+            .border(1.dp, Color(0x3348BFFF), RoundedCornerShape(14.dp))
+            .padding(horizontal = 12.dp, vertical = 7.dp),
+    )
+}
+
+@Composable
 private fun GraphCanvas(
     modifier: Modifier,
     functions: List<com.indianservers.aiexplorer.core.FunctionDefinition>,
+    dataPoints: List<Vec2>,
     traceX: Double,
     graphTool: GraphTool,
     onTraceChange: (Double) -> Unit,
 ) {
     val graph = remember { GraphAnalysis() }
     val engine = remember { ExpressionEngine() }
+    var cameraCenter by remember { mutableStateOf(Vec2(0.0, 0.0)) }
+    var cameraZoom by remember { mutableFloatStateOf(1f) }
+    var lastTapAt by remember { mutableStateOf(0L) }
+    val currentFunctions by rememberUpdatedState(functions)
     Canvas(
         modifier
-            .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    val scale = size.width / 14f
-                    val originX = size.width / 2f
-                    onTraceChange(((offset.x - originX) / scale).toDouble().coerceIn(-6.0, 6.0))
-                }
-            }
-            .pointerInput(Unit) {
-                detectDragGestures { change, _ ->
-                    val scale = size.width / 14f
-                    val originX = size.width / 2f
-                    onTraceChange(((change.position.x - originX) / scale).toDouble().coerceIn(-6.0, 6.0))
+            .pointerInput(graphTool) {
+                awaitEachGesture {
+                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val baseScale = size.width / 14f
+                    fun scale() = baseScale * cameraZoom
+                    fun origin() = Offset(
+                        size.width / 2f - cameraCenter.x.toFloat() * scale(),
+                        size.height / 2f + cameraCenter.y.toFloat() * scale(),
+                    )
+                    fun world(screen: Offset): Vec2 {
+                        val o = origin()
+                        return Vec2(((screen.x - o.x) / scale()).toDouble(), ((o.y - screen.y) / scale()).toDouble())
+                    }
+
+                    val traceScreen = currentFunctions.firstOrNull { it.visible && graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }?.let { fn ->
+                        runCatching {
+                            val y = engine.compile(stripEquation(fn.expression)).eval(mapOf("x" to traceX))
+                            val o = origin()
+                            Offset(o.x + traceX.toFloat() * scale(), o.y - y.toFloat() * scale())
+                        }.getOrNull()
+                    }
+                    val traceDrag = graphTool == GraphTool.Trace || (traceScreen != null && (traceScreen - down.position).getDistance() < 44f)
+                    var moved = false
+                    var transformed = false
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val pressed = event.changes.filter { it.pressed }
+                        if (pressed.size >= 2) {
+                            val pan = event.calculatePan()
+                            val centroid = event.calculateCentroid()
+                            cameraCenter = Vec2(cameraCenter.x - pan.x / scale(), cameraCenter.y + pan.y / scale())
+                            val beforeZoom = world(centroid)
+                            cameraZoom = (cameraZoom * event.calculateZoom()).coerceIn(.2f, 8f)
+                            val afterZoom = world(centroid)
+                            cameraCenter += beforeZoom - afterZoom
+                            transformed = true
+                            event.changes.forEach { it.consume() }
+                        } else {
+                            val change = event.changes.firstOrNull()
+                            val delta = change?.positionChange() ?: Offset.Zero
+                            if (delta.getDistance() > 0f) {
+                                moved = moved || (change!!.position - down.position).getDistance() > 8f
+                                if (traceDrag) {
+                                    onTraceChange(world(change!!.position).x)
+                                } else {
+                                    cameraCenter = Vec2(cameraCenter.x - delta.x / scale(), cameraCenter.y + delta.y / scale())
+                                }
+                                change!!.consume()
+                            }
+                        }
+                        if (event.changes.none { it.pressed }) break
+                    }
+                    if (!moved && !transformed) {
+                        val now = System.currentTimeMillis()
+                        if (now - lastTapAt < 320L) {
+                            cameraCenter = Vec2(0.0, 0.0)
+                            cameraZoom = 1f
+                            lastTapAt = 0L
+                        } else {
+                            onTraceChange(world(down.position).x)
+                            lastTapAt = now
+                        }
+                    }
                 }
             }
             .semantics { contentDescription = "Interactive graphing canvas with axes, curves, trace point, and annotations" },
     ) {
-        val scale = size.width / 14f
-        val origin = Offset(size.width / 2f, size.height / 2f)
+        val scale = size.width / 14f * cameraZoom
+        val origin = Offset(size.width / 2f - cameraCenter.x.toFloat() * scale, size.height / 2f + cameraCenter.y.toFloat() * scale)
         val tx: (Vec2) -> Offset = { Offset(origin.x + it.x.toFloat() * scale, origin.y - it.y.toFloat() * scale) }
         drawGrid(origin, scale)
+        val halfWidth = size.width / (2f * scale)
+        val halfHeight = size.height / (2f * scale)
+        val minX = cameraCenter.x - halfWidth
+        val maxX = cameraCenter.x + halfWidth
+        val minY = cameraCenter.y - halfHeight
+        val maxY = cameraCenter.y + halfHeight
         functions.forEachIndexed { index, fn ->
-            val color = if (fn.colorKey == "cyan") Cyan else Violet
-            val sample = runCatching { graph.sample(fn.expression, -7.0, 7.0) }.getOrNull()
-            sample?.points?.zipWithNext()?.forEachIndexed { i, pair ->
-                if (!sample.breaks.contains(i)) drawLine(color, tx(pair.first), tx(pair.second), 4.5f, cap = StrokeCap.Round)
+            if (!fn.visible) return@forEachIndexed
+            val color = when (fn.colorKey) { "cyan" -> Cyan; "green" -> Green; "amber" -> Amber; else -> Violet }
+            val kind = graph.definitionKind(fn.expression)
+            if (kind == GraphDefinitionKind.Implicit) {
+                val segments = runCatching { graph.implicitSegments(fn.expression, minX, maxX, minY, maxY) }.getOrDefault(emptyList())
+                segments.forEach { drawLine(color, tx(it.start), tx(it.end), 3.2f, cap = StrokeCap.Round) }
+            } else {
+                val sample = runCatching { graph.sampleDefinition(fn.expression, minX, maxX, steps = 520) }.getOrNull()
+                sample?.points?.zipWithNext()?.forEachIndexed { i, pair ->
+                    if (!sample.breaks.contains(i)) drawLine(color, tx(pair.first), tx(pair.second), 4.2f, cap = StrokeCap.Round)
+                }
             }
-            val trace = runCatching {
-                val y = engine.compile(fn.expression).eval(mapOf("x" to traceX))
+            val trace = if (kind == GraphDefinitionKind.Explicit) runCatching {
+                val y = engine.compile(stripEquation(fn.expression)).eval(mapOf("x" to traceX))
                 Vec2(traceX, y)
-            }.getOrNull()
-            trace?.takeIf { it.y in -7.0..7.0 }?.let {
-                if (graphTool in setOf(GraphTool.Trace, GraphTool.Tangent, GraphTool.Derivative, GraphTool.Integral) || index == 0) {
+            }.getOrNull() else null
+            trace?.takeIf { abs(tx(it).y - size.height / 2f) <= size.height }?.let {
+                if (graphTool in setOf(GraphTool.Trace, GraphTool.Tangent, GraphTool.Normal, GraphTool.Derivative, GraphTool.Integral, GraphTool.AreaBetween) || index == 0) {
                     drawRadiantPoint(tx(it), color, "${fn.name}: (${trim(it.x)}, ${trim(it.y)})")
                 }
             }
         }
-        drawGraphAnalysisOverlay(functions.firstOrNull()?.expression, traceX, graphTool, engine, tx, origin, scale)
+        if (dataPoints.isNotEmpty()) {
+            dataPoints.forEachIndexed { index, point -> drawRadiantPoint(tx(point), Amber, "D${index + 1}") }
+            StatisticsEngine.summarize(dataPoints).regression?.let { regression ->
+                drawLine(
+                    Green,
+                    tx(Vec2(minX, regression.slope * minX + regression.intercept)),
+                    tx(Vec2(maxX, regression.slope * maxX + regression.intercept)),
+                    3f,
+                )
+            }
+        }
+        val explicit = functions.filter { it.visible && graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }
+        drawGraphAnalysisOverlay(
+            explicit.firstOrNull()?.expression,
+            explicit.getOrNull(1)?.expression,
+            traceX,
+            graphTool,
+            engine,
+            tx,
+            origin,
+            scale,
+        )
     }
 }
 
@@ -1511,6 +2290,7 @@ private fun GraphToolChips(modifier: Modifier = Modifier, active: GraphTool, onS
 
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphAnalysisOverlay(
     expression: String?,
+    secondExpression: String?,
     traceX: Double,
     graphTool: GraphTool,
     engine: ExpressionEngine,
@@ -1519,24 +2299,30 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphAnalysisOv
     scale: Float,
 ) {
     if (expression == null) return
-    val compiled = runCatching { engine.compile(expression) }.getOrNull() ?: return
+    val compiled = runCatching { engine.compile(stripEquation(expression)) }.getOrNull() ?: return
     fun f(x: Double) = runCatching { compiled.eval(mapOf("x" to x)) }.getOrDefault(Double.NaN)
     val y = f(traceX)
     if (!y.isFinite()) return
     val point = Vec2(traceX, y)
     val h = 0.001
     val slope = (f(traceX + h) - f(traceX - h)) / (2.0 * h)
+    val leftWorld = ((0f - origin.x) / scale).toDouble()
+    val rightWorld = ((size.width - origin.x) / scale).toDouble()
     when (graphTool) {
         GraphTool.Tangent -> {
-            val left = -7.0
-            val right = 7.0
             val tangent = { x: Double -> y + slope * (x - traceX) }
-            drawLine(Amber, tx(Vec2(left, tangent(left))), tx(Vec2(right, tangent(right))), 3f, cap = StrokeCap.Round)
+            drawLine(Amber, tx(Vec2(leftWorld, tangent(leftWorld))), tx(Vec2(rightWorld, tangent(rightWorld))), 3f, cap = StrokeCap.Round)
             drawGraphLabel("tangent slope ${trim(slope)}", tx(point) + Offset(18f, -54f), Amber)
         }
+        GraphTool.Normal -> {
+            val normalSlope = if (abs(slope) < 1e-9) 1e6 else -1.0 / slope
+            val normal = { x: Double -> y + normalSlope * (x - traceX) }
+            drawLine(Violet, tx(Vec2(leftWorld, normal(leftWorld))), tx(Vec2(rightWorld, normal(rightWorld))), 3f, cap = StrokeCap.Round)
+            drawGraphLabel("normal slope ${trim(normalSlope)}", tx(point) + Offset(18f, -54f), Violet)
+        }
         GraphTool.Derivative -> {
-            val derivativePoints = (-180..180).mapNotNull { i ->
-                val x = i / 20.0
+            val derivativePoints = (0..360).mapNotNull { i ->
+                val x = leftWorld + (rightWorld - leftWorld) * i / 360.0
                 val d = (f(x + h) - f(x - h)) / (2.0 * h)
                 if (d.isFinite()) Vec2(x, d) else null
             }
@@ -1569,11 +2355,44 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphAnalysisOv
             drawPath(path, Cyan.copy(.8f), style = Stroke(2f))
             drawGraphLabel("area ${trim(area)}", tx(point) + Offset(18f, -54f), Cyan)
         }
-        GraphTool.Intersections -> {
-            drawLine(Amber.copy(.7f), Offset(0f, origin.y), Offset(size.width, origin.y), 2f)
-            drawGraphLabel("roots/intersections highlighted", Offset(origin.x + 20f, origin.y + 42f), Amber)
+        GraphTool.AreaBetween -> {
+            val other = secondExpression?.let { runCatching { engine.compile(stripEquation(it)) }.getOrNull() } ?: return
+            val start = min(0.0, traceX)
+            val end = max(0.0, traceX)
+            val steps = 100
+            val top = (0..steps).mapNotNull { i ->
+                val x = start + (end - start) * i / steps
+                val yy = f(x)
+                if (yy.isFinite()) Vec2(x, yy) else null
+            }
+            val bottom = (steps downTo 0).mapNotNull { i ->
+                val x = start + (end - start) * i / steps
+                val yy = runCatching { other.eval(mapOf("x" to x)) }.getOrDefault(Double.NaN)
+                if (yy.isFinite()) Vec2(x, yy) else null
+            }
+            if (top.isNotEmpty() && bottom.isNotEmpty()) {
+                val path = Path().apply {
+                    val first = tx(top.first()); moveTo(first.x, first.y)
+                    (top.drop(1) + bottom).forEach { val p = tx(it); lineTo(p.x, p.y) }
+                    close()
+                }
+                drawPath(path, Brush.verticalGradient(listOf(Amber.copy(.30f), Violet.copy(.18f))))
+                drawPath(path, Amber, style = Stroke(2f))
+            }
         }
-        GraphTool.Plot, GraphTool.Trace -> Unit
+        GraphTool.Intersections -> {
+            val graph = GraphAnalysis()
+            val other = secondExpression?.let { runCatching { engine.compile(stripEquation(it)) }.getOrNull() }
+            val points = if (other == null) graph.roots(expression, leftWorld, rightWorld).map { Vec2(it, f(it)) }
+            else graph.intersections(compiled, other, leftWorld, rightWorld)
+            points.forEach { drawRadiantPoint(tx(it), Amber, "(${trim(it.x)}, ${trim(it.y)})") }
+        }
+        GraphTool.Extrema -> {
+            GraphAnalysis().extrema(expression, leftWorld, rightWorld).forEach {
+                drawRadiantPoint(tx(it), Green, "extremum (${trim(it.x)}, ${trim(it.y)})")
+            }
+        }
+        GraphTool.Plot, GraphTool.Trace, GraphTool.Table, GraphTool.Data, GraphTool.Probability -> Unit
     }
 }
 
@@ -1744,100 +2563,213 @@ private fun Projected3DCanvas(
     ry: Float,
     rz: Float,
     zoom: Float,
+    cameraPan: Offset,
+    transformMode: Transform3DMode,
     wire: Boolean,
+    perspective: Boolean,
+    selectionMode: Selection3DMode,
+    subSelection: SubObjectSelection?,
+    sectionEnabled: Boolean,
+    sectionY: Double,
+    clipSection: Boolean,
     onSelect: (Int) -> Unit,
-    onMove: (Int, Vec3) -> Unit,
+    onSubSelect: (SubObjectSelection?) -> Unit,
     onSelectVector: (Int) -> Unit,
-    onMoveVector: (Int, Vec3) -> Unit,
+    onSolidDragStart: (Int) -> Unit,
+    onSolidMove: (Int, Vec3) -> Unit,
+    onSolidRotate: (Int, Vec3) -> Unit,
+    onSolidScale: (Int, Double) -> Unit,
+    onSolidDragEnd: () -> Unit,
+    onSolidDragCancel: () -> Unit,
+    onVectorDragStart: (Int) -> Unit,
+    onVectorMove: (Int, Vec3) -> Unit,
+    onVectorDragEnd: () -> Unit,
+    onVectorDragCancel: () -> Unit,
+    onOrbit: (Float, Float) -> Unit,
+    onPan: (Offset) -> Unit,
+    onZoom: (Float) -> Unit,
+    onResetCamera: () -> Unit,
 ) {
-    var dragSolidIndex by remember { mutableStateOf<Int?>(null) }
-    var dragVectorIndex by remember { mutableStateOf<Int?>(null) }
+    var lastTapAt by remember { mutableStateOf(0L) }
+    val currentSolids by rememberUpdatedState(solids)
+    val currentVectors by rememberUpdatedState(vectors)
+    val currentRx by rememberUpdatedState(rx)
+    val currentRy by rememberUpdatedState(ry)
+    val currentRz by rememberUpdatedState(rz)
+    val currentZoom by rememberUpdatedState(zoom)
+    val currentPan by rememberUpdatedState(cameraPan)
+    val currentPerspective by rememberUpdatedState(perspective)
+    val currentSelectionMode by rememberUpdatedState(selectionMode)
     Canvas(
         modifier
-            .pointerInput(solids, vectors, rx, ry, rz, zoom) {
-                detectTapGestures { tap ->
-                    val center = Offset(size.width * .52f, size.height * .45f)
-                    val scale = 74f * zoom
-                    val nearestVector = vectors.indices.minByOrNull { index ->
-                        val vector = vectors[index]
-                        val a = project(rotate(vector.start, rx, ry, rz), center, scale)
-                        val b = project(rotate(vector.end, rx, ry, rz), center, scale)
-                        minOf((a - tap).getDistance(), (b - tap).getDistance(), (Offset((a.x + b.x) / 2f, (a.y + b.y) / 2f) - tap).getDistance())
+            .pointerInput(transformMode) {
+                awaitEachGesture {
+                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val gestureSolids = currentSolids
+                    val gestureVectors = currentVectors
+                    val gestureRx = currentRx
+                    val gestureRy = currentRy
+                    val gestureRz = currentRz
+                    val center = Offset(size.width * .52f, size.height * .45f) + currentPan
+                    val scale = 74f * currentZoom
+                    fun vectorDistance(index: Int, target: Offset): Float {
+                        val vector = gestureVectors[index]
+                        val a = project(rotate(vector.start, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
+                        val b = project(rotate(vector.end, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
+                        return pointSegmentDistance(target, a, b)
                     }
-                    val nearestVectorDistance = nearestVector?.let { index ->
-                        val vector = vectors[index]
-                        val a = project(rotate(vector.start, rx, ry, rz), center, scale)
-                        val b = project(rotate(vector.end, rx, ry, rz), center, scale)
-                        minOf((a - tap).getDistance(), (b - tap).getDistance(), (Offset((a.x + b.x) / 2f, (a.y + b.y) / 2f) - tap).getDistance())
-                    } ?: Float.MAX_VALUE
-                    val nearestSolid = solids.indices.minByOrNull { index ->
-                        val projected = project(rotate(solids[index].position, rx, ry, rz), center, scale)
-                        (projected - tap).getDistance()
+                    fun solidDistance(index: Int, target: Offset): Float {
+                        val projected = project(rotate(gestureSolids[index].position, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
+                        return (projected - target).getDistance()
                     }
-                    val nearestSolidDistance = nearestSolid?.let { index ->
-                        val projected = project(rotate(solids[index].position, rx, ry, rz), center, scale)
-                        (projected - tap).getDistance()
-                    } ?: Float.MAX_VALUE
-                    if (nearestVector != null && nearestVectorDistance < nearestSolidDistance && nearestVectorDistance < 96f) {
-                        onSelectVector(nearestVector)
-                    } else {
-                        nearestSolid?.let { index ->
-                            if (nearestSolidDistance < 96f) onSelect(index)
+
+                    fun projectVertex(solid: Solid, vertex: Vec3): Offset = project(
+                        rotate(solidLocalToWorld(solid, vertex), gestureRx, gestureRy, gestureRz),
+                        center,
+                        scale,
+                        currentPerspective,
+                    )
+
+                    fun pickSubObject(target: Offset): SubObjectSelection? {
+                        val mode = currentSelectionMode
+                        if (mode == Selection3DMode.Object) return null
+                        var best: SubObjectSelection? = null
+                        var bestDistance = Float.MAX_VALUE
+                        gestureSolids.forEachIndexed { solidIndex, solid ->
+                            val mesh = SolidMeshFactory.create(solid)
+                            val points = mesh.vertices.map { projectVertex(solid, it) }
+                            when (mode) {
+                                Selection3DMode.Vertex -> points.forEachIndexed { index, point ->
+                                    val distance = (point - target).getDistance()
+                                    if (distance < bestDistance) { bestDistance = distance; best = SubObjectSelection(solidIndex, mode, index) }
+                                }
+                                Selection3DMode.Edge -> mesh.edges.forEachIndexed { index, edge ->
+                                    val distance = pointSegmentDistance(target, points[edge.first], points[edge.second])
+                                    if (distance < bestDistance) { bestDistance = distance; best = SubObjectSelection(solidIndex, mode, index) }
+                                }
+                                Selection3DMode.Face -> mesh.faces.forEachIndexed { index, face ->
+                                    val centroid = face.map { points[it] }.reduce(Offset::plus) / face.size.toFloat()
+                                    val distance = (centroid - target).getDistance()
+                                    if (distance < bestDistance) { bestDistance = distance; best = SubObjectSelection(solidIndex, mode, index) }
+                                }
+                                Selection3DMode.Object -> Unit
+                            }
+                        }
+                        val limit = when (mode) {
+                            Selection3DMode.Vertex -> 28f
+                            Selection3DMode.Edge -> 22f
+                            Selection3DMode.Face -> 70f
+                            Selection3DMode.Object -> 0f
+                        }
+                        return best?.takeIf { bestDistance <= limit }
+                    }
+
+                    val subHit = pickSubObject(down.position)
+                    subHit?.let {
+                        onSelect(it.solidIndex)
+                        onSubSelect(it)
+                    }
+                    var vectorIndex = if (subHit == null && currentSelectionMode == Selection3DMode.Object) gestureVectors.indices.minByOrNull { vectorDistance(it, down.position) }
+                        ?.takeIf { vectorDistance(it, down.position) < 42f }
+                    else null
+                    var solidIndex = if (vectorIndex == null) {
+                        gestureSolids.indices.minByOrNull { solidDistance(it, down.position) }
+                            ?.takeIf { solidDistance(it, down.position) < 104f }
+                    } else null
+                    if (currentSelectionMode != Selection3DMode.Object || subHit != null) solidIndex = null
+                    vectorIndex?.let {
+                        onSelectVector(it)
+                        onVectorDragStart(it)
+                    }
+                    solidIndex?.let {
+                        onSelect(it)
+                        onSolidDragStart(it)
+                    }
+
+                    var total = Offset.Zero
+                    var moved = false
+                    var transformed = false
+                    var objectCancelled = false
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val pressed = event.changes.filter { it.pressed }
+                        if (pressed.size >= 2) {
+                            if (!objectCancelled) {
+                                if (solidIndex != null) onSolidDragCancel()
+                                if (vectorIndex != null) onVectorDragCancel()
+                                solidIndex = null
+                                vectorIndex = null
+                                objectCancelled = true
+                            }
+                            onPan(event.calculatePan())
+                            onZoom(event.calculateZoom())
+                            transformed = true
+                            event.changes.forEach { it.consume() }
+                        } else {
+                            val change = event.changes.firstOrNull()
+                            val delta = change?.positionChange() ?: Offset.Zero
+                            if (delta.getDistance() > 0f) {
+                                total += delta
+                                moved = moved || total.getDistance() > 8f
+                                when {
+                                    vectorIndex != null -> onVectorMove(
+                                        vectorIndex,
+                                        Vec3((total.x / scale).toDouble(), 0.0, (total.y / scale).toDouble()),
+                                    )
+                                    solidIndex != null -> when (transformMode) {
+                                        Transform3DMode.Move -> onSolidMove(
+                                            solidIndex,
+                                            Vec3((total.x / scale).toDouble(), 0.0, (total.y / scale).toDouble()),
+                                        )
+                                        Transform3DMode.Rotate -> onSolidRotate(
+                                            solidIndex,
+                                            Vec3((-total.y * .35f).toDouble(), (total.x * .35f).toDouble(), 0.0),
+                                        )
+                                        Transform3DMode.Scale -> onSolidScale(
+                                            solidIndex,
+                                            (1.0 + (total.x - total.y) / 260.0).coerceAtLeast(.2),
+                                        )
+                                    }
+                                    subHit != null -> Unit
+                                    else -> onOrbit(delta.x * .35f, -delta.y * .25f)
+                                }
+                                change!!.consume()
+                            }
+                        }
+                        if (event.changes.none { it.pressed }) break
+                    }
+
+                    if (solidIndex != null) onSolidDragEnd()
+                    if (vectorIndex != null) onVectorDragEnd()
+                    if (!moved && !transformed && solidIndex == null && vectorIndex == null && subHit == null) {
+                        val now = System.currentTimeMillis()
+                        if (now - lastTapAt < 320L) {
+                            onResetCamera()
+                            lastTapAt = 0L
+                        } else {
+                            lastTapAt = now
                         }
                     }
                 }
             }
-            .pointerInput(solids, vectors, selectedIndex, selectedVectorIndex, zoom) {
-                detectDragGestures(
-                    onDragStart = { start ->
-                        val center = Offset(size.width * .52f, size.height * .45f)
-                        val scale = 74f * zoom
-                        dragVectorIndex = vectors.indices.minByOrNull { index ->
-                            val vector = vectors[index]
-                            val a = project(rotate(vector.start, rx, ry, rz), center, scale)
-                            val b = project(rotate(vector.end, rx, ry, rz), center, scale)
-                            minOf((a - start).getDistance(), (b - start).getDistance())
-                        }?.takeIf { index ->
-                            val vector = vectors[index]
-                            val a = project(rotate(vector.start, rx, ry, rz), center, scale)
-                            val b = project(rotate(vector.end, rx, ry, rz), center, scale)
-                            minOf((a - start).getDistance(), (b - start).getDistance()) < 110f
-                        }
-                        dragSolidIndex = if (dragVectorIndex == null) solids.indices.minByOrNull { index ->
-                            val projected = project(rotate(solids[index].position, rx, ry, rz), center, scale)
-                            (projected - start).getDistance()
-                        }?.takeIf { index ->
-                            val projected = project(rotate(solids[index].position, rx, ry, rz), center, scale)
-                            (projected - start).getDistance() < 110f
-                        } ?: selectedIndex else null
-                        dragVectorIndex?.let(onSelectVector)
-                        dragSolidIndex?.let(onSelect)
-                    },
-                    onDragEnd = {
-                        dragSolidIndex = null
-                        dragVectorIndex = null
-                    },
-                ) { change, dragAmount ->
-                    val scale = (74f * zoom).coerceAtLeast(36f)
-                    val delta = Vec3((dragAmount.x / scale).toDouble(), 0.0, (dragAmount.y / scale).toDouble())
-                    dragVectorIndex?.let { onMoveVector(it, delta) }
-                    dragSolidIndex?.let { index ->
-                        val solid = solids.getOrNull(index) ?: return@let
-                        onMove(index, solid.position + delta)
-                    }
-                    change.consume()
-                }
-            }
-            .semantics { contentDescription = "3D solids workspace with projected solid geometry" },
+            .semantics { contentDescription = "Interactive 3D workspace with object, vertex, edge and face selection" },
     ) {
-        val center = Offset(size.width * .52f, size.height * .45f)
+        val center = Offset(size.width * .52f, size.height * .45f) + cameraPan
         drawPerspectiveGrid(center)
         vectors.forEachIndexed { index, vector ->
-            drawVector3D(vector, rx, ry, rz, center, 74f * zoom, if (index == selectedVectorIndex) Amber else Green, index == selectedVectorIndex)
+            drawVector3D(vector, rx, ry, rz, center, 74f * zoom, if (index == selectedVectorIndex) Amber else Green, index == selectedVectorIndex, perspective)
         }
         solids.forEachIndexed { index, solid ->
             val color = if (index == selectedIndex) Cyan else if (index % 2 == 0) Violet else Green
-            drawSolidProjection(solid, solid.position, rx, ry, rz, center, 74f * zoom, color, wire, index == selectedIndex)
+            drawSolidProjection(
+                solid, solid.position, rx, ry, rz, center, 74f * zoom, color, wire, index == selectedIndex,
+                perspective, subSelection?.takeIf { it.solidIndex == index }, sectionEnabled && index == selectedIndex,
+                sectionY, clipSection && index == selectedIndex,
+            )
+            if (index == selectedIndex) {
+                val anchor = project(rotate(solid.position, rx, ry, rz), center, 74f * zoom, perspective)
+                drawTransformGizmo(anchor, transformMode)
+            }
         }
     }
 }
@@ -1850,6 +2782,7 @@ private fun SurfaceCanvas3D(
     rotation: Float,
     tilt: Float,
     zoom: Float,
+    cameraPan: Offset,
     sliceZ: Double,
     trace: Vec2,
     showWireframe: Boolean,
@@ -1860,41 +2793,69 @@ private fun SurfaceCanvas3D(
     activeTool: SurfaceTool,
     onRotate: (Float) -> Unit,
     onTilt: (Float) -> Unit,
+    onPan: (Offset) -> Unit,
+    onZoom: (Float) -> Unit,
+    onResetCamera: () -> Unit,
     onTrace: (Vec2) -> Unit,
 ) {
     val engine = remember { ExpressionEngine() }
+    var lastTapAt by remember { mutableStateOf(0L) }
+    val currentZoom by rememberUpdatedState(zoom)
+    val currentPan by rememberUpdatedState(cameraPan)
     Canvas(
         modifier
             .pointerInput(activeTool) {
-                detectTapGestures { tap ->
-                    val center = Offset(size.width * .5f, size.height * .5f)
-                    val scale = 54f * zoom
-                    val x = ((tap.x - center.x) / scale).toDouble().coerceIn(-3.0, 3.0)
-                    val y = ((tap.y - center.y) / scale).toDouble().coerceIn(-3.0, 3.0)
-                    onTrace(Vec2(x, y))
-                }
-            }
-            .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-                    if (activeTool == SurfaceTool.Trace) {
-                        val center = Offset(size.width * .5f, size.height * .5f)
-                        val scale = 54f * zoom
-                        onTrace(
-                            Vec2(
-                                ((change.position.x - center.x) / scale).toDouble().coerceIn(-3.0, 3.0),
-                                ((change.position.y - center.y) / scale).toDouble().coerceIn(-3.0, 3.0),
-                            ),
-                        )
-                    } else {
-                        onRotate(dragAmount.x * .35f)
-                        onTilt(-dragAmount.y * .18f)
+                awaitEachGesture {
+                    val down = awaitFirstDown(requireUnconsumed = false)
+                    val center = Offset(size.width * .5f, size.height * .5f) + currentPan
+                    val scale = 54f * currentZoom
+                    fun traceAt(position: Offset) = Vec2(
+                        ((position.x - center.x) / scale).toDouble().coerceIn(-3.0, 3.0),
+                        ((position.y - center.y) / scale).toDouble().coerceIn(-3.0, 3.0),
+                    )
+                    var moved = false
+                    var transformed = false
+                    var total = Offset.Zero
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val pressed = event.changes.filter { it.pressed }
+                        if (pressed.size >= 2) {
+                            onPan(event.calculatePan())
+                            onZoom(event.calculateZoom())
+                            transformed = true
+                            event.changes.forEach { it.consume() }
+                        } else {
+                            val change = event.changes.firstOrNull()
+                            val delta = change?.positionChange() ?: Offset.Zero
+                            if (delta.getDistance() > 0f) {
+                                total += delta
+                                moved = moved || total.getDistance() > 8f
+                                if (activeTool == SurfaceTool.Trace) {
+                                    onTrace(traceAt(change!!.position))
+                                } else {
+                                    onRotate(delta.x * .35f)
+                                    onTilt(-delta.y * .18f)
+                                }
+                                change!!.consume()
+                            }
+                        }
+                        if (event.changes.none { it.pressed }) break
                     }
-                    change.consume()
+                    if (!moved && !transformed) {
+                        val now = System.currentTimeMillis()
+                        if (now - lastTapAt < 320L) {
+                            onResetCamera()
+                            lastTapAt = 0L
+                        } else {
+                            if (activeTool == SurfaceTool.Trace) onTrace(traceAt(down.position))
+                            lastTapAt = now
+                        }
+                    }
                 }
             }
             .semantics { contentDescription = "3D graphing surface generated from equation mesh" },
     ) {
-        val center = Offset(size.width * .5f, size.height * .5f)
+        val center = Offset(size.width * .5f, size.height * .5f) + cameraPan
         val scale = 54f * zoom
         fun map(v: Vec3) = project(rotate(v, tilt, rotation, 0f), center, scale)
         drawPerspectiveGrid(center)
@@ -1994,10 +2955,16 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGradientVector(
 }
 
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(origin: Offset, scale: Float) {
-    for (i in -14..14) {
+    val firstX = floor(-origin.x / scale).toInt() - 1
+    val lastX = ceil((size.width - origin.x) / scale).toInt() + 1
+    val firstY = floor(-origin.y / scale).toInt() - 1
+    val lastY = ceil((size.height - origin.y) / scale).toInt() + 1
+    for (i in firstX..lastX) {
         val x = origin.x + i * scale
-        val y = origin.y + i * scale
         drawLine(Grid, Offset(x, 0f), Offset(x, size.height), if (i == 0) 3f else 1f)
+    }
+    for (i in firstY..lastY) {
+        val y = origin.y + i * scale
         drawLine(Grid, Offset(0f, y), Offset(size.width, y), if (i == 0) 3f else 1f)
     }
     drawLine(Color.White.copy(.85f), Offset(0f, origin.y), Offset(size.width, origin.y), 2f)
@@ -2103,12 +3070,27 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawConstructedShap
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStoredShapes(
     points: List<Vec2>,
     shapes: List<Shape2D>,
+    selectedShape: Int,
     tx: (Vec2) -> Offset,
 ) {
     shapes.forEachIndexed { index, shape ->
+        if (!shape.visible) return@forEachIndexed
         val shapePoints = shape.pointIndices.mapNotNull { points.getOrNull(it) }
-        val accent = if (index % 2 == 0) Violet else Cyan
+        val styled = when (shape.styleKey) {
+            "cyan" -> Cyan
+            "violet" -> Violet
+            "green" -> Green
+            else -> if (index % 2 == 0) Violet else Cyan
+        }
+        val accent = if (index == selectedShape) Amber else styled
         drawShape2D(shape.type, shapePoints, tx, accent, filled = true)
+        if (index == selectedShape) {
+            shapePoints.forEach { point ->
+                drawCircle(Amber.copy(.22f), 20f, tx(point))
+                drawCircle(Color.White, 7f, tx(point))
+                drawCircle(Amber, 4f, tx(point))
+            }
+        }
     }
 }
 
@@ -2117,9 +3099,9 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawConstructionPre
     tool: GeometryTool,
     tx: (Vec2) -> Offset,
 ) {
-    val type = tool.toShape2DType() ?: return
     if (pending.isEmpty()) return
     pending.forEachIndexed { index, point -> drawRadiantPoint(tx(point), Amber, "tap ${index + 1}") }
+    val type = tool.toShape2DType() ?: return
     drawShape2D(type, pending, tx, Amber, filled = false)
 }
 
@@ -2134,7 +3116,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
     fun offset(index: Int) = tx(points[index])
     val stroke = Stroke(if (filled) 3.5f else 2.4f, cap = StrokeCap.Round)
     when (type) {
-        Shape2DType.Line, Shape2DType.Ray, Shape2DType.Segment -> {
+        Shape2DType.Line, Shape2DType.Ray, Shape2DType.Segment, Shape2DType.Vector -> {
             if (points.size < 2) return
             val a = offset(0)
             val b = offset(1)
@@ -2150,6 +3132,36 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
                 else -> b
             }
             drawLine(accent, start, end, stroke.width, cap = StrokeCap.Round)
+            if (type == Shape2DType.Vector) {
+                val normal = Offset(-unit.y, unit.x)
+                val head = 20f
+                drawPath(
+                    Path().apply {
+                        moveTo(end.x, end.y)
+                        lineTo((end - unit * head + normal * head * .55f).x, (end - unit * head + normal * head * .55f).y)
+                        lineTo((end - unit * head - normal * head * .55f).x, (end - unit * head - normal * head * .55f).y)
+                        close()
+                    },
+                    accent,
+                )
+            }
+        }
+        Shape2DType.Parallel, Shape2DType.Perpendicular -> {
+            if (points.size < 3) return
+            val base = points[1] - points[0]
+            val direction = if (type == Shape2DType.Parallel) base else Vec2(-base.y, base.x)
+            val length = direction.distanceTo(Vec2(0.0, 0.0)).coerceAtLeast(1e-9)
+            val unit = direction * (1.0 / length)
+            drawLine(accent, tx(points[2] - unit * 100.0), tx(points[2] + unit * 100.0), stroke.width, cap = StrokeCap.Round)
+        }
+        Shape2DType.AngleBisector -> {
+            if (points.size < 3) return
+            val u = points[0] - points[1]
+            val v = points[2] - points[1]
+            val um = u.distanceTo(Vec2(0.0, 0.0)).coerceAtLeast(1e-9)
+            val vm = v.distanceTo(Vec2(0.0, 0.0)).coerceAtLeast(1e-9)
+            val direction = u * (1.0 / um) + v * (1.0 / vm)
+            drawLine(accent, tx(points[1]), tx(points[1] + direction * 100.0), stroke.width, cap = StrokeCap.Round)
         }
         Shape2DType.Circle -> {
             if (points.size < 2) return
@@ -2157,6 +3169,26 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
             val radius = (offset(1) - center).getDistance()
             if (filled) drawCircle(Brush.radialGradient(listOf(accent.copy(.22f), Color.Transparent), center, radius), radius, center)
             drawCircle(accent, radius, center, style = stroke)
+        }
+        Shape2DType.CircleThreePoints -> {
+            if (points.size < 3) return
+            val centerWorld = Geometry2D.circumcenter(points[0], points[1], points[2]) ?: return
+            val center = tx(centerWorld)
+            val radius = (tx(points[0]) - center).getDistance()
+            if (filled) drawCircle(Brush.radialGradient(listOf(accent.copy(.18f), Color.Transparent), center, radius), radius, center)
+            drawCircle(accent, radius, center, style = stroke)
+        }
+        Shape2DType.Ellipse -> {
+            if (points.size < 3) return
+            val center = tx(points[0])
+            val rx = (tx(points[1]) - center).getDistance().coerceAtLeast(1f)
+            val ry = (tx(points[2]) - center).getDistance().coerceAtLeast(1f)
+            drawOval(
+                color = accent,
+                topLeft = Offset(center.x - rx, center.y - ry),
+                size = Size(rx * 2f, ry * 2f),
+                style = stroke,
+            )
         }
         Shape2DType.Rectangle, Shape2DType.Square -> {
             if (points.size < 2) return
@@ -2188,6 +3220,25 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
             if (filled) drawPath(path, Brush.linearGradient(listOf(Violet.copy(.26f), Cyan.copy(.12f), Color.Transparent)))
             drawPath(path, accent, style = stroke)
         }
+        Shape2DType.RegularPolygon -> {
+            if (points.size < 2) return
+            val center = points[0]
+            val radiusVector = points[1] - center
+            val startAngle = kotlin.math.atan2(radiusVector.y, radiusVector.x)
+            val radius = radiusVector.distanceTo(Vec2(0.0, 0.0))
+            val vertices = (0 until 5).map { i ->
+                val angle = startAngle + i * 2.0 * PI / 5.0
+                Vec2(center.x + cos(angle) * radius, center.y + sin(angle) * radius)
+            }
+            val path = Path().apply {
+                val first = tx(vertices.first())
+                moveTo(first.x, first.y)
+                vertices.drop(1).forEach { val p = tx(it); lineTo(p.x, p.y) }
+                close()
+            }
+            if (filled) drawPath(path, accent.copy(.18f))
+            drawPath(path, accent, style = stroke)
+        }
         Shape2DType.Arc -> {
             if (points.size < 2) return
             val a = offset(0)
@@ -2207,9 +3258,10 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawVector3D(
     scale: Float,
     color: Color,
     selected: Boolean,
+    perspective: Boolean,
 ) {
-    val start = project(rotate(vector.start, rx, ry, rz), center, scale)
-    val end = project(rotate(vector.end, rx, ry, rz), center, scale)
+    val start = project(rotate(vector.start, rx, ry, rz), center, scale, perspective)
+    val end = project(rotate(vector.end, rx, ry, rz), center, scale, perspective)
     val direction = end - start
     val length = direction.getDistance().coerceAtLeast(1f)
     val unit = Offset(direction.x / length, direction.y / length)
@@ -2251,69 +3303,107 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjection
     color: Color,
     wire: Boolean,
     selected: Boolean,
+    perspective: Boolean,
+    subSelection: SubObjectSelection?,
+    sectionEnabled: Boolean,
+    sectionY: Double,
+    clipSection: Boolean,
 ) {
-    fun p(v: Vec3) = project(rotate(v + offset, rx, ry, rz), center, scale)
+    fun p(v: Vec3): Offset {
+        return project(rotate(solidLocalToWorld(solid.copy(position = offset), v), rx, ry, rz), center, scale, perspective)
+    }
     val strokeWidth = if (wire) 2.2f else 4.2f
-    val anchor = project(rotate(offset, rx, ry, rz), center, scale)
+    val anchor = project(rotate(offset, rx, ry, rz), center, scale, perspective)
     if (selected) {
         drawCircle(Brush.radialGradient(listOf(color.copy(.34f), Color.Transparent), anchor, 112f), radius = 112f, center = anchor)
         drawCircle(color.copy(.85f), radius = 64f, center = anchor, style = Stroke(2.4f))
     }
-    when (solid.type) {
-        SolidType.Cube, SolidType.Cuboid -> {
-            val vertices = cubeVertices(solid.width, solid.height, solid.depth).map(::p)
-            val edges = listOf(0 to 1, 1 to 2, 2 to 3, 3 to 0, 4 to 5, 5 to 6, 6 to 7, 7 to 4, 0 to 4, 1 to 5, 2 to 6, 3 to 7)
-            edges.forEach { (a, b) -> drawLine(color, vertices[a], vertices[b], strokeWidth) }
-            vertices.forEach { drawCircle(color, 4.5f, it) }
+    val mesh = SolidMeshFactory.create(solid)
+    val vertices = mesh.vertices.map(::p)
+    if (!wire && !clipSection) {
+        mesh.faces.forEachIndexed { index, face ->
+                if (face.size >= 3) {
+                    val path = Path().apply {
+                        moveTo(vertices[face.first()].x, vertices[face.first()].y)
+                        face.drop(1).forEach { lineTo(vertices[it].x, vertices[it].y) }
+                        close()
+                    }
+                    val selectedFace = subSelection?.mode == Selection3DMode.Face && subSelection.index == index
+                    drawPath(path, if (selectedFace) Amber.copy(.5f) else color.copy(.12f))
+                }
         }
-        SolidType.Pyramid -> {
-            val base = listOf(
-                Vec3(-solid.width / 2, -solid.height / 2, -solid.depth / 2),
-                Vec3(solid.width / 2, -solid.height / 2, -solid.depth / 2),
-                Vec3(solid.width / 2, -solid.height / 2, solid.depth / 2),
-                Vec3(-solid.width / 2, -solid.height / 2, solid.depth / 2),
-            )
-            val apex = Vec3(0.0, solid.height / 2, 0.0)
-            base.zipWithNext().forEach { (a, b) -> drawLine(color, p(a), p(b), strokeWidth) }
-            drawLine(color, p(base.last()), p(base.first()), strokeWidth)
-            base.forEach { drawLine(color, p(it), p(apex), strokeWidth) }
+    }
+    mesh.edges.forEachIndexed { index, (a, b) ->
+        var start = mesh.vertices[a]
+        var end = mesh.vertices[b]
+        if (!clipSection || start.y >= sectionY || end.y >= sectionY) {
+            if (clipSection && start.y < sectionY) {
+                val t = (sectionY - start.y) / (end.y - start.y)
+                start += (end - start) * t
+            }
+            if (clipSection && end.y < sectionY) {
+                val t = (sectionY - end.y) / (start.y - end.y)
+                end += (start - end) * t
+            }
+            val picked = subSelection?.mode == Selection3DMode.Edge && subSelection.index == index
+            drawLine(if (picked) Amber else color, p(start), p(end), if (picked) 7f else strokeWidth)
         }
-        SolidType.Cylinder, SolidType.Cone, SolidType.Sphere, SolidType.Torus -> {
-            val steps = 36
-            val radius = solid.radius.coerceAtLeast(0.35)
-            val bottom = (0..steps).map {
-                val t = it / steps.toDouble() * Math.PI * 2.0
-                Vec3(cos(t) * radius, -solid.height / 2, sin(t) * radius)
+    }
+    if (mesh.vertices.size <= 16 || subSelection?.mode == Selection3DMode.Vertex) {
+        vertices.forEachIndexed { index, vertex ->
+            if (!clipSection || mesh.vertices[index].y >= sectionY) {
+                val picked = subSelection?.mode == Selection3DMode.Vertex && subSelection.index == index
+                drawCircle(if (picked) Amber else color, if (picked) 10f else 4.5f, vertex)
             }
-            val top = (0..steps).map {
-                val t = it / steps.toDouble() * Math.PI * 2.0
-                Vec3(cos(t) * radius, solid.height / 2, sin(t) * radius)
+        }
+    }
+    if (subSelection?.mode == Selection3DMode.Face) {
+        mesh.faces.getOrNull(subSelection.index)?.let { face ->
+            val path = Path().apply {
+                if (face.isNotEmpty()) moveTo(vertices[face.first()].x, vertices[face.first()].y)
+                face.drop(1).forEach { lineTo(vertices[it].x, vertices[it].y) }
+                close()
             }
-            when (solid.type) {
-                SolidType.Cone -> {
-                    val apex = Vec3(0.0, solid.height / 2, 0.0)
-                    bottom.zipWithNext().forEach { (a, b) -> drawLine(color, p(a), p(b), strokeWidth) }
-                    listOf(0, 9, 18, 27).forEach { drawLine(color, p(bottom[it]), p(apex), strokeWidth) }
-                }
-                SolidType.Sphere -> {
-                    bottom.zipWithNext().forEach { (a, b) -> drawLine(color, p(a.copy(y = 0.0)), p(b.copy(y = 0.0)), strokeWidth) }
-                    top.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = .7f), p(Vec3(a.x, a.z, 0.0)), p(Vec3(b.x, b.z, 0.0)), 1.6f) }
-                    bottom.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = .5f), p(Vec3(0.0, a.x, a.z)), p(Vec3(0.0, b.x, b.z)), 1.4f) }
-                }
-                SolidType.Torus -> {
-                    bottom.zipWithNext().forEach { (a, b) -> drawLine(color, p(a.copy(y = 0.0) * 1.35), p(b.copy(y = 0.0) * 1.35), strokeWidth) }
-                    bottom.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = .55f), p(a.copy(y = 0.0) * .75), p(b.copy(y = 0.0) * .75), 1.6f) }
-                }
-                else -> {
-                    bottom.zipWithNext().forEach { (a, b) -> drawLine(color, p(a), p(b), strokeWidth) }
-                    top.zipWithNext().forEach { (a, b) -> drawLine(color, p(a), p(b), strokeWidth) }
-                    listOf(0, 9, 18, 27).forEach { drawLine(color.copy(alpha = .7f), p(bottom[it]), p(top[it]), strokeWidth) }
-                }
+            drawPath(path, Amber.copy(.32f), style = Stroke(6f))
+        }
+    }
+    if (sectionEnabled || clipSection) {
+        val section = CrossSection3D.intersect(mesh, Vec3(0.0, 1.0, 0.0), sectionY)
+        if (section.size >= 2) {
+            val sectionPath = Path().apply {
+                val first = p(section.first())
+                moveTo(first.x, first.y)
+                section.drop(1).map(::p).forEach { lineTo(it.x, it.y) }
+                if (section.size >= 3) close()
             }
+            if (section.size >= 3) drawPath(sectionPath, Amber.copy(.28f))
+            drawPath(sectionPath, Amber, style = Stroke(5f))
+            drawGraphLabel("section y=${trim(sectionY)}", p(section.first()) + Offset(12f, -18f), Amber)
         }
     }
     if (selected) {
         drawGraphLabel("${solid.type.name} selected", anchor + Offset(20f, -72f), color)
+    }
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawTransformGizmo(anchor: Offset, mode: Transform3DMode) {
+    when (mode) {
+        Transform3DMode.Move -> {
+            drawLine(Color(0xFFFF5B68), anchor, anchor + Offset(72f, 0f), 5f, cap = StrokeCap.Round)
+            drawLine(Green, anchor, anchor + Offset(0f, -72f), 5f, cap = StrokeCap.Round)
+            drawLine(Cyan, anchor, anchor + Offset(-46f, 48f), 5f, cap = StrokeCap.Round)
+            drawCircle(Color.White, 7f, anchor)
+        }
+        Transform3DMode.Rotate -> {
+            drawCircle(Cyan.copy(.9f), 76f, anchor, style = Stroke(5f))
+            drawArc(Violet, 205f, 115f, false, anchor - Offset(62f, 62f), Size(124f, 124f), style = Stroke(7f, cap = StrokeCap.Round))
+        }
+        Transform3DMode.Scale -> {
+            drawRect(Cyan.copy(.9f), topLeft = anchor - Offset(55f, 55f), size = Size(110f, 110f), style = Stroke(4f))
+            listOf(Offset(-55f, -55f), Offset(55f, -55f), Offset(55f, 55f), Offset(-55f, 55f)).forEach {
+                drawRect(Color.White, topLeft = anchor + it - Offset(7f, 7f), size = Size(14f, 14f))
+            }
+        }
     }
 }
 
@@ -2342,9 +3432,24 @@ private fun rotate(p: Vec3, rx: Float, ry: Float, rz: Float): Vec3 {
     return Vec3(x3, y, z)
 }
 
-private fun project(p: Vec3, center: Offset, scale: Float): Offset {
-    val perspective = 1.0 / (1.0 + (p.z + 5.0) * 0.08)
-    return Offset((center.x + p.x * scale * perspective).toFloat(), (center.y - p.y * scale * perspective + p.z * 18).toFloat())
+private fun solidLocalToWorld(solid: Solid, vertex: Vec3): Vec3 = rotate(
+    vertex,
+    solid.rotation.x.toFloat(),
+    solid.rotation.y.toFloat(),
+    solid.rotation.z.toFloat(),
+) + solid.position
+
+private fun Float.wrapDegrees(): Float {
+    var value = this
+    while (value > 180f) value -= 360f
+    while (value < -180f) value += 360f
+    return value
+}
+
+private fun project(p: Vec3, center: Offset, scale: Float, perspective: Boolean = true): Offset {
+    val depthScale = if (perspective) 1.0 / (1.0 + (p.z + 5.0) * 0.08) else 1.0
+    val depthLift = if (perspective) p.z * 18 else p.z * 10
+    return Offset((center.x + p.x * scale * depthScale).toFloat(), (center.y - p.y * scale * depthScale + depthLift).toFloat())
 }
 
 private fun snapAngle(value: Float): Float = (kotlin.math.round(value / 1f) * 1f).coerceIn(-180f, 180f)
@@ -2457,6 +3562,8 @@ private fun GlassPanel(modifier: Modifier = Modifier, content: @Composable Colum
             .clip(RoundedCornerShape(18.dp))
             .background(Brush.linearGradient(listOf(SurfaceA, SurfaceB)))
             .border(1.dp, Color(0x6645CFFF), RoundedCornerShape(18.dp))
+            .heightIn(max = 560.dp)
+            .verticalScroll(rememberScrollState())
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         content = content,

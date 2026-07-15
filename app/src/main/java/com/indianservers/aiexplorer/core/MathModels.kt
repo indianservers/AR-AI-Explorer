@@ -7,6 +7,8 @@ import kotlin.math.asin
 import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.exp
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.ln
 import kotlin.math.max
@@ -28,6 +30,8 @@ data class Vec3(val x: Double, val y: Double, val z: Double) {
     operator fun minus(other: Vec3) = Vec3(x - other.x, y - other.y, z - other.z)
     operator fun times(scale: Double) = Vec3(x * scale, y * scale, z * scale)
     fun magnitude() = sqrt(x * x + y * y + z * z)
+    fun dot(other: Vec3) = x * other.x + y * other.y + z * other.z
+    fun normalized(): Vec3 = magnitude().takeIf { it > 1e-12 }?.let { this * (1.0 / it) } ?: this
 }
 
 data class Vector3D(
@@ -75,6 +79,50 @@ object Geometry2D {
         val dot = u.x * v.x + u.y * v.y
         val mag = max(1e-9, u.distanceTo(Vec2(0.0, 0.0)) * v.distanceTo(Vec2(0.0, 0.0)))
         return Math.toDegrees(acos((dot / mag).coerceIn(-1.0, 1.0)))
+    }
+
+    fun centroid(a: Vec2, b: Vec2, c: Vec2) = Vec2(
+        (a.x + b.x + c.x) / 3.0,
+        (a.y + b.y + c.y) / 3.0,
+    )
+
+    fun circumcenter(a: Vec2, b: Vec2, c: Vec2): Vec2? {
+        val d = 2.0 * (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y))
+        if (abs(d) < 1e-9) return null
+        val a2 = a.x * a.x + a.y * a.y
+        val b2 = b.x * b.x + b.y * b.y
+        val c2 = c.x * c.x + c.y * c.y
+        return Vec2(
+            (a2 * (b.y - c.y) + b2 * (c.y - a.y) + c2 * (a.y - b.y)) / d,
+            (a2 * (c.x - b.x) + b2 * (a.x - c.x) + c2 * (b.x - a.x)) / d,
+        )
+    }
+
+    fun incenter(a: Vec2, b: Vec2, c: Vec2): Vec2? {
+        val oppositeA = b.distanceTo(c)
+        val oppositeB = a.distanceTo(c)
+        val oppositeC = a.distanceTo(b)
+        val perimeter = oppositeA + oppositeB + oppositeC
+        if (perimeter < 1e-9) return null
+        return Vec2(
+            (oppositeA * a.x + oppositeB * b.x + oppositeC * c.x) / perimeter,
+            (oppositeA * a.y + oppositeB * b.y + oppositeC * c.y) / perimeter,
+        )
+    }
+
+    fun orthocenter(a: Vec2, b: Vec2, c: Vec2): Vec2? {
+        val center = circumcenter(a, b, c) ?: return null
+        return Vec2(a.x + b.x + c.x - 2.0 * center.x, a.y + b.y + c.y - 2.0 * center.y)
+    }
+
+    fun lineIntersection(a: Vec2, b: Vec2, c: Vec2, d: Vec2): Vec2? {
+        val r = b - a
+        val s = d - c
+        val denominator = r.x * s.y - r.y * s.x
+        if (abs(denominator) < 1e-9) return null
+        val q = c - a
+        val t = (q.x * s.y - q.y * s.x) / denominator
+        return a + r * t
     }
 }
 
@@ -124,10 +172,33 @@ private data class BinaryNode(val op: Char, val left: Node, val right: Node) : N
     }
 }
 
-private data class FunctionNode(val name: String, val arg: Node) : Node {
+private data class ComparisonNode(val op: String, val left: Node, val right: Node) : Node {
     override fun eval(v: Map<String, Double>): Double {
-        val x = arg.eval(v)
-        return when (name.lowercase()) {
+        val a = left.eval(v)
+        val b = right.eval(v)
+        val result = when (op) {
+            "<" -> a < b
+            "<=" -> a <= b
+            ">" -> a > b
+            ">=" -> a >= b
+            "==" -> abs(a - b) < 1e-12
+            "!=" -> abs(a - b) >= 1e-12
+            else -> error("Unknown comparison $op")
+        }
+        return if (result) 1.0 else 0.0
+    }
+}
+
+private data class FunctionNode(val name: String, val args: List<Node>) : Node {
+    override fun eval(v: Map<String, Double>): Double {
+        val normalized = name.lowercase()
+        if (normalized == "if") {
+            require(args.size == 3) { "if requires condition, true value, false value" }
+            return if (args[0].eval(v) != 0.0) args[1].eval(v) else args[2].eval(v)
+        }
+        val values = args.map { it.eval(v) }
+        val x = values.firstOrNull() ?: error("$name requires an argument")
+        return when (normalized) {
             "sin" -> sin(x)
             "cos" -> cos(x)
             "tan" -> tan(x)
@@ -139,6 +210,11 @@ private data class FunctionNode(val name: String, val arg: Node) : Node {
             "exp" -> exp(x)
             "ln" -> ln(x)
             "log" -> kotlin.math.log10(x)
+            "floor" -> floor(x)
+            "ceil" -> ceil(x)
+            "sign" -> when { x > 0.0 -> 1.0; x < 0.0 -> -1.0; else -> 0.0 }
+            "min" -> values.minOrNull() ?: Double.NaN
+            "max" -> values.maxOrNull() ?: Double.NaN
             else -> error("Unknown function $name")
         }
     }
@@ -148,10 +224,25 @@ private class Parser(private val input: String) {
     private var index = 0
 
     fun parse(): Expression {
-        val node = parseExpression()
+        val node = parseComparison()
         skip()
         require(index == input.length) { "Unexpected token '${input[index]}'" }
         return Expression(node, input)
+    }
+
+    private fun parseComparison(): Node {
+        var node = parseExpression()
+        while (true) {
+            node = when {
+                matchString("<=") -> ComparisonNode("<=", node, parseExpression())
+                matchString(">=") -> ComparisonNode(">=", node, parseExpression())
+                matchString("==") -> ComparisonNode("==", node, parseExpression())
+                matchString("!=") -> ComparisonNode("!=", node, parseExpression())
+                matchString("<") -> ComparisonNode("<", node, parseExpression())
+                matchString(">") -> ComparisonNode(">", node, parseExpression())
+                else -> return node
+            }
+        }
     }
 
     private fun parseExpression(): Node {
@@ -198,7 +289,7 @@ private class Parser(private val input: String) {
     private fun parsePrimary(): Node {
         skip()
         if (match('(')) {
-            val node = parseExpression()
+            val node = parseComparison()
             require(match(')')) { "Missing closing parenthesis" }
             return node
         }
@@ -207,9 +298,16 @@ private class Parser(private val input: String) {
             val name = parseIdentifier()
             skip()
             return if (match('(')) {
-                val arg = parseExpression()
+                val args = mutableListOf<Node>()
+                skip()
+                if (peek() != ')') {
+                    do {
+                        args += parseComparison()
+                        skip()
+                    } while (match(','))
+                }
                 require(match(')')) { "Missing closing parenthesis" }
-                FunctionNode(name, arg)
+                FunctionNode(name, args)
             } else {
                 VariableNode(name)
             }
@@ -243,6 +341,15 @@ private class Parser(private val input: String) {
         return false
     }
 
+    private fun matchString(value: String): Boolean {
+        skip()
+        if (input.startsWith(value, index)) {
+            index += value.length
+            return true
+        }
+        return false
+    }
+
     private fun peek(): Char? = input.getOrNull(index)
     private fun skip() {
         while (peek()?.isWhitespace() == true) index++
@@ -258,6 +365,10 @@ data class FunctionDefinition(
 )
 
 data class CurveSample(val points: List<Vec2>, val breaks: Set<Int>)
+data class ImplicitSegment(val start: Vec2, val end: Vec2)
+enum class GraphDefinitionKind { Explicit, Polar, Parametric, Implicit }
+data class RegressionResult(val slope: Double, val intercept: Double, val correlation: Double)
+data class DataSummary(val count: Int, val meanX: Double, val meanY: Double, val standardDeviationY: Double, val regression: RegressionResult?)
 data class QuadraticInsight(
     val vertex: Vec2,
     val axis: Double,
@@ -270,6 +381,24 @@ data class QuadraticInsight(
 data class LinearInsight(val slope: Double, val xIntercept: Double?, val yIntercept: Double)
 
 class GraphAnalysis(private val engine: ExpressionEngine = ExpressionEngine()) {
+    fun definitionKind(expression: String): GraphDefinitionKind {
+        val normalized = expression.trim().lowercase()
+        return when {
+            normalized.startsWith("r=") || normalized.startsWith("r =") -> GraphDefinitionKind.Polar
+            normalized.contains("x(t)") && normalized.contains("y(t)") && normalized.contains(';') -> GraphDefinitionKind.Parametric
+            normalized.contains('=') && !normalized.startsWith("y=") && !normalized.startsWith("y =") &&
+                !normalized.substringBefore('=').contains("(x)") -> GraphDefinitionKind.Implicit
+            else -> GraphDefinitionKind.Explicit
+        }
+    }
+
+    fun sampleDefinition(expression: String, minX: Double, maxX: Double, steps: Int = 360): CurveSample = when (definitionKind(expression)) {
+        GraphDefinitionKind.Explicit -> sample(expression, minX, maxX, steps)
+        GraphDefinitionKind.Polar -> samplePolar(expression, steps)
+        GraphDefinitionKind.Parametric -> sampleParametric(expression, steps)
+        GraphDefinitionKind.Implicit -> CurveSample(emptyList(), emptySet())
+    }
+
     fun sample(expression: String, minX: Double, maxX: Double, steps: Int = 360): CurveSample {
         val compiled = engine.compile(stripEquation(expression))
         val points = mutableListOf<Vec2>()
@@ -288,6 +417,120 @@ class GraphAnalysis(private val engine: ExpressionEngine = ExpressionEngine()) {
             }
         }
         return CurveSample(points, breaks)
+    }
+
+    fun samplePolar(expression: String, steps: Int = 480): CurveSample {
+        val compiled = engine.compile(stripEquation(expression))
+        val points = (0..steps).mapNotNull { i ->
+            val t = 2.0 * PI * i / steps
+            val r = runCatching { compiled.eval(mapOf("t" to t, "theta" to t)) }.getOrDefault(Double.NaN)
+            if (r.isFinite()) Vec2(r * cos(t), r * sin(t)) else null
+        }
+        return CurveSample(points, emptySet())
+    }
+
+    fun sampleParametric(expression: String, steps: Int = 480): CurveSample {
+        val parts = expression.split(';')
+        require(parts.size >= 2) { "Parametric form requires x(t)=...; y(t)=..." }
+        val xExpression = engine.compile(stripEquation(parts.first { it.lowercase().contains("x(t)") }))
+        val yExpression = engine.compile(stripEquation(parts.first { it.lowercase().contains("y(t)") }))
+        val points = (0..steps).mapNotNull { i ->
+            val t = -2.0 * PI + 4.0 * PI * i / steps
+            val variables = mapOf("t" to t)
+            val x = runCatching { xExpression.eval(variables) }.getOrDefault(Double.NaN)
+            val y = runCatching { yExpression.eval(variables) }.getOrDefault(Double.NaN)
+            if (x.isFinite() && y.isFinite()) Vec2(x, y) else null
+        }
+        return CurveSample(points, emptySet())
+    }
+
+    fun implicitSegments(
+        expression: String,
+        minX: Double,
+        maxX: Double,
+        minY: Double,
+        maxY: Double,
+        density: Int = 54,
+    ): List<ImplicitSegment> {
+        val (left, right) = expression.split('=', limit = 2).takeIf { it.size == 2 }
+            ?: error("Implicit equation requires =")
+        val compiled = engine.compile("($left)-($right)")
+        fun value(x: Double, y: Double) = runCatching { compiled.eval(mapOf("x" to x, "y" to y)) }.getOrDefault(Double.NaN)
+        fun crossing(a: Vec2, av: Double, b: Vec2, bv: Double): Vec2? {
+            if (!av.isFinite() || !bv.isFinite()) return null
+            if (abs(av) < 1e-12) return a
+            if (abs(bv) < 1e-12) return b
+            if ((av > 0) == (bv > 0)) return null
+            val t = (av / (av - bv)).coerceIn(0.0, 1.0)
+            return a + (b - a) * t
+        }
+        val segments = mutableListOf<ImplicitSegment>()
+        for (ix in 0 until density) {
+            val x0 = minX + (maxX - minX) * ix / density
+            val x1 = minX + (maxX - minX) * (ix + 1) / density
+            for (iy in 0 until density) {
+                val y0 = minY + (maxY - minY) * iy / density
+                val y1 = minY + (maxY - minY) * (iy + 1) / density
+                val corners = listOf(Vec2(x0, y0), Vec2(x1, y0), Vec2(x1, y1), Vec2(x0, y1))
+                val values = corners.map { value(it.x, it.y) }
+                val hits = listOf(0 to 1, 1 to 2, 2 to 3, 3 to 0).mapNotNull { (a, b) ->
+                    crossing(corners[a], values[a], corners[b], values[b])
+                }
+                if (hits.size >= 2) {
+                    segments += ImplicitSegment(hits[0], hits[1])
+                    if (hits.size == 4) segments += ImplicitSegment(hits[2], hits[3])
+                }
+            }
+        }
+        return segments
+    }
+
+    fun roots(expression: String, minX: Double, maxX: Double, steps: Int = 600): List<Double> {
+        val compiled = engine.compile(stripEquation(expression))
+        val zero = engine.compile("0")
+        return intersections(compiled, zero, minX, maxX).map { it.x }.distinctBy { trim(it) }
+    }
+
+    fun derivative(expression: String, x: Double): Double {
+        val compiled = engine.compile(stripEquation(expression))
+        return derivative(compiled, x)
+    }
+
+    private fun derivative(compiled: Expression, x: Double): Double {
+        val h = max(1e-6, abs(x) * 1e-5)
+        return (compiled.eval(mapOf("x" to x + h)) - compiled.eval(mapOf("x" to x - h))) / (2.0 * h)
+    }
+
+    fun integral(expression: String, from: Double, to: Double, steps: Int = 600): Double {
+        val compiled = engine.compile(stripEquation(expression))
+        if (from == to) return 0.0
+        val n = if (steps % 2 == 0) steps else steps + 1
+        val h = (to - from) / n
+        var sum = compiled.eval(mapOf("x" to from)) + compiled.eval(mapOf("x" to to))
+        for (i in 1 until n) {
+            val y = compiled.eval(mapOf("x" to from + i * h))
+            sum += if (i % 2 == 0) 2.0 * y else 4.0 * y
+        }
+        return sum * h / 3.0
+    }
+
+    fun extrema(expression: String, minX: Double, maxX: Double, steps: Int = 500): List<Vec2> {
+        val compiled = engine.compile(stripEquation(expression))
+        val results = mutableListOf<Vec2>()
+        var previousX = minX
+        var previousDerivative = derivative(compiled, previousX)
+        for (i in 1..steps) {
+            val x = minX + (maxX - minX) * i / steps
+            val d = derivative(compiled, x)
+            if (d.isFinite() && previousDerivative.isFinite() && (d > 0) != (previousDerivative > 0)) {
+                val candidate = (previousX + x) / 2.0
+                val y = runCatching { compiled.eval(mapOf("x" to candidate)) }.getOrDefault(Double.NaN)
+                if (y.isFinite()) results += Vec2(candidate, y)
+            }
+            previousX = x
+            previousDerivative = d
+        }
+        return results.distinctBy { trim(it.x) }
     }
 
     fun quadratic(a: Double, b: Double, c: Double): QuadraticInsight {
@@ -346,7 +589,44 @@ class GraphAnalysis(private val engine: ExpressionEngine = ExpressionEngine()) {
     }
 }
 
-enum class SolidType { Cube, Cuboid, Sphere, Cylinder, Cone, Pyramid, Torus }
+object StatisticsEngine {
+    fun summarize(points: List<Vec2>): DataSummary {
+        if (points.isEmpty()) return DataSummary(0, Double.NaN, Double.NaN, Double.NaN, null)
+        val meanX = points.sumOf { it.x } / points.size
+        val meanY = points.sumOf { it.y } / points.size
+        val varianceY = points.sumOf { (it.y - meanY).pow(2) } / points.size
+        val covariance = points.sumOf { (it.x - meanX) * (it.y - meanY) }
+        val varianceXSum = points.sumOf { (it.x - meanX).pow(2) }
+        val regression = if (varianceXSum < 1e-12) null else {
+            val slope = covariance / varianceXSum
+            val intercept = meanY - slope * meanX
+            val yVarianceSum = points.sumOf { (it.y - meanY).pow(2) }
+            val correlation = if (yVarianceSum < 1e-12) 0.0 else covariance / sqrt(varianceXSum * yVarianceSum)
+            RegressionResult(slope, intercept, correlation.coerceIn(-1.0, 1.0))
+        }
+        return DataSummary(points.size, meanX, meanY, sqrt(varianceY), regression)
+    }
+}
+
+object ProbabilityEngine {
+    fun normalPdf(x: Double, mean: Double = 0.0, standardDeviation: Double = 1.0): Double {
+        require(standardDeviation > 0.0)
+        val z = (x - mean) / standardDeviation
+        return exp(-0.5 * z * z) / (standardDeviation * sqrt(2.0 * PI))
+    }
+
+    fun binomialPmf(successes: Int, trials: Int, probability: Double): Double {
+        require(trials >= 0 && successes in 0..trials && probability in 0.0..1.0)
+        var combination = 1.0
+        for (i in 1..successes) combination *= (trials - successes + i).toDouble() / i
+        return combination * probability.pow(successes) * (1.0 - probability).pow(trials - successes)
+    }
+}
+
+enum class SolidType {
+    Cube, Cuboid, Sphere, Hemisphere, Cylinder, Cone, Frustum, Pyramid,
+    TriangularPrism, Tetrahedron, Octahedron, Torus,
+}
 
 data class Solid(
     val type: SolidType,
@@ -354,7 +634,9 @@ data class Solid(
     val height: Double = width,
     val depth: Double = width,
     val radius: Double = width / 2.0,
+    val topRadius: Double = radius / 2.0,
     val position: Vec3 = Vec3(0.0, 0.0, 0.0),
+    val rotation: Vec3 = Vec3(0.0, 0.0, 0.0),
 )
 
 data class SolidMeasurements(val volume: Double, val surfaceArea: Double, val faces: Int, val edges: Int, val vertices: Int)
@@ -370,13 +652,178 @@ object Geometry3D {
             8,
         )
         SolidType.Sphere -> SolidMeasurements(4.0 / 3.0 * PI * solid.radius.pow(3), 4 * PI * solid.radius.pow(2), 1, 0, 0)
+        SolidType.Hemisphere -> SolidMeasurements(2.0 / 3.0 * PI * solid.radius.pow(3), 3 * PI * solid.radius.pow(2), 2, 1, 0)
         SolidType.Cylinder -> SolidMeasurements(PI * solid.radius.pow(2) * solid.height, 2 * PI * solid.radius * (solid.radius + solid.height), 3, 2, 0)
         SolidType.Cone -> {
             val slant = sqrt(solid.radius.pow(2) + solid.height.pow(2))
             SolidMeasurements(PI * solid.radius.pow(2) * solid.height / 3.0, PI * solid.radius * (solid.radius + slant), 2, 1, 1)
         }
-        SolidType.Pyramid -> SolidMeasurements(solid.width * solid.depth * solid.height / 3.0, solid.width * solid.depth + 2 * solid.width * solid.height / 2 + 2 * solid.depth * solid.height / 2, 5, 8, 5)
+        SolidType.Frustum -> {
+            val slant = sqrt((solid.radius - solid.topRadius).pow(2) + solid.height.pow(2))
+            val volume = PI * solid.height * (solid.radius.pow(2) + solid.radius * solid.topRadius + solid.topRadius.pow(2)) / 3.0
+            val area = PI * (solid.radius + solid.topRadius) * slant + PI * (solid.radius.pow(2) + solid.topRadius.pow(2))
+            SolidMeasurements(volume, area, 3, 2, 0)
+        }
+        SolidType.Pyramid -> {
+            val slantWidth = sqrt(solid.height.pow(2) + (solid.depth / 2).pow(2))
+            val slantDepth = sqrt(solid.height.pow(2) + (solid.width / 2).pow(2))
+            SolidMeasurements(
+                solid.width * solid.depth * solid.height / 3.0,
+                solid.width * solid.depth + solid.width * slantWidth + solid.depth * slantDepth,
+                5, 8, 5,
+            )
+        }
+        SolidType.TriangularPrism -> {
+            val side = sqrt((solid.width / 2).pow(2) + solid.height.pow(2))
+            SolidMeasurements(
+                solid.width * solid.height * solid.depth / 2.0,
+                solid.width * solid.height + solid.depth * (solid.width + 2 * side),
+                5, 9, 6,
+            )
+        }
+        SolidType.Tetrahedron -> SolidMeasurements(solid.width.pow(3) / (6 * sqrt(2.0)), sqrt(3.0) * solid.width.pow(2), 4, 6, 4)
+        SolidType.Octahedron -> SolidMeasurements(sqrt(2.0) * solid.width.pow(3) / 3.0, 2 * sqrt(3.0) * solid.width.pow(2), 8, 12, 6)
         SolidType.Torus -> SolidMeasurements(2 * PI.pow(2) * solid.width * solid.radius.pow(2), 4 * PI.pow(2) * solid.width * solid.radius, 1, 0, 0)
+    }
+}
+
+data class SolidMesh(
+    val vertices: List<Vec3>,
+    val edges: List<Pair<Int, Int>>,
+    val faces: List<List<Int>>,
+)
+
+/** Renderer-neutral solid geometry used by Canvas today and GPU/AR renderers later. */
+object SolidMeshFactory {
+    fun create(solid: Solid, segments: Int = 24): SolidMesh = when (solid.type) {
+        SolidType.Cube, SolidType.Cuboid -> box(solid.width, solid.height, solid.depth)
+        SolidType.Pyramid -> pyramid(solid)
+        SolidType.TriangularPrism -> triangularPrism(solid)
+        SolidType.Tetrahedron -> tetrahedron(solid.width)
+        SolidType.Octahedron -> octahedron(solid.width)
+        SolidType.Cylinder -> ringSolid(solid, segments, solid.radius, solid.radius)
+        SolidType.Cone -> ringSolid(solid, segments, solid.radius, 0.0)
+        SolidType.Frustum -> ringSolid(solid, segments, solid.radius, solid.topRadius)
+        SolidType.Sphere -> latitudeSolid(solid.radius, segments, false)
+        SolidType.Hemisphere -> latitudeSolid(solid.radius, segments, true)
+        SolidType.Torus -> torus(solid.width, solid.radius, segments)
+    }
+
+    private fun box(w: Double, h: Double, d: Double): SolidMesh {
+        val x = w / 2; val y = h / 2; val z = d / 2
+        val vertices = listOf(
+            Vec3(-x, -y, -z), Vec3(x, -y, -z), Vec3(x, y, -z), Vec3(-x, y, -z),
+            Vec3(-x, -y, z), Vec3(x, -y, z), Vec3(x, y, z), Vec3(-x, y, z),
+        )
+        val faces = listOf(listOf(0, 1, 2, 3), listOf(4, 7, 6, 5), listOf(0, 4, 5, 1), listOf(3, 2, 6, 7), listOf(0, 3, 7, 4), listOf(1, 5, 6, 2))
+        return mesh(vertices, faces)
+    }
+
+    private fun pyramid(s: Solid): SolidMesh {
+        val w = s.width / 2; val h = s.height / 2; val d = s.depth / 2
+        return mesh(
+            listOf(Vec3(-w, -h, -d), Vec3(w, -h, -d), Vec3(w, -h, d), Vec3(-w, -h, d), Vec3(0.0, h, 0.0)),
+            listOf(listOf(0, 3, 2, 1), listOf(0, 1, 4), listOf(1, 2, 4), listOf(2, 3, 4), listOf(3, 0, 4)),
+        )
+    }
+
+    private fun triangularPrism(s: Solid): SolidMesh {
+        val w = s.width / 2; val h = s.height / 2; val d = s.depth / 2
+        return mesh(
+            listOf(Vec3(-w, -h, -d), Vec3(w, -h, -d), Vec3(0.0, h, -d), Vec3(-w, -h, d), Vec3(w, -h, d), Vec3(0.0, h, d)),
+            listOf(listOf(0, 2, 1), listOf(3, 4, 5), listOf(0, 1, 4, 3), listOf(1, 2, 5, 4), listOf(2, 0, 3, 5)),
+        )
+    }
+
+    private fun tetrahedron(edge: Double): SolidMesh {
+        val a = edge / (2 * sqrt(2.0))
+        return mesh(listOf(Vec3(a, a, a), Vec3(a, -a, -a), Vec3(-a, a, -a), Vec3(-a, -a, a)), listOf(listOf(0, 1, 2), listOf(0, 3, 1), listOf(0, 2, 3), listOf(1, 3, 2)))
+    }
+
+    private fun octahedron(edge: Double): SolidMesh {
+        val r = edge / sqrt(2.0)
+        val v = listOf(Vec3(r, 0.0, 0.0), Vec3(-r, 0.0, 0.0), Vec3(0.0, r, 0.0), Vec3(0.0, -r, 0.0), Vec3(0.0, 0.0, r), Vec3(0.0, 0.0, -r))
+        return mesh(v, listOf(listOf(2, 0, 4), listOf(2, 4, 1), listOf(2, 1, 5), listOf(2, 5, 0), listOf(3, 4, 0), listOf(3, 1, 4), listOf(3, 5, 1), listOf(3, 0, 5)))
+    }
+
+    private fun ringSolid(s: Solid, count: Int, bottomRadius: Double, topRadius: Double): SolidMesh {
+        val vertices = mutableListOf<Vec3>()
+        repeat(count) { i -> val t = i * 2 * PI / count; vertices += Vec3(cos(t) * bottomRadius, -s.height / 2, sin(t) * bottomRadius) }
+        val topStart = vertices.size
+        if (topRadius <= 1e-9) vertices += Vec3(0.0, s.height / 2, 0.0)
+        else repeat(count) { i -> val t = i * 2 * PI / count; vertices += Vec3(cos(t) * topRadius, s.height / 2, sin(t) * topRadius) }
+        val faces = mutableListOf<List<Int>>()
+        faces += (0 until count).reversed().toList()
+        if (topRadius <= 1e-9) repeat(count) { i -> faces += listOf(i, (i + 1) % count, topStart) }
+        else {
+            faces += (0 until count).map { topStart + it }
+            repeat(count) { i -> faces += listOf(i, (i + 1) % count, topStart + (i + 1) % count, topStart + i) }
+        }
+        return mesh(vertices, faces)
+    }
+
+    private fun latitudeSolid(radius: Double, segments: Int, hemisphere: Boolean): SolidMesh {
+        val rings = if (hemisphere) segments / 4 else segments / 2
+        val vertices = mutableListOf<Vec3>()
+        for (j in 0..rings) {
+            val latitude = if (hemisphere) j * PI / 2 / rings else -PI / 2 + j * PI / rings
+            repeat(segments) { i ->
+                val longitude = i * 2 * PI / segments
+                vertices += Vec3(radius * cos(latitude) * cos(longitude), radius * sin(latitude), radius * cos(latitude) * sin(longitude))
+            }
+        }
+        val faces = mutableListOf<List<Int>>()
+        for (j in 0 until rings) repeat(segments) { i ->
+            val next = (i + 1) % segments
+            faces += listOf(j * segments + i, j * segments + next, (j + 1) * segments + next, (j + 1) * segments + i)
+        }
+        if (hemisphere) faces += (0 until segments).reversed().toList()
+        return mesh(vertices, faces)
+    }
+
+    private fun torus(majorRadius: Double, minorRadius: Double, segments: Int): SolidMesh {
+        val rings = (segments / 2).coerceAtLeast(8)
+        val vertices = mutableListOf<Vec3>()
+        repeat(rings) { j -> repeat(segments) { i ->
+            val u = i * 2 * PI / segments; val v = j * 2 * PI / rings
+            vertices += Vec3((majorRadius + minorRadius * cos(v)) * cos(u), minorRadius * sin(v), (majorRadius + minorRadius * cos(v)) * sin(u))
+        } }
+        val faces = mutableListOf<List<Int>>()
+        repeat(rings) { j -> repeat(segments) { i ->
+            val nextI = (i + 1) % segments; val nextJ = (j + 1) % rings
+            faces += listOf(j * segments + i, j * segments + nextI, nextJ * segments + nextI, nextJ * segments + i)
+        } }
+        return mesh(vertices, faces)
+    }
+
+    private fun mesh(vertices: List<Vec3>, faces: List<List<Int>>): SolidMesh {
+        val edges = linkedSetOf<Pair<Int, Int>>()
+        faces.forEach { face -> face.indices.forEach { i ->
+            val a = face[i]; val b = face[(i + 1) % face.size]
+            edges += if (a < b) a to b else b to a
+        } }
+        return SolidMesh(vertices, edges.toList(), faces)
+    }
+}
+
+object CrossSection3D {
+    /** Intersects a mesh with a local-space plane and returns the ordered section points. */
+    fun intersect(mesh: SolidMesh, normal: Vec3, offset: Double): List<Vec3> {
+        val n = normal.normalized()
+        val points = mutableListOf<Vec3>()
+        mesh.edges.forEach { (aIndex, bIndex) ->
+            val a = mesh.vertices[aIndex]; val b = mesh.vertices[bIndex]
+            val da = n.dot(a) - offset; val db = n.dot(b) - offset
+            when {
+                kotlin.math.abs(da) < 1e-8 -> points += a
+                kotlin.math.abs(db) < 1e-8 -> points += b
+                da * db < 0.0 -> points += a + (b - a) * (da / (da - db))
+            }
+        }
+        val unique = points.distinctBy { Triple((it.x * 100000).toInt(), (it.y * 100000).toInt(), (it.z * 100000).toInt()) }
+        if (unique.size < 3) return unique
+        val center = unique.reduce(Vec3::plus) * (1.0 / unique.size)
+        return unique.sortedBy { kotlin.math.atan2(it.z - center.z, it.x - center.x) }
     }
 }
 
