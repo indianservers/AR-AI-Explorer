@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://indianservers.com/aiexplorer/workspace.schema.json",
+  "title": "AI Explorer Workspace",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "module", "points", "functions", "surfaceExpression", "modifiedAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "module": { "enum": ["Geometry2D", "Geometry3D", "Graph2D", "Graph3D"] },
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["x", "y"],
+        "properties": {
+          "x": { "type": "number" },
+          "y": { "type": "number" }
+        }
+      }
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "expression"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "expression": { "type": "string" }
+        }
+      }
+    },
+    "surfaceExpression": { "type": "string" },
+    "modifiedAt": { "type": "integer" }
+  }
+}
+
