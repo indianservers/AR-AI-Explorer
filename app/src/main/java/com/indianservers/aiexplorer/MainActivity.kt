@@ -1060,6 +1060,128 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
 }
 
 @Composable
+private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
+    val solver = remember { MathProblemSolver() }
+    var question by remember { mutableStateOf("Solve 2x + 3 = 11") }
+    var solution by remember { mutableStateOf<ProblemSolution?>(null) }
+    val examples = listOf(
+        "Solve 2x + 3 = 11",
+        "x^2 - 5x + 6 = 0",
+        "Solve system: 2x + y = 5; x - y = 1",
+        "Differentiate x^3 - 4x + 2",
+        "Mean of 4, 7, 7, 10",
+        "15% of 240",
+    )
+
+    @Composable
+    fun QuestionPanel(modifier: Modifier = Modifier) {
+        GlassPanel(modifier) {
+            Text("Intelligent Maths Kernel", color = Cyan, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+            Text(
+                "Ask in words or notation. The solver classifies the problem, shows every transformation, and checks its own answer.",
+                color = Muted,
+                fontSize = 13.sp,
+            )
+            OutlinedTextField(
+                value = question,
+                onValueChange = { question = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 104.dp)
+                    .semantics { contentDescription = "Maths question input" },
+                label = { Text("Maths question") },
+                placeholder = { Text("Example: solve x^2 - 5x + 6 = 0") },
+                minLines = 3,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                GlowButton("Solve step by step", enabled = question.isNotBlank()) { solution = solver.solve(question) }
+                GlowButton("Workspaces") { vm.open(vm.state.module) }
+            }
+            Text("Try an example", color = Ink, fontWeight = FontWeight.SemiBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+                examples.forEachIndexed { index, example ->
+                    GlowButton(
+                        when (index) {
+                            0 -> "Linear"
+                            1 -> "Quadratic"
+                            2 -> "System"
+                            3 -> "Calculus"
+                            4 -> "Statistics"
+                            else -> "Percent"
+                        },
+                    ) {
+                        question = example
+                        solution = solver.solve(example)
+                    }
+                }
+            }
+            Insight("Runs", "On-device maths kernel", Green)
+            Insight("Answers", "Derived + verified", Violet)
+        }
+    }
+
+    @Composable
+    fun ResultPanel(result: ProblemSolution?, modifier: Modifier = Modifier) {
+        GlassPanel(modifier.semantics { contentDescription = "Step by step maths solution" }) {
+            if (result == null) {
+                Text("Your solution will appear here", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text("Choose an example or enter a question, then tap Solve step by step.", color = Muted)
+                Insight("Current coverage", "Algebra · calculus · data", Cyan)
+                Insight("Safety", "No invented unsupported answers", Amber)
+            } else {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Text(result.kind.label, color = Cyan, fontWeight = FontWeight.Bold)
+                    Text(if (result.supported) "${(result.confidence * 100).toInt()}% confidence" else "Needs clarification", color = if (result.supported) Green else Amber, fontSize = 11.sp)
+                }
+                Text(result.answer, color = if (result.supported) Ink else Amber, fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+                result.steps.forEachIndexed { index, item ->
+                    val accent = when (item.role) {
+                        SolutionStepRole.Interpret -> Cyan
+                        SolutionStepRole.Transform -> Violet
+                        SolutionStepRole.Calculate -> Green
+                        SolutionStepRole.Verify -> Amber
+                    }
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Color(0x33101824))
+                            .border(1.dp, accent.copy(.55f), RoundedCornerShape(14.dp))
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text("${index + 1}. ${item.title}", color = accent, fontWeight = FontWeight.Bold)
+                        Text(item.expression, color = Ink, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                        Text(item.explanation, color = Muted, fontSize = 12.sp)
+                    }
+                }
+                Text("Verification", color = Amber, fontWeight = FontWeight.Bold)
+                Text(result.verification, color = Ink, fontSize = 13.sp)
+                result.warnings.forEach { Text("• $it", color = Amber, fontSize = 12.sp) }
+            }
+        }
+    }
+
+    if (wide) {
+        Row(
+            Modifier.fillMaxSize().padding(top = 78.dp, bottom = 76.dp, start = 12.dp, end = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            QuestionPanel(Modifier.weight(.42f).fillMaxHeight())
+            ResultPanel(solution, Modifier.weight(.58f).fillMaxHeight())
+        }
+    } else {
+        Column(
+            Modifier.fillMaxSize().padding(top = 70.dp, bottom = 70.dp).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            QuestionPanel(Modifier.fillMaxWidth())
+            ResultPanel(solution, Modifier.fillMaxWidth())
+        }
+    }
+}
+
+@Composable
 private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpenMaths: () -> Unit) {
     Column(
         modifier
@@ -1155,7 +1277,7 @@ private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier
         GlowButton("Menu", onClick = vm::toggleMathMenu)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("AI Explorer", color = Ink, fontSize = if (compact) 20.sp else 27.sp, fontWeight = FontWeight.ExtraBold)
-            Text("Maths · ${vm.state.module.label}", color = Muted, fontSize = if (compact) 10.sp else 12.sp)
+            Text("Maths · ${if (vm.showProblemSolver) "Problem Solver" else vm.state.module.label}", color = Muted, fontSize = if (compact) 10.sp else 12.sp)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 8.dp)) {
             GlowButton(if (compact) "↶" else "Undo", enabled = true, onClick = vm::undo)
