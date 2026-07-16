@@ -53,12 +53,27 @@ data class PointDependency(
     val parameters: List<Double> = emptyList(),
 )
 
+enum class GraphSliderPlaybackMode { Loop, Bounce }
+
+data class GraphRowMetadataState(
+    val collapsed: Boolean = false,
+    val note: String = "",
+    val folder: String = "",
+)
+
+data class GraphSliderMetadataState(
+    val speed: Double = 1.0,
+    val mode: GraphSliderPlaybackMode = GraphSliderPlaybackMode.Loop,
+    val direction: Int = 1,
+)
+
 enum class MathModule(val label: String) {
     Geometry2D("2D"),
     Geometry3D("3D"),
     Graph2D("Graph"),
     Graph3D("3D Graph"),
     Trigonometry("Trig"),
+    Manipulatives("Tiles"),
     SpatialAR("AR"),
 }
 
@@ -84,6 +99,8 @@ data class WorkspaceState(
         Vector3D("u", Vec3(-2.0, -1.0, -1.0), Vec3(1.4, 1.2, 1.0), "u"),
         Vector3D("v", Vec3(0.2, -1.3, 1.1), Vec3(2.4, .7, -1.0), "v"),
     ),
+    val graphRowMetadata: Map<String, GraphRowMetadataState> = emptyMap(),
+    val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
     val surfaceExpression: String = "x^2 + y^2",
     val spatialPlacement: SpatialScenePlacement = SpatialScenePlacement(),
     val modifiedAt: Long = System.currentTimeMillis(),
@@ -303,14 +320,58 @@ data class UpdateFunctionCommand(val index: Int, val from: FunctionDefinition, v
     override fun undo(state: WorkspaceState) = state.copy(functions = state.functions.replace(index, from), modifiedAt = System.currentTimeMillis())
 }
 
-data class DeleteFunctionCommand(val index: Int, val function: FunctionDefinition) : WorkspaceCommand {
+data class ReorderFunctionsCommand(val from: List<FunctionDefinition>, val to: List<FunctionDefinition>) : WorkspaceCommand {
+    override val label = "Reorder graph layers"
+    override fun apply(state: WorkspaceState) = state.copy(functions = to, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(functions = from, modifiedAt = System.currentTimeMillis())
+}
+
+data class DeleteFunctionCommand(
+    val index: Int,
+    val function: FunctionDefinition,
+    val rowMetadata: GraphRowMetadataState? = null,
+) : WorkspaceCommand {
     override val label = "Delete function"
     override fun apply(state: WorkspaceState) = state.copy(
         functions = state.functions.filterIndexed { i, _ -> i != index },
+        graphRowMetadata = state.graphRowMetadata - function.id,
         modifiedAt = System.currentTimeMillis(),
     )
     override fun undo(state: WorkspaceState) = state.copy(
         functions = state.functions.toMutableList().apply { add(index.coerceIn(0, size), function) },
+        graphRowMetadata = rowMetadata?.let { state.graphRowMetadata + (function.id to it) } ?: state.graphRowMetadata,
+        modifiedAt = System.currentTimeMillis(),
+    )
+}
+
+data class UpdateGraphRowMetadataCommand(
+    val rowId: String,
+    val from: GraphRowMetadataState?,
+    val to: GraphRowMetadataState,
+) : WorkspaceCommand {
+    override val label = "Update graph row"
+    override fun apply(state: WorkspaceState) = state.copy(
+        graphRowMetadata = state.graphRowMetadata + (rowId to to),
+        modifiedAt = System.currentTimeMillis(),
+    )
+    override fun undo(state: WorkspaceState) = state.copy(
+        graphRowMetadata = if (from == null) state.graphRowMetadata - rowId else state.graphRowMetadata + (rowId to from),
+        modifiedAt = System.currentTimeMillis(),
+    )
+}
+
+data class UpdateGraphSliderMetadataCommand(
+    val parameter: String,
+    val from: GraphSliderMetadataState?,
+    val to: GraphSliderMetadataState,
+) : WorkspaceCommand {
+    override val label = "Update graph slider"
+    override fun apply(state: WorkspaceState) = state.copy(
+        graphSliderMetadata = state.graphSliderMetadata + (parameter to to),
+        modifiedAt = System.currentTimeMillis(),
+    )
+    override fun undo(state: WorkspaceState) = state.copy(
+        graphSliderMetadata = if (from == null) state.graphSliderMetadata - parameter else state.graphSliderMetadata + (parameter to from),
         modifiedAt = System.currentTimeMillis(),
     )
 }
@@ -411,12 +472,45 @@ object WorkspaceJson {
         appendLine("  \"shapes\": [${state.shapes.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"type\":\"${it.type}\",\"name\":\"${it.name.jsonEscaped()}\",\"points\":[${it.pointIndices.joinToString()}],\"visible\":${it.visible},\"locked\":${it.locked},\"style\":\"${it.styleKey.jsonEscaped()}\"}" }}],")
         appendLine("  \"pointDependencies\": [${state.pointDependencies.joinToString { "{\"output\":${it.outputIndex},\"inputs\":[${it.inputIndices.joinToString()}],\"type\":\"${it.type}\",\"name\":\"${it.name.jsonEscaped()}\",\"parameters\":[${it.parameters.joinToString()}]}" }}],")
         appendLine("  \"functions\": [${state.functions.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"expression\":\"${it.expression.jsonEscaped()}\",\"color\":\"${it.colorKey.jsonEscaped()}\",\"visible\":${it.visible}}" }}],")
+        appendLine("  \"graphRowMetadata\": [${state.graphRowMetadata.entries.joinToString { "{\"rowId\":\"${it.key.jsonEscaped()}\",\"collapsed\":${it.value.collapsed},\"folder\":\"${it.value.folder.jsonEscaped()}\",\"note\":\"${it.value.note.jsonEscaped()}\"}" }}],")
+        appendLine("  \"graphSliderMetadata\": [${state.graphSliderMetadata.entries.joinToString { "{\"parameter\":\"${it.key.jsonEscaped()}\",\"speed\":${it.value.speed},\"mode\":\"${it.value.mode}\",\"direction\":${it.value.direction}}" }}],")
         appendLine("  \"solids\": [${state.solids.joinToString { "{\"type\":\"${it.type}\",\"width\":${it.width},\"height\":${it.height},\"depth\":${it.depth},\"radius\":${it.radius},\"topRadius\":${it.topRadius},\"position\":{\"x\":${it.position.x},\"y\":${it.position.y},\"z\":${it.position.z}},\"rotation\":{\"x\":${it.rotation.x},\"y\":${it.rotation.y},\"z\":${it.rotation.z}}}" }}],")
         appendLine("  \"vectors3D\": [${state.vectors3D.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"start\":{\"x\":${it.start.x},\"y\":${it.start.y},\"z\":${it.start.z}},\"end\":{\"x\":${it.end.x},\"y\":${it.end.y},\"z\":${it.end.z}}}" }}],")
         appendLine("  \"surfaceExpression\": \"${state.surfaceExpression.jsonEscaped()}\",")
         appendLine("  \"spatialPlacement\": {\"anchorId\":\"${state.spatialPlacement.anchorId.jsonEscaped()}\",\"positionMeters\":{\"x\":${state.spatialPlacement.pose.positionMeters.x},\"y\":${state.spatialPlacement.pose.positionMeters.y},\"z\":${state.spatialPlacement.pose.positionMeters.z}},\"rotationDegrees\":{\"x\":${state.spatialPlacement.pose.rotationDegrees.x},\"y\":${state.spatialPlacement.pose.rotationDegrees.y},\"z\":${state.spatialPlacement.pose.rotationDegrees.z}},\"uniformScale\":${state.spatialPlacement.pose.uniformScale},\"scaleMode\":\"${state.spatialPlacement.scaleMode}\",\"metersPerMathUnit\":${state.spatialPlacement.metersPerMathUnit},\"estimated\":${state.spatialPlacement.estimated},\"depthOcclusionEnabled\":${state.spatialPlacement.depthOcclusionEnabled}},")
+        appendLine("  \"universalMathDocument\": ${UniversalMathDocumentCodec.encode(UniversalWorkspaceBridge.fromWorkspace(state)).prependIndent("  ")},")
         appendLine("  \"modifiedAt\": ${state.modifiedAt}")
         appendLine("}")
+    }
+
+    fun recoverMathDocument(source: String, recover: Boolean = true): UniversalDocumentRecovery {
+        val key = source.indexOf("\"universalMathDocument\"")
+        if (key < 0) return UniversalDocumentRecovery(null, false, listOf("This legacy workspace has no universal maths document."), false)
+        val start = source.indexOf('{', key)
+        if (start < 0) return UniversalDocumentRecovery(null, false, listOf("The universal maths document is truncated."), false)
+        var depth = 0; var inString = false; var escaped = false
+        for (index in start until source.length) {
+            val char = source[index]
+            if (inString) {
+                if (escaped) escaped = false
+                else if (char == '\\') escaped = true
+                else if (char == '"') inString = false
+            } else when (char) {
+                '"' -> inString = true
+                '{' -> depth++
+                '}' -> {
+                    depth--
+                    if (depth == 0) return UniversalMathDocumentCodec.decode(source.substring(start, index + 1), recover)
+                }
+            }
+        }
+        return UniversalDocumentRecovery(null, false, listOf("The universal maths document has unbalanced braces."), false)
+    }
+
+    fun applyRecoveredMathDocument(source: String, state: WorkspaceState = WorkspaceState()): Result<WorkspaceState> = runCatching {
+        val recovery = recoverMathDocument(source, recover = true)
+        val document = recovery.document ?: error(recovery.diagnostics.joinToString("; "))
+        UniversalWorkspaceBridge.applyToWorkspace(document, state)
     }
 }
 

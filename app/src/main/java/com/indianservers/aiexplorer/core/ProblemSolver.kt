@@ -1,18 +1,25 @@
 package com.indianservers.aiexplorer.core
 
-import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.round
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 enum class ProblemKind(val label: String) {
     Arithmetic("Arithmetic"),
+    ExactArithmetic("Exact arithmetic"),
+    PolynomialAlgebra("Symbolic algebra"),
+    Matrix("Linear algebra"),
+    UnitConversion("Unit conversion"),
     Percentage("Percentage"),
+    SequenceSeries("Sequences and series"),
     LinearEquation("Linear equation"),
     QuadraticEquation("Quadratic equation"),
+    Inequality("Inequality"),
     LinearSystem("Two-variable system"),
-    Derivative("Polynomial derivative"),
-    Integral("Polynomial integral"),
+    Derivative("Symbolic derivative"),
+    Integral("Symbolic / definite integral"),
     Statistics("Descriptive statistics"),
     Unsupported("Needs more information"),
 }
@@ -42,21 +49,67 @@ data class ProblemSolution(
  * reproducible derivation and an independent substitution or numerical check.
  */
 class MathProblemSolver(private val expressions: ExpressionEngine = ExpressionEngine()) {
+    private val calculus = CalculusProblemSolver(expressions)
+    private val exact = ExactComputationSolver()
     fun solve(rawQuestion: String): ProblemSolution {
         val question = normalize(rawQuestion)
         if (question.isBlank()) return unsupported(rawQuestion, "Enter a mathematical question.")
 
         return runCatching {
             solvePercentage(question)
+                ?: solveSequenceSeries(question)
                 ?: solveStatistics(question)
                 ?: solveCalculus(question)
+                ?: exact.solve(question)
                 ?: solveSystem(question)
+                ?: solveInequality(question)
                 ?: solveEquation(question)
                 ?: solveArithmetic(question)
                 ?: unsupported(rawQuestion, "I could not identify a supported operation yet.")
         }.getOrElse {
             unsupported(rawQuestion, "The question is ambiguous or contains unsupported notation.")
         }
+    }
+
+    private fun solveSequenceSeries(q: String): ProblemSolution? {
+        val lower = q.lowercase()
+        if (!lower.contains("sequence") && !lower.contains("series") && !lower.contains("progression")) return null
+        val arithmetic = lower.contains("arithmetic") || Regex("\\bdifference\\b|\\bd\\s*=").containsMatchIn(lower)
+        val geometric = lower.contains("geometric") || Regex("\\bratio\\b|\\br\\s*=").containsMatchIn(lower)
+        if (!arithmetic && !geometric) return unsupported(q, "Say whether the sequence is arithmetic or geometric, and provide a, d/r, and n.")
+        val first = namedNumber(q, "a", "first", "first term") ?: namedNumber(q, "a1") ?: return unsupported(q, "Provide the first term, for example a=3.")
+        val n = (namedNumber(q, "n", "terms") ?: Regex("(\\d+)\\s*(?:terms|term)").find(lower)?.groupValues?.get(1)?.toDoubleOrNull())
+            ?.roundToInt()?.coerceAtLeast(1) ?: return unsupported(q, "Provide the term count n, for example n=10.")
+        if (arithmetic) {
+            val d = namedNumber(q, "d", "difference", "common difference") ?: return unsupported(q, "Provide the common difference d, for example d=2.")
+            val nth = first + (n - 1) * d
+            val sum = n * (first + nth) / 2.0
+            val asksSum = lower.contains("sum") || lower.contains("series")
+            return ProblemSolution(
+                q, ProblemKind.SequenceSeries, if (asksSum) "S$n = ${format(sum)}" else "a$n = ${format(nth)}",
+                listOf(
+                    step("Identify progression", "arithmetic: a = ${format(first)}, d = ${format(d)}, n = $n", "Consecutive terms change by a constant difference.", SolutionStepRole.Interpret),
+                    step("Find nth term", "a_n = a + (n - 1)d", "Substitute n=$n into the arithmetic term formula.", SolutionStepRole.Transform),
+                    step("Calculate term", "a_$n = ${format(first)} + ${n - 1}·${format(d)} = ${format(nth)}", "This gives the last term used in the sum.", SolutionStepRole.Calculate),
+                    step("Calculate sum", "S_n = n(a + a_n)/2 = ${format(sum)}", "Average the first and last terms, then multiply by the number of terms.", SolutionStepRole.Calculate),
+                ),
+                "Check: consecutive terms differ by ${format(d)} and the average term is ${format((first + nth) / 2.0)}.", .98,
+            )
+        }
+        val r = namedNumber(q, "r", "ratio", "common ratio") ?: return unsupported(q, "Provide the common ratio r, for example r=2.")
+        val nth = first * r.pow((n - 1).toDouble())
+        val sum = if (abs(r - 1.0) < tolerance) first * n else first * (1 - r.pow(n.toDouble())) / (1 - r)
+        val asksSum = lower.contains("sum") || lower.contains("series")
+        return ProblemSolution(
+            q, ProblemKind.SequenceSeries, if (asksSum) "S$n = ${format(sum)}" else "a$n = ${format(nth)}",
+            listOf(
+                step("Identify progression", "geometric: a = ${format(first)}, r = ${format(r)}, n = $n", "Consecutive terms multiply by a constant ratio.", SolutionStepRole.Interpret),
+                step("Find nth term", "a_n = a·r^(n-1)", "Substitute n=$n into the geometric term formula.", SolutionStepRole.Transform),
+                step("Calculate term", "a_$n = ${format(first)}·${format(r)}^${n - 1} = ${format(nth)}", "This gives the requested term.", SolutionStepRole.Calculate),
+                step("Calculate sum", "S_n = a(1-r^n)/(1-r) = ${format(sum)}", "Use the finite geometric-sum formula.", SolutionStepRole.Calculate),
+            ),
+            "Check: each term is ${format(r)} times the previous term.", .98,
+        )
     }
 
     private fun solvePercentage(q: String): ProblemSolution? {
@@ -114,14 +167,17 @@ class MathProblemSolver(private val expressions: ExpressionEngine = ExpressionEn
         )
     }
 
-    private fun solveCalculus(q: String): ProblemSolution? {
+    private fun solveCalculus(q: String): ProblemSolution? = calculus.solve(q)
+
+    @Suppress("unused")
+    private fun solvePolynomialCalculus(q: String): ProblemSolution? {
         val lower = q.lowercase()
         val derivative = lower.contains("differentiate") || lower.contains("derivative") || lower.startsWith("d/dx")
         val integral = lower.contains("integrate") || lower.contains("integral") || lower.startsWith("∫")
         if (!derivative && !integral) return null
         val source = q
-            .replace(Regex("(?i)differentiate|derivative\\s+of|find\\s+the\\s+derivative\\s+of|with\\s+respect\\s+to\\s+x|d/dx"), "")
-            .replace(Regex("(?i)integrate|integral\\s+of|find\\s+the\\s+integral\\s+of|with\\s+respect\\s+to\\s+x"), "")
+            .replace(Regex("(?i)find\\s+the\\s+derivative\\s+of|derivative\\s+of|differentiate|with\\s+respect\\s+to\\s+x|d/dx"), "")
+            .replace(Regex("(?i)find\\s+the\\s+integral\\s+of|integral\\s+of|integrate|with\\s+respect\\s+to\\s+x"), "")
             .replace("∫", "").replace("dx", "").trim(' ', ':', '?')
         if (source.isBlank() || Regex("[a-wyzA-WYZ]").containsMatchIn(source)) {
             return unsupported(q, "This release differentiates and integrates polynomial expressions in x.")
@@ -197,6 +253,79 @@ class MathProblemSolver(private val expressions: ExpressionEngine = ExpressionEn
         )
     }
 
+    private fun solveInequality(q: String): ProblemSolution? {
+        val source = q.replace(Regex("(?i)^\\s*(solve|find\\s+x|solve\\s+for\\s+x)\\s*:?"), "").trim(' ', '?')
+        val match = Regex("(.+?)(<=|>=|<|>)(.+)").find(source) ?: return null
+        val left = match.groupValues[1].trim()
+        val operator = match.groupValues[2]
+        val right = match.groupValues[3].trim()
+        if (!source.contains('x', true)) return unsupported(q, "Use an inequality in x, for example x^2 - 5x + 6 <= 0.")
+        val polynomial = equationPolynomial(left, right)
+            ?: return unsupported(q, "This release solves polynomial inequalities in x up to degree 2.")
+        val c = polynomial.getOrElse(0) { 0.0 }
+        val b = polynomial.getOrElse(1) { 0.0 }
+        val a = polynomial.getOrElse(2) { 0.0 }
+        val standard = "${polynomialText(polynomial)} $operator 0"
+        if (abs(a) < tolerance) {
+            if (abs(b) < tolerance) {
+                val trueForAll = compareValue(c, operator)
+                return ProblemSolution(
+                    q, ProblemKind.Inequality, if (trueForAll) "All real numbers" else "No solution",
+                    listOf(step("Simplify", standard, "The variable cancels, leaving a constant inequality.", SolutionStepRole.Transform)),
+                    if (trueForAll) "The constant statement is true." else "The constant statement is false.", .99,
+                )
+            }
+            val boundary = -c / b
+            val effective = if (b < 0) flipInequality(operator) else operator
+            val answer = linearInequalityText(boundary, effective)
+            return ProblemSolution(
+                q, ProblemKind.Inequality, answer,
+                listOf(
+                    step("Move to one side", standard, "Subtract the right side and combine like terms.", SolutionStepRole.Transform),
+                    step("Find boundary", "${format(b)}x + ${format(c)} = 0 -> x = ${format(boundary)}", "The sign can only change where the expression is zero.", SolutionStepRole.Calculate),
+                    step("Respect sign of coefficient", if (b < 0) "divide by a negative, flip $operator to $effective" else "divide by a positive, keep $operator", "Inequality direction changes only when multiplying or dividing by a negative.", SolutionStepRole.Transform),
+                ),
+                "Test point check confirms the selected side of ${format(boundary)}.", .98,
+            )
+        }
+        val discriminant = b * b - 4 * a * c
+        if (discriminant < -tolerance) {
+            val alwaysPositive = a > 0
+            val trueForAll = when (operator) {
+                ">", ">=" -> alwaysPositive
+                "<", "<=" -> !alwaysPositive
+                else -> false
+            }
+            return ProblemSolution(
+                q, ProblemKind.Inequality, if (trueForAll) "All real numbers" else "No real solution",
+                listOf(
+                    step("Standard form", standard, "Move all terms to one side.", SolutionStepRole.Transform),
+                    step("Discriminant", "Δ = ${format(discriminant)}", "No real roots means the parabola never crosses the x-axis.", SolutionStepRole.Calculate),
+                    step("Use leading coefficient", "a = ${format(a)}", "The sign is constant and follows the opening direction.", SolutionStepRole.Interpret),
+                ),
+                "The expression has the same sign for every real x.", .98,
+            )
+        }
+        val rootDelta = sqrt(discriminant.coerceAtLeast(0.0))
+        val r1 = ((-b - rootDelta) / (2 * a))
+        val r2 = ((-b + rootDelta) / (2 * a))
+        val low = minOf(r1, r2)
+        val high = maxOf(r1, r2)
+        val inclusive = operator.contains('=')
+        val wantsPositive = operator.startsWith('>')
+        val outside = (a > 0 && wantsPositive) || (a < 0 && !wantsPositive)
+        val answer = quadraticInequalityText(low, high, outside, inclusive)
+        return ProblemSolution(
+            q, ProblemKind.Inequality, answer,
+            listOf(
+                step("Standard form", standard, "Move all terms to one side and combine like terms.", SolutionStepRole.Transform),
+                step("Find zeros", "x = ${format(low)}, ${format(high)}", "Zeros split the number line into sign intervals.", SolutionStepRole.Calculate),
+                step("Sign chart", if (outside) "outside roots satisfies $operator 0" else "between roots satisfies $operator 0", "A quadratic's sign alternates across simple roots.", SolutionStepRole.Transform),
+            ),
+            "Test intervals around ${format(low)} and ${format(high)} match the sign chart.", .98,
+        )
+    }
+
     private fun solveEquation(q: String): ProblemSolution? {
         if (!q.contains('=')) return null
         val equation = q.replace(Regex("(?i)^\\s*(solve|find\\s+x|solve\\s+for\\s+x)\\s*:?"), "")
@@ -264,7 +393,7 @@ class MathProblemSolver(private val expressions: ExpressionEngine = ExpressionEn
     private fun solveArithmetic(q: String): ProblemSolution? {
         if (q.contains('=')) return null
         val source = q.replace(Regex("(?i)^(calculate|evaluate|simplify|what\\s+is)\\s*:?"), "").trim(' ', '?')
-        if (source.isBlank() || Regex("[a-zA-Z]").containsMatchIn(source)) return null
+        if (source.isBlank()) return null
         val value = evaluate(source)
         if (!value.isFinite()) return unsupported(q, "The expression does not have a finite real value.")
         return ProblemSolution(
@@ -356,6 +485,40 @@ class MathProblemSolver(private val expressions: ExpressionEngine = ExpressionEn
     }
 
     private fun linearText(value: Linear2) = "${format(value.a)}x + ${format(value.b)}y = ${format(value.c)}"
+    private fun compareValue(value: Double, operator: String) = when (operator) {
+        "<" -> value < 0.0
+        "<=" -> value <= 0.0
+        ">" -> value > 0.0
+        ">=" -> value >= 0.0
+        else -> false
+    }
+    private fun flipInequality(operator: String) = when (operator) {
+        "<" -> ">"
+        "<=" -> ">="
+        ">" -> "<"
+        ">=" -> "<="
+        else -> operator
+    }
+    private fun linearInequalityText(boundary: Double, operator: String) = when (operator) {
+        "<" -> "x < ${format(boundary)}"
+        "<=" -> "x <= ${format(boundary)}"
+        ">" -> "x > ${format(boundary)}"
+        ">=" -> "x >= ${format(boundary)}"
+        else -> "x ? ${format(boundary)}"
+    }
+    private fun quadraticInequalityText(low: Double, high: Double, outside: Boolean, inclusive: Boolean): String {
+        val l = format(low)
+        val h = format(high)
+        return if (outside) {
+            if (inclusive) "x <= $l or x >= $h" else "x < $l or x > $h"
+        } else {
+            if (inclusive) "$l <= x <= $h" else "$l < x < $h"
+        }
+    }
+    private fun namedNumber(source: String, vararg names: String): Double? {
+        val escaped = names.joinToString("|") { Regex.escape(it) }
+        return Regex("(?i)(?:\\b(?:$escaped)\\b)\\s*(?:=|:|is)?\\s*(-?\\d+(?:\\.\\d+)?)").find(source)?.groupValues?.get(1)?.toDoubleOrNull()
+    }
     private fun format(value: Double): String {
         val clean = if (abs(value) < 1e-10) 0.0 else value
         val whole = round(clean)

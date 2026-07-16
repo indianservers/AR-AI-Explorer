@@ -22,6 +22,10 @@ data class SpatialScenePlacement(
     val trackingQuality: TrackingQuality = TrackingQuality.Stopped,
     val estimated: Boolean = true,
     val depthOcclusionEnabled: Boolean = false,
+    val measurementUncertaintyMeters: Double = 0.03,
+    val anchorTrackingState: AnchorTrackingState = AnchorTrackingState.Tracking,
+    val environmentIntensity: Float = 1f,
+    val relocalizationMessage: String = "",
     val placedAt: Long? = null,
 ) {
     val isPlaced: Boolean get() = anchorId.isNotBlank()
@@ -60,6 +64,21 @@ object SpatialPlacementEngine {
         estimated = true,
         placedAt = now,
     )
+
+    fun place(current: SpatialScenePlacement, hit: SpatialHit, now: Long, bounds: SafePlacementBounds = SafePlacementBounds()): Pair<SpatialScenePlacement, PlacementValidation> {
+        val validation = SpatialPlacementSafety.validate(hit, current.metersPerMathUnit * current.pose.uniformScale * 10, bounds)
+        val placement = current.copy(
+            anchorId = if (validation.accepted) hit.trackableId ?: "local-anchor-$now" else current.anchorId,
+            pose = current.pose.copy(positionMeters = validation.adjustedPosition),
+            trackingQuality = if (validation.accepted) TrackingQuality.Tracking else TrackingQuality.Limited,
+            estimated = true,
+            measurementUncertaintyMeters = hit.uncertaintyMeters,
+            anchorTrackingState = if (validation.accepted) AnchorTrackingState.Tracking else AnchorTrackingState.Relocalizing,
+            relocalizationMessage = validation.messages.joinToString(" "),
+            placedAt = if (validation.accepted) now else current.placedAt,
+        )
+        return placement to validation
+    }
 
     fun move(current: SpatialScenePlacement, deltaMeters: Vec3): SpatialScenePlacement = current.copy(
         pose = current.pose.copy(positionMeters = current.pose.positionMeters + deltaMeters),
