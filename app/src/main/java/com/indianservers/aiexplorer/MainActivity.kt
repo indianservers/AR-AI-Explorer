@@ -1,33 +1,46 @@
 package com.indianservers.aiexplorer
 
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
 import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,6 +55,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -65,13 +80,16 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.content.ContextCompat
 import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.core.Geometry2D
 import com.indianservers.aiexplorer.core.Geometry3D
@@ -81,6 +99,9 @@ import com.indianservers.aiexplorer.core.GraphAnalysis
 import com.indianservers.aiexplorer.core.GraphDefinitionKind
 import com.indianservers.aiexplorer.core.StatisticsEngine
 import com.indianservers.aiexplorer.core.ProbabilityEngine
+import com.indianservers.aiexplorer.core.MathProblemSolver
+import com.indianservers.aiexplorer.core.ProblemSolution
+import com.indianservers.aiexplorer.core.SolutionStepRole
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidType
 import com.indianservers.aiexplorer.core.SolidMeshFactory
@@ -123,6 +144,7 @@ import com.indianservers.aiexplorer.workspace.Shape2DType
 import com.indianservers.aiexplorer.workspace.PointDependencyType
 import com.indianservers.aiexplorer.workspace.TransformSolidCommand
 import com.indianservers.aiexplorer.workspace.TransformVector3DCommand
+import com.indianservers.aiexplorer.workspace.TransformSpatialPlacementCommand
 import com.indianservers.aiexplorer.workspace.TransformShape2DCommand
 import com.indianservers.aiexplorer.workspace.UpdateShapeCommand
 import com.indianservers.aiexplorer.workspace.UpdateFunctionCommand
@@ -130,6 +152,13 @@ import com.indianservers.aiexplorer.workspace.WorkspaceJson
 import com.indianservers.aiexplorer.workspace.WorkspaceState
 import com.indianservers.aiexplorer.workspace.recomputed
 import com.indianservers.aiexplorer.workspace.resolvePointDependency
+import com.indianservers.aiexplorer.spatial.ARScaleMode
+import com.indianservers.aiexplorer.spatial.ARAvailability
+import com.indianservers.aiexplorer.spatial.ARCapabilities
+import com.indianservers.aiexplorer.spatial.ARCoreSessionController
+import com.indianservers.aiexplorer.spatial.SpatialSafety
+import com.indianservers.aiexplorer.spatial.TrackingQuality
+import com.indianservers.aiexplorer.spatial.SpatialPlacementEngine
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -161,6 +190,7 @@ enum class GeometryTool {
 }
 enum class GraphTool { Plot, Trace, Tangent, Normal, Derivative, Integral, AreaBetween, Intersections, Extrema, Table, Data, Probability }
 enum class SurfaceTool { Surface, Wireframe, Contours, Slice, Gradient, BoundingBox, Trace }
+enum class SurfaceViewPreset { Isometric, X, Y, Z, XY, XZ, YZ }
 enum class Transform3DMode { Move, Rotate, Scale }
 enum class Selection3DMode { Object, Vertex, Edge, Face }
 enum class CameraProjection { Perspective, Orthographic }
@@ -172,6 +202,30 @@ data class AppSettings(
     val highContrast: Boolean = false,
     val reducedMotion: Boolean = false,
     val decimalPrecision: Int = 2,
+)
+
+private data class SubjectOption(val title: String, val description: String, val symbol: String, val enabled: Boolean)
+private data class MathMenuOption(val title: String, val description: String, val available: Boolean = false)
+
+private val SubjectOptions = listOf(
+    SubjectOption("Maths", "Interactive mathematics laboratory", "∑", true),
+    SubjectOption("Physics", "Mechanics, waves and fields", "F", false),
+    SubjectOption("Chemistry", "Molecules, reactions and matter", "⚗", false),
+    SubjectOption("Biology", "Cells, systems and life", "DNA", false),
+    SubjectOption("Astro Physics", "Stars, space and cosmology", "✦", false),
+    SubjectOption("IQ Labs", "Logic, patterns and reasoning", "IQ", false),
+)
+
+private val MathMenuOptions = listOf(
+    MathMenuOption("Explore Workspaces", "2D, 3D, graphing, trigonometry and spatial AR", true),
+    MathMenuOption("Problem Solver", "Explainable, step-by-step answers with verification", true),
+    MathMenuOption("Formulas", "Searchable formula reference"),
+    MathMenuOption("MCQs", "Practice questions and explanations"),
+    MathMenuOption("Visualize Formulas", "Turn formulas into interactive scenes"),
+    MathMenuOption("Theorems", "Statements, conditions and applications"),
+    MathMenuOption("Visual Proofs", "Manipulable visual demonstrations"),
+    MathMenuOption("Maths Dictionary", "Terms, notation and examples"),
+    MathMenuOption("Probability & Statistics", "Data, distributions and probability labs"),
 )
 
 private data class PointGesture(
@@ -264,6 +318,7 @@ class ExplorerViewModel : ViewModel() {
     private var pointGesture: PointGesture? = null
     private var solidGesture: SolidGesture? = null
     private var vectorGesture: VectorGesture? = null
+    private var spatialGestureFrom: com.indianservers.aiexplorer.spatial.SpatialScenePlacement? = null
     var state by mutableStateOf(WorkspaceState())
         private set
     var selectedPoint by mutableIntStateOf(1)
@@ -281,6 +336,14 @@ class ExplorerViewModel : ViewModel() {
     var showChrome by mutableStateOf(true)
         private set
     var showLearningPanel by mutableStateOf(false)
+        private set
+    var showSubjectHub by mutableStateOf(true)
+        private set
+    var showMathMenu by mutableStateOf(false)
+        private set
+    var showProblemSolver by mutableStateOf(false)
+        private set
+    var showActionDock by mutableStateOf(false)
         private set
     var geometryTool by mutableStateOf(GeometryTool.Select)
         private set
@@ -323,7 +386,46 @@ class ExplorerViewModel : ViewModel() {
 
     fun open(module: MathModule) {
         state = state.copy(module = module)
+        showProblemSolver = false
+        showMathMenu = false
         hidePanels()
+    }
+
+    fun enterMaths() {
+        showSubjectHub = false
+        showProblemSolver = false
+        showMathMenu = false
+        status = "Mathematics Explorer"
+    }
+
+    fun openProblemSolver() {
+        showSubjectHub = false
+        showProblemSolver = true
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = "Explainable Problem Solver"
+    }
+
+    fun openSubjectHub() {
+        showSubjectHub = true
+        showProblemSolver = false
+        showMathMenu = false
+        hidePanels()
+        status = "Choose a subject"
+    }
+
+    fun toggleMathMenu() {
+        showMathMenu = !showMathMenu
+        if (showMathMenu) hideWorkspacePanelsOnly()
+    }
+
+    fun toggleActionDock() {
+        showActionDock = !showActionDock
+    }
+
+    fun hideActionDock() {
+        showActionDock = false
     }
 
     fun togglePanel(slot: PanelSlot) {
@@ -360,7 +462,6 @@ class ExplorerViewModel : ViewModel() {
         hideWorkspacePanelsOnly()
         geometryTool = if (activity.id == "triangle-angle-sum") GeometryTool.Triangle else geometryTool
         val now = System.currentTimeMillis()
-        learningQueue.enqueue(LearningOperation("attempt-$activeActivityId-$now", activeActivityId, LearningOperationType.Attempt, now))
         if (lessonProgress[activity.id] == null) {
             lessonProgress = lessonProgress + (activity.id to LearnerProgress(activity.id, ProgressStatus.InProgress, startedAt = now, updatedAt = now))
         }
@@ -371,6 +472,7 @@ class ExplorerViewModel : ViewModel() {
     fun validateActiveActivity(): LearningValidation {
         val result = validateActivity(activeActivity)
         val now = System.currentTimeMillis()
+        learningQueue.enqueue(LearningOperation("attempt-$activeActivityId-$now", activeActivityId, LearningOperationType.Attempt, now))
         lessonProgress = lessonProgress + (
             activeActivityId to LearningEvaluator.recordAttempt(activeActivity, lessonProgress[activeActivityId], result, now)
         )
@@ -759,6 +861,56 @@ class ExplorerViewModel : ViewModel() {
         state = state.copy(surfaceExpression = value)
     }
 
+    fun transformSpatialPlacement(label: String = "Transform spatial scene", transform: (com.indianservers.aiexplorer.spatial.SpatialScenePlacement) -> com.indianservers.aiexplorer.spatial.SpatialScenePlacement) {
+        val from = state.spatialPlacement
+        val to = transform(from)
+        if (from == to) return
+        state = history.execute(state, TransformSpatialPlacementCommand(from, to, label))
+        status = label
+    }
+
+    fun placeSpatialScene() = transformSpatialPlacement("Place scene in space") {
+        SpatialPlacementEngine.place(it, Vec3(0.0, 0.0, -1.2), System.currentTimeMillis())
+            .copy(trackingQuality = TrackingQuality.Stopped, estimated = true)
+    }
+
+    fun resetSpatialScene() = transformSpatialPlacement("Reset spatial anchor") {
+        com.indianservers.aiexplorer.spatial.SpatialScenePlacement()
+    }
+
+    fun setSpatialScaleMode(mode: ARScaleMode) = transformSpatialPlacement("Set ${mode.name} scale") {
+        SpatialPlacementEngine.setScaleMode(it, mode)
+    }
+
+    fun setDepthOcclusion(enabled: Boolean) = transformSpatialPlacement("${if (enabled) "Enable" else "Disable"} depth occlusion") {
+        it.copy(depthOcclusionEnabled = enabled)
+    }
+
+    fun beginSpatialGesture() {
+        spatialGestureFrom = state.spatialPlacement
+    }
+
+    fun previewSpatialGesture(panPixels: Offset, rotationDegrees: Float, scaleFactor: Float) {
+        val from = spatialGestureFrom ?: return
+        val moved = SpatialPlacementEngine.move(from, Vec3((panPixels.x / 520f).toDouble(), 0.0, (panPixels.y / 520f).toDouble()))
+        val rotated = SpatialPlacementEngine.rotate(moved, Vec3(0.0, rotationDegrees.toDouble(), 0.0))
+        val transformed = if (kotlin.math.abs(scaleFactor - 1f) > .001f) SpatialPlacementEngine.scale(rotated, scaleFactor.toDouble()) else rotated
+        state = state.copy(spatialPlacement = transformed)
+    }
+
+    fun endSpatialGesture() {
+        val from = spatialGestureFrom ?: return
+        val to = state.spatialPlacement
+        spatialGestureFrom = null
+        if (from != to) history.recordApplied(TransformSpatialPlacementCommand(from, to, "Manipulate spatial scene"))
+    }
+
+    fun cancelSpatialGesture() {
+        val from = spatialGestureFrom ?: return
+        state = state.copy(spatialPlacement = from)
+        spatialGestureFrom = null
+    }
+
     fun undo() {
         state = history.undo(state)
         status = "Undo"
@@ -848,38 +1000,139 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
         ),
     ) {
         Surface(Modifier.fillMaxSize(), color = Background) {
-            Box(
+            BoxWithConstraints(
                 Modifier
                     .fillMaxSize()
                     .background(radialBackdrop())
+                    .windowInsetsPadding(WindowInsets.safeDrawing)
                     .padding(8.dp),
             ) {
-                when (vm.state.module) {
-                    MathModule.Geometry2D -> Geometry2DScreen(vm)
-                    MathModule.Geometry3D -> Geometry3DScreen(vm)
-                    MathModule.Graph2D -> Graph2DScreen(vm)
-                    MathModule.Graph3D -> Graph3DScreen(vm)
-                    MathModule.Trigonometry -> TrigonometryScreen(vm)
-                }
-                if (vm.showChrome) TopShell(vm, Modifier.align(Alignment.TopCenter))
-                if (vm.showLearningPanel) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
-                BottomModeSelector(vm.state.module, vm::open, Modifier.align(Alignment.BottomCenter))
-                MiniDock(
-                    modifier = Modifier.align(Alignment.TopEnd),
-                    items = listOf("Focus", "Learn", "Tools", "Info", "Panel", "Export", "Close"),
-                    onClick = {
-                        when (it) {
-                            "Focus" -> vm.togglePanel(PanelSlot.Chrome)
-                            "Learn" -> vm.toggleLearningPanel()
-                            "Tools" -> vm.togglePanel(PanelSlot.Left)
-                            "Info" -> vm.togglePanel(PanelSlot.Right)
-                            "Panel" -> vm.togglePanel(PanelSlot.Bottom)
-                            "Export" -> vm.exportJson()
-                            "Close" -> vm.hidePanels()
+                val compact = maxWidth < 520.dp
+                val wide = maxWidth >= 760.dp
+                if (vm.showSubjectHub) {
+                    SubjectHubScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        wide = wide,
+                        onOpenMaths = vm::enterMaths,
+                    )
+                } else {
+                    if (vm.showProblemSolver) {
+                        ProblemSolverScreen(vm, wide = wide)
+                    } else {
+                        when (vm.state.module) {
+                            MathModule.Geometry2D -> Geometry2DScreen(vm)
+                            MathModule.Geometry3D -> Geometry3DScreen(vm)
+                            MathModule.Graph2D -> Graph2DScreen(vm)
+                            MathModule.Graph3D -> Graph3DScreen(vm)
+                            MathModule.Trigonometry -> TrigonometryScreen(vm)
+                            MathModule.SpatialAR -> SpatialARScreen(vm)
                         }
-                    },
-                )
+                    }
+                    if (vm.showChrome) TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
+                    if (vm.showLearningPanel && !vm.showProblemSolver) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
+                    BottomModeSelector(vm.state.module, vm::open, Modifier.align(Alignment.BottomCenter))
+                    if (vm.showActionDock && !vm.showProblemSolver) MiniDock(
+                        modifier = Modifier.align(Alignment.TopEnd).padding(top = if (compact) 74.dp else 82.dp),
+                        items = listOf("Focus", "Learn", "Tools", "Info", "Panel", "Export", "Close"),
+                        onClick = {
+                            when (it) {
+                                "Focus" -> vm.togglePanel(PanelSlot.Chrome)
+                                "Learn" -> vm.toggleLearningPanel()
+                                "Tools" -> vm.togglePanel(PanelSlot.Left)
+                                "Info" -> vm.togglePanel(PanelSlot.Right)
+                                "Panel" -> vm.togglePanel(PanelSlot.Bottom)
+                                "Export" -> vm.exportJson()
+                                "Close" -> vm.hideActionDock()
+                            }
+                        },
+                    )
+                    if (vm.showMathMenu) MathematicsMenuPanel(
+                        vm = vm,
+                        modifier = Modifier
+                            .align(if (wide) Alignment.CenterStart else Alignment.Center)
+                            .widthIn(max = if (wide) 460.dp else 390.dp)
+                            .fillMaxWidth(if (wide) .46f else .94f),
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpenMaths: () -> Unit) {
+    Column(
+        modifier
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = if (wide) 42.dp else 12.dp, vertical = if (wide) 28.dp else 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+    ) {
+        Text("AI Explorer", color = Ink, fontSize = if (wide) 42.sp else 30.sp, fontWeight = FontWeight.ExtraBold)
+        Text("Choose a learning laboratory", color = Muted, fontSize = if (wide) 20.sp else 15.sp)
+        Text("Maths is available now · more sciences are being prepared", color = Cyan, fontSize = 12.sp, textAlign = TextAlign.Center)
+        FlowRow(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            SubjectOptions.forEach { subject ->
+                Column(
+                    Modifier
+                        .width(if (wide) 250.dp else 158.dp)
+                        .heightIn(min = if (wide) 170.dp else 142.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(if (subject.enabled) Brush.linearGradient(listOf(Color(0x6630D9FF), Color(0x5538E6B0))) else Brush.linearGradient(listOf(SurfaceA, SurfaceB)))
+                        .border(1.5.dp, if (subject.enabled) Cyan else Muted.copy(.35f), RoundedCornerShape(24.dp))
+                        .clickable(enabled = subject.enabled) { onOpenMaths() }
+                        .focusable()
+                        .semantics { contentDescription = if (subject.enabled) "Open ${subject.title} laboratory" else "${subject.title}, coming soon" }
+                        .padding(18.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(subject.symbol, color = if (subject.enabled) Color.White else Muted, fontSize = if (wide) 34.sp else 27.sp, fontWeight = FontWeight.Bold)
+                    Column {
+                        Text(subject.title, color = if (subject.enabled) Ink else Muted, fontSize = if (wide) 22.sp else 17.sp, fontWeight = FontWeight.Bold)
+                        Text(subject.description, color = Muted, fontSize = 11.sp)
+                        Text(if (subject.enabled) "OPEN" else "COMING SOON", color = if (subject.enabled) Green else Amber.copy(.75f), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+        Text("Touch, mouse, keyboard and TV remote ready", color = Muted, fontSize = 11.sp)
+    }
+}
+
+@Composable
+private fun MathematicsMenuPanel(vm: ExplorerViewModel, modifier: Modifier = Modifier) {
+    GlassPanel(modifier) {
+        PanelHeader("Mathematics Menu", vm::toggleMathMenu, Cyan)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            GlowButton("Subjects", onClick = vm::openSubjectHub)
+            GlowButton("Current Workspace", onClick = vm::toggleMathMenu)
+        }
+        MathMenuOptions.forEach { option ->
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(if (option.available) Color(0x4430D9FF) else Color(0x22101824))
+                    .border(1.dp, if (option.available) Cyan else Muted.copy(.28f), RoundedCornerShape(16.dp))
+                    .clickable(enabled = option.available) {
+                        if (option.title == "Problem Solver") vm.openProblemSolver() else vm.toggleMathMenu()
+                    }
+                    .focusable()
+                    .semantics { contentDescription = "${option.title}, ${if (option.available) "available" else "planned for a future update"}" }
+                    .padding(13.dp),
+            ) {
+                Text(option.title, color = if (option.available) Ink else Muted, fontWeight = FontWeight.SemiBold)
+                Text(option.description, color = Muted, fontSize = 11.sp)
+                Text(if (option.available) "AVAILABLE" else "PLANNED", color = if (option.available) Green else Amber, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+        Text("Workspaces", color = Ink, fontWeight = FontWeight.SemiBold)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            MathModule.entries.forEach { module -> GlowButton(module.label, onClick = { vm.open(module) }) }
         }
     }
 }
@@ -891,7 +1144,7 @@ private fun radialBackdrop() = Brush.radialGradient(
 )
 
 @Composable
-private fun TopShell(vm: ExplorerViewModel, modifier: Modifier = Modifier) {
+private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier = Modifier) {
     Row(
         modifier
             .fillMaxWidth()
@@ -899,14 +1152,15 @@ private fun TopShell(vm: ExplorerViewModel, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        GlowButton("Menu", onClick = { vm.togglePanel(PanelSlot.Left) })
+        GlowButton("Menu", onClick = vm::toggleMathMenu)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("AI Explorer", color = Ink, fontSize = 27.sp, fontWeight = FontWeight.ExtraBold)
-            Text("Learn · Visualize · Explore · ${vm.state.module.label}", color = Muted, fontSize = 12.sp)
+            Text("AI Explorer", color = Ink, fontSize = if (compact) 20.sp else 27.sp, fontWeight = FontWeight.ExtraBold)
+            Text("Maths · ${vm.state.module.label}", color = Muted, fontSize = if (compact) 10.sp else 12.sp)
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            GlowButton("Undo", enabled = true, onClick = vm::undo)
-            GlowButton("Redo", enabled = true, onClick = vm::redo)
+        Row(horizontalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 8.dp)) {
+            GlowButton(if (compact) "↶" else "Undo", enabled = true, onClick = vm::undo)
+            GlowButton(if (compact) "↷" else "Redo", enabled = true, onClick = vm::redo)
+            GlowButton(if (compact) "⋮" else "More", enabled = true, onClick = vm::toggleActionDock)
         }
     }
 }
@@ -1068,32 +1322,41 @@ private fun SavedWorkspaceRow(
 private fun BottomModeSelector(active: MathModule, onSelect: (MathModule) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-        horizontalArrangement = Arrangement.Center,
+            .fillMaxWidth(.98f)
+            .widthIn(max = 980.dp)
+            .padding(bottom = 6.dp)
+            .clip(RoundedCornerShape(26.dp))
+            .background(SurfaceA.copy(alpha = .96f))
+            .border(1.dp, Color(0x5548BFFF), RoundedCornerShape(26.dp))
+            .padding(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        Row(
-            Modifier
-                .clip(RoundedCornerShape(30.dp))
-                .background(SurfaceA)
-                .border(1.dp, Color(0x5548BFFF), RoundedCornerShape(30.dp))
-                .padding(6.dp),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            MathModule.entries.forEach { module ->
-                val selected = module == active
-                Text(
-                    text = module.label,
-                    color = if (selected) Color.White else Muted,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(if (selected) Brush.horizontalGradient(listOf(Violet, Cyan)) else Brush.linearGradient(listOf(Color.Transparent, Color.Transparent)))
-                        .clickable { onSelect(module) }
-                        .padding(horizontal = 12.dp, vertical = 10.dp)
-                        .semantics { contentDescription = "Open ${module.label} workspace" },
-                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                )
+        MathModule.entries.forEach { module ->
+            val selected = module == active
+            val compactLabel = when (module) {
+                MathModule.Geometry2D -> "2D"
+                MathModule.Geometry3D -> "3D"
+                MathModule.Graph2D -> "Graph"
+                MathModule.Graph3D -> "G3D"
+                MathModule.Trigonometry -> "Trig"
+                MathModule.SpatialAR -> "AR"
             }
+            Text(
+                text = compactLabel,
+                color = if (selected) Color.White else Muted,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(if (selected) Brush.horizontalGradient(listOf(Violet, Cyan)) else Brush.linearGradient(listOf(Color.Transparent, Color.Transparent)))
+                    .clickable { onSelect(module) }
+                    .focusable()
+                    .padding(horizontal = 3.dp, vertical = 10.dp)
+                    .semantics { contentDescription = "Open ${module.label} workspace" },
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            )
         }
     }
 }
@@ -1627,10 +1890,147 @@ private fun Geometry3DScreen(vm: ExplorerViewModel) {
 }
 
 @Composable
+private fun SpatialARScreen(vm: ExplorerViewModel) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+    val controller = remember { ARCoreSessionController() }
+    var capabilities by remember { mutableStateOf(ARCapabilities(ARAvailability.Checking)) }
+    var cameraGranted by remember {
+        mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+    }
+    val cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        cameraGranted = granted
+        capabilities = if (granted && activity != null) controller.prepare(activity, true) else {
+            capabilities.copy(message = "Camera permission was not granted; the spatial simulator remains fully available.")
+        }
+    }
+    LaunchedEffect(activity) {
+        if (activity != null) capabilities = controller.checkAvailability(activity)
+    }
+    DisposableEffect(controller) {
+        onDispose { controller.pause(); controller.close() }
+    }
+
+    val placement = vm.state.spatialPlacement
+    val guidance = SpatialSafety.guidance(placement.trackingQuality)
+    Box(Modifier.fillMaxSize()) {
+        SpatialPreviewCanvas(
+            modifier = Modifier.fillMaxSize(),
+            solids = vm.state.solids,
+            placement = placement,
+            onGestureStart = vm::beginSpatialGesture,
+            onGesture = vm::previewSpatialGesture,
+            onGestureEnd = vm::endSpatialGesture,
+        )
+        GlassPanel(Modifier.align(Alignment.TopStart).width(285.dp).padding(top = 105.dp)) {
+            PanelHeader("AR Spatial Lab", { vm.open(MathModule.Geometry3D) }, Cyan)
+            Insight("Mode", if (capabilities.availability == ARAvailability.Ready && cameraGranted) "ARCore ready · simulator preview" else "Accessible spatial simulator", Cyan)
+            Insight("ARCore", capabilities.message, if (capabilities.availability == ARAvailability.Unsupported) Amber else Green)
+            Insight("Tracking", guidance.title, if (guidance.safeToPlace) Green else Amber)
+            Text(guidance.instruction, color = Muted, fontSize = 12.sp)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                GlowButton("Enable ARCore", onClick = {
+                    if (activity == null) capabilities = capabilities.copy(message = "ARCore requires an Android activity.")
+                    else if (!cameraGranted) cameraPermission.launch(Manifest.permission.CAMERA)
+                    else capabilities = controller.prepare(activity, true)
+                })
+                GlowButton(if (placement.isPlaced) "Re-place" else "Place", onClick = vm::placeSpatialScene)
+                GlowButton("Reset", onClick = vm::resetSpatialScene)
+            }
+            Insight("Scale", placement.visibleScale, Violet)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                GlowButton(if (placement.scaleMode == ARScaleMode.OneToOne) "• 1:1" else "1:1", onClick = { vm.setSpatialScaleMode(ARScaleMode.OneToOne) })
+                GlowButton(if (placement.scaleMode == ARScaleMode.FitToSpace) "• Fit" else "Fit", onClick = { vm.setSpatialScaleMode(ARScaleMode.FitToSpace) })
+                TogglePill("Depth occlusion", placement.depthOcclusionEnabled) {
+                    vm.setDepthOcclusion(it && capabilities.depthSupported)
+                }
+            }
+            Insight("Depth", when {
+                capabilities.depthSupported -> "Supported; occlusion can be enabled."
+                capabilities.availability == ARAvailability.Ready -> "Unavailable; objects remain outlined."
+                else -> "Checked when an ARCore session is prepared."
+            }, if (capabilities.depthSupported) Green else Muted)
+            Text("Placement and measurements are educational estimates, not certified physical measurements.", color = Amber, fontSize = 11.sp)
+        }
+        InteractionHint(
+            "Drag to move the anchored scene · pinch to scale · twist to rotate · Undo restores the last gesture",
+            Modifier.align(Alignment.BottomEnd),
+        )
+    }
+}
+
+@Composable
+private fun SpatialPreviewCanvas(
+    modifier: Modifier,
+    solids: List<Solid>,
+    placement: com.indianservers.aiexplorer.spatial.SpatialScenePlacement,
+    onGestureStart: () -> Unit,
+    onGesture: (Offset, Float, Float) -> Unit,
+    onGestureEnd: () -> Unit,
+) {
+    val currentPlacement by rememberUpdatedState(placement)
+    Canvas(
+        modifier
+            .pointerInput(Unit) {
+                awaitEachGesture {
+                    awaitFirstDown(requireUnconsumed = false)
+                    onGestureStart()
+                    var totalPan = Offset.Zero
+                    var totalRotation = 0f
+                    var totalScale = 1f
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        totalPan += event.calculatePan()
+                        totalRotation += event.calculateRotation()
+                        totalScale *= event.calculateZoom()
+                        onGesture(totalPan, totalRotation, totalScale)
+                        event.changes.forEach { if (it.pressed) it.consume() }
+                        if (event.changes.none { it.pressed }) break
+                    }
+                    onGestureEnd()
+                }
+            }
+            .semantics { contentDescription = "AR spatial mathematics preview with direct move, rotate and scale gestures" },
+    ) {
+        drawRect(Brush.verticalGradient(listOf(Color(0xFF08131B), Color(0xFF18242A), Color(0xFF101317))))
+        val scene = currentPlacement
+        val center = Offset(
+            size.width * .56f + scene.pose.positionMeters.x.toFloat() * 220f,
+            size.height * .53f + scene.pose.positionMeters.z.toFloat() * 34f,
+        )
+        drawPerspectiveGrid(center.copy(y = center.y + 110f))
+        drawCircle(if (scene.isPlaced) Green else Amber, 20f, center, style = Stroke(3f))
+        drawLine(Color.White.copy(.7f), center - Offset(32f, 0f), center + Offset(32f, 0f), 2f)
+        drawLine(Color.White.copy(.7f), center - Offset(0f, 32f), center + Offset(0f, 32f), 2f)
+        solids.forEachIndexed { index, solid ->
+            drawSolidProjection(
+                solid = solid,
+                offset = solid.position,
+                rx = 24f + scene.pose.rotationDegrees.x.toFloat(),
+                ry = -34f + scene.pose.rotationDegrees.y.toFloat(),
+                rz = scene.pose.rotationDegrees.z.toFloat(),
+                center = center,
+                scale = 58f * scene.pose.uniformScale.toFloat(),
+                color = if (index % 2 == 0) Cyan else Violet,
+                wire = !scene.depthOcclusionEnabled,
+                selected = index == 0,
+                perspective = true,
+                subSelection = null,
+                sectionEnabled = false,
+                sectionY = 0.0,
+                clipSection = false,
+            )
+        }
+        drawGraphLabel(if (scene.isPlaced) "Anchored · ${scene.visibleScale}" else "Placement preview · tap Place", center + Offset(28f, -130f), if (scene.isPlaced) Green else Amber)
+    }
+}
+
+@Composable
 private fun Graph3DScreen(vm: ExplorerViewModel) {
     val graph3D = remember { Graph3D() }
     var density by remember { mutableFloatStateOf(26f) }
     var rotation by remember { mutableFloatStateOf(35f) }
+    var roll by remember { mutableFloatStateOf(0f) }
     var zoom by remember { mutableFloatStateOf(1f) }
     var cameraPan by remember { mutableStateOf(Offset.Zero) }
     var tilt by remember { mutableFloatStateOf(55f) }
@@ -1642,7 +2042,18 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var showSlice by remember { mutableStateOf(true) }
     var showGradient by remember { mutableStateOf(true) }
     var showBox by remember { mutableStateOf(true) }
-    var activeTool by remember { mutableStateOf(SurfaceTool.Trace) }
+    var activeTool by remember { mutableStateOf(SurfaceTool.Surface) }
+    var viewPreset by remember { mutableStateOf(SurfaceViewPreset.Isometric) }
+    fun applyView(preset: SurfaceViewPreset) {
+        viewPreset = preset
+        when (preset) {
+            SurfaceViewPreset.Isometric -> { tilt = 55f; rotation = 35f; roll = 0f }
+            SurfaceViewPreset.X, SurfaceViewPreset.YZ -> { tilt = 0f; rotation = 90f; roll = 0f }
+            SurfaceViewPreset.Y, SurfaceViewPreset.XZ -> { tilt = 90f; rotation = 0f; roll = 0f }
+            SurfaceViewPreset.Z, SurfaceViewPreset.XY -> { tilt = 0f; rotation = 0f; roll = 0f }
+        }
+        cameraPan = Offset.Zero
+    }
     val insight = remember(vm.state.surfaceExpression) { graph3D.insight(vm.state.surfaceExpression) }
     val mesh = remember(vm.state.surfaceExpression, density) {
         runCatching { graph3D.mesh(vm.state.surfaceExpression, density = density.toInt()) }.getOrNull()
@@ -1654,6 +2065,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             mesh = mesh,
             rotation = rotation,
             tilt = tilt,
+            roll = roll,
             zoom = zoom,
             cameraPan = cameraPan,
             sliceZ = sliceZ.toDouble(),
@@ -1665,13 +2077,16 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             showBox = showBox,
             activeTool = activeTool,
             onRotate = { delta -> rotation = (rotation + delta).coerceIn(-180f, 180f) },
-            onTilt = { delta -> tilt = (tilt + delta).coerceIn(25f, 78f) },
+            onTilt = { delta -> tilt = (tilt + delta).coerceIn(-89f, 89f) },
+            onRoll = { delta -> roll = (roll + delta).wrapDegrees() },
             onPan = { delta -> cameraPan += delta },
             onZoom = { factor -> zoom = (zoom * factor).coerceIn(.35f, 4f) },
             onResetCamera = {
                 zoom = 1f
                 rotation = 35f
                 tilt = 55f
+                roll = 0f
+                viewPreset = SurfaceViewPreset.Isometric
                 cameraPan = Offset.Zero
             },
             onTrace = { point ->
@@ -1683,8 +2098,13 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             modifier = Modifier.align(Alignment.TopCenter),
             onSelect = vm::setSurfaceExpression,
         )
+        SurfaceViewChips(
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 120.dp),
+            active = viewPreset,
+            onSelect = { applyView(it) },
+        )
         InteractionHint(
-            "Drag to orbit · Trace drags a point · two fingers pan/zoom",
+            "One finger orbits · two fingers pan · pinch zooms · twist rolls · tap X/Y/Z or a plane",
             Modifier.align(Alignment.BottomEnd),
         )
         FloatingPanelLaunchers(
@@ -1707,7 +2127,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             )
             AxisSlider("Mesh density", density, 8f..48f) { density = it }
             AxisSlider("Rotation", rotation, -180f..180f) { rotation = it }
-            AxisSlider("Tilt", tilt, 25f..78f) { tilt = it }
+            AxisSlider("Tilt", tilt, -89f..89f) { tilt = it }
+            AxisSlider("Roll", roll, -180f..180f) { roll = it }
         }
         if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(250.dp)) {
             PanelHeader("Surface Insights", vm::hidePanels, Violet)
@@ -1722,7 +2143,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
             PanelHeader("3D Graph Controls", vm::hidePanels, Ink)
             AxisSlider("Rotation", rotation, -180f..180f) { rotation = it }
-            AxisSlider("Tilt", tilt, 25f..78f) { tilt = it }
+            AxisSlider("Tilt", tilt, -89f..89f) { tilt = it }
+            AxisSlider("Roll", roll, -180f..180f) { roll = it }
             AxisSlider("Zoom", zoom, .55f..1.7f) { zoom = it }
             AxisSlider("Mesh", density, 8f..56f) { density = it }
             AxisSlider("Slice z", sliceZ, -4f..6f) { sliceZ = it }
@@ -1741,7 +2163,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 }
                 GlowButton("Zoom +", onClick = { zoom = (zoom + .1f).coerceAtMost(1.7f) })
                 GlowButton("Zoom -", onClick = { zoom = (zoom - .1f).coerceAtLeast(.55f) })
-                GlowButton("Fit", onClick = { zoom = 1f; rotation = 35f; tilt = 55f })
+                GlowButton("Fit", onClick = { zoom = 1f; applyView(SurfaceViewPreset.Isometric) })
             }
         }
     }
@@ -1844,6 +2266,38 @@ private fun SurfaceExampleChips(modifier: Modifier = Modifier, onSelect: (String
                     .border(1.dp, if (index % 2 == 0) Cyan else Violet, RoundedCornerShape(16.dp))
                     .clickable { onSelect(expression) }
                     .padding(horizontal = 11.dp, vertical = 7.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun SurfaceViewChips(
+    modifier: Modifier = Modifier,
+    active: SurfaceViewPreset,
+    onSelect: (SurfaceViewPreset) -> Unit,
+) {
+    FlowRow(
+        modifier = modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(SurfaceA.copy(alpha = .92f))
+            .border(1.dp, Cyan.copy(.45f), RoundedCornerShape(18.dp))
+            .padding(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        SurfaceViewPreset.entries.forEach { preset ->
+            Text(
+                text = if (preset == active) "• ${preset.name}" else preset.name,
+                color = if (preset == active) Color.White else Muted,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(if (preset == active) Color(0x6630D9FF) else Color.Transparent)
+                    .clickable { onSelect(preset) }
+                    .semantics { contentDescription = "View 3D graph from ${preset.name} axis or plane" }
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
             )
         }
     }
@@ -2781,6 +3235,7 @@ private fun SurfaceCanvas3D(
     mesh: com.indianservers.aiexplorer.core.SurfaceMesh?,
     rotation: Float,
     tilt: Float,
+    roll: Float,
     zoom: Float,
     cameraPan: Offset,
     sliceZ: Double,
@@ -2793,6 +3248,7 @@ private fun SurfaceCanvas3D(
     activeTool: SurfaceTool,
     onRotate: (Float) -> Unit,
     onTilt: (Float) -> Unit,
+    onRoll: (Float) -> Unit,
     onPan: (Offset) -> Unit,
     onZoom: (Float) -> Unit,
     onResetCamera: () -> Unit,
@@ -2822,6 +3278,7 @@ private fun SurfaceCanvas3D(
                         if (pressed.size >= 2) {
                             onPan(event.calculatePan())
                             onZoom(event.calculateZoom())
+                            onRoll(event.calculateRotation())
                             transformed = true
                             event.changes.forEach { it.consume() }
                         } else {
@@ -2853,12 +3310,13 @@ private fun SurfaceCanvas3D(
                     }
                 }
             }
-            .semantics { contentDescription = "3D graphing surface generated from equation mesh" },
+            .semantics { contentDescription = "Interactive 3D graph: drag to orbit, two fingers pan, pinch zoom, twist roll, and tap axis or plane views" },
     ) {
         val center = Offset(size.width * .5f, size.height * .5f) + cameraPan
         val scale = 54f * zoom
-        fun map(v: Vec3) = project(rotate(v, tilt, rotation, 0f), center, scale)
+        fun map(v: Vec3) = project(rotate(v, tilt, rotation, roll), center, scale)
         drawPerspectiveGrid(center)
+        drawCoordinatePlanes3D(::map)
         if (showBox) drawSurfaceBox(::map)
         mesh?.vertices?.chunked(mesh.columns)?.forEachIndexed { rowIndex, row ->
             row.zipWithNext().forEachIndexed { columnIndex, (a, b) ->
@@ -2885,6 +3343,34 @@ private fun SurfaceCanvas3D(
             }
         }
     }
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawCoordinatePlanes3D(map: (Vec3) -> Offset) {
+    fun plane(points: List<Vec3>, color: Color) {
+        val projected = points.map(map)
+        val path = Path().apply {
+            moveTo(projected.first().x, projected.first().y)
+            projected.drop(1).forEach { lineTo(it.x, it.y) }
+            close()
+        }
+        drawPath(path, color.copy(alpha = .045f))
+        drawPath(path, color.copy(alpha = .22f), style = Stroke(1.2f))
+    }
+    plane(listOf(Vec3(-3.0, -3.0, 0.0), Vec3(3.0, -3.0, 0.0), Vec3(3.0, 3.0, 0.0), Vec3(-3.0, 3.0, 0.0)), Cyan)
+    plane(listOf(Vec3(-3.0, 0.0, -1.0), Vec3(3.0, 0.0, -1.0), Vec3(3.0, 0.0, 6.0), Vec3(-3.0, 0.0, 6.0)), Green)
+    plane(listOf(Vec3(0.0, -3.0, -1.0), Vec3(0.0, 3.0, -1.0), Vec3(0.0, 3.0, 6.0), Vec3(0.0, -3.0, 6.0)), Violet)
+
+    val origin = map(Vec3(0.0, 0.0, 0.0))
+    val x = map(Vec3(3.7, 0.0, 0.0))
+    val y = map(Vec3(0.0, 3.7, 0.0))
+    val z = map(Vec3(0.0, 0.0, 4.8))
+    drawLine(Color(0xFFFF5B68), origin, x, 4f, cap = StrokeCap.Round)
+    drawLine(Green, origin, y, 4f, cap = StrokeCap.Round)
+    drawLine(Cyan, origin, z, 4f, cap = StrokeCap.Round)
+    drawCircle(Color.White, 5f, origin)
+    drawGraphLabel("X", x + Offset(8f, 0f), Color(0xFFFF5B68))
+    drawGraphLabel("Y", y + Offset(8f, 0f), Green)
+    drawGraphLabel("Z", z + Offset(8f, 0f), Cyan)
 }
 
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSurfaceBox(map: (Vec3) -> Offset) {
@@ -3506,6 +3992,7 @@ private fun MiniDock(modifier: Modifier = Modifier, items: List<String>, onClick
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
                     .clickable { onClick(it) }
+                    .focusable()
                     .padding(horizontal = 10.dp, vertical = 8.dp),
             )
         }

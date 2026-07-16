@@ -7,6 +7,7 @@ import com.indianservers.aiexplorer.core.SolidType
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.core.Vector3D
+import com.indianservers.aiexplorer.spatial.SpatialScenePlacement
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -58,6 +59,7 @@ enum class MathModule(val label: String) {
     Graph2D("Graph"),
     Graph3D("3D Graph"),
     Trigonometry("Trig"),
+    SpatialAR("AR"),
 }
 
 data class WorkspaceState(
@@ -83,6 +85,7 @@ data class WorkspaceState(
         Vector3D("v", Vec3(0.2, -1.3, 1.1), Vec3(2.4, .7, -1.0), "v"),
     ),
     val surfaceExpression: String = "x^2 + y^2",
+    val spatialPlacement: SpatialScenePlacement = SpatialScenePlacement(),
     val modifiedAt: Long = System.currentTimeMillis(),
 )
 
@@ -355,6 +358,15 @@ data class TransformVector3DCommand(val index: Int, val from: Vector3D, val to: 
     override fun undo(state: WorkspaceState) = state.copy(vectors3D = state.vectors3D.replace(index, from), modifiedAt = System.currentTimeMillis())
 }
 
+data class TransformSpatialPlacementCommand(
+    val from: SpatialScenePlacement,
+    val to: SpatialScenePlacement,
+    override val label: String = "Transform spatial scene",
+) : WorkspaceCommand {
+    override fun apply(state: WorkspaceState) = state.copy(spatialPlacement = to, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(spatialPlacement = from, modifiedAt = System.currentTimeMillis())
+}
+
 class CommandHistory(private val limit: Int = 80) {
     private val undoStack = ArrayDeque<WorkspaceCommand>()
     private val redoStack = ArrayDeque<WorkspaceCommand>()
@@ -402,6 +414,7 @@ object WorkspaceJson {
         appendLine("  \"solids\": [${state.solids.joinToString { "{\"type\":\"${it.type}\",\"width\":${it.width},\"height\":${it.height},\"depth\":${it.depth},\"radius\":${it.radius},\"topRadius\":${it.topRadius},\"position\":{\"x\":${it.position.x},\"y\":${it.position.y},\"z\":${it.position.z}},\"rotation\":{\"x\":${it.rotation.x},\"y\":${it.rotation.y},\"z\":${it.rotation.z}}}" }}],")
         appendLine("  \"vectors3D\": [${state.vectors3D.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"start\":{\"x\":${it.start.x},\"y\":${it.start.y},\"z\":${it.start.z}},\"end\":{\"x\":${it.end.x},\"y\":${it.end.y},\"z\":${it.end.z}}}" }}],")
         appendLine("  \"surfaceExpression\": \"${state.surfaceExpression.jsonEscaped()}\",")
+        appendLine("  \"spatialPlacement\": {\"anchorId\":\"${state.spatialPlacement.anchorId.jsonEscaped()}\",\"positionMeters\":{\"x\":${state.spatialPlacement.pose.positionMeters.x},\"y\":${state.spatialPlacement.pose.positionMeters.y},\"z\":${state.spatialPlacement.pose.positionMeters.z}},\"rotationDegrees\":{\"x\":${state.spatialPlacement.pose.rotationDegrees.x},\"y\":${state.spatialPlacement.pose.rotationDegrees.y},\"z\":${state.spatialPlacement.pose.rotationDegrees.z}},\"uniformScale\":${state.spatialPlacement.pose.uniformScale},\"scaleMode\":\"${state.spatialPlacement.scaleMode}\",\"metersPerMathUnit\":${state.spatialPlacement.metersPerMathUnit},\"estimated\":${state.spatialPlacement.estimated},\"depthOcclusionEnabled\":${state.spatialPlacement.depthOcclusionEnabled}},")
         appendLine("  \"modifiedAt\": ${state.modifiedAt}")
         appendLine("}")
     }
