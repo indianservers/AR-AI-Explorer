@@ -1,0 +1,4 @@
+package com.indianservers.aiexplorer.physics.formulas.navigation
+
+sealed class PhysicsFormulaRoute(val path:String){data object Home:PhysicsFormulaRoute("physics/formulas/home");data class Category(val categoryId:String):PhysicsFormulaRoute("physics/formulas/category/$categoryId");data class Subcategory(val subcategoryId:String):PhysicsFormulaRoute("physics/formulas/subcategory/$subcategoryId");data class Detail(val formulaId:String):PhysicsFormulaRoute("physics/formulas/detail/$formulaId");data object Search:PhysicsFormulaRoute("physics/formulas/search");data object Bookmarks:PhysicsFormulaRoute("physics/formulas/bookmarks");data object Revision:PhysicsFormulaRoute("physics/formulas/revision");data class Quiz(val categoryId:String):PhysicsFormulaRoute("physics/formulas/quiz/$categoryId");data class Calculator(val formulaId:String):PhysicsFormulaRoute("physics/formulas/calculator/$formulaId")}
+

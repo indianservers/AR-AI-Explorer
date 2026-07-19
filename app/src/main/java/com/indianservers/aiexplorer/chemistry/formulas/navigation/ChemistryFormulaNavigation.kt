@@ -1,0 +1,4 @@
+package com.indianservers.aiexplorer.chemistry.formulas.navigation
+
+sealed class ChemistryFormulaRoute(val path:String){data object Home:ChemistryFormulaRoute("chemistry/formulas/home");data class Category(val categoryId:String):ChemistryFormulaRoute("chemistry/formulas/category/$categoryId");data class Subcategory(val subcategoryId:String):ChemistryFormulaRoute("chemistry/formulas/subcategory/$subcategoryId");data class Detail(val formulaId:String):ChemistryFormulaRoute("chemistry/formulas/detail/$formulaId");data object Search:ChemistryFormulaRoute("chemistry/formulas/search");data object Bookmarks:ChemistryFormulaRoute("chemistry/formulas/bookmarks");data object Revision:ChemistryFormulaRoute("chemistry/formulas/revision");data class Quiz(val categoryId:String):ChemistryFormulaRoute("chemistry/formulas/quiz/$categoryId");data class Calculator(val formulaId:String):ChemistryFormulaRoute("chemistry/formulas/calculator/$formulaId")}
+

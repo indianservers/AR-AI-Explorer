@@ -434,3 +434,32 @@ ARCore official references used for Phase 6:
 - [Cloud Anchors](https://developers.google.com/ar/develop/cloud-anchors)
 - [Geospatial API](https://developers.google.com/ar/develop/geospatial)
 - [Geospatial Anchors on Android](https://developers.google.com/ar/develop/java/geospatial/anchors)
+
+## Scientific Calculator — three implementation phases
+
+### Phase 1 — Smart input and deterministic calculation core (implemented)
+
+- Cursor-aware structured editor, syntax colours, bracket diagnostics and layered mobile keyboard.
+- Natural-language normalization and foundations for voice/OCR structured input.
+- Exact, decimal, scientific, engineering and percentage result views.
+- Variables, user-defined functions, equation solving, verification and teachable steps.
+- DEG/RAD/GRAD modes, editable branching history and independent editor undo/redo.
+- Deterministic local validation remains the source of truth.
+
+### Phase 2 — Advanced scientific, algebra and calculus workspaces (implemented)
+
+- Complete trig/hyperbolic/logarithm operations, complex numbers and precision controls.
+- Symbolic derivatives, integrals, limits, series, polynomials and partial fractions.
+- Systems of equations, numerical methods, ODE basics, recurrences and modular arithmetic.
+- Rich structural templates and topic-aware step explanations.
+
+Delivered with deterministic symbolic differentiation/integration, CAS simplify/expand/factor, two-linear-factor partial fractions, limits, Taylor series, linear ODE routing, Newton and bisection reports, complex rectangular/polar/root operations, modular powers/inverses, arbitrary-base logarithms, mode-specific examples and adjustable result precision.
+
+### Phase 3 — Specialized professional modes and production UX (implemented)
+
+- Matrix, vector, statistics, probability, units, dimensional analysis and constants library.
+- Programmer and finance calculators, uncertainty propagation and significant figures.
+- OCR/voice adapters, favourites, one-handed layouts, haptics and customizable keyboards.
+- Cross-module handoff to Graph, Solver, Notebook, Spreadsheet and future AR lessons.
+
+Delivered with exact matrix routing; vector dot, cross, angle and projection tools; descriptive statistics and confidence intervals; Normal, Binomial and Poisson calculations; dimension-safe unit conversions; significant figures and uncertainty propagation; programmer radix/bitwise tools; finance calculations; searchable constants; OCR and voice normalization adapters; favourite/custom-key state; responsive one-handed and haptic-ready controls; and typed Graph, Solver, Notebook, Spreadsheet and Probability Lab handoff payloads.

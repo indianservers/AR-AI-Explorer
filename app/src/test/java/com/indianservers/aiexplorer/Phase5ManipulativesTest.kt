@@ -16,6 +16,14 @@ import org.junit.Test
 
 class Phase5ManipulativesTest {
     @Test
+    fun formulaTypographyRemovesProgrammingStyleOperators() {
+        val rendered = latexStyleFormula("sqrt(x^2) + b^2/2 <= pi * r^2; theta_1 -> theta_2")
+        assertEquals("√(x²) + b²⁄2 ≤ π × r²; θ₁ → θ₂", rendered)
+        assertFalse(rendered.contains('^'))
+        assertFalse(rendered.contains('/'))
+    }
+
+    @Test
     fun objectsCreateMoveSnapCloneGroupTransformLockAndSerialize() {
         val engine = ManipulativeEngine()
         var scene = ManipulativeScene(snapSize = .5)
@@ -86,6 +94,55 @@ class Phase5ManipulativesTest {
             val revealed = engine.reveal(playback)
             assertEquals(lab.steps.lastIndex, revealed.frame.step)
             assertFalse(revealed.playing)
+        }
+    }
+
+    @Test
+    fun visualProofCatalogHasTenCategoriesAndTenGeometryFormulaProofs() {
+        assertEquals(10, VisualProofCatalog.categories.size)
+        assertEquals(10, VisualProofCatalog.categories.distinct().size)
+        assertEquals(10, VisualProofCatalog.labsFor("Geometry").size)
+        VisualProofCatalog.categories.forEach { category ->
+            assertTrue("$category has a formula submenu", VisualProofCatalog.labsFor(category).isNotEmpty())
+            val subcategories = VisualProofCatalog.subcategoriesFor(category)
+            assertTrue("$category has a subcategory menu", subcategories.isNotEmpty())
+            subcategories.forEach { subcategory ->
+                assertTrue(subcategory.description.isNotBlank())
+                assertTrue(
+                    "$category / ${subcategory.name} has interactive formulas",
+                    VisualProofCatalog.labsFor(category, subcategory.name).isNotEmpty(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun everyVisualFormulaAppearsInExactlyOneCategoryAndSubcategory() {
+        val hierarchicalLabs = VisualProofCatalog.categories.flatMap { category ->
+            VisualProofCatalog.subcategoriesFor(category).flatMap { subcategory ->
+                VisualProofCatalog.labsFor(category, subcategory.name)
+            }
+        }
+        assertEquals(VisualProofCatalog.labs.map { it.id }.toSet(), hierarchicalLabs.map { it.id }.toSet())
+        assertEquals(VisualProofCatalog.labs.size, hierarchicalLabs.size)
+    }
+
+    @Test
+    fun everyVisualProofFormulaHasItsOwnInteractiveScene() {
+        assertEquals(VisualProofCatalog.labs.map { it.id }.toSet(), InteractiveVisualProofSceneIds)
+    }
+
+    @Test
+    fun everyVisualProofHasARealMathematicalCertificate() {
+        assertEquals(
+            VisualProofCatalog.labs.map { it.id }.toSet(),
+            VisualProofCatalog.certificates.map { it.labId }.toSet(),
+        )
+        VisualProofCatalog.certificates.forEach { certificate ->
+            assertTrue(certificate.method.isNotBlank())
+            assertTrue(certificate.argument.size >= 3)
+            assertTrue(certificate.argument.all { it.isNotBlank() })
+            assertTrue(certificate.assumptions.isNotEmpty())
         }
     }
 

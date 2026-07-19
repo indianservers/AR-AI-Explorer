@@ -90,6 +90,9 @@ class ScientificCalculator(private val expressionEngine: ExpressionEngine = Expr
             if (angleMode == AngleMode.Degrees && cleaned.contains(Regex("\\b(sin|cos|tan|sec|csc|cot)\\s*\\(", RegexOption.IGNORE_CASE))) {
                 add("Trig inputs interpreted as degrees.")
             }
+            if (angleMode == AngleMode.Gradians && cleaned.contains(Regex("\\b(sin|cos|tan|sec|csc|cot)\\s*\\(", RegexOption.IGNORE_CASE))) {
+                add("Trig inputs interpreted as gradians.")
+            }
         }
         return ScientificCalculatorResult(
             input = source,

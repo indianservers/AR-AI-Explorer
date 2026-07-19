@@ -382,6 +382,18 @@ data class AddSolidCommand(val solid: Solid) : WorkspaceCommand {
     override fun undo(state: WorkspaceState) = state.copy(solids = state.solids.dropLast(1), modifiedAt = System.currentTimeMillis())
 }
 
+data class DeleteSolidCommand(val index: Int, val solid: Solid) : WorkspaceCommand {
+    override val label = "Delete ${solid.type.name}"
+    override fun apply(state: WorkspaceState) = state.copy(
+        solids = state.solids.filterIndexed { solidIndex, _ -> solidIndex != index },
+        modifiedAt = System.currentTimeMillis(),
+    )
+    override fun undo(state: WorkspaceState) = state.copy(
+        solids = state.solids.toMutableList().apply { add(index.coerceIn(0, size), solid) },
+        modifiedAt = System.currentTimeMillis(),
+    )
+}
+
 data class MoveSolidCommand(val index: Int, val from: Vec3, val to: Vec3) : WorkspaceCommand {
     override val label = "Move solid"
     override fun apply(state: WorkspaceState) = state.copy(

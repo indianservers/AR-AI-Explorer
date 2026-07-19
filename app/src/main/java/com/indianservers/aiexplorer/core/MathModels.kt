@@ -631,7 +631,8 @@ object ProbabilityEngine {
 
 enum class SolidType {
     Cube, Cuboid, Sphere, Hemisphere, Cylinder, Cone, Frustum, Pyramid,
-    TriangularPrism, Tetrahedron, Octahedron, Torus,
+    TriangularPrism, PentagonalPrism, HexagonalPrism, Tetrahedron, Octahedron,
+    Torus, Ellipsoid, Paraboloid,
 }
 
 data class Solid(
@@ -648,6 +649,25 @@ data class Solid(
 data class SolidMeasurements(val volume: Double, val surfaceArea: Double, val faces: Int, val edges: Int, val vertices: Int)
 
 object Geometry3D {
+    fun formula(type: SolidType): String = when (type) {
+        SolidType.Cube -> "V = a cubed; A = 6a squared"
+        SolidType.Cuboid -> "V = lwh; A = 2(lw + lh + wh)"
+        SolidType.Sphere -> "V = 4 pi r cubed / 3; A = 4 pi r squared"
+        SolidType.Hemisphere -> "V = 2 pi r cubed / 3; A = 3 pi r squared"
+        SolidType.Cylinder -> "V = pi r squared h; A = 2 pi r(r + h)"
+        SolidType.Cone -> "V = pi r squared h / 3; A = pi r(r + s)"
+        SolidType.Frustum -> "V = pi h(R squared + Rr + r squared) / 3"
+        SolidType.Pyramid -> "V = base area times h / 3"
+        SolidType.TriangularPrism -> "V = triangle base area times length"
+        SolidType.PentagonalPrism -> "V = pentagon base area times h"
+        SolidType.HexagonalPrism -> "V = 3 sqrt(3) s squared h / 2"
+        SolidType.Tetrahedron -> "V = a cubed / (6 sqrt(2)); A = sqrt(3) a squared"
+        SolidType.Octahedron -> "V = sqrt(2) a cubed / 3; A = 2 sqrt(3) a squared"
+        SolidType.Torus -> "V = 2 pi squared R r squared; A = 4 pi squared Rr"
+        SolidType.Ellipsoid -> "V = 4 pi abc / 3"
+        SolidType.Paraboloid -> "V = pi r squared h / 2"
+    }
+
     fun measure(solid: Solid): SolidMeasurements = when (solid.type) {
         SolidType.Cube -> SolidMeasurements(solid.width.pow(3), 6 * solid.width.pow(2), 6, 12, 8)
         SolidType.Cuboid -> SolidMeasurements(
@@ -687,9 +707,26 @@ object Geometry3D {
                 5, 9, 6,
             )
         }
+        SolidType.PentagonalPrism, SolidType.HexagonalPrism -> {
+            val sides = if (solid.type == SolidType.PentagonalPrism) 5 else 6
+            val baseArea = sides * solid.radius.pow(2) * kotlin.math.sin(2 * PI / sides) / 2
+            val perimeter = 2 * sides * solid.radius * kotlin.math.sin(PI / sides)
+            SolidMeasurements(baseArea * solid.height, 2 * baseArea + perimeter * solid.height, sides + 2, 3 * sides, 2 * sides)
+        }
         SolidType.Tetrahedron -> SolidMeasurements(solid.width.pow(3) / (6 * sqrt(2.0)), sqrt(3.0) * solid.width.pow(2), 4, 6, 4)
         SolidType.Octahedron -> SolidMeasurements(sqrt(2.0) * solid.width.pow(3) / 3.0, 2 * sqrt(3.0) * solid.width.pow(2), 8, 12, 6)
         SolidType.Torus -> SolidMeasurements(2 * PI.pow(2) * solid.width * solid.radius.pow(2), 4 * PI.pow(2) * solid.width * solid.radius, 1, 0, 0)
+        SolidType.Ellipsoid -> {
+            val a = solid.width / 2; val b = solid.height / 2; val c = solid.depth / 2
+            val p = 1.6075
+            val area = 4 * PI * ((a.pow(p) * b.pow(p) + a.pow(p) * c.pow(p) + b.pow(p) * c.pow(p)) / 3).pow(1 / p)
+            SolidMeasurements(4 * PI * a * b * c / 3, area, 1, 0, 0)
+        }
+        SolidType.Paraboloid -> {
+            val r = solid.radius; val h = solid.height
+            val curved = PI * r / (6 * h.pow(2)) * ((r.pow(2) + 4 * h.pow(2)).pow(1.5) - r.pow(3))
+            SolidMeasurements(PI * r.pow(2) * h / 2, PI * r.pow(2) + curved, 2, 1, 1)
+        }
     }
 }
 
@@ -705,6 +742,8 @@ object SolidMeshFactory {
         SolidType.Cube, SolidType.Cuboid -> box(solid.width, solid.height, solid.depth)
         SolidType.Pyramid -> pyramid(solid)
         SolidType.TriangularPrism -> triangularPrism(solid)
+        SolidType.PentagonalPrism -> regularPrism(solid, 5)
+        SolidType.HexagonalPrism -> regularPrism(solid, 6)
         SolidType.Tetrahedron -> tetrahedron(solid.width)
         SolidType.Octahedron -> octahedron(solid.width)
         SolidType.Cylinder -> ringSolid(solid, segments, solid.radius, solid.radius)
@@ -713,6 +752,8 @@ object SolidMeshFactory {
         SolidType.Sphere -> latitudeSolid(solid.radius, segments, false)
         SolidType.Hemisphere -> latitudeSolid(solid.radius, segments, true)
         SolidType.Torus -> torus(solid.width, solid.radius, segments)
+        SolidType.Ellipsoid -> ellipsoid(solid, segments)
+        SolidType.Paraboloid -> paraboloid(solid, segments)
     }
 
     private fun box(w: Double, h: Double, d: Double): SolidMesh {
@@ -739,6 +780,24 @@ object SolidMeshFactory {
             listOf(Vec3(-w, -h, -d), Vec3(w, -h, -d), Vec3(0.0, h, -d), Vec3(-w, -h, d), Vec3(w, -h, d), Vec3(0.0, h, d)),
             listOf(listOf(0, 2, 1), listOf(3, 4, 5), listOf(0, 1, 4, 3), listOf(1, 2, 5, 4), listOf(2, 0, 3, 5)),
         )
+    }
+
+    private fun regularPrism(s: Solid, sides: Int): SolidMesh {
+        val vertices = mutableListOf<Vec3>()
+        listOf(-s.height / 2, s.height / 2).forEach { y ->
+            repeat(sides) { i ->
+                val angle = 2 * PI * i / sides - PI / 2
+                vertices += Vec3(cos(angle) * s.radius, y, sin(angle) * s.radius)
+            }
+        }
+        val faces = mutableListOf<List<Int>>()
+        faces += (0 until sides).reversed().toList()
+        faces += (0 until sides).map { sides + it }
+        repeat(sides) { i ->
+            val next = (i + 1) % sides
+            faces += listOf(i, next, sides + next, sides + i)
+        }
+        return mesh(vertices, faces)
     }
 
     private fun tetrahedron(edge: Double): SolidMesh {
@@ -799,6 +858,37 @@ object SolidMeshFactory {
             val nextI = (i + 1) % segments; val nextJ = (j + 1) % rings
             faces += listOf(j * segments + i, j * segments + nextI, nextJ * segments + nextI, nextJ * segments + i)
         } }
+        return mesh(vertices, faces)
+    }
+
+    private fun ellipsoid(s: Solid, segments: Int): SolidMesh {
+        val sphere = latitudeSolid(1.0, segments, false)
+        return sphere.copy(vertices = sphere.vertices.map { Vec3(it.x * s.width / 2, it.y * s.height / 2, it.z * s.depth / 2) })
+    }
+
+    private fun paraboloid(s: Solid, segments: Int): SolidMesh {
+        val rings = (segments / 2).coerceAtLeast(6)
+        val vertices = mutableListOf(Vec3(0.0, -s.height / 2, 0.0))
+        for (ring in 1..rings) {
+            val t = ring.toDouble() / rings
+            val radius = s.radius * sqrt(t)
+            val y = -s.height / 2 + s.height * t
+            repeat(segments) { i ->
+                val angle = 2 * PI * i / segments
+                vertices += Vec3(radius * cos(angle), y, radius * sin(angle))
+            }
+        }
+        val faces = mutableListOf<List<Int>>()
+        repeat(segments) { i -> faces += listOf(0, 1 + i, 1 + (i + 1) % segments) }
+        for (ring in 1 until rings) repeat(segments) { i ->
+            val a = 1 + (ring - 1) * segments + i
+            val b = 1 + (ring - 1) * segments + (i + 1) % segments
+            val c = 1 + ring * segments + (i + 1) % segments
+            val d = 1 + ring * segments + i
+            faces += listOf(a, b, c, d)
+        }
+        val topStart = 1 + (rings - 1) * segments
+        faces += (0 until segments).map { topStart + it }
         return mesh(vertices, faces)
     }
 
