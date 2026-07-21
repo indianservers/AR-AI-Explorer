@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">AI Explorer</string>
+    <string name="app_name" translatable="false">AI Explorer</string>
+    <string name="phase3_platform_title">Trusted school learning platform</string>
+    <string name="phase3_exam">Exam practice</string>
+    <string name="phase3_report">Evidence-based progress</string>
+    <string name="phase3_teacher">Teacher classroom</string>
+    <string name="phase3_local_first">Core learning remains available without internet</string>
 </resources>

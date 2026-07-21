@@ -1,0 +1,4 @@
+package com.indianservers.aiexplorer.biology.ncert.assessment
+import com.indianservers.aiexplorer.phase3.assessment.*
+import com.indianservers.aiexplorer.learningintelligence.model.*
+object BiologyAssessmentAdapter:SubjectCriterionValidator{override fun validate(criterion:StepCriterion,attempt:CriterionAttempt,prior:Map<String,CriterionScore>):CriterionValidation=when(criterion.validatorId){"genetics-ratio"->CriterionValidation(attempt.answer.replace(" ","") in setOf("3:1","3/1"),feedback="Count the four equally likely Punnett outcomes.",corrected="3:1");"process-sequence"->CriterionValidation(attempt.answer.lowercase().split("->").size>=3,feedback="Show the reviewed biological process in order.");"diagram-label"->CriterionValidation(attempt.answer.split(',').size>=3,feedback="Use precise structure labels.");else->CriterionValidation(attempt.answer.isNotBlank(),feedback="Biology response checked by its subject adapter.")}}

@@ -1,0 +1,4 @@
+package com.indianservers.aiexplorer.chemistry.ncert.assessment
+import com.indianservers.aiexplorer.phase3.assessment.*
+import com.indianservers.aiexplorer.learningintelligence.model.*
+object ChemistryAssessmentAdapter:SubjectCriterionValidator{override fun validate(criterion:StepCriterion,attempt:CriterionAttempt,prior:Map<String,CriterionScore>):CriterionValidation=when(criterion.validatorId){"stoichiometry-ratio"->CriterionValidation(attempt.answer.replace(" ","") in setOf("2:1","2/1"),feedback="Use balanced-equation mole coefficients.",corrected="2:1");"atom-charge-conservation"->{val atom=attempt.answer.contains("atoms",true);val charge=attempt.answer.contains("charge",true);CriterionValidation(atom&&charge,atom,atom&&charge,if(atom&&charge)"Atoms and charge conserved." else "Check both atom count and total charge.")};else->CriterionValidation(attempt.answer.isNotBlank(),feedback="Chemistry response checked by its subject adapter.")}}

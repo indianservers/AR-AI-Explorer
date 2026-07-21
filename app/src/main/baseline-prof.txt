@@ -1,0 +1,9 @@
+HSPLcom/indianservers/aiexplorer/MainActivity;->**(**)**
+HSPLcom/indianservers/aiexplorer/ExplorerViewModel;->**(**)**
+HSPLcom/indianservers/aiexplorer/learningintelligence/**;->**(**)**
+HSPLcom/indianservers/aiexplorer/learningworkspace/**;->**(**)**
+HSPLcom/indianservers/aiexplorer/phase3/**;->**(**)**
+HSPLcom/indianservers/aiexplorer/curriculum/**;->**(**)**
+HSPLcom/indianservers/aiexplorer/physics/**;->**(**)**
+HSPLcom/indianservers/aiexplorer/chemistry/**;->**(**)**
+HSPLcom/indianservers/aiexplorer/biology/**;->**(**)**

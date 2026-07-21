@@ -15,11 +15,13 @@ data class InteractiveGraphRow(
     val note: String? = null,
     val domain: GraphDomain? = null,
     val error: String? = null,
+    val typed: TypedGraphExpression? = null,
 )
 data class GraphWorkspaceState(
     val rows: List<InteractiveGraphRow> = emptyList(),
     val folders: List<GraphFolder> = emptyList(),
     val parameters: Map<String, GraphParameter> = emptyMap(),
+    val linkedVariables: Map<String, String> = emptyMap(),
     val revision: Long = 0,
 )
 
@@ -33,6 +35,10 @@ sealed interface GraphWorkspaceAction {
     data class AnimateParameter(val name: String, val enabled: Boolean) : GraphWorkspaceAction
     data class AddFolder(val title: String) : GraphWorkspaceAction
     data class ToggleFolder(val id: String) : GraphWorkspaceAction
+    data class MoveToFolder(val rowId: String, val folderId: String?) : GraphWorkspaceAction
+    data class SetNote(val rowId: String, val note: String?) : GraphWorkspaceAction
+    data class SetLinkedVariable(val name: String, val expression: String) : GraphWorkspaceAction
+    data class RemoveLinkedVariable(val name: String) : GraphWorkspaceAction
 }
 
 /** Pure, undo-friendly graph action reducer. UI, notebook and classroom playback can replay the same actions. */
@@ -49,7 +55,7 @@ class GraphWorkspaceReducer(private val expressions: ExpressionEngine = Expressi
             is GraphWorkspaceAction.SetDomain -> state.copy(rows = state.rows.map { if (it.id == action.id) it.copy(domain = action.domain) else it })
             is GraphWorkspaceAction.SetParameter -> {
                 val old = state.parameters[action.name] ?: GraphParameter(action.name, action.value)
-                state.copy(parameters = state.parameters + (action.name to old.copy(value = action.value.coerceIn(old.minimum, old.maximum))))
+                resolveLinked(state.copy(parameters = state.parameters + (action.name to old.copy(value = action.value.coerceIn(old.minimum, old.maximum)))))
             }
             is GraphWorkspaceAction.AnimateParameter -> {
                 val old = state.parameters[action.name] ?: GraphParameter(action.name, 0.0)
@@ -57,6 +63,17 @@ class GraphWorkspaceReducer(private val expressions: ExpressionEngine = Expressi
             }
             is GraphWorkspaceAction.AddFolder -> state.copy(folders = state.folders + GraphFolder(nextId("folder", state.folders.map { it.id }), action.title.ifBlank { "Folder" }))
             is GraphWorkspaceAction.ToggleFolder -> state.copy(folders = state.folders.map { if (it.id == action.id) it.copy(collapsed = !it.collapsed) else it })
+            is GraphWorkspaceAction.MoveToFolder -> {
+                require(action.folderId == null || state.folders.any { it.id == action.folderId }) { "Unknown graph folder." }
+                state.copy(rows = state.rows.map { if (it.id == action.rowId) it.copy(folderId = action.folderId) else it })
+            }
+            is GraphWorkspaceAction.SetNote -> state.copy(rows = state.rows.map { if (it.id == action.rowId) it.copy(note = action.note?.take(4_000)) else it })
+            is GraphWorkspaceAction.SetLinkedVariable -> {
+                require(action.name.matches(Regex("[A-Za-z][A-Za-z0-9_]*")))
+                expressions.compile(action.expression)
+                resolveLinked(state.copy(linkedVariables = state.linkedVariables + (action.name to action.expression)))
+            }
+            is GraphWorkspaceAction.RemoveLinkedVariable -> state.copy(linkedVariables = state.linkedVariables - action.name)
         }
         return discoverParameters(updated).copy(revision = state.revision + 1)
     }
@@ -74,8 +91,10 @@ class GraphWorkspaceReducer(private val expressions: ExpressionEngine = Expressi
     }
 
     private fun validate(row: InteractiveGraphRow): InteractiveGraphRow {
-        val kind = AdvancedGraphEngine(expressions).classify(row.source)
+        var typed: TypedGraphExpression? = null
         val error = runCatching {
+            typed = TypedGraphExpressionParser.parse(row.source)
+            val kind = AdvancedGraphEngine(expressions).classify(row.source)
             when (kind) {
                 AdvancedGraphKind.Parametric -> require(row.source.contains(';')) { "Use x(t)=…; y(t)=…" }
                 AdvancedGraphKind.VectorField -> require(row.source.contains(';')) { "Use two vector components separated by ';'." }
@@ -83,14 +102,27 @@ class GraphWorkspaceReducer(private val expressions: ExpressionEngine = Expressi
                 else -> expressions.compile(stripEquation(row.source))
             }
         }.exceptionOrNull()?.message
-        return row.copy(error = error)
+        return row.copy(error = error, typed = if (error == null) typed else null)
     }
 
     private fun discoverParameters(state: GraphWorkspaceState): GraphWorkspaceState {
         val reserved = setOf("x", "y", "t", "theta", "pi", "e", "sin", "cos", "tan", "sqrt", "abs", "ln", "log", "exp", "min", "max")
-        val found = state.rows.flatMap { row -> Regex("[A-Za-z][A-Za-z0-9_]*").findAll(row.source).map { it.value.lowercase() }.toList() }
-            .filterNot { it in reserved || it.length > 10 }.toSet()
-        return state.copy(parameters = state.parameters.filterKeys { it in found } + found.associateWith { state.parameters[it] ?: GraphParameter(it, 1.0) })
+        val found = state.rows.flatMap { it.typed?.parameters.orEmpty() }.filterNot { it in reserved || it.length > 10 }.toSet() + state.linkedVariables.keys
+        return resolveLinked(state.copy(parameters = state.parameters.filterKeys { it in found } + found.associateWith { state.parameters[it] ?: GraphParameter(it, 1.0) }))
+    }
+
+    private fun resolveLinked(state: GraphWorkspaceState): GraphWorkspaceState {
+        var values = state.parameters
+        repeat(state.linkedVariables.size.coerceAtLeast(1)) {
+            state.linkedVariables.forEach { (name, source) ->
+                val value = runCatching { expressions.compile(source).eval(values.mapValues { it.value.value }) }.getOrNull()
+                if (value?.isFinite() == true) {
+                    val old = values[name] ?: GraphParameter(name, value)
+                    values = values + (name to old.copy(value = value.coerceIn(old.minimum, old.maximum)))
+                }
+            }
+        }
+        return state.copy(parameters = values)
     }
 
     private fun nextId(prefix: String, existing: List<String>): String = generateSequence(1) { it + 1 }.map { "$prefix-$it" }.first { it !in existing }

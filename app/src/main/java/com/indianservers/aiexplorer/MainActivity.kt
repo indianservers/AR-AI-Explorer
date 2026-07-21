@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -72,8 +73,10 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -125,7 +128,16 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import com.indianservers.aiexplorer.core.ExpressionEngine
+import com.indianservers.aiexplorer.persistence.DurableMathStore
+import com.indianservers.aiexplorer.persistence.LocalReliabilityMonitor
+import com.indianservers.aiexplorer.persistence.MathFileExchange
+import com.indianservers.aiexplorer.phase2.mathstudio.UnifiedMathStudioScreen
+import com.indianservers.aiexplorer.phase3.mathlearning.AdaptiveMathLearningScreen
 import com.indianservers.aiexplorer.core.TrustedMathKernel
 import com.indianservers.aiexplorer.core.EquivalenceEvidence
 import com.indianservers.aiexplorer.core.InteractiveTrigEngine
@@ -156,6 +168,9 @@ import com.indianservers.aiexplorer.core.StatisticsEngine
 import com.indianservers.aiexplorer.core.ProbabilityEngine
 import com.indianservers.aiexplorer.core.AdvancedGraphDefinition
 import com.indianservers.aiexplorer.core.AdvancedGraphEngine
+import com.indianservers.aiexplorer.core.TypedGraphEngine
+import com.indianservers.aiexplorer.core.TypedGraphExpression
+import com.indianservers.aiexplorer.core.TypedGraphExpressionParser
 import com.indianservers.aiexplorer.core.AdvancedGraphKind
 import com.indianservers.aiexplorer.core.GraphDomain
 import com.indianservers.aiexplorer.core.GraphViewport
@@ -167,6 +182,14 @@ import com.indianservers.aiexplorer.core.GraphLineStyle
 import com.indianservers.aiexplorer.core.GraphSnapshot
 import com.indianservers.aiexplorer.core.GraphTransformKind
 import com.indianservers.aiexplorer.core.GraphUxEngine
+import com.indianservers.aiexplorer.core.GraphDirectManipulationEngine
+import com.indianservers.aiexplorer.core.GraphFitResult
+import com.indianservers.aiexplorer.core.AdvancedSpatialInteractionEngine
+import com.indianservers.aiexplorer.core.SpatialAlignment
+import com.indianservers.aiexplorer.core.SpatialCameraBookmark
+import com.indianservers.aiexplorer.core.SpatialDragPlane
+import com.indianservers.aiexplorer.core.SpatialTransformSpace
+import com.indianservers.aiexplorer.core.SpatialVisualMode
 import com.indianservers.aiexplorer.core.GraphViewState
 import com.indianservers.aiexplorer.core.AxisNumberFormat
 import com.indianservers.aiexplorer.core.DistributionEngine
@@ -251,6 +274,7 @@ import com.indianservers.aiexplorer.chemistry.navigation.ChemistryFeatureRoot
 import com.indianservers.aiexplorer.physics.formulas.navigation.PhysicsFormulaFeatureRoot
 import com.indianservers.aiexplorer.physics.learning.PhysicsConnectedLearningFeature
 import com.indianservers.aiexplorer.biology.navigation.BiologyFeatureRoot
+import com.indianservers.aiexplorer.learningintelligence.ui.LearningIntelligenceFeatureRoot
 import com.indianservers.aiexplorer.core.SolutionStepRole
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
 import com.indianservers.aiexplorer.core.Solid
@@ -281,10 +305,16 @@ import com.indianservers.aiexplorer.learning.LearningValidation
 import com.indianservers.aiexplorer.learning.FormulaCategory
 import com.indianservers.aiexplorer.learning.KnowledgeLevel
 import com.indianservers.aiexplorer.learning.KnowledgeTopic
+import com.indianservers.aiexplorer.learning.DictionaryClassBand
+import com.indianservers.aiexplorer.learning.DictionaryDifficulty
+import com.indianservers.aiexplorer.learning.DictionaryTerm
 import com.indianservers.aiexplorer.learning.MathKnowledgeCatalog
+import com.indianservers.aiexplorer.learning.MathDictionaryCatalog
+import com.indianservers.aiexplorer.learning.KnowledgeSearchResult
 import com.indianservers.aiexplorer.learning.McqQuestion
 import com.indianservers.aiexplorer.learning.OfflineLearningQueue
 import com.indianservers.aiexplorer.learning.PackageValidation
+import com.indianservers.aiexplorer.input.HandwritingMathInput
 import com.indianservers.aiexplorer.learning.ProgressStatus
 import com.indianservers.aiexplorer.learning.QuizEngine
 import com.indianservers.aiexplorer.learning.QuizLevel
@@ -300,6 +330,7 @@ import com.indianservers.aiexplorer.workspace.CommandHistory
 import com.indianservers.aiexplorer.workspace.EditExpressionCommand
 import com.indianservers.aiexplorer.workspace.DeleteShapeCommand
 import com.indianservers.aiexplorer.workspace.DeleteSolidCommand
+import com.indianservers.aiexplorer.workspace.ReplaceSolidsCommand
 import com.indianservers.aiexplorer.workspace.DeleteFunctionCommand
 import com.indianservers.aiexplorer.workspace.LinkedMathKernel
 import com.indianservers.aiexplorer.workspace.LinkedMathView
@@ -332,6 +363,7 @@ import com.indianservers.aiexplorer.workspace.ReorderFunctionsCommand
 import com.indianservers.aiexplorer.workspace.UpdateGraphRowMetadataCommand
 import com.indianservers.aiexplorer.workspace.UpdateGraphSliderMetadataCommand
 import com.indianservers.aiexplorer.workspace.WorkspaceJson
+import com.indianservers.aiexplorer.workspace.WorkspaceProjectCodec
 import com.indianservers.aiexplorer.workspace.WorkspaceState
 import com.indianservers.aiexplorer.workspace.UniversalMathDocument
 import com.indianservers.aiexplorer.workspace.UniversalMathDocumentEngine
@@ -389,7 +421,7 @@ enum class GeometryTool {
     Line, Segment, Ray, Vector, Parallel, Perpendicular, AngleBisector,
     Triangle, Polygon, RegularPolygon, Rectangle, Square, Circle, CircleThreePoints, Arc, Ellipse, Measure,
 }
-enum class GraphTool { Plot, Trace, Tangent, Normal, Derivative, Integral, AreaBetween, Intersections, Extrema, Table, Data, Probability }
+enum class GraphTool { Plot, Trace, Tangent, Normal, Derivative, Integral, AreaBetween, BrushArea, SketchFit, Intersections, Extrema, Table, Data, Probability, ComplexPlane }
 private enum class ProbabilityLabSection { Distributions, Statistics, Spreadsheet, Experiments, Learn }
 enum class KnowledgeSection(val title: String) { Formulas("Formulas"), Mcqs("MCQs"), Visualize("Visualize Formulas"), Theorems("Theorems"), Proofs("Visual Proofs"), Dictionary("Maths Dictionary") }
 private enum class StatisticsChartType(val label: String) { Histogram("Histogram"), BoxPlot("Box Plot"), DotPlot("Dot Plot"), Ecdf("ECDF"), NormalQq("Normal Q-Q") }
@@ -412,7 +444,7 @@ data class AppSettings(
 )
 
 private data class SubjectOption(val title: String, val description: String, val symbol: String, val enabled: Boolean)
-private data class MathWorkspaceOption(val title: String, val description: String, val icon: String)
+internal data class MathWorkspaceOption(val title: String, val description: String, val icon: String)
 private data class PhysicsModuleOption(val title: String, val description: String, val icon: String)
 
 private val SubjectOptions = listOf(
@@ -443,7 +475,8 @@ private val PhysicsModules = listOf(
     PhysicsModuleOption("Astronomy and Astrophysics", "Stars, galaxies, cosmology and observational physics", "★"),
 )
 
-private val MathCreationTools = listOf(
+internal val MathCreationTools = listOf(
+    MathWorkspaceOption("Unified Math Studio", "Linked algebra, graph, table, geometry and solver views", "Live"),
     MathWorkspaceOption("Explore Workspaces", "2D, 3D, graphing, trigonometry and spatial AR", "W"),
     MathWorkspaceOption("Scientific Calculator", "Scientific keypad, constants and conversions", "Sci"),
     MathWorkspaceOption("Math Notebook", "Named values, linked functions and reusable exact results", "#"),
@@ -453,7 +486,8 @@ private val MathCreationTools = listOf(
     MathWorkspaceOption("Probability & Statistics", "Distributions, intervals and probability plots", "Stat"),
 )
 
-private val MathLearningTools = listOf(
+internal val MathLearningTools = listOf(
+    MathWorkspaceOption("Adaptive Math Coach", "Workspace-aware Socratic practice, proof checks and misconception repair", "AI"),
     MathWorkspaceOption("Formulas", "Searchable formula reference", "F"),
     MathWorkspaceOption("Visual Proofs", "Manipulable visual demonstrations", "Proof"),
     MathWorkspaceOption("Theorems", "Statements, conditions and applications", "Thm"),
@@ -464,7 +498,7 @@ private val MathLearningTools = listOf(
     MathWorkspaceOption("Set Theory & Logic", "Interactive Venn diagrams, identities and truth tables", "∪∧"),
 )
 
-private val SuggestedMathTools = listOf(
+internal val SuggestedMathTools = listOf(
     MathWorkspaceOption("Daily Challenge", "A fresh problem and guided solution every day", "Day"),
     MathWorkspaceOption("Practice Paths", "Adaptive practice from foundations to mastery", "Path"),
     MathWorkspaceOption("Math Games", "Puzzles, patterns and strategy challenges", "Game"),
@@ -637,9 +671,22 @@ private fun defaultSolid(type: SolidType): Solid = when (type) {
 }
 
 class MainActivity : ComponentActivity() {
+    private lateinit var reliabilityMonitor: LocalReliabilityMonitor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        reliabilityMonitor = LocalReliabilityMonitor(this)
         setContent { AIExplorerApp() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        reliabilityMonitor.beginSession()
+    }
+
+    override fun onStop() {
+        reliabilityMonitor.endSession()
+        super.onStop()
     }
 }
 
@@ -683,6 +730,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         private set
     var showBiologyHub by mutableStateOf(false)
         private set
+    var showLearningIntelligence by mutableStateOf(false)
+        private set
     var showMathLanding by mutableStateOf(false)
         private set
     var showMathMenu by mutableStateOf(false)
@@ -699,6 +748,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         private set
     var showMathNotebook by mutableStateOf(false)
         private set
+    var showUnifiedMathStudio by mutableStateOf(false)
+        private set
+    var showAdaptiveMathLearning by mutableStateOf(false)
+        private set
     var showProbabilityLab by mutableStateOf(false)
         private set
     var requestedProbabilitySection by mutableIntStateOf(0)
@@ -706,6 +759,17 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     var showKnowledgeHub by mutableStateOf(false)
         private set
     var activeKnowledgeSection by mutableStateOf(KnowledgeSection.Formulas)
+        private set
+    var pinnedMathTools by mutableStateOf(savedStateHandle.get<ArrayList<String>>("pinnedMathTools").orEmpty().toSet())
+        private set
+    var recentMathTools by mutableStateOf(savedStateHandle.get<ArrayList<String>>("recentMathTools").orEmpty().toList())
+        private set
+    var mathToolUseCounts by mutableStateOf(
+        savedStateHandle.get<ArrayList<String>>("mathToolUseCounts").orEmpty().mapNotNull { encoded ->
+            val split = encoded.lastIndexOf('=')
+            if (split <= 0) null else encoded.substring(0, split) to (encoded.substring(split + 1).toIntOrNull() ?: 0)
+        }.toMap(),
+    )
         private set
     var favoriteShapeKeys by mutableStateOf<Set<String>>(emptySet())
         private set
@@ -781,6 +845,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -802,6 +868,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showShapesExplorer = false
@@ -1064,6 +1132,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showProblemSolver = true
         showScientificCalculator = false
         showMathNotebook = false
+        showUnifiedMathStudio = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -1099,6 +1168,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showPhysicsHub = false
         showChemistryHub = false
         showBiologyHub = false
+        showLearningIntelligence = false
         showMathLanding = false
         showShapesExplorer = false
         shapeExplorerScene = false
@@ -1112,6 +1182,19 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Choose a subject"
     }
 
+    fun openLearningIntelligence() {
+        showSubjectHub = false
+        showPhysicsHub = false
+        showChemistryHub = false
+        showBiologyHub = false
+        showLearningIntelligence = true
+        showMathLanding = false
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = "Local Learning Intelligence"
+    }
+
     fun openMathNotebook() {
         showSubjectHub = false
         showMathLanding = false
@@ -1120,12 +1203,55 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showProblemSolver = false
         showScientificCalculator = false
         showMathNotebook = true
+        showUnifiedMathStudio = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
         showActionDock = false
         hidePanels()
         status = "Unified Math Notebook"
+    }
+
+    fun openUnifiedMathStudio() {
+        showSubjectHub = false
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showUnifiedMathStudio = true
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = "Unified Math Studio"
+    }
+
+    fun openAdaptiveMathLearning() {
+        showSubjectHub = false
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = true
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = "Adaptive Math Coach"
+    }
+
+    fun commitUnifiedStudio(workspace: WorkspaceState) {
+        state = workspace
+        status = "Linked maths document autosaved"
     }
 
     fun openKnowledgeHub(section: KnowledgeSection) {
@@ -1258,6 +1384,18 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun toggleMathMenu() {
         showMathMenu = !showMathMenu
         if (showMathMenu) hideWorkspacePanelsOnly()
+    }
+
+    fun recordMathToolOpen(title: String) {
+        recentMathTools = (listOf(title) + recentMathTools.filterNot { it == title }).take(6)
+        mathToolUseCounts = mathToolUseCounts + (title to ((mathToolUseCounts[title] ?: 0) + 1))
+        savedStateHandle["recentMathTools"] = ArrayList(recentMathTools)
+        savedStateHandle["mathToolUseCounts"] = ArrayList(mathToolUseCounts.map { "${it.key}=${it.value}" })
+    }
+
+    fun togglePinnedMathTool(title: String) {
+        pinnedMathTools = if (title in pinnedMathTools) pinnedMathTools - title else pinnedMathTools + title
+        savedStateHandle["pinnedMathTools"] = ArrayList(pinnedMathTools.sorted())
     }
 
     fun toggleActionDock() {
@@ -1725,6 +1863,13 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         )
     }
 
+    fun previewSolidFaceExtrusion(index: Int, faceIndex: Int, factor: Double) {
+        val gesture = solidGesture?.takeIf { it.index == index } ?: return
+        val amount = (factor - 1.0) * 2.0
+        val extruded = AdvancedSpatialInteractionEngine.extrude(gesture.from, faceIndex, amount)
+        state = state.copy(solids = state.solids.mapIndexed { i, old -> if (i == index) extruded else old }, modifiedAt = System.currentTimeMillis())
+    }
+
     fun endSolidDrag() {
         val gesture = solidGesture ?: return
         val final = state.solids.getOrNull(gesture.index)
@@ -1746,6 +1891,22 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         state = history.execute(state, TransformSolidCommand(index, from, to))
         selectedSolid = index
         status = "Transformed ${to.type.name}"
+    }
+
+    fun replaceSolids(label: String, transform: (List<Solid>) -> List<Solid>) {
+        val from = state.solids
+        val to = transform(from)
+        if (from == to) return
+        state = history.execute(state, ReplaceSolidsCommand(from, to, label))
+        selectedSolid = selectedSolid.coerceIn(0, state.solids.lastIndex.coerceAtLeast(0))
+        status = label
+    }
+
+    fun duplicateSelectedSolid() {
+        val source = state.solids.getOrNull(selectedSolid) ?: return
+        state = history.execute(state, AddSolidCommand(source.copy(position = source.position + Vec3(.8, .2, .8))))
+        selectedSolid = state.solids.lastIndex
+        status = "Duplicated ${source.type.name}"
     }
 
     fun addVector3D() {
@@ -1881,6 +2042,25 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Undo"
     }
 
+    val canUndo: Boolean get() = history.canUndo
+    val canRedo: Boolean get() = history.canRedo
+    val universalHistoryDepth: Int get() = history.protocol.size
+
+    val mathsBreadcrumb: List<String>
+        get() = when {
+            showProblemSolver -> listOf("Maths", "Algebra", "Quadratics")
+            showKnowledgeHub && activeKnowledgeSection == KnowledgeSection.Dictionary -> listOf("Maths", "Reference", "Visual Dictionary")
+            showKnowledgeHub -> listOf("Maths", "Knowledge", activeKnowledgeSection.title)
+            showScientificCalculator -> listOf("Maths", "Tools", "Scientific Calculator")
+            showMathNotebook -> listOf("Maths", "Workspace", "Notebook")
+            showUnifiedMathStudio -> listOf("Maths", "Studio", "Linked Views")
+            showAdaptiveMathLearning -> listOf("Maths", "Learn", "Adaptive Coach")
+            showProbabilityLab -> listOf("Maths", "Data", "Probability & Statistics")
+            showShapesExplorer -> listOf("Maths", "Geometry", "Shapes Explorer")
+            showSetLogicVisualizer -> listOf("Maths", "Foundations", "Set Theory & Logic")
+            else -> listOf("Maths", state.module.label)
+        }
+
     fun redo() {
         state = history.redo(state)
         status = "Redo"
@@ -1898,13 +2078,39 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         return WorkspaceJson.export(state)
     }
 
+    fun hydrateDurableState(recovered: WorkspaceState?, projects: List<SavedWorkspace>, persistedSettings: AppSettings) {
+        recovered?.let { state = it }
+        savedWorkspaces = projects
+        settings = persistedSettings
+        selectedPoint = selectedPoint.coerceIn(0, state.points.lastIndex.coerceAtLeast(0))
+        selectedShape = -1
+        selectedShapes = emptySet()
+        status = if (recovered == null) "Ready" else "Recovered your last workspace"
+    }
+
+    fun importWorkspace(imported: WorkspaceState, recovered: Boolean, diagnostics: List<String>) {
+        state = imported.copy(modifiedAt = System.currentTimeMillis())
+        selectedPoint = 0.coerceAtMost(state.points.lastIndex)
+        selectedShape = -1
+        selectedShapes = emptySet()
+        showSubjectHub = false
+        showMathLanding = false
+        showMathMenu = false
+        status = when {
+            recovered -> "Project recovered${diagnostics.firstOrNull()?.let { ": $it" }.orEmpty()}"
+            else -> "Project imported"
+        }
+    }
+
+    fun reportStatus(message: String) { status = message.take(180) }
+
     fun saveWorkspace() {
         val saved = SavedWorkspace(
             id = "workspace-${System.currentTimeMillis()}",
             name = "${state.name} ${savedWorkspaces.size + 1}",
             module = state.module,
             snapshot = state,
-            json = WorkspaceJson.export(state),
+            json = WorkspaceProjectCodec.encode(state),
             updatedAt = System.currentTimeMillis(),
         )
         savedWorkspaces = listOf(saved) + savedWorkspaces.take(7)
@@ -1959,6 +2165,37 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     var menuOffset by remember { mutableStateOf(Offset.Zero) }
     var dockOffset by remember { mutableStateOf(Offset.Zero) }
+    val applicationContext = LocalContext.current.applicationContext
+    val durableStore = remember(applicationContext) { DurableMathStore(applicationContext) }
+    var persistenceReady by remember { mutableStateOf(false) }
+    LaunchedEffect(durableStore) {
+        val recovered = runCatching { durableStore.loadRecovery() }.getOrNull()
+        val projects = runCatching { durableStore.loadProjects() }.getOrDefault(emptyList())
+        val settings = runCatching { durableStore.loadSettings() }.getOrDefault(AppSettings())
+        vm.hydrateDurableState(recovered, projects, settings)
+        persistenceReady = true
+    }
+    LaunchedEffect(durableStore, persistenceReady) {
+        if (!persistenceReady) return@LaunchedEffect
+        snapshotFlow { vm.state }.drop(1).conflate().collect { state ->
+            runCatching { durableStore.saveRecovery(state) }
+                .onFailure { vm.reportStatus("Autosave unavailable: ${it.message ?: "storage error"}") }
+        }
+    }
+    LaunchedEffect(durableStore, persistenceReady) {
+        if (!persistenceReady) return@LaunchedEffect
+        snapshotFlow { vm.savedWorkspaces }.drop(1).conflate().collect { projects ->
+            runCatching { durableStore.replaceProjects(projects) }
+                .onFailure { vm.reportStatus("Project library unavailable: ${it.message ?: "storage error"}") }
+        }
+    }
+    LaunchedEffect(durableStore, persistenceReady) {
+        if (!persistenceReady) return@LaunchedEffect
+        snapshotFlow { vm.settings }.drop(1).conflate().collect { settings ->
+            runCatching { durableStore.saveSettings(settings) }
+                .onFailure { vm.reportStatus("Settings could not be saved: ${it.message ?: "storage error"}") }
+        }
+    }
     BackHandler(enabled = !vm.showSubjectHub || vm.hasDismissibleOverlay()) {
         when {
             vm.showMathLanding -> vm.openSubjectHub()
@@ -1966,6 +2203,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
             vm.showPhysicsHub -> vm.openSubjectHub()
             vm.showChemistryHub -> vm.openSubjectHub()
             vm.showBiologyHub -> vm.openSubjectHub()
+            vm.showLearningIntelligence -> vm.openSubjectHub()
             else -> vm.returnToMathMenu()
         }
     }
@@ -2006,9 +2244,12 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                                 "Biology" -> vm.openBiologyHub()
                             }
                         },
+                        onOpenLearningIntelligence = vm::openLearningIntelligence,
                     )
                 } else {
-                    if (vm.showBiologyHub) {
+                    if (vm.showLearningIntelligence) {
+                        LearningIntelligenceFeatureRoot(onExit = vm::openSubjectHub)
+                    } else if (vm.showBiologyHub) {
                         BiologyFeatureRoot(onExit = vm::openSubjectHub)
                     } else if (vm.showChemistryHub) {
                         ChemistryFeatureRoot(onExit = vm::openSubjectHub)
@@ -2018,6 +2259,10 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         MathLandingScreen()
                     } else if (vm.showShapesExplorer) {
                         ShapesExplorerScreen(vm, wide = wide)
+                    } else if (vm.showUnifiedMathStudio) {
+                        UnifiedMathStudioScreen(vm.state, vm::commitUnifiedStudio, vm::returnToMathMenu)
+                    } else if (vm.showAdaptiveMathLearning) {
+                        AdaptiveMathLearningScreen(vm.state, vm::returnToMathMenu)
                     } else if (vm.showMathNotebook) {
                         MathNotebookScreen(vm, wide = wide)
                     } else if (vm.showProblemSolver) {
@@ -2041,9 +2286,9 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             MathModule.SpatialAR -> SpatialARScreen(vm)
                         }
                     }
-                    if (vm.showChrome && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding && !vm.showScientificCalculator && !vm.showSetLogicVisualizer) TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
-                    if (vm.showLearningPanel && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
-                    if (!imeVisible && !vm.showMathLanding && !vm.shapeExplorerScene && !vm.showShapesExplorer && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showScientificCalculator && !vm.showSetLogicVisualizer && !vm.showProblemSolver && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) BottomModeSelector(vm.state.module, vm::open, compact, Modifier.align(Alignment.BottomCenter))
+                    if (vm.showChrome && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
+                    if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
+                    if (!imeVisible && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showMathLanding && !vm.shapeExplorerScene && !vm.showShapesExplorer && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showScientificCalculator && !vm.showSetLogicVisualizer && !vm.showProblemSolver && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) BottomModeSelector(vm.state.module, vm::open, compact, Modifier.align(Alignment.BottomCenter))
                     if (vm.showActionDock && vm.state.module != MathModule.Graph2D && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) MiniDock(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -3087,7 +3332,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
     fun CasPanel(modifier: Modifier = Modifier) {
         GlassPanel(modifier.semantics { contentDescription = "CAS rows with exact and decimal output" }) {
             PanelHeader("CAS Rows", vm::returnToMathMenu, Violet, icon = "CAS")
-            Text("Typed AST foundation: simplify, expand and factor share one symbolic tree boundary.", color = Muted, fontSize = 12.sp)
+            Text("Exact CAS: assumptions, algebra, systems, calculus, matrices and verified first-order ODEs share one symbolic tree.", color = Muted, fontSize = 12.sp)
             OutlinedTextField(
                 value = casInput,
                 onValueChange = { casInput = it },
@@ -3097,7 +3342,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                 singleLine = true,
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf("simplify", "expand", "factor").forEach { operation ->
+                listOf("simplify", "expand", "factor", "partial fractions", "derivative", "integral", "limit", "system", "inequalities", "determinant", "rref", "eigenvalues", "ode").forEach { operation ->
                     GlowButton(if (casOperation == operation) "• $operation" else operation) { casOperation = operation }
                 }
                 GlowButton("sub x=2") {
@@ -3105,6 +3350,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                     casOperation = "simplify"
                 }
             }
+            Text("Syntax: systems use {x+y=5; x-y=1}; inequalities use 2*x>=4 and x<5; matrices use [[1,2],[3,4]].", color = Muted, fontSize = 10.sp)
             Insight("Operation", casRow.operation, Cyan)
             Insight("Exact", casRow.exact, if (casRow.supported) Green else Amber)
             casRow.decimal?.let { Insight("Decimal", it, Violet) }
@@ -3137,6 +3383,9 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     var topic by remember { mutableStateOf<KnowledgeTopic?>(null) }
     var level by remember { mutableStateOf<KnowledgeLevel?>(null) }
     var formulaCategory by remember { mutableStateOf<FormulaCategory?>(null) }
+    var dictionaryInitial by rememberSaveable { mutableStateOf<Char?>(null) }
+    var dictionaryClassBand by rememberSaveable { mutableStateOf<DictionaryClassBand?>(null) }
+    var dictionaryDifficulty by rememberSaveable { mutableStateOf<DictionaryDifficulty?>(null) }
     var answers by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
     var quizSubject by remember { mutableStateOf(QuizSubject.Maths) }
     var quizLevel by remember { mutableStateOf(QuizLevel.Basic) }
@@ -3152,13 +3401,32 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     var proofExplanationOpen by remember { mutableStateOf(false) }
     var proofControlsOpen by remember { mutableStateOf(false) }
     var proofResultsOpen by remember { mutableStateOf(false) }
+    var knowledgeLoading by remember { mutableStateOf(true) }
     LaunchedEffect(visualProofPlayback.playing) {
         while (visualProofPlayback.playing) {
             delay(850)
             visualProofPlayback = visualProofEngine.next(visualProofPlayback)
         }
     }
-    val result = remember(query, topic, level, formulaCategory) { MathKnowledgeCatalog.search(query, topic, level, formulaCategory) }
+    val result = remember(query, topic, level, formulaCategory, dictionaryInitial, dictionaryClassBand, dictionaryDifficulty, vm.activeKnowledgeSection) {
+        if (vm.activeKnowledgeSection == KnowledgeSection.Dictionary) {
+            KnowledgeSearchResult(
+                formulas = emptyList(),
+                theorems = emptyList(),
+                visualProofs = emptyList(),
+                dictionary = MathDictionaryCatalog.search(query, topic, level, dictionaryInitial, dictionaryClassBand, dictionaryDifficulty),
+                mcqs = emptyList(),
+            )
+        } else {
+            MathKnowledgeCatalog.search(query, topic, level, formulaCategory)
+        }
+    }
+    LaunchedEffect(query, topic, level, formulaCategory, dictionaryInitial, dictionaryClassBand, dictionaryDifficulty, vm.activeKnowledgeSection) {
+        knowledgeLoading = true
+        // Keep at least one composed frame so a destination/filter change never flashes blank.
+        delay(90)
+        knowledgeLoading = false
+    }
 
     @Composable
     fun Filters() {
@@ -3201,6 +3469,25 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                         }
                     }
                 }
+                if (vm.activeKnowledgeSection == KnowledgeSection.Dictionary) {
+                    Text("A–Z", color = Ink, fontWeight = FontWeight.SemiBold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        GlowButton(if (dictionaryInitial == null) "• All" else "All") { dictionaryInitial = null }
+                        ('A'..'Z').forEach { letter ->
+                            GlowButton(if (dictionaryInitial == letter) "• $letter" else letter.toString()) { dictionaryInitial = letter }
+                        }
+                    }
+                    Text("Class", color = Ink, fontWeight = FontWeight.SemiBold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        GlowButton(if (dictionaryClassBand == null) "• All classes" else "All classes") { dictionaryClassBand = null }
+                        DictionaryClassBand.entries.forEach { band -> GlowButton(if (dictionaryClassBand == band) "• ${band.label}" else band.label) { dictionaryClassBand = band } }
+                    }
+                    Text("Difficulty", color = Ink, fontWeight = FontWeight.SemiBold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        GlowButton(if (dictionaryDifficulty == null) "• All difficulties" else "All difficulties") { dictionaryDifficulty = null }
+                        DictionaryDifficulty.entries.forEach { difficulty -> GlowButton(if (dictionaryDifficulty == difficulty) "• ${difficulty.label}" else difficulty.label) { dictionaryDifficulty = difficulty } }
+                    }
+                }
                 Insight("Matches", "${result.total}", Green)
                 Insight("Coverage", "${FormulaCategory.entries.size} formula categories · ${MathKnowledgeCatalog.formulas.size} formulas", Violet)
             }
@@ -3214,7 +3501,9 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                 Text(vm.activeKnowledgeSection.title, color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Text("${result.total} found", color = Muted, fontSize = 11.sp)
             }
-            when (vm.activeKnowledgeSection) {
+            if (knowledgeLoading) {
+                KnowledgeLoadingSkeleton(vm.activeKnowledgeSection.title)
+            } else when (vm.activeKnowledgeSection) {
                 KnowledgeSection.Formulas -> result.formulas.forEach { formula ->
                     KnowledgeCard(formula.title, formula.expression, "${formula.category.label} · ${formula.level.label}", formula.useCase, Cyan)
                     if (formula.variables.isNotEmpty()) Text("Variables: ${formula.variables.joinToString()}", color = Muted, fontSize = 11.sp)
@@ -3347,7 +3636,8 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                     }
                 }
                 KnowledgeSection.Dictionary -> result.dictionary.forEach { term ->
-                    KnowledgeCard(term.term, term.definition, "${term.topic.label} · ${term.level.label}", "${term.notation}: ${term.example}", Amber)
+                    DictionaryTermDiagram(term)
+                    KnowledgeCard(term.term, term.definition, "${term.topic.label} · ${term.classBands.joinToString { it.label }} · ${term.difficulty.label}", "${term.notation}\n✓ Example: ${term.example}\n✕ Non-example: ${term.nonExample}", Amber)
                 }
                 KnowledgeSection.Mcqs -> {
                     QuizDashboard(
@@ -3371,7 +3661,7 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                     )
                 }
             }
-            if (result.total == 0) Text("No matches yet. Clear filters or search a broader term.", color = Amber)
+            if (!knowledgeLoading && result.total == 0) Text("No matches yet. Clear filters or search a broader term.", color = Amber)
         }
     }
 
@@ -3385,12 +3675,116 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
         }
     } else {
         Column(
-            Modifier.fillMaxSize().padding(top = 70.dp, bottom = 70.dp).verticalScroll(rememberScrollState()),
+            Modifier.fillMaxSize().padding(top = 70.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            GlassPanel(Modifier.fillMaxWidth()) { Filters() }
-            Content(Modifier.fillMaxWidth())
+            Content(Modifier.fillMaxWidth().weight(1f))
+            GlassPanel(Modifier.fillMaxWidth().heightIn(max = 210.dp)) { Filters() }
         }
+    }
+}
+
+@Composable
+private fun KnowledgeLoadingSkeleton(section: String) {
+    Column(
+        Modifier.fillMaxWidth().semantics { contentDescription = "Loading $section content" },
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Text("Preparing $section…", color = Muted, fontSize = 11.sp)
+        repeat(3) { index ->
+            Column(
+                Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+                    .background(SurfaceB.copy(alpha = .55f)).padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Box(Modifier.fillMaxWidth(if (index == 1) .55f else .72f).height(16.dp).clip(RoundedCornerShape(8.dp)).background(Cyan.copy(alpha = .16f)))
+                Box(Modifier.fillMaxWidth().height(if (section == KnowledgeSection.Dictionary.title) 58.dp else 12.dp).clip(RoundedCornerShape(7.dp)).background(Ink.copy(alpha = .09f)))
+                Box(Modifier.fillMaxWidth(.82f).height(10.dp).clip(RoundedCornerShape(6.dp)).background(Ink.copy(alpha = .07f)))
+                Box(Modifier.fillMaxWidth(.64f).height(10.dp).clip(RoundedCornerShape(6.dp)).background(Ink.copy(alpha = .07f)))
+            }
+        }
+    }
+}
+
+@Composable
+private fun DictionaryTermDiagram(term: DictionaryTerm) {
+    val explanation = when (term.term) {
+        "Discriminant" -> "A parabola crossing the axis twice: a positive discriminant gives two real roots."
+        "Limit" -> "Points from both sides approach the same open target point."
+        "Derivative" -> "The tangent line shows the curve's instantaneous slope."
+        "Median" -> "The highlighted centre point divides the ordered values."
+        "Posterior" -> "Evidence updates a prior probability into a posterior."
+        "Eigenvector" -> "The transformation stretches the vector but preserves its direction."
+        else -> "A visual explanation of ${term.term}."
+    }
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+            .background(Color(0x44101824)).border(1.dp, Amber.copy(alpha = .35f), RoundedCornerShape(12.dp))
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Text("Picture it", color = Amber, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+        Canvas(
+            Modifier.fillMaxWidth().height(82.dp).semantics {
+                contentDescription = "${term.term} explanatory diagram: $explanation"
+            },
+        ) {
+            val w = size.width
+            val h = size.height
+            val grid = Ink.copy(alpha = .08f)
+            for (i in 1..5) drawLine(grid, Offset(w * i / 6f, 0f), Offset(w * i / 6f, h), 1f)
+            for (i in 1..3) drawLine(grid, Offset(0f, h * i / 4f), Offset(w, h * i / 4f), 1f)
+            when (term.term) {
+                "Discriminant" -> {
+                    drawLine(Ink.copy(.55f), Offset(w * .08f, h * .72f), Offset(w * .92f, h * .72f), 2f)
+                    val path = Path().apply {
+                        moveTo(w * .18f, h * .18f)
+                        quadraticBezierTo(w * .5f, h * 1.16f, w * .82f, h * .18f)
+                    }
+                    drawPath(path, Cyan, style = Stroke(4f))
+                    drawCircle(Green, 6f, Offset(w * .31f, h * .72f))
+                    drawCircle(Green, 6f, Offset(w * .69f, h * .72f))
+                }
+                "Limit" -> {
+                    drawLine(Ink.copy(.5f), Offset(w * .5f, h * .12f), Offset(w * .5f, h * .88f), 2f)
+                    listOf(.14f, .25f, .35f, .43f, .57f, .65f, .75f, .86f).forEach { x ->
+                        val distance = kotlin.math.abs(x - .5f)
+                        drawCircle(Cyan.copy(alpha = 1f - distance), 5f, Offset(w * x, h * (.48f + distance * .55f)))
+                    }
+                    drawCircle(Green, 8f, Offset(w * .5f, h * .48f), style = Stroke(3f))
+                }
+                "Derivative" -> {
+                    val curve = Path().apply {
+                        moveTo(w * .08f, h * .78f)
+                        cubicTo(w * .34f, h * .78f, w * .48f, h * .15f, w * .9f, h * .26f)
+                    }
+                    drawPath(curve, Cyan, style = Stroke(4f))
+                    drawLine(Green, Offset(w * .25f, h * .82f), Offset(w * .78f, h * .12f), 4f, StrokeCap.Round)
+                    drawCircle(Amber, 6f, Offset(w * .5f, h * .49f))
+                }
+                "Median" -> {
+                    drawLine(Cyan, Offset(w * .1f, h * .55f), Offset(w * .9f, h * .55f), 4f, StrokeCap.Round)
+                    (1..7).forEach { i ->
+                        drawCircle(if (i == 4) Green else Ink, if (i == 4) 8f else 5f, Offset(w * (.1f + i * .1f), h * .55f))
+                    }
+                    drawLine(Green, Offset(w * .5f, h * .22f), Offset(w * .5f, h * .82f), 3f)
+                }
+                "Posterior" -> {
+                    drawRect(Cyan.copy(.35f), Offset(w * .08f, h * .22f), Size(w * .84f, h * .2f))
+                    drawRect(Cyan, Offset(w * .08f, h * .22f), Size(w * .55f, h * .2f))
+                    drawRect(Green.copy(.35f), Offset(w * .08f, h * .6f), Size(w * .84f, h * .2f))
+                    drawRect(Green, Offset(w * .08f, h * .6f), Size(w * .72f, h * .2f))
+                    drawLine(Amber, Offset(w * .67f, h * .38f), Offset(w * .76f, h * .58f), 4f, StrokeCap.Round)
+                }
+                else -> {
+                    drawLine(Ink.copy(.5f), Offset(w * .12f, h * .78f), Offset(w * .88f, h * .22f), 2f)
+                    drawLine(Cyan, Offset(w * .18f, h * .72f), Offset(w * .52f, h * .47f), 7f, StrokeCap.Round)
+                    drawLine(Green, Offset(w * .52f, h * .47f), Offset(w * .84f, h * .24f), 7f, StrokeCap.Round)
+                    drawCircle(Amber, 7f, Offset(w * .52f, h * .47f))
+                }
+            }
+        }
+        Text(explanation, color = Muted, fontSize = 10.sp)
     }
 }
 
@@ -3423,9 +3817,10 @@ internal fun latexStyleFormula(source: String): String {
     )
     fun styled(value: String, alphabet: Map<Char, Char>): String = value.map { alphabet[it] ?: it }.joinToString("")
     fun applyScript(input: String, marker: Char, alphabet: Map<Char, Char>): String {
-        val braced = Regex("\\${marker}\\{([^}]+)}").replace(input) { styled(it.groupValues[1], alphabet) }
-        val parenthesized = Regex("\\${marker}\\(([^)]+)\\)").replace(braced) { styled("(${it.groupValues[1]})", alphabet) }
-        return Regex("\\${marker}(-?\\d+|[A-Za-z])").replace(parenthesized) { styled(it.groupValues[1], alphabet) }
+        val literalMarker = Regex.escape(marker.toString())
+        val braced = Regex("$literalMarker\\{([^}]*)\\}").replace(input) { styled(it.groupValues[1], alphabet) }
+        val parenthesized = Regex("$literalMarker\\(([^)]*)\\)").replace(braced) { styled("(${it.groupValues[1]})", alphabet) }
+        return Regex("$literalMarker(-?\\d+|[A-Za-z])").replace(parenthesized) { styled(it.groupValues[1], alphabet) }
     }
 
     var result = source
@@ -4102,6 +4497,7 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
     var learnerWork by remember { mutableStateOf("") }
     var selectedResultForm by remember { mutableStateOf(SolverResultKind.Exact) }
     var showMathKeyboard by remember { mutableStateOf(true) }
+    var showHandwriting by rememberSaveable { mutableStateOf(false) }
     val syntax = remember(question.text) { MathInputIntelligence.analyze(question.text) }
     val syntaxHighlighting = remember { MathSyntaxVisualTransformation() }
     val examples = listOf(
@@ -4189,8 +4585,12 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
             )
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(syntax.message, color = if (syntax.validBrackets) Green else Amber, fontSize = 11.sp, modifier = Modifier.weight(1f))
-                GlowButton(if (showMathKeyboard) "Hide editor" else "Smart editor") { showMathKeyboard = !showMathKeyboard }
+                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    GlowButton(if (showMathKeyboard) "Hide editor" else "Smart editor") { showMathKeyboard = !showMathKeyboard }
+                    GlowButton(if (showHandwriting) "Hide ink" else "Handwrite") { showHandwriting = !showHandwriting }
+                }
             }
+            AnimatedVisibility(showHandwriting) { HandwritingMathInput(onInsert = ::insertMath) }
             AnimatedVisibility(showMathKeyboard) {
                 Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -5034,7 +5434,7 @@ private fun SubjectMicroIcon(subject: String, tint: Color) {
 }
 
 @Composable
-private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpenSubject: (String) -> Unit) {
+private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpenSubject: (String) -> Unit, onOpenLearningIntelligence: () -> Unit) {
     Column(
         modifier
             .verticalScroll(rememberScrollState())
@@ -5092,6 +5492,9 @@ private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpe
                     }
                 }
             }
+        }
+        Button(onClick = onOpenLearningIntelligence, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open local learning diagnostic and recommendations" }) {
+            Text("Learning Intelligence · Diagnostic, mastery, review and error book")
         }
         Text("Touch, mouse, keyboard and TV remote ready", color = Muted, fontSize = 11.sp)
     }
@@ -5396,14 +5799,17 @@ private fun MathematicsMenuPanel(
     onMove: (Offset) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showMathWorkspace by remember { mutableStateOf(false) }
+    var launcherQuery by rememberSaveable { mutableStateOf("") }
     var showWorkspaces by remember { mutableStateOf(false) }
     var showConcepts by remember { mutableStateOf(false) }
     var showSuggestions by remember { mutableStateOf(false) }
     var futureSelection by remember { mutableStateOf<String?>(null) }
 
     fun openWorkspaceOption(title: String) {
+        vm.recordMathToolOpen(title)
         when (title) {
+            "Unified Math Studio" -> vm.openUnifiedMathStudio()
+            "Adaptive Math Coach" -> vm.openAdaptiveMathLearning()
             "Scientific Calculator" -> vm.openScientificCalculator()
             "Math Notebook" -> vm.openMathNotebook()
             "Problem Solver" -> vm.openProblemSolver()
@@ -5423,41 +5829,63 @@ private fun MathematicsMenuPanel(
         }
     }
 
+    val allTools = remember { (MathCreationTools + MathLearningTools + SuggestedMathTools).distinctBy { it.title } }
+    val matchingTools = remember(launcherQuery) {
+        val query = launcherQuery.trim().lowercase()
+        if (query.isBlank()) allTools else allTools.filter { query in it.title.lowercase() || query in it.description.lowercase() }
+    }
+
+    @Composable
+    fun LauncherTool(option: MathWorkspaceOption) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            GlowButton(option.title, icon = option.icon) { openWorkspaceOption(option.title) }
+            Text(
+                if (option.title in vm.pinnedMathTools) "★" else "☆",
+                color = if (option.title in vm.pinnedMathTools) Amber else Muted,
+                fontSize = 18.sp,
+                modifier = Modifier.clickable { vm.togglePinnedMathTool(option.title) }.padding(5.dp)
+                    .semantics { contentDescription = "${if (option.title in vm.pinnedMathTools) "Unpin" else "Pin"} ${option.title}" },
+            )
+        }
+    }
+
     GlassPanel(modifier) {
-        PanelHeader("Mathematics Menu", vm::toggleMathMenu, Cyan, icon = "∑", onMove = onMove)
+        PanelHeader("Maths Tool Launcher", vm::toggleMathMenu, Cyan, icon = "⌕", onMove = onMove)
+        Text(vm.mathsBreadcrumb.joinToString(" → "), color = Green, fontSize = 11.sp, modifier = Modifier.semantics { contentDescription = "Maths breadcrumb" })
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GlowButton("Home", icon = "H", onClick = vm::openSubjectHub)
             GlowButton("Current Workspace", onClick = vm::toggleMathMenu)
         }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(18.dp))
-                .background(Brush.horizontalGradient(listOf(Color(0x5530D9FF), Color(0x443F2A82))))
-                .border(1.dp, Cyan.copy(alpha = .7f), RoundedCornerShape(18.dp))
-                .clickable { showMathWorkspace = !showMathWorkspace }
-                .focusable()
-                .semantics { contentDescription = "${if (showMathWorkspace) "Close" else "Open"} Math Workspace submenu" }
-                .padding(if (compact) 11.dp else 14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(11.dp),
-        ) {
-            TransparentIcon("MW", Cyan)
-            Column(Modifier.weight(1f)) {
-                Text("Math Workspace", color = Ink, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Text("Create, explore, learn and practise mathematics", color = Muted, fontSize = 11.sp)
+        OutlinedTextField(
+            value = launcherQuery,
+            onValueChange = { launcherQuery = it },
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search maths tools" },
+            label = { Text("Search tools, topics or activities") },
+            singleLine = true,
+        )
+        if (launcherQuery.isBlank()) {
+            val pinned = allTools.filter { it.title in vm.pinnedMathTools }
+            val recent = vm.recentMathTools.mapNotNull { title -> allTools.singleOrNull { it.title == title } }.take(4)
+            val frequent = allTools.filter { (vm.mathToolUseCounts[it.title] ?: 0) > 0 }.sortedByDescending { vm.mathToolUseCounts[it.title] }.take(4)
+            if (pinned.isNotEmpty()) {
+                Text("PINNED", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { pinned.forEach { LauncherTool(it) } }
             }
-            Text(if (showMathWorkspace) "HIDE" else "OPEN", color = Green, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+            if (recent.isNotEmpty()) {
+                Text("RECENT", color = Green, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { recent.forEach { LauncherTool(it) } }
+            }
+            if (frequent.isNotEmpty()) {
+                Text("FREQUENTLY USED", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { frequent.forEach { LauncherTool(it) } }
+            }
         }
-
-        AnimatedVisibility(showMathWorkspace) {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                if (launcherQuery.isNotBlank()) Text("${matchingTools.size} matching tools", color = Green, fontSize = 11.sp)
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("CREATE & SOLVE", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    MathCreationTools.forEach { option ->
-                        GlowButton(option.title, icon = option.icon) { openWorkspaceOption(option.title) }
-                    }
+                    MathCreationTools.filter { it in matchingTools }.forEach { LauncherTool(it) }
                 }
 
                 AnimatedVisibility(showWorkspaces) {
@@ -5471,14 +5899,7 @@ private fun MathematicsMenuPanel(
 
                 Text("LEARN & PRACTISE", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    MathLearningTools.forEach { option ->
-                        GlowButton(
-                            label = if (option.title == "Math Concepts") "Math Concepts (27)" else option.title,
-                            icon = option.icon,
-                        ) {
-                            openWorkspaceOption(option.title)
-                        }
-                    }
+                    MathLearningTools.filter { it in matchingTools }.forEach { LauncherTool(it) }
                 }
 
                 AnimatedVisibility(showConcepts) {
@@ -5546,6 +5967,19 @@ private fun radialBackdrop() = Brush.radialGradient(
 @Composable
 private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(!compact) }
+    val activity = LocalActivity.current
+    val scope = rememberCoroutineScope()
+    val importProject = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null || activity == null) return@rememberLauncherForActivityResult
+        scope.launch {
+            runCatching { MathFileExchange.readProject(activity, uri) }
+                .onSuccess { result ->
+                    result.state?.let { vm.importWorkspace(it, result.recovered, result.diagnostics) }
+                        ?: vm.reportStatus(result.diagnostics.firstOrNull() ?: "This project could not be imported")
+                }
+                .onFailure { vm.reportStatus("Import failed: ${it.message ?: "invalid project"}") }
+        }
+    }
     Row(
         modifier
             .fillMaxWidth()
@@ -5561,21 +5995,35 @@ private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier
             GlowButton("Menu", icon = "≡", iconOnly = compact, onClick = vm::toggleMathMenu)
         }
         Column(
-            Modifier.clickable { expanded = !expanded }.padding(horizontal = 5.dp),
+            Modifier.clickable { expanded = !expanded }.padding(horizontal = 5.dp)
+                .semantics { contentDescription = "Breadcrumb ${vm.mathsBreadcrumb.joinToString(" → ")}" },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text("AI Explorer ${if (expanded) "⌃" else "⌄"}", color = Ink, fontSize = if (compact) 18.sp else 24.sp, fontWeight = FontWeight.ExtraBold)
-            AnimatedVisibility(expanded) {
-                Text(
-                    "Maths · ${when { vm.showShapesExplorer -> "Shapes Explorer"; vm.showMathNotebook -> "Notebook"; vm.showProblemSolver -> "Problem Solver"; vm.showScientificCalculator -> "Scientific Calculator"; vm.showProbabilityLab -> "Probability Lab"; vm.showKnowledgeHub -> vm.activeKnowledgeSection.title; else -> vm.state.name }}",
-                    color = Muted,
-                    fontSize = if (compact) 10.sp else 12.sp,
-                )
-            }
+            Text(
+                vm.mathsBreadcrumb.joinToString(" → "),
+                color = Muted,
+                fontSize = if (compact) 9.sp else 12.sp,
+                maxLines = 1,
+            )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 8.dp)) {
-            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "↶" else "Undo", enabled = true, onClick = vm::undo) }
-            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "↷" else "Redo", enabled = true, onClick = vm::redo) }
+            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "↶" else "Undo", enabled = vm.canUndo, onClick = vm::undo) }
+            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "↷" else "Redo", enabled = vm.canRedo, onClick = vm::redo) }
+            AnimatedVisibility(expanded && !compact) { GlowButton("Save", onClick = vm::saveWorkspace) }
+            AnimatedVisibility(expanded && !compact) { GlowButton("Import") { importProject.launch(arrayOf("application/*", "text/plain")) } }
+            AnimatedVisibility(expanded && !compact) {
+                GlowButton("Share") {
+                    if (activity == null) vm.reportStatus("Sharing is unavailable in this window")
+                    else scope.launch { runCatching { MathFileExchange.shareProject(activity, vm.state) }.onFailure { vm.reportStatus("Share failed: ${it.message}") } }
+                }
+            }
+            AnimatedVisibility(expanded && !compact) {
+                GlowButton("PNG") {
+                    if (activity == null) vm.reportStatus("Image export is unavailable in this window")
+                    else scope.launch { runCatching { MathFileExchange.sharePng(activity, vm.state) }.onFailure { vm.reportStatus("Image export failed: ${it.message}") } }
+                }
+            }
             AnimatedVisibility(vm.state.module != MathModule.Graph2D) {
                 GlowButton(if (compact) "⋮" else "More", enabled = true, onClick = vm::toggleActionDock)
             }
@@ -5725,6 +6173,7 @@ private fun ProductionReadinessCard(vm: ExplorerViewModel) {
     val memoryClass = remember {
         (context.getSystemService(android.content.Context.ACTIVITY_SERVICE) as? ActivityManager)?.memoryClass ?: 256
     }
+    val reliability = remember { LocalReliabilityMonitor(context).snapshot() }
     val device = remember(memoryClass) {
         DeviceCapabilityManager.assess(DeviceCapabilityProfile(Build.VERSION.SDK_INT, Runtime.getRuntime().availableProcessors(), memoryClass, 3, false, false, false, memoryClass <= 128))
     }
@@ -5743,6 +6192,7 @@ private fun ProductionReadinessCard(vm: ExplorerViewModel) {
         }
         Insight("Runtime", "${performance.status} ${performance.score}/100 · ${device.tier}", if (performance.score >= 90) Green else Amber)
         if (expanded) {
+            Insight("Local reliability", "${"%.2f".format(reliability.cleanSessionRate * 100)}% clean · ${reliability.sessions} sessions", if (reliability.cleanSessionRate >= .998) Green else Amber)
             Insight("Project archive", "${archive.toByteArray().size / 1024} KB · ${document.objects.size} typed maths objects", Cyan)
             Insight("GeoGebra XML", "${exchange.exported} translated · ${exchange.skipped.size} explicitly skipped", Violet)
             Insight("Fallback", if ("live AR" in device.enabled) "Live AR available" else "Full simulator and 2D maths remain enabled", Amber)
@@ -6378,11 +6828,19 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             "Drag a junction to resize · drag shape to move · empty canvas pans · empty two-finger pinch zooms",
             Modifier.align(Alignment.BottomEnd),
         )
-        if (!vm.hasDismissibleOverlay()) DeleteDropTarget(
+        DeleteDropTarget(
             enabled = vm.selectedShape in vm.state.shapes.indices,
             onDelete = vm::deleteSelectedShape,
             modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
         )
+        if (!vm.shapeExplorerScene && selectedShape != null) SmartSelectionHud(
+            title = selectedShape.name,
+            instruction = if (selectedShape.locked) "Locked · unlock to drag or resize" else "Drag body to move · junctions resize · top handle rotates",
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 76.dp),
+        ) {
+            GlowButton(if (selectedShape.locked) "Unlock" else "Lock") { vm.updateSelectedShape { it.copy(locked = !it.locked) } }
+            GlowButton("Delete", icon = "×", onClick = vm::deleteSelectedShape)
+        }
         if (!vm.shapeExplorerScene) Row(
             Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -6729,6 +7187,13 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
     var graphTransformAmount by remember { mutableFloatStateOf(.5f) }
     var animateGraphTransform by remember { mutableStateOf(false) }
     var dataText by remember { mutableStateOf("-2,4; -1,1; 0,0; 1,1; 2,4") }
+    var brushInterval by remember { mutableStateOf<ClosedFloatingPointRange<Double>?>(null) }
+    var sketchPoints by remember { mutableStateOf<List<Vec2>>(emptyList()) }
+    var latestSketchFit by remember { mutableStateOf<GraphFitResult?>(null) }
+    var pinnedTracePoints by remember { mutableStateOf<List<Vec2>>(emptyList()) }
+    var directCurveDelta by remember { mutableStateOf<Vec2?>(null) }
+    var splitComparison by remember { mutableStateOf(false) }
+    var showResidualPlot by remember { mutableStateOf(false) }
     val objectGraphSnapshot = vm.mathObjectGraphSnapshot(graphParameterValues)
     val graphRowMetadata = vm.state.graphRowMetadata
     val graphSliderMetadata = vm.state.graphSliderMetadata
@@ -6810,7 +7275,14 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             showMiniMap = showMiniMap,
             parameterA = parameterA,
             parameterHandleEnabled = parameterHandleEnabled,
-            previewExpression = selectedFunction?.let { GraphUxEngine.transform(it.expression, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
+            parameterValues = objectGraphSnapshot.parameterRows.associate { it.name to it.value },
+            previewExpression = directCurveDelta?.let { delta -> selectedFunction?.let { GraphDirectManipulationEngine.translate(it.expression, delta) } }
+                ?: selectedFunction?.let { GraphUxEngine.transform(it.expression, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
+            brushInterval = brushInterval,
+            sketchPoints = sketchPoints,
+            pinnedTracePoints = pinnedTracePoints,
+            showResidualPlot = showResidualPlot,
+            splitComparison = splitComparison,
             snapshotExpressions = graphSnapshotOverlay?.expressions.orEmpty(),
             selectedFunctionId = selectedGraphRowId,
             onSelectFunction = {
@@ -6824,8 +7296,35 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             },
             onTraceChange = { traceX = it.toFloat().coerceIn(-1_000f, 1_000f) },
             onParameterAChange = { parameterA = it.toFloat().coerceIn(-20f, 20f) },
+            onParameterChange = { name, value ->
+                graphParameterValues = graphParameterValues + (name to value.coerceIn(-20.0, 20.0))
+                if (name == "a") parameterA = value.toFloat().coerceIn(-20f, 20f)
+            },
             onDomainChange = { id, domain -> graphDomains = graphDomains + (id to domain) },
             onLabelMove = { id, delta -> graphLabelOffsets = graphLabelOffsets + (id to ((graphLabelOffsets[id] ?: Offset.Zero) + delta)) },
+            onCurveDrag = { id, delta ->
+                selectedGraphRowId = id
+                directCurveDelta = delta
+            },
+            onCurveDragEnd = { id, delta ->
+                val index = vm.state.functions.indexOfFirst { it.id == id }
+                if (index >= 0 && (abs(delta.x) > .01 || abs(delta.y) > .01)) vm.editExpression(index, GraphDirectManipulationEngine.translate(vm.state.functions[index].expression, delta))
+                directCurveDelta = null
+            },
+            onBrushChange = { start, end -> brushInterval = min(start, end)..max(start, end) },
+            onSketchChange = { sketchPoints = it },
+            onSketchEnd = { points ->
+                latestSketchFit = GraphDirectManipulationEngine.fit(points)
+                latestSketchFit?.let { fit -> vm.addFunction(fit.expression); selectedGraphRowId = vm.state.functions.lastOrNull()?.id }
+                sketchPoints = emptyList()
+            },
+            onDataPointMove = { index, point ->
+                val updated = dataPoints.toMutableList()
+                if (index in updated.indices) {
+                    updated[index] = point
+                    dataText = updated.joinToString("; ") { "${trim(it.x)},${trim(it.y)}" }
+                }
+            },
             onViewportChange = { graphViewport = it },
             onContextMenu = { id, point -> contextMenuFunctionId = id; contextMenuPosition = point },
         )
@@ -6847,6 +7346,34 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             },
             modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
         )
+        if (!graphTypingMode && selectedFunction != null) SmartSelectionHud(
+            title = selectedFunction.name,
+            instruction = if (Regex("\\ba\\b").containsMatchIn(selectedFunction.expression)) {
+                "Drag the curve handle to change a · drag endpoint handles to edit its domain"
+            } else {
+                "Tap/hold the curve for actions · drag its label or domain endpoints directly"
+            },
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 76.dp),
+        ) {
+            GlowButton("Trace") { graphTool = GraphTool.Trace }
+            GlowButton("Pin point") {
+                runCatching { engine.compile(stripEquation(selectedFunction.expression)).eval(mapOf("x" to traceX.toDouble())) }.getOrNull()?.takeIf(Double::isFinite)?.let { y ->
+                    pinnedTracePoints = (pinnedTracePoints + Vec2(traceX.toDouble(), y)).takeLast(8)
+                }
+            }
+            GlowButton("Brush area") { graphTool = GraphTool.BrushArea; brushInterval = null }
+            GlowButton("Sketch fit") { graphTool = GraphTool.SketchFit; sketchPoints = emptyList() }
+            GlowButton("Domain") {
+                graphDomains = graphDomains + (selectedFunction.id to (graphDomains[selectedFunction.id] ?: GraphDomainSelection()))
+            }
+            GlowButton("Delete", icon = "×") {
+                val index = vm.state.functions.indexOfFirst { it.id == selectedFunction.id }
+                if (index >= 0) {
+                    vm.deleteFunction(index)
+                    selectedGraphRowId = vm.state.functions.getOrNull(index.coerceAtMost(vm.state.functions.lastIndex))?.id
+                }
+            }
+        }
         if (!graphTypingMode) FlowRow(Modifier.align(Alignment.TopEnd).padding(top = 72.dp, end = 10.dp), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             GlowButton("Back") { graphBackRequest++ }; GlowButton("Forward") { graphForwardRequest++ }; GlowButton("Fit") { graphHomeRequest++ }
             GlowButton("Axis") { showAxisSheet = !showAxisSheet }
@@ -7081,7 +7608,10 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 TogglePill("Compare", comparisonMode) { comparisonMode = it }
+                TogglePill("Split compare", splitComparison) { splitComparison = it; comparisonMode = it || comparisonMode }
+                TogglePill("Residual plot", showResidualPlot) { showResidualPlot = it }
                 TogglePill("Parameter handles", parameterHandleEnabled) { parameterHandleEnabled = it }
+                if (pinnedTracePoints.isNotEmpty()) GlowButton("Clear ${pinnedTracePoints.size} pins") { pinnedTracePoints = emptyList() }
                 GlowButton("Save snapshot") { graphSnapshots = graphSnapshots + GraphSnapshot("View ${graphSnapshots.size + 1}", liveFunctions.map { it.expression }, graphViewport) }
                 selectedFunction?.let { selected ->
                     val selectedIndex = vm.state.functions.indexOfFirst { it.id == selected.id }
@@ -7095,6 +7625,11 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
                 }
             }
             if (selectedFunction != null) AxisSlider("Transform amount", graphTransformAmount, -2f..2f) { graphTransformAmount = it }
+            brushInterval?.let { interval ->
+                val area = primaryExpression?.let { expression -> runCatching { GraphDirectManipulationEngine.signedArea(engine.compile(stripEquation(expression)), interval.start, interval.endInclusive) }.getOrNull() }
+                Insight("Brushed interval", "${trim(interval.start)} to ${trim(interval.endInclusive)} · signed area ${area?.let(::trim) ?: "undefined"}", Cyan)
+            }
+            latestSketchFit?.let { fit -> Insight("Sketch fit", "${fit.expression} · R² ${trim(fit.rSquared)}", Green) }
             if (graphSnapshots.isNotEmpty()) {
                 Text("Saved graph states", color = Ink, fontWeight = FontWeight.SemiBold)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { graphSnapshots.forEach { snapshot -> GlowButton(if (graphSnapshotOverlay == snapshot) "Overlay on: ${snapshot.name}" else snapshot.name, onClick = { graphSnapshotOverlay = if (graphSnapshotOverlay == snapshot) null else snapshot }) } }
@@ -7308,8 +7843,21 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var sectionEnabled by remember { mutableStateOf(false) }
     var clipSection by remember { mutableStateOf(false) }
     var sectionY by remember { mutableFloatStateOf(0f) }
+    var transformSpace by remember { mutableStateOf(SpatialTransformSpace.World) }
+    var dragPlane by remember { mutableStateOf(SpatialDragPlane.Free) }
+    var visualMode by remember { mutableStateOf(SpatialVisualMode.Wireframe) }
+    var explodeAmount by remember { mutableFloatStateOf(0f) }
+    var multiSelectEnabled by remember { mutableStateOf(false) }
+    var selectedSolidIndices by remember { mutableStateOf<Set<Int>>(setOf(vm.selectedSolid)) }
+    var solidGroups by remember { mutableStateOf<List<Set<Int>>>(emptyList()) }
+    var cameraBookmarks by remember { mutableStateOf<List<SpatialCameraBookmark>>(emptyList()) }
+    var showSceneNavigator by remember { mutableStateOf(true) }
+    var showMotionTrails by remember { mutableStateOf(true) }
+    var motionTrail by remember { mutableStateOf<List<Vec3>>(emptyList()) }
     val selectedIndex = vm.selectedSolid.coerceIn(0, vm.state.solids.lastIndex.coerceAtLeast(0))
     val selectedSolid = vm.state.solids.getOrNull(selectedIndex)
+    val renderedSolids = remember(vm.state.solids, explodeAmount) { AdvancedSpatialInteractionEngine.exploded(vm.state.solids, explodeAmount.toDouble()) }
+    val collisions = remember(renderedSolids) { AdvancedSpatialInteractionEngine.collisions(renderedSolids) }
     val selectedBounds = remember(selectedSolid) {
         selectedSolid?.let { solid ->
             AnalyticGeometry3D.bounds(SolidMeshFactory.create(solid).vertices.map { it + solid.position })
@@ -7324,7 +7872,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     Box(Modifier.fillMaxSize()) {
         Projected3DCanvas(
             modifier = Modifier.fillMaxSize(),
-            solids = vm.state.solids,
+            solids = renderedSolids,
             vectors = vm.state.vectors3D,
             selectedIndex = selectedIndex,
             selectedVectorIndex = selectedVectorIndex,
@@ -7334,14 +7882,19 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             zoom = zoom,
             cameraPan = cameraPan,
             transformMode = transformMode,
-            wire = wire,
+            wire = wire || visualMode != SpatialVisualMode.Solid,
             perspective = projection == CameraProjection.Perspective,
             selectionMode = selectionMode,
             subSelection = subSelection,
             sectionEnabled = sectionEnabled,
             sectionY = sectionY.toDouble(),
             clipSection = clipSection,
-            onSelect = vm::selectSolid,
+            onSelect = { index ->
+                vm.selectSolid(index)
+                selectedSolidIndices = if (multiSelectEnabled) {
+                    if (index in selectedSolidIndices) selectedSolidIndices - index else selectedSolidIndices + index
+                } else setOf(index)
+            },
             onSubSelect = { subSelection = it },
             onSelectVector = vm::selectVector3D,
             onSolidDragStart = {
@@ -7349,12 +7902,20 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 if (it !in lockedSolidIndices) vm.beginSolidDrag(it)
             },
             onSolidMove = { index, delta ->
-                val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(delta, axisConstraint), precisionMode)
-                val snapped = if (vm.settings.snap) Vec3(round(constrained.x * 4) / 4, round(constrained.y * 4) / 4, round(constrained.z * 4) / 4) else constrained
+                val spatialDelta = AdvancedSpatialInteractionEngine.transformSpace(delta, vm.state.solids.getOrNull(index)?.rotation ?: Vec3(0.0, 0.0, 0.0), transformSpace)
+                val planeConstrained = AdvancedSpatialInteractionEngine.constrain(spatialDelta, dragPlane)
+                val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(planeConstrained, axisConstraint), precisionMode)
+                val proposed = vm.state.solids.getOrNull(index)?.position?.plus(constrained) ?: constrained
+                val snappedPosition = if (vm.settings.snap) AdvancedSpatialInteractionEngine.snap(proposed, vm.state.solids.filterIndexed { i, _ -> i != index }.map { it.position }) else proposed
+                val snapped = snappedPosition - (vm.state.solids.getOrNull(index)?.position ?: Vec3(0.0, 0.0, 0.0))
                 vm.previewSolidDrag(index, snapped)
+                if (showMotionTrails) motionTrail = (motionTrail + snappedPosition).takeLast(24)
             },
             onSolidRotate = vm::previewSolidRotation,
-            onSolidScale = vm::previewSolidScale,
+            onSolidScale = { index, factor ->
+                val face = subSelection?.takeIf { it.solidIndex == index && it.mode == Selection3DMode.Face }
+                if (face != null) vm.previewSolidFaceExtrusion(index, face.index, factor) else vm.previewSolidScale(index, factor)
+            },
             onSolidDragEnd = vm::endSolidDrag,
             onSolidDragCancel = vm::cancelSolidDrag,
             onSolidDropDelete = { vm.deleteSelectedSolid() },
@@ -7380,6 +7941,29 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             },
             onEmptyTap = vm::dismissAllMenusAndPanels,
             onGestureModeChange = { gestureMode = it },
+        )
+        if (!vm.shapeExplorerScene && showSceneNavigator) SpatialSceneNavigator(
+            solids = renderedSolids,
+            selected = selectedSolidIndices,
+            collisions = collisions.map { it.first to it.second },
+            trail = if (showMotionTrails) motionTrail else emptyList(),
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 72.dp, end = 10.dp),
+        )
+        if (!vm.shapeExplorerScene && !vm.showRightPanel) OrientationCube(
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 12.dp),
+            onPreset = { preset ->
+                when (preset) {
+                    "Front" -> { rotateX = 0f; rotateY = 0f; rotateZ = 0f }
+                    "Top" -> { rotateX = 90f; rotateY = 0f; rotateZ = 0f }
+                    "Side" -> { rotateX = 0f; rotateY = 90f; rotateZ = 0f }
+                    else -> { rotateX = 25f; rotateY = -35f; rotateZ = 15f }
+                }
+            },
+        )
+        if (collisions.isNotEmpty()) Text(
+            "⚠ ${collisions.size} overlap${if (collisions.size == 1) "" else "s"}",
+            color = Amber,
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 76.dp).clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(8.dp),
         )
         if (vm.shapeExplorerScene && selectedSolid != null) {
             val measurements = Geometry3D.measure(selectedSolid)
@@ -7424,11 +8008,29 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             "Drag empty space to orbit · two fingers pan/zoom · drag object to transform",
             Modifier.align(Alignment.BottomEnd),
         )
-        if (!vm.hasDismissibleOverlay()) DeleteDropTarget(
+        DeleteDropTarget(
             enabled = selectedSolid != null,
             onDelete = vm::deleteSelectedSolid,
             modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
         )
+        if (!vm.shapeExplorerScene && selectedSolid != null) SmartSelectionHud(
+            title = selectedSolid.type.name,
+            instruction = "Drag the object to ${transformMode.name.lowercase()} · empty space orbits the camera",
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 76.dp),
+        ) {
+            Transform3DMode.entries.forEach { mode ->
+                GlowButton(if (mode == transformMode) "• ${mode.name}" else mode.name) { transformMode = mode }
+            }
+            GlowButton(if (selectedIndex in lockedSolidIndices) "Unlock" else "Lock") {
+                lockedSolidIndices = if (selectedIndex in lockedSolidIndices) lockedSolidIndices - selectedIndex else lockedSolidIndices + selectedIndex
+            }
+            GlowButton("Copy") { vm.duplicateSelectedSolid(); selectedSolidIndices = setOf(vm.selectedSolid) }
+            subSelection?.takeIf { it.mode == Selection3DMode.Face }?.let { face ->
+                GlowButton("Extrude face") { vm.transformSolid(selectedIndex) { AdvancedSpatialInteractionEngine.extrude(it, face.index, .25) } }
+            }
+            GlowButton("Mirror X") { vm.transformSolid(selectedIndex) { AdvancedSpatialInteractionEngine.reflect(it, SpatialAlignment.X) } }
+            GlowButton("Delete", icon = "×", onClick = vm::deleteSelectedSolid)
+        }
         if (!vm.shapeExplorerScene) Row(Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton("⌂ Home") { rotateX = 25f; rotateY = -35f; rotateZ = 15f; zoom = 1f; cameraPan = Offset.Zero }
             if (gestureMode != GestureMode.Idle) Text(gestureMode.label, color = Cyan, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
@@ -7547,6 +8149,52 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                     GlowButton(if (axisConstraint == axis) "● ${axis.name}" else axis.name) { axisConstraint = axis }
                 }
                 GlowButton(if (precisionMode) "● Precision" else "Precision") { precisionMode = !precisionMode }
+            }
+            Text("Professional direct manipulation", color = Cyan, fontWeight = FontWeight.SemiBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SpatialTransformSpace.entries.forEach { space -> GlowButton(if (transformSpace == space) "● ${space.name}" else space.name) { transformSpace = space } }
+                SpatialDragPlane.entries.forEach { plane -> GlowButton(if (dragPlane == plane) "● ${plane.name}" else plane.name) { dragPlane = plane } }
+                SpatialVisualMode.entries.forEach { mode -> GlowButton(if (visualMode == mode) "● ${mode.name}" else mode.name) { visualMode = mode; wire = mode != SpatialVisualMode.Solid } }
+            }
+            AxisSlider("Exploded view", explodeAmount, 0f..3f) { explodeAmount = it }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                TogglePill("Multi-select", multiSelectEnabled) { multiSelectEnabled = it; if (!it) selectedSolidIndices = setOf(selectedIndex) }
+                TogglePill("Scene navigator", showSceneNavigator) { showSceneNavigator = it }
+                TogglePill("Motion trails", showMotionTrails) { showMotionTrails = it; if (!it) motionTrail = emptyList() }
+                GlowButton("Group", enabled = selectedSolidIndices.size >= 2) { solidGroups = solidGroups + listOf(selectedSolidIndices) }
+                GlowButton("Ungroup", enabled = solidGroups.any { it == selectedSolidIndices }) { solidGroups = solidGroups.filterNot { it == selectedSolidIndices } }
+            }
+            if (selectedSolidIndices.size >= 2) FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                SpatialAlignment.entries.forEach { alignment ->
+                    GlowButton("Align ${alignment.name}") { vm.replaceSolids("Aligned objects on ${alignment.name}") { AdvancedSpatialInteractionEngine.align(it, selectedSolidIndices, alignment) } }
+                    GlowButton("Space ${alignment.name}", enabled = selectedSolidIndices.size >= 3) { vm.replaceSolids("Distributed objects on ${alignment.name}") { AdvancedSpatialInteractionEngine.distribute(it, selectedSolidIndices, alignment) } }
+                }
+                GlowButton("Concentric") {
+                    vm.replaceSolids("Applied concentric constraint") { solids ->
+                        val anchor = selectedSolidIndices.firstOrNull()?.let(solids::getOrNull)?.position ?: return@replaceSolids solids
+                        solids.mapIndexed { index, solid -> if (index in selectedSolidIndices) solid.copy(position = anchor) else solid }
+                    }
+                }
+                GlowButton("Parallel orientation") {
+                    vm.replaceSolids("Applied parallel-orientation constraint") { solids ->
+                        val rotation = selectedSolidIndices.firstOrNull()?.let(solids::getOrNull)?.rotation ?: return@replaceSolids solids
+                        solids.mapIndexed { index, solid -> if (index in selectedSolidIndices) solid.copy(rotation = rotation) else solid }
+                    }
+                }
+            }
+            if (selectedSolidIndices.size >= 2) {
+                val pair = selectedSolidIndices.take(2).mapNotNull(vm.state.solids::getOrNull)
+                if (pair.size == 2) Insight("Measurement anchor", "distance ${trim((pair[0].position - pair[1].position).magnitude())}", Green)
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                GlowButton("Front") { rotateX = 0f; rotateY = 0f; rotateZ = 0f }
+                GlowButton("Top") { rotateX = 90f; rotateY = 0f; rotateZ = 0f }
+                GlowButton("Side") { rotateX = 0f; rotateY = 90f; rotateZ = 0f }
+                GlowButton("Isometric") { rotateX = 25f; rotateY = -35f; rotateZ = 15f }
+                GlowButton("Save camera") { cameraBookmarks = (cameraBookmarks + SpatialCameraBookmark("View ${cameraBookmarks.size + 1}", Vec3(rotateX.toDouble(), rotateY.toDouble(), rotateZ.toDouble()), zoom, cameraPan.x, cameraPan.y)).takeLast(6) }
+            }
+            if (cameraBookmarks.isNotEmpty()) FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                cameraBookmarks.forEach { bookmark -> GlowButton(bookmark.name) { rotateX = bookmark.rotation.x.toFloat(); rotateY = bookmark.rotation.y.toFloat(); rotateZ = bookmark.rotation.z.toFloat(); zoom = bookmark.zoom; cameraPan = Offset(bookmark.panX, bookmark.panY) } }
             }
             TogglePill("Cross-section", sectionEnabled) { sectionEnabled = it }
             TogglePill("Clip below plane", clipSection) { clipSection = it }
@@ -8712,23 +9360,51 @@ private fun SolidTrackballPalette(
 }
 
 @Composable
-private fun DeleteDropTarget(enabled: Boolean, onDelete: () -> Unit, modifier: Modifier = Modifier) {
-    Box(
+private fun SmartSelectionHud(
+    title: String,
+    instruction: String,
+    modifier: Modifier = Modifier,
+    actions: @Composable () -> Unit,
+) {
+    Column(
         modifier
-            .size(52.dp)
-            .clip(androidx.compose.foundation.shape.CircleShape)
+            .widthIn(max = 560.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .background(Brush.linearGradient(listOf(SurfaceA.copy(.96f), SurfaceB.copy(.94f))))
+            .border(1.dp, Cyan.copy(alpha = .48f), RoundedCornerShape(18.dp))
+            .padding(horizontal = 10.dp, vertical = 8.dp)
+            .semantics { contentDescription = "Selected object controls for $title" },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(title, color = Cyan, fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1)
+            Text("Direct manipulation", color = Green, fontSize = 10.sp)
+        }
+        Text(instruction, color = Muted, fontSize = 10.sp, maxLines = 2)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { actions() }
+    }
+}
+
+@Composable
+private fun DeleteDropTarget(enabled: Boolean, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier
+            .clip(RoundedCornerShape(16.dp))
             .background(if (enabled) Color(0xCC351521) else SurfaceA.copy(alpha = .55f))
-            .border(1.dp, if (enabled) Color(0xFFFF6688) else Muted.copy(.35f), androidx.compose.foundation.shape.CircleShape)
+            .border(1.dp, if (enabled) Color(0xFFFF6688) else Muted.copy(.35f), RoundedCornerShape(16.dp))
             .clickable(enabled = enabled, onClick = onDelete)
             .semantics { contentDescription = "Delete selected object or drag object here" },
-        contentAlignment = Alignment.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
-        Canvas(Modifier.size(24.dp)) {
+        Canvas(Modifier.padding(top = 7.dp).size(22.dp)) {
             val color = if (enabled) Color(0xFFFF6688) else Muted
             drawRoundRect(color, Offset(size.width * .27f, size.height * .30f), Size(size.width * .46f, size.height * .55f), cornerRadius = CornerRadius(3f, 3f), style = Stroke(2.5f))
             drawLine(color, Offset(size.width * .20f, size.height * .23f), Offset(size.width * .80f, size.height * .23f), 2.5f)
             drawLine(color, Offset(size.width * .40f, size.height * .13f), Offset(size.width * .60f, size.height * .13f), 2.5f)
         }
+        Text(if (enabled) "Delete" else "Select", color = if (enabled) Color(0xFFFF6688) else Muted, fontSize = 9.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
     }
 }
 
@@ -8837,6 +9513,63 @@ private fun InteractionHint(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
+private fun OrientationCube(modifier: Modifier = Modifier, onPreset: (String) -> Unit) {
+    Column(
+        modifier.clip(RoundedCornerShape(14.dp)).background(SurfaceA.copy(.94f)).border(1.dp, Violet.copy(.5f), RoundedCornerShape(14.dp)).padding(6.dp)
+            .semantics { contentDescription = "Interactive 3D orientation cube" },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Canvas(Modifier.size(62.dp).clickable { onPreset("Isometric") }) {
+            val front = Path().apply { moveTo(10f, 22f); lineTo(38f, 30f); lineTo(38f, 57f); lineTo(10f, 48f); close() }
+            val side = Path().apply { moveTo(38f, 30f); lineTo(56f, 18f); lineTo(56f, 45f); lineTo(38f, 57f); close() }
+            val top = Path().apply { moveTo(10f, 22f); lineTo(29f, 9f); lineTo(56f, 18f); lineTo(38f, 30f); close() }
+            drawPath(front, Cyan.copy(.35f)); drawPath(front, Cyan, style = Stroke(2f))
+            drawPath(side, Violet.copy(.4f)); drawPath(side, Violet, style = Stroke(2f))
+            drawPath(top, Amber.copy(.35f)); drawPath(top, Amber, style = Stroke(2f))
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+            listOf("Front", "Top", "Side").forEach { preset -> Text(preset.take(1), color = Ink, fontSize = 9.sp, modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable { onPreset(preset) }.padding(5.dp)) }
+        }
+    }
+}
+
+@Composable
+private fun SpatialSceneNavigator(
+    solids: List<Solid>,
+    selected: Set<Int>,
+    collisions: List<Pair<Int, Int>>,
+    trail: List<Vec3>,
+    modifier: Modifier = Modifier,
+) {
+    Canvas(
+        modifier.width(148.dp).height(112.dp).clip(RoundedCornerShape(15.dp))
+            .background(SurfaceA.copy(.92f)).border(1.dp, Cyan.copy(.45f), RoundedCornerShape(15.dp))
+            .semantics { contentDescription = "3D scene navigator with ${solids.size} objects, ${selected.size} selected, and ${collisions.size} overlaps" },
+    ) {
+        val all = solids.map { it.position } + trail
+        val minX = all.minOfOrNull { it.x } ?: -4.0; val maxX = all.maxOfOrNull { it.x } ?: 4.0
+        val minZ = all.minOfOrNull { it.z } ?: -4.0; val maxZ = all.maxOfOrNull { it.z } ?: 4.0
+        fun map(point: Vec3) = Offset(
+            12f + ((point.x - minX) / (maxX - minX).coerceAtLeast(1.0)).toFloat() * (size.width - 24f),
+            12f + ((point.z - minZ) / (maxZ - minZ).coerceAtLeast(1.0)).toFloat() * (size.height - 24f),
+        )
+        for (i in 1..3) {
+            drawLine(Ink.copy(.08f), Offset(size.width * i / 4f, 0f), Offset(size.width * i / 4f, size.height), 1f)
+            drawLine(Ink.copy(.08f), Offset(0f, size.height * i / 4f), Offset(size.width, size.height * i / 4f), 1f)
+        }
+        trail.zipWithNext().forEachIndexed { index, pair -> drawLine(Amber.copy(alpha = .15f + .7f * index / trail.size.coerceAtLeast(1)), map(pair.first), map(pair.second), 2f) }
+        solids.forEachIndexed { index, solid ->
+            val colliding = collisions.any { index == it.first || index == it.second }
+            val color = when { colliding -> Color.Red; index in selected -> Amber; else -> Cyan }
+            drawCircle(color.copy(.22f), if (index in selected) 10f else 7f, map(solid.position))
+            drawCircle(color, if (index in selected) 5f else 3.5f, map(solid.position))
+        }
+        drawGraphLabel("TOP · scene", Offset(8f, 20f), Muted)
+    }
+}
+
+@Composable
 private fun GraphCanvas(
     modifier: Modifier,
     functions: List<com.indianservers.aiexplorer.core.FunctionDefinition>,
@@ -8854,20 +9587,34 @@ private fun GraphCanvas(
     showMiniMap: Boolean,
     parameterA: Float,
     parameterHandleEnabled: Boolean,
+    parameterValues: Map<String, Double>,
     previewExpression: String?,
+    brushInterval: ClosedFloatingPointRange<Double>?,
+    sketchPoints: List<Vec2>,
+    pinnedTracePoints: List<Vec2>,
+    showResidualPlot: Boolean,
+    splitComparison: Boolean,
     snapshotExpressions: List<String>,
     selectedFunctionId: String?,
     onSelectFunction: (String) -> Unit,
     onClearSelection: () -> Unit,
     onTraceChange: (Double) -> Unit,
     onParameterAChange: (Double) -> Unit,
+    onParameterChange: (String, Double) -> Unit,
     onDomainChange: (String, GraphDomainSelection) -> Unit,
     onLabelMove: (String, Offset) -> Unit,
+    onCurveDrag: (String, Vec2) -> Unit,
+    onCurveDragEnd: (String, Vec2) -> Unit,
+    onBrushChange: (Double, Double) -> Unit,
+    onSketchChange: (List<Vec2>) -> Unit,
+    onSketchEnd: (List<Vec2>) -> Unit,
+    onDataPointMove: (Int, Vec2) -> Unit,
     onViewportChange: (GraphViewState) -> Unit,
     onContextMenu: (String?, Vec2) -> Unit,
 ) {
     val graph = remember { GraphAnalysis() }
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
+    val typedGraphEngine = remember { TypedGraphEngine() }
     val engine = remember { ExpressionEngine() }
     var cameraCenter by remember { mutableStateOf(Vec2(0.0, 0.0)) }
     var cameraZoom by remember { mutableFloatStateOf(1f) }
@@ -8891,7 +9638,7 @@ private fun GraphCanvas(
     LaunchedEffect(cameraCenter, cameraZoom) { onViewportChange(GraphViewState(cameraCenter, cameraZoom)) }
     Canvas(
         modifier
-            .pointerInput(graphTool, selectedFunctionId, domains, labelOffsets, parameterA, parameterHandleEnabled) {
+            .pointerInput(graphTool, selectedFunctionId, domains, labelOffsets, parameterA, parameterHandleEnabled, parameterValues) {
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
                     val gestureStartedAt = System.currentTimeMillis()
@@ -8980,11 +9727,24 @@ private fun GraphCanvas(
                         runCatching { Vec2(1.0, engine.compile(stripEquation(fn.expression)).eval(mapOf("x" to 1.0))) }.getOrNull()
                     }
                     val parameterDrag = parameterHandleWorld?.let { (screen(it) - down.position).getDistance() < 48f } == true
+                    val canvasParameterColumns = maxOf(1, ((size.width - 80f) / 92f).toInt())
+                    fun canvasParameterAnchor(index: Int) = Offset(80f + (index % canvasParameterColumns) * 92f, 120f + (index / canvasParameterColumns) * 54f)
+                    val canvasParameter = if (parameterHandleEnabled) parameterValues.keys.withIndex().minByOrNull { (index, _) ->
+                        (canvasParameterAnchor(index) - down.position).getDistance()
+                    }?.takeIf { (index, _) -> (canvasParameterAnchor(index) - down.position).getDistance() < 38f }?.value else null
                     val domainSide = selectedDomain?.let { domain ->
                         val left = screen(Vec2(domain.minimum, 0.0)); val right = screen(Vec2(domain.maximum, 0.0))
                         when { (left - down.position).getDistance() < 42f -> -1; (right - down.position).getDistance() < 42f -> 1; else -> 0 }
                     } ?: 0
                     val traceDrag = !labelDrag && !parameterDrag && domainSide == 0 && (graphTool == GraphTool.Trace || (traceScreen != null && (traceScreen - down.position).getDistance() < 44f))
+                    val startWorld = world(down.position)
+                    val curveDragId = nearestFunction(down.position)?.takeIf { graphTool == GraphTool.Plot && it == selectedFunctionId }
+                    val dataPointIndex = if (graphTool == GraphTool.Data) dataPoints.indices.minByOrNull { (screen(dataPoints[it]) - down.position).getDistance() }
+                        ?.takeIf { (screen(dataPoints[it]) - down.position).getDistance() < 42f } else null
+                    val brushing = graphTool == GraphTool.BrushArea
+                    val sketching = graphTool == GraphTool.SketchFit
+                    var activeSketch = if (sketching) listOf(startWorld) else emptyList()
+                    var latestWorld = startWorld
                     val gestureStartView = GraphViewState(cameraCenter, cameraZoom)
                     var moved = false
                     var transformed = false
@@ -9005,9 +9765,26 @@ private fun GraphCanvas(
                         } else {
                             val change = event.changes.firstOrNull()
                             val delta = change?.positionChange() ?: Offset.Zero
+                            if (change != null) latestWorld = world(change.position)
                             if (delta.getDistance() > 0f) {
                                 moved = moved || (change!!.position - down.position).getDistance() > 8f
-                                if (labelDrag && selectedFunctionId != null) {
+                                if (canvasParameter != null) {
+                                    onParameterChange(canvasParameter, ((change!!.position.x - 40f) / (size.width - 80f) * 20f - 10f).toDouble())
+                                    gestureMode = GestureMode.Resizing
+                                } else if (dataPointIndex != null) {
+                                    onDataPointMove(dataPointIndex, world(change!!.position))
+                                    gestureMode = GestureMode.Moving
+                                } else if (brushing) {
+                                    onBrushChange(startWorld.x, world(change!!.position).x)
+                                    gestureMode = GestureMode.Resizing
+                                } else if (sketching) {
+                                    activeSketch = (activeSketch + world(change!!.position)).takeLast(800)
+                                    onSketchChange(activeSketch)
+                                    gestureMode = GestureMode.Moving
+                                } else if (curveDragId != null) {
+                                    onCurveDrag(curveDragId, world(change!!.position) - startWorld)
+                                    gestureMode = GestureMode.Moving
+                                } else if (labelDrag && selectedFunctionId != null) {
                                     onLabelMove(selectedFunctionId, delta)
                                     gestureMode = GestureMode.Moving
                                 } else if (parameterDrag) {
@@ -9033,6 +9810,8 @@ private fun GraphCanvas(
                         }
                         if (event.changes.none { it.pressed }) break
                     }
+                    if (moved && curveDragId != null) onCurveDragEnd(curveDragId, latestWorld - startWorld)
+                    if (sketching && activeSketch.size >= 3) onSketchEnd(activeSketch)
                     if (!moved && !transformed) {
                         val now = System.currentTimeMillis()
                         if (now - lastTapAt < 320L) {
@@ -9066,6 +9845,13 @@ private fun GraphCanvas(
             Offset(origin.x + displayX.toFloat() * scale, origin.y - displayY.toFloat() * scale)
         }
         drawGrid(origin, scale, axisSettings)
+        if (parameterHandleEnabled) parameterValues.entries.forEachIndexed { index, entry ->
+            val columns = maxOf(1, ((size.width - 80f) / 92f).toInt())
+            val anchor = Offset(80f + (index % columns) * 92f, 120f + (index / columns) * 54f)
+            drawCircle(Cyan.copy(.2f), 20f, anchor)
+            drawCircle(Cyan, 7f, anchor)
+            drawGraphLabel("${entry.key}=${trim(entry.value)}", anchor + Offset(-34f, -28f), Cyan)
+        }
         val halfWidth = size.width / (2f * scale)
         val halfHeight = size.height / (2f * scale)
         val minX = if (axisSettings.xLogarithmic) 10.0.pow(cameraCenter.x - halfWidth) else cameraCenter.x - halfWidth
@@ -9083,37 +9869,40 @@ private fun GraphCanvas(
             val selected = selectedFunctionId == fn.id
             val strokeWidth = if (selected) 6.0f else 4.2f
             val styleEffect = when (styles[fn.id] ?: GraphLineStyle.Solid) { GraphLineStyle.Solid -> null; GraphLineStyle.Dashed -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(16f, 9f)); GraphLineStyle.Dotted -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(3f, 8f)) }
-            if (advancedGraphEngine.classify(fn.expression) == AdvancedGraphKind.Inequality) {
+            val typedDefinition = runCatching { TypedGraphExpressionParser.parse(fn.expression) }.getOrNull()
+            if (typedDefinition is TypedGraphExpression.Inequality) {
                 val columns = 42; val rows = 42
-                val cells = runCatching { advancedGraphEngine.inequality(fn.expression, GraphDomain(minX, maxX), GraphDomain(minY, maxY), columns, rows) }.getOrDefault(emptyList())
+                val cells = runCatching { typedGraphEngine.sample(typedDefinition, GraphDomain(minX, maxX), GraphDomain(minY, maxY, "y"), parameterValues, 168).inequalityCells }.getOrDefault(emptyList())
                 val cellSize = Size(size.width / columns, size.height / rows)
                 cells.filter { it.satisfied }.forEach { cell -> drawRect(color.copy(if (selected) .25f else .14f), topLeft = tx(cell.center) - Offset(cellSize.width / 2, cellSize.height / 2), size = cellSize) }
-                val boundary = fn.expression.replace("<=", "=").replace(">=", "=").replace("<", "=").replace(">", "=")
-                runCatching { graph.implicitSegments(boundary, minX, maxX, minY, maxY) }.getOrDefault(emptyList()).forEach { drawLine(color, tx(it.start), tx(it.end), if (selected) 5f else 3f, pathEffect = styleEffect) }
                 return@forEachIndexed
             }
             val kind = graph.definitionKind(fn.expression)
-            if (kind == GraphDefinitionKind.Implicit) {
-                val segments = runCatching { graph.implicitSegments(fn.expression, minX, maxX, minY, maxY) }.getOrDefault(emptyList())
+            if (typedDefinition is TypedGraphExpression.Implicit) {
+                val segments = runCatching { typedGraphEngine.sample(typedDefinition, GraphDomain(minX, maxX), GraphDomain(minY, maxY, "y"), parameterValues, 520).implicitSegments }.getOrDefault(emptyList())
                 segments.forEach { drawLine(color, tx(it.start), tx(it.end), if (selected) 5.2f else 3.2f, cap = StrokeCap.Round, pathEffect = styleEffect) }
             } else {
                 val domain = domains[fn.id]
                 val sampleMinimum = max(minX, domain?.minimum ?: minX)
                 val sampleMaximum = min(maxX, domain?.maximum ?: maxX)
-                val sample = if (sampleMinimum < sampleMaximum) runCatching { graph.sampleDefinition(fn.expression, sampleMinimum, sampleMaximum, steps = 520) }.getOrNull() else null
-                sample?.points?.zipWithNext()?.forEachIndexed { i, pair ->
-                    val logValid = (!axisSettings.xLogarithmic || pair.first.x > 0 && pair.second.x > 0) && (!axisSettings.yLogarithmic || pair.first.y > 0 && pair.second.y > 0)
-                    if (!sample.breaks.contains(i) && logValid) drawLine(color.copy(alpha = if (selected) 1f else .55f), tx(pair.first), tx(pair.second), strokeWidth, cap = StrokeCap.Round, pathEffect = styleEffect)
+                val sample = if (sampleMinimum < sampleMaximum && typedDefinition != null) runCatching {
+                    typedGraphEngine.sample(typedDefinition, GraphDomain(sampleMinimum, sampleMaximum), GraphDomain(minY, maxY, "y"), parameterValues, 520)
+                }.getOrNull() else null
+                sample?.curves?.forEach { segment ->
+                    segment.points.zipWithNext().forEach { pair ->
+                        val logValid = (!axisSettings.xLogarithmic || pair.first.x > 0 && pair.second.x > 0) && (!axisSettings.yLogarithmic || pair.first.y > 0 && pair.second.y > 0)
+                        if (logValid) drawLine(color.copy(alpha = if (selected) 1f else .55f), tx(pair.first), tx(pair.second), strokeWidth, cap = StrokeCap.Round, pathEffect = styleEffect)
+                    }
                 }
                 if (domain != null && selected) {
                     listOf(domain.minimum to domain.leftClosed, domain.maximum to domain.rightClosed).forEach { (x, closed) ->
-                        val y = runCatching { engine.compile(stripEquation(fn.expression)).eval(mapOf("x" to x)) }.getOrNull()
+                        val y = (typedDefinition as? TypedGraphExpression.Explicit)?.let { runCatching { engine.compile(it.expression).eval(parameterValues + ("x" to x)) }.getOrNull() }
                         if (y?.isFinite() == true) { if (closed) drawCircle(color, 10f, tx(Vec2(x, y))) else drawCircle(color, 10f, tx(Vec2(x, y)), style = Stroke(4f)); drawLine(color.copy(.7f), tx(Vec2(x, 0.0)) + Offset(0f, -18f), tx(Vec2(x, 0.0)) + Offset(0f, 18f), 4f) }
                     }
                 }
             }
             val trace = if (kind == GraphDefinitionKind.Explicit) runCatching {
-                val y = engine.compile(stripEquation(fn.expression)).eval(mapOf("x" to traceX))
+                val y = engine.compile(stripEquation(fn.expression)).eval(parameterValues + ("x" to traceX))
                 Vec2(traceX, y)
             }.getOrNull() else null
             trace?.takeIf { abs(tx(it).y - size.height / 2f) <= size.height }?.let {
@@ -9127,6 +9916,64 @@ private fun GraphCanvas(
             if (selected && parameterHandleEnabled && Regex("\\ba\\b").containsMatchIn(fn.expression)) {
                 runCatching { Vec2(1.0, engine.compile(stripEquation(fn.expression)).eval(mapOf("x" to 1.0))) }.getOrNull()?.let { point -> drawRadiantPoint(tx(point), Amber, "drag a=${trim(parameterA.toDouble())}") }
             }
+        }
+        brushInterval?.let { interval ->
+            functions.firstOrNull { it.visible && graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }?.let { function ->
+                val compiled = runCatching { engine.compile(stripEquation(function.expression)) }.getOrNull()
+                if (compiled != null) {
+                    val start = max(minX, interval.start); val end = min(maxX, interval.endInclusive)
+                    if (start < end) {
+                        val areaPath = Path().apply {
+                            val base = tx(Vec2(start, 0.0)); moveTo(base.x, base.y)
+                            (0..120).forEach { i ->
+                                val x = start + (end - start) * i / 120.0
+                                val y = runCatching { compiled.eval(mapOf("x" to x)) }.getOrDefault(Double.NaN)
+                                if (y.isFinite()) { val point = tx(Vec2(x, y)); lineTo(point.x, point.y) }
+                            }
+                            val finish = tx(Vec2(end, 0.0)); lineTo(finish.x, finish.y); close()
+                        }
+                        drawPath(areaPath, Brush.verticalGradient(listOf(Cyan.copy(.38f), Violet.copy(.12f))))
+                        drawGraphLabel("Brushed area", tx(Vec2(start, 0.0)) + Offset(10f, -35f), Cyan)
+                    }
+                }
+            }
+        }
+        if (sketchPoints.size >= 2) {
+            sketchPoints.zipWithNext().forEach { (a, b) -> drawLine(Amber, tx(a), tx(b), 5f, StrokeCap.Round) }
+            drawGraphLabel("Release to fit a quadratic", tx(sketchPoints.last()) + Offset(12f, -30f), Amber)
+        }
+        pinnedTracePoints.forEachIndexed { index, point ->
+            val anchor = tx(point)
+            drawLine(Green.copy(.45f), Offset(anchor.x, 0f), Offset(anchor.x, size.height), 1.5f)
+            drawLine(Green.copy(.45f), Offset(0f, anchor.y), Offset(size.width, anchor.y), 1.5f)
+            drawCircle(Green.copy(.24f), 14f, anchor); drawCircle(Green, 5f, anchor)
+            drawGraphLabel("P${index + 1} (${trim(point.x)}, ${trim(point.y)})", anchor + Offset(10f, -34f), Green)
+        }
+        if (splitComparison) {
+            drawLine(Amber.copy(.8f), Offset(size.width / 2f, 96f), Offset(size.width / 2f, size.height - 70f), 2f)
+            drawGraphLabel("A", Offset(size.width * .25f, 130f), Cyan); drawGraphLabel("B", Offset(size.width * .75f, 130f), Violet)
+        }
+        if (showResidualPlot && dataPoints.size >= 3) {
+            StatisticsEngine.summarize(dataPoints).regression?.let { regression ->
+                val top = size.height * .76f
+                drawRect(SurfaceA.copy(.88f), Offset(0f, top), Size(size.width, size.height - top))
+                drawLine(Muted, Offset(0f, (top + size.height) / 2f), Offset(size.width, (top + size.height) / 2f), 1.5f)
+                dataPoints.forEach { point ->
+                    val residual = point.y - (regression.slope * point.x + regression.intercept)
+                    val anchor = Offset(tx(point).x, (top + size.height) / 2f - residual.toFloat() * scale * .35f)
+                    drawCircle(Amber, 5f, anchor)
+                }
+                drawGraphLabel("Residual plot", Offset(14f, top + 26f), Amber)
+            }
+        }
+        if (graphTool == GraphTool.ComplexPlane) {
+            val originPoint = tx(Vec2(0.0, 0.0))
+            drawCircle(Violet.copy(.18f), scale, originPoint)
+            drawCircle(Violet, scale, originPoint, style = Stroke(2.5f))
+            listOf(Vec2(0.0, 1.0) to "i", Vec2(0.0, -1.0) to "−i", Vec2(1.0, 0.0) to "1", Vec2(-1.0, 0.0) to "−1").forEach { (point, label) ->
+                drawRadiantPoint(tx(point), Amber, label)
+            }
+            drawGraphLabel("Complex plane · horizontal Re(z), vertical Im(z)", Offset(18f, 165f), Violet)
         }
         previewExpression?.let { expression ->
             val sample = runCatching { graph.sampleDefinition(expression, minX, maxX, 420) }.getOrNull()
@@ -9153,6 +10000,12 @@ private fun GraphCanvas(
         if (graphTool == GraphTool.Trace) {
             val traceScreenX = tx(Vec2(traceX, 0.0)).x
             drawLine(Cyan.copy(.7f), Offset(traceScreenX, 0f), Offset(traceScreenX, size.height), 2f, pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(9f, 7f)))
+            explicit.firstOrNull()?.let { function ->
+                runCatching { engine.compile(stripEquation(function.expression)).eval(mapOf("x" to traceX)) }.getOrNull()?.takeIf(Double::isFinite)?.let { y ->
+                    val traceScreenY = tx(Vec2(traceX, y)).y
+                    drawLine(Cyan.copy(.5f), Offset(0f, traceScreenY), Offset(size.width, traceScreenY), 1.5f, pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(7f, 7f)))
+                }
+            }
             drawGraphLabel("x=${GraphUxEngine.format(traceX, axisSettings.format)}", Offset(traceScreenX + 10f, 165f), Cyan)
         }
         if (comparisonMode && explicit.size >= 2) {
@@ -9299,7 +10152,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphAnalysisOv
                 drawRadiantPoint(tx(it), Green, "extremum (${trim(it.x)}, ${trim(it.y)})")
             }
         }
-        GraphTool.Plot, GraphTool.Trace, GraphTool.Table, GraphTool.Data, GraphTool.Probability -> Unit
+        GraphTool.Plot, GraphTool.Trace, GraphTool.BrushArea, GraphTool.SketchFit, GraphTool.Table, GraphTool.Data, GraphTool.Probability, GraphTool.ComplexPlane -> Unit
     }
 }
 
@@ -11030,12 +11883,16 @@ private class MathSyntaxVisualTransformation : VisualTransformation {
         MathInputIntelligence.analyze(text.text).tokens.forEach { token ->
             val bracketColors = listOf(Cyan, Violet, Green, Amber)
             val style = when (token.kind) {
+                MathInputTokenKind.Command -> SpanStyle(color = Color(0xFFA878FF), fontWeight = FontWeight.ExtraBold)
                 MathInputTokenKind.Function -> SpanStyle(color = Violet, fontWeight = FontWeight.Bold)
                 MathInputTokenKind.Number -> SpanStyle(color = Cyan, fontWeight = FontWeight.SemiBold)
                 MathInputTokenKind.Variable -> SpanStyle(color = Green, fontWeight = FontWeight.Bold)
                 MathInputTokenKind.Constant -> SpanStyle(color = Amber, fontWeight = FontWeight.Bold)
+                MathInputTokenKind.Unit -> SpanStyle(color = Color(0xFF2DE2C5), fontWeight = FontWeight.Bold)
                 MathInputTokenKind.Operator -> SpanStyle(color = Ink)
+                MathInputTokenKind.Relation -> SpanStyle(color = Color(0xFFFF8A70), fontWeight = FontWeight.SemiBold)
                 MathInputTokenKind.Bracket -> SpanStyle(color = bracketColors[(token.depth - 1).coerceAtLeast(0) % bracketColors.size], fontWeight = FontWeight.ExtraBold)
+                MathInputTokenKind.Separator -> SpanStyle(color = Color(0xFFB4C3D8))
                 MathInputTokenKind.Keyword -> SpanStyle(color = Color(0xFF79A7FF), fontWeight = FontWeight.SemiBold)
                 MathInputTokenKind.Error -> SpanStyle(color = Color(0xFFFF6B7A), background = Color(0x44FF304F), fontWeight = FontWeight.Bold)
                 MathInputTokenKind.Text -> SpanStyle(color = Muted)

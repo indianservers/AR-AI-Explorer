@@ -6,6 +6,20 @@ The approved visual direction remains: near-black workspace, cyan/violet math ob
 
 The product must stay **AI Explorer**. Do not use AR wording in app title, modules, buttons, settings, or user-facing copy.
 
+## July 2026 competitive engine closure
+
+The two competitive-parity phases have moved from roadmap to implemented production foundations:
+
+- Unified Graph/2D/3D command palette and accessible object-token navigator are visible in Unified Math Studio.
+- Dynamic 2D dependencies now include division points, centroid, circumcentre, incentre and orthocentre, in addition to point-on-object, intersections, conics, tangency, transformations, constraints, locus/trace and protocol replay.
+- Unified cross-view undo/redo, bounded session persistence, dependency inspection, snapping, macro recording/replay and linked values are implemented.
+- Advanced graph calculus adds verified tangent/normal data, adaptive integrals, geometric area, area between curves, high-resolution roots and large generated tables.
+- Surface analysis adds CPU-independent gradients, normals, tangent planes, critical-point classification, contours and ascent/descent paths on top of typed surfaces, mesh editing, cross-sections, projection and measurement.
+- Unified Studio CAS now exposes the advanced symbolic derivative/integral implementation plus partial fractions and limits; the CAS notebook engine supports shared assumptions, systems, inequalities, matrices, eigenvalues, row reduction and verified first-order ODE solutions.
+- Focused production suites cover Graph, 2D Geometry, 3D Spatial, CAS, unified parity, persistence and the user-facing Unified Studio.
+
+Code completion does not by itself certify market leadership. Store-scale telemetry, classroom usability studies, accessibility audits, and physical phone/tablet/stylus performance runs remain release-validation gates rather than unverified feature claims.
+
 ## Product North Star
 
 AI Explorer should feel like a full-screen mathematical instrument:

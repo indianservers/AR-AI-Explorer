@@ -1,0 +1,7 @@
+<resources>
+    <string name="phase3_platform_title">विश्वसनीय विद्यालय शिक्षण मंच</string>
+    <string name="phase3_exam">परीक्षा अभ्यास</string>
+    <string name="phase3_report">प्रमाण-आधारित प्रगति</string>
+    <string name="phase3_teacher">शिक्षक कक्षा</string>
+    <string name="phase3_local_first">इंटरनेट के बिना भी मुख्य शिक्षण उपलब्ध है</string>
+</resources>

@@ -108,6 +108,36 @@ class SymbolicCasEngine {
         )
     }
 
+    /** Simplifies only identities justified by the supplied domain assumptions. */
+    fun simplify(source: String, assumptionSet: MathAssumptionSet): CasRow =
+        AdvancedSymbolicCas.simplify(this, source, assumptionSet)
+
+    fun partialFractions(source: String, variable: String = "x"): CasRow =
+        AdvancedSymbolicCas.partialFractions(this, source, variable)
+
+    fun solveSystem(equations: List<String>, variables: List<String>): CasRow =
+        AdvancedSymbolicCas.solveSystem(this, equations, variables)
+
+    fun solveInequalities(inequalities: List<String>, variable: String = "x"): CasRow =
+        AdvancedSymbolicCas.solveInequalities(this, inequalities, variable)
+
+    fun derivative(source: String, variable: String = "x"): CasRow =
+        AdvancedSymbolicCas.derivative(this, source, variable)
+
+    fun integral(source: String, variable: String = "x"): CasRow =
+        AdvancedSymbolicCas.integral(this, source, variable)
+
+    fun limit(source: String, variable: String = "x", approaching: String = "0"): CasRow =
+        AdvancedSymbolicCas.limit(this, source, variable, approaching)
+
+    fun determinant(matrix: String): CasRow = AdvancedSymbolicCas.determinant(matrix)
+
+    fun rowReduce(matrix: String): CasRow = AdvancedSymbolicCas.rowReduce(matrix)
+
+    fun eigenvalues(matrix: String): CasRow = AdvancedSymbolicCas.eigenvalues(matrix)
+
+    fun solveOde(source: String): CasRow = AdvancedSymbolicCas.solveOde(this, source)
+
     fun expand(source: String): CasRow = casRow(source, "expand") {
         val parsed = parse(source)
         val expanded = expand(parsed).let(::simplify)
@@ -131,17 +161,35 @@ class SymbolicCasEngine {
     fun factor(source: String, variable: String = "x"): CasRow = casRow(source, "factor") {
         val expanded = expand(parse(source)).let(::simplify)
         val polynomial = polynomialCoefficients(expanded, variable)
-        val factorText = polynomial?.let { factorPolynomial(it, variable) } ?: render(expanded)
-        CasRow(source, "factor", factorText, evaluate(expanded).getOrNull()?.let(::formatDecimal), assumptions(expanded), listOf(
-            CasStep("Canonical polynomial", render(expanded), "Expand and collect terms before factoring."),
-            CasStep("Rational roots", factorText, "Use exact rational candidates for small univariate polynomials."),
-        ), supported = polynomial != null)
+        if (polynomial == null) {
+            AdvancedSymbolicCas.factorRational(this, source, variable)
+        } else {
+            val factorText = factorPolynomial(polynomial, variable)
+            CasRow(source, "factor", factorText, evaluate(expanded).getOrNull()?.let(::formatDecimal), assumptions(expanded), listOf(
+                CasStep("Canonical polynomial", render(expanded), "Expand and collect terms before factoring."),
+                CasStep("Rational roots", factorText, "Use exact rational candidates for small univariate polynomials."),
+            ))
+        }
     }
 
     fun casRow(source: String, operation: String): CasRow = when (operation.lowercase()) {
         "simplify" -> simplify(source)
         "expand" -> expand(source)
         "factor" -> factor(source)
+        "partial fractions", "partialfractions", "apart" -> partialFractions(source)
+        "derivative", "differentiate", "diff" -> derivative(source)
+        "integral", "integrate" -> integral(source)
+        "limit" -> limit(source)
+        "ode" -> solveOde(source)
+        "determinant", "det" -> determinant(source)
+        "rref", "row reduce", "rowreduce" -> rowReduce(source)
+        "eigenvalues", "eigen" -> eigenvalues(source)
+        "system", "solve system" -> {
+            val equations = source.removePrefix("{").removeSuffix("}").split(';').map(String::trim).filter(String::isNotBlank)
+            val variables = Regex("[A-Za-z][A-Za-z0-9_]*").findAll(source).map { it.value }.filterNot { it.lowercase() in setOf("sin", "cos", "tan", "exp", "ln", "log", "sqrt") }.distinct().sorted().toList()
+            solveSystem(equations, variables)
+        }
+        "inequality", "inequalities" -> solveInequalities(source.split(Regex("\\s*(?:&&|;|\\band\\b)\\s*", RegexOption.IGNORE_CASE)).filter(String::isNotBlank))
         else -> CasRow(source, operation, "Not supported", null, emptyList(), listOf(CasStep("Unsupported", operation, "This CAS operation is not implemented yet.")), supported = false)
     }
 

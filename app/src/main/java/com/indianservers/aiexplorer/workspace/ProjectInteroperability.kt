@@ -6,6 +6,12 @@ import com.indianservers.aiexplorer.core.Vec2
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.Base64
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
+import kotlin.math.abs
 
 enum class ProjectSectionKind { Mathematics, Notebook, Activities, LearningProgress, Settings, SpatialAnchors, Audit }
 data class ProjectSection(val kind: ProjectSectionKind, val content: String, val revision: Long = 0, val required: Boolean = false)
@@ -123,7 +129,7 @@ object GeoGebraExchange {
                 Shape2DType.Line -> "Line"; Shape2DType.Segment -> "Segment"; Shape2DType.Ray -> "Ray"; Shape2DType.Vector -> "Vector"
                 Shape2DType.Circle -> "Circle"; Shape2DType.CircleThreePoints -> "Circle"; Shape2DType.Polygon, Shape2DType.Triangle, Shape2DType.Rectangle, Shape2DType.Square, Shape2DType.RegularPolygon -> "Polygon"
                 Shape2DType.Ellipse -> "Ellipse"
-                else -> null
+                Shape2DType.Arc -> "CircularArc"; Shape2DType.Parallel -> "Line"; Shape2DType.Perpendicular -> "OrthogonalLine"; Shape2DType.AngleBisector -> "AngularBisector"
             }
             if (command == null || labels.isEmpty()) skipped += "${shape.id}:${shape.type}" else commands += "<command name=\"$command\"><input ${labels.mapIndexed { i, value -> "a$i=\"$value\"" }.joinToString(" ")}/><output a0=\"${shape.name.xml()}\"/></command>"
         }
@@ -133,13 +139,91 @@ object GeoGebraExchange {
 
     fun importXml(xml: String, base: WorkspaceState = WorkspaceState(points = emptyList(), shapes = emptyList(), functions = emptyList(), solids = emptyList(), vectors3D = emptyList())): GeoGebraImport {
         require(xml.length <= 4_000_000 && "<geogebra" in xml) { "A bounded GeoGebra XML document is required." }
-        val points = Regex("<element\\s+type=\"point\"\\s+label=\"([^\"]+)\"[^>]*>\\s*<coords\\s+x=\"([^\"]+)\"\\s+y=\"([^\"]+)\"", RegexOption.IGNORE_CASE).findAll(xml).mapNotNull { match ->
-            val x = match.groupValues[2].toDoubleOrNull(); val y = match.groupValues[3].toDoubleOrNull(); if (x == null || y == null) null else match.groupValues[1] to Vec2(x, y)
+        fun attributes(source: String) = Regex("([A-Za-z_:][A-Za-z0-9_:.\\-]*)\\s*=\\s*\"([^\"]*)\"").findAll(source).associate { it.groupValues[1] to it.groupValues[2].unxml() }
+        val pointPairs = Regex("<element\\b([^>]*)>(.*?)</element>", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)).findAll(xml).mapNotNull { match ->
+            val element = attributes(match.groupValues[1]); if (!element["type"].equals("point", true)) return@mapNotNull null
+            val coordsTag = Regex("<coords\\b([^>]*)/?>", RegexOption.IGNORE_CASE).find(match.groupValues[2]) ?: return@mapNotNull null; val coords = attributes(coordsTag.groupValues[1])
+            val homogeneous = coords["z"]?.toDoubleOrNull()?.takeIf { abs(it) > 1e-15 } ?: 1.0; val x = coords["x"]?.toDoubleOrNull(); val y = coords["y"]?.toDoubleOrNull()
+            if (x == null || y == null) null else (element["label"] ?: "P${match.range.first}") to Vec2(x / homogeneous, y / homogeneous)
         }.toList()
-        val functions = Regex("<expression\\s+label=\"([^\"]+)\"\\s+exp=\"([^\"]+)\"\\s*/>", RegexOption.IGNORE_CASE).findAll(xml).mapIndexed { index, match -> FunctionDefinition("ggb-f-$index", match.groupValues[1].unxml(), match.groupValues[2].unxml(), listOf("cyan", "violet", "green", "amber")[index % 4]) }.toList()
-        val unsupported = Regex("<element\\s+type=\"([^\"]+)\"").findAll(xml).map { it.groupValues[1] }.filterNot { it.equals("point", true) }.distinct().map { "element:$it" }.toList()
-        val state = base.copy(points = points.map { it.second }, functions = functions, name = "Imported GeoGebra construction", modifiedAt = System.currentTimeMillis())
-        return GeoGebraImport(state, ExchangeCoverage("GeoGebra XML", exported = 0, imported = points.size + functions.size, skipped = unsupported, warnings = if (points.isEmpty() && functions.isEmpty()) listOf("No supported point or expression elements were found.") else emptyList()))
+        val labelToIndex = pointPairs.mapIndexed { index, pair -> pair.first to index }.toMap(); val shapes = mutableListOf<Shape2D>(); val skipped = mutableListOf<String>()
+        val supportedCommands = mapOf(
+            "line" to Shape2DType.Line, "segment" to Shape2DType.Segment, "ray" to Shape2DType.Ray, "vector" to Shape2DType.Vector,
+            "circle" to Shape2DType.Circle, "circulararc" to Shape2DType.Arc, "polygon" to Shape2DType.Polygon, "regularpolygon" to Shape2DType.RegularPolygon,
+            "ellipse" to Shape2DType.Ellipse, "orthogonalline" to Shape2DType.Perpendicular, "perpendicularline" to Shape2DType.Perpendicular,
+            "angularbisector" to Shape2DType.AngleBisector, "anglebisector" to Shape2DType.AngleBisector,
+        )
+        Regex("<command\\b([^>]*)>(.*?)</command>", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)).findAll(xml).forEachIndexed { index, match ->
+            val name = attributes(match.groupValues[1])["name"].orEmpty(); val body = match.groupValues[2]
+            val input = Regex("<input\\b([^>]*)/?>", RegexOption.IGNORE_CASE).find(body)?.groupValues?.get(1)?.let(::attributes).orEmpty().toSortedMap(compareBy { it.removePrefix("a").toIntOrNull() ?: Int.MAX_VALUE }).values
+            val output = Regex("<output\\b([^>]*)/?>", RegexOption.IGNORE_CASE).find(body)?.groupValues?.get(1)?.let(::attributes).orEmpty()["a0"] ?: "$name ${index + 1}"
+            val type = supportedCommands[name.lowercase()]
+            val indices = input.mapNotNull(labelToIndex::get)
+            val minimum = when (type) { Shape2DType.Ellipse, Shape2DType.CircleThreePoints, Shape2DType.Arc -> 3; Shape2DType.Polygon, Shape2DType.RegularPolygon -> 2; else -> 2 }
+            if (type == null) skipped += "command:$name" else if (indices.size < minimum) skipped += "command:$name:unresolved-input" else shapes += Shape2D("ggb-shape-$index", type, indices, output)
+        }
+        val functions = Regex("<expression\\b([^>]*)/?>", RegexOption.IGNORE_CASE).findAll(xml).mapNotNull { match ->
+            val value = attributes(match.groupValues[1]); val label = value["label"] ?: return@mapNotNull null; val expression = value["exp"] ?: return@mapNotNull null
+            label to expression
+        }.filter { (_, expression) -> expression.contains('x') || expression.contains('=') }.mapIndexed { index, pair -> FunctionDefinition("ggb-f-$index", pair.first, pair.second.substringAfter('=', pair.second), listOf("cyan", "violet", "green", "amber")[index % 4]) }.toList()
+        Regex("<element\\b([^>]*)>", RegexOption.IGNORE_CASE).findAll(xml).map { attributes(it.groupValues[1])["type"].orEmpty() }.filter { it.isNotBlank() && !it.equals("point", true) }.distinct().forEach { skipped += "element:$it" }
+        val state = base.copy(points = pointPairs.map { it.second }, shapes = shapes, pointDependencies = emptyList(), functions = functions, name = "Imported GeoGebra construction", modifiedAt = System.currentTimeMillis())
+        val imported = pointPairs.size + shapes.size + functions.size
+        return GeoGebraImport(state, ExchangeCoverage("GeoGebra XML", exported = 0, imported = imported, skipped = skipped.distinct(), warnings = if (imported == 0) listOf("No supported construction objects were found.") else emptyList()))
+    }
+}
+
+/** Real `.ggb` package boundary with bounded ZIP handling and explicit translation coverage. */
+object GeoGebraPackageExchange {
+    const val maximumPackageBytes = 8_000_000
+
+    fun export(state: WorkspaceState): ByteArray {
+        val exchange = GeoGebraExchange.exportXml(state)
+        return ByteArrayOutputStream().use { bytes ->
+            ZipOutputStream(bytes).use { zip ->
+                zip.putNextEntry(ZipEntry("geogebra.xml"))
+                zip.write(exchange.xml.toByteArray(StandardCharsets.UTF_8))
+                zip.closeEntry()
+                zip.putNextEntry(ZipEntry("aiexplorer-coverage.txt"))
+                zip.write(buildString {
+                    appendLine("exported=${exchange.coverage.exported}")
+                    exchange.coverage.skipped.forEach { appendLine("skipped=$it") }
+                    exchange.coverage.warnings.forEach { appendLine("warning=$it") }
+                }.toByteArray(StandardCharsets.UTF_8))
+                zip.closeEntry()
+            }
+            bytes.toByteArray().also { require(it.size <= maximumPackageBytes) { "GeoGebra package exceeds the 8 MB safety limit." } }
+        }
+    }
+
+    fun import(source: ByteArray, base: WorkspaceState = WorkspaceState()): GeoGebraImport {
+        require(source.size <= maximumPackageBytes) { "GeoGebra package exceeds the 8 MB safety limit." }
+        var xml: String? = null
+        ZipInputStream(ByteArrayInputStream(source)).use { zip ->
+            var entries = 0
+            while (true) {
+                val entry = zip.nextEntry ?: break
+                require(++entries <= 32) { "GeoGebra package contains too many entries." }
+                require(!entry.name.contains("..") && !entry.name.startsWith('/') && !entry.name.startsWith('\\')) { "Unsafe GeoGebra package path." }
+                if (entry.name == "geogebra.xml") {
+                    val bytes = zip.readBounded(4_000_000)
+                    xml = String(bytes, StandardCharsets.UTF_8)
+                }
+                zip.closeEntry()
+            }
+        }
+        return GeoGebraExchange.importXml(xml ?: error("The package has no geogebra.xml construction."), base)
+    }
+
+    private fun ZipInputStream.readBounded(maximum: Int): ByteArray {
+        val result = ByteArrayOutputStream(); val buffer = ByteArray(8192); var total = 0
+        while (true) {
+            val count = read(buffer)
+            if (count < 0) break
+            total += count; require(total <= maximum) { "Compressed entry exceeds its safety limit." }
+            result.write(buffer, 0, count)
+        }
+        return result.toByteArray()
     }
 }
 

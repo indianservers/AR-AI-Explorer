@@ -65,6 +65,7 @@ data class GraphSliderMetadataState(
     val speed: Double = 1.0,
     val mode: GraphSliderPlaybackMode = GraphSliderPlaybackMode.Loop,
     val direction: Int = 1,
+    val value: Double? = null,
 )
 
 enum class MathModule(val label: String) {
@@ -413,6 +414,15 @@ data class TransformSolidCommand(val index: Int, val from: Solid, val to: Solid)
     override fun undo(state: WorkspaceState) = state.copy(solids = state.solids.replace(index, from), modifiedAt = System.currentTimeMillis())
 }
 
+data class ReplaceSolidsCommand(
+    val from: List<Solid>,
+    val to: List<Solid>,
+    override val label: String,
+) : WorkspaceCommand {
+    override fun apply(state: WorkspaceState) = state.copy(solids = to, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(solids = from, modifiedAt = System.currentTimeMillis())
+}
+
 data class AddVector3DCommand(val vector: Vector3D) : WorkspaceCommand {
     override val label = "Add 3D vector"
     override fun apply(state: WorkspaceState) = state.copy(vectors3D = state.vectors3D + vector, modifiedAt = System.currentTimeMillis())
@@ -485,7 +495,7 @@ object WorkspaceJson {
         appendLine("  \"pointDependencies\": [${state.pointDependencies.joinToString { "{\"output\":${it.outputIndex},\"inputs\":[${it.inputIndices.joinToString()}],\"type\":\"${it.type}\",\"name\":\"${it.name.jsonEscaped()}\",\"parameters\":[${it.parameters.joinToString()}]}" }}],")
         appendLine("  \"functions\": [${state.functions.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"expression\":\"${it.expression.jsonEscaped()}\",\"color\":\"${it.colorKey.jsonEscaped()}\",\"visible\":${it.visible}}" }}],")
         appendLine("  \"graphRowMetadata\": [${state.graphRowMetadata.entries.joinToString { "{\"rowId\":\"${it.key.jsonEscaped()}\",\"collapsed\":${it.value.collapsed},\"folder\":\"${it.value.folder.jsonEscaped()}\",\"note\":\"${it.value.note.jsonEscaped()}\"}" }}],")
-        appendLine("  \"graphSliderMetadata\": [${state.graphSliderMetadata.entries.joinToString { "{\"parameter\":\"${it.key.jsonEscaped()}\",\"speed\":${it.value.speed},\"mode\":\"${it.value.mode}\",\"direction\":${it.value.direction}}" }}],")
+        appendLine("  \"graphSliderMetadata\": [${state.graphSliderMetadata.entries.joinToString { "{\"parameter\":\"${it.key.jsonEscaped()}\",\"speed\":${it.value.speed},\"mode\":\"${it.value.mode}\",\"direction\":${it.value.direction},\"value\":${it.value.value ?: "null"}}" }}],")
         appendLine("  \"solids\": [${state.solids.joinToString { "{\"type\":\"${it.type}\",\"width\":${it.width},\"height\":${it.height},\"depth\":${it.depth},\"radius\":${it.radius},\"topRadius\":${it.topRadius},\"position\":{\"x\":${it.position.x},\"y\":${it.position.y},\"z\":${it.position.z}},\"rotation\":{\"x\":${it.rotation.x},\"y\":${it.rotation.y},\"z\":${it.rotation.z}}}" }}],")
         appendLine("  \"vectors3D\": [${state.vectors3D.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"start\":{\"x\":${it.start.x},\"y\":${it.start.y},\"z\":${it.start.z}},\"end\":{\"x\":${it.end.x},\"y\":${it.end.y},\"z\":${it.end.z}}}" }}],")
         appendLine("  \"surfaceExpression\": \"${state.surfaceExpression.jsonEscaped()}\",")

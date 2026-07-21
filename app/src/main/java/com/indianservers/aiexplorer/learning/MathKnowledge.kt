@@ -2,6 +2,8 @@ package com.indianservers.aiexplorer.learning
 
 enum class KnowledgeLevel(val label: String) { School("School"), UG("UG"), PG("PG") }
 enum class KnowledgeTopic(val label: String) { Algebra("Algebra"), Calculus("Calculus"), Geometry("Geometry"), Statistics("Statistics"), Probability("Probability") }
+enum class DictionaryClassBand(val label: String) { CLASS_6_8("Classes 6–8"), CLASS_9_10("Classes 9–10"), CLASS_11_12("Classes 11–12"), UNIVERSITY("University") }
+enum class DictionaryDifficulty(val label: String) { FOUNDATION("Foundation"), STANDARD("Standard"), ADVANCED("Advanced") }
 enum class QuizSubject(val label: String) { Maths("Maths"), Physics("Physics"), Chemistry("Chemistry"), Biology("Biology"), AstroPhysics("Astro Physics"), IQLabs("IQ Labs") }
 enum class QuizLevel(val label: String, val difficulty: Int) { Basic("Basic", 1), Intermediate("Intermediate", 2), Advanced("Advanced", 3) }
 enum class FormulaCategory(val label: String, val topic: KnowledgeTopic) {
@@ -63,7 +65,34 @@ data class DictionaryTerm(
     val definition: String,
     val notation: String,
     val example: String,
+    val nonExample: String,
+    val classBands: Set<DictionaryClassBand>,
+    val difficulty: DictionaryDifficulty,
 )
+
+/** Lightweight dictionary data that can open without initializing the full formula and quiz catalogs. */
+object MathDictionaryCatalog {
+    val terms = listOf(
+        DictionaryTerm("Discriminant", KnowledgeTopic.Algebra, KnowledgeLevel.School, "The quantity b^2 - 4ac that classifies roots of a quadratic.", "Delta", "For x^2 - 5x + 6, Delta = 1, so roots are real and distinct.", "b^2 - 4ac is not the quadratic formula itself.", setOf(DictionaryClassBand.CLASS_9_10, DictionaryClassBand.CLASS_11_12), DictionaryDifficulty.STANDARD),
+        DictionaryTerm("Limit", KnowledgeTopic.Calculus, KnowledgeLevel.UG, "The value a function approaches as the input approaches a point.", "lim x->a f(x)", "lim x->0 sin(x)/x = 1.", "A limit is not always the function value f(a).", setOf(DictionaryClassBand.CLASS_11_12, DictionaryClassBand.UNIVERSITY), DictionaryDifficulty.ADVANCED),
+        DictionaryTerm("Derivative", KnowledgeTopic.Calculus, KnowledgeLevel.School, "Instantaneous rate of change, represented by tangent slope.", "dy/dx or f'(x)", "If f(x)=x^2, f'(x)=2x.", "f(x)/x is not generally the derivative of f.", setOf(DictionaryClassBand.CLASS_11_12, DictionaryClassBand.UNIVERSITY), DictionaryDifficulty.ADVANCED),
+        DictionaryTerm("Median", KnowledgeTopic.Statistics, KnowledgeLevel.School, "The middle value after ordering data.", "Q2", "For 2, 4, 9, the median is 4.", "The median is not found before arranging unordered data.", setOf(DictionaryClassBand.CLASS_6_8, DictionaryClassBand.CLASS_9_10), DictionaryDifficulty.FOUNDATION),
+        DictionaryTerm("Posterior", KnowledgeTopic.Probability, KnowledgeLevel.UG, "A Bayesian probability updated after evidence is observed.", "P(A|B)", "Disease probability after a positive test.", "P(A|B) is not automatically equal to P(B|A).", setOf(DictionaryClassBand.CLASS_11_12, DictionaryClassBand.UNIVERSITY), DictionaryDifficulty.ADVANCED),
+        DictionaryTerm("Eigenvector", KnowledgeTopic.Algebra, KnowledgeLevel.PG, "A nonzero vector whose direction is preserved by a linear transformation.", "Av=lambda v", "Principal component directions are eigenvectors of a covariance matrix.", "The zero vector is not an eigenvector.", setOf(DictionaryClassBand.UNIVERSITY), DictionaryDifficulty.ADVANCED),
+    ).sortedBy { it.term }
+
+    fun search(query: String, topic: KnowledgeTopic?, level: KnowledgeLevel?, initial: Char?, classBand: DictionaryClassBand? = null, difficulty: DictionaryDifficulty? = null): List<DictionaryTerm> {
+        val normalized = query.trim().lowercase()
+        return terms.filter { term ->
+            (topic == null || term.topic == topic) &&
+                (level == null || term.level == level) &&
+                (initial == null || term.term.firstOrNull()?.uppercaseChar() == initial) &&
+                (classBand == null || classBand in term.classBands) &&
+                (difficulty == null || term.difficulty == difficulty) &&
+                (normalized.isBlank() || listOf(term.term, term.definition, term.notation, term.example, term.nonExample).any { normalized in it.lowercase() })
+        }
+    }
+}
 
 data class McqQuestion(
     val id: String,
@@ -198,14 +227,7 @@ object MathKnowledgeCatalog {
         VisualProofCard("surface-gradient", "Gradient on a surface", KnowledgeTopic.Calculus, KnowledgeLevel.UG, MathModuleTarget.Graph3D, listOf("Plot z=x^2+y^2.", "Show tangent plane and gradient arrow.", "Move the trace point."), "The gradient points toward steepest increase.", "Tap around a level circle and compare arrow direction."),
     )
 
-    val dictionary = listOf(
-        DictionaryTerm("Discriminant", KnowledgeTopic.Algebra, KnowledgeLevel.School, "The quantity b^2 - 4ac that classifies roots of a quadratic.", "Delta", "For x^2 - 5x + 6, Delta = 1, so roots are real and distinct."),
-        DictionaryTerm("Limit", KnowledgeTopic.Calculus, KnowledgeLevel.UG, "The value a function approaches as the input approaches a point.", "lim x->a f(x)", "lim x->0 sin(x)/x = 1."),
-        DictionaryTerm("Derivative", KnowledgeTopic.Calculus, KnowledgeLevel.School, "Instantaneous rate of change, represented by tangent slope.", "dy/dx or f'(x)", "If f(x)=x^2, f'(x)=2x."),
-        DictionaryTerm("Median", KnowledgeTopic.Statistics, KnowledgeLevel.School, "The middle value after ordering data.", "Q2", "For 2, 4, 9, the median is 4."),
-        DictionaryTerm("Posterior", KnowledgeTopic.Probability, KnowledgeLevel.UG, "A Bayesian probability updated after evidence is observed.", "P(A|B)", "Disease probability after a positive test."),
-        DictionaryTerm("Eigenvector", KnowledgeTopic.Algebra, KnowledgeLevel.PG, "A nonzero vector whose direction is preserved by a linear transformation.", "Av=lambda v", "Principal component directions are eigenvectors of a covariance matrix."),
-    )
+    val dictionary = MathDictionaryCatalog.terms
 
     val mcqs = listOf(
         McqQuestion("mcq-discriminant", KnowledgeTopic.Algebra, KnowledgeLevel.School, "If b^2 - 4ac is negative, a real quadratic has:", listOf("Two real roots", "One repeated real root", "No real roots", "Infinitely many roots"), 2, "A negative discriminant means the square root part is imaginary.", 1),

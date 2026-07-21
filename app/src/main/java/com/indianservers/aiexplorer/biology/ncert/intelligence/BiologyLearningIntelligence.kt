@@ -1,0 +1,15 @@
+package com.indianservers.aiexplorer.biology.ncert.intelligence
+import com.indianservers.aiexplorer.curriculum.*
+import com.indianservers.aiexplorer.learningintelligence.model.*
+import com.indianservers.aiexplorer.learningintelligence.reference.*
+object BiologyLearningIntelligence{
+ private val s=SchoolSubject.BIOLOGY;private val levels=setOf(SchoolClassLevel.CLASS_9,SchoolClassLevel.CLASS_10,SchoolClassLevel.CLASS_11,SchoolClassLevel.CLASS_12)
+ private fun node(vararg k:String)=ReferenceCurriculumResolver.topic(s,*k)
+ val concepts=listOf(
+  ReferenceConceptFactory.create("biology-cell-structure",node("Cell","Fundamental Unit"),s,levels,emptyList(),"biology-cell-explorer","dominance meaning","bio-dominant-common","Dominant means more common","Dominance describes expression in a heterozygote, not population frequency.","A rare allele can be dominant.","A dominant allele must be most common.",DiagnosticQuestionKind.CONCEPT,setOf(MasteryEvidenceType.CONCEPT_QUESTION,MasteryEvidenceType.DIAGRAM_TASK)),
+  ReferenceConceptFactory.create("biology-diffusion-osmosis",node("Cell","Life Processes"),s,levels,listOf("biology-cell-structure"),"biology-membrane-transport","plant respiration","bio-plants-no-respire","Plants do not respire","Plant cells respire continuously; photosynthesis is a separate light-dependent process.","Plants respire by day and night.","Plants only photosynthesise and never respire.",DiagnosticQuestionKind.REASONING,setOf(MasteryEvidenceType.CONCEPT_QUESTION,MasteryEvidenceType.SIMULATION_PREDICTION)),
+  ReferenceConceptFactory.create("biology-mitosis-meiosis",node("Cell Cycle","Division"),s,levels,listOf("biology-cell-structure"),"biology-cell-division","division purpose","bio-mitosis-meiosis-same","Mitosis and meiosis have the same purpose","Mitosis supports growth/repair; meiosis produces haploid gametes and variation.","Their divisions and outcomes differ.","Meiosis is simply mitosis twice.",DiagnosticQuestionKind.VISUAL,setOf(MasteryEvidenceType.CONCEPT_QUESTION,MasteryEvidenceType.DIAGRAM_TASK)),
+  ReferenceConceptFactory.create("biology-blood-circulation",node("Life Processes","Body Fluids","Circulation"),s,levels,listOf("biology-cell-structure"),"biology-circulation","vessel definition","bio-arteries-oxygen","Arteries always carry oxygenated blood","Arteries carry blood away from the heart; pulmonary arteries are oxygen-poor.","Direction from the heart defines an artery.","Oxygen content alone defines arteries.",DiagnosticQuestionKind.VISUAL,setOf(MasteryEvidenceType.CONCEPT_QUESTION,MasteryEvidenceType.DATA_INTERPRETATION)),
+  ReferenceConceptFactory.create("biology-mendelian-inheritance",node("Inheritance","Heredity"),s,levels,listOf("biology-mitosis-meiosis"),"biology-mendelian-genetics","antibiotic action","bio-antibiotics-viruses","Antibiotics kill viruses","Antibiotics target bacterial structures/processes and do not treat viral infections.","Antibiotics do not destroy viruses.","Antibiotics cure any infectious disease.",DiagnosticQuestionKind.PREREQUISITE_DISCRIMINATION,setOf(MasteryEvidenceType.CONCEPT_QUESTION,MasteryEvidenceType.DATA_INTERPRETATION))
+ )
+}

@@ -3,6 +3,9 @@ package com.indianservers.aiexplorer
 import com.indianservers.aiexplorer.learning.KnowledgeLevel
 import com.indianservers.aiexplorer.learning.KnowledgeTopic
 import com.indianservers.aiexplorer.learning.FormulaCategory
+import com.indianservers.aiexplorer.learning.DictionaryClassBand
+import com.indianservers.aiexplorer.learning.DictionaryDifficulty
+import com.indianservers.aiexplorer.learning.MathDictionaryCatalog
 import com.indianservers.aiexplorer.learning.MathKnowledgeCatalog
 import com.indianservers.aiexplorer.learning.QuizEngine
 import com.indianservers.aiexplorer.learning.QuizLevel
@@ -13,6 +16,22 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MathKnowledgeTest {
+    @Test
+    fun visualDictionarySupportsAlphabetClassDifficultyAndTeachingExamples() {
+        val result = MathDictionaryCatalog.search(
+            query = "",
+            topic = null,
+            level = null,
+            initial = 'D',
+            classBand = DictionaryClassBand.CLASS_11_12,
+            difficulty = DictionaryDifficulty.ADVANCED,
+        )
+
+        assertEquals(listOf("Derivative"), result.map { it.term })
+        assertTrue(result.single().example.isNotBlank())
+        assertTrue(result.single().nonExample.isNotBlank())
+    }
+
     @Test
     fun searchFindsContentAcrossKnowledgeTypes() {
         val result = MathKnowledgeCatalog.search("Bayes")

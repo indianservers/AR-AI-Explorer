@@ -69,11 +69,12 @@ class Phase5ProductionClosureTest {
         )
         val exported = GeoGebraExchange.exportXml(workspace)
         assertTrue(exported.xml.contains("<geogebra"))
-        assertEquals(listOf("arc:Arc"), exported.coverage.skipped)
+        assertTrue(exported.coverage.skipped.isEmpty())
         val imported = GeoGebraExchange.importXml(exported.xml)
         assertEquals(3, imported.workspace.points.size)
+        assertEquals(setOf(Shape2DType.Segment, Shape2DType.Arc), imported.workspace.shapes.map { it.type }.toSet())
         assertEquals("x^2", imported.workspace.functions.single().expression)
-        assertEquals(4, imported.coverage.imported)
+        assertEquals(6, imported.coverage.imported)
     }
 
     @Test fun svgAndCsvExportsAreBoundedAndReportDiscontinuities() {

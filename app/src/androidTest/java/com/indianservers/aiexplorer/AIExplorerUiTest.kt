@@ -2,9 +2,11 @@ package com.indianservers.aiexplorer
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import org.junit.Rule
 import org.junit.Test
@@ -14,7 +16,7 @@ class AIExplorerUiTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private fun openMaths() {
-        composeRule.onNodeWithText("Maths").performClick()
+        composeRule.onNodeWithContentDescription("Open Maths laboratory").performClick()
     }
 
     private fun expandNavigation() {
@@ -139,6 +141,21 @@ class AIExplorerUiTest {
     }
 
     @Test
+    fun visualDictionaryOpensWithoutCrashAndShowsTerms() {
+        openMaths()
+        composeRule.onNodeWithContentDescription("Search maths tools").assertIsDisplayed()
+        composeRule.onNodeWithText("Visual Dictionary").performScrollTo().performClick()
+        composeRule.onNodeWithContentDescription("Maths knowledge content").assertIsDisplayed()
+        composeRule.onNodeWithText("Discriminant").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Discriminant explanatory diagram", substring = true).performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("A–Z").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("Class").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("Difficulty").performScrollTo().assertIsDisplayed()
+        composeRule.onAllNodesWithText("✓ Example:", substring = true)[0].assertIsDisplayed()
+        composeRule.onAllNodesWithText("✕ Non-example:", substring = true)[0].assertIsDisplayed()
+    }
+
+    @Test
     fun statisticsLabProvidesInteractiveChartsAndDescriptiveMeasures() {
         openMaths()
         composeRule.onNodeWithText("Menu").performClick()
@@ -159,6 +176,19 @@ class AIExplorerUiTest {
     }
 
     @Test
+    fun unifiedMathStudioLinksAlgebraGraphTableAndResults() {
+        openMaths()
+        composeRule.onNodeWithText("Unified Math Studio").performClick()
+        composeRule.onNodeWithContentDescription("Unified live mathematics studio").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Unified studio expression input").performTextReplacement("h(x) = a*x + 2")
+        composeRule.onNodeWithText("Add linked object").performClick()
+        composeRule.onNodeWithText("h(x)").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Graph")[0].performClick()
+        composeRule.onNodeWithContentDescription("Linked graph with roots and extrema").assertIsDisplayed()
+        composeRule.onNodeWithText("LIVE", substring = true).assertIsDisplayed()
+    }
+
+    @Test
     fun threeDimensionalWorkspaceExposesDirectTransformModes() {
         openMaths()
         expandNavigation()
@@ -169,6 +199,8 @@ class AIExplorerUiTest {
         composeRule.onNodeWithText("Vertex").assertIsDisplayed()
         composeRule.onNodeWithText("Edge").assertIsDisplayed()
         composeRule.onNodeWithText("Face").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Selected object controls for Cube").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Delete selected object or drag object here").assertIsDisplayed()
         composeRule.onNodeWithContentDescription("Interactive 3D workspace with object, vertex, edge and face selection")
             .assertIsDisplayed()
     }
@@ -183,6 +215,7 @@ class AIExplorerUiTest {
         composeRule.onNodeWithText("Midpoint").assertIsDisplayed()
         composeRule.onNodeWithText("Circumcenter").assertIsDisplayed()
         composeRule.onNodeWithText("Perpendicular").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Delete selected object or drag object here").assertIsDisplayed()
     }
 
     @Test

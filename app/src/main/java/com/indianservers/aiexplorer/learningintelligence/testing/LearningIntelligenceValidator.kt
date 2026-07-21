@@ -1,0 +1,13 @@
+package com.indianservers.aiexplorer.learningintelligence.testing
+
+import com.indianservers.aiexplorer.connectedlearning.ScientificReviewStatus
+import com.indianservers.aiexplorer.learningintelligence.engine.KnowledgeGraphValidator
+import com.indianservers.aiexplorer.learningintelligence.model.*
+import com.indianservers.aiexplorer.learningintelligence.reference.LearningIntelligenceCatalog
+
+data class LearningIntelligenceValidationReport(val errors:List<String>){val valid get()=errors.isEmpty()}
+object LearningIntelligenceValidator{
+ fun validate(states:List<LearnerConceptState> = emptyList(),reviews:List<ScheduledReview> = emptyList(),errors:List<ErrorBookEntry> = emptyList(),recommendations:List<LearningRecommendation> = emptyList()):LearningIntelligenceValidationReport{val problems=mutableListOf<String>();val conceptIds=LearningIntelligenceCatalog.conceptIds();val curriculumIds=LearningIntelligenceCatalog.curriculumIds();val validIds=conceptIds+curriculumIds;LearningIntelligenceCatalog.concepts.forEach{c->if(c.conceptId !in conceptIds)problems+="Unresolved concept ${c.conceptId}.";if(c.curriculumNodeId !in curriculumIds)problems+="Unresolved curriculum node ${c.curriculumNodeId}.";if(c.prerequisiteConceptIds.any{it !in conceptIds})problems+="Broken prerequisite for ${c.conceptId}.";c.diagnosticQuestions.forEach{if(it.conceptId !in validIds)problems+="Diagnostic ${it.id} is unresolved."};c.misconceptions.forEach{m->if(m.conceptId !in validIds)problems+="Misconception ${m.id} is unresolved.";if(m.reviewStatus!=ScientificReviewStatus.Verified)problems+="Unverified misconception ${m.id}.";if(m.remediationActivityId==null&&m.explanationSectionId.isBlank())problems+="Misconception ${m.id} lacks remediation."};c.hints.forEach{if(it.conceptId !in conceptIds)problems+="Hint ${it.id} is unresolved."};val stepIds=c.workedExample.steps.map{it.id}.toSet();c.workedExample.steps.forEach{s->if(s.dependencies.any{it !in stepIds})problems+="Broken worked-step dependency ${s.id}."}}
+  problems+=KnowledgeGraphValidator.validate(LearningIntelligenceCatalog.graph).errors
+  states.forEach{if(it.conceptId !in conceptIds||it.curriculumNodeIds.any{id->id !in curriculumIds})problems+="Learner state ${it.conceptId} is unresolved."};reviews.forEach{if(it.conceptId !in conceptIds)problems+="Review ${it.conceptId} is unresolved."};errors.forEach{if(it.conceptId !in conceptIds||it.curriculumNodeId !in curriculumIds)problems+="Error entry ${it.id} is unresolved."};recommendations.forEach{if(it.conceptId !in conceptIds)problems+="Recommendation ${it.conceptId} is unresolved."};return LearningIntelligenceValidationReport(problems.distinct())}
+}

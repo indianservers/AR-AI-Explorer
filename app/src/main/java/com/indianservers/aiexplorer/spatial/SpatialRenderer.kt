@@ -114,8 +114,7 @@ object SpatialPicking {
     fun hitTest(scene: SpatialRenderScene, ray: SpatialRay, maxDistance: Double = 100.0): List<SpatialPickResult> {
         val direction = normalize(ray.direction)
         val primitiveHits = scene.primitives.filter { it.visible && it.selectable && it.geometry.vertices.isNotEmpty() }.mapNotNull { primitive ->
-            val bounds = bounds(primitive.geometry.vertices, primitive.geometry.pointRadius)
-            val distance = rayBox(ray.origin, direction, bounds.first, bounds.second) ?: return@mapNotNull null
+            val distance = preciseDistance(ray.origin, direction, primitive.geometry) ?: return@mapNotNull null
             if (distance !in 0.0..maxDistance) return@mapNotNull null
             SpatialPickResult(primitive.id, primitive.kind, distance, ray.origin + direction * distance, primitive.label)
         }
@@ -127,6 +126,41 @@ object SpatialPicking {
         }
         return (primitiveHits + annotationHits).sortedBy { it.distance }
     }
+
+    private fun preciseDistance(origin: Vec3, direction: Vec3, geometry: SpatialGeometry): Double? {
+        val triangleHit = geometry.triangles.chunked(3).asSequence().filter { it.size == 3 }.mapNotNull { triangle ->
+            rayTriangle(origin, direction, geometry.vertices[triangle[0]], geometry.vertices[triangle[1]], geometry.vertices[triangle[2]])
+        }.minOrNull()
+        if (triangleHit != null) return triangleHit
+        val lineHit = geometry.lines.asSequence().mapNotNull { (a, b) -> raySegment(origin, direction, geometry.vertices[a], geometry.vertices[b], geometry.pointRadius) }.minOrNull()
+        if (lineHit != null) return lineHit
+        val pointHit = geometry.vertices.asSequence().mapNotNull { raySphere(origin, direction, it, geometry.pointRadius) }.minOrNull()
+        if (pointHit != null) return pointHit
+        return null
+    }
+
+    private fun rayTriangle(origin: Vec3, direction: Vec3, a: Vec3, b: Vec3, c: Vec3): Double? {
+        val edge1 = b - a; val edge2 = c - a; val h = cross(direction, edge2); val determinant = edge1.dot(h)
+        if (abs(determinant) < 1e-12) return null
+        val inverse = 1.0 / determinant; val s = origin - a; val u = inverse * s.dot(h); if (u !in 0.0..1.0) return null
+        val q = cross(s, edge1); val v = inverse * direction.dot(q); if (v < 0.0 || u + v > 1.0) return null
+        return (inverse * edge2.dot(q)).takeIf { it >= 0.0 }
+    }
+
+    private fun raySegment(origin: Vec3, direction: Vec3, a: Vec3, b: Vec3, radius: Double): Double? {
+        val segment = b - a; val w = origin - a; val aa = direction.dot(direction); val bb = direction.dot(segment); val cc = segment.dot(segment); val dd = direction.dot(w); val ee = segment.dot(w)
+        if (cc < 1e-15) return raySphere(origin, direction, a, radius)
+        val denominator = aa * cc - bb * bb; var segmentT = if (abs(denominator) < 1e-15) 0.0 else ((aa * ee - bb * dd) / denominator).coerceIn(0.0, 1.0)
+        var rayT = max(0.0, (bb * segmentT - dd) / aa); segmentT = ((bb * rayT + ee) / cc).coerceIn(0.0, 1.0); rayT = max(0.0, (bb * segmentT - dd) / aa)
+        return rayT.takeIf { distance(origin + direction * rayT, a + segment * segmentT) <= radius }
+    }
+
+    private fun raySphere(origin: Vec3, direction: Vec3, center: Vec3, radius: Double): Double? {
+        val offset = origin - center; val b = offset.dot(direction); val c = offset.dot(offset) - radius * radius; val discriminant = b * b - c
+        if (discriminant < 0) return null; val root = sqrt(discriminant); return listOf(-b - root, -b + root).firstOrNull { it >= 0 }
+    }
+
+    private fun cross(a: Vec3, b: Vec3) = Vec3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x)
 
     fun nearestPoint(scene: SpatialRenderScene, world: Vec3, tolerance: Double): SpatialPickResult? =
         scene.primitives.asSequence().filter { it.visible && it.selectable }.flatMap { primitive -> primitive.geometry.vertices.asSequence().map { primitive to it } }

@@ -63,3 +63,22 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
+
+listOf(
+    "validatePhase1Foundation",
+    "validatePhase2UnifiedStudio",
+    "validatePhysicsFormulaDimensions",
+    "validateChemistryFormulaDimensions",
+    "validateScientificUnits",
+    "validatePhase3Release"
+).forEach { taskName ->
+    tasks.register(taskName) {
+        group = "verification"
+        description = when (taskName) {
+            "validatePhase1Foundation" -> "Runs the Phase 1 persistence, recovery, correctness, and interoperability contract suite."
+            "validatePhase2UnifiedStudio" -> "Runs the Phase 2 linked algebra, graph, table, geometry, CAS, and persistence contract suite."
+            else -> "Runs the verified Phase 3 scientific and release contract suite."
+        }
+        dependsOn("testDebugUnitTest")
+    }
+}

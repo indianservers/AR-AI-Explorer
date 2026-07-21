@@ -3,6 +3,9 @@ package com.indianservers.aiexplorer.curriculum
 import com.indianservers.aiexplorer.curriculum.experience.ConceptExperienceRegistry
 import com.indianservers.aiexplorer.curriculum.interaction.ReferenceActivityRegistry
 import com.indianservers.aiexplorer.curriculum.interactive.*
+import com.indianservers.aiexplorer.learningintelligence.testing.LearningIntelligenceValidator
+import com.indianservers.aiexplorer.learningworkspace.Phase2Validator
+import com.indianservers.aiexplorer.phase3.Phase3ReleaseValidator
 
 data class CurriculumValidationReport(val errors: List<String>, val warnings: List<String>) { val valid: Boolean get() = errors.isEmpty() }
 
@@ -46,6 +49,9 @@ object CurriculumValidator {
         inventory.assets.filter { it.classNumbers.any { c -> c !in 7..12 } }.forEach { errors += "Incorrect school class mapping: ${it.id}" }
         val interaction=validateInteractions(manifests,CurriculumInteractionBridge.activities)
         errors += interaction.errors;warnings += interaction.warnings
+        errors += LearningIntelligenceValidator.validate().errors
+        errors += Phase2Validator.validate().errors
+        errors += Phase3ReleaseValidator.validate().errors
         return CurriculumValidationReport(errors, warnings)
     }
 
