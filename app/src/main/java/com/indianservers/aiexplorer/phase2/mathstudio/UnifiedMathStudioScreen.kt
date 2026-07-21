@@ -60,6 +60,7 @@ import com.indianservers.aiexplorer.core.UnifiedConstructionSession
 import com.indianservers.aiexplorer.workspace.MathGraphObject
 import com.indianservers.aiexplorer.workspace.WorkspaceState
 import com.indianservers.aiexplorer.persistence.MathFileExchange
+import com.indianservers.aiexplorer.input.IntentAwareMathField
 import kotlinx.coroutines.launch
 
 private val StudioBackground = Color(0xFF03070C)
@@ -127,9 +128,10 @@ fun UnifiedMathStudioScreen(
             }, enabled = activity != null) { Text("Export .ggb") }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(
-                constructionInput, { constructionInput = it }, Modifier.weight(1f).semantics { contentDescription = "Graph geometry and 3D construction command" },
-                label = { Text("Unified command") }, placeholder = { Text("midpoint(M,A,B) · surface(s,z=x^2+y^2)") }, singleLine = true,
+            IntentAwareMathField(
+                constructionInput, { constructionInput = it }, "Unified command",
+                Modifier.weight(1f).semantics { contentDescription = "Graph geometry and 3D construction command" },
+                placeholder = "midpoint(M,A,B) · surface(s,z=x^2+y^2)", showLegend = false,
             )
             Button({
                 runCatching { constructionHistory.execute(constructionInput) }
@@ -185,7 +187,7 @@ private fun AlgebraPane(
     modifier: Modifier,
 ) {
     StudioCard(modifier, "ALGEBRA & OBJECTS", "Changes recalculate every linked view") {
-        OutlinedTextField(input, onInput, Modifier.fillMaxWidth().semantics { contentDescription = "Unified studio expression input" }, label = { Text("f(x) = expression") }, singleLine = true)
+        IntentAwareMathField(input, onInput, "Expression or maths question", Modifier.fillMaxWidth().semantics { contentDescription = "Unified studio expression input" }, placeholder = "f(x)=a*sin(x)+1")
         Button(onAdd, enabled = input.isNotBlank(), modifier = Modifier.fillMaxWidth()) { Text("Add linked object") }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             StudioTransform.entries.forEach { operation -> OutlinedButton({ onSession(engine.transform(session, operation)) }) { Text(operation.label) } }
@@ -302,7 +304,7 @@ private fun StudioCard(modifier: Modifier, title: String, subtitle: String, cont
 private fun StudioExpressionEditor(source: String, onApply: (String) -> Unit) {
     var draft by remember(source) { mutableStateOf(source) }
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        OutlinedTextField(draft, { draft = it }, Modifier.weight(1f), singleLine = true, label = { Text("Expression") })
+        IntentAwareMathField(draft, { draft = it }, "Expression", Modifier.weight(1f), showLegend = false)
         Button({ onApply(draft) }, enabled = draft.isNotBlank() && draft != source) { Text("Apply") }
     }
 }

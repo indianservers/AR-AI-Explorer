@@ -53,6 +53,19 @@ data class PointDependency(
     val parameters: List<Double> = emptyList(),
 )
 
+enum class GeometryConstraint2DType(val label: String) {
+    EqualLength("Equal length"), Parallel("Parallel"), Perpendicular("Perpendicular"), Tangent("Tangent"),
+    Concentric("Concentric"), FixedLength("Fixed length"), FixedAngle("Fixed angle"),
+}
+
+data class GeometryConstraint2D(
+    val id: String,
+    val type: GeometryConstraint2DType,
+    val pointIndices: List<Int> = emptyList(),
+    val shapeIds: List<String> = emptyList(),
+    val target: Double? = null,
+)
+
 enum class GraphSliderPlaybackMode { Loop, Bounce }
 
 data class GraphRowMetadataState(
@@ -87,6 +100,7 @@ data class WorkspaceState(
         Shape2D("default-segment", Shape2DType.Segment, listOf(0, 1), "AB"),
     ),
     val pointDependencies: List<PointDependency> = emptyList(),
+    val geometryConstraints: List<GeometryConstraint2D> = emptyList(),
     val functions: List<FunctionDefinition> = listOf(
         FunctionDefinition("f", "f(x)", "x^2 - 4*x + 3", "cyan"),
         FunctionDefinition("g", "g(x)", "x - 1", "violet"),
@@ -106,6 +120,18 @@ data class WorkspaceState(
     val spatialPlacement: SpatialScenePlacement = SpatialScenePlacement(),
     val modifiedAt: Long = System.currentTimeMillis(),
 )
+
+data class AddGeometryConstraint2DCommand(val constraint: GeometryConstraint2D) : WorkspaceCommand {
+    override val label = "Apply ${constraint.type.label.lowercase()} constraint"
+    override fun apply(state: WorkspaceState) = state.copy(
+        geometryConstraints = state.geometryConstraints.filterNot { it.id == constraint.id } + constraint,
+        modifiedAt = System.currentTimeMillis(),
+    )
+    override fun undo(state: WorkspaceState) = state.copy(
+        geometryConstraints = state.geometryConstraints.filterNot { it.id == constraint.id },
+        modifiedAt = System.currentTimeMillis(),
+    )
+}
 
 sealed interface WorkspaceCommand {
     val label: String

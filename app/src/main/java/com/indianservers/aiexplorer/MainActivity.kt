@@ -238,6 +238,15 @@ import com.indianservers.aiexplorer.core.SolverDestination
 import com.indianservers.aiexplorer.core.SolverResultKind
 import com.indianservers.aiexplorer.core.MathInputIntelligence
 import com.indianservers.aiexplorer.core.MathInputTokenKind
+import com.indianservers.aiexplorer.core.CasAssumptionDraft
+import com.indianservers.aiexplorer.core.CasInteractionEngine
+import com.indianservers.aiexplorer.core.CasKeyboardCatalog
+import com.indianservers.aiexplorer.core.CasKeyboardLayer
+import com.indianservers.aiexplorer.core.CasSolutionMethod
+import com.indianservers.aiexplorer.core.MathAssumptionSet
+import com.indianservers.aiexplorer.core.MathNumberDomain
+import com.indianservers.aiexplorer.input.IntentAwareMathField
+import com.indianservers.aiexplorer.input.IntentAwareMathValueField
 import com.indianservers.aiexplorer.core.MathNotebookDocument
 import com.indianservers.aiexplorer.core.MathNotebookEngine
 import com.indianservers.aiexplorer.core.NotebookCell
@@ -323,6 +332,8 @@ import com.indianservers.aiexplorer.learning.QuizSubject
 import com.indianservers.aiexplorer.workspace.AddVector3DCommand
 import com.indianservers.aiexplorer.workspace.AddConstructionCommand
 import com.indianservers.aiexplorer.workspace.AddDependentPointCommand
+import com.indianservers.aiexplorer.workspace.AddGeometryConstraint2DCommand
+import com.indianservers.aiexplorer.workspace.AddShapeFromPointsCommand
 import com.indianservers.aiexplorer.workspace.AddFunctionCommand
 import com.indianservers.aiexplorer.workspace.AddPointCommand
 import com.indianservers.aiexplorer.workspace.AddSolidCommand
@@ -337,6 +348,9 @@ import com.indianservers.aiexplorer.workspace.LinkedMathView
 import com.indianservers.aiexplorer.workspace.GraphRowMetadataState
 import com.indianservers.aiexplorer.workspace.GraphSliderMetadataState
 import com.indianservers.aiexplorer.workspace.GraphSliderPlaybackMode
+import com.indianservers.aiexplorer.workspace.Geometry2DInteractionEngine
+import com.indianservers.aiexplorer.workspace.ConstraintFeedbackLevel
+import com.indianservers.aiexplorer.workspace.GeometryProtocolStatus
 import com.indianservers.aiexplorer.workspace.MathObjectGraph
 import com.indianservers.aiexplorer.workspace.MathModule
 import com.indianservers.aiexplorer.workspace.AIExplorerProjectArchive
@@ -1516,6 +1530,46 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         pendingConstruction = emptyList()
         pendingPointIndices = emptyList()
         status = "${tool.name.lowercase().replaceFirstChar { it.uppercase() }} tool selected"
+    }
+
+    fun applyContextualGeometryTool(toolName: String, pointIndices: List<Int>) {
+        val tool = runCatching { GeometryTool.valueOf(toolName) }.getOrNull() ?: return
+        val required = tool.requiredTapCount()
+        val inputs = pointIndices.take(required)
+        if (required == 0 || inputs.size < required || inputs.any { it !in state.points.indices }) {
+            selectGeometryTool(tool)
+            status = "${tool.name}: select ${required.coerceAtLeast(1)} defining point${if (required == 1) "" else "s"}"
+            return
+        }
+        val dependencyType = tool.toPointDependencyType()
+        if (dependencyType != null) {
+            state = history.execute(state, AddDependentPointCommand(inputs, dependencyType))
+            selectedPoint = state.points.lastIndex
+            selectedShape = -1
+            selectedShapes = emptySet()
+        } else {
+            val shapeType = tool.toShape2DType() ?: return selectGeometryTool(tool)
+            state = history.execute(state, AddShapeFromPointsCommand(shapeType, inputs, tool.name))
+            selectedShape = state.shapes.lastIndex
+            selectedShapes = setOf(selectedShape)
+            selectedPoint = -1
+        }
+        geometryTool = GeometryTool.Select
+        pendingConstruction = emptyList()
+        pendingPointIndices = emptyList()
+        status = "Created ${tool.name.lowercase()} from the current selection"
+    }
+
+    fun applyGeometryConstraint(constraint: com.indianservers.aiexplorer.workspace.GeometryConstraint2D) {
+        state = history.execute(state, AddGeometryConstraint2DCommand(constraint))
+        val feedback = Geometry2DInteractionEngine.evaluateConstraint(state, constraint)
+        status = "${constraint.type.label}: ${feedback.level.name.lowercase().replaceFirstChar { it.uppercase() }}"
+    }
+
+    fun removeGeometryConstraint(id: String) {
+        if (state.geometryConstraints.none { it.id == id }) return
+        state = state.copy(geometryConstraints = state.geometryConstraints.filterNot { it.id == id }, modifiedAt = System.currentTimeMillis())
+        status = "Constraint removed"
     }
 
     fun addPoint(point: Vec2) {
@@ -2946,7 +3000,7 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
             TogglePill(if (showRecognition) "Hide import" else "Voice / OCR", showRecognition) { showRecognition = !showRecognition }
         }
         if (showRecognition) {
-            OutlinedTextField(recognitionInput, { recognitionInput = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Voice transcript or recognized maths") })
+            IntentAwareMathField(recognitionInput, { recognitionInput = it }, "Voice transcript or recognized maths", Modifier.fillMaxWidth(), singleLine = false, minLines = 2)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 GlowButton("Normalize voice", enabled = recognitionInput.isNotBlank()) {
                     val recognized = CalculatorRecognitionAdapters.voice(recognitionInput)
@@ -2959,15 +3013,10 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             recognitionMessage?.let { Text(it, color = Muted, fontSize = 11.sp) }
         }
-        OutlinedTextField(
-            value = editor,
-            onValueChange = { next -> editorHistory.edit(next.text); editor = next },
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = "Scientific calculator expression input" },
-            label = { Text("Expression") },
-            visualTransformation = MathSyntaxVisualTransformation(),
-            singleLine = false,
+        IntentAwareMathValueField(
+            value = editor, onValueChange = { next -> editorHistory.edit(next.text); editor = next }, label = "Expression",
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Scientific calculator expression input" },
+            singleLine = false, minLines = 2,
         )
         val diagnostics = CalculatorInputIntelligence.diagnostics(expression)
         diagnostics.forEach { Text("${it.position?.let { position -> "At ${position + 1}: " }.orEmpty()}${it.message}", color = if (it.error) Amber else Muted, fontSize = 11.sp) }
@@ -3247,9 +3296,21 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
     var input by remember { mutableStateOf("a := 2") }
     var exactMode by remember { mutableStateOf(true) }
     val cas = remember { SymbolicCasEngine() }
-    var casInput by remember { mutableStateOf("(x+1)^2") }
+    val casInteraction = remember { CasInteractionEngine(cas) }
+    var casInput by remember { mutableStateOf(TextFieldValue("(x+1)^2")) }
     var casOperation by remember { mutableStateOf("expand") }
-    val casRow = remember(casInput, casOperation) { cas.casRow(casInput, casOperation) }
+    var casAssumptions by remember { mutableStateOf(MathAssumptionSet()) }
+    var assumptionDraft by remember { mutableStateOf(CasAssumptionDraft()) }
+    var assumptionMessage by remember { mutableStateOf("Assumptions are local, explicit and removable.") }
+    var showAssumptions by remember { mutableStateOf(false) }
+    var casMethod by remember { mutableStateOf(CasSolutionMethod.Auto) }
+    var keyboardLayer by remember { mutableStateOf(CasKeyboardLayer.Basic) }
+    var expandedCasSteps by remember { mutableStateOf<Set<Int>>(emptySet()) }
+    var revealedCasSteps by remember { mutableIntStateOf(1) }
+    val casPreview = remember(casInput.text, casOperation, casAssumptions) { casInteraction.interpret(casInput.text, casOperation, casAssumptions) }
+    val availableCasMethods = remember(casPreview.operation) { casInteraction.availableMethods(casPreview.operation) }
+    val effectiveCasMethod = casMethod.takeIf { it in availableCasMethods } ?: CasSolutionMethod.Auto
+    val casRow = remember(casPreview, casAssumptions, effectiveCasMethod) { casInteraction.evaluate(casPreview, casAssumptions, effectiveCasMethod) }
     val examples = listOf(
         "Value" to "a := 2",
         "Dependent" to "b := a^2 + 3",
@@ -3258,19 +3319,27 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
         "Exact" to "1/3 + 1/6",
     )
 
+    fun insertCasText(insertion: String, cursorBack: Int = 0) {
+        val start = casInput.selection.min.coerceIn(0, casInput.text.length); val end = casInput.selection.max.coerceIn(start, casInput.text.length)
+        val next = casInput.text.replaceRange(start, end, insertion); val cursor = (start + insertion.length - cursorBack).coerceIn(0, next.length)
+        casInput = TextFieldValue(next, TextRange(cursor)); revealedCasSteps = 1; expandedCasSteps = emptySet()
+    }
+
+    fun deleteCasBackward() {
+        val start = casInput.selection.min.coerceIn(0, casInput.text.length); val end = casInput.selection.max.coerceIn(start, casInput.text.length)
+        if (start != end) casInput = TextFieldValue(casInput.text.removeRange(start, end), TextRange(start))
+        else if (start > 0) casInput = TextFieldValue(casInput.text.removeRange(start - 1, start), TextRange(start - 1))
+    }
+
     @Composable
     fun InputPanel(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
             PanelHeader("Unified Math Notebook", vm::returnToMathMenu, Cyan, icon = "#")
             Text("Define with := · edit a symbol by defining it again · dependent cells recalculate automatically.", color = Muted, fontSize = 12.sp)
-            OutlinedTextField(
-                value = input,
-                onValueChange = { input = it },
+            IntentAwareMathField(
+                value = input, onValueChange = { input = it }, label = "Expression or assignment",
                 modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Notebook maths input" },
-                label = { Text("Expression or assignment") },
-                placeholder = { Text("f(x) := a*x^2 + 3") },
-                textStyle = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, color = Ink),
-                minLines = 2,
+                placeholder = "f(x) := a*x^2 + 3", singleLine = false, minLines = 2,
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 GlowButton("Run cell", enabled = input.isNotBlank()) { vm.submitNotebook(input) }
@@ -3330,34 +3399,132 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
 
     @Composable
     fun CasPanel(modifier: Modifier = Modifier) {
+        LaunchedEffect(casPreview.operation) { casMethod = CasSolutionMethod.Auto; revealedCasSteps = 1; expandedCasSteps = emptySet() }
         GlassPanel(modifier.semantics { contentDescription = "CAS rows with exact and decimal output" }) {
             PanelHeader("CAS Rows", vm::returnToMathMenu, Violet, icon = "CAS")
             Text("Exact CAS: assumptions, algebra, systems, calculus, matrices and verified first-order ODEs share one symbolic tree.", color = Muted, fontSize = 12.sp)
-            OutlinedTextField(
+            IntentAwareMathValueField(
                 value = casInput,
-                onValueChange = { casInput = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("CAS expression") },
-                visualTransformation = MathSyntaxVisualTransformation(),
-                singleLine = true,
+                onValueChange = { casInput = it; revealedCasSteps = 1; expandedCasSteps = emptySet() },
+                label = "CAS expression or question", modifier = Modifier.fillMaxWidth(),
+                placeholder = "factor x^2-5*x+6 or eigenvalues [[1,2],[3,4]]", minLines = 2,
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 listOf("simplify", "expand", "factor", "partial fractions", "derivative", "integral", "limit", "system", "inequalities", "determinant", "rref", "eigenvalues", "ode").forEach { operation ->
-                    GlowButton(if (casOperation == operation) "• $operation" else operation) { casOperation = operation }
+                    GlowButton(if (casPreview.operation == operation) "• $operation" else operation) {
+                        casOperation = operation
+                        val expression = casPreview.expression
+                        casInput = TextFieldValue(expression, TextRange(expression.length))
+                    }
                 }
                 GlowButton("sub x=2") {
-                    casInput = cas.substitute(casInput, mapOf("x" to "2")).exact
+                    val substituted = cas.substitute(casInput.text, mapOf("x" to "2")).exact
+                    casInput = TextFieldValue(substituted, TextRange(substituted.length))
                     casOperation = "simplify"
                 }
+            }
+            Column(
+                Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color(0x33101B2A))
+                    .border(1.dp, Cyan.copy(.35f), RoundedCornerShape(14.dp)).padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text("INTERPRETATION PREVIEW", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text("${(casPreview.confidence * 100).toInt()}%", color = if (casPreview.warnings.isEmpty()) Green else Amber, fontSize = 10.sp)
+                }
+                Text(casPreview.explanation, color = Ink, fontSize = 12.sp)
+                Text("Expression: ${casPreview.expression}", color = Green, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+                Text("Operation ${casPreview.operation} · variable ${casPreview.variable}", color = Violet, fontSize = 10.sp)
+                casPreview.warnings.forEach { Text("Check: $it", color = Amber, fontSize = 10.sp) }
+            }
+            Text("Solution method", color = Ink, fontWeight = FontWeight.SemiBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                availableCasMethods.forEach { method ->
+                    GlowButton(if (effectiveCasMethod == method) "Selected: ${method.label}" else method.label) { casMethod = method; revealedCasSteps = 1; expandedCasSteps = emptySet() }
+                }
+            }
+            Text((if (effectiveCasMethod == CasSolutionMethod.Auto) availableCasMethods.firstOrNull { it != CasSolutionMethod.Auto } else effectiveCasMethod)?.explanation.orEmpty(), color = Muted, fontSize = 10.sp)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("Assumptions", color = Ink, fontWeight = FontWeight.SemiBold)
+                GlowButton(if (showAssumptions) "Close editor" else "Edit assumptions") { showAssumptions = !showAssumptions }
+            }
+            if (casAssumptions.variables.isEmpty()) Text("No assumptions — real variables use guarded identities only.", color = Muted, fontSize = 10.sp)
+            else FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                casAssumptions.variables.values.sortedBy { it.variable }.forEach { assumption ->
+                    GlowButton("${assumption.description()} ×") { casAssumptions = casAssumptions.copy(variables = casAssumptions.variables - assumption.variable) }
+                }
+            }
+            AnimatedVisibility(showAssumptions) {
+                Column(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color(0x331D1330)).border(1.dp, Violet.copy(.45f), RoundedCornerShape(14.dp)).padding(9.dp),
+                    verticalArrangement = Arrangement.spacedBy(7.dp),
+                ) {
+                    OutlinedTextField(assumptionDraft.variable, { assumptionDraft = assumptionDraft.copy(variable = it.take(16)) }, Modifier.fillMaxWidth(), label = { Text("Variable") }, singleLine = true)
+                    Text("Domain", color = Muted, fontSize = 10.sp)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        MathNumberDomain.entries.forEach { domain -> TogglePill(domain.name, assumptionDraft.domain == domain) { assumptionDraft = assumptionDraft.copy(domain = domain) } }
+                    }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        TogglePill("positive", assumptionDraft.positive) { assumptionDraft = assumptionDraft.copy(positive = it, nonNegative = if (it) false else assumptionDraft.nonNegative) }
+                        TogglePill("non-negative", assumptionDraft.nonNegative) { assumptionDraft = assumptionDraft.copy(nonNegative = it, positive = if (it) false else assumptionDraft.positive) }
+                        TogglePill("non-zero", assumptionDraft.nonZero) { assumptionDraft = assumptionDraft.copy(nonZero = it) }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        OutlinedTextField(assumptionDraft.minimum, { assumptionDraft = assumptionDraft.copy(minimum = it) }, Modifier.weight(1f), label = { Text("Minimum") }, singleLine = true)
+                        OutlinedTextField(assumptionDraft.maximum, { assumptionDraft = assumptionDraft.copy(maximum = it) }, Modifier.weight(1f), label = { Text("Maximum") }, singleLine = true)
+                    }
+                    GlowButton("Add or update assumption") {
+                        runCatching { assumptionDraft.build() }.onSuccess { assumption ->
+                            casAssumptions = casAssumptions.with(assumption); assumptionMessage = "Using ${assumption.description()}"; assumptionDraft = assumptionDraft.copy(variable = assumption.variable)
+                        }.onFailure { assumptionMessage = it.message ?: "Check the assumption." }
+                    }
+                    Text(assumptionMessage, color = if (assumptionMessage.startsWith("Using")) Green else Muted, fontSize = 10.sp)
+                }
+            }
+            Text("Full maths keyboard", color = Ink, fontWeight = FontWeight.SemiBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                CasKeyboardLayer.entries.forEach { layer -> GlowButton(if (keyboardLayer == layer) "${layer.label} active" else layer.label) { keyboardLayer = layer } }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                CasKeyboardCatalog.layers.getValue(keyboardLayer).forEach { key -> GlowButton(key.label) { insertCasText(key.insertion, key.cursorBack) } }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                GlowButton("←") { casInput = casInput.copy(selection = TextRange((casInput.selection.min - 1).coerceAtLeast(0))) }
+                GlowButton("→") { casInput = casInput.copy(selection = TextRange((casInput.selection.max + 1).coerceAtMost(casInput.text.length))) }
+                GlowButton("Backspace", onClick = ::deleteCasBackward)
+                GlowButton("Clear") { casInput = TextFieldValue("") }
             }
             Text("Syntax: systems use {x+y=5; x-y=1}; inequalities use 2*x>=4 and x<5; matrices use [[1,2],[3,4]].", color = Muted, fontSize = 10.sp)
             Insight("Operation", casRow.operation, Cyan)
             Insight("Exact", casRow.exact, if (casRow.supported) Green else Amber)
             casRow.decimal?.let { Insight("Decimal", it, Violet) }
             Insight("Assumptions", casRow.assumptions.joinToString().ifBlank { "none" }, Amber)
-            casRow.steps.take(4).forEachIndexed { index, step ->
-                MathFormulaText("${index + 1}. ${step.title}: ${step.expression}", color = Ink, fontSize = 13.sp)
-                Text(step.explanation, color = Muted, fontSize = 10.sp)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("Step-by-step reasoning", color = Ink, fontWeight = FontWeight.SemiBold)
+                Text("${revealedCasSteps.coerceAtMost(casRow.steps.size)}/${casRow.steps.size}", color = Cyan, fontSize = 10.sp)
+            }
+            casRow.steps.take(revealedCasSteps).forEachIndexed { index, step ->
+                val expanded = index in expandedCasSteps
+                Column(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x33101824))
+                        .border(1.dp, (if (expanded) Violet else Cyan).copy(.35f), RoundedCornerShape(12.dp)).padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                ) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text("${index + 1}. ${step.title}", color = if (expanded) Violet else Cyan, fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                        GlowButton(if (expanded) "Less" else "Explain") { expandedCasSteps = if (expanded) expandedCasSteps - index else expandedCasSteps + index }
+                    }
+                    MathFormulaText(step.expression, color = Ink, fontSize = 13.sp)
+                    AnimatedVisibility(expanded) { Text(step.explanation, color = Muted, fontSize = 11.sp) }
+                }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                if (revealedCasSteps < casRow.steps.size) GlowButton("Show next step") { revealedCasSteps++ }
+                if (revealedCasSteps < casRow.steps.size) GlowButton("Reveal all") { revealedCasSteps = casRow.steps.size }
+                if (casRow.steps.isNotEmpty()) GlowButton(if (expandedCasSteps.size == casRow.steps.size) "Collapse details" else "Explain all") {
+                    expandedCasSteps = if (expandedCasSteps.size == casRow.steps.size) emptySet() else casRow.steps.indices.toSet()
+                    revealedCasSteps = casRow.steps.size
+                }
             }
         }
     }
@@ -4499,7 +4666,6 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
     var showMathKeyboard by remember { mutableStateOf(true) }
     var showHandwriting by rememberSaveable { mutableStateOf(false) }
     val syntax = remember(question.text) { MathInputIntelligence.analyze(question.text) }
-    val syntaxHighlighting = remember { MathSyntaxVisualTransformation() }
     val examples = listOf(
         "Linear" to "Solve 2x + 3 = 11",
         "Quadratic" to "x^2 - 5x + 6 = 0",
@@ -4570,18 +4736,10 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     }
                 }
             }
-            OutlinedTextField(
-                value = question,
-                onValueChange = { question = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 104.dp)
-                    .semantics { contentDescription = "Maths question input" },
-                label = { Text("Maths question") },
-                placeholder = { Text("Example: solve x^2 - 5x + 6 = 0") },
-                minLines = 3,
-                visualTransformation = syntaxHighlighting,
-                textStyle = androidx.compose.ui.text.TextStyle(fontFamily = FontFamily.Monospace, fontSize = 16.sp, color = Ink),
+            IntentAwareMathValueField(
+                value = question, onValueChange = { question = it }, label = "Maths question",
+                modifier = Modifier.fillMaxWidth().heightIn(min = 104.dp).semantics { contentDescription = "Maths question input" },
+                placeholder = "Example: solve x^2 - 5x + 6 = 0", minLines = 3,
             )
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(syntax.message, color = if (syntax.validBrackets) Green else Amber, fontSize = 11.sp, modifier = Modifier.weight(1f))
@@ -4984,7 +5142,7 @@ private fun SpreadsheetLabScreen(vm: ExplorerViewModel, wide: Boolean, onSection
             ProbabilitySectionSelector(ProbabilityLabSection.Spreadsheet, onSection)
             Text("Editable CSV grid · A1 formulas · named lists · linked analysis", color = Muted, fontSize = 12.sp)
             OutlinedTextField(value = csv, onValueChange = { csv = it }, label = { Text("CSV data") }, minLines = 7, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Spreadsheet CSV editor" })
-            OutlinedTextField(value = formula, onValueChange = { formula = it }, label = { Text("Formula in C1") }, modifier = Modifier.fillMaxWidth())
+            IntentAwareMathField(value = formula, onValueChange = { formula = it }, label = "Formula in C1", modifier = Modifier.fillMaxWidth(), placeholder = "=A1+B1", showLegend = false)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 MissingDataPolicy.entries.forEach { policy -> GlowButton(if (missing == policy) "• ${policy.name}" else policy.name) { missing = policy } }
                 GlowButton("Export CSV") { snapshot?.let { exported = engine.exportCsv(it) } }
@@ -6335,7 +6493,7 @@ private fun InteractiveActivityStudioCard(role: LearningRole) {
                     }
                     is ActivityBlock.MathResponse -> {
                         Text(current.prompt, color = Ink, fontSize = 12.sp)
-                        OutlinedTextField(response, { response = it }, Modifier.fillMaxWidth(), label = { Text("Your expression") })
+                        IntentAwareMathField(response, { response = it }, "Your expression", Modifier.fillMaxWidth(), showLegend = false)
                         GlowButton("Check without revealing") { run = engine.submit(document, run, ActivityAnswer.Text(response), ActivityEvaluationContext(now = System.currentTimeMillis())); response = "" }
                     }
                     is ActivityBlock.MultipleChoice -> {
@@ -6726,9 +6884,6 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
         document = dynamicEngine.addObject(document, DynamicGeometryObject.Ellipse("ellipse", "A", "B", "C"), "The sum of focal distances is constant")
         document
     }
-    var replayStep by remember { mutableFloatStateOf(dynamicDocument.protocol.size.toFloat()) }
-    LaunchedEffect(dynamicDocument.protocol.size) { replayStep = dynamicDocument.protocol.size.toFloat() }
-    val replayDocument = remember(dynamicDocument, replayStep) { dynamicEngine.replay(dynamicDocument, replayStep.toInt()) }
     val m = Geometry2D.segment(a, b)
     val analyticLine = remember(a, b) { runCatching { AnalyticGeometry2D.lineThrough(a, b) }.getOrNull() }
     val third = Vec2(4.0, -1.5)
@@ -6737,11 +6892,29 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     val invalidDependencyOutputs = vm.state.pointDependencies.filter {
         resolvePointDependency(vm.state.points, it.inputIndices, it.type, it.parameters) == null
     }.mapTo(mutableSetOf()) { it.outputIndex }
+    val protocolSize = vm.state.points.size + vm.state.shapes.size + vm.state.geometryConstraints.size
+    var protocolStep by remember { mutableFloatStateOf(protocolSize.toFloat()) }
+    var focusedProtocolId by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(protocolSize) { protocolStep = protocolSize.toFloat() }
+    val protocolTimeline = remember(vm.state, protocolStep, focusedProtocolId) {
+        Geometry2DInteractionEngine.protocolTimeline(vm.state, protocolStep.roundToInt(), focusedProtocolId)
+    }
+    val contextInspector = remember(vm.state, vm.selectedPoint, vm.selectedShapes) {
+        Geometry2DInteractionEngine.inspect(vm.state, vm.selectedPoint, vm.selectedShapes)
+    }
+    val constraintSuggestions = remember(vm.state, vm.selectedPoint, vm.selectedShapes) {
+        Geometry2DInteractionEngine.constraintSuggestions(vm.state, vm.selectedPoint, vm.selectedShapes)
+    }
+    val constraintFeedback = remember(vm.state) { Geometry2DInteractionEngine.evaluateConstraints(vm.state) }
+    val replayingProtocol = protocolStep.roundToInt() < protocolSize
+    val replayShapes = remember(vm.state.shapes, protocolTimeline.visibleIds) {
+        vm.state.shapes.map { shape -> shape.copy(visible = shape.visible && shape.id in protocolTimeline.visibleIds) }
+    }
     Box(Modifier.fillMaxSize()) {
         CoordinateCanvas(
             modifier = Modifier.fillMaxSize().semantics { contentDescription = "Interactive coordinate geometry canvas" },
-            shapes = vm.state.shapes,
-            interactionEnabled = vm.geometryTool == GeometryTool.Select,
+            shapes = replayShapes,
+            interactionEnabled = vm.geometryTool == GeometryTool.Select && !replayingProtocol,
             selectedShapes = vm.selectedShapes,
             snapEnabled = vm.settings.snap,
             axisConstraint = axisConstraint,
@@ -6774,11 +6947,12 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             val pa = tx(a)
             val pb = tx(b)
             val pm = tx(m.midpoint)
-            if (!vm.shapeExplorerScene) drawLine(Violet, pa, pb, 5f, cap = StrokeCap.Round)
-            drawStoredShapes(vm.state.points, vm.state.shapes, vm.selectedShapes, vm.selectedShape, tx)
+            if (!vm.shapeExplorerScene && "P1" in protocolTimeline.visibleIds && "P2" in protocolTimeline.visibleIds) drawLine(Violet, pa, pb, 5f, cap = StrokeCap.Round)
+            drawStoredShapes(vm.state.points, replayShapes, vm.selectedShapes, vm.selectedShape, tx)
             if (!vm.shapeExplorerScene) drawConstructionPreview(vm.pendingConstruction, vm.geometryTool, tx)
             vm.state.points.drop(2).forEachIndexed { index, point ->
                 val pointIndex = index + 2
+                if ("P${pointIndex + 1}" !in protocolTimeline.visibleIds) return@forEachIndexed
                 val dependency = dependenciesByOutput[pointIndex]
                 val invalid = pointIndex in invalidDependencyOutputs
                 drawRadiantPoint(
@@ -6791,8 +6965,8 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 drawLine(Cyan, tx(Vec2(a.x, a.y)), tx(Vec2(b.x, a.y)), 2f, pathEffect = null)
                 drawLine(Cyan.copy(alpha = .8f), tx(Vec2(b.x, a.y)), pb, 2f)
             }
-            drawRadiantPoint(pa, Cyan, "A (${trim(a.x)}, ${trim(a.y)})")
-            drawRadiantPoint(pb, Violet, "B (${trim(b.x)}, ${trim(b.y)})")
+            if ("P1" in protocolTimeline.visibleIds) drawRadiantPoint(pa, Cyan, "A (${trim(a.x)}, ${trim(a.y)})")
+            if ("P2" in protocolTimeline.visibleIds) drawRadiantPoint(pb, Violet, "B (${trim(b.x)}, ${trim(b.y)})")
             if (!vm.shapeExplorerScene) {
                 drawRadiantPoint(pm, Violet, "M (${trim(m.midpoint.x)}, ${trim(m.midpoint.y)})")
                 drawCircle(Cyan.copy(alpha = .8f), radius = a.distanceTo(third).toFloat() * 42f, center = tx(Vec2(1.5, 1.0)), style = Stroke(2f))
@@ -6848,6 +7022,39 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             GlowButton("⌂ Fit") { homeRequest++ }
             GlowButton("Undo view") { undoViewRequest++ }
             GlowButton(if (lassoEnabled) "● Lasso" else "Lasso") { lassoEnabled = !lassoEnabled }
+        }
+        val quickContextTools = contextInspector.tools.filter { it.enabled && (it.category.contains("Dependent") || it.category.contains("centre") || it.toolName in setOf("Intersection", "Midpoint", "CircleThreePoints")) }.take(6)
+        if (!vm.shapeExplorerScene && quickContextTools.isNotEmpty() && !vm.showLeftPanel && !vm.showRightPanel) {
+            Column(
+                Modifier.align(Alignment.TopCenter).padding(top = 72.dp).widthIn(max = 620.dp)
+                    .clip(RoundedCornerShape(15.dp)).background(SurfaceA.copy(.94f)).border(1.dp, Amber.copy(.55f), RoundedCornerShape(15.dp)).padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
+                Text("CONSTRUCT FROM ${contextInspector.title.uppercase()}", color = Amber, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    quickContextTools.forEach { tool -> GlowButton(tool.label) { vm.applyContextualGeometryTool(tool.toolName, tool.pointIndices) } }
+                    GlowButton("More…") { vm.togglePanel(PanelSlot.Right) }
+                }
+            }
+        }
+        if (!vm.shapeExplorerScene && constraintFeedback.isNotEmpty() && !vm.showRightPanel) {
+            val satisfied = constraintFeedback.count { it.level == ConstraintFeedbackLevel.Satisfied }
+            val warning = constraintFeedback.any { it.level == ConstraintFeedbackLevel.Violated || it.level == ConstraintFeedbackLevel.Invalid }
+            Column(
+                Modifier.align(Alignment.TopEnd).padding(top = 72.dp, end = 10.dp).width(210.dp)
+                    .clip(RoundedCornerShape(14.dp)).background(SurfaceA.copy(.94f)).border(1.dp, (if (warning) Amber else Green).copy(.55f), RoundedCornerShape(14.dp)).padding(8.dp),
+            ) {
+                Text("CONSTRAINTS  $satisfied/${constraintFeedback.size}", color = if (warning) Amber else Green, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text(constraintFeedback.firstOrNull { it.level != ConstraintFeedbackLevel.Satisfied }?.statement ?: "All monitored relations are satisfied", color = Ink, fontSize = 10.sp, maxLines = 2)
+            }
+        }
+        if (replayingProtocol) {
+            Text(
+                "Protocol replay · ${protocolStep.roundToInt()}/$protocolSize · editing paused",
+                color = Amber,
+                fontSize = 11.sp,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 72.dp).clip(RoundedCornerShape(12.dp)).background(SurfaceA.copy(.94f)).padding(horizontal = 10.dp, vertical = 7.dp),
+            )
         }
         if (!vm.shapeExplorerScene) FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
@@ -7691,15 +7898,10 @@ private fun DesmosExpressionRow(
         }
         AnimatedVisibility(!uiState.collapsed) {
             Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                OutlinedTextField(
-                    value = row.expression,
-                    onValueChange = onExpressionChange,
-                    label = { Text("Expression") },
-                    visualTransformation = MathSyntaxVisualTransformation(),
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics { contentDescription = "Expression row ${row.name}" },
+                IntentAwareMathField(
+                    value = row.expression, onValueChange = onExpressionChange, label = "Expression",
+                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Expression row ${row.name}" },
+                    placeholder = "y=sin(x)", showLegend = selected,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                     OutlinedTextField(
@@ -8575,12 +8777,9 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         )
         if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(280.dp)) {
             PanelHeader("3D Graph Workspace", vm::hidePanels, Cyan)
-            OutlinedTextField(
-                value = vm.state.surfaceExpression,
-                onValueChange = vm::setSurfaceExpression,
-                label = { Text("z = f(x, y)") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+            IntentAwareMathField(
+                value = vm.state.surfaceExpression, onValueChange = vm::setSurfaceExpression,
+                label = "3D surface", modifier = Modifier.fillMaxWidth(), placeholder = "z=x^2+y^2",
             )
             AxisSlider("Mesh density", density, 8f..48f) { density = it }
             AxisSlider("Rotation", rotation, -180f..180f) { rotation = it }
