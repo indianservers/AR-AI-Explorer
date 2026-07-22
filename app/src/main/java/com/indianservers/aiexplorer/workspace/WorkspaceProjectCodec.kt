@@ -23,7 +23,7 @@ data class WorkspaceProjectRecovery(
 
 /** Complete, deterministic workspace snapshot embedded beside the canonical maths document. */
 object WorkspaceSnapshotCodec {
-    const val currentSchema = 2
+    const val currentSchema = 4
     private const val maximumChars = 8_000_000
 
     fun encode(state: WorkspaceState): String {
@@ -36,6 +36,10 @@ object WorkspaceSnapshotCodec {
             state.pointDependencies.forEach { dependency ->
                 add(listOf("D", dependency.outputIndex, dependency.inputIndices.joinToString(","), dependency.type.name, pack(dependency.name), dependency.parameters.joinToString(",")).joinToString("|"))
             }
+            state.geometryConstraints.forEach { constraint ->
+                add(listOf("C", pack(constraint.id), constraint.type.name, constraint.pointIndices.joinToString(","), constraint.shapeIds.joinToString(",") { pack(it) }, constraint.target ?: "").joinToString("|"))
+            }
+            state.geometryGroups.forEach { group -> add(listOf("G", pack(group.id), pack(group.name), group.locked, group.visible, group.shapeIds.joinToString(",") { pack(it) }).joinToString("|")) }
             state.functions.forEach { function ->
                 add(listOf("F", pack(function.id), pack(function.name), pack(function.expression), pack(function.colorKey), function.visible).joinToString("|"))
             }
@@ -85,7 +89,7 @@ object WorkspaceSnapshotCodec {
         val workspace = records.firstOrNull { it.startsWith("W|") }?.split('|')
             ?: return WorkspaceProjectRecovery(null, !checksumValid, diagnostics + "Workspace metadata is missing.")
         return runCatching {
-            val points = mutableListOf<Vec2>(); val shapes = mutableListOf<Shape2D>(); val dependencies = mutableListOf<PointDependency>()
+            val points = mutableListOf<Vec2>(); val shapes = mutableListOf<Shape2D>(); val dependencies = mutableListOf<PointDependency>(); val constraints = mutableListOf<GeometryConstraint2D>(); val groups = mutableListOf<GeometryGroup2D>()
             val functions = mutableListOf<FunctionDefinition>(); val rows = linkedMapOf<String, GraphRowMetadataState>()
             val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>()
             var placement = SpatialScenePlacement()
@@ -96,6 +100,8 @@ object WorkspaceSnapshotCodec {
                         "P" -> points += Vec2(f[1].toDouble(), f[2].toDouble())
                         "S" -> shapes += Shape2D(unpack(f[1]), Shape2DType.valueOf(f[2]), f[7].csvInts(), unpack(f[3]), f[4].toBoolean(), f[5].toBoolean(), unpack(f[6]))
                         "D" -> dependencies += PointDependency(f[1].toInt(), f[2].csvInts(), PointDependencyType.valueOf(f[3]), unpack(f[4]), f.getOrElse(5) { "" }.csvDoubles())
+                        "C" -> constraints += GeometryConstraint2D(unpack(f[1]), GeometryConstraint2DType.valueOf(f[2]), f[3].csvInts(), f[4].csvPackedStrings(), f.getOrNull(5)?.toDoubleOrNull())
+                        "G" -> groups += GeometryGroup2D(unpack(f[1]), unpack(f[2]), f[5].csvPackedStrings().toSet(), f[3].toBoolean(), f[4].toBoolean())
                         "F" -> functions += FunctionDefinition(unpack(f[1]), unpack(f[2]), unpack(f[3]), unpack(f[4]), f[5].toBoolean())
                         "R" -> rows[unpack(f[1])] = GraphRowMetadataState(f[2].toBoolean(), unpack(f[3]), unpack(f[4]))
                         "L" -> sliders[unpack(f[1])] = GraphSliderMetadataState(f[2].toDouble(), GraphSliderPlaybackMode.valueOf(f[3]), f[4].toInt(), f.getOrNull(5)?.toDoubleOrNull())
@@ -106,7 +112,7 @@ object WorkspaceSnapshotCodec {
                 }.onFailure { diagnostics += "Skipped damaged workspace record $index: ${it.message ?: "invalid data"}." }
             }
             WorkspaceState(id = unpack(workspace[1]), name = unpack(workspace[2]), module = MathModule.valueOf(workspace[3]),
-                points = points, shapes = shapes, pointDependencies = dependencies, functions = functions,
+                points = points, shapes = shapes, pointDependencies = dependencies, geometryConstraints = constraints, geometryGroups = groups, functions = functions,
                 solids = solids, vectors3D = vectors, graphRowMetadata = rows, graphSliderMetadata = sliders,
                 surfaceExpression = unpack(workspace[5]), spatialPlacement = placement, modifiedAt = workspace[4].toLong()).recomputed()
         }.fold(
@@ -117,6 +123,7 @@ object WorkspaceSnapshotCodec {
 
     private fun String.csvInts(): List<Int> = if (isBlank()) emptyList() else split(',').map(String::toInt)
     private fun String.csvDoubles(): List<Double> = if (isBlank()) emptyList() else split(',').map(String::toDouble)
+    private fun String.csvPackedStrings(): List<String> = if (isBlank()) emptyList() else split(',').map(::unpack)
     private fun pack(value: String) = Base64.getUrlEncoder().withoutPadding().encodeToString(value.toByteArray(StandardCharsets.UTF_8))
     private fun unpack(value: String) = String(Base64.getUrlDecoder().decode(value), StandardCharsets.UTF_8)
     private fun sha256(value: String) = MessageDigest.getInstance("SHA-256").digest(value.toByteArray(StandardCharsets.UTF_8)).joinToString("") { "%02x".format(it) }

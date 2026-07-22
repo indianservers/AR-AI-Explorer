@@ -42,6 +42,7 @@ data class Shape2D(
 
 enum class PointDependencyType {
     Midpoint, Centroid, Circumcenter, Incenter, Orthocenter, Intersection,
+    PointOnObject, TangentPoint,
     Translate, Rotate, ReflectX, Dilate,
 }
 
@@ -65,6 +66,8 @@ data class GeometryConstraint2D(
     val shapeIds: List<String> = emptyList(),
     val target: Double? = null,
 )
+
+data class GeometryGroup2D(val id: String, val name: String, val shapeIds: Set<String>, val locked: Boolean = false, val visible: Boolean = true)
 
 enum class GraphSliderPlaybackMode { Loop, Bounce }
 
@@ -101,6 +104,7 @@ data class WorkspaceState(
     ),
     val pointDependencies: List<PointDependency> = emptyList(),
     val geometryConstraints: List<GeometryConstraint2D> = emptyList(),
+    val geometryGroups: List<GeometryGroup2D> = emptyList(),
     val functions: List<FunctionDefinition> = listOf(
         FunctionDefinition("f", "f(x)", "x^2 - 4*x + 3", "cyan"),
         FunctionDefinition("g", "g(x)", "x - 1", "violet"),
@@ -131,6 +135,12 @@ data class AddGeometryConstraint2DCommand(val constraint: GeometryConstraint2D) 
         geometryConstraints = state.geometryConstraints.filterNot { it.id == constraint.id },
         modifiedAt = System.currentTimeMillis(),
     )
+}
+
+data class ReplaceGeometryGroupsCommand(val from: List<GeometryGroup2D>, val to: List<GeometryGroup2D>) : WorkspaceCommand {
+    override val label = "Update geometry groups"
+    override fun apply(state: WorkspaceState) = state.copy(geometryGroups = to, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(geometryGroups = from, modifiedAt = System.currentTimeMillis())
 }
 
 sealed interface WorkspaceCommand {
@@ -237,6 +247,12 @@ data class AddDependentPointCommand(
     ).recomputed()
 }
 
+data class RemovePointDependencyCommand(val dependency: PointDependency) : WorkspaceCommand {
+    override val label = "Convert dependent point to free point"
+    override fun apply(state: WorkspaceState) = state.copy(pointDependencies = state.pointDependencies - dependency, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(pointDependencies = state.pointDependencies + dependency, modifiedAt = System.currentTimeMillis()).recomputed()
+}
+
 data class AddShapeFromPointsCommand(
     val type: Shape2DType,
     val pointIndices: List<Int>,
@@ -262,6 +278,12 @@ data class UpdateShapeCommand(val index: Int, val from: Shape2D, val to: Shape2D
     override fun undo(state: WorkspaceState) = state.copy(shapes = state.shapes.replace(index, from), modifiedAt = System.currentTimeMillis())
 }
 
+data class ReorderShapesCommand(val from: List<Shape2D>, val to: List<Shape2D>) : WorkspaceCommand {
+    override val label = "Reorder geometry layers"
+    override fun apply(state: WorkspaceState) = state.copy(shapes = to, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(shapes = from, modifiedAt = System.currentTimeMillis())
+}
+
 data class DeleteShapeCommand(val index: Int, val shape: Shape2D) : WorkspaceCommand {
     override val label = "Delete ${shape.name}"
     override fun apply(state: WorkspaceState) = state.copy(
@@ -273,6 +295,62 @@ data class DeleteShapeCommand(val index: Int, val shape: Shape2D) : WorkspaceCom
         shapes = state.shapes.toMutableList().apply { add(index.coerceIn(0, size), shape) },
         modifiedAt = System.currentTimeMillis(),
     )
+}
+
+/** Deletes the complete selected 2D object set atomically and restores it as one undo step. */
+data class DeleteShapesCommand(
+    val indices: Set<Int>,
+    val beforeShapes: List<Shape2D>,
+    val beforePoints: List<Vec2>,
+    val beforePointDependencies: List<PointDependency>,
+    val beforeGroups: List<GeometryGroup2D>,
+    val beforeConstraints: List<GeometryConstraint2D>,
+) : WorkspaceCommand {
+    override val label = "Delete ${indices.size} selected 2D object${if (indices.size == 1) "" else "s"}"
+    override fun apply(state: WorkspaceState): WorkspaceState {
+        val valid = indices.filterTo(linkedSetOf()) { it in state.shapes.indices }
+        val removedIds = valid.mapTo(linkedSetOf()) { state.shapes[it].id }
+        val removedShapes = valid.map(state.shapes::get)
+        val remainingShapes = state.shapes.filterIndexed { index, _ -> index !in valid }
+        val ownedPointCandidates = removedShapes.filter { it.id.startsWith("shape-explorer-") }.flatMap { it.pointIndices }.toSet()
+        val referencedPoints = remainingShapes.flatMap { it.pointIndices }.toSet()
+        val dependencyPoints = state.pointDependencies.flatMap { it.inputIndices + it.outputIndex }.toSet()
+        val removedPoints = ownedPointCandidates - referencedPoints - dependencyPoints
+        val remap = linkedMapOf<Int, Int>(); var next = 0
+        state.points.indices.forEach { old -> if (old !in removedPoints) remap[old] = next++ }
+        val remappedShapes = remainingShapes.map { shape -> shape.copy(pointIndices = shape.pointIndices.mapNotNull(remap::get)) }
+        val remappedDependencies = state.pointDependencies.mapNotNull { dependency ->
+            val output = remap[dependency.outputIndex] ?: return@mapNotNull null
+            val inputs = dependency.inputIndices.mapNotNull(remap::get)
+            dependency.copy(outputIndex = output, inputIndices = inputs).takeIf { inputs.size == dependency.inputIndices.size }
+        }
+        return state.copy(
+            points = state.points.filterIndexed { index, _ -> index !in removedPoints },
+            pointDependencies = remappedDependencies,
+            shapes = remappedShapes,
+            geometryGroups = state.geometryGroups.mapNotNull { group ->
+                val members = group.shapeIds - removedIds
+                group.copy(shapeIds = members).takeIf { members.isNotEmpty() }
+            },
+            geometryConstraints = state.geometryConstraints.filterNot { constraint -> constraint.shapeIds.any(removedIds::contains) || constraint.pointIndices.any(removedPoints::contains) }
+                .map { constraint -> constraint.copy(pointIndices = constraint.pointIndices.mapNotNull(remap::get)) },
+            modifiedAt = System.currentTimeMillis(),
+        )
+    }
+    override fun undo(state: WorkspaceState) = state.copy(
+        shapes = beforeShapes,
+        points = beforePoints,
+        pointDependencies = beforePointDependencies,
+        geometryGroups = beforeGroups,
+        geometryConstraints = beforeConstraints,
+        modifiedAt = System.currentTimeMillis(),
+    )
+}
+
+data class DeleteSolidsCommand(val indices: Set<Int>, val before: List<Solid>) : WorkspaceCommand {
+    override val label = "Delete ${indices.size} selected 3D object${if (indices.size == 1) "" else "s"}"
+    override fun apply(state: WorkspaceState) = state.copy(solids = state.solids.filterIndexed { index, _ -> index !in indices }, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(solids = before, modifiedAt = System.currentTimeMillis())
 }
 
 data class TransformShape2DCommand(
@@ -519,6 +597,7 @@ object WorkspaceJson {
         appendLine("  \"points\": [${state.points.joinToString { "{\"x\":${it.x},\"y\":${it.y}}" }}],")
         appendLine("  \"shapes\": [${state.shapes.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"type\":\"${it.type}\",\"name\":\"${it.name.jsonEscaped()}\",\"points\":[${it.pointIndices.joinToString()}],\"visible\":${it.visible},\"locked\":${it.locked},\"style\":\"${it.styleKey.jsonEscaped()}\"}" }}],")
         appendLine("  \"pointDependencies\": [${state.pointDependencies.joinToString { "{\"output\":${it.outputIndex},\"inputs\":[${it.inputIndices.joinToString()}],\"type\":\"${it.type}\",\"name\":\"${it.name.jsonEscaped()}\",\"parameters\":[${it.parameters.joinToString()}]}" }}],")
+        appendLine("  \"geometryConstraints\": [${state.geometryConstraints.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"type\":\"${it.type}\",\"points\":[${it.pointIndices.joinToString()}],\"shapes\":[${it.shapeIds.joinToString { id -> "\"${id.jsonEscaped()}\"" }}],\"target\":${it.target ?: "null"}}" }}],")
         appendLine("  \"functions\": [${state.functions.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"expression\":\"${it.expression.jsonEscaped()}\",\"color\":\"${it.colorKey.jsonEscaped()}\",\"visible\":${it.visible}}" }}],")
         appendLine("  \"graphRowMetadata\": [${state.graphRowMetadata.entries.joinToString { "{\"rowId\":\"${it.key.jsonEscaped()}\",\"collapsed\":${it.value.collapsed},\"folder\":\"${it.value.folder.jsonEscaped()}\",\"note\":\"${it.value.note.jsonEscaped()}\"}" }}],")
         appendLine("  \"graphSliderMetadata\": [${state.graphSliderMetadata.entries.joinToString { "{\"parameter\":\"${it.key.jsonEscaped()}\",\"speed\":${it.value.speed},\"mode\":\"${it.value.mode}\",\"direction\":${it.value.direction},\"value\":${it.value.value ?: "null"}}" }}],")
@@ -606,6 +685,15 @@ fun resolvePointDependency(
         PointDependencyType.Incenter -> if (p.size >= 3) Geometry2D.incenter(p[0], p[1], p[2]) else null
         PointDependencyType.Orthocenter -> if (p.size >= 3) Geometry2D.orthocenter(p[0], p[1], p[2]) else null
         PointDependencyType.Intersection -> if (p.size >= 4) Geometry2D.lineIntersection(p[0], p[1], p[2], p[3]) else null
+        PointDependencyType.PointOnObject -> if (p.size >= 3) {
+            val direction = p[1] - p[0]
+            val denominator = direction.x * direction.x + direction.y * direction.y
+            if (denominator < 1e-12) null else p[0] + direction * (((p[2] - p[0]).x * direction.x + (p[2] - p[0]).y * direction.y) / denominator)
+        } else null
+        PointDependencyType.TangentPoint -> if (p.size >= 3) {
+            val radius = p[0].distanceTo(p[1])
+            com.indianservers.aiexplorer.core.InteractionGeometry.tangentPoints(p[2], p[0], radius).getOrNull(parameters.firstOrNull()?.toInt()?.coerceIn(0, 1) ?: 0)
+        } else null
         PointDependencyType.Translate -> p.firstOrNull()?.let { it + Vec2(parameters.getOrElse(0) { 0.0 }, parameters.getOrElse(1) { 0.0 }) }
         PointDependencyType.Rotate -> p.firstOrNull()?.let { point ->
             val angle = Math.toRadians(parameters.getOrElse(0) { 0.0 })

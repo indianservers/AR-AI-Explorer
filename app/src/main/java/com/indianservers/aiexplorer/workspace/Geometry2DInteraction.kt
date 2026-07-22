@@ -74,12 +74,14 @@ object Geometry2DInteractionEngine {
         val shapeValues = selectedShapes.sorted().mapNotNull(state.shapes::getOrNull)
         val points = selectedPointIndices(state, selectedPoint, selectedShapes)
         val title = when {
+            state.geometryGroups.any { it.shapeIds == shapeValues.map(Shape2D::id).toSet() } -> state.geometryGroups.first { it.shapeIds == shapeValues.map(Shape2D::id).toSet() }.name
             shapeValues.size == 1 -> shapeValues.single().name
             shapeValues.size > 1 -> "${shapeValues.size} selected objects"
             selectedPoint in state.points.indices -> "Point ${pointId(selectedPoint)}"
             else -> "No selection"
         }
         val kind = when {
+            state.geometryGroups.any { it.shapeIds == shapeValues.map(Shape2D::id).toSet() } -> "Group"
             shapeValues.size == 1 -> shapeValues.single().type.name
             shapeValues.size > 1 -> "Multi-selection"
             selectedPoint in state.points.indices -> if (state.pointDependencies.any { it.outputIndex == selectedPoint }) "Dependent point" else "Free point"
@@ -107,7 +109,7 @@ object Geometry2DInteractionEngine {
         val points = selectedPointIndices(state, selectedPoint, selectedShapes)
         val result = linkedMapOf<String, GeometryContextTool>()
         fun offer(name: String, label: String, category: String, required: Int, supplied: List<Int> = points, reason: String) {
-            result[name] = GeometryContextTool(name, label, category, supplied.take(required), supplied.size >= required, reason)
+            result[name] = GeometryContextTool(name, label, category, supplied.take(required), supplied.isNotEmpty(), reason)
         }
         offer("Segment", "Segment", "Connect", 2, reason = "Connect two selected points")
         offer("Line", "Line", "Connect", 2, reason = "Extend through two selected points")
@@ -121,10 +123,15 @@ object Geometry2DInteractionEngine {
         offer("Circumcenter", "Circumcenter", "Triangle centre", 3, reason = "Equidistant from the vertices")
         offer("Incenter", "Incenter", "Triangle centre", 3, reason = "Equidistant from the sides")
         offer("Orthocenter", "Orthocenter", "Triangle centre", 3, reason = "Intersection of the altitudes")
-        if (shapes.size == 1 && shapes.single().type in linearTypes && selectedPoint in state.points.indices) {
-            val base = shapes.single().pointIndices.take(2) + selectedPoint
+        if (shapes.size == 1 && shapes.single().type in linearTypes) {
+            val base = shapes.single().pointIndices.take(2) + listOfNotNull(selectedPoint.takeIf { it in state.points.indices })
+            offer("PointOnObject", "Point on object", "Dependent point", 3, base, "Projects the selected point onto the line and keeps it attached")
             offer("Parallel", "Parallel through point", "Dependent line", 3, base, "Uses the selected line as its direction")
             offer("Perpendicular", "Perpendicular through point", "Dependent line", 3, base, "Uses a 90° direction to the selected line")
+        }
+        if (shapes.size == 1 && shapes.single().type in circleTypes) {
+            val base = shapes.single().pointIndices.take(2) + listOfNotNull(selectedPoint.takeIf { it in state.points.indices })
+            offer("Tangent", "Tangent contact", "Dependent point", 3, base, "Constructs a live tangent contact from the selected external point")
         }
         if (shapes.size == 2 && shapes.all { it.type in linearTypes }) {
             offer("Intersection", "Intersection", "Dependent point", 4, shapes.flatMap { it.pointIndices.take(2) }, "Recomputes when either line moves")

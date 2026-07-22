@@ -9,8 +9,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SolidCatalogTest {
-    @Test fun catalogHasSixteenRenderableMeasuredShapesWithFormulas() {
-        assertEquals(16, SolidType.entries.size)
+    @Test fun catalogHasTwentyRenderableMeasuredShapesWithFormulas() {
+        assertEquals(20, SolidType.entries.size)
         SolidType.entries.forEach { type ->
             val solid = Solid(type, width = 2.0, height = 2.0, depth = 2.0, radius = .8, topRadius = .4)
             val mesh = SolidMeshFactory.create(solid, segments = 16)

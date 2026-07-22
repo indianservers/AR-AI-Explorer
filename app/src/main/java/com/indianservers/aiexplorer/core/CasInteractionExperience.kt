@@ -10,7 +10,10 @@ enum class CasSolutionMethod(val label: String, val explanation: String) {
     Verify("Verified result", "Compute exactly, then attach an independent verification strategy."),
 }
 
-enum class CasKeyboardLayer(val label: String) { Basic("123"), Algebra("Algebra"), Calculus("Calculus"), Matrix("Matrix"), Relations("Relations"), Greek("Greek") }
+enum class CasKeyboardLayer(val label: String) {
+    Basic("123"), Algebra("Algebra"), Calculus("Calculus"), Matrix("Matrix"), Advanced("Advanced"),
+    Structures("Structures"), Units("Units"), Relations("Relations"), Greek("Greek")
+}
 data class CasKeyboardKey(val label: String, val insertion: String, val cursorBack: Int = 0, val description: String = label)
 
 object CasKeyboardCatalog {
@@ -34,12 +37,39 @@ object CasKeyboardCatalog {
             CasKeyboardKey("lim", "limit  as x -> 0", 10), CasKeyboardKey("Σ", "sum(,x,1,n)", 8), CasKeyboardKey("Π", "product(,x,1,n)", 8),
             CasKeyboardKey("sin", "sin()", 1), CasKeyboardKey("cos", "cos()", 1), CasKeyboardKey("tan", "tan()", 1),
             CasKeyboardKey("ln", "ln()", 1), CasKeyboardKey("exp", "exp()", 1), CasKeyboardKey("ODE", "y'=a*y+b"),
+            CasKeyboardKey("Laplace", "laplace "), CasKeyboardKey("L^-1", "inverse laplace "), CasKeyboardKey("Z", "z transform "),
         ),
         CasKeyboardLayer.Matrix to listOf(
             CasKeyboardKey("2×2", "[[1,0],[0,1]]"), CasKeyboardKey("3×3", "[[1,0,0],[0,1,0],[0,0,1]]"),
             CasKeyboardKey("det", "determinant "), CasKeyboardKey("rref", "rref "), CasKeyboardKey("A⁻¹", "inverse "),
-            CasKeyboardKey("eigen", "eigenvalues "), CasKeyboardKey("transpose", "transpose "), CasKeyboardKey("·", "*"),
+            CasKeyboardKey("eigen", "eigenvalues "), CasKeyboardKey("LU", "lu "), CasKeyboardKey("QR", "qr "), CasKeyboardKey("Chol", "cholesky "),
+            CasKeyboardKey("transpose", "transpose "), CasKeyboardKey("·", "*"),
             CasKeyboardKey("[", "["), CasKeyboardKey("]", "]"), CasKeyboardKey(",", ","), CasKeyboardKey(";", ";"),
+        ),
+        CasKeyboardLayer.Advanced to listOf(
+            CasKeyboardKey("series", "series(,x,0,6)", 8), CasKeyboardKey("asymptotic", "asymptotic "),
+            CasKeyboardKey("Fourier", "fourier "), CasKeyboardKey("Z", "z transform "),
+            CasKeyboardKey("residue", "residue(,z,0)", 5), CasKeyboardKey("contour", "contour integral residue(,z,0)", 5),
+            CasKeyboardKey("Gamma", "gamma()", 1), CasKeyboardKey("zeta", "zeta()", 1),
+            CasKeyboardKey("gcd", "gcd(,)", 2), CasKeyboardKey("mod inverse", "modInverse(,)", 2),
+            CasKeyboardKey("recurrence", "a(n)=r*a(n-1)+b, a(0)=c"), CasKeyboardKey("PDE", "u_xx+u_yy=0"),
+            CasKeyboardKey("optimize", "minimize(a*x^2+b*x+c)"), CasKeyboardKey("RootOf", "exact roots "),
+            CasKeyboardKey("Jordan", "jordan form "), CasKeyboardKey("SVD", "svd "),
+        ),
+        CasKeyboardLayer.Structures to listOf(
+            CasKeyboardKey("piecewise", "piecewise({condition:value, otherwise:value})", 30),
+            CasKeyboardKey("2x2 matrix", "[[a,b],[c,d]]"), CasKeyboardKey("3x3 matrix", "[[a,b,c],[d,e,f],[g,h,i]]"),
+            CasKeyboardKey("vector", "<x,y,z>"), CasKeyboardKey("system", "{equation1; equation2}", 12),
+            CasKeyboardKey("sum", "sum(expression,k,1,n)", 17), CasKeyboardKey("product", "product(expression,k,1,n)", 17),
+            CasKeyboardKey("limit", "limit(expression,x,0)", 15), CasKeyboardKey("integral", "integral(expression,x)", 2),
+            CasKeyboardKey("def integral", "integral(expression,x,a,b)", 4), CasKeyboardKey("derivative", "derivative(expression,x)", 2),
+            CasKeyboardKey("cases row", "condition:value"), CasKeyboardKey("otherwise", "otherwise:value"),
+        ),
+        CasKeyboardLayer.Units to listOf(
+            CasKeyboardKey("m", " m"), CasKeyboardKey("cm", " cm"), CasKeyboardKey("km", " km"), CasKeyboardKey("s", " s"),
+            CasKeyboardKey("min", " min"), CasKeyboardKey("h", " h"), CasKeyboardKey("kg", " kg"), CasKeyboardKey("g", " g"),
+            CasKeyboardKey("mol", " mol"), CasKeyboardKey("K", " K"), CasKeyboardKey("rad", " rad"), CasKeyboardKey("deg", " deg"),
+            CasKeyboardKey("m/s", " m/s"), CasKeyboardKey("m^2", " m^2"), CasKeyboardKey("m^3", " m^3"), CasKeyboardKey("convert", "convert  to ", 4),
         ),
         CasKeyboardLayer.Relations to listOf(
             CasKeyboardKey("=", "="), CasKeyboardKey("≠", "!="), CasKeyboardKey("<", "<"), CasKeyboardKey(">", ">"),
@@ -119,8 +149,8 @@ class CasInteractionEngine(private val cas: SymbolicCasEngine = SymbolicCasEngin
     fun availableMethods(operation: String): List<CasSolutionMethod> = when (operation.lowercase()) {
         "simplify" -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Direct, CasSolutionMethod.ExpandFirst, CasSolutionMethod.FactorFirst, CasSolutionMethod.Verify)
         "factor", "partial fractions" -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Direct, CasSolutionMethod.ExpandFirst, CasSolutionMethod.Verify)
-        "system", "inequalities" -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Elimination, CasSolutionMethod.Substitution, CasSolutionMethod.Verify)
-        "determinant", "rref", "eigenvalues" -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Elimination, CasSolutionMethod.Verify)
+        "system", "nonlinear system", "inequalities" -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Elimination, CasSolutionMethod.Substitution, CasSolutionMethod.Verify)
+        "determinant", "rref", "rank", "nullspace", "matrix inverse", "transpose", "eigenvalues", "eigenvectors", "jordan", "jordan form", "svd", "lu", "qr", "cholesky" -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Elimination, CasSolutionMethod.Verify)
         else -> listOf(CasSolutionMethod.Auto, CasSolutionMethod.Direct, CasSolutionMethod.Verify)
     }
 
@@ -149,7 +179,7 @@ class CasInteractionEngine(private val cas: SymbolicCasEngine = SymbolicCasEngin
     }
 
     private fun defaultMethod(operation: String) = when (operation.lowercase()) {
-        "system", "inequalities", "determinant", "rref", "eigenvalues" -> CasSolutionMethod.Elimination
+        "system", "nonlinear system", "inequalities", "determinant", "rref", "eigenvalues", "lu", "qr", "cholesky" -> CasSolutionMethod.Elimination
         "factor", "partial fractions" -> CasSolutionMethod.ExpandFirst
         else -> CasSolutionMethod.Direct
     }
@@ -163,7 +193,7 @@ class CasInteractionEngine(private val cas: SymbolicCasEngine = SymbolicCasEngin
     }
 
     private companion object {
-        val aliases = mapOf("differentiate" to "derivative", "integrate" to "integral", "solve" to "simplify", "det" to "determinant")
-        val operationPrefixes = setOf("simplify", "expand", "factor", "partial fractions", "differentiate", "derivative", "integrate", "integral", "limit", "determinant", "det", "rref", "eigenvalues", "ode")
+        val aliases = mapOf("differentiate" to "derivative", "integrate" to "integral", "solve" to "simplify", "det" to "determinant", "ilaplace" to "inverse laplace")
+        val operationPrefixes = setOf("simplify", "expand", "factor", "partial fractions", "differentiate", "derivative", "integrate", "integral", "limit", "determinant", "det", "rref", "rank", "nullspace", "matrix inverse", "transpose", "eigenvalues", "eigenvectors", "jordan form", "svd", "ode", "nonlinear ode", "higher ode", "nonlinear system", "pde", "series", "asymptotic", "laplace", "inverse laplace", "ilaplace", "fourier", "inverse fourier", "z transform", "sum", "product", "residue", "contour integral", "special functions", "number theory", "finite algebra", "optimization", "recurrence", "exact roots", "domain", "branch analysis", "lu", "plu", "qr", "cholesky")
     }
 }

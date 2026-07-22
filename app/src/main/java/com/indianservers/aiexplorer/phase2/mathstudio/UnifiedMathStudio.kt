@@ -5,6 +5,8 @@ import com.indianservers.aiexplorer.core.FunctionDefinition
 import com.indianservers.aiexplorer.core.MathSolverTutor
 import com.indianservers.aiexplorer.core.SymbolicCalculusEngine
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
+import com.indianservers.aiexplorer.core.UnifiedConstructionEngine
+import com.indianservers.aiexplorer.core.UnifiedConstructionSession
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.workspace.MathGraphObject
 import com.indianservers.aiexplorer.workspace.GraphSliderMetadataState
@@ -59,6 +61,8 @@ data class UnifiedStudioSession(
     val hiddenIds: Set<String> = emptySet(),
     val colorKeys: Map<String, String> = emptyMap(),
     val resultPods: List<StudioResultPod> = emptyList(),
+    val construction: UnifiedConstructionSession = UnifiedConstructionSession(),
+    val experience: SharedExperienceState = SharedExperienceState(),
     val message: String = "Every view is linked to one maths document.",
 )
 
@@ -104,7 +108,11 @@ class UnifiedMathStudioEngine(
         is UniversalMutationResult.Conflict -> session.copy(message = result.message)
     }
 
-    fun select(session: UnifiedStudioSession, id: String) = session.copy(selectedId = id)
+    fun select(session: UnifiedStudioSession, id: String) = SharedExperienceEngine().select(session, id)
+    fun construct(session: UnifiedStudioSession, command: String): UnifiedStudioSession {
+        val next = UnifiedConstructionEngine().execute(session.construction, command)
+        return session.copy(construction = next, message = "Created ${command.substringBefore('(')} in the shared object graph.")
+    }
     fun parameter(session: UnifiedStudioSession, name: String, value: Double) = session.copy(parameterValues = session.parameterValues + (name to value), message = "$name = ${format(value)}; all views updated.")
     fun toggleVisible(session: UnifiedStudioSession, id: String) = session.copy(hiddenIds = if (id in session.hiddenIds) session.hiddenIds - id else session.hiddenIds + id, message = "Visibility synchronized across views.")
     fun cycleColor(session: UnifiedStudioSession, id: String): UnifiedStudioSession {

@@ -45,7 +45,7 @@ class SymbolicCasTest {
 
     @Test
     fun unsupportedOperationsRefuseSafely() {
-        val row = cas.casRow("sin(x)", "laplace")
+        val row = cas.casRow("sin(x)", "groebner basis")
 
         assertFalse(row.supported)
         assertEquals("Not supported", row.exact)
@@ -123,5 +123,51 @@ class SymbolicCasTest {
         assertTrue(row.supported)
         assertEquals("y = -2 + 5*exp(2*x)", row.exact)
         assertTrue(row.steps.any { it.title == "Verify" })
+    }
+
+    @Test
+    fun solvesVerifiedNonlinearSystemsBySubstitution() {
+        val row = cas.solveSystem(listOf("y=x^2", "x+y=6"), listOf("x", "y"))
+
+        assertTrue(row.supported)
+        assertTrue(row.exact.contains("x = 2, y = 4"))
+        assertTrue(row.exact.contains("x = -3, y = 9"))
+        assertTrue(row.steps.any { it.title == "Verify" })
+    }
+
+    @Test
+    fun computesAndVerifiesMatrixDecompositions() {
+        val lu = cas.matrixDecomposition("[[0,2],[1,3]]", "lu")
+        val qr = cas.matrixDecomposition("[[1,0],[0,1],[1,1]]", "qr")
+        val cholesky = cas.matrixDecomposition("[[4,2],[2,3]]", "cholesky")
+
+        assertTrue(lu.supported)
+        assertTrue(lu.exact.contains("P="))
+        assertTrue(lu.steps.any { it.expression == "P*A = L*U" })
+        assertTrue(qr.supported)
+        assertEquals("0", qr.decimal)
+        assertTrue(cholesky.supported)
+        assertEquals("0", cholesky.decimal)
+    }
+
+    @Test
+    fun solvesSecondOrderOdesWithInitialConditions() {
+        val row = cas.solveOde("y''-3*y'+2*y=0, y(0)=3, y'(0)=4")
+
+        assertTrue(row.supported)
+        assertEquals("y = 1*exp(2*x) + 2*exp(1*x)", row.exact)
+        assertTrue(row.steps.any { it.title == "Characteristic equation" })
+    }
+
+    @Test
+    fun supportsForwardInverseLaplaceAndZTransforms() {
+        val laplace = cas.laplace("3*x^2+sin(2*x)")
+
+        assertTrue(laplace.supported)
+        assertTrue(laplace.exact.contains("2/s^3"))
+        assertTrue(laplace.exact.contains("2/(s^2 + 4)"))
+        assertEquals("x^2/2", cas.inverseLaplace("1/s^3").exact)
+        assertEquals("z/(z - 2)", cas.zTransform("2^n").exact)
+        assertTrue(cas.casRow("x", "laplace").supported)
     }
 }
