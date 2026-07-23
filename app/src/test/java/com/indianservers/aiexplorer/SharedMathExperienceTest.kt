@@ -26,7 +26,8 @@ class SharedMathExperienceTest {
         val session = studio.construct(studio.fromWorkspace(workspace), "point2d(A,0,0)")
         val graph = SharedObjectGraphBuilder.build(session)
         assertTrue(graph.nodes.keys.containsAll(listOf("f@graph", "f@table", "f@cas", "point-0@geometry2d", "surface-main@spatial3d")))
-        assertTrue("construction:A@geometry2d" in graph.nodes)
+        assertTrue("A@geometry2d" in graph.nodes)
+        assertTrue("A@algebra" in graph.nodes)
         assertEquals(setOf("f"), graph.dependencies("g"))
         assertTrue(graph.representations("f").map { it.view }.containsAll(listOf(SharedMathView.Graph, SharedMathView.Table, SharedMathView.Cas)))
     }

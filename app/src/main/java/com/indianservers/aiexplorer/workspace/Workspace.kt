@@ -122,6 +122,7 @@ data class WorkspaceState(
     val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
     val surfaceExpression: String = "x^2 + y^2",
     val spatialPlacement: SpatialScenePlacement = SpatialScenePlacement(),
+    val universalMathDocument: UniversalMathDocument? = null,
     val modifiedAt: Long = System.currentTimeMillis(),
 )
 
@@ -531,6 +532,18 @@ data class AddVector3DCommand(val vector: Vector3D) : WorkspaceCommand {
     override val label = "Add 3D vector"
     override fun apply(state: WorkspaceState) = state.copy(vectors3D = state.vectors3D + vector, modifiedAt = System.currentTimeMillis())
     override fun undo(state: WorkspaceState) = state.copy(vectors3D = state.vectors3D.dropLast(1), modifiedAt = System.currentTimeMillis())
+}
+
+data class DeleteVector3DCommand(val index: Int, val vector: Vector3D) : WorkspaceCommand {
+    override val label = "Delete 3D vector"
+    override fun apply(state: WorkspaceState) = state.copy(
+        vectors3D = state.vectors3D.filterIndexed { vectorIndex, _ -> vectorIndex != index },
+        modifiedAt = System.currentTimeMillis(),
+    )
+    override fun undo(state: WorkspaceState) = state.copy(
+        vectors3D = state.vectors3D.toMutableList().apply { add(index.coerceIn(0, size), vector) },
+        modifiedAt = System.currentTimeMillis(),
+    )
 }
 
 data class MoveVector3DCommand(val index: Int, val from: Vector3D, val to: Vector3D) : WorkspaceCommand {

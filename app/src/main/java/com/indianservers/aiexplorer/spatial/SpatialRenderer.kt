@@ -1,6 +1,7 @@
 package com.indianservers.aiexplorer.spatial
 
 import android.opengl.GLES30
+import com.indianservers.aiexplorer.arengine.rendering.ArNormalizedLighting
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidMeshFactory
 import com.indianservers.aiexplorer.core.SurfaceMesh
@@ -217,11 +218,27 @@ class OpenGlEsSpatialRenderer {
     private var plan: GpuRenderPlan? = null
 
     fun initialize() {
-        val vertex = compileShader(GLES30.GL_VERTEX_SHADER, "#version 300 es\nuniform mat4 uMvp; layout(location=0) in vec3 aPosition; layout(location=1) in vec4 aColor; layout(location=2) in vec3 aMaterial; out vec4 vColor; out vec3 vPosition; out vec3 vMaterial; void main(){vColor=aColor;vPosition=aPosition;vMaterial=aMaterial;gl_Position=uMvp*vec4(aPosition,1.0);}")
-        val fragment = compileShader(GLES30.GL_FRAGMENT_SHADER, "#version 300 es\nprecision highp float; uniform float uEnvironment; in vec4 vColor; in vec3 vPosition; in vec3 vMaterial; out vec4 color; void main(){vec3 dx=dFdx(vPosition);vec3 dy=dFdy(vPosition);vec3 n=normalize(cross(dx,dy));if(!gl_FrontFacing)n=-n;vec3 l=normalize(vec3(.35,.8,.45));float diffuse=.22+.78*abs(dot(n,l));float rough=clamp(vMaterial.y,.05,1.);float metallic=clamp(vMaterial.x,0.,1.);float spec=pow(max(dot(reflect(-l,n),normalize(vec3(.1,.25,1.))),0.),mix(64.,4.,rough))*mix(.18,.75,metallic);vec3 rgb=vColor.rgb*(diffuse*max(uEnvironment,.25))+spec+vColor.rgb*vMaterial.z;color=vec4(rgb,vColor.a);}")
-        program = GLES30.glCreateProgram(); GLES30.glAttachShader(program, vertex); GLES30.glAttachShader(program, fragment); GLES30.glLinkProgram(program)
-        val status = IntArray(1); GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, status, 0); require(status[0] == GLES30.GL_TRUE) { GLES30.glGetProgramInfoLog(program) }
+        release()
+        val vertex = compileShader(GLES30.GL_VERTEX_SHADER, "#version 300 es\nuniform mat4 uMvp; layout(location=0) in vec3 aPosition; layout(location=1) in vec4 aColor; layout(location=2) in vec3 aMaterial; out vec4 vColor; out vec3 vPosition; out vec3 vMaterial; void main(){vColor=aColor;vPosition=aPosition;vMaterial=aMaterial;gl_Position=uMvp*vec4(aPosition,1.0);}", "spatial vertex")
+        val fragment = compileShader(GLES30.GL_FRAGMENT_SHADER, "#version 300 es\nprecision highp float; uniform float uEnvironment; uniform float uExposure; uniform vec3 uMainLightDirection; uniform vec3 uMainLightIntensity; uniform vec3 uAmbientSh; in vec4 vColor; in vec3 vPosition; in vec3 vMaterial; out vec4 color; void main(){vec3 dx=dFdx(vPosition);vec3 dy=dFdy(vPosition);vec3 n=normalize(cross(dx,dy));if(!gl_FrontFacing)n=-n;vec3 l=normalize(-uMainLightDirection);float diffuse=.18+.82*max(dot(n,l),0.);float rough=clamp(vMaterial.y,.05,1.);float metallic=clamp(vMaterial.x,0.,1.);float spec=pow(max(dot(reflect(-l,n),normalize(vec3(.1,.25,1.))),0.),mix(64.,4.,rough))*mix(.18,.75,metallic);vec3 direct=uMainLightIntensity*diffuse;vec3 rgb=vColor.rgb*(direct*uExposure+max(uAmbientSh,vec3(.08))*max(uEnvironment,.25))+spec+vColor.rgb*vMaterial.z;color=vec4(rgb,vColor.a);}", "spatial fragment")
+        program = GLES30.glCreateProgram()
+        GLES30.glAttachShader(program, vertex)
+        GLES30.glAttachShader(program, fragment)
+        GLES30.glLinkProgram(program)
+        val status = IntArray(1)
+        GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, status, 0)
+        val diagnostics = GLES30.glGetProgramInfoLog(program)
+        GLES30.glDetachShader(program, vertex)
+        GLES30.glDetachShader(program, fragment)
+        GLES30.glDeleteShader(vertex)
+        GLES30.glDeleteShader(fragment)
+        check(status[0] == GLES30.GL_TRUE) {
+            GLES30.glDeleteProgram(program)
+            program = 0
+            "Spatial shader program failed to link: ${diagnostics.ifBlank { "no driver diagnostics" }}"
+        }
         val buffers = IntArray(3); GLES30.glGenBuffers(3, buffers, 0); vertexBuffer = buffers[0]; triangleBuffer = buffers[1]; lineBuffer = buffers[2]
+        check(buffers.all { it > 0 }) { "OpenGL did not allocate all spatial mesh buffers." }
     }
 
     fun upload(value: GpuRenderPlan) {
@@ -234,12 +251,25 @@ class OpenGlEsSpatialRenderer {
         GLES30.glBufferData(GLES30.GL_ELEMENT_ARRAY_BUFFER, value.lineIndices.size * 4, intBuffer(value.lineIndices), GLES30.GL_DYNAMIC_DRAW)
     }
 
-    fun render(viewProjection: FloatArray, clear: Boolean = true, environmentIntensity: Float = 1f) {
+    fun render(
+        viewProjection: FloatArray,
+        clear: Boolean = true,
+        lighting: ArNormalizedLighting? = null,
+        fallbackEnvironmentIntensity: Float = 1f,
+    ) {
         require(viewProjection.size == 16 && program != 0)
         if (clear) { GLES30.glClearColor(.015f, .025f, .04f, 1f); GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT) }
         GLES30.glEnable(GLES30.GL_DEPTH_TEST); GLES30.glEnable(GLES30.GL_BLEND); GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
         GLES30.glUseProgram(program); GLES30.glUniformMatrix4fv(GLES30.glGetUniformLocation(program, "uMvp"), 1, false, viewProjection, 0)
-        GLES30.glUniform1f(GLES30.glGetUniformLocation(program, "uEnvironment"), environmentIntensity.coerceIn(.25f, 2.5f))
+        val activeLight = lighting?.takeIf { it.valid }
+        val direction = activeLight?.direction ?: com.indianservers.aiexplorer.arengine.contract.ArVector3(0.35, -0.8, -0.45)
+        val intensity = activeLight?.intensity ?: com.indianservers.aiexplorer.arengine.contract.ArVector3(1.0, 1.0, 1.0)
+        val ambient = activeLight?.sphericalHarmonics?.takeIf { it.size >= 3 } ?: listOf(.28f, .28f, .28f)
+        GLES30.glUniform1f(GLES30.glGetUniformLocation(program, "uEnvironment"), fallbackEnvironmentIntensity.coerceIn(.25f, 2.5f))
+        GLES30.glUniform1f(GLES30.glGetUniformLocation(program, "uExposure"), activeLight?.exposure ?: 1f)
+        GLES30.glUniform3f(GLES30.glGetUniformLocation(program, "uMainLightDirection"), direction.x.toFloat(), direction.y.toFloat(), direction.z.toFloat())
+        GLES30.glUniform3f(GLES30.glGetUniformLocation(program, "uMainLightIntensity"), intensity.x.toFloat(), intensity.y.toFloat(), intensity.z.toFloat())
+        GLES30.glUniform3f(GLES30.glGetUniformLocation(program, "uAmbientSh"), ambient[0], ambient[1], ambient[2])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBuffer); GLES30.glEnableVertexAttribArray(0); GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 40, 0)
         GLES30.glEnableVertexAttribArray(1); GLES30.glVertexAttribPointer(1, 4, GLES30.GL_FLOAT, false, 40, 12)
         GLES30.glEnableVertexAttribArray(2); GLES30.glVertexAttribPointer(2, 3, GLES30.GL_FLOAT, false, 40, 28)
@@ -256,9 +286,15 @@ class OpenGlEsSpatialRenderer {
         program = 0; vertexBuffer = 0; triangleBuffer = 0; lineBuffer = 0; plan = null
     }
 
-    private fun compileShader(type: Int, source: String): Int {
+    private fun compileShader(type: Int, source: String, label: String): Int {
         val shader = GLES30.glCreateShader(type); GLES30.glShaderSource(shader, source); GLES30.glCompileShader(shader)
-        val status = IntArray(1); GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, status, 0); require(status[0] == GLES30.GL_TRUE) { GLES30.glGetShaderInfoLog(shader) }
+        val status = IntArray(1)
+        GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, status, 0)
+        if (status[0] != GLES30.GL_TRUE) {
+            val diagnostics = GLES30.glGetShaderInfoLog(shader)
+            GLES30.glDeleteShader(shader)
+            error("$label shader failed to compile: ${diagnostics.ifBlank { "no driver diagnostics" }}")
+        }
         return shader
     }
     private fun floatBuffer(values: FloatArray) = ByteBuffer.allocateDirect(values.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().apply { put(values); position(0) }

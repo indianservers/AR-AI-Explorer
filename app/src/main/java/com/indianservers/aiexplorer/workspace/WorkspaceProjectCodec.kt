@@ -23,7 +23,7 @@ data class WorkspaceProjectRecovery(
 
 /** Complete, deterministic workspace snapshot embedded beside the canonical maths document. */
 object WorkspaceSnapshotCodec {
-    const val currentSchema = 4
+    const val currentSchema = 5
     private const val maximumChars = 8_000_000
 
     fun encode(state: WorkspaceState): String {
@@ -66,6 +66,7 @@ object WorkspaceSnapshotCodec {
                     placement.environmentIntensity, placement.placedAt ?: -1L, placement.anchorTrackingState.name,
                     pack(placement.relocalizationMessage)).joinToString("|"))
             }
+            state.universalMathDocument?.let { document -> add("U|${pack(UniversalMathDocumentCodec.encode(document))}") }
         }
         val body = records.joinToString("\n")
         return "AIEXPLORER_WORKSPACE|$currentSchema|${sha256(body)}\n$body".also {
@@ -93,6 +94,7 @@ object WorkspaceSnapshotCodec {
             val functions = mutableListOf<FunctionDefinition>(); val rows = linkedMapOf<String, GraphRowMetadataState>()
             val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>()
             var placement = SpatialScenePlacement()
+            var universalDocument: UniversalMathDocument? = null
             records.drop(1).forEachIndexed { index, record ->
                 runCatching {
                     val f = record.split('|')
@@ -108,13 +110,14 @@ object WorkspaceSnapshotCodec {
                         "O" -> solids += Solid(SolidType.valueOf(f[1]), f[2].toDouble(), f[3].toDouble(), f[4].toDouble(), f[5].toDouble(), f[6].toDouble(), Vec3(f[7].toDouble(), f[8].toDouble(), f[9].toDouble()), Vec3(f[10].toDouble(), f[11].toDouble(), f[12].toDouble()))
                         "V" -> vectors += Vector3D(unpack(f[1]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), Vec3(f[6].toDouble(), f[7].toDouble(), f[8].toDouble()), unpack(f[2]))
                         "A" -> placement = SpatialScenePlacement(anchorId = unpack(f[1]), pose = SpatialPose(Vec3(f[2].toDouble(), f[3].toDouble(), f[4].toDouble()), Vec3(f[5].toDouble(), f[6].toDouble(), f[7].toDouble()), f[8].toDouble()), scaleMode = ARScaleMode.valueOf(f[9]), metersPerMathUnit = f[10].toDouble(), trackingQuality = TrackingQuality.valueOf(f[11]), estimated = f[12].toBoolean(), depthOcclusionEnabled = f[13].toBoolean(), measurementUncertaintyMeters = f[14].toDouble(), environmentIntensity = f[15].toFloat(), placedAt = f[16].toLong().takeIf { it >= 0 }, anchorTrackingState = f.getOrNull(17)?.let { AnchorTrackingState.valueOf(it) } ?: AnchorTrackingState.Tracking, relocalizationMessage = f.getOrNull(18)?.let(::unpack).orEmpty())
+                        "U" -> universalDocument = UniversalMathDocumentCodec.decode(unpack(f[1]), recover).document
                     }
                 }.onFailure { diagnostics += "Skipped damaged workspace record $index: ${it.message ?: "invalid data"}." }
             }
             WorkspaceState(id = unpack(workspace[1]), name = unpack(workspace[2]), module = MathModule.valueOf(workspace[3]),
                 points = points, shapes = shapes, pointDependencies = dependencies, geometryConstraints = constraints, geometryGroups = groups, functions = functions,
                 solids = solids, vectors3D = vectors, graphRowMetadata = rows, graphSliderMetadata = sliders,
-                surfaceExpression = unpack(workspace[5]), spatialPlacement = placement, modifiedAt = workspace[4].toLong()).recomputed()
+                surfaceExpression = unpack(workspace[5]), spatialPlacement = placement, universalMathDocument = universalDocument, modifiedAt = workspace[4].toLong()).recomputed()
         }.fold(
             onSuccess = { WorkspaceProjectRecovery(it, !checksumValid || diagnostics.isNotEmpty() || schema < currentSchema, diagnostics) },
             onFailure = { WorkspaceProjectRecovery(null, !checksumValid, diagnostics + (it.message ?: "Workspace could not be decoded.")) },
@@ -146,8 +149,13 @@ object WorkspaceProjectCodec {
         val project = archive.project ?: return WorkspaceProjectRecovery(null, archive.recovered, archive.diagnostics)
         val snapshot = project.sections.firstOrNull { it.kind == ProjectSectionKind.Audit }
             ?.let { WorkspaceSnapshotCodec.decode(it.content, recover) }
-        if (snapshot?.state != null) return WorkspaceProjectRecovery(snapshot.state, archive.recovered || snapshot.recovered, archive.diagnostics + snapshot.diagnostics)
         val maths = project.sections.first { it.kind == ProjectSectionKind.Mathematics }
+        if (snapshot?.state != null) {
+            if (snapshot.state.universalMathDocument == null) return WorkspaceProjectRecovery(snapshot.state, archive.recovered || snapshot.recovered, archive.diagnostics + snapshot.diagnostics)
+            val canonical = UniversalMathDocumentCodec.decode(maths.content, recover)
+            return WorkspaceProjectRecovery(snapshot.state.copy(universalMathDocument = canonical.document), archive.recovered || snapshot.recovered || canonical.recovered,
+                archive.diagnostics + snapshot.diagnostics + canonical.diagnostics)
+        }
         val base = WorkspaceState(id = project.id, points = emptyList(), shapes = emptyList(), pointDependencies = emptyList(), functions = emptyList(), solids = emptyList(), vectors3D = emptyList())
         val restored = WorkspaceJson.applyRecoveredMathDocument(maths.content, base)
         return restored.fold(

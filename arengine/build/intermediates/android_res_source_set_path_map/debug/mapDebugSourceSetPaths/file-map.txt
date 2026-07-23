@@ -1,0 +1,8 @@
+com.indianservers.aiexplorer.arengine-pngs-0 C:\Indian Servers\AIExplorer\arengine\build\generated\res\pngs\debug
+com.indianservers.aiexplorer.arengine-updated_navigation_xml-1 C:\Indian Servers\AIExplorer\arengine\build\generated\updated_navigation_xml\debug
+com.indianservers.aiexplorer.arengine-mergeDebugResources-2 C:\Indian Servers\AIExplorer\arengine\build\intermediates\incremental\debug\mergeDebugResources\merged.dir
+com.indianservers.aiexplorer.arengine-mergeDebugResources-3 C:\Indian Servers\AIExplorer\arengine\build\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+com.indianservers.aiexplorer.arengine-debug-4 C:\Indian Servers\AIExplorer\arengine\build\intermediates\merged_res\debug\mergeDebugResources
+com.indianservers.aiexplorer.arengine-debug-5 C:\Indian Servers\AIExplorer\arengine\build\intermediates\packaged_res\debug\packageDebugResources
+com.indianservers.aiexplorer.arengine-debug-6 C:\Indian Servers\AIExplorer\arengine\src\debug\res
+com.indianservers.aiexplorer.arengine-main-7 C:\Indian Servers\AIExplorer\arengine\src\main\res

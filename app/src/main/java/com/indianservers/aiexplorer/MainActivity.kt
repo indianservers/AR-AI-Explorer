@@ -96,6 +96,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isShiftPressed
@@ -128,6 +129,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -204,6 +206,7 @@ import com.indianservers.aiexplorer.core.GraphDirectManipulationEngine
 import com.indianservers.aiexplorer.core.GraphFitResult
 import com.indianservers.aiexplorer.core.AdvancedSpatialInteractionEngine
 import com.indianservers.aiexplorer.core.SpatialAlignment
+import com.indianservers.aiexplorer.core.ConstraintAwareSpatialSnap
 import com.indianservers.aiexplorer.core.SpatialCameraBookmark
 import com.indianservers.aiexplorer.core.SpatialDragPlane
 import com.indianservers.aiexplorer.core.SpatialTransformSpace
@@ -368,6 +371,7 @@ import com.indianservers.aiexplorer.learning.QuizLevel
 import com.indianservers.aiexplorer.learning.QuizSession
 import com.indianservers.aiexplorer.learning.QuizSubject
 import com.indianservers.aiexplorer.workspace.AddVector3DCommand
+import com.indianservers.aiexplorer.workspace.DeleteVector3DCommand
 import com.indianservers.aiexplorer.workspace.AddConstructionCommand
 import com.indianservers.aiexplorer.workspace.AddDependentPointCommand
 import com.indianservers.aiexplorer.workspace.AddGeometryConstraint2DCommand
@@ -429,12 +433,27 @@ import com.indianservers.aiexplorer.workspace.resolvePointDependency
 import com.indianservers.aiexplorer.spatial.ARScaleMode
 import com.indianservers.aiexplorer.spatial.ARAvailability
 import com.indianservers.aiexplorer.spatial.ARCapabilities
-import com.indianservers.aiexplorer.spatial.ARCoreSessionController
+import com.indianservers.aiexplorer.arengine.arcore.ArCoreRuntime
+import com.indianservers.aiexplorer.arengine.contract.ArVector2
+import com.indianservers.aiexplorer.arengine.contract.ArFrameSnapshot
+import com.indianservers.aiexplorer.arengine.contract.ArHitCandidate
+import com.indianservers.aiexplorer.arengine.contract.ArTrackingState
+import com.indianservers.aiexplorer.arengine.interaction.ArGizmoAxis
+import com.indianservers.aiexplorer.arengine.interaction.ArGizmoMode
+import com.indianservers.aiexplorer.arengine.interaction.ArPickHit
+import com.indianservers.aiexplorer.arengine.interaction.ArSelectionEngine
+import com.indianservers.aiexplorer.arengine.interaction.ArSelectionState
+import com.indianservers.aiexplorer.arengine.interaction.ArSubObjectKind
 import com.indianservers.aiexplorer.spatial.SpatialSafety
 import com.indianservers.aiexplorer.spatial.TrackingQuality
 import com.indianservers.aiexplorer.spatial.SpatialPlacementEngine
 import com.indianservers.aiexplorer.spatial.ARCoreCompositorView
 import com.indianservers.aiexplorer.spatial.ARFrameState
+import com.indianservers.aiexplorer.spatial.toSpatialCapabilities
+import com.indianservers.aiexplorer.spatial.toSpatialFrame
+import com.indianservers.aiexplorer.spatial.toSpatialHit
+import com.indianservers.aiexplorer.spatial.previewSpatialPlacement
+import com.indianservers.aiexplorer.spatial.ArPhase4SpatialBridge
 import com.indianservers.aiexplorer.spatial.ARPrivacySafetyChecklist
 import com.indianservers.aiexplorer.spatial.SharedGpuSceneCompiler
 import com.indianservers.aiexplorer.spatial.SharedSpatialSceneBuilder
@@ -2189,6 +2208,14 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun selectVector3D(index: Int) {
         selectedVector3D = index.coerceIn(0, state.vectors3D.lastIndex.coerceAtLeast(0))
         status = "Selected vector ${state.vectors3D.getOrNull(selectedVector3D)?.name ?: ""}"
+    }
+
+    fun deleteVector3D(index: Int) {
+        val vector = state.vectors3D.getOrNull(index) ?: return
+        state = history.execute(state, DeleteVector3DCommand(index, vector))
+        selectedVector3D = index.coerceAtMost(state.vectors3D.lastIndex).coerceAtLeast(0)
+        vectorGesture = null
+        status = "Deleted vector ${vector.name}"
     }
 
     fun moveVector3D(index: Int, delta: Vec3) {
@@ -9334,46 +9361,87 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
 private fun SpatialARScreen(vm: ExplorerViewModel) {
     val context = LocalContext.current
     val activity = context as? ComponentActivity
-    val controller = remember { ARCoreSessionController() }
+    val runtime = remember(activity) { activity?.let(::ArCoreRuntime) }
+    var compositorView by remember { mutableStateOf<ARCoreCompositorView?>(null) }
     var capabilities by remember { mutableStateOf(ARCapabilities(ARAvailability.Checking)) }
     var liveAR by remember { mutableStateOf(false) }
     var frameState by remember { mutableStateOf<ARFrameState?>(null) }
+    var arFrame by remember { mutableStateOf<ArFrameSnapshot?>(null) }
+    var viewportSize by remember { mutableStateOf(IntSize.Zero) }
+    var placementMode by remember { mutableStateOf(true) }
+    var reticleHit by remember { mutableStateOf<ArHitCandidate?>(null) }
+    var arSelection by remember { mutableStateOf(ArSelectionState()) }
+    var overlapHits by remember { mutableStateOf<List<ArPickHit>>(emptyList()) }
+    var stylusHoverHit by remember { mutableStateOf<ArPickHit?>(null) }
+    var gizmoMode by remember { mutableStateOf(ArGizmoMode.Translate) }
+    var gizmoAxis by remember { mutableStateOf(ArGizmoAxis.X) }
+    var arMultiSelect by remember { mutableStateOf(false) }
+    var subObjectKind by remember { mutableStateOf(ArSubObjectKind.Whole) }
+    var snapEnabled by remember { mutableStateOf(true) }
+    var precisionMode by remember { mutableStateOf(false) }
+    var arClipboard by remember { mutableStateOf<List<Solid>>(emptyList()) }
+    var arGroups by remember { mutableStateOf<List<Set<String>>>(emptyList()) }
+    var numericPosition by remember { mutableStateOf("0, 0, 0") }
+    var numericRotation by remember { mutableStateOf("0, 0, 0") }
+    var numericScale by remember { mutableStateOf("1") }
+    var numericPlaneNormal by remember { mutableStateOf("0, 1, 0") }
+    var numericPlaneOffset by remember { mutableStateOf("0") }
     var liveError by remember { mutableStateOf("") }
     var selectedLesson by remember { mutableIntStateOf(0) }
     var thermalLevel by remember { mutableStateOf(ThermalLevel.Nominal) }
     var showSpatialDetails by remember { mutableStateOf(false) }
     val currentLiveAR by rememberUpdatedState(liveAR)
+    val currentCompositorView by rememberUpdatedState(compositorView)
     var cameraGranted by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
     }
     val cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         cameraGranted = granted
-        capabilities = if (granted && activity != null) controller.prepare(activity, true) else {
+        capabilities = if (granted && runtime != null) runtime.prepare(cameraPermissionGranted = true, userRequestedInstall = true).toSpatialCapabilities() else {
             capabilities.copy(message = "Camera permission was not granted; the spatial simulator remains fully available.")
         }
     }
-    LaunchedEffect(activity) {
-        if (activity != null) capabilities = controller.checkAvailability(activity)
+    LaunchedEffect(runtime) {
+        if (runtime != null) capabilities = runtime.checkAvailability().toSpatialCapabilities()
     }
     LaunchedEffect(capabilities.message, cameraGranted) {
-        if (cameraGranted && capabilities.message.contains("session configured", ignoreCase = true)) {
-            controller.resume().onSuccess { liveAR = true }.onFailure { liveError = it.message ?: "ARCore could not resume." }
+        if (cameraGranted && runtime != null && capabilities.message.contains("session configured", ignoreCase = true)) {
+            runtime.resume()
+                .onSuccess {
+                    capabilities = it.toSpatialCapabilities()
+                    liveAR = true
+                }
+                .onFailure { liveError = it.message ?: "ARCore could not resume." }
         }
     }
-    DisposableEffect(controller, activity) {
+    DisposableEffect(runtime, activity) {
         val observer = object : DefaultLifecycleObserver {
-            override fun onPause(owner: LifecycleOwner) = controller.pause()
-            override fun onResume(owner: LifecycleOwner) { if (currentLiveAR) controller.resume() }
+            override fun onPause(owner: LifecycleOwner) {
+                currentCompositorView?.onPause()
+                runtime?.pause()
+            }
+
+            override fun onResume(owner: LifecycleOwner) {
+                if (currentLiveAR) {
+                    runtime?.resume()
+                    currentCompositorView?.onResume()
+                }
+            }
         }
         activity?.lifecycle?.addObserver(observer)
         onDispose {
             activity?.lifecycle?.removeObserver(observer)
-            controller.pause()
-            controller.close()
+            currentCompositorView?.releaseRenderer()
+            currentCompositorView?.onPause()
+            runtime?.pause()
+            runtime?.close()
         }
     }
 
     val placement = vm.state.spatialPlacement
+    LaunchedEffect(placement.isPlaced) {
+        if (!placement.isPlaced) placementMode = true
+    }
     val guidance = SpatialSafety.guidance(placement.trackingQuality)
     val policy = remember(thermalLevel) { SpatialPerformanceManager.policy(thermalLevel, 22.0) }
     val surfaceMesh = remember(vm.state.surfaceExpression, policy.surfaceDensity) {
@@ -9394,29 +9462,111 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             ),
         ).copy(depthOcclusion = placement.depthOcclusionEnabled, environmentIntensity = frameState?.lighting?.pixelIntensity ?: 1f)
     }
-    val gpuPlan = remember(sharedScene) { SharedGpuSceneCompiler.compile(sharedScene) }
-    val currentCompositorScene by rememberUpdatedState(SpatialCompositorScene(sharedScene, placement))
-    Box(Modifier.fillMaxSize()) {
-        if (liveAR) {
+    val selectedSolidIndices = arSelection.objectIds.mapNotNullTo(linkedSetOf()) {
+        it.removePrefix("solid-").toIntOrNull()?.takeIf(vm.state.solids.indices::contains)
+    }
+    val selectedVectorIndex = arSelection.primaryObjectId
+        ?.removePrefix("vector-")
+        ?.toIntOrNull()
+        ?.takeIf(vm.state.vectors3D.indices::contains)
+    val interactiveScene = remember(sharedScene, arSelection, placementMode, reticleHit, gizmoMode, stylusHoverHit) {
+        phase4DisplayScene(sharedScene, arSelection, placementMode && reticleHit != null, vm.state.solids, gizmoMode, stylusHoverHit?.objectId)
+    }
+    val previewPlacement = if (placementMode) reticleHit?.previewSpatialPlacement(placement) ?: placement else placement
+    val activeAnchor = runtime?.anchors()?.firstOrNull { it.id == placement.anchorId }
+    val canonicalArScene = remember(interactiveScene, placement, activeAnchor, arSelection) {
+        ArPhase4SpatialBridge.scene(interactiveScene, placement, activeAnchor, arSelection)
+    }
+    val trackingAllowsDirectManipulation = !liveAR || arFrame?.camera?.trackingState == ArTrackingState.Tracking
+    val gpuPlan = remember(interactiveScene) { SharedGpuSceneCompiler.compile(interactiveScene) }
+    val currentCompositorScene by rememberUpdatedState(SpatialCompositorScene(interactiveScene, previewPlacement))
+    LaunchedEffect(arSelection.primaryObjectId, vm.state.solids, vm.state.vectors3D) {
+        val solid = arSelection.primaryObjectId?.removePrefix("solid-")?.toIntOrNull()?.let(vm.state.solids::getOrNull)
+        val vector = arSelection.primaryObjectId?.removePrefix("vector-")?.toIntOrNull()?.let(vm.state.vectors3D::getOrNull)
+        when {
+            solid != null -> {
+                numericPosition = "${trim(solid.position.x)}, ${trim(solid.position.y)}, ${trim(solid.position.z)}"
+                numericRotation = "${trim(solid.rotation.x)}, ${trim(solid.rotation.y)}, ${trim(solid.rotation.z)}"
+                numericScale = "1"
+            }
+            vector != null -> {
+                numericPosition = "${trim(vector.start.x)}, ${trim(vector.start.y)}, ${trim(vector.start.z)}"
+                numericRotation = "${trim(vector.end.x)}, ${trim(vector.end.y)}, ${trim(vector.end.z)}"
+                numericScale = "1"
+            }
+        }
+    }
+    Box(Modifier.fillMaxSize().onSizeChanged { viewportSize = it }) {
+        if (liveAR && runtime != null) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { viewContext ->
                     ARCoreCompositorView(
                         viewContext,
-                        controller,
+                        runtime,
                         sceneProvider = { currentCompositorScene },
-                        onFrame = { frameState = it; liveError = "" },
+                        onFrame = { snapshot ->
+                            arFrame = snapshot
+                            frameState = snapshot.toSpatialFrame()
+                            reticleHit = if (placementMode && viewportSize.width > 0 && viewportSize.height > 0) {
+                                runtime.hitTest(ArVector2(viewportSize.width / 2f, viewportSize.height / 2f)).firstOrNull()
+                            } else {
+                                null
+                            }
+                            liveError = ""
+                        },
                         onError = { liveError = it },
-                    )
+                    ).also { compositorView = it }
                 },
             )
             Box(
                 Modifier
                     .fillMaxSize()
-                    .pointerInput(Unit) {
+                    .pointerInput(arSelection, gizmoMode, gizmoAxis, placementMode, subObjectKind, arMultiSelect, snapEnabled, precisionMode, numericPlaneNormal, numericPlaneOffset, canonicalArScene, arFrame, trackingAllowsDirectManipulation) {
                         awaitEachGesture {
                             val down = awaitFirstDown(requireUnconsumed = false)
-                            vm.beginSpatialGesture()
+                            if (!trackingAllowsDirectManipulation) {
+                                while (true) {
+                                    val event = awaitPointerEvent()
+                                    event.changes.forEach { it.consume() }
+                                    if (event.changes.none { it.pressed }) break
+                                }
+                                return@awaitEachGesture
+                            }
+                            val precisionMultiplier = when {
+                                down.type == PointerType.Stylus && precisionMode -> .2
+                                down.type == PointerType.Stylus -> .35
+                                precisionMode -> .4
+                                else -> 1.0
+                            }
+                            val gestureIndices = arSelection.objectIds.mapNotNullTo(linkedSetOf()) {
+                                it.removePrefix("solid-").toIntOrNull()?.takeIf(vm.state.solids.indices::contains)
+                            }
+                            val editableIndices = gestureIndices.filterTo(linkedSetOf()) { "solid-$it" !in arSelection.lockedObjectIds }
+                            val vectorGestureIndex = arSelection.primaryObjectId
+                                ?.removePrefix("vector-")
+                                ?.toIntOrNull()
+                                ?.takeIf(vm.state.vectors3D.indices::contains)
+                                ?.takeIf { "vector-$it" !in arSelection.lockedObjectIds }
+                            val objectGesture = !placementMode && (editableIndices.isNotEmpty() || vectorGestureIndex != null)
+                            val basePosition = editableIndices.singleOrNull()?.let(vm.state.solids::getOrNull)?.position
+                            val snapTargets = if (snapEnabled && basePosition != null) {
+                                vm.state.solids.flatMapIndexed { index, solid ->
+                                    if (index in editableIndices) emptyList()
+                                    else ConstraintAwareSpatialSnap.targets(SolidMeshFactory.create(solid), solid.position)
+                                }
+                            } else {
+                                emptyList()
+                            }
+                            if (objectGesture) {
+                                when {
+                                    vectorGestureIndex != null -> vm.beginVectorDrag(vectorGestureIndex)
+                                    editableIndices.size > 1 -> vm.beginSolidGroupDrag(editableIndices)
+                                    else -> vm.beginSolidDrag(editableIndices.single())
+                                }
+                            } else {
+                                vm.beginSpatialGesture()
+                            }
                             var totalPan = Offset.Zero
                             var totalRotation = 0f
                             var totalScale = 1f
@@ -9425,21 +9575,185 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 totalPan += event.calculatePan()
                                 totalRotation += event.calculateRotation()
                                 totalScale *= event.calculateZoom()
-                                vm.previewSpatialGesture(totalPan, totalRotation, totalScale)
+                                if (objectGesture) {
+                                    val raw = Vec3(
+                                        totalPan.x / 420.0 * precisionMultiplier,
+                                        -totalPan.y / 420.0 * precisionMultiplier,
+                                        totalPan.y / 620.0 * precisionMultiplier,
+                                    )
+                                    val axisDelta = when (gizmoAxis) {
+                                        ArGizmoAxis.X -> Vec3(raw.x, 0.0, 0.0)
+                                        ArGizmoAxis.Y -> Vec3(0.0, raw.y, 0.0)
+                                        ArGizmoAxis.Z -> Vec3(0.0, 0.0, raw.z)
+                                        ArGizmoAxis.Uniform -> raw
+                                    }
+                                    val snappedDelta = if (snapEnabled && basePosition != null) {
+                                        val proposed = basePosition + axisDelta
+                                        val planeNormal = parseSpatialTriple(numericPlaneNormal)?.takeIf { it.magnitude() > 1e-9 }?.normalized()
+                                        val planeOffset = numericPlaneOffset.toDoubleOrNull() ?: 0.0
+                                        val projectedPlane = planeNormal?.let { normal ->
+                                            proposed - normal * (normal.dot(proposed) - planeOffset)
+                                        }
+                                        val planeDistance = projectedPlane?.let { (proposed - it).magnitude() } ?: Double.POSITIVE_INFINITY
+                                        val geometric = ConstraintAwareSpatialSnap.snap(proposed, snapTargets, .18)
+                                        when {
+                                            projectedPlane != null && planeDistance <= .18 -> projectedPlane - basePosition
+                                            geometric.target != null -> geometric.point - basePosition
+                                            else -> Vec3(
+                                                (axisDelta.x * 10.0).roundToInt() / 10.0,
+                                                (axisDelta.y * 10.0).roundToInt() / 10.0,
+                                                (axisDelta.z * 10.0).roundToInt() / 10.0,
+                                            )
+                                        }
+                                    } else axisDelta
+                                    if (vectorGestureIndex != null) {
+                                        vm.previewVectorDrag(vectorGestureIndex, snappedDelta)
+                                    } else if (editableIndices.size > 1) {
+                                        when (gizmoMode) {
+                                            ArGizmoMode.Translate -> vm.previewSolidGroupMove(snappedDelta)
+                                            ArGizmoMode.Rotate -> vm.previewSolidGroupRotation(
+                                                when (gizmoAxis) {
+                                                    ArGizmoAxis.X -> Vec3(totalRotation.toDouble(), 0.0, 0.0)
+                                                    ArGizmoAxis.Y -> Vec3(0.0, totalRotation.toDouble(), 0.0)
+                                                    ArGizmoAxis.Z -> Vec3(0.0, 0.0, totalRotation.toDouble())
+                                                    ArGizmoAxis.Uniform -> Vec3(totalRotation.toDouble(), totalRotation.toDouble(), totalRotation.toDouble())
+                                                },
+                                            )
+                                            ArGizmoMode.Scale -> vm.previewSolidGroupScale(totalScale.toDouble())
+                                        }
+                                    } else {
+                                        val index = editableIndices.single()
+                                        when (gizmoMode) {
+                                            ArGizmoMode.Translate -> vm.previewSolidDrag(index, snappedDelta)
+                                            ArGizmoMode.Rotate -> vm.previewSolidRotation(
+                                                index,
+                                                when (gizmoAxis) {
+                                                    ArGizmoAxis.X -> Vec3(totalRotation.toDouble(), 0.0, 0.0)
+                                                    ArGizmoAxis.Y -> Vec3(0.0, totalRotation.toDouble(), 0.0)
+                                                    ArGizmoAxis.Z -> Vec3(0.0, 0.0, totalRotation.toDouble())
+                                                    ArGizmoAxis.Uniform -> Vec3(totalRotation.toDouble(), totalRotation.toDouble(), totalRotation.toDouble())
+                                                },
+                                            )
+                                            ArGizmoMode.Scale -> vm.previewSolidAxisScale(
+                                                index,
+                                                when (gizmoAxis) {
+                                                    ArGizmoAxis.X -> TransformGizmoAxis.X
+                                                    ArGizmoAxis.Y -> TransformGizmoAxis.Y
+                                                    ArGizmoAxis.Z -> TransformGizmoAxis.Z
+                                                    ArGizmoAxis.Uniform -> TransformGizmoAxis.Uniform
+                                                },
+                                                totalScale.toDouble(),
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    vm.previewSpatialGesture(totalPan, totalRotation, totalScale)
+                                }
                                 if (event.changes.none { it.pressed }) break
                                 event.changes.forEach { it.consume() }
                             }
-                            vm.endSpatialGesture()
+                            if (objectGesture) {
+                                when {
+                                    vectorGestureIndex != null -> vm.endVectorDrag()
+                                    editableIndices.size > 1 -> vm.endSolidGroupDrag()
+                                    else -> vm.endSolidDrag()
+                                }
+                            } else {
+                                vm.endSpatialGesture()
+                            }
                             if (totalPan.getDistance() < 12f && kotlin.math.abs(totalRotation) < 2f && kotlin.math.abs(totalScale - 1f) < .03f) {
-                                controller.hitTest(down.position.x, down.position.y).firstOrNull()?.let { hit ->
-                                    controller.createAnchor(hit, lessonId = lesson.id)
-                                        .onSuccess { anchor -> vm.placeSpatialHit(hit.copy(trackableId = anchor.id, positionMeters = anchor.pose.positionMeters)) }
-                                        .onFailure { liveError = it.message ?: "Could not create the spatial anchor." }
+                                if (placementMode) {
+                                    runtime.hitTest(ArVector2(down.position.x, down.position.y)).firstOrNull()?.let { hit ->
+                                        runtime.createAnchor(hit.id, System.currentTimeMillis())
+                                            .onSuccess { anchor ->
+                                                placement.anchorId.takeIf(String::isNotBlank)?.let(runtime::detachAnchor)
+                                                vm.placeSpatialHit(
+                                                    hit.toSpatialHit().copy(
+                                                        trackableId = anchor.id,
+                                                        positionMeters = Vec3(
+                                                            anchor.pose.positionMeters.x,
+                                                            anchor.pose.positionMeters.y,
+                                                            anchor.pose.positionMeters.z,
+                                                        ),
+                                                    ),
+                                                )
+                                                placementMode = false
+                                                reticleHit = null
+                                            }
+                                            .onFailure { liveError = it.message ?: "Could not create the spatial anchor." }
+                                    }
+                                } else {
+                                    val snapshot = arFrame
+                                    if (snapshot != null) {
+                                        val hits = ArPhase4SpatialBridge.pick(
+                                            ArVector2(down.position.x, down.position.y),
+                                            viewportSize.width,
+                                            viewportSize.height,
+                                            snapshot,
+                                            canonicalArScene,
+                                        ).filter { it.kind == subObjectKind }
+                                        overlapHits = hits
+                                        val hit = if (
+                                            hits.firstOrNull()?.objectId == arSelection.primaryObjectId &&
+                                            overlapHits.isNotEmpty()
+                                        ) {
+                                            ArSelectionEngine.cycle(hits, arSelection.subObject)
+                                        } else {
+                                            hits.firstOrNull()
+                                        }
+                                        if (hit != null) {
+                                            arSelection = ArSelectionEngine.select(arSelection, hit, arMultiSelect)
+                                            hit.objectId.removePrefix("solid-").toIntOrNull()?.let(vm::selectSolid)
+                                        } else if (!arMultiSelect) {
+                                            arSelection = arSelection.copy(objectIds = emptySet(), primaryObjectId = null, subObject = null)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .pointerInput(arFrame, canonicalArScene, viewportSize, placementMode, trackingAllowsDirectManipulation, subObjectKind) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent()
+                                val hover = event.changes.firstOrNull { it.type == PointerType.Stylus && !it.pressed }
+                                stylusHoverHit = if (
+                                    hover != null &&
+                                    !placementMode &&
+                                    trackingAllowsDirectManipulation &&
+                                    arFrame != null
+                                ) {
+                                    ArPhase4SpatialBridge.pick(
+                                        ArVector2(hover.position.x, hover.position.y),
+                                        viewportSize.width,
+                                        viewportSize.height,
+                                        arFrame!!,
+                                        canonicalArScene,
+                                    ).firstOrNull { it.kind == subObjectKind }
+                                } else {
+                                    null
                                 }
                             }
                         }
                     },
             )
+            if (placementMode) {
+                Canvas(Modifier.fillMaxSize()) {
+                    val center = Offset(size.width / 2f, size.height / 2f)
+                    val color = if (reticleHit != null) Green else Amber
+                    drawCircle(color.copy(alpha = .18f), radius = 28f, center = center)
+                    drawCircle(color, radius = 18f, center = center, style = Stroke(width = 3f))
+                    drawLine(color, center - Offset(30f, 0f), center + Offset(30f, 0f), strokeWidth = 2f)
+                    drawLine(color, center - Offset(0f, 30f), center + Offset(0f, 30f), strokeWidth = 2f)
+                }
+                Text(
+                    reticleHit?.let { "${it.type.name} · ${(it.confidence * 100).roundToInt()}% · ±${trim(it.uncertaintyMeters)} m" }
+                        ?: "Scan a plane or feature point",
+                    color = Ink,
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Center).offset(y = 48.dp).clip(RoundedCornerShape(10.dp)).background(SurfaceA.copy(.88f)).padding(8.dp),
+                )
+            }
         } else {
             SpatialPreviewCanvas(
                 modifier = Modifier.fillMaxSize(),
@@ -9460,12 +9774,31 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 GlowButton("Enable ARCore", onClick = {
                     if (activity == null) capabilities = capabilities.copy(message = "ARCore requires an Android activity.")
                     else if (!cameraGranted) cameraPermission.launch(Manifest.permission.CAMERA)
-                    else capabilities = controller.prepare(activity, true)
+                    else if (runtime != null) capabilities = runtime.prepare(cameraPermissionGranted = true, userRequestedInstall = true).toSpatialCapabilities()
                 })
-                GlowButton(if (placement.isPlaced) "Re-place" else "Place", onClick = vm::placeSpatialScene)
-                GlowButton("Reset", onClick = vm::resetSpatialScene)
+                GlowButton(
+                    when {
+                        placementMode && placement.isPlaced -> "Cancel re-place"
+                        placementMode -> "Aim & tap"
+                        else -> "Re-place"
+                    },
+                    onClick = {
+                        placementMode = if (placement.isPlaced) !placementMode else true
+                        if (!placementMode) reticleHit = null
+                    },
+                )
+                GlowButton("Reset", onClick = {
+                    placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
+                    vm.resetSpatialScene()
+                    placementMode = true
+                    arSelection = ArSelectionState()
+                })
             }
-            if (liveAR) GlowButton("Use simulator", onClick = { liveAR = false; controller.pause() })
+            if (liveAR) GlowButton("Use simulator", onClick = {
+                compositorView?.onPause()
+                liveAR = false
+                runtime?.pause()
+            })
             Insight("Scale", placement.visibleScale, Violet)
             Insight("Estimate", "±${trim(placement.measurementUncertaintyMeters)} m · educational only", Amber)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -9480,6 +9813,207 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 capabilities.availability == ARAvailability.Ready -> "Unavailable; objects remain outlined."
                 else -> "Checked when an ARCore session is prepared."
             }, if (capabilities.depthSupported) Green else Muted)
+            reticleHit?.takeIf { placementMode }?.let {
+                Insight("Placement preview", "${it.type.name} · ${(it.confidence * 100).roundToInt()}% confidence", Green)
+                Insight("Uncertainty", "±${trim(it.uncertaintyMeters)} m · ${placement.visibleScale}", Amber)
+            }
+            if (!placementMode) {
+                Text("Direct manipulation", color = Ink, fontWeight = FontWeight.Bold)
+                if (!trackingAllowsDirectManipulation) {
+                    Text("Tracking paused · object selection and gizmos are temporarily frozen; mathematical state and selection are preserved.", color = Amber, fontSize = 11.sp)
+                }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    ArGizmoMode.entries.forEach { mode ->
+                        GlowButton(if (gizmoMode == mode) "• ${mode.name}" else mode.name) { gizmoMode = mode }
+                    }
+                    ArGizmoAxis.entries.forEach { axis ->
+                        GlowButton(if (gizmoAxis == axis) "• ${axis.name}" else axis.name) { gizmoAxis = axis }
+                    }
+                }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    TogglePill("Snap", snapEnabled) { snapEnabled = it }
+                    TogglePill("Precision", precisionMode) { precisionMode = it }
+                    TogglePill("Multi", arMultiSelect) {
+                        arMultiSelect = it
+                        if (!it) arSelection.primaryObjectId?.let { id ->
+                            arSelection = arSelection.copy(objectIds = setOf(id))
+                        }
+                    }
+                    ArSubObjectKind.entries.forEach { kind ->
+                        GlowButton(if (subObjectKind == kind) "• ${kind.name}" else kind.name) { subObjectKind = kind }
+                    }
+                }
+                if (snapEnabled) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        OutlinedTextField(
+                            numericPlaneNormal,
+                            { numericPlaneNormal = it },
+                            modifier = Modifier.weight(1f),
+                            label = { Text("Plane normal") },
+                            singleLine = true,
+                        )
+                        OutlinedTextField(
+                            numericPlaneOffset,
+                            { numericPlaneOffset = it },
+                            modifier = Modifier.width(82.dp),
+                            label = { Text("Offset") },
+                            singleLine = true,
+                        )
+                    }
+                }
+                arSelection.primaryObjectId?.let { selectedId ->
+                    Insight(
+                        "Selected",
+                        buildString {
+                            append(selectedId)
+                            arSelection.subObject?.takeIf { it.kind != ArSubObjectKind.Whole }?.let {
+                                append(" · ${it.kind.name} ${(it.subObjectIndex ?: 0) + 1}")
+                            }
+                        },
+                        Cyan,
+                    )
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        GlowButton(if (selectedId in arSelection.lockedObjectIds) "Unlock" else "Lock") {
+                            arSelection = ArSelectionEngine.toggleLock(arSelection)
+                        }
+                        GlowButton("Hide") { arSelection = ArSelectionEngine.hideSelected(arSelection) }
+                        GlowButton(if (arSelection.isolatedObjectIds == null) "Isolate" else "End isolate") {
+                            arSelection = if (arSelection.isolatedObjectIds == null) ArSelectionEngine.isolate(arSelection) else ArSelectionEngine.showAll(arSelection)
+                        }
+                        GlowButton("Cycle", enabled = overlapHits.isNotEmpty()) {
+                            ArSelectionEngine.cycle(overlapHits, arSelection.subObject)?.let {
+                                arSelection = ArSelectionEngine.select(arSelection, it, false)
+                                it.objectId.removePrefix("solid-").toIntOrNull()?.let(vm::selectSolid)
+                            }
+                        }
+                        GlowButton("Copy", enabled = selectedSolidIndices.isNotEmpty()) {
+                            arClipboard = selectedSolidIndices.mapNotNull(vm.state.solids::getOrNull)
+                            context.getSystemService(android.content.ClipboardManager::class.java)?.setPrimaryClip(
+                                android.content.ClipData.newPlainText(
+                                    "AI Explorer AR objects",
+                                    arClipboard.joinToString("\n") {
+                                        "${it.type.name} @ (${trim(it.position.x)}, ${trim(it.position.y)}, ${trim(it.position.z)})"
+                                    },
+                                ),
+                            )
+                        }
+                        GlowButton("Paste", enabled = arClipboard.isNotEmpty()) {
+                            val start = vm.state.solids.size
+                            vm.replaceSolids("Paste AR objects") { solids ->
+                                solids + arClipboard.mapIndexed { index, solid ->
+                                    solid.copy(position = solid.position + Vec3(.35 + index * .12, .15, .35))
+                                }
+                            }
+                            val ids = (start until vm.state.solids.size).mapTo(linkedSetOf()) { "solid-$it" }
+                            arSelection = arSelection.copy(objectIds = ids, primaryObjectId = ids.lastOrNull())
+                        }
+                        GlowButton("Duplicate", enabled = selectedSolidIndices.size == 1) {
+                            selectedSolidIndices.singleOrNull()?.let(vm::selectSolid)
+                            vm.duplicateSelectedSolid()
+                            arSelection = ArSelectionState(setOf("solid-${vm.selectedSolid}"), "solid-${vm.selectedSolid}")
+                        }
+                        GlowButton("Delete", enabled = selectedSolidIndices.isNotEmpty() || selectedVectorIndex != null) {
+                            selectedVectorIndex?.let(vm::deleteVector3D)
+                            vm.deleteSelectedSolids(selectedSolidIndices)
+                            arSelection = ArSelectionState()
+                            if (vm.state.solids.isEmpty() && vm.state.vectors3D.isEmpty()) {
+                                placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
+                                vm.resetSpatialScene()
+                                placementMode = true
+                            }
+                        }
+                        GlowButton("Front", enabled = selectedSolidIndices.size == 1) {
+                            val index = selectedSolidIndices.singleOrNull() ?: return@GlowButton
+                            vm.replaceSolids("Bring AR object to front") { solids ->
+                                solids.getOrNull(index)?.let { selected -> solids.filterIndexed { i, _ -> i != index } + selected } ?: solids
+                            }
+                            val id = "solid-${vm.state.solids.lastIndex}"
+                            arSelection = ArSelectionState(setOf(id), id)
+                            arGroups = emptyList()
+                        }
+                        GlowButton("Back", enabled = selectedSolidIndices.size == 1) {
+                            val index = selectedSolidIndices.singleOrNull() ?: return@GlowButton
+                            vm.replaceSolids("Send AR object to back") { solids ->
+                                solids.getOrNull(index)?.let { selected -> listOf(selected) + solids.filterIndexed { i, _ -> i != index } } ?: solids
+                            }
+                            arSelection = ArSelectionState(setOf("solid-0"), "solid-0")
+                            arGroups = emptyList()
+                        }
+                    }
+                    if (selectedSolidIndices.size > 1) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            GlowButton("Group") {
+                                arGroups = arGroups + listOf(arSelection.objectIds)
+                            }
+                            SpatialAlignment.entries.forEach { alignment ->
+                                GlowButton("Align ${alignment.name}") {
+                                    vm.replaceSolids("Align AR group on ${alignment.name}") {
+                                        AdvancedSpatialInteractionEngine.align(it, selectedSolidIndices, alignment)
+                                    }
+                                }
+                            }
+                            GlowButton("Distribute X", enabled = selectedSolidIndices.size >= 3) {
+                                vm.replaceSolids("Distribute AR group") {
+                                    AdvancedSpatialInteractionEngine.distribute(it, selectedSolidIndices, SpatialAlignment.X)
+                                }
+                            }
+                        }
+                    }
+                    Text(if (selectedVectorIndex != null) "Numeric vector editor" else "Numeric transform", color = Ink, fontWeight = FontWeight.SemiBold)
+                    OutlinedTextField(
+                        numericPosition,
+                        { numericPosition = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(if (selectedVectorIndex != null) "Vector start x, y, z" else "Position x, y, z") },
+                        singleLine = true,
+                    )
+                    OutlinedTextField(
+                        numericRotation,
+                        { numericRotation = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(if (selectedVectorIndex != null) "Vector end x, y, z" else "Rotation x°, y°, z°") },
+                        singleLine = true,
+                    )
+                    if (selectedVectorIndex == null) OutlinedTextField(
+                        numericScale,
+                        { numericScale = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Scale factor") },
+                        singleLine = true,
+                    )
+                    GlowButton("Apply exact transform", enabled = selectedSolidIndices.size == 1 || selectedVectorIndex != null) {
+                        val positionValues = parseSpatialTriple(numericPosition)
+                        val rotationValues = parseSpatialTriple(numericRotation)
+                        val factor = numericScale.toDoubleOrNull()?.coerceIn(.05, 20.0)
+                        selectedVectorIndex?.let { index ->
+                            vm.transformVector3D(index) { vector ->
+                                vector.copy(start = positionValues ?: vector.start, end = rotationValues ?: vector.end)
+                            }
+                        }
+                        selectedSolidIndices.singleOrNull()?.let { index ->
+                            vm.transformSolid(index) { solid ->
+                                solid.copy(
+                                    position = positionValues ?: solid.position,
+                                    rotation = rotationValues ?: solid.rotation,
+                                    width = if (factor != null) solid.width * factor else solid.width,
+                                    height = if (factor != null) solid.height * factor else solid.height,
+                                    depth = if (factor != null) solid.depth * factor else solid.depth,
+                                    radius = if (factor != null) solid.radius * factor else solid.radius,
+                                    topRadius = if (factor != null) solid.topRadius * factor else solid.topRadius,
+                                )
+                            }
+                            numericScale = "1"
+                        }
+                    }
+                }
+                stylusHoverHit?.let {
+                    Insight("Stylus hover", "${it.objectId} · ${it.kind.name.lowercase()} preview", Green)
+                }
+                if (arSelection.hiddenObjectIds.isNotEmpty() || arSelection.isolatedObjectIds != null) {
+                    GlowButton("Show all objects") { arSelection = ArSelectionEngine.showAll(arSelection) }
+                }
+                if (arGroups.isNotEmpty()) Insight("Groups", "${arGroups.size} AR group(s) · shared transforms enabled", Violet)
+            }
             GlowButton(if (showSpatialDetails) "Hide spatial details" else "Lessons & renderer", onClick = { showSpatialDetails = !showSpatialDetails })
             if (showSpatialDetails) {
                 Text("Spatial lesson", color = Ink, fontWeight = FontWeight.SemiBold)
@@ -9505,6 +10039,95 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Modifier.align(Alignment.BottomEnd),
         )
     }
+}
+
+private fun parseSpatialTriple(value: String): Vec3? {
+    val parts = value.split(',', ';', ' ').map(String::trim).filter(String::isNotEmpty)
+    if (parts.size != 3) return null
+    val values = parts.map { it.toDoubleOrNull() ?: return null }
+    return Vec3(values[0], values[1], values[2])
+}
+
+private fun phase4DisplayScene(
+    source: com.indianservers.aiexplorer.spatial.SpatialRenderScene,
+    selection: ArSelectionState,
+    ghost: Boolean,
+    solids: List<Solid>,
+    gizmoMode: ArGizmoMode,
+    hoverObjectId: String?,
+): com.indianservers.aiexplorer.spatial.SpatialRenderScene {
+    val styled = source.primitives.map { primitive ->
+        val selected = primitive.id in selection.objectIds
+        val hovered = primitive.id == hoverObjectId && !selected
+        val visible = primitive.visible && ArSelectionEngine.isVisible(selection, primitive.id)
+        val color = primitive.material.colorRgba.toMutableList().apply {
+            while (size < 4) add(1f)
+            if (ghost) this[3] = minOf(this[3], .28f)
+            if (selected) {
+                this[0] = 1f
+                this[1] = .68f
+                this[2] = .12f
+                this[3] = 1f
+            } else if (hovered) {
+                this[0] = .35f
+                this[1] = 1f
+                this[2] = .72f
+                this[3] = 1f
+            }
+        }
+        primitive.copy(
+            visible = visible,
+            selectable = primitive.selectable && !ghost,
+            material = primitive.material.copy(
+                colorRgba = color,
+                emissive = if (selected || hovered) maxOf(primitive.material.emissive, if (selected) .3f else .18f) else primitive.material.emissive,
+                blendMode = if (ghost) com.indianservers.aiexplorer.spatial.SpatialBlendMode.Transparent else primitive.material.blendMode,
+            ),
+        )
+    }
+    if (ghost || selection.objectIds.isEmpty()) return source.copy(primitives = styled)
+    val gizmos = selection.objectIds.mapNotNull {
+        it.removePrefix("solid-").toIntOrNull()?.let { index -> index to solids.getOrNull(index) }
+    }.filter { it.second != null }.flatMap { (index, nullableSolid) ->
+        val solid = nullableSolid ?: return@flatMap emptyList()
+        val origin = solid.position
+        val axes = listOf(
+            Triple("x", Vec3(1.0, 0.0, 0.0), listOf(1f, .18f, .22f, 1f)),
+            Triple("y", Vec3(0.0, 1.0, 0.0), listOf(.2f, 1f, .4f, 1f)),
+            Triple("z", Vec3(0.0, 0.0, 1.0), listOf(.25f, .55f, 1f, 1f)),
+        )
+        axes.map { (name, axis, color) ->
+            val points = when (gizmoMode) {
+                ArGizmoMode.Translate, ArGizmoMode.Scale -> listOf(origin, origin + axis * .85)
+                ArGizmoMode.Rotate -> (0..40).map { step ->
+                    val angle = step * Math.PI * 2.0 / 40.0
+                    when (name) {
+                        "x" -> origin + Vec3(0.0, kotlin.math.cos(angle), kotlin.math.sin(angle)) * .72
+                        "y" -> origin + Vec3(kotlin.math.cos(angle), 0.0, kotlin.math.sin(angle)) * .72
+                        else -> origin + Vec3(kotlin.math.cos(angle), kotlin.math.sin(angle), 0.0) * .72
+                    }
+                }
+            }
+            com.indianservers.aiexplorer.spatial.SpatialPrimitive(
+                id = "gizmo-$index-$name",
+                kind = com.indianservers.aiexplorer.spatial.SpatialPrimitiveKind.Curve,
+                geometry = com.indianservers.aiexplorer.spatial.SpatialGeometry(
+                    vertices = points,
+                    lines = if (gizmoMode == ArGizmoMode.Rotate) points.indices.toList().dropLast(1).map { it to it + 1 } else listOf(0 to 1),
+                    pointRadius = if (gizmoMode == ArGizmoMode.Scale) .12 else .055,
+                ),
+                material = com.indianservers.aiexplorer.spatial.SpatialMaterial(
+                    name = "$name ${gizmoMode.name.lowercase()} handle",
+                    colorRgba = color,
+                    roughness = .28f,
+                    emissive = .35f,
+                ),
+                label = "${gizmoMode.name} ${name.uppercase()}",
+                selectable = false,
+            )
+        }
+    }
+    return source.copy(primitives = styled + gizmos)
 }
 
 @Composable

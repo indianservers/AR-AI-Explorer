@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "AI Explorer"
 include(":app")
+include(":arengine")
 include(":macrobenchmark")

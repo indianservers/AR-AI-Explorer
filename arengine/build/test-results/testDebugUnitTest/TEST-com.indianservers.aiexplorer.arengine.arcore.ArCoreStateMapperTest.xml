@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.arengine.arcore.ArCoreStateMapperTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-07-23T20:26:03.705Z" hostname="INDIANSERVERS" time="0.007">
+  <properties/>
+  <testcase name="trackingFailureGuidanceAndPlaneOrientationAreLossless" classname="com.indianservers.aiexplorer.arengine.arcore.ArCoreStateMapperTest" time="0.005"/>
+  <testcase name="availabilityStatesKeepInstallUpdateUnsupportedAndTransientDistinct" classname="com.indianservers.aiexplorer.arengine.arcore.ArCoreStateMapperTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

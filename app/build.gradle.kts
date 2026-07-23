@@ -45,6 +45,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":arengine"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -55,7 +56,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.google.ar.core)
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.digital.ink)
     testImplementation(libs.junit)

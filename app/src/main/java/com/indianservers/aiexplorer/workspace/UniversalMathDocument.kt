@@ -17,14 +17,17 @@ import java.security.MessageDigest
 import java.util.Base64
 
 enum class UniversalMathKind {
-    Scalar, Expression, Equation, Function, Point2D, Point3D, Vector, Matrix, DataList,
+    Scalar, Parameter, Expression, Equation, EquationSystem, ParametricEquation, Inequality, Relation, Boolean, Text,
+    Function, PiecewiseFunction, Point2D, Point3D, Vector,
+    Line, Ray, Segment, Circle, Conic, Plane,
+    Matrix, DataList, Sequence, Measurement, Angle,
     GeometryConstruction, ProbabilityModel, UnitMeasurement, Surface, Solid, Manipulative, NotebookCell, SpatialScene,
 }
 
 sealed interface UniversalMathPayload {
     /** A null AST represents a staged editor value; it remains visible but cannot enter verified computation. */
     data class Symbolic(val source: String, val ast: SymbolicExpression?, val parseError: String? = null) : UniversalMathPayload
-    data class Coordinates(val values: List<Double>, val labels: List<String> = emptyList()) : UniversalMathPayload
+    data class Coordinates(val values: List<Double>, val labels: List<String> = emptyList(), val definition: String? = null) : UniversalMathPayload
     data class Dataset(val values: List<Double>, val missingIndices: Set<Int> = emptySet()) : UniversalMathPayload
     data class Properties(val entries: Map<String, String>) : UniversalMathPayload
 }
@@ -56,7 +59,8 @@ object UniversalMathObjectFactory {
 
     fun symbolic(id: String, kind: UniversalMathKind, name: String, source: String, assumptions: MathAssumptionSet = MathAssumptionSet(), dependencies: Set<String> = emptySet(), sourceView: String = "CAS"):
         UniversalMathObject {
-        require(kind in setOf(UniversalMathKind.Expression, UniversalMathKind.Equation, UniversalMathKind.Function, UniversalMathKind.Surface, UniversalMathKind.NotebookCell))
+        require(kind in setOf(UniversalMathKind.Expression, UniversalMathKind.Equation, UniversalMathKind.Inequality, UniversalMathKind.Boolean,
+            UniversalMathKind.Function, UniversalMathKind.PiecewiseFunction, UniversalMathKind.Surface, UniversalMathKind.NotebookCell))
         val parsed = runCatching { cas.parse(source) }
         return UniversalMathObject(id, kind, name, UniversalMathPayload.Symbolic(source, parsed.getOrNull(), parsed.exceptionOrNull()?.message), dependencies, assumptions, sourceView = sourceView)
     }
@@ -222,7 +226,7 @@ object UniversalWorkspaceBridge {
             val dependency = pointDependencyByOutput[index]
             objects += UniversalMathObject(
                 id = "point-$index", kind = UniversalMathKind.Point2D, name = dependency?.name ?: "P$index",
-                payload = UniversalMathPayload.Coordinates(listOf(point.x, point.y), listOf("x", "y")),
+                payload = UniversalMathPayload.Coordinates(listOf(point.x, point.y), listOf("x", "y"), dependency?.let { pointDefinition(it, state) }),
                 dependencies = dependency?.inputIndices?.map { "point-$it" }?.toSet().orEmpty(), sourceView = "geometry",
             )
         }
@@ -234,9 +238,20 @@ object UniversalWorkspaceBridge {
             objects += UniversalMathObject(function.id, UniversalMathKind.Function, function.name, UniversalMathPayload.Symbolic(function.expression, ast, parsed.exceptionOrNull()?.message), dependencies, sourceView = "graph/CAS/table")
         }
         state.shapes.forEach { shape ->
-            objects += UniversalMathObject(shape.id, UniversalMathKind.GeometryConstruction, shape.name,
-                UniversalMathPayload.Properties(mapOf("type" to shape.type.name, "visible" to shape.visible.toString(), "locked" to shape.locked.toString(), "style" to shape.styleKey)),
+            objects += UniversalMathObject(shape.id, shape.type.algebraKind(), shape.name,
+                UniversalMathPayload.Properties(mapOf("definition" to shapeDefinition(shape, state), "type" to shape.type.name, "visible" to shape.visible.toString(), "locked" to shape.locked.toString(), "style" to shape.styleKey)),
                 shape.pointIndices.map { "point-$it" }.toSet(), sourceView = "geometry")
+        }
+        state.geometryConstraints.forEach { constraint ->
+            val kind = when (constraint.type) {
+                GeometryConstraint2DType.FixedAngle -> UniversalMathKind.Angle
+                GeometryConstraint2DType.FixedLength -> UniversalMathKind.Measurement
+                else -> UniversalMathKind.Boolean
+            }
+            val definition = "${constraint.type.label}(${(constraint.shapeIds + constraint.pointIndices.map { "P$it" }).joinToString()})"
+            objects += UniversalMathObject(constraint.id, kind, constraint.type.label,
+                UniversalMathPayload.Properties(mapOf("definition" to definition, "value" to (constraint.target?.toString() ?: "satisfied"), "constraint" to constraint.type.name)),
+                (constraint.shapeIds + constraint.pointIndices.map { "point-$it" }).toSet(), sourceView = "geometry/measurement")
         }
         state.solids.forEachIndexed { index, solid -> objects += solidObject(index, solid) }
         state.vectors3D.forEach { vector -> objects += vectorObject(vector) }
@@ -245,7 +260,9 @@ object UniversalWorkspaceBridge {
         objects += UniversalMathObject("spatial-scene", UniversalMathKind.SpatialScene, "AR spatial scene", UniversalMathPayload.Properties(mapOf(
             "anchorId" to state.spatialPlacement.anchorId, "scale" to state.spatialPlacement.pose.uniformScale.toString(), "metersPerUnit" to state.spatialPlacement.metersPerMathUnit.toString(),
         )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + "surface-main").toSet(), sourceView = "AR")
-        return UniversalMathDocument(id = "math-${state.id}", revision = state.modifiedAt.coerceAtLeast(0), objects = objects.associateBy { it.id }, modifiedAt = state.modifiedAt)
+        val generated = UniversalMathDocument(id = "math-${state.id}", revision = state.modifiedAt.coerceAtLeast(0), objects = objects.associateBy { it.id }, modifiedAt = state.modifiedAt)
+        val stored = state.universalMathDocument ?: return generated
+        return stored.copy(revision = maxOf(stored.revision, generated.revision), objects = stored.objects + generated.objects, modifiedAt = maxOf(stored.modifiedAt, generated.modifiedAt))
     }
 
     fun applyToWorkspace(document: UniversalMathDocument, state: WorkspaceState): WorkspaceState {
@@ -260,7 +277,7 @@ object UniversalWorkspaceBridge {
             coordinates?.values?.takeIf { it.size >= 2 }?.let { Vec2(it[0], it[1]) } ?: point
         }
         val surface = (document.objects["surface-main"]?.payload as? UniversalMathPayload.Symbolic)?.source ?: state.surfaceExpression
-        return state.copy(functions = functions, points = points, surfaceExpression = surface, modifiedAt = document.modifiedAt).recomputed()
+        return state.copy(functions = functions, points = points, surfaceExpression = surface, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
     }
 
     private fun solidObject(index: Int, solid: Solid) = UniversalMathObject("solid-$index", UniversalMathKind.Solid, solid.type.name,
@@ -283,6 +300,38 @@ object UniversalWorkspaceBridge {
     }
 
     private fun Vec3.csv() = "$x,$y,$z"
+
+    private fun Shape2DType.algebraKind() = when (this) {
+        Shape2DType.Line, Shape2DType.Parallel, Shape2DType.Perpendicular, Shape2DType.AngleBisector -> UniversalMathKind.Line
+        Shape2DType.Ray -> UniversalMathKind.Ray
+        Shape2DType.Segment -> UniversalMathKind.Segment
+        Shape2DType.Circle, Shape2DType.CircleThreePoints -> UniversalMathKind.Circle
+        Shape2DType.Ellipse -> UniversalMathKind.Conic
+        else -> UniversalMathKind.GeometryConstruction
+    }
+
+    private fun pointDefinition(dependency: PointDependency, state: WorkspaceState): String {
+        val names = dependency.inputIndices.map { index -> state.pointDependencies.firstOrNull { it.outputIndex == index }?.name ?: "P$index" }
+        return when (dependency.type) {
+            PointDependencyType.Midpoint -> "Midpoint(${names.joinToString()})"
+            PointDependencyType.Centroid -> "Centroid(${names.joinToString()})"
+            PointDependencyType.Circumcenter -> "Circumcenter(${names.joinToString()})"
+            PointDependencyType.Incenter -> "Incenter(${names.joinToString()})"
+            PointDependencyType.Orthocenter -> "Orthocenter(${names.joinToString()})"
+            PointDependencyType.Intersection -> "Intersect(${names.joinToString()})"
+            PointDependencyType.PointOnObject -> "Point(${names.joinToString()})"
+            PointDependencyType.TangentPoint -> "TangentPoint(${names.joinToString()})"
+            PointDependencyType.Translate -> "Translate(${names.joinToString()},${dependency.parameters.joinToString()})"
+            PointDependencyType.Rotate -> "Rotate(${names.joinToString()},${dependency.parameters.joinToString()})"
+            PointDependencyType.ReflectX -> "Reflect(${names.joinToString()},xAxis)"
+            PointDependencyType.Dilate -> "Dilate(${names.joinToString()},${dependency.parameters.joinToString()})"
+        }
+    }
+
+    private fun shapeDefinition(shape: Shape2D, state: WorkspaceState): String {
+        val names = shape.pointIndices.map { index -> state.pointDependencies.firstOrNull { it.outputIndex == index }?.name ?: "P$index" }
+        return "${shape.type.name}(${names.joinToString()})"
+    }
 }
 
 data class UniversalDocumentRecovery(
@@ -355,19 +404,20 @@ object UniversalMathDocumentCodec {
 
     private fun encodePayload(payload: UniversalMathPayload): String = when (payload) {
         is UniversalMathPayload.Symbolic -> "S|${pack(payload.source)}"
-        is UniversalMathPayload.Coordinates -> "C|${payload.values.joinToString(",")}|${pack(payload.labels.joinToString(","))}"
+        is UniversalMathPayload.Coordinates -> "C|${payload.values.joinToString(",")}|${pack(payload.labels.joinToString(","))}|${pack(payload.definition.orEmpty())}"
         is UniversalMathPayload.Dataset -> "D|${payload.values.joinToString(",")}|${payload.missingIndices.sorted().joinToString(",")}"
         is UniversalMathPayload.Properties -> "P|" + payload.entries.toSortedMap().entries.joinToString(",") { "${pack(it.key)}=${pack(it.value)}" }
     }
 
     private fun decodePayload(source: String): UniversalMathPayload {
-        val parts = source.split('|', limit = 3)
+        val parts = source.split('|', limit = 4)
         return when (parts.firstOrNull()) {
             "S" -> unpack(parts.getOrElse(1) { error("missing symbolic source") }).let { sourceValue ->
                 val parsed = runCatching { cas.parse(sourceValue) }
                 UniversalMathPayload.Symbolic(sourceValue, parsed.getOrNull(), parsed.exceptionOrNull()?.message)
             }
-            "C" -> UniversalMathPayload.Coordinates(parts.getOrElse(1) { "" }.csvDoubles(), parts.getOrElse(2) { "" }.let(::unpack).split(',').filter(String::isNotBlank))
+            "C" -> UniversalMathPayload.Coordinates(parts.getOrElse(1) { "" }.csvDoubles(), parts.getOrElse(2) { "" }.let(::unpack).split(',').filter(String::isNotBlank),
+                parts.getOrNull(3)?.let(::unpack)?.takeIf(String::isNotBlank))
             "D" -> UniversalMathPayload.Dataset(parts.getOrElse(1) { "" }.csvDoubles(), parts.getOrElse(2) { "" }.split(',').mapNotNull(String::toIntOrNull).toSet())
             "P" -> UniversalMathPayload.Properties(parts.getOrElse(1) { "" }.split(',').filter(String::isNotBlank).associate { entry -> entry.substringBefore('=').let(::unpack) to entry.substringAfter('=').let(::unpack) })
             else -> error("unknown payload type")

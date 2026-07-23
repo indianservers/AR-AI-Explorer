@@ -54,6 +54,7 @@ data class SharedSelection(
     val anchorId: String? = null,
     val canonicalIds: Set<String> = emptySet(),
     val representationIds: Set<String> = emptySet(),
+    val contextCanonicalIds: Set<String> = emptySet(),
     val announcement: String = "Nothing selected.",
 )
 
@@ -114,7 +115,7 @@ object SharedObjectGraphBuilder {
                 edges += SharedMathEdge(value.id, id, "represented-as")
             }
         }
-        UnifiedConstructionEngine().tokens(session.construction).forEach { token ->
+        UnifiedConstructionEngine().tokens(session.construction).filter { it.id !in document.objects }.forEach { token ->
             val canonical = "construction:${token.id}"
             val view = when (token.view) {
                 MathStudioView.Graph -> SharedMathView.Graph
@@ -143,22 +144,26 @@ object SharedObjectGraphBuilder {
     )
 
     private fun primaryView(value: UniversalMathObject) = when (value.kind) {
-        UniversalMathKind.Function -> SharedMathView.Algebra
-        UniversalMathKind.Point2D, UniversalMathKind.GeometryConstruction -> SharedMathView.Geometry2D
+        UniversalMathKind.Function, UniversalMathKind.PiecewiseFunction -> SharedMathView.Algebra
+        UniversalMathKind.Point2D, UniversalMathKind.Line, UniversalMathKind.Ray, UniversalMathKind.Segment,
+        UniversalMathKind.Circle, UniversalMathKind.Conic, UniversalMathKind.GeometryConstruction,
+        UniversalMathKind.Measurement, UniversalMathKind.Angle -> SharedMathView.Geometry2D
         UniversalMathKind.Point3D, UniversalMathKind.Vector, UniversalMathKind.Solid,
-        UniversalMathKind.Surface, UniversalMathKind.SpatialScene -> SharedMathView.Spatial3D
+        UniversalMathKind.Plane, UniversalMathKind.Surface, UniversalMathKind.SpatialScene -> SharedMathView.Spatial3D
         UniversalMathKind.NotebookCell, UniversalMathKind.Matrix -> SharedMathView.Cas
-        UniversalMathKind.DataList -> SharedMathView.Table
+        UniversalMathKind.DataList, UniversalMathKind.Sequence -> SharedMathView.Table
         else -> SharedMathView.Inspector
     }
 
     private fun representations(value: UniversalMathObject): Set<SharedMathView> = when (value.kind) {
-        UniversalMathKind.Function -> setOf(SharedMathView.Algebra, SharedMathView.Graph, SharedMathView.Table, SharedMathView.Cas)
-        UniversalMathKind.Point2D, UniversalMathKind.GeometryConstruction -> setOf(SharedMathView.Geometry2D, SharedMathView.Algebra, SharedMathView.Inspector)
+        UniversalMathKind.Function, UniversalMathKind.PiecewiseFunction -> setOf(SharedMathView.Algebra, SharedMathView.Graph, SharedMathView.Table, SharedMathView.Cas)
+        UniversalMathKind.Point2D, UniversalMathKind.Line, UniversalMathKind.Ray, UniversalMathKind.Segment,
+        UniversalMathKind.Circle, UniversalMathKind.Conic, UniversalMathKind.GeometryConstruction,
+        UniversalMathKind.Measurement, UniversalMathKind.Angle -> setOf(SharedMathView.Geometry2D, SharedMathView.Algebra, SharedMathView.Inspector)
         UniversalMathKind.Point3D, UniversalMathKind.Vector, UniversalMathKind.Solid,
-        UniversalMathKind.Surface, UniversalMathKind.SpatialScene -> setOf(SharedMathView.Spatial3D, SharedMathView.Algebra, SharedMathView.Inspector)
+        UniversalMathKind.Plane, UniversalMathKind.Surface, UniversalMathKind.SpatialScene -> setOf(SharedMathView.Spatial3D, SharedMathView.Algebra, SharedMathView.Inspector)
         UniversalMathKind.NotebookCell, UniversalMathKind.Matrix -> setOf(SharedMathView.Cas, SharedMathView.Algebra, SharedMathView.Inspector)
-        UniversalMathKind.DataList -> setOf(SharedMathView.Table, SharedMathView.Graph, SharedMathView.Inspector)
+        UniversalMathKind.DataList, UniversalMathKind.Sequence -> setOf(SharedMathView.Table, SharedMathView.Graph, SharedMathView.Algebra, SharedMathView.Inspector)
         UniversalMathKind.UnitMeasurement -> setOf(SharedMathView.Algebra, SharedMathView.Geometry2D, SharedMathView.Spatial3D, SharedMathView.Inspector)
         else -> setOf(primaryView(value), SharedMathView.Inspector)
     }
@@ -184,9 +189,10 @@ class SharedExperienceEngine {
         val requested = graph.nodes[requestedId] ?: graph.nodes.values.firstOrNull { it.canonicalId == requestedId }
             ?: return session.copy(message = "Unknown linked object $requestedId.")
         val canonical = if (additive) session.experience.selection.canonicalIds + requested.canonicalId else setOf(requested.canonicalId)
-        val representations = graph.nodes.values.filter { it.canonicalId in canonical }.mapTo(linkedSetOf()) { it.id }
+        val context = canonical.flatMapTo(linkedSetOf()) { graph.dependencies(it) }
+        val representations = graph.nodes.values.filter { it.canonicalId in canonical + context }.mapTo(linkedSetOf()) { it.id }
         val views = graph.nodes.values.filter { it.id in representations }.map { it.view.label }.distinct()
-        val selection = SharedSelection(requested.id, canonical, representations, "Selected ${canonical.joinToString()} across ${views.joinToString()}.")
+        val selection = SharedSelection(requested.id, canonical, representations, context, "Selected ${canonical.joinToString()} with ${context.size} construction parent(s) across ${views.joinToString()}.")
         return session.copy(selectedId = requested.canonicalId, experience = session.experience.copy(selection = selection), message = selection.announcement)
     }
 

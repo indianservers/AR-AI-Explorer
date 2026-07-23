@@ -48,10 +48,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.core.Vec2
@@ -353,44 +361,197 @@ private fun AlgebraPane(
     engine: UnifiedMathStudioEngine,
     modifier: Modifier,
 ) {
-    StudioCard(modifier, "ALGEBRA & OBJECTS", "Changes recalculate every linked view") {
-        IntentAwareMathField(input, onInput, "Expression or maths question", Modifier.fillMaxWidth().semantics { contentDescription = "Unified studio expression input" }, placeholder = "f(x)=a*sin(x)+1")
+    var query by remember { mutableStateOf("") }
+    val clipboard = LocalClipboardManager.current
+    val entries = remember(session.document.revision, session.algebraSort, session.algebraFilter, session.algebraStyles, session.hiddenIds, session.showAuxiliary, query) {
+        UniversalAlgebraProjection.visible(session, query)
+    }
+    val selectedEntries = projection.algebraEntries.filter { it.id in session.algebraSelection }
+    val suggestions = remember(input, session.algebraSelection, session.document.revision) { AlgebraCommandCatalog.suggest(input, selectedEntries) }
+    val groupedEntries = remember(entries, session.algebraSort) {
+        entries.groupBy { entry -> when (session.algebraSort) {
+            AlgebraSortMode.Type -> entry.kind.name
+            AlgebraSortMode.Dependency -> if (entry.free) "Free objects" else "Dependent objects"
+            AlgebraSortMode.Layer -> "Layer ${entry.style.layer}"
+            AlgebraSortMode.Construction -> "Construction order"
+            AlgebraSortMode.Name -> entry.style.folder
+        } }
+    }
+    StudioCard(modifier.onPreviewKeyEvent { event ->
+        if (event.type != KeyEventType.KeyDown) false else when {
+            event.isCtrlPressed && event.key == Key.A -> { onSession(engine.selectAllAlgebra(session, entries)); true }
+            event.key == Key.DirectionDown || event.key == Key.DirectionUp -> {
+                AlgebraKeyboardController.move(entries, session.selectedId, if (event.key == Key.DirectionDown) 1 else -1)?.let { onSession(engine.selectAlgebra(session, it)) }
+                true
+            }
+            event.key == Key.Delete || event.key == Key.Backspace -> { onSession(engine.removeSelection(session)); true }
+            event.key == Key.Spacebar -> { onSession(engine.styleSelection(session) { it.copy(visible = !it.visible) }); true }
+            else -> false
+        }
+    }, "UNIVERSAL ALGEBRA", "Every mathematical object is live, typed, editable, and linked") {
+        IntentAwareMathField(input, onInput, "Expression, equation, point, list, matrix, or command", Modifier.fillMaxWidth().semantics { contentDescription = "Universal typed Algebra input" }, placeholder = "A=(2,3) · x+y=5 · L={1,4,9} · Line(A,B)")
         Button(onAdd, enabled = input.isNotBlank(), modifier = Modifier.fillMaxWidth()) { Text("Add linked object") }
+        if (input.isNotBlank()) Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            suggestions.forEach { suggestion ->
+                FilterChip(false, { onInput(suggestion.signature) }, label = { Text("${suggestion.name} · ${suggestion.signature}") },
+                    modifier = Modifier.semantics { contentDescription = "${suggestion.description}. ${suggestion.compatibleObjectIds.size} selected objects compatible" })
+            }
+        }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             StudioTransform.entries.forEach { operation -> OutlinedButton({ onSession(engine.transform(session, operation)) }) { Text(operation.label) } }
             OutlinedButton({ onSession(engine.explain(session)) }) { Text("Explain") }
         }
+        IntentAwareMathField(query, { query = it }, "Search Algebra", Modifier.fillMaxWidth(), placeholder = "Filter by name, type, or definition", showLegend = false)
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            AlgebraSortMode.entries.forEach { mode -> FilterChip(session.algebraSort == mode, { onSession(engine.configureAlgebra(session, sort = mode)) }, label = { Text(mode.label) }) }
+        }
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            AlgebraDisplayMode.entries.forEach { mode -> FilterChip(session.algebraDisplay == mode, { onSession(engine.configureAlgebra(session, display = mode)) }, label = { Text(mode.label) }) }
+        }
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            AlgebraFilter.entries.forEach { filter -> FilterChip(session.algebraFilter == filter, { onSession(engine.configureAlgebra(session, filter = filter)) }, label = { Text(filter.label) }) }
+            FilterChip(session.showAuxiliary, { onSession(session.copy(showAuxiliary = !session.showAuxiliary)) }, label = { Text("Auxiliary") })
+        }
+        if (session.algebraSelection.isNotEmpty()) {
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("${session.algebraSelection.size} SELECTED", color = StudioGreen, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                listOf("Line", "Segment", "Midpoint", "Circle", "Intersect").forEach { command -> OutlinedButton({ onSession(engine.constructFromSelection(session, command)) }) { Text(command) } }
+                OutlinedButton({ onSession(engine.duplicateSelection(session)) }) { Text("Duplicate") }
+                OutlinedButton({ clipboard.setText(AnnotatedString(engine.copySelection(session))) }) { Text("Copy") }
+                OutlinedButton({ onSession(engine.styleSelection(session) { it.copy(visible = false) }) }) { Text("Hide") }
+                OutlinedButton({ onSession(engine.styleSelection(session) { it.copy(visible = true) }) }) { Text("Show") }
+                OutlinedButton({ onSession(engine.setSelectionFolder(session, "Group ${session.algebraStyles.values.map { it.folder }.distinct().size + 1}")) }) { Text("Group") }
+                if (selectedEntries.size == 2) OutlinedButton({ onSession(engine.replaceReferences(session, selectedEntries[0].id, selectedEntries[1].id)) }) {
+                    Text("Replace ${selectedEntries[0].name} → ${selectedEntries[1].name}")
+                }
+                OutlinedButton({ onSession(engine.removeSelection(session)) }) { Text("Delete") }
+                OutlinedButton({ onSession(engine.removeSelection(session, cascade = true)) }) { Text("Delete chain") }
+            }
+        }
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
-            items(projection.expressions, key = { it.id }) { expression ->
-                val selected = expression.id == session.selectedId
+            groupedEntries.forEach { (group, groupEntries) ->
+                item(key = "group:$group") {
+                    Row(Modifier.fillMaxWidth().clickable { onSession(engine.toggleAlgebraGroup(session, group)) }.padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(if (group in session.collapsedAlgebraGroups) "▶" else "▼", color = StudioCyan)
+                        Text("  $group", color = StudioCyan, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                        Text("${groupEntries.size}", color = StudioMuted, fontSize = 9.sp)
+                    }
+                }
+                if (group !in session.collapsedAlgebraGroups) items(groupEntries, key = { it.id }) { entry ->
+                val selected = entry.id in session.algebraSelection
+                val dependencyContext = entry.id in session.experience.selection.contextCanonicalIds
                 Column(
-                    Modifier.fillMaxWidth().background(if (selected) StudioViolet.copy(.18f) else Color(0x66101B29), RoundedCornerShape(12.dp))
-                        .border(1.dp, if (selected) StudioViolet else StudioCyan.copy(.25f), RoundedCornerShape(12.dp))
-                        .clickable { onSession(engine.select(session, expression.id)) }.padding(9.dp),
+                    Modifier.fillMaxWidth().background(when { selected -> StudioViolet.copy(.18f); dependencyContext -> StudioAmber.copy(.12f); else -> Color(0x66101B29) }, RoundedCornerShape(12.dp))
+                        .border(1.dp, when { selected -> StudioViolet; dependencyContext -> StudioAmber; else -> StudioCyan.copy(.25f) }, RoundedCornerShape(12.dp))
+                        .clickable { onSession(engine.selectAlgebra(session, entry.id)) }.semantics { contentDescription = entry.spoken }.padding(9.dp),
                     verticalArrangement = Arrangement.spacedBy(5.dp),
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(Modifier.size(10.dp).background(studioColor(expression.colorKey), RoundedCornerShape(8.dp)))
-                        Text("  ${expression.name}", color = StudioInk, fontWeight = FontWeight.Bold)
+                        Box(Modifier.size(10.dp).background(studioColor(session.colorKeys[entry.id] ?: "cyan"), RoundedCornerShape(8.dp)))
+                        Text("  ${entry.style.caption ?: entry.name}", color = StudioInk, fontWeight = FontWeight.Bold)
+                        Text("  ${entry.kind.name.uppercase()}", color = StudioCyan, fontSize = 8.sp)
                         Spacer(Modifier.weight(1f))
-                        Text(if (expression.dependencies.isEmpty()) "INDEPENDENT" else "LINKED ${expression.dependencies.size}", color = if (expression.dependencies.isEmpty()) StudioMuted else StudioGreen, fontSize = 9.sp)
-                        OutlinedButton({ onSession(engine.remove(session, expression.id)) }) { Text("Delete") }
+                        Text(if (entry.free) "FREE" else "DEPENDENT ${entry.dependencies.size}", color = if (entry.free) StudioMuted else StudioGreen, fontSize = 9.sp)
+                        OutlinedButton({ onSession(engine.selectAlgebra(session, entry.id, additive = true)) }) { Text(if (selected) "✓" else "+") }
                     }
-                    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                        OutlinedButton({ onSession(engine.toggleVisible(session, expression.id)) }) { Text(if (expression.visible) "Hide" else "Show") }
-                        OutlinedButton({ onSession(engine.cycleColor(session, expression.id)) }) { Text("Colour") }
+                    Text("${entry.name} = ${entry.rendered(session.algebraDisplay)}", color = if (entry.valid) StudioInk else StudioAmber,
+                        fontFamily = FontFamily.Monospace, fontWeight = FontWeight.SemiBold)
+                    if (dependencyContext) Text("CONSTRUCTION PARENT", color = StudioAmber, fontSize = 8.sp, fontWeight = FontWeight.Bold)
+                    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(visible = !it.visible) }) }) { Text(if (entry.style.visible) "Hide" else "Show") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(locked = !it.locked) }) }) { Text(if (entry.style.locked) "Unlock" else "Lock") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(auxiliary = !it.auxiliary) }) }) { Text(if (entry.style.auxiliary) "Primary" else "Aux") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(layer = (it.layer + 1) % 10) }) }) { Text("Layer ${entry.style.layer}") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(trace = !it.trace) }) }) { Text(if (entry.style.trace) "Trace on" else "Trace") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(animated = !it.animated) }) }) { Text(if (entry.style.animated) "Pause" else "Animate") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(selectionAllowed = !it.selectionAllowed) }) }) { Text(if (entry.style.selectionAllowed) "Selectable" else "Protected") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(opacity = if (it.opacity > .5f) .35f else 1f) }) }) { Text("Opacity") }
+                        OutlinedButton({ onSession(engine.setAlgebraStyle(session, entry.id) { it.copy(strokeWidth = if (it.strokeWidth >= 5f) 1f else it.strokeWidth + 1f) }) }) { Text("Stroke ${entry.style.strokeWidth.toInt()}") }
+                        OutlinedButton({ onSession(engine.cycleColor(session, entry.id)) }) { Text("Colour") }
+                        OutlinedButton({ onSession(engine.duplicate(session, entry.id)) }) { Text("Duplicate") }
+                        OutlinedButton({ onSession(engine.remove(session, entry.id)) }) { Text("Delete") }
+                        if (entry.dependents.isNotEmpty()) OutlinedButton({ onSession(engine.remove(session, entry.id, cascade = true)) }) { Text("Delete chain") }
                     }
-                    StudioExpressionEditor(expression.source) { onSession(engine.edit(session, expression.id, it)) }
-                    if (expression.source != expression.resolvedSource) Text("Resolved: ${expression.resolvedSource}", color = StudioGreen, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
-                    expression.error?.let { Text(it, color = StudioAmber, fontSize = 10.sp) }
+                    AlgebraNameEditor(entry.name) { onSession(engine.rename(session, entry.id, it)) }
+                    AlgebraPropertyEditor(entry.style) { style -> onSession(engine.setAlgebraStyle(session, entry.id) { style }) }
+                    AlgebraEquationActionBar(entry, session, engine, onSession)
+                    if (!entry.style.locked && entry.free) StudioExpressionEditor(entry.definition) { draft -> onSession(engine.redefine(session, entry.id, draft)) }
+                    if (!entry.style.locked && !entry.free) AlgebraDependentEditor(entry, session, engine, onSession)
+                    if (entry.dependencies.isNotEmpty()) Text("Inputs: ${entry.dependencies.joinToString()} · updates ${entry.dependents.size} direct object(s)", color = StudioGreen, fontSize = 9.sp)
+                    entry.issue?.let { Text("Corrective action: edit this row or duplicate it as a free object. $it", color = StudioAmber, fontSize = 10.sp) }
                 }
             }
+            }
+            if (entries.isEmpty()) item { Text("No Algebra objects match this filter.", color = StudioMuted) }
         }
         projection.graph.parameterRows.forEach { parameter ->
             val value = session.parameterValues[parameter.name] ?: parameter.value
             Text("${parameter.name} = ${format(value)}", color = StudioCyan, fontWeight = FontWeight.Bold)
             Slider(value.toFloat(), { onSession(engine.parameter(session, parameter.name, it.toDouble())) }, valueRange = parameter.min.toFloat()..parameter.max.toFloat(), modifier = Modifier.semantics { contentDescription = "Parameter ${parameter.name}" })
         }
+    }
+}
+
+@Composable
+private fun AlgebraEquationActionBar(entry: AlgebraEntry, session: UnifiedStudioSession, engine: UnifiedMathStudioEngine, onSession: (UnifiedStudioSession) -> Unit) {
+    val actions = remember(entry.kind, entry.definition) { AlgebraEquationActions.available(entry) }
+    if (actions.isEmpty()) return
+    var substitution by remember(entry.id) { mutableStateOf("x=0") }
+    Column(Modifier.fillMaxWidth().background(StudioCyan.copy(.06f), RoundedCornerShape(9.dp)).padding(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text("EQUATION ACTIONS", color = StudioCyan, fontSize = 8.sp, fontWeight = FontWeight.Bold)
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            actions.filterNot { it == AlgebraEquationAction.Substitute }.forEach { action ->
+                OutlinedButton({ onSession(engine.applyEquationAction(session, entry.id, action)) }) { Text(action.label) }
+            }
+        }
+        if (AlgebraEquationAction.Substitute in actions) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
+            IntentAwareMathField(substitution, { substitution = it }, "Substitution", Modifier.weight(1f), placeholder = "x=2", showLegend = false)
+            OutlinedButton({ onSession(engine.applyEquationAction(session, entry.id, AlgebraEquationAction.Substitute, substitution)) }) { Text("Substitute") }
+        }
+    }
+}
+
+@Composable
+private fun AlgebraDependentEditor(entry: AlgebraEntry, session: UnifiedStudioSession, engine: UnifiedMathStudioEngine, onSession: (UnifiedStudioSession) -> Unit) {
+    var draft by remember(entry.definition) { mutableStateOf(entry.definition) }
+    val preview = remember(draft, session.document.revision) { engine.redefinitionPreview(session, entry.id, draft) }
+    Column(Modifier.fillMaxWidth().background(StudioViolet.copy(.08f), RoundedCornerShape(10.dp)).padding(7.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        Text("DEPENDENT REDEFINITION", color = StudioViolet, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        IntentAwareMathField(draft, { draft = it }, "New definition", Modifier.fillMaxWidth(), showLegend = false)
+        Text(preview.message, color = if (preview.accepted) StudioGreen else StudioAmber, fontSize = 9.sp)
+        if (preview.affectedObjects.isNotEmpty()) Text("Will update: ${preview.affectedObjects.joinToString()}", color = StudioMuted, fontSize = 9.sp)
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            Button({ onSession(engine.redefine(session, entry.id, draft)) }, enabled = preview.accepted && draft != entry.definition) { Text("Redefine") }
+            OutlinedButton({ onSession(engine.makeIndependent(session, entry.id)) }) { Text("Make independent") }
+            OutlinedButton({ onSession(engine.duplicateAsFree(session, entry.id)) }) { Text("Duplicate as free") }
+        }
+    }
+}
+
+@Composable
+private fun AlgebraPropertyEditor(style: AlgebraObjectStyle, onApply: (AlgebraObjectStyle) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    var caption by remember(style.caption) { mutableStateOf(style.caption.orEmpty()) }
+    var folder by remember(style.folder) { mutableStateOf(style.folder) }
+    var condition by remember(style.visibilityCondition) { mutableStateOf(style.visibilityCondition.orEmpty()) }
+    OutlinedButton({ expanded = !expanded }) { Text(if (expanded) "Close inspector" else "Object inspector") }
+    if (expanded) {
+        IntentAwareMathField(caption, { caption = it }, "Caption", Modifier.fillMaxWidth(), showLegend = false)
+        IntentAwareMathField(folder, { folder = it }, "Folder", Modifier.fillMaxWidth(), showLegend = false)
+        IntentAwareMathField(condition, { condition = it }, "Visibility condition", Modifier.fillMaxWidth(), placeholder = "Example: a > 0", showLegend = false)
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            AlgebraLabelMode.entries.forEach { mode -> FilterChip(style.labelMode == mode, { onApply(style.copy(labelMode = mode)) }, label = { Text(mode.name) }) }
+            Button({ onApply(style.copy(caption = caption.ifBlank { null }, folder = folder.ifBlank { "Workspace" }, visibilityCondition = condition.ifBlank { null })) }) { Text("Apply properties") }
+        }
+    }
+}
+
+@Composable
+private fun AlgebraNameEditor(name: String, onApply: (String) -> Unit) {
+    var draft by remember(name) { mutableStateOf(name) }
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+        IntentAwareMathField(draft, { draft = it }, "Object name", Modifier.weight(1f), showLegend = false)
+        OutlinedButton({ onApply(draft) }, enabled = draft != name && draft.isNotBlank()) { Text("Rename") }
     }
 }
 

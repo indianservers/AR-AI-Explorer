@@ -32,7 +32,7 @@ class Phase1TrustedKernelTest {
         val document = UniversalWorkspaceBridge.fromWorkspace(WorkspaceState())
         val kinds = document.objects.values.map { it.kind }.toSet()
         assertTrue(kinds.containsAll(setOf(
-            UniversalMathKind.Function, UniversalMathKind.Point2D, UniversalMathKind.GeometryConstruction,
+            UniversalMathKind.Function, UniversalMathKind.Point2D, UniversalMathKind.Segment,
             UniversalMathKind.Solid, UniversalMathKind.Vector, UniversalMathKind.Surface, UniversalMathKind.SpatialScene,
         )))
         val validation = UniversalMathDocumentEngine().validate(document)
