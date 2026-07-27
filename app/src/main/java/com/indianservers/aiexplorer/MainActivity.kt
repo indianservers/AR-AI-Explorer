@@ -2629,7 +2629,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     SubjectHubScreen(
                         modifier = Modifier.fillMaxSize(),
                         wide = wide,
-                        onOpenSubject = { subject ->
+                        onOpenSubject = { subject: String ->
                             when (subject) {
                                 "Maths" -> vm.enterMaths()
                                 "Physics" -> vm.openPhysicsHub()
@@ -3862,15 +3862,17 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
                     MathFormulaText(card.expression, color = Cyan, fontSize = 14.sp)
                 }
                 Text(card.description, color = Muted, fontSize = 11.sp)
-                if (showAdvancedTools || arSelection.primaryObjectId != null) {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    card.examples.forEach { example -> GlowButton(example) { setExpression(example); outcome = runCatching { smartCalculator.evaluate(example, angleMode, calculatorPrecision) }.getOrNull() } }
+                if (showAdvancedTools) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        card.examples.forEach { example -> GlowButton(example) { setExpression(example); outcome = runCatching { smartCalculator.evaluate(example, angleMode, calculatorPrecision) }.getOrNull() } }
+                    }
                 }
             }
-        }
             }
         }
     }
+}
+
 }
 
 @Composable
