@@ -178,6 +178,32 @@ data class MovePointsCommand(
     ).recomputed()
 }
 
+data class Geometry2DSnapshot(
+    val points: List<Vec2>,
+    val shapes: List<Shape2D>,
+    val pointDependencies: List<PointDependency>,
+    val geometryConstraints: List<GeometryConstraint2D>,
+)
+
+fun WorkspaceState.geometry2DSnapshot() = Geometry2DSnapshot(points, shapes, pointDependencies, geometryConstraints)
+
+data class ReplaceGeometry2DCommand(
+    val from: Geometry2DSnapshot,
+    val to: Geometry2DSnapshot,
+    override val label: String = "Move 2D object",
+) : WorkspaceCommand {
+    override fun apply(state: WorkspaceState) = state.withGeometry(to)
+    override fun undo(state: WorkspaceState) = state.withGeometry(from)
+
+    private fun WorkspaceState.withGeometry(snapshot: Geometry2DSnapshot) = copy(
+        points = snapshot.points,
+        shapes = snapshot.shapes,
+        pointDependencies = snapshot.pointDependencies,
+        geometryConstraints = snapshot.geometryConstraints,
+        modifiedAt = System.currentTimeMillis(),
+    ).recomputed()
+}
+
 data class AddPointCommand(val point: Vec2) : WorkspaceCommand {
     override val label = "Add point"
     override fun apply(state: WorkspaceState) = state.copy(points = state.points + point, modifiedAt = System.currentTimeMillis())

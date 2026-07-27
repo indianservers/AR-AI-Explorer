@@ -123,6 +123,8 @@ class ARCoreCompositorView(
         override fun onDrawFrame(gl: GL10?) {
             if (released) return
             updateDisplayGeometry()
+            val current = sceneProvider()
+            runtime.setDepthEnabled(current.scene.depthOcclusion)
             val frame = runtime.updateFrame().getOrElse { error ->
                 mainHandler.post { onError(error.message ?: "AR frame failed") }
                 return
@@ -132,7 +134,6 @@ class ARCoreCompositorView(
             drawCamera()
             drawTrackedPlanes(frame)
 
-            val current = sceneProvider()
             val plan = if (uploadedScene !== current.scene) {
                 SharedGpuSceneCompiler.compile(current.scene).also {
                     spatialRenderer.upload(it)
@@ -170,6 +171,10 @@ class ARCoreCompositorView(
                         clear = false,
                         lighting = if (quality.environmentalHdr) light else null,
                         fallbackEnvironmentIntensity = current.scene.environmentIntensity,
+                        depth = frame.depth,
+                        depthOcclusion = quality.depthOcclusion && current.scene.depthOcclusion,
+                        viewportWidth = viewportWidth,
+                        viewportHeight = viewportHeight,
                     )
                 }
             }

@@ -2,6 +2,7 @@ package com.indianservers.aiexplorer.spatial
 
 import android.opengl.GLES30
 import com.indianservers.aiexplorer.arengine.rendering.ArNormalizedLighting
+import com.indianservers.aiexplorer.arengine.contract.ArDepthSnapshot
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidMeshFactory
 import com.indianservers.aiexplorer.core.SurfaceMesh
@@ -215,12 +216,14 @@ object SharedGpuSceneCompiler {
 /** OpenGL ES 3 backend shared by normal 3D and the AR camera compositor. */
 class OpenGlEsSpatialRenderer {
     private var program = 0; private var vertexBuffer = 0; private var triangleBuffer = 0; private var lineBuffer = 0
+    private var depthTexture = 0
+    private var uploadedDepthTimestamp = Long.MIN_VALUE
     private var plan: GpuRenderPlan? = null
 
     fun initialize() {
         release()
         val vertex = compileShader(GLES30.GL_VERTEX_SHADER, "#version 300 es\nuniform mat4 uMvp; layout(location=0) in vec3 aPosition; layout(location=1) in vec4 aColor; layout(location=2) in vec3 aMaterial; out vec4 vColor; out vec3 vPosition; out vec3 vMaterial; void main(){vColor=aColor;vPosition=aPosition;vMaterial=aMaterial;gl_Position=uMvp*vec4(aPosition,1.0);}", "spatial vertex")
-        val fragment = compileShader(GLES30.GL_FRAGMENT_SHADER, "#version 300 es\nprecision highp float; uniform float uEnvironment; uniform float uExposure; uniform vec3 uMainLightDirection; uniform vec3 uMainLightIntensity; uniform vec3 uAmbientSh; in vec4 vColor; in vec3 vPosition; in vec3 vMaterial; out vec4 color; void main(){vec3 dx=dFdx(vPosition);vec3 dy=dFdy(vPosition);vec3 n=normalize(cross(dx,dy));if(!gl_FrontFacing)n=-n;vec3 l=normalize(-uMainLightDirection);float diffuse=.18+.82*max(dot(n,l),0.);float rough=clamp(vMaterial.y,.05,1.);float metallic=clamp(vMaterial.x,0.,1.);float spec=pow(max(dot(reflect(-l,n),normalize(vec3(.1,.25,1.))),0.),mix(64.,4.,rough))*mix(.18,.75,metallic);vec3 direct=uMainLightIntensity*diffuse;vec3 rgb=vColor.rgb*(direct*uExposure+max(uAmbientSh,vec3(.08))*max(uEnvironment,.25))+spec+vColor.rgb*vMaterial.z;color=vec4(rgb,vColor.a);}", "spatial fragment")
+        val fragment = compileShader(GLES30.GL_FRAGMENT_SHADER, "#version 300 es\nprecision highp float; precision highp usampler2D; uniform float uEnvironment; uniform float uExposure; uniform vec3 uMainLightDirection; uniform vec3 uMainLightIntensity; uniform vec3 uAmbientSh; uniform bool uDepthEnabled; uniform usampler2D uDepthTexture; uniform vec2 uViewport; uniform vec2 uDepthUv0; uniform vec2 uDepthUv1; uniform vec2 uDepthUv2; uniform vec2 uDepthUv3; uniform float uNear; uniform float uFar; in vec4 vColor; in vec3 vPosition; in vec3 vMaterial; out vec4 color; void main(){if(uDepthEnabled){vec2 s=gl_FragCoord.xy/uViewport;vec2 bottom=mix(uDepthUv0,uDepthUv1,s.x);vec2 top=mix(uDepthUv2,uDepthUv3,s.x);vec2 uv=clamp(mix(bottom,top,s.y),vec2(0.),vec2(1.));uint mm=texture(uDepthTexture,uv).r;float ndc=gl_FragCoord.z*2.-1.;float virtualDepth=(2.*uNear*uFar)/(uFar+uNear-ndc*(uFar-uNear));float realDepth=float(mm)*.001;if(mm>uint(0)&&virtualDepth>realDepth+.03)discard;}vec3 dx=dFdx(vPosition);vec3 dy=dFdy(vPosition);vec3 n=normalize(cross(dx,dy));if(!gl_FrontFacing)n=-n;vec3 l=normalize(-uMainLightDirection);float diffuse=.18+.82*max(dot(n,l),0.);float rough=clamp(vMaterial.y,.05,1.);float metallic=clamp(vMaterial.x,0.,1.);float spec=pow(max(dot(reflect(-l,n),normalize(vec3(.1,.25,1.))),0.),mix(64.,4.,rough))*mix(.18,.75,metallic);vec3 direct=uMainLightIntensity*diffuse;vec3 rgb=vColor.rgb*(direct*uExposure+max(uAmbientSh,vec3(.08))*max(uEnvironment,.25))+spec+vColor.rgb*vMaterial.z;color=vec4(rgb,vColor.a);}", "spatial fragment")
         program = GLES30.glCreateProgram()
         GLES30.glAttachShader(program, vertex)
         GLES30.glAttachShader(program, fragment)
@@ -239,6 +242,8 @@ class OpenGlEsSpatialRenderer {
         }
         val buffers = IntArray(3); GLES30.glGenBuffers(3, buffers, 0); vertexBuffer = buffers[0]; triangleBuffer = buffers[1]; lineBuffer = buffers[2]
         check(buffers.all { it > 0 }) { "OpenGL did not allocate all spatial mesh buffers." }
+        depthTexture = IntArray(1).also { GLES30.glGenTextures(1, it, 0) }[0]
+        check(depthTexture > 0) { "OpenGL did not allocate the depth texture." }
     }
 
     fun upload(value: GpuRenderPlan) {
@@ -256,6 +261,10 @@ class OpenGlEsSpatialRenderer {
         clear: Boolean = true,
         lighting: ArNormalizedLighting? = null,
         fallbackEnvironmentIntensity: Float = 1f,
+        depth: ArDepthSnapshot? = null,
+        depthOcclusion: Boolean = false,
+        viewportWidth: Int = 1,
+        viewportHeight: Int = 1,
     ) {
         require(viewProjection.size == 16 && program != 0)
         if (clear) { GLES30.glClearColor(.015f, .025f, .04f, 1f); GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT) }
@@ -270,6 +279,23 @@ class OpenGlEsSpatialRenderer {
         GLES30.glUniform3f(GLES30.glGetUniformLocation(program, "uMainLightDirection"), direction.x.toFloat(), direction.y.toFloat(), direction.z.toFloat())
         GLES30.glUniform3f(GLES30.glGetUniformLocation(program, "uMainLightIntensity"), intensity.x.toFloat(), intensity.y.toFloat(), intensity.z.toFloat())
         GLES30.glUniform3f(GLES30.glGetUniformLocation(program, "uAmbientSh"), ambient[0], ambient[1], ambient[2])
+        val useDepth = depthOcclusion && depth != null
+        if (useDepth) uploadDepth(depth!!)
+        GLES30.glUniform1i(GLES30.glGetUniformLocation(program, "uDepthEnabled"), if (useDepth) 1 else 0)
+        if (useDepth) {
+            GLES30.glActiveTexture(GLES30.GL_TEXTURE1)
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, depthTexture)
+            GLES30.glUniform1i(GLES30.glGetUniformLocation(program, "uDepthTexture"), 1)
+            GLES30.glUniform2f(GLES30.glGetUniformLocation(program, "uViewport"), viewportWidth.coerceAtLeast(1).toFloat(), viewportHeight.coerceAtLeast(1).toFloat())
+            val uv = depth!!.textureCoordinates
+            GLES30.glUniform2f(GLES30.glGetUniformLocation(program, "uDepthUv0"), uv[0].x, uv[0].y)
+            GLES30.glUniform2f(GLES30.glGetUniformLocation(program, "uDepthUv1"), uv[1].x, uv[1].y)
+            GLES30.glUniform2f(GLES30.glGetUniformLocation(program, "uDepthUv2"), uv[2].x, uv[2].y)
+            GLES30.glUniform2f(GLES30.glGetUniformLocation(program, "uDepthUv3"), uv[3].x, uv[3].y)
+            GLES30.glUniform1f(GLES30.glGetUniformLocation(program, "uNear"), .05f)
+            GLES30.glUniform1f(GLES30.glGetUniformLocation(program, "uFar"), 100f)
+            GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        }
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBuffer); GLES30.glEnableVertexAttribArray(0); GLES30.glVertexAttribPointer(0, 3, GLES30.GL_FLOAT, false, 40, 0)
         GLES30.glEnableVertexAttribArray(1); GLES30.glVertexAttribPointer(1, 4, GLES30.GL_FLOAT, false, 40, 12)
         GLES30.glEnableVertexAttribArray(2); GLES30.glVertexAttribPointer(2, 3, GLES30.GL_FLOAT, false, 40, 28)
@@ -283,7 +309,32 @@ class OpenGlEsSpatialRenderer {
     fun release() {
         if (program != 0) GLES30.glDeleteProgram(program)
         if (vertexBuffer != 0) GLES30.glDeleteBuffers(3, intArrayOf(vertexBuffer, triangleBuffer, lineBuffer), 0)
-        program = 0; vertexBuffer = 0; triangleBuffer = 0; lineBuffer = 0; plan = null
+        if (depthTexture != 0) GLES30.glDeleteTextures(1, intArrayOf(depthTexture), 0)
+        program = 0; vertexBuffer = 0; triangleBuffer = 0; lineBuffer = 0; depthTexture = 0; uploadedDepthTimestamp = Long.MIN_VALUE; plan = null
+    }
+
+    private fun uploadDepth(depth: ArDepthSnapshot) {
+        if (depth.timestampNanos == uploadedDepthTimestamp) return
+        val bytes = ByteBuffer.allocateDirect(depth.millimeters.size * Short.SIZE_BYTES).order(ByteOrder.nativeOrder())
+        depth.millimeters.forEach { bytes.putShort(it.toShort()) }
+        bytes.position(0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, depthTexture)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
+        GLES30.glTexImage2D(
+            GLES30.GL_TEXTURE_2D,
+            0,
+            GLES30.GL_R16UI,
+            depth.width,
+            depth.height,
+            0,
+            GLES30.GL_RED_INTEGER,
+            GLES30.GL_UNSIGNED_SHORT,
+            bytes,
+        )
+        uploadedDepthTimestamp = depth.timestampNanos
     }
 
     private fun compileShader(type: Int, source: String, label: String): Int {

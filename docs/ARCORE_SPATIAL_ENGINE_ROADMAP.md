@@ -395,6 +395,17 @@ Use environmental depth and mathematical analysis to create spatially credible, 
 - Every physical measurement displays units and uncertainty.
 - Depth acquisition does not leak image handles or stall the frame loop.
 
+### Phase 5 implementation completed
+
+- Depth acquisition is opt-in per scene and is suppressed when Depth is unsupported or disabled. CPU image data is copied into immutable snapshots and the ARCore `Image` is closed in the mapper boundary.
+- Camera-to-depth coordinates are transformed with ARCore, uploaded as an unsigned 16-bit GPU texture, and sampled by the spatial fragment shader for real-world occlusion.
+- The existing outline, selection, and ghost-preview passes remain active when environmental depth is absent.
+- Surface trace points are constrained to the mathematical mesh. Live overlays expose the unit normal, tangent plane, gradient arrow, horizontal contour, and editable ascent/descent path.
+- Selected solids expose an editable section plane and calculated section loops. Plane normal and offset share the existing exact numeric editor and a touch slider.
+- Selection-driven measurement handles cover distance and angle, analytic surface area and volume, plus section perimeter in the analysis engine.
+- Exact mathematical values and environmental estimates use separate truth labels. Physical estimates propagate pose, depth, endpoint, and scale contributions through an explicit uncertainty budget.
+- Automated checks cover analysis constraints, cross-sections, contours, path editing/playback, measurements, scene bridging, and exact-versus-estimated output. Physical-device occlusion quality remains an explicit Phase 7 validation item.
+
 ## 12. Phase 6 — Persistence, Relocalization, Replay, Privacy, and Accessibility
 
 ### Goal
@@ -505,12 +516,12 @@ The AR program is complete when:
 
 Work proceeds phase by phase. A phase begins only after the previous phase's acceptance gate is satisfied, except where Phase 1 and early Phase 2 contract tests can safely run in parallel after Phase 0.
 
-- [ ] Phase 0 — Contracts, coordinates, safety baseline
-- [ ] Phase 1 — Availability, install, permission, lifecycle
-- [ ] Phase 2 — Runtime and existing-engine bridge
-- [ ] Phase 3 — Camera compositor and GPU renderer
-- [ ] Phase 4 — Placement, picking, direct manipulation
-- [ ] Phase 5 — Depth, analysis, measurements
+- [x] Phase 0 — Contracts, coordinates, safety baseline
+- [x] Phase 1 — Availability, install, permission, lifecycle
+- [x] Phase 2 — Runtime and existing-engine bridge
+- [x] Phase 3 — Camera compositor and GPU renderer
+- [x] Phase 4 — Placement, picking, direct manipulation
+- [x] Phase 5 — Depth, analysis, measurements (automated implementation gate; device matrix remains in Phase 7)
 - [ ] Phase 6 — Persistence, replay, privacy, accessibility
 - [ ] Phase 7 — Device validation and rollout
 

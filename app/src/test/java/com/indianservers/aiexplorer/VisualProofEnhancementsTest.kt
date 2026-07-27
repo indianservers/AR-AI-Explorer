@@ -68,4 +68,23 @@ class VisualProofEnhancementsTest {
         assertFalse("too-wide delta band is visibly rejected", invalid.frame.holds)
         assertTrue(invalid.frame.residual > 0.0)
     }
+
+    @Test
+    fun triangleAngleProofPublishesLiveAnglesAndSideLengths() {
+        val engine = VisualProofEngine()
+        val initial = engine.start("triangle-angle-sum")
+        val measurements = initial.frame.measurements
+
+        listOf("∠A", "∠B", "∠C", "angle sum", "side a = BC", "side b = CA", "side c = AB").forEach { key ->
+            assertTrue("$key is available to the visual proof", key in measurements)
+        }
+        assertEquals(180.0, measurements.getValue("∠A") + measurements.getValue("∠B") + measurements.getValue("∠C"), 1e-7)
+        assertEquals(5.4, measurements.getValue("side c = AB"), 1e-12)
+
+        val moved = engine.setParameter(engine.setParameter(initial, "height", 5.0), "offset", 3.0)
+        assertFalse(measurements.getValue("∠A") == moved.frame.measurements.getValue("∠A"))
+        assertFalse(measurements.getValue("side a = BC") == moved.frame.measurements.getValue("side a = BC"))
+        assertEquals(180.0, moved.frame.measurements.getValue("angle sum"), 1e-7)
+        assertTrue(moved.frame.holds)
+    }
 }

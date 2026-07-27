@@ -352,9 +352,26 @@ class VisualProofEngine {
         val invariant: String
         when (lab.id) {
             "triangle-angle-sum" -> {
-                val a = Vec2(0.0, 0.0); val b = Vec2(4.0, 0.0); val c = Vec2(p.getValue("offset"), p.getValue("height"))
+                val a = Vec2(-2.7, 0.0)
+                val b = Vec2(2.7, 0.0)
+                val c = Vec2(p.getValue("offset") - 1.0, p.getValue("height"))
                 val angles = listOf(angle(b - a, c - a), angle(a - b, c - b), angle(a - c, b - c))
-                measurements["angle sum"] = angles.sum(); residual = abs(angles.sum() - 180); invariant = "angle sum = 180°"
+                val sideA = c.distanceTo(b)
+                val sideB = c.distanceTo(a)
+                val sideC = b.distanceTo(a)
+                measurements.putAll(
+                    linkedMapOf(
+                        "∠A" to angles[0],
+                        "∠B" to angles[1],
+                        "∠C" to angles[2],
+                        "angle sum" to angles.sum(),
+                        "side a = BC" to sideA,
+                        "side b = CA" to sideB,
+                        "side c = AB" to sideC,
+                    ),
+                )
+                residual = abs(angles.sum() - 180)
+                invariant = "∠A + ∠B + ∠C = 180°"
             }
             "pythagorean" -> {
                 val a = p.getValue("a"); val b = p.getValue("b"); val c2 = a * a + b * b

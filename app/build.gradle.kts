@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.digital.ink)
+    implementation(libs.microsoft.onnxruntime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

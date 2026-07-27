@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -60,6 +61,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.core.Vec2
@@ -104,6 +106,7 @@ fun UnifiedMathStudioScreen(
     val activity = LocalActivity.current
     val scope = rememberCoroutineScope()
     val projection = remember(session.document.revision, session.parameterValues) { engine.projection(session) }
+    val compactLayout = LocalConfiguration.current.screenWidthDp < 600
     fun apply(next: UnifiedStudioSession, label: String = next.message) {
         session = history.apply(next, label)
         if (isRecording) recorder.capture(label, session)
@@ -120,24 +123,63 @@ fun UnifiedMathStudioScreen(
     LaunchedEffect(session.document.revision, session.parameterValues) { onWorkspaceChange(engine.toWorkspace(session)) }
 
     Column(
-        Modifier.fillMaxSize().background(StudioBackground).padding(8.dp)
+        Modifier
+            .fillMaxSize()
+            .background(StudioBackground)
+            .then(if (compactLayout) Modifier.verticalScroll(rememberScrollState()) else Modifier)
+            .padding(8.dp)
             .semantics { contentDescription = "Unified live mathematics studio" },
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onBack) { Text("Back") }
-            Column(Modifier.weight(1f)) {
-                Text("UNIFIED MATH STUDIO", color = StudioInk, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                Text("One object → algebra · graph · table · geometry · solver", color = StudioMuted, fontSize = 11.sp)
+        if (compactLayout) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    OutlinedButton(onBack) { Text("Back") }
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            "UNIFIED MATH STUDIO",
+                            color = StudioInk,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                        )
+                        Text("Linked algebra, graph, table, geometry and solver", color = StudioMuted, fontSize = 9.sp, maxLines = 1)
+                    }
+                    Text("LIVE r${session.document.revision}", color = StudioGreen, fontWeight = FontWeight.Bold, fontSize = 9.sp, maxLines = 1)
+                }
+                Row(
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    OutlinedButton({ session = history.undo() }, enabled = history.canUndo) { Text("Undo") }
+                    OutlinedButton({ session = history.redo() }, enabled = history.canRedo) { Text("Redo") }
+                    OutlinedButton({
+                        if (isRecording) lastRecording = recorder.stop()
+                        else recorder.start(session.baseWorkspace.name, session)
+                        isRecording = !isRecording
+                    }) { Text(if (isRecording) "Stop recording" else "Record") }
+                }
             }
-            Text("LIVE r${session.document.revision}", color = StudioGreen, fontWeight = FontWeight.Bold, fontSize = 11.sp)
-            OutlinedButton({ session = history.undo() }, enabled = history.canUndo) { Text("Undo") }
-            OutlinedButton({ session = history.redo() }, enabled = history.canRedo) { Text("Redo") }
-            OutlinedButton({
-                if (isRecording) lastRecording = recorder.stop()
-                else recorder.start(session.baseWorkspace.name, session)
-                isRecording = !isRecording
-            }) { Text(if (isRecording) "Stop" else "Record") }
+        } else {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(onBack) { Text("Back") }
+                Column(Modifier.weight(1f)) {
+                    Text("UNIFIED MATH STUDIO", color = StudioInk, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    Text("One object → algebra · graph · table · geometry · solver", color = StudioMuted, fontSize = 11.sp)
+                }
+                Text("LIVE r${session.document.revision}", color = StudioGreen, fontWeight = FontWeight.Bold, fontSize = 11.sp)
+                OutlinedButton({ session = history.undo() }, enabled = history.canUndo) { Text("Undo") }
+                OutlinedButton({ session = history.redo() }, enabled = history.canRedo) { Text("Redo") }
+                OutlinedButton({
+                    if (isRecording) lastRecording = recorder.stop()
+                    else recorder.start(session.baseWorkspace.name, session)
+                    isRecording = !isRecording
+                }) { Text(if (isRecording) "Stop" else "Record") }
+            }
         }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             SharedWorkspaceMode.entries.forEach { mode ->
@@ -161,19 +203,41 @@ fun UnifiedMathStudioScreen(
                 if (activity != null) scope.launch { runCatching { MathFileExchange.shareGeoGebra(activity, engine.toWorkspace(session)) }.onFailure { apply(session.copy(message = "GeoGebra export failed: ${it.message}"), "GeoGebra export failed") } }
             }, enabled = activity != null) { Text("Export .ggb") }
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            IntentAwareMathField(
-                constructionInput, { constructionInput = it }, "Unified command",
-                Modifier.weight(1f).semantics { contentDescription = "Graph geometry and 3D construction command" },
-                placeholder = "midpoint(M,A,B) · surface(s,z=x^2+y^2)", showLegend = false,
-            )
-            Button({
-                runCatching { engine.construct(session, constructionInput) }
-                    .onSuccess { next -> apply(next, "Construct ${constructionInput.substringBefore('(')}"); constructionStatus = "Created ${constructionEngine.tokens(next.construction).last().accessibleLabel}" }
-                    .onFailure { constructionStatus = it.message ?: "The command could not be completed." }
-            }, enabled = constructionInput.isNotBlank()) { Text("Construct") }
-            OutlinedButton({ session = history.undo(); constructionStatus = "Unified construction undone." }, enabled = history.canUndo) { Text("↶") }
-            OutlinedButton({ session = history.redo(); constructionStatus = "Unified construction restored." }, enabled = history.canRedo) { Text("↷") }
+        if (compactLayout) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                IntentAwareMathField(
+                    constructionInput, { constructionInput = it }, "Unified command",
+                    Modifier.fillMaxWidth().semantics { contentDescription = "Graph geometry and 3D construction command" },
+                    placeholder = "midpoint(M,A,B) or surface(s,z=x^2+y^2)", showLegend = false,
+                )
+                Row(
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Button({
+                        runCatching { engine.construct(session, constructionInput) }
+                            .onSuccess { next -> apply(next, "Construct ${constructionInput.substringBefore('(')}"); constructionStatus = "Created ${constructionEngine.tokens(next.construction).last().accessibleLabel}" }
+                            .onFailure { constructionStatus = it.message ?: "The command could not be completed." }
+                    }, enabled = constructionInput.isNotBlank()) { Text("Construct") }
+                    OutlinedButton({ session = history.undo(); constructionStatus = "Unified construction undone." }, enabled = history.canUndo) { Text("Undo") }
+                    OutlinedButton({ session = history.redo(); constructionStatus = "Unified construction restored." }, enabled = history.canRedo) { Text("Redo") }
+                }
+            }
+        } else {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                IntentAwareMathField(
+                    constructionInput, { constructionInput = it }, "Unified command",
+                    Modifier.weight(1f).semantics { contentDescription = "Graph geometry and 3D construction command" },
+                    placeholder = "midpoint(M,A,B) or surface(s,z=x^2+y^2)", showLegend = false,
+                )
+                Button({
+                    runCatching { engine.construct(session, constructionInput) }
+                        .onSuccess { next -> apply(next, "Construct ${constructionInput.substringBefore('(')}"); constructionStatus = "Created ${constructionEngine.tokens(next.construction).last().accessibleLabel}" }
+                        .onFailure { constructionStatus = it.message ?: "The command could not be completed." }
+                }, enabled = constructionInput.isNotBlank()) { Text("Construct") }
+                OutlinedButton({ session = history.undo(); constructionStatus = "Unified construction undone." }, enabled = history.canUndo) { Text("Undo") }
+                OutlinedButton({ session = history.redo(); constructionStatus = "Unified construction restored." }, enabled = history.canRedo) { Text("Redo") }
+            }
         }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).semantics { contentDescription = constructionStatus }, horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(constructionStatus, color = if (constructionStatus.startsWith("Created")) StudioGreen else StudioMuted, fontSize = 10.sp)
@@ -182,7 +246,16 @@ fun UnifiedMathStudioScreen(
                 FilterChip(id in session.experience.selection.canonicalIds, { apply(shared.select(session, id), "Select ${token.id}") }, label = { Text("${token.view.name} · ${token.id}") }, modifier = Modifier.semantics { contentDescription = token.accessibleLabel })
             }
         }
-        BoxWithConstraints(Modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            if (compactLayout) {
+                Modifier
+                    .fillMaxWidth()
+                    .height(620.dp)
+                    .semantics { contentDescription = "Scrollable unified engine workspace" }
+            } else {
+                Modifier.fillMaxSize()
+            },
+        ) {
             val wide = maxWidth >= 820.dp
             val views = session.experience.layout.activeViews
             if (!wide) {

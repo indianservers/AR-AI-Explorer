@@ -131,6 +131,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -217,6 +218,7 @@ import com.indianservers.aiexplorer.core.DistributionEngine
 import com.indianservers.aiexplorer.core.DistributionKind
 import com.indianservers.aiexplorer.core.ProbabilityDistribution
 import com.indianservers.aiexplorer.core.SurfaceCalculus
+import com.indianservers.aiexplorer.core.SurfaceInputInterpreter
 import com.indianservers.aiexplorer.core.AnalyticGeometry2D
 import com.indianservers.aiexplorer.core.AnalyticGeometry3D
 import com.indianservers.aiexplorer.core.AdvancedStatisticsEngine
@@ -329,6 +331,7 @@ import com.indianservers.aiexplorer.core.SolutionStepRole
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.SmartSolidPlacementEngine
 import com.indianservers.aiexplorer.core.SolidMeshFactory
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.Vec3
@@ -394,6 +397,7 @@ import com.indianservers.aiexplorer.workspace.GraphSliderMetadataState
 import com.indianservers.aiexplorer.workspace.GraphSliderPlaybackMode
 import com.indianservers.aiexplorer.workspace.Geometry2DInteractionEngine
 import com.indianservers.aiexplorer.workspace.Geometry2DDirectManipulation
+import com.indianservers.aiexplorer.workspace.Geometry2DDragPlanner
 import com.indianservers.aiexplorer.workspace.ConstraintFeedbackLevel
 import com.indianservers.aiexplorer.workspace.GeometryProtocolStatus
 import com.indianservers.aiexplorer.workspace.MathObjectGraph
@@ -406,6 +410,7 @@ import com.indianservers.aiexplorer.workspace.ProjectSection
 import com.indianservers.aiexplorer.workspace.ProjectSectionKind
 import com.indianservers.aiexplorer.workspace.MovePointCommand
 import com.indianservers.aiexplorer.workspace.MovePointsCommand
+import com.indianservers.aiexplorer.workspace.ReplaceGeometry2DCommand
 import com.indianservers.aiexplorer.workspace.MoveSolidCommand
 import com.indianservers.aiexplorer.workspace.MoveVector3DCommand
 import com.indianservers.aiexplorer.workspace.Shape2D
@@ -424,6 +429,8 @@ import com.indianservers.aiexplorer.workspace.UpdateGraphSliderMetadataCommand
 import com.indianservers.aiexplorer.workspace.WorkspaceJson
 import com.indianservers.aiexplorer.workspace.WorkspaceProjectCodec
 import com.indianservers.aiexplorer.workspace.WorkspaceState
+import com.indianservers.aiexplorer.workspace.Geometry2DSnapshot
+import com.indianservers.aiexplorer.workspace.geometry2DSnapshot
 import com.indianservers.aiexplorer.workspace.UniversalMathDocument
 import com.indianservers.aiexplorer.workspace.UniversalMathDocumentEngine
 import com.indianservers.aiexplorer.workspace.UniversalWorkspaceBridge
@@ -437,6 +444,7 @@ import com.indianservers.aiexplorer.arengine.arcore.ArCoreRuntime
 import com.indianservers.aiexplorer.arengine.contract.ArVector2
 import com.indianservers.aiexplorer.arengine.contract.ArFrameSnapshot
 import com.indianservers.aiexplorer.arengine.contract.ArHitCandidate
+import com.indianservers.aiexplorer.arengine.contract.ArRuntimeState
 import com.indianservers.aiexplorer.arengine.contract.ArTrackingState
 import com.indianservers.aiexplorer.arengine.interaction.ArGizmoAxis
 import com.indianservers.aiexplorer.arengine.interaction.ArGizmoMode
@@ -454,6 +462,10 @@ import com.indianservers.aiexplorer.spatial.toSpatialFrame
 import com.indianservers.aiexplorer.spatial.toSpatialHit
 import com.indianservers.aiexplorer.spatial.previewSpatialPlacement
 import com.indianservers.aiexplorer.spatial.ArPhase4SpatialBridge
+import com.indianservers.aiexplorer.spatial.ArPhase5AnalysisBridge
+import com.indianservers.aiexplorer.spatial.ArPhase5AnalysisOptions
+import com.indianservers.aiexplorer.spatial.ArMathWorkspaceBridge
+import com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode
 import com.indianservers.aiexplorer.spatial.ARPrivacySafetyChecklist
 import com.indianservers.aiexplorer.spatial.SharedGpuSceneCompiler
 import com.indianservers.aiexplorer.spatial.SharedSpatialSceneBuilder
@@ -464,8 +476,10 @@ import com.indianservers.aiexplorer.spatial.SpatialHitType
 import com.indianservers.aiexplorer.spatial.SpatialLessonCatalog
 import com.indianservers.aiexplorer.spatial.SpatialPerformanceManager
 import com.indianservers.aiexplorer.spatial.ThermalLevel
+import com.indianservers.aiexplorer.smartboard.presentation.SmartBoardFeatureRoot
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -678,6 +692,7 @@ private fun solidFormulaLibrary(type: SolidType): List<ShapeFormulaItem> = when 
 private data class PointGesture(
     val indices: List<Int>,
     val from: List<Vec2>,
+    val geometryBefore: Geometry2DSnapshot? = null,
 )
 
 private data class SolidGesture(val index: Int, val from: Solid)
@@ -824,6 +839,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     var showBiologyHub by mutableStateOf(false)
         private set
     var showLearningIntelligence by mutableStateOf(false)
+        private set
+    var showSmartBoard by mutableStateOf(false)
+        private set
+    var returnToSmartBoard by mutableStateOf(savedStateHandle["returnToSmartBoard"] ?: false)
         private set
     var showMathLanding by mutableStateOf(false)
         private set
@@ -1257,7 +1276,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun openSubjectHub() {
+        returnToSmartBoard = false
+        savedStateHandle["returnToSmartBoard"] = false
         showSubjectHub = true
+        showSmartBoard = false
         showPhysicsHub = false
         showChemistryHub = false
         showBiologyHub = false
@@ -1273,6 +1295,50 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathMenu = false
         hidePanels()
         status = "Choose a subject"
+    }
+
+    fun openSmartBoard() {
+        showSubjectHub = false
+        showPhysicsHub = false
+        showChemistryHub = false
+        showBiologyHub = false
+        showLearningIntelligence = false
+        showSmartBoard = true
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showMathMenu = false
+        showChrome = false
+        showActionDock = false
+        hidePanels()
+        status = "Smart Board · Mathematics"
+    }
+
+    fun openSmartBoardMathModule(module: MathModule, expression: String? = null) {
+        returnToSmartBoard = true
+        savedStateHandle["returnToSmartBoard"] = true
+        expression?.takeIf(String::isNotBlank)?.let { source ->
+            when (module) {
+                MathModule.Graph2D -> addFunction(source)
+                MathModule.Graph3D -> setSurfaceExpression(source)
+                else -> Unit
+            }
+        }
+        showSmartBoard = false
+        open(module)
+        status = "Opened from Smart Board"
+    }
+
+    fun returnFromSmartBoardMathModule() {
+        if (returnToSmartBoard) openSmartBoard() else returnToMathMenu()
     }
 
     fun openLearningIntelligence() {
@@ -1534,6 +1600,14 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         }
     }
 
+    fun navigateBackFromMathWorkspace() {
+        when {
+            hasDismissibleOverlay() -> dismissTopOverlay()
+            shapeExplorerScene -> openShapesExplorer()
+            else -> returnToMathMenu()
+        }
+    }
+
     fun dismissAllMenusAndPanels() {
         showMathMenu = false
         showActionDock = false
@@ -1719,7 +1793,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun beginPointDrag(index: Int) {
         val point = state.points.getOrNull(index) ?: return
-        selectedShape = state.shapes.indexOfLast { it.visible && index in it.pointIndices }
+        selectedShape = selectedShape
+            .takeIf { it in state.shapes.indices && state.shapes[it].visible && index in state.shapes[it].pointIndices }
+            ?: state.shapes.indexOfLast { it.visible && index in it.pointIndices }
         selectedShapes = selectedShape.takeIf { it >= 0 }?.let(::setOf) ?: emptySet()
         state.shapes.firstOrNull { it.locked && index in it.pointIndices }?.let {
             selectedPoint = index
@@ -1739,15 +1815,27 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun beginShapeDrag(shapeIndex: Int) {
         val shape = state.shapes.getOrNull(shapeIndex) ?: return
         selectedShape = shapeIndex
-        if (shapeIndex !in selectedShapes) selectedShapes = setOf(shapeIndex)
+        selectedPoint = -1
         if (shape.locked) {
+            selectedShapes = setOf(shapeIndex)
             status = "${shape.name} is locked"
             return
         }
-        val indices = selectedShapes.mapNotNull(state.shapes::getOrNull).filterNot { it.locked }.flatMap { it.pointIndices }.distinct()
-            .filterNot { index -> state.pointDependencies.any { it.outputIndex == index } }
-        if (indices.isEmpty()) return
-        pointGesture = PointGesture(indices, indices.mapNotNull(state.points::getOrNull))
+        val geometryBefore = state.geometry2DSnapshot()
+        val plan = Geometry2DDragPlanner.plan(state, shapeIndex, selectedShapes)
+        selectedShapes = plan.selectedShapeIndices
+        state = plan.state
+        val indices = plan.movablePointIndices
+        if (indices.isEmpty()) {
+            status = "This object is locked or fully dependency-controlled"
+            return
+        }
+        pointGesture = PointGesture(
+            indices,
+            indices.mapNotNull(state.points::getOrNull),
+            geometryBefore.takeIf { plan.detached },
+        )
+        status = if (plan.detached) "Moving ${shape.name} independently" else "Moving ${selectedShapes.size} object${if (selectedShapes.size == 1) "" else "s"}"
     }
 
     fun previewPointDrag(index: Int, point: Vec2) {
@@ -1784,7 +1872,14 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun endPointDrag() {
         val gesture = pointGesture ?: return
         val final = gesture.indices.mapNotNull(state.points::getOrNull)
-        if (final != gesture.from) history.recordApplied(MovePointsCommand(gesture.indices, gesture.from, final))
+        if (gesture.geometryBefore != null) {
+            val after = state.geometry2DSnapshot()
+            if (after != gesture.geometryBefore) {
+                history.recordApplied(ReplaceGeometry2DCommand(gesture.geometryBefore, after, "Move object independently"))
+            }
+        } else if (final != gesture.from) {
+            history.recordApplied(MovePointsCommand(gesture.indices, gesture.from, final))
+        }
         val resizedShape = selectedShape.takeIf { gesture.indices.size == 1 }?.let(state.shapes::getOrNull)
         pointGesture = null
         status = resizedShape?.let { "Resized ${it.name} from junction" } ?: "Moved object"
@@ -1792,8 +1887,12 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun cancelPointDrag() {
         val gesture = pointGesture ?: return
-        val replacements = gesture.indices.zip(gesture.from).toMap()
-        state = state.copy(points = state.points.mapIndexed { index, old -> replacements[index] ?: old }).recomputed()
+        state = if (gesture.geometryBefore != null) {
+            ReplaceGeometry2DCommand(state.geometry2DSnapshot(), gesture.geometryBefore).apply(state)
+        } else {
+            val replacements = gesture.indices.zip(gesture.from).toMap()
+            state.copy(points = state.points.mapIndexed { index, old -> replacements[index] ?: old }).recomputed()
+        }
         pointGesture = null
         status = "Move cancelled"
     }
@@ -2024,11 +2123,11 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun addSolid(type: SolidType) {
-        val position = Vec3(((state.solids.size % 5) - 2) * 1.7, 0.0, ((state.solids.size / 5) - 1) * 1.6)
-        val solid = defaultSolid(type).copy(position = position)
+        val template = defaultSolid(type)
+        val solid = template.copy(position = SmartSolidPlacementEngine.next(state.solids, template))
         state = history.execute(state, AddSolidCommand(solid))
         selectedSolid = state.solids.lastIndex
-        status = "Added ${type.name}"
+        status = "Added ${type.name} in open scene space"
     }
 
     fun selectSolid(index: Int) {
@@ -2488,8 +2587,12 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     }
     BackHandler(enabled = !vm.showSubjectHub || vm.hasDismissibleOverlay()) {
         when {
+            vm.showSmartBoard -> vm.openSubjectHub()
+            vm.returnToSmartBoard -> vm.returnFromSmartBoardMathModule()
             vm.showMathLanding -> vm.openSubjectHub()
             vm.hasDismissibleOverlay() -> vm.dismissTopOverlay()
+            vm.showShapesExplorer -> vm.returnToMathMenu()
+            vm.shapeExplorerScene -> vm.openShapesExplorer()
             vm.showPhysicsHub -> vm.openSubjectHub()
             vm.showChemistryHub -> vm.openSubjectHub()
             vm.showBiologyHub -> vm.openSubjectHub()
@@ -2535,9 +2638,20 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             }
                         },
                         onOpenLearningIntelligence = vm::openLearningIntelligence,
+                        onOpenSmartBoard = vm::openSmartBoard,
+                        onOpenAugmentedReality = { vm.open(MathModule.SpatialAR) },
                     )
                 } else {
-                    if (vm.showLearningIntelligence) {
+                    if (vm.showSmartBoard) {
+                        SmartBoardFeatureRoot(
+                            onExit = vm::openSubjectHub,
+                            onOpenGraph2D = { expression -> vm.openSmartBoardMathModule(MathModule.Graph2D, expression) },
+                            onOpenGraph3D = { expression -> vm.openSmartBoardMathModule(MathModule.Graph3D, expression) },
+                            onOpenGeometry2D = { vm.openSmartBoardMathModule(MathModule.Geometry2D) },
+                            onOpenGeometry3D = { vm.openSmartBoardMathModule(MathModule.Geometry3D) },
+                            onOpenPhysicsWorkspace = { vm.openPhysicsHub() },
+                        )
+                    } else if (vm.showLearningIntelligence) {
                         LearningIntelligenceFeatureRoot(onExit = vm::openSubjectHub)
                     } else if (vm.showBiologyHub) {
                         BiologyFeatureRoot(onExit = vm::openSubjectHub)
@@ -2546,7 +2660,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     } else if (vm.showPhysicsHub) {
                         PhysicsHubScreen(vm, wide)
                     } else if (vm.showMathLanding) {
-                        MathLandingScreen()
+                        MathematicsHubScreen(vm, wide)
                     } else if (vm.showShapesExplorer) {
                         ShapesExplorerScreen(vm, wide = wide)
                     } else if (vm.showUnifiedMathStudio) {
@@ -2576,9 +2690,9 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             MathModule.SpatialAR -> SpatialARScreen(vm)
                         }
                     }
-                    if (vm.showChrome && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
+                    if (vm.showChrome && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
-                    if (!imeVisible && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showMathLanding && !vm.shapeExplorerScene && !vm.showShapesExplorer && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showScientificCalculator && !vm.showSetLogicVisualizer && !vm.showProblemSolver && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) BottomModeSelector(vm.state.module, vm::open, compact, Modifier.align(Alignment.BottomCenter))
+                    if (!imeVisible && !vm.showSmartBoard && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showMathLanding && !vm.shapeExplorerScene && !vm.showShapesExplorer && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showScientificCalculator && !vm.showSetLogicVisualizer && !vm.showProblemSolver && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) BottomModeSelector(vm.state.module, vm::open, compact, Modifier.align(Alignment.BottomCenter))
                     if (vm.showActionDock && vm.state.module != MathModule.Graph2D && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) MiniDock(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -2603,7 +2717,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             }
                         },
                     )
-                    if (vm.showMathMenu) MathematicsMenuPanel(
+                    if (vm.showMathMenu && !vm.showMathLanding) MathematicsMenuPanel(
                         vm = vm,
                         modifier = Modifier
                             .align(if (wide) Alignment.CenterStart else Alignment.Center)
@@ -2624,16 +2738,337 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     }
 }
 
+private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
+    vm.recordMathToolOpen(title)
+    when (title) {
+        "Unified Math Studio" -> vm.openUnifiedMathStudio()
+        "Adaptive Math Coach" -> vm.openAdaptiveMathLearning()
+        "Scientific Calculator" -> vm.openScientificCalculator()
+        "Math Notebook" -> vm.openMathNotebook()
+        "Problem Solver" -> vm.openProblemSolver()
+        "Formulas" -> vm.openKnowledgeHub(KnowledgeSection.Formulas)
+        "MCQs" -> vm.openKnowledgeHub(KnowledgeSection.Mcqs)
+        "Formula Visualizer" -> vm.openKnowledgeHub(KnowledgeSection.Visualize)
+        "Theorems" -> vm.openKnowledgeHub(KnowledgeSection.Theorems)
+        "Visual Proofs" -> vm.openKnowledgeHub(KnowledgeSection.Proofs)
+        "Visual Dictionary" -> vm.openKnowledgeHub(KnowledgeSection.Dictionary)
+        "Probability & Statistics" -> vm.openProbabilityLab()
+        "Manipulatives" -> vm.open(MathModule.Manipulatives)
+        "Shapes Explorer" -> vm.openShapesExplorer()
+        "Set Theory & Logic" -> vm.openSetLogicVisualizer()
+        else -> return false
+    }
+    return true
+}
+
 @Composable
-private fun MathLandingScreen() {
-    Box(
-        Modifier.fillMaxSize().semantics { contentDescription = "Mathematics menu background" },
-        contentAlignment = Alignment.Center,
+private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
+    var query by rememberSaveable { mutableStateOf("") }
+    var showWorkspaces by rememberSaveable { mutableStateOf(false) }
+    var showConcepts by rememberSaveable { mutableStateOf(false) }
+    var selectedPreview by rememberSaveable { mutableStateOf<String?>(null) }
+    val allTools = remember { (MathCreationTools + MathLearningTools + SuggestedMathTools).distinctBy { it.title } }
+    val visibleTools = remember(query) {
+        val normalized = query.trim().lowercase()
+        if (normalized.isBlank()) allTools
+        else allTools.filter { normalized in it.title.lowercase() || normalized in it.description.lowercase() }
+    }
+
+    fun openOption(option: MathWorkspaceOption) {
+        when (option.title) {
+            "Explore Workspaces" -> showWorkspaces = !showWorkspaces
+            "Math Concepts" -> showConcepts = !showConcepts
+            else -> if (!openMathTool(vm, option.title)) selectedPreview = option.title
+        }
+    }
+
+    @Composable
+    fun MathHubCard(option: MathWorkspaceOption, accent: Color, status: String = "OPEN") {
+        val pinned = option.title in vm.pinnedMathTools
+        Column(
+            Modifier
+                .width(if (wide) 225.dp else 165.dp)
+                .heightIn(min = 132.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(if (selectedPreview == option.title) accent.copy(alpha = .18f) else Color(0xCC0B1420))
+                .border(
+                    1.dp,
+                    if (selectedPreview == option.title) accent else accent.copy(alpha = .38f),
+                    RoundedCornerShape(18.dp),
+                )
+                .clickable { openOption(option) }
+                .focusable()
+                .semantics { contentDescription = "Open Maths tool ${option.title}. ${option.description}" }
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp),
+        ) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TransparentIcon(option.icon, accent)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Text(status, color = Green, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(
+                        if (pinned) "PINNED" else "PIN",
+                        color = if (pinned) Amber else Muted,
+                        fontSize = 8.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { vm.togglePinnedMathTool(option.title) }
+                            .padding(horizontal = 4.dp, vertical = 3.dp)
+                            .semantics { contentDescription = "${if (pinned) "Unpin" else "Pin"} ${option.title}" },
+                    )
+                }
+            }
+            Text(
+                option.title,
+                color = Ink,
+                fontSize = if (wide) 16.sp else 14.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+            )
+            Text(option.description, color = Muted, fontSize = 10.sp, maxLines = 3)
+        }
+    }
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = if (wide) 34.dp else 8.dp, vertical = 12.dp)
+            .semantics { contentDescription = "Mathematics Explorer menu" },
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("∑", color = Cyan.copy(alpha = .3f), fontSize = 72.sp, fontWeight = FontWeight.ExtraBold)
-            Text("Choose a Maths tool", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text("A workspace opens only after you select it from the menu.", color = Muted, fontSize = 12.sp)
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                TransparentIcon("SUM", Cyan)
+                Column {
+                    Text("Mathematics Explorer", color = Cyan, fontSize = if (wide) 28.sp else 22.sp, fontWeight = FontWeight.Bold)
+                    Text("${allTools.size} interactive tools and learning spaces", color = Muted, fontSize = 11.sp)
+                }
+            }
+            GlowButton("Home", icon = "H", onClick = vm::openSubjectHub)
+        }
+
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = 100.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(Brush.horizontalGradient(listOf(Cyan.copy(.18f), Color(0xCC102B36))))
+                .border(1.dp, Cyan.copy(.68f), RoundedCornerShape(18.dp))
+                .clickable { openMathTool(vm, "Unified Math Studio") }
+                .semantics { contentDescription = "Open Unified Math Studio" }
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("UNIFIED MATH STUDIO", color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                Text("Algebra, graph, table, geometry and CAS in one linked workspace", color = Ink, fontSize = 11.sp)
+                Text("Direct manipulation - shared variables - live updates", color = Green, fontSize = 9.sp)
+            }
+            Text("OPEN  >", color = Amber, fontWeight = FontWeight.Bold)
+        }
+
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = 96.dp)
+                .clip(RoundedCornerShape(18.dp))
+                .background(Brush.horizontalGradient(listOf(Violet.copy(.14f), Color(0xCC17132B))))
+                .border(1.dp, Violet.copy(.68f), RoundedCornerShape(18.dp))
+                .clickable { openMathTool(vm, "Adaptive Math Coach") }
+                .semantics { contentDescription = "Open Adaptive Math Coach" }
+                .padding(14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("ADAPTIVE LEARNING JOURNEY", color = Violet, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
+                Text("Explore, practise and master concepts with workspace-aware guidance", color = Ink, fontSize = 11.sp)
+            }
+            Text("START  >", color = Green, fontWeight = FontWeight.Bold)
+        }
+
+        OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            label = { Text("Search Mathematics") },
+            placeholder = { Text("Try algebra, graphing, geometry, statistics or proofs") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search Mathematics tools" },
+        )
+
+        if (query.isBlank()) {
+            val pinned = allTools.filter { it.title in vm.pinnedMathTools }
+            val recent = vm.recentMathTools.mapNotNull { title -> allTools.singleOrNull { it.title == title } }.take(4)
+            if (pinned.isNotEmpty() || recent.isNotEmpty()) {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0x99101824))
+                        .border(1.dp, Amber.copy(alpha = .32f), RoundedCornerShape(16.dp))
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(7.dp),
+                ) {
+                    Text("QUICK ACCESS", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        (pinned + recent).distinctBy { it.title }.take(6).forEach { option ->
+                            GlowButton(option.title, icon = option.icon) { openOption(option) }
+                        }
+                    }
+                }
+            }
+        }
+
+        val creation = MathCreationTools.filter { it in visibleTools && it.title != "Unified Math Studio" }
+        if (creation.isNotEmpty()) {
+            Text("CREATE & SOLVE", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+            FlowRow(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(9.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                creation.forEach { MathHubCard(it, Cyan) }
+            }
+        }
+
+        val learning = MathLearningTools.filter { it in visibleTools && it.title != "Adaptive Math Coach" }
+        if (learning.isNotEmpty()) {
+            Text("LEARN & PRACTISE", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+            FlowRow(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(9.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                learning.forEach { MathHubCard(it, Violet) }
+            }
+        }
+
+        AnimatedVisibility(showConcepts) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Violet.copy(alpha = .07f))
+                    .border(1.dp, Violet.copy(alpha = .38f), RoundedCornerShape(18.dp))
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text("MATH CONCEPTS - 27 SUBJECTS", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    MathConceptCategories.forEach { concept -> GlowButton(concept) { selectedPreview = concept } }
+                }
+            }
+        }
+
+        val suggested = SuggestedMathTools.filter { it in visibleTools }
+        if (suggested.isNotEmpty()) {
+            Text("DISCOVER MORE", color = Amber, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+            FlowRow(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(9.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                suggested.forEach { MathHubCard(it, Amber, status = "PREVIEW") }
+            }
+        }
+
+        selectedPreview?.let { selection ->
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Amber.copy(alpha = .08f))
+                    .border(1.dp, Amber.copy(alpha = .35f), RoundedCornerShape(14.dp))
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                TransparentIcon("+", Amber)
+                Column(Modifier.weight(1f)) {
+                    Text(selection, color = Ink, fontWeight = FontWeight.Bold)
+                    Text("Preview selected. This learning space is ready for its next content pack.", color = Muted, fontSize = 10.sp)
+                }
+            }
+        }
+
+        if (visibleTools.isEmpty()) {
+            Text("No Mathematics tools match this search.", color = Amber, fontWeight = FontWeight.SemiBold)
+        }
+        Text("Touch, mouse, keyboard and TV remote ready", color = Muted, fontSize = 11.sp)
+    }
+
+    if (showWorkspaces) {
+        Dialog(onDismissRequest = { showWorkspaces = false }) {
+            GlassPanel(Modifier.fillMaxWidth().widthIn(max = 620.dp)) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Text("Explore Workspaces", color = Cyan, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                        Text("Choose an interactive Maths workspace", color = Muted, fontSize = 11.sp)
+                    }
+                    GlowButton("Close", icon = "×") { showWorkspaces = false }
+                }
+                Text(
+                    "Your objects remain directly editable. You can switch workspace later from the bottom navigation.",
+                    color = Ink,
+                    fontSize = 11.sp,
+                )
+                val destinations = listOf(
+                    Triple(MathModule.Geometry2D, "2D Geometry", "Construct and drag points, lines, circles, polygons and constraints"),
+                    Triple(MathModule.Geometry3D, "3D Geometry", "Create and manipulate solids, vectors, sections and measurements"),
+                    Triple(MathModule.Graph2D, "Graph", "Plot explicit, implicit, polar, parametric and inequality graphs"),
+                    Triple(MathModule.Graph3D, "3D Graph", "Explore explicit, implicit and parametric surfaces"),
+                    Triple(MathModule.Trigonometry, "Trigonometry", "Use unit circles, identities, triangles and transformations"),
+                    Triple(MathModule.Manipulatives, "Math Tiles", "Learn with algebra tiles, fractions, balances and tactile models"),
+                    Triple(MathModule.SpatialAR, "Spatial AR", "Place existing mathematical constructions into augmented reality"),
+                )
+                FlowRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    destinations.forEachIndexed { index, (module, title, description) ->
+                        val accent = listOf(Cyan, Violet, Green, Amber)[index % 4]
+                        Column(
+                            Modifier
+                                .width(if (wide) 180.dp else 145.dp)
+                                .heightIn(min = 116.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(accent.copy(alpha = .09f))
+                                .border(1.dp, accent.copy(alpha = .45f), RoundedCornerShape(14.dp))
+                                .clickable {
+                                    showWorkspaces = false
+                                    vm.open(module)
+                                }
+                                .focusable()
+                                .semantics { contentDescription = "Open $title workspace. $description" }
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                TransparentIcon(module.label, accent)
+                                Text("OPEN ›", color = Green, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
+                            }
+                            Text(title, color = accent, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Text(description, color = Muted, fontSize = 9.sp, maxLines = 3)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -2701,6 +3136,15 @@ private fun SetTheoryLogicVisualizerScreen(vm: ExplorerViewModel, wide: Boolean)
                     SetFormulaVennCanvas(law, overlap, selectedPoint) { point, memberships ->
                         selectedPoint = point
                         values = values + memberships
+                    }
+                    FlowRow(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        SetDiagramLegendChip("A", SetDiagramAColor)
+                        SetDiagramLegendChip("B", SetDiagramBColor)
+                        SetDiagramLegendChip("A ∪ B  (A U B)", SetDiagramUnionColor)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Overlap", color = Muted, fontSize = 11.sp, modifier = Modifier.width(70.dp))
@@ -2984,6 +3428,26 @@ private fun shareSetConstruction(context: android.content.Context, data: String)
     context.startActivity(android.content.Intent.createChooser(intent, "Share Set Theory construction").addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
 }
 
+private val SetDiagramAColor = Color(0xFF20D7B0)
+private val SetDiagramBColor = Color(0xFFFF5FA2)
+private val SetDiagramUnionColor = Color(0xFFFFC857)
+
+@Composable
+private fun SetDiagramLegendChip(label: String, color: Color) {
+    Row(
+        Modifier
+            .clip(RoundedCornerShape(100.dp))
+            .background(color.copy(alpha = .14f))
+            .border(1.dp, color.copy(alpha = .72f), RoundedCornerShape(100.dp))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(9.dp).clip(RoundedCornerShape(50)).background(color))
+        Text(label, color = color, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
 @Composable
 private fun SetFormulaVennCanvas(
     law: BooleanFormulaLaw,
@@ -3017,17 +3481,67 @@ private fun SetFormulaVennCanvas(
         val separation = radius * (1.65f - overlap)
         val centers = listOf(Offset(size.width / 2 - separation / 2, size.height * .47f) + pan, Offset(size.width / 2 + separation / 2, size.height * .47f) + pan, Offset(size.width / 2, size.height * .64f) + pan)
         drawRect(Color(0xFF091626), style = androidx.compose.ui.graphics.drawscope.Fill)
-        val colors = listOf(Cyan, Violet, Amber)
+        val colors = listOf(SetDiagramAColor, SetDiagramBColor, Color(0xFF8B7CFF))
         law.variables.forEachIndexed { index, _ ->
-            drawCircle(colors[index].copy(.13f), radius, centers[index])
-            drawCircle(colors[index].copy(.9f), radius, centers[index], style = Stroke(width = 3f))
+            drawCircle(colors[index].copy(.25f), radius, centers[index])
+            drawCircle(colors[index], radius, centers[index], style = Stroke(width = 3.5f))
         }
         val columns = 17; val lines = 9
         repeat(columns) { xIndex -> repeat(lines) { yIndex ->
             val point = Offset((xIndex + 1) * size.width / (columns + 1), (yIndex + 1) * size.height / (lines + 1))
             val member = memberships(point, size.width, size.height)
-            if (law.left(member)) drawCircle(Green.copy(.8f), 3.5f, point) else drawCircle(Muted.copy(.28f), 2f, point)
+            if (law.left(member)) drawCircle(SetDiagramUnionColor.copy(.92f), 3.5f, point) else drawCircle(Muted.copy(.24f), 2f, point)
         } }
+        fun drawRegionBadge(label: String, center: Offset, color: Color) {
+            val textPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+                this.color = android.graphics.Color.rgb(
+                    (color.red * 255).toInt(),
+                    (color.green * 255).toInt(),
+                    (color.blue * 255).toInt(),
+                )
+                textAlign = android.graphics.Paint.Align.CENTER
+                textSize = 15.sp.toPx()
+                isFakeBoldText = true
+            }
+            val horizontalPadding = 9.dp.toPx()
+            val verticalPadding = 5.dp.toPx()
+            val badgeWidth = textPaint.measureText(label) + horizontalPadding * 2
+            val badgeHeight = textPaint.fontMetrics.run { bottom - top } + verticalPadding * 2
+            val badgeTopLeft = Offset(center.x - badgeWidth / 2, center.y - badgeHeight / 2)
+            drawRoundRect(
+                color = Color(0xE6172330),
+                topLeft = badgeTopLeft,
+                size = Size(badgeWidth, badgeHeight),
+                cornerRadius = CornerRadius(badgeHeight / 2),
+            )
+            drawRoundRect(
+                color = color.copy(alpha = .9f),
+                topLeft = badgeTopLeft,
+                size = Size(badgeWidth, badgeHeight),
+                cornerRadius = CornerRadius(badgeHeight / 2),
+                style = Stroke(width = 1.5.dp.toPx()),
+            )
+            val baseline = center.y - (textPaint.descent() + textPaint.ascent()) / 2
+            drawContext.canvas.nativeCanvas.drawText(label, center.x, baseline, textPaint)
+        }
+        law.variables.forEachIndexed { index, variable ->
+            val horizontalDirection = when (index) {
+                0 -> -.42f
+                1 -> .42f
+                else -> 0f
+            }
+            val verticalDirection = if (index == 2) .48f else .05f
+            drawRegionBadge(
+                variable,
+                centers[index] + Offset(radius * horizontalDirection, radius * verticalDirection),
+                colors[index],
+            )
+        }
+        if ("A" in law.variables && "B" in law.variables) {
+            val unionY = (minOf(centers[0].y, centers[1].y) - radius - 17.dp.toPx())
+                .coerceAtLeast(25.dp.toPx())
+            drawRegionBadge("A ∪ B", Offset((centers[0].x + centers[1].x) / 2, unionY), SetDiagramUnionColor)
+        }
         selectedPoint?.let { point ->
             drawCircle(Amber.copy(.22f), 14f, point)
             drawCircle(Amber, 7f, point)
@@ -3348,6 +3862,7 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
                     MathFormulaText(card.expression, color = Cyan, fontSize = 14.sp)
                 }
                 Text(card.description, color = Muted, fontSize = 11.sp)
+                if (showAdvancedTools || arSelection.primaryObjectId != null) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     card.examples.forEach { example -> GlowButton(example) { setExpression(example); outcome = runCatching { smartCalculator.evaluate(example, angleMode, calculatorPrecision) }.getOrNull() } }
                 }
@@ -4618,6 +5133,8 @@ internal val InteractiveVisualProofSceneIds = setOf(
     "eigenvector-direction", "counting-paths", "modular-clock",
 )
 
+private fun proofValue(value: Double): String = trim(round(value * 100.0) / 100.0)
+
 @Composable
 private fun InteractiveVisualProofCanvas(
     playback: com.indianservers.aiexplorer.core.ProofPlayback,
@@ -4663,6 +5180,21 @@ private fun InteractiveVisualProofCanvas(
                 drawPath(path, fill)
                 drawPath(path, color, style = Stroke(4f, cap = StrokeCap.Round))
             }
+            fun angleArc(vertex: Offset, first: Offset, second: Offset, radius: Float, color: Color) {
+                val start = Math.toDegrees(atan2((first.y - vertex.y).toDouble(), (first.x - vertex.x).toDouble())).toFloat()
+                val end = Math.toDegrees(atan2((second.y - vertex.y).toDouble(), (second.x - vertex.x).toDouble())).toFloat()
+                var sweep = (end - start + 540f) % 360f - 180f
+                if (sweep == -180f) sweep = 180f
+                drawArc(
+                    color = color,
+                    startAngle = start,
+                    sweepAngle = sweep,
+                    useCenter = false,
+                    topLeft = vertex - Offset(radius, radius),
+                    size = Size(radius * 2f, radius * 2f),
+                    style = Stroke(5f, cap = StrokeCap.Round),
+                )
+            }
             if (com.indianservers.aiexplorer.core.ProofEnhancement.GridBackground in profile.features) {
                 val gridStep = 28f
                 var gx = 0f
@@ -4676,12 +5208,35 @@ private fun InteractiveVisualProofCanvas(
                     val a = point(-2.7, 0.0); val b = point(2.7, 0.0); val c = point(frame.parameters.getValue("offset") - 1.0, frame.parameters.getValue("height"))
                     polygon(listOf(a, b, c), Cyan)
                     drawCircle(Violet, 18f, a, style = Stroke(5f)); drawCircle(Green, 18f, b, style = Stroke(5f)); drawCircle(Amber, 18f, c, style = Stroke(5f))
+                    val angleA = frame.measurements.getValue("∠A")
+                    val angleB = frame.measurements.getValue("∠B")
+                    val angleC = frame.measurements.getValue("∠C")
+                    val sideA = frame.measurements.getValue("side a = BC")
+                    val sideB = frame.measurements.getValue("side b = CA")
+                    val sideC = frame.measurements.getValue("side c = AB")
+                    angleArc(a, b, c, 31f, Violet)
+                    angleArc(b, c, a, 31f, Green)
+                    angleArc(c, a, b, 31f, Amber)
+                    label("A", a + Offset(-28f, 30f), Violet, 25f)
+                    label("B", b + Offset(14f, 30f), Green, 25f)
+                    label("C", c + Offset(-7f, -18f), Amber, 25f)
+                    label("∠A ${proofValue(angleA)}°", a + Offset(26f, -12f), Violet, 19f)
+                    label("∠B ${proofValue(angleB)}°", b + Offset(-112f, -12f), Green, 19f)
+                    label("∠C ${proofValue(angleC)}°", c + Offset(-38f, 48f), Amber, 19f)
+                    label("a = ${proofValue(sideA)}", (b + c) / 2f + Offset(14f, -8f), Green, 19f)
+                    label("b = ${proofValue(sideB)}", (c + a) / 2f + Offset(-68f, -8f), Violet, 19f)
+                    label("c = ${proofValue(sideC)}", (a + b) / 2f + Offset(-34f, 31f), Cyan, 19f)
+                    label(
+                        "${proofValue(angleA)}° + ${proofValue(angleB)}° + ${proofValue(angleC)}° = 180°",
+                        Offset(w * .48f, h * .10f),
+                        Green,
+                        24f,
+                    )
                     if (frame.step >= 2) {
                         val y = h * .18f; drawLine(Ink, Offset(w * .2f, y), Offset(w * .8f, y), 4f)
                         drawArc(Violet, 0f, 55f, false, Offset(w * .37f, y - 25f), Size(50f, 50f), style = Stroke(7f))
                         drawArc(Amber, 55f, 70f, false, Offset(w * .46f, y - 25f), Size(50f, 50f), style = Stroke(7f))
                         drawArc(Green, 125f, 55f, false, Offset(w * .55f, y - 25f), Size(50f, 50f), style = Stroke(7f))
-                        label("A + B + C = 180°", Offset(w * .34f, y - 38f), Green)
                     }
                 }
                 "pythagorean" -> {
@@ -4940,11 +5495,101 @@ private fun InteractiveVisualProofCanvas(
             if (profile.notToScale) label("NOT TO SCALE", Offset(w - 178f, 28f), Amber, 18f)
             label("Step ${frame.step + 1}/${frame.lab.steps.size} · drag horizontally", Offset(22f, h - 22f), Muted, 21f)
         }
+        ProofLiveEvidence(frame)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text("${frame.step + 1}. ${frame.lab.steps[frame.step]}", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             GlowButton(if (proofLensOpen) "Hide proof lens" else "Open proof lens") { proofLensOpen = !proofLensOpen }
         }
         AnimatedVisibility(proofLensOpen) { ProofReasoningLens(frame, profile) }
+    }
+}
+
+@Composable
+private fun ProofLiveEvidence(frame: com.indianservers.aiexplorer.core.ProofFrame) {
+    fun displayValue(name: String, value: Double): String = when {
+        name == "inside interval" -> if (value >= .5) "YES" else "NO"
+        name.startsWith("∠") || "angle" in name.lowercase() -> "${proofValue(value)}°"
+        else -> proofValue(value)
+    }
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(Color(0xCC07131E))
+            .border(1.dp, Violet.copy(alpha = .38f), RoundedCornerShape(14.dp))
+            .padding(9.dp)
+            .semantics {
+                contentDescription = buildString {
+                    append("Live proof values. ")
+                    frame.parameters.forEach { (name, value) -> append("$name ${proofValue(value)}. ") }
+                    frame.measurements.forEach { (name, value) -> append("$name ${displayValue(name, value)}. ") }
+                    append(frame.invariant)
+                }
+            },
+        verticalArrangement = Arrangement.spacedBy(7.dp),
+    ) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column {
+                Text("LIVE VALUES", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                Text("Drag the diagram or sliders—every value updates immediately.", color = Muted, fontSize = 10.sp)
+            }
+            Text(
+                if (frame.holds) "✓ VERIFIED" else "ADJUST TO VERIFY",
+                color = if (frame.holds) Green else Amber,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.ExtraBold,
+            )
+        }
+        if (frame.parameters.isNotEmpty()) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                frame.lab.parameters.forEach { parameter ->
+                    val value = frame.parameters.getValue(parameter.name)
+                    Text(
+                        "${parameter.name} = ${proofValue(value)}",
+                        color = Cyan,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(9.dp))
+                            .background(Cyan.copy(alpha = .09f))
+                            .border(1.dp, Cyan.copy(alpha = .28f), RoundedCornerShape(9.dp))
+                            .padding(horizontal = 8.dp, vertical = 5.dp),
+                    )
+                }
+            }
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            frame.measurements.forEach { (name, value) ->
+                Text(
+                    "$name = ${displayValue(name, value)}",
+                    color = Ink,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(Violet.copy(alpha = .09f))
+                        .border(1.dp, Violet.copy(alpha = .26f), RoundedCornerShape(9.dp))
+                        .padding(horizontal = 8.dp, vertical = 5.dp),
+                )
+            }
+        }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .background(Green.copy(alpha = .09f))
+                .padding(horizontal = 9.dp, vertical = 7.dp),
+            horizontalArrangement = Arrangement.spacedBy(7.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("THEREFORE", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+            Text(frame.lab.formalResult, color = Green, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            Text("residual ${proofValue(frame.residual)}", color = Muted, fontSize = 9.sp)
+        }
     }
 }
 
@@ -6168,7 +6813,14 @@ private fun SubjectMicroIcon(subject: String, tint: Color) {
 }
 
 @Composable
-private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpenSubject: (String) -> Unit, onOpenLearningIntelligence: () -> Unit) {
+private fun SubjectHubScreen(
+    modifier: Modifier = Modifier,
+    wide: Boolean,
+    onOpenSubject: (String) -> Unit,
+    onOpenLearningIntelligence: () -> Unit,
+    onOpenSmartBoard: () -> Unit,
+    onOpenAugmentedReality: () -> Unit,
+) {
     Column(
         modifier
             .verticalScroll(rememberScrollState())
@@ -6226,6 +6878,12 @@ private fun SubjectHubScreen(modifier: Modifier = Modifier, wide: Boolean, onOpe
                     }
                 }
             }
+        }
+        Button(onClick = onOpenSmartBoard, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open unified multi-subject Smart Board canvas" }) {
+            Text("Smart Board · Draw, select and recognize")
+        }
+        Button(onClick = onOpenAugmentedReality, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open Augmented Reality camera spatial learning lab" }) {
+            Text("Augmented Reality - Camera spatial lab")
         }
         Button(onClick = onOpenLearningIntelligence, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open local learning diagnostic and recommendations" }) {
             Text("Learning Intelligence · Diagnostic, mastery, review and error book")
@@ -6368,6 +7026,19 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
     fun selectKey(key: String, open: () -> Unit) {
         if (compareMode) compareKeys = (compareKeys + key).distinct().takeLast(2) else open()
     }
+    fun dismissTopLayerOrNavigateBack() {
+        when {
+            formulaKey != null -> formulaKey = null
+            compareKeys.isNotEmpty() -> compareKeys = emptyList()
+            compareMode -> compareMode = false
+            multiAdd -> multiAdd = false
+            else -> vm.returnToMathMenu()
+        }
+    }
+    BackHandler(
+        enabled = formulaKey != null || compareKeys.isNotEmpty() || compareMode || multiAdd,
+        onBack = ::dismissTopLayerOrNavigateBack,
+    )
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         GlassPanel(
             Modifier
@@ -6382,7 +7053,7 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                         Text("Choose a shape to load its interactive scene", color = Muted, fontSize = 11.sp)
                     }
                 }
-                GlowButton("Maths", icon = "←", onClick = vm::returnToMathMenu)
+                GlowButton("Back", icon = "←", onClick = ::dismissTopLayerOrNavigateBack)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 GlowButton(if (dimension == 2) "2D · ${ShapeExplorer2DShapes.size}" else "2D", icon = "2D") { dimension = 2; category = "All"; compareKeys = emptyList() }
@@ -6725,7 +7396,7 @@ private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-            GlowButton("Maths", icon = "←", iconOnly = compact, onClick = vm::returnToMathMenu)
+            GlowButton("Back", icon = "←", iconOnly = compact, onClick = vm::navigateBackFromMathWorkspace)
             GlowButton("Menu", icon = "≡", iconOnly = compact, onClick = vm::toggleMathMenu)
         }
         Column(
@@ -7621,11 +8292,13 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             "Drag a junction to resize · drag shape to move · empty canvas pans · empty two-finger pinch zooms",
             Modifier.align(Alignment.BottomEnd),
         )
-        DeleteDropTarget(
-            enabled = vm.selectedShape in vm.state.shapes.indices,
-            onDelete = vm::deleteSelectedShape,
-            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
-        )
+        if (!vm.shapeExplorerScene) {
+            DeleteDropTarget(
+                enabled = vm.selectedShape in vm.state.shapes.indices,
+                onDelete = vm::deleteSelectedShape,
+                modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
+            )
+        }
         if (!vm.shapeExplorerScene && selectedShape != null) SmartSelectionHud(
             title = selectedShape.name,
             instruction = if (selectedShape.locked) "Locked · unlock to drag or resize" else "Drag body to move · junctions resize · top handle rotates",
@@ -8778,6 +9451,24 @@ private fun parseDataPoints(source: String): List<Vec2> = source
         if (values.size >= 2) Vec2(values[0], values[1]) else null
     }
 
+private fun SpatialVisualMode.displayLabel() = when (this) {
+    SpatialVisualMode.Solid -> "Solid"
+    SpatialVisualMode.XRay -> "Transparent"
+    SpatialVisualMode.Wireframe -> "Wireframe"
+}
+
+private fun SpatialVisualMode.displayIcon() = when (this) {
+    SpatialVisualMode.Solid -> "◉"
+    SpatialVisualMode.XRay -> "◐"
+    SpatialVisualMode.Wireframe -> "◇"
+}
+
+private fun SpatialVisualMode.nextDisplayMode() = when (this) {
+    SpatialVisualMode.Solid -> SpatialVisualMode.XRay
+    SpatialVisualMode.XRay -> SpatialVisualMode.Wireframe
+    SpatialVisualMode.Wireframe -> SpatialVisualMode.Solid
+}
+
 @Composable
 private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     val haptic = LocalHapticFeedback.current
@@ -8790,7 +9481,6 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var transformMode by remember(vm.shapeExplorerScene) {
         mutableStateOf(if (vm.shapeExplorerScene) Transform3DMode.Scale else Transform3DMode.Move)
     }
-    var wire by remember { mutableStateOf(true) }
     var projection by remember { mutableStateOf(CameraProjection.Perspective) }
     var selectionMode by remember { mutableStateOf(Selection3DMode.Object) }
     var subSelection by remember { mutableStateOf<SubObjectSelection?>(null) }
@@ -8803,7 +9493,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var sectionPlane by remember { mutableStateOf(EditableSectionPlane()) }
     var transformSpace by remember { mutableStateOf(SpatialTransformSpace.World) }
     var dragPlane by remember { mutableStateOf(SpatialDragPlane.Free) }
-    var visualMode by remember { mutableStateOf(SpatialVisualMode.Wireframe) }
+    var visualMode by remember { mutableStateOf(SpatialVisualMode.Solid) }
     var explodeAmount by remember { mutableFloatStateOf(0f) }
     var multiSelectEnabled by remember { mutableStateOf(false) }
     var selectedSolidIndices by remember { mutableStateOf<Set<Int>>(setOf(vm.selectedSolid)) }
@@ -8818,6 +9508,8 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var meshEditHistory by remember { mutableStateOf(com.indianservers.aiexplorer.core.MeshEditHistory3D()) }
     var booleanResult by remember { mutableStateOf<com.indianservers.aiexplorer.core.BooleanMeshResult?>(null) }
     var spatialMeasurements by remember { mutableStateOf<List<com.indianservers.aiexplorer.core.SpatialMeasurement3D>>(emptyList()) }
+    var addShapeOpen by remember { mutableStateOf(false) }
+    BackHandler(enabled = addShapeOpen) { addShapeOpen = false }
     val selectedIndex = vm.selectedSolid.coerceIn(0, vm.state.solids.lastIndex.coerceAtLeast(0))
     val selectedSolid = vm.state.solids.getOrNull(selectedIndex)
     val visibleSolidIndices = remember(vm.state.solids.size, hiddenSolidIndices, isolatedSolidIndices) {
@@ -8859,7 +9551,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             zoom = zoom,
             cameraPan = cameraPan,
             transformMode = transformMode,
-            wire = wire || visualMode != SpatialVisualMode.Solid,
+            visualMode = visualMode,
             perspective = projection == CameraProjection.Perspective,
             selectionMode = selectionMode,
             subSelection = subSelection,
@@ -8974,6 +9666,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text(selectedSolid.type.name, color = Cyan, fontSize = 17.sp, fontWeight = FontWeight.Bold)
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        GlowButton(visualMode.displayLabel(), icon = visualMode.displayIcon(), iconOnly = compact) {
+                            visualMode = visualMode.nextDisplayMode()
+                        }
                         GlowButton("All formulas", icon = "ƒ", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
                         GlowButton("Shapes", icon = "SE", iconOnly = compact, onClick = vm::openShapesExplorer)
                     }
@@ -9004,6 +9699,10 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             enabled = selectedSolid != null,
             onDelete = ::deleteCurrent3DSelection,
             modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
+        )
+        if (!vm.shapeExplorerScene) AddShapeTarget(
+            onAdd = { addShapeOpen = true },
+            modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 14.dp),
         )
         if (!vm.shapeExplorerScene && selectedSolid != null) SmartSelectionHud(
             title = subSelection?.let { "${selectedSolid.type.name} · ${it.mode.name} ${it.index + 1}" } ?: selectedSolid.type.name,
@@ -9042,8 +9741,14 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 }
             }
         }
-        if (!vm.shapeExplorerScene) Row(Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        if (!vm.shapeExplorerScene) Row(
+            Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp).horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
             GlowButton("⌂ Home") { rotateX = 25f; rotateY = -35f; rotateZ = 15f; zoom = 1f; cameraPan = Offset.Zero }
+            GlowButton(visualMode.displayLabel(), icon = visualMode.displayIcon()) {
+                visualMode = visualMode.nextDisplayMode()
+            }
             GlowButton("Cycle overlap", enabled = visibleSolidIndices.isNotEmpty()) {
                 val ordered = visibleSolidIndices.sorted(); val next = ordered.firstOrNull { it > selectedIndex } ?: ordered.firstOrNull()
                 next?.let { vm.selectSolid(it); selectedSolidIndices = setOf(it) }
@@ -9109,7 +9814,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
         if (vm.showRightPanel && !vm.shapeExplorerScene) GlassPanel(Modifier.align(Alignment.TopEnd).padding(top = 64.dp).width(260.dp)) {
             PanelHeader("3D Context Inspector", vm::hidePanels, Violet)
             Insight("Shared GPU", "${sharedRenderScene.primitives.size} objects · ${sharedRenderPlan.vertices.size / 10} vertices", Cyan)
-            listOf("Zoom +", "Zoom -", "Scale +", "Scale -", "Wireframe", "Reset").forEach {
+            listOf("Zoom +", "Zoom -", "Scale +", "Scale -", "Reset").forEach {
                 GlowButton(it, onClick = {
                     if (it == "Zoom +") zoom = (zoom + .1f).coerceAtMost(1.8f)
                     if (it == "Zoom -") zoom = (zoom - .1f).coerceAtLeast(.6f)
@@ -9126,7 +9831,6 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                             )
                         }
                     }
-                    if (it == "Wireframe") wire = !wire
                     if (it == "Reset") vm.reset()
                 })
             }
@@ -9170,7 +9874,6 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             TogglePill("Perspective", projection == CameraProjection.Perspective) {
                 projection = if (it) CameraProjection.Perspective else CameraProjection.Orthographic
             }
-            TogglePill("Wireframe", wire) { wire = it }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 listOf(AxisConstraint.Free, AxisConstraint.X, AxisConstraint.Y, AxisConstraint.Z).forEach { axis ->
                     GlowButton(if (axisConstraint == axis) "● ${axis.name}" else axis.name) { axisConstraint = axis }
@@ -9181,7 +9884,11 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SpatialTransformSpace.entries.forEach { space -> GlowButton(if (transformSpace == space) "● ${space.name}" else space.name) { transformSpace = space } }
                 SpatialDragPlane.entries.forEach { plane -> GlowButton(if (dragPlane == plane) "● ${plane.name}" else plane.name) { dragPlane = plane } }
-                SpatialVisualMode.entries.forEach { mode -> GlowButton(if (visualMode == mode) "● ${mode.name}" else mode.name) { visualMode = mode; wire = mode != SpatialVisualMode.Solid } }
+                SpatialVisualMode.entries.forEach { mode ->
+                    GlowButton(if (visualMode == mode) "● ${mode.displayLabel()}" else mode.displayLabel(), icon = mode.displayIcon()) {
+                        visualMode = mode
+                    }
+                }
             }
             AxisSlider("Exploded view", explodeAmount, 0f..3f) { explodeAmount = it }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -9354,6 +10061,35 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 }
             }
         }
+        if (addShapeOpen && !vm.shapeExplorerScene) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = .62f))
+                    .clickable { addShapeOpen = false },
+                contentAlignment = Alignment.Center,
+            ) {
+                SolidShapeLibrary(
+                    sceneObjectCount = vm.state.solids.size,
+                    onDismiss = { addShapeOpen = false },
+                    onAdd = { type ->
+                        vm.addSolid(type)
+                        selectedSolidIndices = setOf(vm.selectedSolid)
+                        hiddenSolidIndices -= vm.selectedSolid
+                        isolatedSolidIndices = null
+                    },
+                    onAddVector = {
+                        vm.addVector3D()
+                        addShapeOpen = false
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(.95f)
+                        .widthIn(max = 760.dp)
+                        .heightIn(max = 590.dp)
+                        .clickable(enabled = false) {},
+                )
+            }
+        }
     }
 }
 
@@ -9386,32 +10122,73 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     var numericScale by remember { mutableStateOf("1") }
     var numericPlaneNormal by remember { mutableStateOf("0, 1, 0") }
     var numericPlaneOffset by remember { mutableStateOf("0") }
+    var arAnalysisEnabled by remember { mutableStateOf(false) }
+    var arTraceX by remember { mutableFloatStateOf(0f) }
+    var arTraceY by remember { mutableFloatStateOf(0f) }
+    var arContourLevel by remember { mutableFloatStateOf(0f) }
+    var arGradientAscending by remember { mutableStateOf(true) }
+    var arGradientStep by remember { mutableIntStateOf(0) }
+    var arGradientPlaying by remember { mutableStateOf(false) }
     var liveError by remember { mutableStateOf("") }
     var selectedLesson by remember { mutableIntStateOf(0) }
+    var arWorkspaceMode by remember { mutableStateOf(ArMathWorkspaceMode.Geometry3D) }
     var thermalLevel by remember { mutableStateOf(ThermalLevel.Nominal) }
     var showSpatialDetails by remember { mutableStateOf(false) }
+    var showAdvancedTools by remember { mutableStateOf(false) }
+    var showAnalysisTools by remember { mutableStateOf(false) }
+    var autoStartAttempted by remember { mutableStateOf(false) }
+    var requestCameraPermission by remember { mutableStateOf(false) }
     val currentLiveAR by rememberUpdatedState(liveAR)
     val currentCompositorView by rememberUpdatedState(compositorView)
     var cameraGranted by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
     }
+    fun startLiveAr(userRequestedInstall: Boolean = true) {
+        if (activity == null) {
+            capabilities = capabilities.copy(message = "ARCore requires an Android activity.")
+            return
+        }
+        if (runtime == null) {
+            capabilities = capabilities.copy(availability = ARAvailability.Error, message = "ARCore runtime is unavailable; use the spatial simulator.")
+            return
+        }
+        if (!cameraGranted) {
+            requestCameraPermission = true
+            return
+        }
+        val prepared = runtime.prepare(cameraPermissionGranted = true, userRequestedInstall = userRequestedInstall)
+        capabilities = prepared.toSpatialCapabilities()
+        if (prepared is ArRuntimeState.Ready || prepared is ArRuntimeState.Paused || prepared is ArRuntimeState.Running) {
+            runtime.resume()
+                .onSuccess {
+                    capabilities = it.toSpatialCapabilities()
+                    liveAR = true
+                    liveError = ""
+                }
+                .onFailure {
+                    liveError = it.message ?: "ARCore could not open the camera."
+                    liveAR = false
+                }
+        }
+    }
     val cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         cameraGranted = granted
-        capabilities = if (granted && runtime != null) runtime.prepare(cameraPermissionGranted = true, userRequestedInstall = true).toSpatialCapabilities() else {
-            capabilities.copy(message = "Camera permission was not granted; the spatial simulator remains fully available.")
+        if (granted) startLiveAr(userRequestedInstall = true)
+        else capabilities = capabilities.copy(message = "Camera permission was not granted; the spatial simulator remains fully available.")
+    }
+    LaunchedEffect(requestCameraPermission) {
+        if (requestCameraPermission) {
+            requestCameraPermission = false
+            cameraPermission.launch(Manifest.permission.CAMERA)
         }
     }
     LaunchedEffect(runtime) {
         if (runtime != null) capabilities = runtime.checkAvailability().toSpatialCapabilities()
     }
-    LaunchedEffect(capabilities.message, cameraGranted) {
-        if (cameraGranted && runtime != null && capabilities.message.contains("session configured", ignoreCase = true)) {
-            runtime.resume()
-                .onSuccess {
-                    capabilities = it.toSpatialCapabilities()
-                    liveAR = true
-                }
-                .onFailure { liveError = it.message ?: "ARCore could not resume." }
+    LaunchedEffect(runtime, cameraGranted) {
+        if (!autoStartAttempted && runtime != null) {
+            autoStartAttempted = true
+            startLiveAr(userRequestedInstall = false)
         }
     }
     DisposableEffect(runtime, activity) {
@@ -9442,25 +10219,50 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     LaunchedEffect(placement.isPlaced) {
         if (!placement.isPlaced) placementMode = true
     }
+    LaunchedEffect(arWorkspaceMode) {
+        arSelection = ArSelectionState()
+        overlapHits = emptyList()
+        stylusHoverHit = null
+        arAnalysisEnabled = arWorkspaceMode == ArMathWorkspaceMode.Graph3D
+    }
     val guidance = SpatialSafety.guidance(placement.trackingQuality)
     val policy = remember(thermalLevel) { SpatialPerformanceManager.policy(thermalLevel, 22.0) }
-    val surfaceMesh = remember(vm.state.surfaceExpression, policy.surfaceDensity) {
-        runCatching { Graph3D().mesh(vm.state.surfaceExpression, density = policy.surfaceDensity) }.getOrNull()
+    val surfaceMesh = remember(arWorkspaceMode, vm.state.surfaceExpression, policy.surfaceDensity) {
+        if (arWorkspaceMode == ArMathWorkspaceMode.Graph3D) {
+            runCatching { Graph3D().mesh(vm.state.surfaceExpression, density = policy.surfaceDensity) }.getOrNull()
+        } else {
+            null
+        }
     }
     val lesson = SpatialLessonCatalog.lessons[selectedLesson]
-    val sharedScene = remember(vm.state.solids, vm.state.vectors3D, surfaceMesh, lesson.id, placement.depthOcclusionEnabled, frameState?.lighting?.pixelIntensity) {
-        val probability = if (lesson.id == "probability-surface-ar") surfaceMesh else null
-        SharedSpatialSceneBuilder.build(
-            id = "spatial-${lesson.id}",
-            solids = vm.state.solids,
-            surface = if (probability == null) surfaceMesh else null,
-            vectors = vm.state.vectors3D,
-            probabilitySurface = probability,
-            annotations = listOf(
-                SpatialAnnotation("origin", Vec3(0.0, 0.0, 0.0), "O"),
-                SpatialAnnotation("lesson", Vec3(0.0, 1.5, 0.0), lesson.title),
+    val linkedArWorkspace = remember(
+        arWorkspaceMode,
+        vm.state.points,
+        vm.state.shapes,
+        vm.state.functions,
+        vm.state.solids,
+        vm.state.vectors3D,
+        vm.state.surfaceExpression,
+        vm.universalMathDocument,
+        policy.surfaceDensity,
+    ) {
+        ArMathWorkspaceBridge.build(
+            mode = arWorkspaceMode,
+            workspace = vm.state,
+            universalDocument = vm.universalMathDocument,
+            surfaceDensity = policy.surfaceDensity,
+        )
+    }
+    val sharedScene = remember(linkedArWorkspace, lesson.id, placement.depthOcclusionEnabled, frameState?.lighting?.pixelIntensity) {
+        linkedArWorkspace.scene.copy(
+            annotations = linkedArWorkspace.scene.annotations + SpatialAnnotation(
+                "ar-workspace-mode",
+                Vec3(0.0, 1.5, 0.0),
+                arWorkspaceMode.label,
             ),
-        ).copy(depthOcclusion = placement.depthOcclusionEnabled, environmentIntensity = frameState?.lighting?.pixelIntensity ?: 1f)
+            depthOcclusion = placement.depthOcclusionEnabled,
+            environmentIntensity = frameState?.lighting?.pixelIntensity ?: 1f,
+        )
     }
     val selectedSolidIndices = arSelection.objectIds.mapNotNullTo(linkedSetOf()) {
         it.removePrefix("solid-").toIntOrNull()?.takeIf(vm.state.solids.indices::contains)
@@ -9469,8 +10271,54 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         ?.removePrefix("vector-")
         ?.toIntOrNull()
         ?.takeIf(vm.state.vectors3D.indices::contains)
-    val interactiveScene = remember(sharedScene, arSelection, placementMode, reticleHit, gizmoMode, stylusHoverHit) {
+    val phase4Scene = remember(sharedScene, arSelection, placementMode, reticleHit, gizmoMode, stylusHoverHit) {
         phase4DisplayScene(sharedScene, arSelection, placementMode && reticleHit != null, vm.state.solids, gizmoMode, stylusHoverHit?.objectId)
+    }
+    val phase5Analysis = remember(
+        phase4Scene,
+        surfaceMesh,
+        vm.state.surfaceExpression,
+        vm.state.solids,
+        arSelection.objectIds,
+        arAnalysisEnabled,
+        arTraceX,
+        arTraceY,
+        arContourLevel,
+        numericPlaneNormal,
+        numericPlaneOffset,
+        arGradientAscending,
+        arGradientStep,
+        placement.metersPerMathUnit,
+        placement.measurementUncertaintyMeters,
+        arFrame?.depth,
+    ) {
+        ArPhase5AnalysisBridge.enrich(
+            source = phase4Scene,
+            surface = surfaceMesh,
+            expression = vm.state.surfaceExpression,
+            solids = vm.state.solids,
+            selectedObjectIds = arSelection.objectIds,
+            options = ArPhase5AnalysisOptions(
+                enabled = arAnalysisEnabled,
+                traceX = arTraceX.toDouble(),
+                traceY = arTraceY.toDouble(),
+                contourLevel = arContourLevel.toDouble(),
+                sectionNormal = parseSpatialTriple(numericPlaneNormal) ?: Vec3(0.0, 1.0, 0.0),
+                sectionOffset = numericPlaneOffset.toDoubleOrNull() ?: 0.0,
+                ascending = arGradientAscending,
+                gradientStep = arGradientStep,
+            ),
+            metersPerMathUnit = placement.metersPerMathUnit,
+            poseUncertaintyMeters = placement.measurementUncertaintyMeters,
+            depthAvailable = arFrame?.depth != null,
+        )
+    }
+    val interactiveScene = phase5Analysis.scene
+    LaunchedEffect(arGradientPlaying, phase5Analysis.gradientSteps) {
+        while (arGradientPlaying && phase5Analysis.gradientSteps > 0) {
+            delay(100)
+            arGradientStep = if (arGradientStep + 1 >= phase5Analysis.gradientSteps) 0 else arGradientStep + 1
+        }
     }
     val previewPlacement = if (placementMode) reticleHit?.previewSpatialPlacement(placement) ?: placement else placement
     val activeAnchor = runtime?.anchors()?.firstOrNull { it.id == placement.anchorId }
@@ -9757,7 +10605,8 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         } else {
             SpatialPreviewCanvas(
                 modifier = Modifier.fillMaxSize(),
-                solids = vm.state.solids,
+                solids = if (arWorkspaceMode == ArMathWorkspaceMode.Geometry3D) vm.state.solids else emptyList(),
+                spatialScene = interactiveScene,
                 placement = placement,
                 onGestureStart = vm::beginSpatialGesture,
                 onGesture = vm::previewSpatialGesture,
@@ -9765,17 +10614,42 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             )
         }
         GlassPanel(Modifier.align(Alignment.TopStart).width(285.dp).padding(top = 105.dp)) {
-            PanelHeader("AR Spatial Lab", { vm.open(MathModule.Geometry3D) }, Cyan)
-            Insight("Mode", if (liveAR) "Live ARCore camera + shared GPU scene" else "Accessible spatial simulator", Cyan)
+            PanelHeader("AR Mathematics", vm::returnToMathMenu, Cyan, icon = "AR")
+            Text(
+                if (liveAR) "Camera is live. Aim at a flat surface and tap to place the linked math scene."
+                else "Smart AR opens the camera when supported; simulator remains ready as a fallback.",
+                color = Muted,
+                fontSize = 11.sp,
+            )
+            GlowButton(if (showAdvancedTools) "Hide advanced tools" else "Advanced tools", onClick = { showAdvancedTools = !showAdvancedTools })
+            if (showAdvancedTools) {
+            Text(arWorkspaceMode.description, color = Muted, fontSize = 10.sp)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                ArMathWorkspaceMode.entries.forEach { mode ->
+                    GlowButton(if (arWorkspaceMode == mode) "• ${mode.shortLabel}" else mode.shortLabel) {
+                        arWorkspaceMode = mode
+                    }
+                }
+            }
+            Insight("Workspace", arWorkspaceMode.label, Cyan)
+            Insight("Linked scene", linkedArWorkspace.status, if (linkedArWorkspace.visualizedObjectCount > 0) Green else Amber)
+            linkedArWorkspace.diagnostics.firstOrNull()?.let { Text(it, color = Amber, fontSize = 10.sp) }
+            GlowButton("+ Add or edit ${arWorkspaceMode.label}") {
+                when (arWorkspaceMode) {
+                    ArMathWorkspaceMode.Geometry2D -> vm.open(MathModule.Geometry2D)
+                    ArMathWorkspaceMode.Geometry3D -> vm.open(MathModule.Geometry3D)
+                    ArMathWorkspaceMode.Graph2D -> vm.open(MathModule.Graph2D)
+                    ArMathWorkspaceMode.Graph3D -> vm.open(MathModule.Graph3D)
+                    ArMathWorkspaceMode.CAS -> vm.openMathNotebook()
+                }
+            }
+            Insight("AR mode", if (liveAR) "Live ARCore camera + shared GPU scene" else "Accessible spatial simulator", Cyan)
+            }
             Insight("ARCore", capabilities.message, if (capabilities.availability == ARAvailability.Unsupported) Amber else Green)
             Insight("Tracking", guidance.title, if (guidance.safeToPlace) Green else Amber)
             Text(guidance.instruction, color = Muted, fontSize = 12.sp)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                GlowButton("Enable ARCore", onClick = {
-                    if (activity == null) capabilities = capabilities.copy(message = "ARCore requires an Android activity.")
-                    else if (!cameraGranted) cameraPermission.launch(Manifest.permission.CAMERA)
-                    else if (runtime != null) capabilities = runtime.prepare(cameraPermissionGranted = true, userRequestedInstall = true).toSpatialCapabilities()
-                })
+                GlowButton(if (liveAR) "Camera on" else "Open camera", onClick = { startLiveAr(userRequestedInstall = true) })
                 GlowButton(
                     when {
                         placementMode && placement.isPlaced -> "Cancel re-place"
@@ -9800,6 +10674,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 runtime?.pause()
             })
             Insight("Scale", placement.visibleScale, Violet)
+            if (showAdvancedTools) {
             Insight("Estimate", "±${trim(placement.measurementUncertaintyMeters)} m · educational only", Amber)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 GlowButton(if (placement.scaleMode == ARScaleMode.OneToOne) "• 1:1" else "1:1", onClick = { vm.setSpatialScaleMode(ARScaleMode.OneToOne) })
@@ -9813,6 +10688,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 capabilities.availability == ARAvailability.Ready -> "Unavailable; objects remain outlined."
                 else -> "Checked when an ARCore session is prepared."
             }, if (capabilities.depthSupported) Green else Muted)
+            }
             reticleHit?.takeIf { placementMode }?.let {
                 Insight("Placement preview", "${it.type.name} · ${(it.confidence * 100).roundToInt()}% confidence", Green)
                 Insight("Uncertainty", "±${trim(it.uncertaintyMeters)} m · ${placement.visibleScale}", Amber)
@@ -9822,6 +10698,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 if (!trackingAllowsDirectManipulation) {
                     Text("Tracking paused · object selection and gizmos are temporarily frozen; mathematical state and selection are preserved.", color = Amber, fontSize = 11.sp)
                 }
+                if (showAdvancedTools || arSelection.primaryObjectId != null) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     ArGizmoMode.entries.forEach { mode ->
                         GlowButton(if (gizmoMode == mode) "• ${mode.name}" else mode.name) { gizmoMode = mode }
@@ -9860,6 +10737,9 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                             singleLine = true,
                         )
                     }
+                }
+                } else {
+                    Text("Tap an object to reveal transform controls.", color = Muted, fontSize = 11.sp)
                 }
                 arSelection.primaryObjectId?.let { selectedId ->
                     Insight(
@@ -10013,6 +10893,73 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     GlowButton("Show all objects") { arSelection = ArSelectionEngine.showAll(arSelection) }
                 }
                 if (arGroups.isNotEmpty()) Insight("Groups", "${arGroups.size} AR group(s) · shared transforms enabled", Violet)
+                GlowButton(if (showAnalysisTools) "Hide analysis" else "Analysis & measurements", onClick = { showAnalysisTools = !showAnalysisTools })
+                if (showAnalysisTools) {
+                Text("Surface analysis & measurement", color = Ink, fontWeight = FontWeight.Bold)
+                TogglePill("Live analysis", arAnalysisEnabled) {
+                    arAnalysisEnabled = it
+                    if (!it) arGradientPlaying = false
+                }
+                if (arAnalysisEnabled) {
+                    AxisSlider("Trace x", arTraceX, -5f..5f) {
+                        arTraceX = it
+                        arGradientStep = 0
+                    }
+                    AxisSlider("Trace y", arTraceY, -5f..5f) {
+                        arTraceY = it
+                        arGradientStep = 0
+                    }
+                    AxisSlider("Contour z", arContourLevel, -8f..8f) { arContourLevel = it }
+                    AxisSlider(
+                        "Section offset",
+                        (numericPlaneOffset.toFloatOrNull() ?: 0f).coerceIn(-5f, 5f),
+                        -5f..5f,
+                    ) { numericPlaneOffset = trim(it.toDouble()) }
+                    Text(phase5Analysis.surfaceStatus, color = Muted, fontSize = 11.sp)
+                    Text(phase5Analysis.sectionStatus, color = Muted, fontSize = 11.sp)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        GlowButton(if (arGradientAscending) "• Ascent" else "Ascent") {
+                            arGradientAscending = true
+                            arGradientStep = 0
+                        }
+                        GlowButton(if (!arGradientAscending) "• Descent" else "Descent") {
+                            arGradientAscending = false
+                            arGradientStep = 0
+                        }
+                        GlowButton(if (arGradientPlaying) "Pause path" else "Play path", enabled = phase5Analysis.gradientSteps > 0) {
+                            arGradientPlaying = !arGradientPlaying
+                        }
+                        GlowButton("Previous", enabled = phase5Analysis.gradientSteps > 0) {
+                            arGradientPlaying = false
+                            arGradientStep = (arGradientStep - 1).coerceAtLeast(0)
+                        }
+                        GlowButton("Next", enabled = phase5Analysis.gradientSteps > 0) {
+                            arGradientPlaying = false
+                            arGradientStep = (arGradientStep + 1).coerceAtMost((phase5Analysis.gradientSteps - 1).coerceAtLeast(0))
+                        }
+                    }
+                    if (phase5Analysis.gradientSteps > 0) {
+                        AxisSlider(
+                            "Path handle",
+                            arGradientStep.coerceAtMost(phase5Analysis.gradientSteps - 1).toFloat(),
+                            0f..(phase5Analysis.gradientSteps - 1).coerceAtLeast(1).toFloat(),
+                        ) {
+                            arGradientPlaying = false
+                            arGradientStep = it.roundToInt()
+                        }
+                    }
+                }
+                phase5Analysis.measurements.forEach { measurement ->
+                    Insight(
+                        measurement.kind.name,
+                        measurement.display,
+                        if (measurement.truth == com.indianservers.aiexplorer.arengine.analysis.ArMeasurementTruth.ExactMathematical) Green else Amber,
+                    )
+                }
+                if (arSelection.objectIds.isEmpty()) {
+                    Text("Select one solid for exact area/volume, two for exact and physical distance, or three for angle.", color = Muted, fontSize = 11.sp)
+                }
+                }
             }
             GlowButton(if (showSpatialDetails) "Hide spatial details" else "Lessons & renderer", onClick = { showSpatialDetails = !showSpatialDetails })
             if (showSpatialDetails) {
@@ -10134,6 +11081,7 @@ private fun phase4DisplayScene(
 private fun SpatialPreviewCanvas(
     modifier: Modifier,
     solids: List<Solid>,
+    spatialScene: com.indianservers.aiexplorer.spatial.SpatialRenderScene,
     placement: com.indianservers.aiexplorer.spatial.SpatialScenePlacement,
     onGestureStart: () -> Unit,
     onGesture: (Offset, Float, Float) -> Unit,
@@ -10173,6 +11121,44 @@ private fun SpatialPreviewCanvas(
         drawCircle(if (scene.isPlaced) Green else Amber, 20f, center, style = Stroke(3f))
         drawLine(Color.White.copy(.7f), center - Offset(32f, 0f), center + Offset(32f, 0f), 2f)
         drawLine(Color.White.copy(.7f), center - Offset(0f, 32f), center + Offset(0f, 32f), 2f)
+        val primitiveScale = 34f * scene.pose.uniformScale.toFloat()
+        fun project(point: Vec3) = Offset(
+            center.x + (point.x - point.z * .34).toFloat() * primitiveScale,
+            center.y - (point.y - point.z * .22).toFloat() * primitiveScale,
+        )
+        spatialScene.primitives.filter { it.visible && (solids.isEmpty() || it.kind != com.indianservers.aiexplorer.spatial.SpatialPrimitiveKind.Solid) }.forEach { primitive ->
+            val rgba = primitive.material.colorRgba
+            val color = Color(
+                rgba.getOrElse(0) { 1f },
+                rgba.getOrElse(1) { 1f },
+                rgba.getOrElse(2) { 1f },
+                rgba.getOrElse(3) { 1f },
+            )
+            primitive.geometry.triangles.chunked(3).take(420).forEach { triangle ->
+                if (triangle.size == 3 && triangle.all(primitive.geometry.vertices.indices::contains)) {
+                    val a = project(primitive.geometry.vertices[triangle[0]])
+                    val b = project(primitive.geometry.vertices[triangle[1]])
+                    val c = project(primitive.geometry.vertices[triangle[2]])
+                    drawPath(Path().apply { moveTo(a.x, a.y); lineTo(b.x, b.y); lineTo(c.x, c.y); close() }, color.copy(alpha = minOf(.2f, color.alpha)))
+                }
+            }
+            primitive.geometry.lines.forEach { (from, to) ->
+                val a = primitive.geometry.vertices.getOrNull(from) ?: return@forEach
+                val b = primitive.geometry.vertices.getOrNull(to) ?: return@forEach
+                drawLine(color, project(a), project(b), if (primitive.kind == com.indianservers.aiexplorer.spatial.SpatialPrimitiveKind.Curve) 3.2f else 1.8f)
+            }
+            if (primitive.kind == com.indianservers.aiexplorer.spatial.SpatialPrimitiveKind.Point) {
+                primitive.geometry.vertices.forEach { drawCircle(color, (primitive.geometry.pointRadius * primitiveScale).toFloat().coerceAtLeast(5f), project(it)) }
+            } else if (primitive.geometry.lines.isEmpty() && primitive.geometry.triangles.isNotEmpty()) {
+                primitive.geometry.triangles.chunked(3).filterIndexed { index, _ -> index % 4 == 0 }.take(300).forEach { triangle ->
+                    if (triangle.size == 3 && triangle.all(primitive.geometry.vertices.indices::contains)) {
+                        val projected = triangle.map { project(primitive.geometry.vertices[it]) }
+                        drawLine(color.copy(alpha = .5f), projected[0], projected[1], 1f)
+                        drawLine(color.copy(alpha = .5f), projected[1], projected[2], 1f)
+                    }
+                }
+            }
+        }
         solids.forEachIndexed { index, solid ->
             drawSolidProjection(
                 solid = solid,
@@ -10183,7 +11169,7 @@ private fun SpatialPreviewCanvas(
                 center = center,
                 scale = 58f * scene.pose.uniformScale.toFloat(),
                 color = if (index % 2 == 0) Cyan else Violet,
-                wire = !scene.depthOcclusionEnabled,
+                visualMode = if (scene.depthOcclusionEnabled) SpatialVisualMode.Solid else SpatialVisualMode.Wireframe,
                 selected = index == 0,
                 perspective = true,
                 subSelection = null,
@@ -10220,6 +11206,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var contourLevel by remember { mutableFloatStateOf(2f) }
     var gradientPlayback by remember { mutableStateOf(com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())) }
     var viewPreset by remember { mutableStateOf(SurfaceViewPreset.Isometric) }
+    var surfaceDraft by rememberSaveable { mutableStateOf(vm.state.surfaceExpression) }
+    var surfaceInputMessage by remember { mutableStateOf<String?>(null) }
     fun applyView(preset: SurfaceViewPreset) {
         viewPreset = preset
         when (preset) {
@@ -10235,6 +11223,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         runCatching { graph3D.mesh(vm.state.surfaceExpression, density = density.toInt()) }.getOrNull()
     }
     LaunchedEffect(vm.state.surfaceExpression) {
+        surfaceDraft = vm.state.surfaceExpression
         surfaceLayers = surfaceLayers.mapIndexed { index, layer -> if (index == 0) layer.copy(expression = vm.state.surfaceExpression) else layer }
     }
     val additionalSurfaceMeshes = remember(surfaceLayers, density) {
@@ -10251,6 +11240,24 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
     val sharedSurfaceScene = remember(mesh) { SharedSpatialSceneBuilder.build("graph-3d-workspace", emptyList(), surface = mesh) }
     val sharedSurfacePlan = remember(sharedSurfaceScene) { SharedGpuSceneCompiler.compile(sharedSurfaceScene) }
+    fun plotSurfaceDraft() {
+        val interpretation = SurfaceInputInterpreter.explicit(surfaceDraft).getOrElse {
+            surfaceInputMessage = it.message ?: "Enter z as a function of x and y."
+            return
+        }
+        val preview = runCatching { graph3D.mesh(interpretation.canonicalEquation, density = 8) }
+            .getOrElse {
+                surfaceInputMessage = it.message ?: "The equation could not be parsed."
+                return
+            }
+        if (preview.vertices.isEmpty()) {
+            surfaceInputMessage = "The equation produced no finite surface points. Check variables and domain."
+            return
+        }
+        surfaceDraft = interpretation.canonicalEquation
+        surfaceInputMessage = "Plotted ${interpretation.canonicalEquation}"
+        vm.setSurfaceExpression(interpretation.canonicalEquation)
+    }
     Box(Modifier.fillMaxSize()) {
         SurfaceCanvas3D(
             modifier = Modifier.fillMaxSize(),
@@ -10290,10 +11297,28 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 traceY = point.y.toFloat().coerceIn(-3f, 3f)
             },
         )
-        SurfaceExampleChips(
-            modifier = Modifier.align(Alignment.TopCenter),
-            onSelect = vm::setSurfaceExpression,
-        )
+        Column(
+            Modifier.align(Alignment.TopCenter).fillMaxWidth().padding(top = 84.dp, start = 10.dp, end = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(7.dp),
+        ) {
+            SurfaceExampleChips(
+                onSelect = { expression ->
+                    surfaceDraft = expression
+                    surfaceInputMessage = null
+                    vm.setSurfaceExpression(expression)
+                },
+            )
+            SurfaceEquationInput(
+                value = surfaceDraft,
+                message = surfaceInputMessage,
+                onValueChange = {
+                    surfaceDraft = it
+                    surfaceInputMessage = null
+                },
+                onPlot = ::plotSurfaceDraft,
+            )
+        }
         SurfaceViewChips(
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 120.dp),
             active = viewPreset,
@@ -10656,15 +11681,15 @@ private fun LegacyTrigonometryScreen(vm: ExplorerViewModel) {
 @Composable
 private fun SurfaceExampleChips(modifier: Modifier = Modifier, onSelect: (String) -> Unit) {
     val examples = listOf(
-        "Paraboloid" to "x^2 + y^2",
-        "Saddle" to "x^2 - y^2",
-        "Wave" to "sin(x) + cos(y)",
-        "Plane" to "0.5*x + y",
-        "Cone" to "sqrt(x^2 + y^2)",
-        "Ripple" to "sin(x^2 + y^2)",
+        "Paraboloid" to "z = x^2 + y^2",
+        "Saddle" to "z = x^2 - y^2",
+        "Wave" to "z = sin(x) + cos(y)",
+        "Plane" to "z = 0.5*x + y",
+        "Cone" to "z = sqrt(x^2 + y^2)",
+        "Ripple" to "z = sin(x^2 + y^2)",
     )
     FlowRow(
-        modifier.padding(top = 88.dp),
+        modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
@@ -10681,6 +11706,60 @@ private fun SurfaceExampleChips(modifier: Modifier = Modifier, onSelect: (String
                     .clickable { onSelect(expression) }
                     .padding(horizontal = 11.dp, vertical = 7.dp),
             )
+        }
+    }
+}
+
+@Composable
+private fun SurfaceEquationInput(
+    value: String,
+    message: String?,
+    onValueChange: (String) -> Unit,
+    onPlot: () -> Unit,
+) {
+    Column(
+        Modifier
+            .widthIn(max = 760.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(Color(0xE60A1521))
+            .border(1.dp, Cyan.copy(alpha = .62f), RoundedCornerShape(18.dp))
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("Enter your 3D equation", color = Ink, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            Text("Explicit surface · z = f(x,y)", color = Cyan, fontSize = 10.sp)
+        }
+        IntentAwareMathField(
+            value = value,
+            onValueChange = onValueChange,
+            label = "Surface equation",
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = "Example: z = sin(x) + cos(y)",
+            imeAction = ImeAction.Done,
+            onDone = onPlot,
+            showLegend = false,
+        )
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            message?.let {
+                Text(
+                    it,
+                    color = if (it.startsWith("Plotted")) Green else Color(0xFFFF8E9E),
+                    fontSize = 10.sp,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 2,
+                )
+            } ?: Spacer(Modifier.weight(1f))
+            GlowButton("Plot surface", enabled = value.isNotBlank(), onClick = onPlot)
         }
     }
 }
@@ -10761,10 +11840,17 @@ private fun CoordinateCanvas(
     var viewportUndo by remember { mutableStateOf<List<com.indianservers.aiexplorer.core.Viewport2D>>(emptyList()) }
     val currentPoints by rememberUpdatedState(points)
     val currentShapes by rememberUpdatedState(shapes)
-    LaunchedEffect(homeRequest, canvasWidth, canvasHeight, points) {
+    val currentInteractionEnabled by rememberUpdatedState(interactionEnabled)
+    val currentSelectedShapes by rememberUpdatedState(selectedShapes)
+    val currentSnapEnabled by rememberUpdatedState(snapEnabled)
+    val currentAxisConstraint by rememberUpdatedState(axisConstraint)
+    val currentPrecisionMode by rememberUpdatedState(precisionMode)
+    val currentLassoEnabled by rememberUpdatedState(lassoEnabled)
+    val currentBoxSelectEnabled by rememberUpdatedState(boxSelectEnabled)
+    LaunchedEffect(homeRequest, canvasWidth, canvasHeight) {
         if (homeRequest > 0 && canvasWidth > 0 && canvasHeight > 0) {
             viewportUndo = viewportUndo + com.indianservers.aiexplorer.core.Viewport2D(cameraCenter, cameraZoom)
-            val fit = InteractionGeometry.fit(points, canvasWidth.toDouble() / canvasHeight)
+            val fit = InteractionGeometry.fit(currentPoints, canvasWidth.toDouble() / canvasHeight)
             cameraCenter = fit.center
             cameraZoom = fit.zoom
         }
@@ -10792,9 +11878,16 @@ private fun CoordinateCanvas(
                 }
             }
             .focusable()
-            .pointerInput(interactionEnabled) {
+            .pointerInput(Unit) {
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
+                    val canManipulate = currentInteractionEnabled
+                    val gestureSelectedShapes = currentSelectedShapes
+                    val snapDuringGesture = currentSnapEnabled
+                    val axisDuringGesture = currentAxisConstraint
+                    val precisionDuringGesture = currentPrecisionMode
+                    val lassoDuringGesture = currentLassoEnabled
+                    val boxSelectDuringGesture = currentBoxSelectEnabled
                     val viewportFrom = com.indianservers.aiexplorer.core.Viewport2D(cameraCenter, cameraZoom)
                     val baseScale = size.width / 14f
                     fun scale() = baseScale * cameraZoom
@@ -10814,34 +11907,38 @@ private fun CoordinateCanvas(
                     val startWorld = world(down.position)
                     val gesturePoints = currentPoints
                     val gestureShapes = currentShapes
-                    val selectionPoints = selectedShapes.flatMap { index -> gestureShapes.getOrNull(index)?.pointIndices.orEmpty() }.distinct().mapNotNull(gesturePoints::getOrNull)
+                    val selectionPoints = gestureSelectedShapes.flatMap { index -> gestureShapes.getOrNull(index)?.pointIndices.orEmpty() }.distinct().mapNotNull(gesturePoints::getOrNull)
                     val selectionBounds = InteractionGeometry.bounds(selectionPoints)
                     val rotationHandle = selectionBounds?.let { bounds -> screen(Vec2(bounds.center.x, bounds.maximum.y + 1.0)) }
-                    val selectingRegion = lassoEnabled || boxSelectEnabled
-                    val rotating = interactionEnabled && !selectingRegion && rotationHandle != null && (rotationHandle - down.position).getDistance() <= 34f
-                    val tappedPointIndex = gesturePoints.indices
+                    val selectingRegion = lassoDuringGesture || boxSelectDuringGesture
+                    val rotating = canManipulate && !selectingRegion && rotationHandle != null && (rotationHandle - down.position).getDistance() <= 34f
+                    val eligiblePointIndices = Geometry2DDragPlanner.eligibleHandleIndices(
+                        WorkspaceState(points = gesturePoints, shapes = gestureShapes, functions = emptyList(), solids = emptyList(), vectors3D = emptyList()),
+                        gestureSelectedShapes,
+                    )
+                    val tappedPointIndex = eligiblePointIndices
                         .minByOrNull { (screen(gesturePoints[it]) - down.position).getDistance() }
-                        ?.takeIf { (screen(gesturePoints[it]) - down.position).getDistance() <= 38f }
+                        ?.takeIf { (screen(gesturePoints[it]) - down.position).getDistance() <= 24f }
                     var pointIndex: Int? = null
                     var shapeIndex: Int? = null
-                    if (interactionEnabled && !selectingRegion) {
+                    if (canManipulate && !selectingRegion) {
                         pointIndex = tappedPointIndex
                         if (pointIndex == null && !rotating) {
-                            shapeIndex = gestureShapes.indices.filter { gestureShapes[it].visible }
+                            shapeIndex = gestureShapes.indices.reversed().filter { gestureShapes[it].visible }
                                 .minByOrNull { shapeScreenDistance(gestureShapes[it], gesturePoints, down.position, ::screen) }
                                 ?.takeIf { shapeScreenDistance(gestureShapes[it], gesturePoints, down.position, ::screen) <= 42f }
                         }
                         pointIndex?.let(onPointDragStart)
                         shapeIndex?.let(onShapeDragStart)
-                        if (rotating) selectedShapes.lastOrNull()?.let(onShapeDragStart)
+                        if (rotating) gestureSelectedShapes.lastOrNull()?.let(onShapeDragStart)
                     }
                     val gestureTarget = when {
                         pointIndex != null -> GeometryGestureTarget.JunctionHandle
                         shapeIndex != null || rotating -> GeometryGestureTarget.ShapeBody
                         else -> GeometryGestureTarget.EmptyCanvas
                     }
-                    if (lassoEnabled) { lassoWorld = listOf(startWorld); gestureMode = GestureMode.Lasso }
-                    else if (boxSelectEnabled) { boxStartWorld = startWorld; boxCurrentWorld = startWorld; gestureMode = GestureMode.Lasso }
+                    if (lassoDuringGesture) { lassoWorld = listOf(startWorld); gestureMode = GestureMode.Lasso }
+                    else if (boxSelectDuringGesture) { boxStartWorld = startWorld; boxCurrentWorld = startWorld; gestureMode = GestureMode.Lasso }
                     else gestureMode = when { rotating -> GestureMode.Rotating; pointIndex != null -> GestureMode.Resizing; shapeIndex != null -> GestureMode.Moving; else -> GestureMode.Selecting }
 
                     var moved = false
@@ -10873,13 +11970,13 @@ private fun CoordinateCanvas(
                                 moved = moved || (change!!.position - down.position).getDistance() > 8f
                                 val currentWorld = world(change!!.position)
                                 when {
-                                    lassoEnabled -> lassoWorld = lassoWorld + currentWorld
-                                    boxSelectEnabled -> boxCurrentWorld = currentWorld
+                                    lassoDuringGesture -> lassoWorld = lassoWorld + currentWorld
+                                    boxSelectDuringGesture -> boxCurrentWorld = currentWorld
                                     rotating && selectionBounds != null -> onShapeRotate(InteractionGeometry.rotationDegrees(selectionBounds.center, startWorld, currentWorld))
                                     pointIndex != null -> {
                                         val original = gesturePoints[pointIndex]
                                         val handleHeld = change.uptimeMillis - down.uptimeMillis >= 450L
-                                        val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(currentWorld - original, axisConstraint), precisionMode || handleHeld)
+                                        val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(currentWorld - original, axisDuringGesture), precisionDuringGesture || handleHeld)
                                         val proposed = original + constrained
                                         val centers = gestureShapes.filter { it.visible }.mapNotNull { shape -> shape.pointIndices.mapNotNull(gesturePoints::getOrNull).takeIf { it.isNotEmpty() }?.let { values -> InteractionGeometry.bounds(values)?.center } }
                                         val segments = gestureShapes.filter { it.visible }.flatMap { shape -> shape.pointIndices.mapNotNull(gesturePoints::getOrNull).zipWithNext() }
@@ -10897,7 +11994,7 @@ private fun CoordinateCanvas(
                                                 InteractionGeometry.tangentPoints(origin, center, radius)
                                             }
                                         }.orEmpty()
-                                        val snapped = if (snapEnabled) SmartSnapEngine.snap(
+                                        val snapped = if (snapDuringGesture) SmartSnapEngine.snap(
                                             proposed,
                                             remainingPoints,
                                             centers = centers,
@@ -10910,12 +12007,12 @@ private fun CoordinateCanvas(
                                         onPointDrag(pointIndex, snapped.point)
                                     }
                                     shapeIndex != null -> {
-                                        val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(currentWorld - startWorld, axisConstraint), precisionMode)
+                                        val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(currentWorld - startWorld, axisDuringGesture), precisionDuringGesture)
                                         snapGuides = emptyList()
                                         coordinateTooltip = selectionBounds?.center?.plus(constrained)
                                         onShapeDrag(constrained)
                                     }
-                                    interactionEnabled -> {
+                                    canManipulate -> {
                                         cameraCenter = Vec2(cameraCenter.x - delta.x / scale(), cameraCenter.y + delta.y / scale())
                                         gestureMode = GestureMode.Panning
                                     }
@@ -10932,14 +12029,14 @@ private fun CoordinateCanvas(
                             onDragCancel()
                             onObjectLongPress(shapeIndex, pointIndex, startWorld)
                         }
-                        lassoEnabled -> {
+                        lassoDuringGesture -> {
                             val selected = gestureShapes.indices.filterTo(linkedSetOf()) { index ->
                                 val shapePoints = gestureShapes[index].pointIndices.mapNotNull(gesturePoints::getOrNull)
                                 shapePoints.isNotEmpty() && InteractionGeometry.pointInPolygon(InteractionGeometry.bounds(shapePoints)?.center ?: shapePoints.first(), lassoWorld)
                             }
                             onLassoSelection(selected)
                         }
-                        boxSelectEnabled -> {
+                        boxSelectDuringGesture -> {
                             val end = boxCurrentWorld ?: startWorld
                             onLassoSelection(com.indianservers.aiexplorer.workspace.Geometry2DDirectManipulation.boxSelect(
                                 com.indianservers.aiexplorer.workspace.WorkspaceState(points = gesturePoints, shapes = gestureShapes, functions = emptyList(), solids = emptyList(), vectors3D = emptyList()),
@@ -10956,15 +12053,15 @@ private fun CoordinateCanvas(
                         }
                         !moved && !transformed -> {
                             val now = System.currentTimeMillis()
-                            if (interactionEnabled && now - lastTapAt < 320L) {
+                            if (canManipulate && now - lastTapAt < 320L) {
                                 val fit = InteractionGeometry.fit(gesturePoints, size.width.toDouble() / size.height)
                                 cameraCenter = fit.center
                                 cameraZoom = fit.zoom
                                 lastTapAt = 0L
                             } else {
-                                if (interactionEnabled && tappedPointIndex == null && shapeIndex == null) onClearSelection()
+                                if (canManipulate && tappedPointIndex == null && shapeIndex == null) onClearSelection()
                                 else onCanvasTap(startWorld, tappedPointIndex)
-                                lastTapAt = if (interactionEnabled) now else 0L
+                                lastTapAt = if (canManipulate) now else 0L
                             }
                         }
                     }
@@ -11232,6 +12329,176 @@ private fun DeleteDropTarget(enabled: Boolean, onDelete: () -> Unit, modifier: M
             drawLine(color, Offset(size.width * .40f, size.height * .13f), Offset(size.width * .60f, size.height * .13f), 2.5f)
         }
         Text(if (enabled) "Delete" else "Select", color = if (enabled) Color(0xFFFF6688) else Muted, fontSize = 9.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
+    }
+}
+
+@Composable
+private fun AddShapeTarget(onAdd: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xDD0D332C))
+            .border(1.dp, Green.copy(alpha = .88f), RoundedCornerShape(16.dp))
+            .clickable(onClick = onAdd)
+            .semantics { contentDescription = "Add a shape to the 3D scene" },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Canvas(Modifier.padding(top = 7.dp).size(22.dp)) {
+            drawCircle(Green.copy(alpha = .18f), size.minDimension / 2)
+            drawLine(Green, Offset(size.width * .20f, size.height / 2), Offset(size.width * .80f, size.height / 2), 3f, cap = StrokeCap.Round)
+            drawLine(Green, Offset(size.width / 2, size.height * .20f), Offset(size.width / 2, size.height * .80f), 3f, cap = StrokeCap.Round)
+        }
+        Text("+ Add", color = Green, fontSize = 9.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp))
+    }
+}
+
+private fun SolidType.libraryCategory(): String = when (this) {
+    SolidType.Cube, SolidType.Cuboid -> "Basic"
+    SolidType.Sphere, SolidType.Hemisphere, SolidType.Cylinder, SolidType.Cone,
+    SolidType.Frustum, SolidType.Torus, SolidType.Capsule, SolidType.Ellipsoid,
+    SolidType.Paraboloid,
+    -> "Curved"
+    SolidType.TriangularPrism, SolidType.PentagonalPrism, SolidType.HexagonalPrism,
+    SolidType.OctagonalPrism,
+    -> "Prisms"
+    SolidType.Tetrahedron, SolidType.TriangularPyramid, SolidType.Octahedron,
+    SolidType.Pyramid, SolidType.Wedge,
+    -> "Polyhedra"
+}
+
+private fun SolidType.displayName(): String =
+    name.replace(Regex("(?<=[a-z])(?=[A-Z])"), " ")
+
+private fun SolidType.libraryColor(): Color = when (libraryCategory()) {
+    "Basic" -> Cyan
+    "Curved" -> Color(0xFFFF6FAE)
+    "Prisms" -> Green
+    else -> Violet
+}
+
+@Composable
+private fun SolidShapeLibrary(
+    sceneObjectCount: Int,
+    onDismiss: () -> Unit,
+    onAdd: (SolidType) -> Unit,
+    onAddVector: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var search by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("All") }
+    var preview by remember { mutableStateOf(SolidType.Cube) }
+    val categories = listOf("All", "Basic", "Curved", "Prisms", "Polyhedra")
+    val visibleTypes = SolidType.entries.filter { type ->
+        (category == "All" || type.libraryCategory() == category) &&
+            (search.isBlank() || type.displayName().contains(search.trim(), ignoreCase = true))
+    }
+    GlassPanel(modifier) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Column {
+                Text("Add to 3D space", color = Ink, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text("${SolidType.entries.size} solids · $sceneObjectCount currently in scene", color = Green, fontSize = 10.sp)
+            }
+            GlowButton("Close", icon = "×", onClick = onDismiss)
+        }
+        OutlinedTextField(
+            value = search,
+            onValueChange = { search = it },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Search all shapes") },
+            placeholder = { Text("sphere, prism, pyramid…") },
+            singleLine = true,
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            categories.forEach { option ->
+                GlowButton(if (category == option) "• $option" else option) { category = option }
+            }
+        }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(preview.libraryColor().copy(alpha = .10f))
+                .border(1.dp, preview.libraryColor().copy(alpha = .55f), RoundedCornerShape(14.dp))
+                .padding(9.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            SolidLibraryThumbnail(preview, preview.libraryColor(), Modifier.size(68.dp))
+            Column(Modifier.weight(1f)) {
+                Text(preview.displayName(), color = preview.libraryColor(), fontWeight = FontWeight.Bold)
+                Text(Geometry3D.formula(preview), color = Ink, fontSize = 10.sp, maxLines = 2)
+                Text("Placed automatically in the nearest clear floor position.", color = Muted, fontSize = 9.sp)
+            }
+            GlowButton("+ Add ${preview.displayName()}", onClick = { onAdd(preview) })
+        }
+        if (visibleTypes.isEmpty()) {
+            Text("No matching shapes. Try another name or choose All.", color = Amber)
+        } else {
+            FlowRow(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(7.dp),
+                verticalArrangement = Arrangement.spacedBy(7.dp),
+            ) {
+                visibleTypes.forEach { type ->
+                    val selected = type == preview
+                    Column(
+                        Modifier
+                            .width(105.dp)
+                            .clip(RoundedCornerShape(13.dp))
+                            .background(type.libraryColor().copy(alpha = if (selected) .18f else .07f))
+                            .border(1.dp, type.libraryColor().copy(alpha = if (selected) .9f else .35f), RoundedCornerShape(13.dp))
+                            .clickable { preview = type }
+                            .padding(7.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(3.dp),
+                    ) {
+                        SolidLibraryThumbnail(type, type.libraryColor(), Modifier.size(48.dp))
+                        Text(type.displayName(), color = if (selected) type.libraryColor() else Ink, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, maxLines = 2)
+                        Text(
+                            "+ Add",
+                            color = Green,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable {
+                                    preview = type
+                                    onAdd(type)
+                                }
+                                .padding(horizontal = 12.dp, vertical = 5.dp),
+                        )
+                    }
+                }
+            }
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text("Need direction or magnitude?", color = Muted, fontSize = 10.sp)
+            GlowButton("+ Add vector", onClick = onAddVector)
+        }
+    }
+}
+
+@Composable
+private fun SolidLibraryThumbnail(type: SolidType, color: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier.semantics { contentDescription = "${type.displayName()} preview" }) {
+        drawSolidProjection(
+            solid = defaultSolid(type),
+            offset = Vec3(0.0, 0.0, 0.0),
+            rx = 24f,
+            ry = -32f,
+            rz = 8f,
+            center = center,
+            scale = size.minDimension * .22f,
+            color = color,
+            visualMode = SpatialVisualMode.Solid,
+            selected = false,
+            perspective = true,
+            subSelection = null,
+            sectionEnabled = false,
+            sectionPlane = EditableSectionPlane(),
+            clipSection = false,
+        )
     }
 }
 
@@ -12369,7 +13636,7 @@ private fun Projected3DCanvas(
     zoom: Float,
     cameraPan: Offset,
     transformMode: Transform3DMode,
-    wire: Boolean,
+    visualMode: SpatialVisualMode,
     perspective: Boolean,
     selectionMode: Selection3DMode,
     subSelection: SubObjectSelection?,
@@ -12651,7 +13918,7 @@ private fun Projected3DCanvas(
             if (index !in visibleSolidIndices) return@forEachIndexed
             val color = if (index == selectedIndex) Cyan else if (index == stylusHoverSolid) Amber else if (index % 2 == 0) Violet else Green
             drawSolidProjection(
-                solid, solid.position, rx, ry, rz, center, 74f * zoom, color, wire, index == selectedIndex,
+                solid, solid.position, rx, ry, rz, center, 74f * zoom, color, visualMode, index == selectedIndex,
                 perspective, subSelection?.takeIf { it.solidIndex == index }, sectionEnabled && index == selectedIndex,
                 sectionPlane, clipSection && index == selectedIndex,
             )
@@ -13054,24 +14321,41 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStoredShapes(
     selectedShape: Int,
     tx: (Vec2) -> Offset,
 ) {
+    val objectPalette = listOf(
+        Color(0xFF20D9FF),
+        Color(0xFF9B6CFF),
+        Color(0xFF48E0A4),
+        Color(0xFFFFC857),
+        Color(0xFFFF7396),
+        Color(0xFF5B8CFF),
+        Color(0xFFFF8A5B),
+        Color(0xFF68E5D1),
+    )
+    fun objectColor(shape: Shape2D): Color = when (shape.styleKey) {
+        "cyan" -> Cyan
+        "violet" -> Violet
+        "green" -> Green
+        "accent" -> Amber
+        else -> objectPalette[shape.id.hashCode().ushr(1) % objectPalette.size]
+    }
     shapes.forEachIndexed { index, shape ->
         if (!shape.visible) return@forEachIndexed
         val shapePoints = shape.pointIndices.mapNotNull { points.getOrNull(it) }
-        val styled = when (shape.styleKey) {
-            "cyan" -> Cyan
-            "violet" -> Violet
-            "green" -> Green
-            else -> if (index % 2 == 0) Violet else Cyan
-        }
-        val accent = if (index in selectedShapes) Amber else styled
+        val accent = objectColor(shape)
         drawShape2D(shape.type, shapePoints, tx, accent, filled = true)
+        if (index in selectedShapes) {
+            shapePoints.forEach { point ->
+                drawCircle(Color.White.copy(alpha = .16f), 13f, tx(point))
+            }
+        }
     }
     val visibleJunctions = shapes.filter { it.visible }.flatMap { it.pointIndices }.distinct()
     val selectedJunctions = shapes.getOrNull(selectedShape)?.pointIndices.orEmpty().toSet()
     visibleJunctions.forEach { pointIndex ->
         val point = points.getOrNull(pointIndex) ?: return@forEach
         val selected = pointIndex in selectedJunctions
-        val accent = if (selected) Amber else Cyan
+        val owner = shapes.firstOrNull { it.visible && pointIndex in it.pointIndices }
+        val accent = owner?.let(::objectColor) ?: Cyan
         drawCircle(accent.copy(if (selected) .24f else .15f), if (selected) 22f else 16f, tx(point))
         drawCircle(Color.White.copy(.95f), if (selected) 8f else 6f, tx(point))
         drawCircle(accent, if (selected) 5f else 3.5f, tx(point))
@@ -13167,6 +14451,13 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
             val center = tx(points[0])
             val rx = (tx(points[1]) - center).getDistance().coerceAtLeast(1f)
             val ry = (tx(points[2]) - center).getDistance().coerceAtLeast(1f)
+            if (filled) {
+                drawOval(
+                    color = accent.copy(alpha = .14f),
+                    topLeft = Offset(center.x - rx, center.y - ry),
+                    size = Size(rx * 2f, ry * 2f),
+                )
+            }
             drawOval(
                 color = accent,
                 topLeft = Offset(center.x - rx, center.y - ry),
@@ -13187,7 +14478,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
                 lineTo(a.x, a.y + height)
                 close()
             }
-            if (filled) drawPath(path, Brush.linearGradient(listOf(accent.copy(.28f), Cyan.copy(.10f))))
+            if (filled) drawPath(path, Brush.linearGradient(listOf(accent.copy(.20f), accent.copy(.07f), Color.Transparent)))
             drawPath(path, accent, style = stroke)
         }
         Shape2DType.Triangle, Shape2DType.Polygon -> {
@@ -13201,7 +14492,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawShape2D(
                 }
                 close()
             }
-            if (filled) drawPath(path, Brush.linearGradient(listOf(Violet.copy(.26f), Cyan.copy(.12f), Color.Transparent)))
+            if (filled) drawPath(path, Brush.linearGradient(listOf(accent.copy(.20f), accent.copy(.07f), Color.Transparent)))
             drawPath(path, accent, style = stroke)
         }
         Shape2DType.RegularPolygon -> {
@@ -13285,7 +14576,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjection
     center: Offset,
     scale: Float,
     color: Color,
-    wire: Boolean,
+    visualMode: SpatialVisualMode,
     selected: Boolean,
     perspective: Boolean,
     subSelection: SubObjectSelection?,
@@ -13296,26 +14587,58 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjection
     fun p(v: Vec3): Offset {
         return project(rotate(solidLocalToWorld(solid.copy(position = offset), v), rx, ry, rz), center, scale, perspective)
     }
-    val strokeWidth = if (wire) 2.2f else 4.2f
+    val strokeWidth = when (visualMode) {
+        SpatialVisualMode.Wireframe -> 2.2f
+        SpatialVisualMode.XRay -> 1.5f
+        SpatialVisualMode.Solid -> if (selected) 1.8f else 1.1f
+    }
     val anchor = project(rotate(offset, rx, ry, rz), center, scale, perspective)
     if (selected) {
         drawCircle(Brush.radialGradient(listOf(color.copy(.34f), Color.Transparent), anchor, 112f), radius = 112f, center = anchor)
         drawCircle(color.copy(.85f), radius = 64f, center = anchor, style = Stroke(2.4f))
     }
     val mesh = SolidMeshFactory.create(solid)
-    val vertices = mesh.vertices.map(::p)
-    if (!wire && !clipSection) {
-        mesh.faces.forEachIndexed { index, face ->
-                if (face.size >= 3) {
-                    val path = Path().apply {
-                        moveTo(vertices[face.first()].x, vertices[face.first()].y)
-                        face.drop(1).forEach { lineTo(vertices[it].x, vertices[it].y) }
-                        close()
-                    }
-                    val selectedFace = subSelection?.mode == Selection3DMode.Face && subSelection.index == index
-                    drawPath(path, if (selectedFace) Amber.copy(.5f) else color.copy(.12f))
+    val rotatedVertices = mesh.vertices.map { rotate(solidLocalToWorld(solid.copy(position = offset), it), rx, ry, rz) }
+    val vertices = rotatedVertices.map { project(it, center, scale, perspective) }
+    if (visualMode != SpatialVisualMode.Wireframe && !clipSection) {
+        val lightDirection = Vec3(-.35, .65, -.68).normalized()
+        mesh.faces.withIndex()
+            .filter { it.value.size >= 3 }
+            .sortedByDescending { indexed -> indexed.value.map { rotatedVertices[it].z }.average() }
+            .forEach { (index, face) ->
+                val path = Path().apply {
+                    moveTo(vertices[face.first()].x, vertices[face.first()].y)
+                    face.drop(1).forEach { lineTo(vertices[it].x, vertices[it].y) }
+                    close()
                 }
-        }
+                val normal = AnalyticGeometry3D.cross(
+                    rotatedVertices[face[1]] - rotatedVertices[face[0]],
+                    rotatedVertices[face[2]] - rotatedVertices[face[0]],
+                ).normalized()
+                val light = (.28 + .72 * kotlin.math.abs(normal.dot(lightDirection))).coerceIn(.28, 1.0).toFloat()
+                val litColor = Color(
+                    red = (color.red * (.55f + light * .45f)).coerceIn(0f, 1f),
+                    green = (color.green * (.55f + light * .45f)).coerceIn(0f, 1f),
+                    blue = (color.blue * (.55f + light * .45f)).coerceIn(0f, 1f),
+                    alpha = 1f,
+                )
+                val selectedFace = subSelection?.mode == Selection3DMode.Face && subSelection.index == index
+                val faceAlpha = when {
+                    selectedFace -> .68f
+                    visualMode == SpatialVisualMode.XRay -> .13f
+                    selected -> .68f
+                    else -> .56f
+                }
+                drawPath(
+                    path,
+                    Brush.linearGradient(
+                        listOf(
+                            (if (selectedFace) Amber else litColor).copy(alpha = faceAlpha),
+                            Color.White.copy(alpha = if (visualMode == SpatialVisualMode.XRay) .025f else .10f),
+                        ),
+                    ),
+                )
+            }
     }
     mesh.edges.forEachIndexed { index, (a, b) ->
         var start = mesh.vertices[a]
@@ -13332,10 +14655,17 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjection
                 end += (start - end) * t
             }
             val picked = subSelection?.mode == Selection3DMode.Edge && subSelection.index == index
-            drawLine(if (picked) Amber else color, p(start), p(end), if (picked) 7f else strokeWidth)
+            val edgeColor = when {
+                picked -> Amber
+                visualMode == SpatialVisualMode.Wireframe -> color
+                visualMode == SpatialVisualMode.XRay -> color.copy(alpha = .58f)
+                selected -> color.copy(alpha = .88f)
+                else -> color.copy(alpha = .48f)
+            }
+            drawLine(edgeColor, p(start), p(end), if (picked) 7f else strokeWidth)
         }
     }
-    if (mesh.vertices.size <= 16 || subSelection?.mode == Selection3DMode.Vertex) {
+    if (visualMode == SpatialVisualMode.Wireframe || subSelection?.mode == Selection3DMode.Vertex) {
         vertices.forEachIndexed { index, vertex ->
             if (!clipSection || sectionPlane.unitNormal.dot(mesh.vertices[index]) - sectionPlane.offset >= 0.0) {
                 val picked = subSelection?.mode == Selection3DMode.Vertex && subSelection.index == index
