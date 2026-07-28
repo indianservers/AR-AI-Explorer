@@ -39,10 +39,14 @@ data class ArMathWorkspaceScene(
  */
 object ArMathWorkspaceBridge {
     private val graph = GraphAnalysis()
-    private val cyan = SpatialMaterial("AR cyan", listOf(.08f, .82f, 1f, .92f), metallic = .08f, roughness = .34f)
-    private val violet = SpatialMaterial("AR violet", listOf(.63f, .36f, 1f, .88f), metallic = .08f, roughness = .38f)
-    private val green = SpatialMaterial("AR green", listOf(.18f, .92f, .56f, .92f), emissive = .08f)
-    private val amber = SpatialMaterial("AR amber", listOf(1f, .65f, .12f, .9f), emissive = .05f)
+    private val cyan = SpatialMaterial("AR cyan glow", listOf(.10f, .95f, 1f, .96f), roughness = .2f, emissive = .55f, blendMode = SpatialBlendMode.Transparent)
+    private val violet = SpatialMaterial("AR violet glow", listOf(.70f, .35f, 1f, .94f), roughness = .24f, emissive = .52f, blendMode = SpatialBlendMode.Transparent)
+    private val green = SpatialMaterial("AR mint glow", listOf(.25f, 1f, .72f, .94f), roughness = .2f, emissive = .5f, blendMode = SpatialBlendMode.Transparent)
+    private val amber = SpatialMaterial("AR amber glow", listOf(1f, .70f, .18f, .9f), roughness = .26f, emissive = .38f, blendMode = SpatialBlendMode.Transparent)
+    private val graphSurface = SpatialMaterial("AR graph surface", listOf(.48f, .22f, 1f, .52f), roughness = .2f, emissive = .42f, blendMode = SpatialBlendMode.Transparent)
+    private val graphWire = SpatialMaterial("AR graph wire", listOf(.10f, .92f, 1f, .82f), roughness = .18f, emissive = .55f, blendMode = SpatialBlendMode.Transparent)
+    private val graphAxis = SpatialMaterial("AR white axis", listOf(1f, 1f, 1f, .96f), roughness = .18f, emissive = .32f, blendMode = SpatialBlendMode.Transparent)
+    private val graphGrid = SpatialMaterial("AR glass grid", listOf(.75f, .95f, 1f, .18f), roughness = .35f, emissive = .12f, blendMode = SpatialBlendMode.Transparent)
     private val palette = listOf(cyan, violet, green, amber)
 
     fun build(
@@ -78,7 +82,7 @@ object ArMathWorkspaceBridge {
         val sourceCount = workspace.points.size + workspace.shapes.size
         return ArMathWorkspaceScene(
             ArMathWorkspaceMode.Geometry2D,
-            base.copy(id = "ar-2d-geometry", primitives = base.primitives + shapePrimitives + pointPrimitives, annotations = annotations),
+            base.copy(id = "ar-2d-geometry", primitives = restyleAxes(base.primitives) + grid2D(-6, 6, z = -0.02) + shapePrimitives + pointPrimitives, annotations = annotations),
             sourceCount,
             pointPrimitives.size + shapePrimitives.size,
             if (shapePrimitives.size < workspace.shapes.size) listOf("${workspace.shapes.size - shapePrimitives.size} incomplete 2D object(s) need more defining points.") else emptyList(),
@@ -125,7 +129,7 @@ object ArMathWorkspaceBridge {
         }
         return ArMathWorkspaceScene(
             ArMathWorkspaceMode.Graph2D,
-            base.copy(id = "ar-2d-graph", primitives = base.primitives + curves, annotations = annotations),
+            base.copy(id = "ar-2d-graph", primitives = restyleAxes(base.primitives) + grid2D(-6, 6, z = 0.0) + curves, annotations = annotations),
             workspace.functions.count { it.visible },
             curves.size,
             diagnostics,
@@ -135,10 +139,19 @@ object ArMathWorkspaceBridge {
     private fun graph3D(workspace: WorkspaceState, density: Int): ArMathWorkspaceScene {
         val mesh = runCatching { Graph3D().mesh(workspace.surfaceExpression, density.coerceIn(12, 64).toDouble()) }
         val scene = mesh.getOrNull()?.let {
-            SharedSpatialSceneBuilder.build(
+            val generated = SharedSpatialSceneBuilder.build(
                 id = "ar-3d-graph",
                 surface = it,
                 annotations = listOf(SpatialAnnotation("surface-label", Vec3(0.0, 2.6, 0.0), workspace.surfaceExpression)),
+            )
+            generated.copy(
+                primitives = generated.primitives.map { primitive ->
+                    when {
+                        primitive.kind == SpatialPrimitiveKind.Surface -> primitive.copy(material = graphSurface)
+                        primitive.id.startsWith("axis-") -> primitive.copy(material = graphAxis)
+                        else -> primitive
+                    }
+                } + meshWireframe(it),
             )
         } ?: SharedSpatialSceneBuilder.build("ar-3d-graph")
         return ArMathWorkspaceScene(
@@ -238,6 +251,61 @@ object ArMathWorkspaceBridge {
             geometry = SpatialGeometry(vertices, triangles = triangles, lines = lines, pointRadius = .045),
             material = if (triangles.isEmpty()) material else material.copy(colorRgba = material.colorRgba.toMutableList().also { it[3] = .32f }, blendMode = SpatialBlendMode.Transparent),
             label = shape.name,
+        )
+    }
+
+    private fun restyleAxes(primitives: List<SpatialPrimitive>): List<SpatialPrimitive> = primitives.map { primitive ->
+        if (primitive.id.startsWith("axis-")) primitive.copy(material = graphAxis) else primitive
+    }
+
+    private fun grid2D(min: Int, max: Int, z: Double): List<SpatialPrimitive> {
+        val vertices = mutableListOf<Vec3>()
+        val lines = mutableListOf<Pair<Int, Int>>()
+        fun addLine(from: Vec3, to: Vec3) {
+            val start = vertices.size
+            vertices += from
+            vertices += to
+            lines += start to start + 1
+        }
+        for (value in min..max) {
+            if (value != 0) {
+                addLine(Vec3(value.toDouble(), min.toDouble(), z), Vec3(value.toDouble(), max.toDouble(), z))
+                addLine(Vec3(min.toDouble(), value.toDouble(), z), Vec3(max.toDouble(), value.toDouble(), z))
+            }
+        }
+        return listOf(
+            SpatialPrimitive(
+                id = "ar-grid-2d",
+                kind = SpatialPrimitiveKind.Curve,
+                geometry = SpatialGeometry(vertices, lines = lines, pointRadius = .015),
+                material = graphGrid,
+                label = "AR graph grid",
+                selectable = false,
+            ),
+        )
+    }
+
+    private fun meshWireframe(mesh: com.indianservers.aiexplorer.core.SurfaceMesh): SpatialPrimitive {
+        val lines = mutableListOf<Pair<Int, Int>>()
+        for (row in 0 until mesh.rows) {
+            for (column in 0 until mesh.columns - 1) {
+                val index = row * mesh.columns + column
+                lines += index to index + 1
+            }
+        }
+        for (column in 0 until mesh.columns) {
+            for (row in 0 until mesh.rows - 1) {
+                val index = row * mesh.columns + column
+                lines += index to index + mesh.columns
+            }
+        }
+        return SpatialPrimitive(
+            id = "surface-wireframe",
+            kind = SpatialPrimitiveKind.Curve,
+            geometry = SpatialGeometry(mesh.vertices, lines = lines, pointRadius = .018),
+            material = graphWire,
+            label = "Surface wireframe",
+            selectable = false,
         )
     }
 

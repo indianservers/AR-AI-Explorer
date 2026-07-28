@@ -53,12 +53,12 @@ data class SpatialRay(val origin: Vec3, val direction: Vec3)
 data class SpatialPickResult(val primitiveId: String, val kind: SpatialPrimitiveKind, val distance: Double, val worldPosition: Vec3, val label: String)
 
 object SharedSpatialSceneBuilder {
-    private val cyan = SpatialMaterial("cyan glass", listOf(.12f, .82f, 1f, .88f), metallic = .15f, roughness = .3f)
-    private val violet = SpatialMaterial("violet", listOf(.58f, .34f, 1f, .84f), metallic = .1f, roughness = .4f)
-    private val green = SpatialMaterial("vector", listOf(.2f, .9f, .58f, 1f), emissive = .1f)
-    private val axisX = SpatialMaterial("x axis", listOf(1f, .25f, .3f, 1f), metallic = .1f, roughness = .35f)
-    private val axisY = SpatialMaterial("y axis", listOf(.25f, 1f, .45f, 1f), metallic = .1f, roughness = .35f)
-    private val axisZ = SpatialMaterial("z axis", listOf(.25f, .6f, 1f, 1f), metallic = .1f, roughness = .35f)
+    private val cyan = SpatialMaterial("cyan glass", listOf(.10f, .92f, 1f, .66f), roughness = .24f, emissive = .34f, blendMode = SpatialBlendMode.Transparent)
+    private val violet = SpatialMaterial("violet glass", listOf(.72f, .34f, 1f, .64f), roughness = .28f, emissive = .32f, blendMode = SpatialBlendMode.Transparent)
+    private val green = SpatialMaterial("mint vector", listOf(.22f, 1f, .72f, .88f), roughness = .22f, emissive = .42f, blendMode = SpatialBlendMode.Transparent)
+    private val axisX = SpatialMaterial("x axis", listOf(1f, 1f, 1f, .92f), roughness = .2f, emissive = .22f, blendMode = SpatialBlendMode.Transparent)
+    private val axisY = SpatialMaterial("y axis", listOf(1f, 1f, 1f, .92f), roughness = .2f, emissive = .22f, blendMode = SpatialBlendMode.Transparent)
+    private val axisZ = SpatialMaterial("z axis", listOf(1f, 1f, 1f, .92f), roughness = .2f, emissive = .22f, blendMode = SpatialBlendMode.Transparent)
 
     fun build(
         id: String,
@@ -82,7 +82,7 @@ object SharedSpatialSceneBuilder {
             )
         }
         surface?.let { mesh ->
-            primitives += SpatialPrimitive("surface", SpatialPrimitiveKind.Surface, surfaceGeometry(mesh), cyan.copy(name = "surface", blendMode = SpatialBlendMode.Transparent), "Mathematical surface")
+            primitives += SpatialPrimitive("surface", SpatialPrimitiveKind.Surface, surfaceGeometry(mesh), cyan.copy(name = "surface", colorRgba = listOf(.14f, .86f, 1f, .48f), emissive = .28f), "Mathematical surface")
         }
         probabilitySurface?.let { mesh ->
             primitives += SpatialPrimitive("probability", SpatialPrimitiveKind.ProbabilitySurface, surfaceGeometry(mesh), violet.copy(name = "probability", blendMode = SpatialBlendMode.Transparent), "Probability surface")
@@ -302,7 +302,7 @@ class OpenGlEsSpatialRenderer {
         GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, triangleBuffer)
         plan?.calls?.forEach { call -> if (call.indexCount > 0) GLES30.glDrawElements(GLES30.GL_TRIANGLES, call.indexCount, GLES30.GL_UNSIGNED_INT, call.firstIndex * 4) }
         GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, lineBuffer)
-        GLES30.glLineWidth(2f)
+        GLES30.glLineWidth(4f)
         plan?.calls?.forEach { call -> if (call.lineCount > 0) GLES30.glDrawElements(GLES30.GL_LINES, call.lineCount, GLES30.GL_UNSIGNED_INT, call.lineFirst * 4) }
     }
 

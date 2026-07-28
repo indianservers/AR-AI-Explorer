@@ -98,10 +98,8 @@ data class WorkspaceState(
     val id: String = "default",
     val name: String = "Exploration Lab",
     val module: MathModule = MathModule.Graph2D,
-    val points: List<Vec2> = listOf(Vec2(1.0, 2.0), Vec2(4.0, 5.0)),
-    val shapes: List<Shape2D> = listOf(
-        Shape2D("default-segment", Shape2DType.Segment, listOf(0, 1), "AB"),
-    ),
+    val points: List<Vec2> = emptyList(),
+    val shapes: List<Shape2D> = emptyList(),
     val pointDependencies: List<PointDependency> = emptyList(),
     val geometryConstraints: List<GeometryConstraint2D> = emptyList(),
     val geometryGroups: List<GeometryGroup2D> = emptyList(),

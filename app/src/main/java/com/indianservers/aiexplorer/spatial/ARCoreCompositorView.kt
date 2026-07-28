@@ -26,7 +26,11 @@ import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-data class SpatialCompositorScene(val scene: SpatialRenderScene, val placement: SpatialScenePlacement)
+data class SpatialCompositorScene(
+    val scene: SpatialRenderScene,
+    val placement: SpatialScenePlacement,
+    val screenLocked: Boolean = false,
+)
 
 /**
  * Production camera compositor over the renderer-neutral [ArRuntime].
@@ -132,7 +136,7 @@ class ARCoreCompositorView(
             updateFrameTime(frame.timestampNanos)
             uploadCameraCoordinates(frame)
             drawCamera()
-            drawTrackedPlanes(frame)
+            if (!current.screenLocked) drawTrackedPlanes(frame)
 
             val plan = if (uploadedScene !== current.scene) {
                 SharedGpuSceneCompiler.compile(current.scene).also {
@@ -144,7 +148,7 @@ class ARCoreCompositorView(
                 uploadedPlan
             }
             if (plan != null) {
-                val anchor = current.placement.anchorId
+                val anchor = if (current.screenLocked) null else current.placement.anchorId
                     .takeIf(String::isNotBlank)
                     ?.let { id -> runtime.anchors().firstOrNull { it.id == id } }
                 val pose = current.placement.pose
@@ -157,7 +161,12 @@ class ARCoreCompositorView(
                 applyLocalEulerRotation(model, pose)
                 val viewModel = FloatArray(16)
                 val mvp = FloatArray(16)
-                Matrix.multiplyMM(viewModel, 0, frame.camera.viewMatrix.values.toFloatArray(), 0, model, 0)
+                if (current.screenLocked) {
+                    Matrix.setIdentityM(viewModel, 0)
+                    Matrix.multiplyMM(viewModel, 0, viewModel.copyOf(), 0, model, 0)
+                } else {
+                    Matrix.multiplyMM(viewModel, 0, frame.camera.viewMatrix.values.toFloatArray(), 0, model, 0)
+                }
                 Matrix.multiplyMM(mvp, 0, frame.camera.projectionMatrix.values.toFloatArray(), 0, viewModel, 0)
                 val bounds = plan.boundingSphere()
                 if (bounds == null || ArFrustumCuller.visible(ArMatrix4(mvp.toList()), bounds)) {
