@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.indianservers.aiexplorer.AppColorScheme
 import androidx.datastore.preferences.preferencesDataStore
 import com.indianservers.aiexplorer.AppSettings
 import com.indianservers.aiexplorer.SavedWorkspace
@@ -70,6 +72,7 @@ class DurableMathStore(context: Context) {
             preferences[highContrast] = value.highContrast; preferences[reducedMotion] = value.reducedMotion
             preferences[spokenMath] = value.spokenMath; preferences[graphSonification] = value.graphSonification
             preferences[largeTouchTargets] = value.largeTouchTargets; preferences[decimalPrecision] = value.decimalPrecision
+            preferences[colorScheme] = value.colorScheme.name
         }
     }
 
@@ -81,6 +84,9 @@ class DurableMathStore(context: Context) {
             spokenMath = preferences[spokenMath] ?: false, graphSonification = preferences[graphSonification] ?: false,
             largeTouchTargets = preferences[largeTouchTargets] ?: false,
             decimalPrecision = (preferences[decimalPrecision] ?: 2).coerceIn(0, 10),
+            colorScheme = runCatching {
+                AppColorScheme.valueOf(preferences[colorScheme] ?: AppColorScheme.Modern.name)
+            }.getOrDefault(AppColorScheme.Modern),
         )
     }
 
@@ -115,5 +121,6 @@ class DurableMathStore(context: Context) {
         val graphSonification = booleanPreferencesKey("graph_sonification")
         val largeTouchTargets = booleanPreferencesKey("large_touch_targets")
         val decimalPrecision = intPreferencesKey("decimal_precision")
+        val colorScheme = stringPreferencesKey("color_scheme")
     }
 }

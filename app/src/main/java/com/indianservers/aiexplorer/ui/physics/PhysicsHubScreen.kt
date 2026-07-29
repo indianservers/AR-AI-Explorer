@@ -93,7 +93,7 @@ internal fun PhysicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
                     Text("16 physics learning modules", color = Muted, fontSize = 11.sp)
                 }
             }
-            GlowButton("Home", icon = "H", onClick = vm::openSubjectHub)
+	            GlowButton("Back", icon = "←", onClick = vm::navigateBackIntent)
         }
         Row(
             Modifier.fillMaxWidth().heightIn(min = 96.dp).clip(RoundedCornerShape(18.dp)).background(Brush.horizontalGradient(listOf(Cyan.copy(.16f), Violet.copy(.12f)))).border(1.dp, Cyan.copy(.65f), RoundedCornerShape(18.dp)).clickable { showFormulaLibrary = true }.semantics { contentDescription = "Open Physics Formulas: equations, derivations, units, calculators and applications" }.padding(14.dp),
@@ -103,7 +103,7 @@ internal fun PhysicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text("PHYSICS FORMULAS", color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
                 Text("Equations, derivations, units, calculators and applications", color = Ink, fontSize = 11.sp)
-                Text("25 categories - offline - separate Physics repository", color = Green, fontSize = 9.sp)
+	                Text("14 categories - offline - separate Physics repository", color = Green, fontSize = 9.sp)
             }
             Text("OPEN  >", color = Amber, fontWeight = FontWeight.Bold)
         }

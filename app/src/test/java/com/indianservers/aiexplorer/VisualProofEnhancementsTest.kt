@@ -87,4 +87,26 @@ class VisualProofEnhancementsTest {
         assertEquals(180.0, moved.frame.measurements.getValue("angle sum"), 1e-7)
         assertTrue(moved.frame.holds)
     }
+
+    @Test
+    fun everyProofSurvivesBoundaryValuesAndDeterministicNavigation() {
+        val engine = VisualProofEngine()
+        VisualProofCatalog.labs.forEach { lab ->
+            var playback = engine.start(lab.id)
+            lab.parameters.forEach { parameter ->
+                listOf(parameter.minimum, (parameter.minimum + parameter.maximum) / 2.0, parameter.maximum).forEach { value ->
+                    playback = engine.setParameter(playback, parameter.name, value)
+                    assertTrue("${lab.id}/${parameter.name} has finite evidence", playback.frame.measurements.values.all(Double::isFinite))
+                    assertTrue("${lab.id}/${parameter.name} has finite residual", playback.frame.residual.isFinite())
+                }
+            }
+            playback = engine.reveal(playback)
+            assertEquals(lab.steps.lastIndex, playback.frame.step)
+            playback = engine.previous(playback)
+            assertEquals((lab.steps.lastIndex - 1).coerceAtLeast(0), playback.frame.step)
+            playback = engine.reset(playback)
+            assertEquals(0, playback.frame.step)
+            assertFalse(playback.playing)
+        }
+    }
 }

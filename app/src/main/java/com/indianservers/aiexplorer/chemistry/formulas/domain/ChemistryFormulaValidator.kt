@@ -18,9 +18,8 @@ object ChemistryFormulaValidator {
             if(formula.relatedFormulaIds.any{it !in formulaIds})errors+="${formula.id} has a broken related formula link."
             if((formula.title.contains("pH",true)||formula.title.contains("Nernst",true))&&formula.assumptions.none{it.contains("temperature",true)})errors+="${formula.id} must state temperature assumptions."
         }
-        if(catalogue.categories.size!=26)warnings+="Expected 26 requested Chemistry categories."
+        if(catalogue.categories.size !in 10..15)warnings+="Chemistry formulas should stay between 10 and 15 top-level categories."
         if(catalogue.schemaVersion<1)errors+="Invalid schema version."
         return ChemistryFormulaValidationReport(errors,warnings)
     }
 }
-

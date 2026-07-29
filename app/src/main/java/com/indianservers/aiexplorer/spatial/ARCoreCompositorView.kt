@@ -152,9 +152,10 @@ class ARCoreCompositorView(
                     .takeIf(String::isNotBlank)
                     ?.let { id -> runtime.anchors().firstOrNull { it.id == id } }
                 val pose = current.placement.pose
+                val anchorPosition = anchor?.pose?.positionMeters
                 val orientation = anchor?.pose?.orientation ?: ArQuaternion.Identity
                 val model = ArModelMatrix.compose(
-                    position = ArVector3(pose.positionMeters.x, pose.positionMeters.y, pose.positionMeters.z),
+                    position = anchorPosition ?: ArVector3(pose.positionMeters.x, pose.positionMeters.y, pose.positionMeters.z),
                     orientation = orientation,
                     scale = pose.uniformScale * current.placement.metersPerMathUnit,
                 )

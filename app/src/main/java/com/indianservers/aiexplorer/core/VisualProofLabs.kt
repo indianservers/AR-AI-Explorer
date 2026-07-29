@@ -326,13 +326,15 @@ object VisualProofCatalog {
 
 class VisualProofEngine {
     fun start(id: String): ProofPlayback {
-        val lab = VisualProofCatalog.labs.first { it.id == id }
+        val lab = VisualProofCatalog.labs.firstOrNull { it.id == id }
+            ?: VisualProofCatalog.labs.first()
         return ProofPlayback(frame(lab, 0, lab.parameters.associate { it.name to it.initial }))
     }
 
     fun setParameter(playback: ProofPlayback, name: String, value: Double): ProofPlayback {
-        val definition = playback.frame.lab.parameters.first { it.name == name }
-        val parameters = playback.frame.parameters + (name to value.coerceIn(definition.minimum, definition.maximum))
+        val definition = playback.frame.lab.parameters.firstOrNull { it.name == name } ?: return playback
+        val safeValue = value.takeIf(Double::isFinite) ?: definition.initial
+        val parameters = playback.frame.parameters + (name to safeValue.coerceIn(definition.minimum, definition.maximum))
         return playback.copy(frame = frame(playback.frame.lab, playback.frame.step, parameters))
     }
 
@@ -343,7 +345,34 @@ class VisualProofEngine {
         return playback.copy(frame = frame(playback.frame.lab, next, playback.frame.parameters), direction = direction)
     }
 
-    fun reveal(playback: ProofPlayback) = playback.copy(frame = frame(playback.frame.lab, playback.frame.lab.steps.lastIndex, playback.frame.parameters))
+    fun previous(playback: ProofPlayback): ProofPlayback {
+        val previous = (playback.frame.step - 1).coerceAtLeast(0)
+        return playback.copy(
+            frame = frame(playback.frame.lab, previous, playback.frame.parameters),
+            playing = false,
+            direction = 1,
+        )
+    }
+
+    fun advance(playback: ProofPlayback): ProofPlayback {
+        val next = (playback.frame.step + 1).coerceAtMost(playback.frame.lab.steps.lastIndex)
+        return playback.copy(
+            frame = frame(playback.frame.lab, next, playback.frame.parameters),
+            playing = false,
+            direction = 1,
+        )
+    }
+
+    fun reset(playback: ProofPlayback): ProofPlayback {
+        val lab = playback.frame.lab
+        return ProofPlayback(frame(lab, 0, lab.parameters.associate { it.name to it.initial }))
+    }
+
+    fun reveal(playback: ProofPlayback) = playback.copy(
+        frame = frame(playback.frame.lab, playback.frame.lab.steps.lastIndex, playback.frame.parameters),
+        playing = false,
+        direction = 1,
+    )
     fun togglePlaying(playback: ProofPlayback) = playback.copy(playing = !playback.playing)
 
     private fun frame(lab: VisualProofLab, step: Int, p: Map<String, Double>): ProofFrame {

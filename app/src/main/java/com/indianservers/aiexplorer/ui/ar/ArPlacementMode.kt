@@ -10,7 +10,7 @@ import com.indianservers.aiexplorer.spatial.TrackingQuality
 internal enum class ArPlacementMode(val label: String, val shortLabel: String) {
     Screen("Screen", "SCR"),
     Instant6Dof("6DoF", "6D"),
-    PlaneAnchor("Plane", "PLN"),
+    PlaneAnchor("Tap Anchor", "TAP"),
 }
 
 internal fun SpatialScenePlacement.instantCameraFrontPlacement(

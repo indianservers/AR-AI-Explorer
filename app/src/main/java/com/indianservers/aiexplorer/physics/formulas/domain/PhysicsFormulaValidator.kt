@@ -17,9 +17,8 @@ object PhysicsFormulaValidator {
             formula.calculator?.let { if ((it.targetVariableIds + it.requiredVariableIds).any { id -> id !in formula.variables.map { variable -> variable.id } }) errors += "${formula.id} has an invalid calculator definition." }
             if (formula.relatedFormulaIds.any { it !in formulaIds }) errors += "${formula.id} has a broken related formula link."
         }
-        if (catalogue.categories.size != 25) warnings += "Expected 25 requested Physics categories."
+        if (catalogue.categories.size !in 10..15) warnings += "Physics formulas should stay between 10 and 15 top-level categories."
         if (catalogue.schemaVersion < 1) errors += "Invalid schema version."
         return PhysicsFormulaValidationReport(errors, warnings)
     }
 }
-

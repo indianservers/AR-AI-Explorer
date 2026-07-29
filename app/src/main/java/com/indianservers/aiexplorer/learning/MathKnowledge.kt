@@ -6,22 +6,121 @@ enum class DictionaryClassBand(val label: String) { CLASS_6_8("Classes 6–8"), 
 enum class DictionaryDifficulty(val label: String) { FOUNDATION("Foundation"), STANDARD("Standard"), ADVANCED("Advanced") }
 enum class QuizSubject(val label: String) { Maths("Maths"), Physics("Physics"), Chemistry("Chemistry"), Biology("Biology"), AstroPhysics("Astro Physics"), IQLabs("IQ Labs") }
 enum class QuizLevel(val label: String, val difficulty: Int) { Basic("Basic", 1), Intermediate("Intermediate", 2), Advanced("Advanced", 3) }
-enum class FormulaCategory(val label: String, val topic: KnowledgeTopic) {
-    Algebra("Algebra", KnowledgeTopic.Algebra),
-    Geometry("Geometry", KnowledgeTopic.Geometry),
-    Trigonometry("Trigonometry", KnowledgeTopic.Geometry),
-    Calculus("Calculus", KnowledgeTopic.Calculus),
-    DifferentialEquations("Differential Equations", KnowledgeTopic.Calculus),
-    LinearAlgebra("Linear Algebra", KnowledgeTopic.Algebra),
-    CoordinateGeometry("Coordinate Geometry", KnowledgeTopic.Geometry),
-    Vectors3D("Vectors & 3D", KnowledgeTopic.Geometry),
-    Probability("Probability", KnowledgeTopic.Probability),
-    Statistics("Statistics", KnowledgeTopic.Statistics),
-    Distributions("Distributions", KnowledgeTopic.Statistics),
-    NumberTheory("Number Theory", KnowledgeTopic.Algebra),
-    Combinatorics("Combinatorics", KnowledgeTopic.Probability),
-    ComplexNumbers("Complex Numbers", KnowledgeTopic.Algebra),
-    NumericalMethods("Numerical Methods", KnowledgeTopic.Calculus),
+enum class FormulaCategory(val label: String, val topic: KnowledgeTopic, val subcategories: List<String>) {
+    AlgebraFunctions("Algebra and Functions", KnowledgeTopic.Algebra, listOf("Quadratics", "Identities", "Sequences", "Logarithms", "Polynomials")),
+    GeometryTrigonometry("Geometry and Trigonometry", KnowledgeTopic.Geometry, listOf("Plane Geometry", "Mensuration", "Right Triangles", "Trigonometric Identities", "Triangle Laws")),
+    CalculusAnalysis("Calculus and Analysis", KnowledgeTopic.Calculus, listOf("Limits", "Derivatives", "Integrals", "Series", "Multivariable Calculus")),
+    DifferentialEquations("Differential Equations", KnowledgeTopic.Calculus, listOf("First-order ODEs", "Second-order ODEs", "Growth Models", "Laplace Methods", "Numerical ODEs")),
+    LinearAlgebraVectors("Linear Algebra and Vectors", KnowledgeTopic.Algebra, listOf("Matrices", "Determinants", "Eigenvalues", "Dot Products", "Projections")),
+    CoordinateGeometry3D("Coordinate Geometry and 3D", KnowledgeTopic.Geometry, listOf("Lines", "Conics", "Coordinate Solids", "Planes", "3D Distance")),
+    ProbabilityCombinatorics("Probability and Combinatorics", KnowledgeTopic.Probability, listOf("Probability Rules", "Bayes", "Random Variables", "Counting", "Graph Counting")),
+    StatisticsDistributions("Statistics and Distributions", KnowledgeTopic.Statistics, listOf("Descriptive Statistics", "Inference", "Regression", "Discrete Distributions", "Continuous Distributions")),
+    NumberTheory("Number Theory", KnowledgeTopic.Algebra, listOf("Divisibility", "Modular Arithmetic", "Primes", "Arithmetic Functions", "Sequences")),
+    ComplexNumbers("Complex Numbers", KnowledgeTopic.Algebra, listOf("Algebraic Form", "Polar Form", "Euler Form", "Roots", "Complex Analysis Basics")),
+    NumericalMethods("Numerical Methods", KnowledgeTopic.Calculus, listOf("Root Finding", "Finite Differences", "Numerical Integration", "Interpolation", "Optimization")),
+    ;
+
+    companion object {
+        // Retains source compatibility with the former category name.
+        val Trigonometry: FormulaCategory get() = GeometryTrigonometry
+    }
+}
+
+fun FormulaCategory.icon(): String = when (this) {
+    FormulaCategory.AlgebraFunctions -> "x2"
+    FormulaCategory.GeometryTrigonometry -> "tri"
+    FormulaCategory.CalculusAnalysis -> "int"
+    FormulaCategory.DifferentialEquations -> "dy"
+    FormulaCategory.LinearAlgebraVectors -> "mat"
+    FormulaCategory.CoordinateGeometry3D -> "xyz"
+    FormulaCategory.ProbabilityCombinatorics -> "P"
+    FormulaCategory.StatisticsDistributions -> "bar"
+    FormulaCategory.NumberTheory -> "N"
+    FormulaCategory.ComplexNumbers -> "i"
+    FormulaCategory.NumericalMethods -> "num"
+}
+
+fun FormulaCategory.subcategoryFor(title: String): String {
+    val name = title.lowercase()
+    return when (this) {
+        FormulaCategory.AlgebraFunctions -> when {
+            listOf("quadratic", "discriminant", "parabola", "square").any { it in name } -> "Quadratics"
+            listOf("difference", "perfect", "cubic").any { it in name } -> "Identities"
+            listOf("sequence", "series").any { it in name } -> "Sequences"
+            "logarithm" in name || "base" in name || "exponential" in name -> "Logarithms"
+            else -> "Polynomials"
+        }
+        FormulaCategory.GeometryTrigonometry -> when {
+            listOf("sine", "cosine", "tangent", "secant", "cosecant", "angle", "radians").any { it in name } -> "Trigonometric Identities"
+            "law of" in name -> "Triangle Laws"
+            listOf("triangle", "pythagorean", "heron").any { it in name } -> "Plane Geometry"
+            listOf("volume", "surface", "sphere", "cylinder", "cone", "frustum").any { it in name } -> "Mensuration"
+            else -> "Right Triangles"
+        }
+        FormulaCategory.CalculusAnalysis -> when {
+            listOf("limit", "l'hopital", "mean value").any { it in name } -> "Limits"
+            listOf("derivative", "rule", "gradient", "divergence", "curl", "directional").any { it in name } -> "Derivatives"
+            listOf("integr", "arc length", "surface of revolution").any { it in name } -> "Integrals"
+            "series" in name -> "Series"
+            else -> "Multivariable Calculus"
+        }
+        FormulaCategory.DifferentialEquations -> when {
+            listOf("separable", "first order", "integrating factor", "linear solution").any { it in name } -> "First-order ODEs"
+            listOf("second-order", "characteristic", "homogeneous", "repeated-root", "complex-root").any { it in name } -> "Second-order ODEs"
+            listOf("growth", "logistic").any { it in name } -> "Growth Models"
+            listOf("laplace", "convolution").any { it in name } -> "Laplace Methods"
+            else -> "Numerical ODEs"
+        }
+        FormulaCategory.LinearAlgebraVectors -> when {
+            listOf("matrix", "inverse", "rank", "trace", "gram", "qr", "singular").any { it in name } -> "Matrices"
+            listOf("determinant", "cramer").any { it in name } -> "Determinants"
+            listOf("eigen", "characteristic").any { it in name } -> "Eigenvalues"
+            listOf("dot", "orthogonality", "cauchy").any { it in name } -> "Dot Products"
+            else -> "Projections"
+        }
+        FormulaCategory.CoordinateGeometry3D -> when {
+            listOf("line", "slope", "midpoint", "distance formula").any { it in name } -> "Lines"
+            listOf("circle", "parabola", "ellipse", "hyperbola", "conic", "eccentricity").any { it in name } -> "Conics"
+            listOf("sphere", "cylinder", "cone", "torus").any { it in name } -> "Coordinate Solids"
+            "plane" in name -> "Planes"
+            else -> "3D Distance"
+        }
+        FormulaCategory.ProbabilityCombinatorics -> when {
+            listOf("complement", "addition", "conditional", "multiplication", "independence", "odds").any { it in name } -> "Probability Rules"
+            "bayes" in name -> "Bayes"
+            listOf("expected", "variance", "markov", "chebyshev", "moment", "covariance", "correlation").any { it in name } -> "Random Variables"
+            listOf("factorial", "permutation", "combination", "binomial", "pascal", "stars", "inclusion", "pigeonhole", "catalan", "derangements", "multinomial", "bell", "stirling", "vandermonde", "burnside").any { it in name } -> "Counting"
+            else -> "Graph Counting"
+        }
+        FormulaCategory.StatisticsDistributions -> when {
+            listOf("mean", "variance", "standard score", "standard error").any { it in name } -> "Descriptive Statistics"
+            listOf("confidence", "chi-square", "pooled", "welch", "anova").any { it in name } -> "Inference"
+            listOf("correlation", "regression", "aic").any { it in name } -> "Regression"
+            listOf("binomial", "poisson", "geometric", "negative").any { it in name } -> "Discrete Distributions"
+            else -> "Continuous Distributions"
+        }
+        FormulaCategory.NumberTheory -> when {
+            listOf("divisor", "gcd", "lcm").any { it in name } -> "Divisibility"
+            listOf("mod", "wilson").any { it in name } -> "Modular Arithmetic"
+            listOf("prime", "euler product").any { it in name } -> "Primes"
+            listOf("mobius", "sigma").any { it in name } -> "Arithmetic Functions"
+            else -> "Sequences"
+        }
+        FormulaCategory.ComplexNumbers -> when {
+            listOf("complex number", "modulus", "conjugate", "division").any { it in name } -> "Algebraic Form"
+            listOf("argument", "polar").any { it in name } -> "Polar Form"
+            listOf("euler", "moivre").any { it in name } -> "Euler Form"
+            listOf("root").any { it in name } -> "Roots"
+            else -> "Complex Analysis Basics"
+        }
+        FormulaCategory.NumericalMethods -> when {
+            listOf("newton", "bisection", "secant", "fixed point").any { it in name } -> "Root Finding"
+            listOf("difference", "error", "condition").any { it in name } -> "Finite Differences"
+            listOf("trapezoidal", "simpson", "midpoint").any { it in name } -> "Numerical Integration"
+            listOf("interpolation", "lagrange").any { it in name } -> "Interpolation"
+            else -> "Optimization"
+        }
+    }
 }
 
 data class FormulaCard(
@@ -29,6 +128,7 @@ data class FormulaCard(
     val title: String,
     val topic: KnowledgeTopic,
     val category: FormulaCategory,
+    val subcategory: String,
     val level: KnowledgeLevel,
     val expression: String,
     val variables: List<String>,
@@ -203,11 +303,12 @@ object MathKnowledgeCatalog {
                 title = item.title,
                 topic = group.category.topic,
                 category = group.category,
+                subcategory = group.category.subcategoryFor(item.title),
                 level = item.level,
                 expression = item.expression,
                 variables = item.variables,
                 useCase = item.useCase,
-                relatedTerms = item.relatedTerms + group.category.label,
+                relatedTerms = item.relatedTerms + group.category.label + group.category.subcategories,
             )
         }
     }
@@ -243,7 +344,7 @@ object MathKnowledgeCatalog {
             (topic == null || topic == itemTopic) && (level == null || level == itemLevel)
         fun textMatches(vararg parts: String) = normalized.isBlank() || parts.any { it.lowercase().contains(normalized) }
         return KnowledgeSearchResult(
-            formulas = formulas.filter { (formulaCategory == null || it.category == formulaCategory) && topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.expression, it.useCase, it.relatedTerms.joinToString(), it.category.label) },
+            formulas = formulas.filter { (formulaCategory == null || it.category == formulaCategory) && topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.expression, it.useCase, it.relatedTerms.joinToString(), it.category.label, it.subcategory, it.category.subcategories.joinToString()) },
             theorems = theorems.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.statement, it.applications.joinToString()) },
             visualProofs = visualProofs.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.invariant, it.learnerPrompt) },
             dictionary = dictionary.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.term, it.definition, it.notation, it.example) },
@@ -270,7 +371,7 @@ object MathKnowledgeCatalog {
         FormulaItem(title, expression, vars.split(',').map { it.trim() }.filter { it.isNotBlank() }, useCase, level, related)
 
     private fun formulaGroups() = listOf(
-        FormulaGroup(FormulaCategory.Algebra, listOf(
+        FormulaGroup(FormulaCategory.AlgebraFunctions, listOf(
             item("Quadratic roots", """x=\frac{-b\pm\sqrt{b^{2}-4ac}}{2a}""", "a,b,c", "Solve quadratic equations.", related = listOf("discriminant", "roots")),
             item("Discriminant", """\Delta=b^{2}-4ac""", "a,b,c", "Classify roots of a quadratic."),
             item("Vertex of parabola", """\left(h,k\right)=\left(\frac{-b}{2a},f\left(\frac{-b}{2a}\right)\right)""", "a,b,h,k", "Find the turning point of a quadratic."),
@@ -284,7 +385,7 @@ object MathKnowledgeCatalog {
             item("Geometric sequence", """a_{n}=a_{1}r^{n-1}""", "a_1,r,n", "Find terms with constant ratio."),
             item("Geometric series", """S_{n}=a_{1}\frac{1-r^{n}}{1-r}""", "S_n,a_1,r,n", "Sum a finite geometric progression."),
         )),
-        FormulaGroup(FormulaCategory.Geometry, listOf(
+        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
             item("Triangle area", """A=\frac{1}{2}bh""", "A,b,h", "Find area from base and height."),
             item("Heron's formula", """A=\sqrt{s\left(s-a\right)\left(s-b\right)\left(s-c\right)}""", "A,s,a,b,c", "Find triangle area from three sides."),
             item("Semiperimeter", """s=\frac{a+b+c}{2}""", "s,a,b,c", "Prepare Heron's formula."),
@@ -298,7 +399,7 @@ object MathKnowledgeCatalog {
             item("Cylinder volume", """V=\pi r^{2}h""", "V,r,h", "Find volume of a cylinder."),
             item("Sphere volume", """V=\frac{4}{3}\pi r^{3}""", "V,r", "Find volume of a sphere."),
         )),
-        FormulaGroup(FormulaCategory.Trigonometry, listOf(
+        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
             item("Sine ratio", """\sin\theta=\frac{\text{opposite}}{\text{hypotenuse}}""", "theta", "Use right-triangle sine."),
             item("Cosine ratio", """\cos\theta=\frac{\text{adjacent}}{\text{hypotenuse}}""", "theta", "Use right-triangle cosine."),
             item("Tangent ratio", """\tan\theta=\frac{\sin\theta}{\cos\theta}""", "theta", "Connect tangent to sine and cosine."),
@@ -312,7 +413,7 @@ object MathKnowledgeCatalog {
             item("Law of sines", """\frac{a}{\sin A}=\frac{b}{\sin B}=\frac{c}{\sin C}""", "a,b,c,A,B,C", "Solve non-right triangles."),
             item("Law of cosines", """c^{2}=a^{2}+b^{2}-2ab\cos C""", "a,b,c,C", "Solve triangles with included angle."),
         )),
-        FormulaGroup(FormulaCategory.Calculus, listOf(
+        FormulaGroup(FormulaCategory.CalculusAnalysis, listOf(
             item("Derivative definition", """f'\left(x\right)=\lim_{h\to0}\frac{f\left(x+h\right)-f\left(x\right)}{h}""", "f,x,h", "Define instantaneous rate.", KnowledgeLevel.UG),
             item("Power rule", """\frac{d}{dx}x^{n}=nx^{n-1}""", "x,n", "Differentiate powers.", KnowledgeLevel.UG),
             item("Product rule", """\frac{d}{dx}\left(uv\right)=u\frac{dv}{dx}+v\frac{du}{dx}""", "u,v,x", "Differentiate products.", KnowledgeLevel.UG, listOf("derivative", "chain rule")),
@@ -340,7 +441,7 @@ object MathKnowledgeCatalog {
             item("Euler method", """y_{n+1}=y_{n}+hf\left(x_{n},y_{n}\right)""", "y,h,x,f", "Approximate ODE solutions.", KnowledgeLevel.UG),
             item("RK4 update", """y_{n+1}=y_{n}+\frac{h}{6}\left(k_{1}+2k_{2}+2k_{3}+k_{4}\right)""", "y,h,k", "Approximate ODEs accurately.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.LinearAlgebra, listOf(
+        FormulaGroup(FormulaCategory.LinearAlgebraVectors, listOf(
             item("Matrix product", """\left(AB\right)_{ij}=\sum_{k=1}^{n}a_{ik}b_{kj}""", "A,B,i,j,k", "Multiply matrices.", KnowledgeLevel.UG),
             item("Determinant 2 by 2", """\det\begin{pmatrix}a&b\\c&d\end{pmatrix}=ad-bc""", "a,b,c,d", "Find area scale and invertibility.", KnowledgeLevel.UG),
             item("Inverse 2 by 2", """A^{-1}=\frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}""", "A,a,b,c,d", "Invert a 2 by 2 matrix.", KnowledgeLevel.UG),
@@ -354,7 +455,7 @@ object MathKnowledgeCatalog {
             item("Orthogonality", """\mathbf{u}\cdot\mathbf{v}=0""", "u,v", "Test perpendicular vectors.", KnowledgeLevel.UG),
             item("Least squares", """\hat{\beta}=\left(X^{T}X\right)^{-1}X^{T}y""", "X,y,beta", "Fit linear models.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.CoordinateGeometry, listOf(
+        FormulaGroup(FormulaCategory.CoordinateGeometry3D, listOf(
             item("Distance formula", """d=\sqrt{\left(x_{2}-x_{1}\right)^{2}+\left(y_{2}-y_{1}\right)^{2}}""", "d,x_1,x_2,y_1,y_2", "Find distance between points."),
             item("Midpoint", """M=\left(\frac{x_{1}+x_{2}}{2},\frac{y_{1}+y_{2}}{2}\right)""", "M,x_1,x_2,y_1,y_2", "Find middle of a segment."),
             item("Slope", """m=\frac{y_{2}-y_{1}}{x_{2}-x_{1}}""", "m,x_1,x_2,y_1,y_2", "Find line steepness."),
@@ -368,7 +469,7 @@ object MathKnowledgeCatalog {
             item("Polygon area", """A=\frac{1}{2}\left|\sum_{i=1}^{n}x_{i}y_{i+1}-y_{i}x_{i+1}\right|""", "A,x,y,i,n", "Use shoelace formula.", KnowledgeLevel.UG),
             item("Centroid of triangle", """G=\left(\frac{x_{1}+x_{2}+x_{3}}{3},\frac{y_{1}+y_{2}+y_{3}}{3}\right)""", "G,x,y", "Find triangle centroid."),
         )),
-        FormulaGroup(FormulaCategory.Vectors3D, listOf(
+        FormulaGroup(FormulaCategory.CoordinateGeometry3D, listOf(
             item("3D distance", """d=\sqrt{\left(x_{2}-x_{1}\right)^{2}+\left(y_{2}-y_{1}\right)^{2}+\left(z_{2}-z_{1}\right)^{2}}""", "d,x,y,z", "Find distance in space."),
             item("Cross product", """\mathbf{a}\times\mathbf{b}=\left\langle a_{2}b_{3}-a_{3}b_{2},a_{3}b_{1}-a_{1}b_{3},a_{1}b_{2}-a_{2}b_{1}\right\rangle""", "a,b", "Find perpendicular vector.", KnowledgeLevel.UG),
             item("Scalar triple product", """V=\left|\mathbf{a}\cdot\left(\mathbf{b}\times\mathbf{c}\right)\right|""", "V,a,b,c", "Find parallelepiped volume.", KnowledgeLevel.UG),
@@ -382,7 +483,7 @@ object MathKnowledgeCatalog {
             item("Torus volume", """V=2\pi^{2}Rr^{2}""", "V,R,r", "Find torus volume.", KnowledgeLevel.UG),
             item("Tangent plane", """z-z_{0}=f_{x}\left(x_{0},y_{0}\right)\left(x-x_{0}\right)+f_{y}\left(x_{0},y_{0}\right)\left(y-y_{0}\right)""", "z,x,y,f", "Approximate a surface locally.", KnowledgeLevel.UG),
         )),
-        FormulaGroup(FormulaCategory.Probability, listOf(
+        FormulaGroup(FormulaCategory.ProbabilityCombinatorics, listOf(
             item("Complement rule", """P\left(A^{c}\right)=1-P\left(A\right)""", "A", "Find probability of not A."),
             item("Addition rule", """P\left(A\cup B\right)=P\left(A\right)+P\left(B\right)-P\left(A\cap B\right)""", "A,B", "Combine overlapping events."),
             item("Conditional probability", """P\left(A\mid B\right)=\frac{P\left(A\cap B\right)}{P\left(B\right)}""", "A,B", "Condition on evidence."),
@@ -396,7 +497,7 @@ object MathKnowledgeCatalog {
             item("Union bound", """P\left(\bigcup_{i=1}^{n}A_{i}\right)\leq\sum_{i=1}^{n}P\left(A_{i}\right)""", "A_i,n", "Bound probability of any event.", KnowledgeLevel.UG),
             item("Markov inequality", """P\left(X\geq a\right)\leq\frac{E\left(X\right)}{a}""", "X,a", "Bound tail probability.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.Statistics, listOf(
+        FormulaGroup(FormulaCategory.StatisticsDistributions, listOf(
             item("Mean", """\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_{i}""", "x,n,i", "Find arithmetic average."),
             item("Sample variance", """s^{2}=\frac{1}{n-1}\sum_{i=1}^{n}\left(x_{i}-\bar{x}\right)^{2}""", "s,x,n,i", "Estimate variance from a sample."),
             item("Population variance", """\sigma^{2}=\frac{1}{N}\sum_{i=1}^{N}\left(x_{i}-\mu\right)^{2}""", "sigma,N,x,mu", "Measure population spread."),
@@ -410,7 +511,7 @@ object MathKnowledgeCatalog {
             item("Coefficient of variation", """CV=\frac{s}{\bar{x}}\times100\%""", "CV,s,x", "Compare relative variability.", KnowledgeLevel.UG),
             item("Interquartile range", """IQR=Q_{3}-Q_{1}""", "IQR,Q_1,Q_3", "Measure middle spread."),
         )),
-        FormulaGroup(FormulaCategory.Distributions, listOf(
+        FormulaGroup(FormulaCategory.StatisticsDistributions, listOf(
             item("Binomial PMF", """P\left(X=k\right)=\binom{n}{k}p^{k}\left(1-p\right)^{n-k}""", "X,k,n,p", "Model fixed Bernoulli trials."),
             item("Binomial mean", """E\left(X\right)=np""", "X,n,p", "Find binomial expectation."),
             item("Binomial variance", """\operatorname{Var}\left(X\right)=np\left(1-p\right)""", "X,n,p", "Find binomial spread."),
@@ -438,7 +539,7 @@ object MathKnowledgeCatalog {
             item("Sum of cubes", """1^{3}+2^{3}+\cdots+n^{3}=\left(\frac{n\left(n+1\right)}{2}\right)^{2}""", "n", "Sum cube numbers."),
             item("Chinese remainder", """x\equiv a_{i}\pmod{m_{i}}""", "x,a_i,m_i", "Solve compatible modular systems.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.Combinatorics, listOf(
+        FormulaGroup(FormulaCategory.ProbabilityCombinatorics, listOf(
             item("Factorial", """n!=n\left(n-1\right)\left(n-2\right)\cdots1""", "n", "Count arrangements."),
             item("Permutation", """{}^{n}P_{r}=\frac{n!}{\left(n-r\right)!}""", "n,r", "Count ordered selections."),
             item("Combination", """\binom{n}{r}=\frac{n!}{r!\left(n-r\right)!}""", "n,r", "Count unordered selections."),
@@ -483,28 +584,28 @@ object MathKnowledgeCatalog {
     )
 
     private fun additionalFormulaGroups() = listOf(
-        FormulaGroup(FormulaCategory.Algebra, listOf(
+        FormulaGroup(FormulaCategory.AlgebraFunctions, listOf(
             item("Logarithm product", """\log_{b}\left(xy\right)=\log_{b}x+\log_{b}y""", "b,x,y", "Split logarithm of a product."),
             item("Logarithm power", """\log_{b}\left(x^{r}\right)=r\log_{b}x""", "b,x,r", "Bring powers down in logarithms."),
             item("Change of base", """\log_{b}x=\frac{\ln x}{\ln b}""", "b,x", "Evaluate logs using another base."),
             item("Exponential inverse", """b^{\log_{b}x}=x""", "b,x", "Undo logarithms and exponentials."),
             item("Remainder theorem", """f\left(a\right)=\operatorname{rem}\left(f\left(x\right),x-a\right)""", "f,a,x", "Find polynomial remainders.", KnowledgeLevel.UG),
         )),
-        FormulaGroup(FormulaCategory.Geometry, listOf(
+        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
             item("Cone surface area", """S=\pi r\left(r+\ell\right)""", "S,r,ell", "Find total surface area of a cone."),
             item("Cone slant height", """\ell=\sqrt{r^{2}+h^{2}}""", "ell,r,h", "Find cone slant height."),
             item("Frustum volume", """V=\frac{1}{3}\pi h\left(R^{2}+Rr+r^{2}\right)""", "V,h,R,r", "Find volume of a conical frustum.", KnowledgeLevel.UG),
             item("Regular polygon area", """A=\frac{1}{2}aP""", "A,a,P", "Find area from apothem and perimeter."),
             item("Interior angle sum", """S=\left(n-2\right)180^{\circ}""", "S,n", "Find total interior angle measure."),
         )),
-        FormulaGroup(FormulaCategory.Trigonometry, listOf(
+        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
             item("Half-angle sine", """\sin^{2}\frac{\theta}{2}=\frac{1-\cos\theta}{2}""", "theta", "Use half-angle identities.", KnowledgeLevel.UG),
             item("Half-angle cosine", """\cos^{2}\frac{\theta}{2}=\frac{1+\cos\theta}{2}""", "theta", "Use half-angle identities.", KnowledgeLevel.UG),
             item("Product to sum sine cosine", """\sin A\cos B=\frac{1}{2}\left[\sin\left(A+B\right)+\sin\left(A-B\right)\right]""", "A,B", "Convert products to sums.", KnowledgeLevel.UG),
             item("Sum to product sine", """\sin A+\sin B=2\sin\frac{A+B}{2}\cos\frac{A-B}{2}""", "A,B", "Convert sums to products.", KnowledgeLevel.UG),
             item("Radians and degrees", """\theta_{\mathrm{rad}}=\frac{\pi}{180^{\circ}}\theta_{\mathrm{deg}}""", "theta", "Convert degrees to radians."),
         )),
-        FormulaGroup(FormulaCategory.Calculus, listOf(
+        FormulaGroup(FormulaCategory.CalculusAnalysis, listOf(
             item("Mean value theorem", """f'\left(c\right)=\frac{f\left(b\right)-f\left(a\right)}{b-a}""", "f,a,b,c", "Relate average and instantaneous rate.", KnowledgeLevel.UG),
             item("L'Hopital rule", """\lim_{x\to a}\frac{f\left(x\right)}{g\left(x\right)}=\lim_{x\to a}\frac{f'\left(x\right)}{g'\left(x\right)}""", "f,g,x,a", "Evaluate indeterminate limits.", KnowledgeLevel.UG),
             item("Arc length", """L=\int_{a}^{b}\sqrt{1+\left(f'\left(x\right)\right)^{2}}\,dx""", "L,a,b,f,x", "Find curve length.", KnowledgeLevel.UG),
@@ -518,42 +619,42 @@ object MathKnowledgeCatalog {
             item("Laplace derivative", """\mathcal{L}\left\{f'\left(t\right)\right\}=sF\left(s\right)-f\left(0\right)""", "L,f,t,s,F", "Transform derivatives.", KnowledgeLevel.PG),
             item("Convolution theorem", """\mathcal{L}\left\{f*g\right\}=F\left(s\right)G\left(s\right)""", "L,f,g,F,G,s", "Solve forced linear systems.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.LinearAlgebra, listOf(
+        FormulaGroup(FormulaCategory.LinearAlgebraVectors, listOf(
             item("Cramer's rule", """x_{i}=\frac{\det A_{i}}{\det A}""", "x,A,i", "Solve square systems.", KnowledgeLevel.UG),
             item("Cauchy-Schwarz", """\left|\mathbf{u}\cdot\mathbf{v}\right|\leq\left\lVert\mathbf{u}\right\rVert\left\lVert\mathbf{v}\right\rVert""", "u,v", "Bound dot products.", KnowledgeLevel.UG),
             item("Gram matrix", """G=X^{T}X""", "G,X", "Store pairwise inner products.", KnowledgeLevel.UG),
             item("QR factorization", """\mathbf{A}=\mathbf{Q}\mathbf{R}""", "A,Q,R", "Decompose into orthogonal and triangular factors.", KnowledgeLevel.PG),
             item("Singular value decomposition", """\mathbf{A}=\mathbf{U}\Sigma\mathbf{V}^{T}""", "A,U,Sigma,V", "Analyze matrix geometry.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.CoordinateGeometry, listOf(
+        FormulaGroup(FormulaCategory.CoordinateGeometry3D, listOf(
             item("Parametric line 2D", """\left(x,y\right)=\left(x_{0},y_{0}\right)+t\left(a,b\right)""", "x,y,x_0,y_0,t,a,b", "Represent a 2D line parametrically.", KnowledgeLevel.UG),
             item("Line intercept form", """\frac{x}{a}+\frac{y}{b}=1""", "x,y,a,b", "Represent a line by intercepts."),
             item("Pair of lines", """ax^{2}+2hxy+by^{2}=0""", "a,h,b,x,y", "Represent homogeneous pair of lines.", KnowledgeLevel.UG),
             item("Eccentricity", """e=\frac{c}{a}""", "e,c,a", "Classify conic shape."),
             item("Polar conic", """r=\frac{\ell}{1+e\cos\theta}""", "r,ell,e,theta", "Represent conics in polar form.", KnowledgeLevel.UG),
         )),
-        FormulaGroup(FormulaCategory.Vectors3D, listOf(
+        FormulaGroup(FormulaCategory.CoordinateGeometry3D, listOf(
             item("Vector projection scalar", """\operatorname{comp}_{\mathbf{b}}\mathbf{a}=\frac{\mathbf{a}\cdot\mathbf{b}}{\left\lVert\mathbf{b}\right\rVert}""", "a,b", "Find scalar projection.", KnowledgeLevel.UG),
             item("Area parallelogram", """A=\left\lVert\mathbf{a}\times\mathbf{b}\right\rVert""", "A,a,b", "Find area from cross product.", KnowledgeLevel.UG),
             item("Area triangle 3D", """A=\frac{1}{2}\left\lVert\mathbf{a}\times\mathbf{b}\right\rVert""", "A,a,b", "Find triangle area in space.", KnowledgeLevel.UG),
             item("Line-plane intersection", """t=\frac{\mathbf{n}\cdot\left(\mathbf{p}_{0}-\mathbf{r}_{0}\right)}{\mathbf{n}\cdot\mathbf{v}}""", "t,n,p_0,r_0,v", "Intersect a parametric line with a plane.", KnowledgeLevel.UG),
             item("Dihedral angle", """\cos\theta=\frac{\mathbf{n}_{1}\cdot\mathbf{n}_{2}}{\left\lVert\mathbf{n}_{1}\right\rVert\left\lVert\mathbf{n}_{2}\right\rVert}""", "theta,n_1,n_2", "Find angle between planes.", KnowledgeLevel.UG),
         )),
-        FormulaGroup(FormulaCategory.Probability, listOf(
+        FormulaGroup(FormulaCategory.ProbabilityCombinatorics, listOf(
             item("Chebyshev inequality", """P\left(\left|X-\mu\right|\geq k\sigma\right)\leq\frac{1}{k^{2}}""", "X,mu,k,sigma", "Bound probability far from mean.", KnowledgeLevel.UG),
             item("Moment generating function", """M_{X}\left(t\right)=E\left(e^{tX}\right)""", "M,X,t", "Encode moments.", KnowledgeLevel.PG),
             item("Covariance", """\operatorname{Cov}\left(X,Y\right)=E\left(XY\right)-E\left(X\right)E\left(Y\right)""", "X,Y", "Measure joint variation.", KnowledgeLevel.UG),
             item("Correlation", """\rho_{X,Y}=\frac{\operatorname{Cov}\left(X,Y\right)}{\sigma_{X}\sigma_{Y}}""", "rho,X,Y,sigma", "Normalize covariance.", KnowledgeLevel.UG),
             item("Law of total expectation", """E\left(X\right)=E\left(E\left(X\mid Y\right)\right)""", "X,Y", "Average conditional expectations.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.Statistics, listOf(
+        FormulaGroup(FormulaCategory.StatisticsDistributions, listOf(
             item("Pooled variance", """s_{p}^{2}=\frac{\left(n_{1}-1\right)s_{1}^{2}+\left(n_{2}-1\right)s_{2}^{2}}{n_{1}+n_{2}-2}""", "s,n", "Combine two sample variances.", KnowledgeLevel.UG),
             item("Welch t statistic", """t=\frac{\bar{x}_{1}-\bar{x}_{2}}{\sqrt{\frac{s_{1}^{2}}{n_{1}}+\frac{s_{2}^{2}}{n_{2}}}}""", "t,x,s,n", "Compare two means without equal variance.", KnowledgeLevel.UG),
             item("ANOVA F statistic", """F=\frac{MS_{\text{between}}}{MS_{\text{within}}}""", "F,MS", "Compare group means.", KnowledgeLevel.UG),
             item("Logistic regression", """\log\frac{p}{1-p}=\beta_{0}+\beta_{1}x""", "p,beta,x", "Model binary response.", KnowledgeLevel.PG),
             item("AIC", """AIC=2k-2\ln\left(\hat{L}\right)""", "AIC,k,L", "Compare statistical models.", KnowledgeLevel.PG),
         )),
-        FormulaGroup(FormulaCategory.Distributions, listOf(
+        FormulaGroup(FormulaCategory.StatisticsDistributions, listOf(
             item("Beta PDF", """f\left(x\right)=\frac{x^{\alpha-1}\left(1-x\right)^{\beta-1}}{B\left(\alpha,\beta\right)}""", "f,x,alpha,beta", "Model probabilities and proportions.", KnowledgeLevel.PG),
             item("Geometric PMF", """P\left(X=k\right)=\left(1-p\right)^{k-1}p""", "X,k,p", "Model first success trial."),
             item("Negative binomial PMF", """P\left(X=k\right)=\binom{k-1}{r-1}p^{r}\left(1-p\right)^{k-r}""", "X,k,r,p", "Model trials until r successes.", KnowledgeLevel.UG),
@@ -567,7 +668,7 @@ object MathKnowledgeCatalog {
             item("Divisor count", """d\left(n\right)=\prod_{i=1}^{k}\left(a_{i}+1\right)""", "d,n,a,i,k", "Count positive divisors."),
             item("Divisor sum", """\sigma\left(n\right)=\prod_{i=1}^{k}\frac{p_{i}^{a_{i}+1}-1}{p_{i}-1}""", "sigma,n,p,a,i,k", "Sum positive divisors.", KnowledgeLevel.UG),
         )),
-        FormulaGroup(FormulaCategory.Combinatorics, listOf(
+        FormulaGroup(FormulaCategory.ProbabilityCombinatorics, listOf(
             item("Bell recurrence", """B_{n+1}=\sum_{k=0}^{n}\binom{n}{k}B_{k}""", "B,n,k", "Count set partitions.", KnowledgeLevel.PG),
             item("Stirling second kind", """S\left(n,k\right)=kS\left(n-1,k\right)+S\left(n-1,k-1\right)""", "S,n,k", "Count partitions into k blocks.", KnowledgeLevel.UG),
             item("Vandermonde identity", """\sum_{k}\binom{r}{k}\binom{s}{n-k}=\binom{r+s}{n}""", "r,s,n,k", "Combine binomial choices.", KnowledgeLevel.UG),

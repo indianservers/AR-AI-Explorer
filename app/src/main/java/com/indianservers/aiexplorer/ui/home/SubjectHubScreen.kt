@@ -20,6 +20,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +34,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -43,9 +47,9 @@ private data class SubjectOption(val title: String, val description: String, val
 
 private val SubjectOptions = listOf(
     SubjectOption("Maths", "Interactive mathematics laboratory", "Sum", true),
-    SubjectOption("Physics", "Mechanics, waves, fields and modern physics", "F", true),
-    SubjectOption("Chemistry", "Elements, atoms, molecules and reactions", "Ch", true),
-    SubjectOption("Biology", "Life from cells to ecosystems", "DNA", true),
+    SubjectOption("Physics", "Upcoming science laboratory", "F", false),
+    SubjectOption("Chemistry", "Upcoming science laboratory", "Ch", false),
+    SubjectOption("Biology", "Upcoming science laboratory", "DNA", false),
     SubjectOption("Astro Physics", "Stars, space and cosmology", "Star", false),
     SubjectOption("IQ Labs", "Logic, patterns and reasoning", "IQ", false),
 )
@@ -59,7 +63,16 @@ internal fun SubjectHubScreen(
     onOpenLearningIntelligence: () -> Unit,
     onOpenSmartBoard: () -> Unit,
     onOpenAugmentedReality: () -> Unit,
+    onOpenMathFormulas: () -> Unit,
+    onOpenMathGraph: () -> Unit,
+    onOpenMathArGraph: () -> Unit,
+    onCopyLaunchReport: () -> Unit,
 ) {
+    val haptics = LocalHapticFeedback.current
+    fun launch(action: () -> Unit) {
+        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        action()
+    }
     Column(
         modifier
             .verticalScroll(rememberScrollState())
@@ -68,8 +81,27 @@ internal fun SubjectHubScreen(
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Text("AI Explorer", color = Ink, fontSize = if (wide) 42.sp else 30.sp, fontWeight = FontWeight.ExtraBold)
+        Box(
+            Modifier
+                .clip(RoundedCornerShape(18.dp))
+                .background(Cyan.copy(.12f))
+                .border(1.dp, Cyan.copy(.38f), RoundedCornerShape(18.dp))
+                .padding(horizontal = 10.dp, vertical = 5.dp),
+        ) {
+            Text("MATHS ONLY LAUNCH", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+        }
         Text("Choose a learning laboratory", color = Muted, fontSize = if (wide) 20.sp else 15.sp)
-        Text("Maths and Physics are available now - more sciences are being prepared", color = Cyan, fontSize = 12.sp, textAlign = TextAlign.Center)
+        Text("Maths is available now. Physics, Chemistry, Biology and other labs are upcoming.", color = Cyan, fontSize = 12.sp, textAlign = TextAlign.Center)
+        FlowRow(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            QuickLaunchButton("Start Maths", "home", wide) { launch { onOpenSubject("Maths") } }
+            QuickLaunchButton("Formulas", "f", wide) { launch(onOpenMathFormulas) }
+            QuickLaunchButton("Graph", "graph", wide) { launch(onOpenMathGraph) }
+            QuickLaunchButton("AR Graph", "ar", wide) { launch(onOpenMathArGraph) }
+        }
         FlowRow(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally),
@@ -83,11 +115,20 @@ internal fun SubjectHubScreen(
                         .shadow(if (subject.enabled) 14.dp else 5.dp, RoundedCornerShape(26.dp), ambientColor = Cyan.copy(.18f), spotColor = Violet.copy(.24f))
                         .clip(RoundedCornerShape(24.dp))
                         .background(
-                            if (subject.enabled) Brush.linearGradient(listOf(Color(0xEE111C35), Color(0xCC203058), Color(0xCC123B38)))
-                            else Brush.linearGradient(listOf(Color(0xEE0D131E), Color(0xEE121824))),
+                            if (subject.enabled) {
+                                Brush.linearGradient(
+                                    listOf(
+                                        MaterialTheme.colorScheme.surface,
+                                        Cyan.copy(alpha = 0.22f),
+                                        Green.copy(alpha = 0.14f),
+                                    ),
+                                )
+                            } else {
+                                Brush.linearGradient(listOf(MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.surfaceVariant))
+                            },
                         )
                         .border(2.dp, if (subject.enabled) Cyan.copy(.78f) else Muted.copy(.28f), RoundedCornerShape(24.dp))
-                        .clickable(enabled = subject.enabled) { onOpenSubject(subject.title) }
+                        .clickable(enabled = subject.enabled) { launch { onOpenSubject(subject.title) } }
                         .focusable()
                         .semantics { contentDescription = if (subject.enabled) "Open ${subject.title} laboratory" else "${subject.title}, coming soon" }
                         .padding(16.dp),
@@ -113,21 +154,43 @@ internal fun SubjectHubScreen(
                                 Text("Enter lab", color = Green, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                                 Text(">", color = Green, fontSize = 13.sp, fontWeight = FontWeight.Black)
                             }
+                        } else {
+                            Text("Upcoming", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
             }
         }
-        Button(onClick = onOpenSmartBoard, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open unified multi-subject Smart Board canvas" }) {
-            Text("Smart Board - Draw, select and recognize")
+        Button(onClick = onOpenSmartBoard, enabled = false, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Smart Board, upcoming" }) {
+            Text("Smart Board - Upcoming")
         }
-        Button(onClick = onOpenAugmentedReality, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open Augmented Reality camera spatial learning lab" }) {
-            Text("Augmented Reality - Camera spatial lab")
+        Button(onClick = onOpenAugmentedReality, enabled = false, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Augmented Reality, upcoming from home" }) {
+            Text("Augmented Reality - Upcoming")
         }
-        Button(onClick = onOpenLearningIntelligence, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Open local learning diagnostic and recommendations" }) {
-            Text("Learning Intelligence - Diagnostic, mastery, review and error book")
+        Button(onClick = onOpenLearningIntelligence, enabled = false, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Learning Intelligence, upcoming" }) {
+            Text("Learning Intelligence - Upcoming")
         }
-        Text("Touch, mouse, keyboard and TV remote ready", color = Muted, fontSize = 11.sp)
+        Button(onClick = { launch(onCopyLaunchReport) }, modifier = Modifier.fillMaxWidth()) {
+            Text("Copy Launch Diagnostics")
+        }
+        Text("v1.0 · Offline Maths core · Touch, mouse, keyboard and TV remote ready", color = Muted, fontSize = 11.sp, textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+private fun QuickLaunchButton(label: String, icon: String, wide: Boolean, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = Ink,
+        ),
+        modifier = Modifier
+            .heightIn(min = if (wide) 44.dp else 38.dp)
+            .semantics { contentDescription = "Open $label" },
+    ) {
+        TransparentIcon(icon, Cyan)
+        Text("  $label", fontSize = if (wide) 12.sp else 10.sp, maxLines = 1)
     }
 }
 
