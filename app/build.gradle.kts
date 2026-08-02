@@ -42,6 +42,14 @@ android {
     buildFeatures {
         compose = true
     }
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
+            isUniversalApk = false
+        }
+    }
 }
 
 dependencies {
@@ -56,9 +64,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.google.mlkit.text.recognition)
-    implementation(libs.google.mlkit.digital.ink)
-    implementation(libs.microsoft.onnxruntime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

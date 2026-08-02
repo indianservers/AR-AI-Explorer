@@ -22,7 +22,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AI Explorer"
+rootProject.name = "AI Maths Explorer"
 include(":app")
 include(":arengine")
 include(":macrobenchmark")

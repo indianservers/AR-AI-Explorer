@@ -3,7 +3,6 @@ package com.indianservers.aiexplorer
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -56,20 +53,37 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
     )
     Box(
         modifier
-            .background(Color.Black)
-            .semantics { contentDescription = "AI Explorer splash screen" },
+            .background(
+                Brush.radialGradient(
+                    listOf(Color(0xFF153879), Color(0xFF090F2C), Color.Black),
+                ),
+            )
+            .semantics { contentDescription = "AI Maths Explorer splash screen" },
     ) {
-        Image(
-            painter = painterResource(R.drawable.ai_explorer_splash),
-            contentDescription = "AI Explorer STEM AR",
-            contentScale = ContentScale.Crop,
+        Text(
+            "π  ∑  √x  ∫  △",
+            color = Color(0xFF78E7FF),
+            fontSize = 42.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 4.sp,
             modifier = Modifier
-                .fillMaxSize()
+                .align(Alignment.Center)
                 .graphicsLayer {
                     alpha = imageAlpha
                     scaleX = imageScale
                     scaleY = imageScale
                 },
+        )
+        Text(
+            "AI MATHS EXPLORER",
+            color = Color.White,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.ExtraBold,
+            letterSpacing = 2.sp,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 54.dp)
+                .graphicsLayer { alpha = footerAlpha },
         )
         Box(
             Modifier

@@ -3,8 +3,6 @@
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -293,9 +291,6 @@ import com.indianservers.aiexplorer.core.CasVariableScope
 import com.indianservers.aiexplorer.core.CasStepDisclosureEngine
 import com.indianservers.aiexplorer.core.CasDirectManipulationEngine
 import com.indianservers.aiexplorer.core.CasManipulationState
-import com.indianservers.aiexplorer.input.CasPhotoMathRecognizer
-import com.indianservers.aiexplorer.input.CasHandwritingRecognizer
-import com.indianservers.aiexplorer.input.MathInkPoint
 import com.indianservers.aiexplorer.core.MathAssumptionSet
 import com.indianservers.aiexplorer.core.MathNumberDomain
 import com.indianservers.aiexplorer.input.IntentAwareMathField
@@ -331,11 +326,6 @@ import com.indianservers.aiexplorer.core.CalculatorFavourites
 import com.indianservers.aiexplorer.core.CalculatorRecognitionAdapters
 import com.indianservers.aiexplorer.core.ProfessionalCalculatorMode
 import com.indianservers.aiexplorer.core.ProfessionalScientificCalculator
-import com.indianservers.aiexplorer.physics.mechanicalwaves.MechanicalWaveLabScreen
-import com.indianservers.aiexplorer.chemistry.navigation.ChemistryFeatureRoot
-import com.indianservers.aiexplorer.physics.formulas.navigation.PhysicsFormulaFeatureRoot
-import com.indianservers.aiexplorer.physics.learning.PhysicsConnectedLearningFeature
-import com.indianservers.aiexplorer.biology.navigation.BiologyFeatureRoot
 import com.indianservers.aiexplorer.learningintelligence.ui.LearningIntelligenceFeatureRoot
 import com.indianservers.aiexplorer.core.SolutionStepRole
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
@@ -489,7 +479,7 @@ import com.indianservers.aiexplorer.spatial.SpatialHitType
 import com.indianservers.aiexplorer.spatial.SpatialLessonCatalog
 import com.indianservers.aiexplorer.spatial.SpatialPerformanceManager
 import com.indianservers.aiexplorer.spatial.ThermalLevel
-import com.indianservers.aiexplorer.smartboard.presentation.SmartBoardFeatureRoot
+import com.indianservers.aiexplorer.gamifymaths.GamifyMathsRoot
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -543,8 +533,6 @@ private data class AppIntentSnapshot(
     val showChemistryHub: Boolean,
     val showBiologyHub: Boolean,
     val showLearningIntelligence: Boolean,
-    val showSmartBoard: Boolean,
-    val returnToSmartBoard: Boolean,
     val showMathLanding: Boolean,
     val showShapesExplorer: Boolean,
     val shapeExplorerScene: Boolean,
@@ -554,6 +542,7 @@ private data class AppIntentSnapshot(
     val showMathNotebook: Boolean,
     val showUnifiedMathStudio: Boolean,
     val showAdaptiveMathLearning: Boolean,
+    val showGamifyMaths: Boolean,
     val showProbabilityLab: Boolean,
     val requestedProbabilitySection: Int,
     val showKnowledgeHub: Boolean,
@@ -575,6 +564,7 @@ internal val MathCreationTools = listOf(
 
 internal val MathLearningTools = listOf(
     MathWorkspaceOption("Adaptive Math Coach", "Workspace-aware Socratic practice, proof checks and misconception repair", "AI"),
+    MathWorkspaceOption("GamifyMaths", "Interactive maths worlds with drag-and-drop missions, reasoning and mastery", "PLAY"),
     MathWorkspaceOption("Formulas", "Searchable formula reference", "F"),
     MathWorkspaceOption("Visual Proofs", "Manipulable visual demonstrations", "Proof"),
     MathWorkspaceOption("Theorems", "Statements, conditions and applications", "Thm"),
@@ -680,7 +670,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
     var showLearningPanel by mutableStateOf(false)
         private set
-    var showSubjectHub by mutableStateOf(true)
+    var showSubjectHub by mutableStateOf(false)
         private set
     var showPhysicsHub by mutableStateOf(false)
         private set
@@ -690,11 +680,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         private set
     var showLearningIntelligence by mutableStateOf(false)
         private set
-    var showSmartBoard by mutableStateOf(false)
-        private set
-    var returnToSmartBoard by mutableStateOf(savedStateHandle["returnToSmartBoard"] ?: false)
-        private set
-    var showMathLanding by mutableStateOf(false)
+    var showMathLanding by mutableStateOf(true)
         private set
     var showMathMenu by mutableStateOf(false)
         private set
@@ -713,6 +699,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     var showUnifiedMathStudio by mutableStateOf(false)
         private set
     var showAdaptiveMathLearning by mutableStateOf(false)
+        private set
+    var showGamifyMaths by mutableStateOf(false)
         private set
     var showProbabilityLab by mutableStateOf(false)
         private set
@@ -807,8 +795,6 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showChemistryHub = showChemistryHub,
         showBiologyHub = showBiologyHub,
         showLearningIntelligence = showLearningIntelligence,
-        showSmartBoard = showSmartBoard,
-        returnToSmartBoard = returnToSmartBoard,
         showMathLanding = showMathLanding,
         showShapesExplorer = showShapesExplorer,
         shapeExplorerScene = shapeExplorerScene,
@@ -818,6 +804,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = showMathNotebook,
         showUnifiedMathStudio = showUnifiedMathStudio,
         showAdaptiveMathLearning = showAdaptiveMathLearning,
+        showGamifyMaths = showGamifyMaths,
         showProbabilityLab = showProbabilityLab,
         requestedProbabilitySection = requestedProbabilitySection,
         showKnowledgeHub = showKnowledgeHub,
@@ -842,9 +829,6 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showChemistryHub = snapshot.showChemistryHub
         showBiologyHub = snapshot.showBiologyHub
         showLearningIntelligence = snapshot.showLearningIntelligence
-        showSmartBoard = snapshot.showSmartBoard
-        returnToSmartBoard = snapshot.returnToSmartBoard
-        savedStateHandle["returnToSmartBoard"] = snapshot.returnToSmartBoard
         showMathLanding = snapshot.showMathLanding
         showShapesExplorer = snapshot.showShapesExplorer
         shapeExplorerScene = snapshot.shapeExplorerScene
@@ -854,6 +838,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = snapshot.showMathNotebook
         showUnifiedMathStudio = snapshot.showUnifiedMathStudio
         showAdaptiveMathLearning = snapshot.showAdaptiveMathLearning
+        showGamifyMaths = snapshot.showGamifyMaths
         showProbabilityLab = snapshot.showProbabilityLab
         requestedProbabilitySection = snapshot.requestedProbabilitySection
         showKnowledgeHub = snapshot.showKnowledgeHub
@@ -894,6 +879,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = false
         showUnifiedMathStudio = false
         showAdaptiveMathLearning = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -919,6 +905,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = false
         showUnifiedMathStudio = false
         showAdaptiveMathLearning = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showShapesExplorer = false
@@ -928,68 +915,6 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showActionDock = false
         hidePanels()
         status = "Mathematics Menu"
-    }
-
-	    fun openPhysicsHub() {
-        rememberCurrentIntent()
-	    showSubjectHub = true
-        showPhysicsHub = false
-        showChemistryHub = false
-        showBiologyHub = false
-        showMathLanding = false
-        showShapesExplorer = false
-        shapeExplorerScene = false
-        showProblemSolver = false
-        showScientificCalculator = false
-        showMathNotebook = false
-        showProbabilityLab = false
-        showKnowledgeHub = false
-        showMathMenu = false
-        showActionDock = false
-        hidePanels()
-        status = "Physics Explorer upcoming"
-    }
-
-	    fun openChemistryHub() {
-        rememberCurrentIntent()
-	    showSubjectHub = true
-        showPhysicsHub = false
-        showChemistryHub = false
-        showBiologyHub = false
-        showMathLanding = false
-        showShapesExplorer = false
-        shapeExplorerScene = false
-        showProblemSolver = false
-        showScientificCalculator = false
-        showSetLogicVisualizer = false
-        showMathNotebook = false
-        showProbabilityLab = false
-        showKnowledgeHub = false
-        showMathMenu = false
-        showActionDock = false
-        hidePanels()
-        status = "Chemistry Lab upcoming"
-    }
-
-	    fun openBiologyHub() {
-        rememberCurrentIntent()
-	    showSubjectHub = true
-        showPhysicsHub = false
-        showChemistryHub = false
-        showBiologyHub = false
-        showMathLanding = false
-        showShapesExplorer = false
-        shapeExplorerScene = false
-        showProblemSolver = false
-        showScientificCalculator = false
-        showSetLogicVisualizer = false
-        showMathNotebook = false
-        showProbabilityLab = false
-        showKnowledgeHub = false
-        showMathMenu = false
-        showActionDock = false
-        hidePanels()
-        status = "Biology Explorer upcoming"
     }
 
 	    fun openShapesExplorer() {
@@ -1238,72 +1163,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
 	    fun openSubjectHub() {
-        rememberCurrentIntent()
-	        returnToSmartBoard = false
-        savedStateHandle["returnToSmartBoard"] = false
-        showSubjectHub = true
-        showSmartBoard = false
-        showPhysicsHub = false
-        showChemistryHub = false
-        showBiologyHub = false
-        showLearningIntelligence = false
-        showMathLanding = false
-        showShapesExplorer = false
-        shapeExplorerScene = false
-        showProblemSolver = false
-        showScientificCalculator = false
-        showMathNotebook = false
-        showProbabilityLab = false
-        showKnowledgeHub = false
-        showMathMenu = false
-        hidePanels()
-        status = "Choose a subject"
-    }
-
-	    fun openSmartBoard() {
-        rememberCurrentIntent()
-	        showSubjectHub = false
-        showPhysicsHub = false
-        showChemistryHub = false
-        showBiologyHub = false
-        showLearningIntelligence = false
-        showSmartBoard = true
-        showMathLanding = false
-        showShapesExplorer = false
-        shapeExplorerScene = false
-        showProblemSolver = false
-        showScientificCalculator = false
-        showSetLogicVisualizer = false
-        showMathNotebook = false
-        showUnifiedMathStudio = false
-        showAdaptiveMathLearning = false
-        showProbabilityLab = false
-        showKnowledgeHub = false
-        showMathMenu = false
-        showChrome = false
-        showActionDock = false
-        hidePanels()
-        status = "Smart Board Ã‚Â· Mathematics"
-    }
-
-	    fun openSmartBoardMathModule(module: MathModule, expression: String? = null) {
-        rememberCurrentIntent()
-	        returnToSmartBoard = true
-        savedStateHandle["returnToSmartBoard"] = true
-        expression?.takeIf(String::isNotBlank)?.let { source ->
-            when (module) {
-                MathModule.Graph2D -> addFunction(source)
-                MathModule.Graph3D -> setSurfaceExpression(source)
-                else -> Unit
-            }
-        }
-        showSmartBoard = false
-        open(module)
-        status = "Opened from Smart Board"
-    }
-
-    fun returnFromSmartBoardMathModule() {
-        if (returnToSmartBoard) openSmartBoard() else returnToMathMenu()
+        returnToMathMenu()
     }
 
 	    fun openLearningIntelligence() {
@@ -1375,6 +1235,32 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showActionDock = false
         hidePanels()
         status = "Adaptive Math Coach"
+    }
+
+    fun openGamifyMaths() {
+        rememberCurrentIntent()
+        showSubjectHub = false
+        showPhysicsHub = false
+        showChemistryHub = false
+        showBiologyHub = false
+        showLearningIntelligence = false
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showGamifyMaths = true
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showMathMenu = false
+        showChrome = false
+        showActionDock = false
+        hidePanels()
+        status = "GamifyMaths"
     }
 
     fun commitUnifiedStudio(workspace: WorkspaceState) {
@@ -1584,11 +1470,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun navigateBackIntent() {
         when {
             hasDismissibleOverlay() -> dismissTopOverlay()
-            returnToSmartBoard && !showSmartBoard -> withoutRecordingIntent { returnFromSmartBoardMathModule() }
             restorePreviousIntent() -> Unit
-            showSubjectHub -> Unit
-            showSmartBoard || showPhysicsHub || showChemistryHub || showBiologyHub || showLearningIntelligence -> withoutRecordingIntent { openSubjectHub() }
-            showMathLanding -> withoutRecordingIntent { openSubjectHub() }
+            showSubjectHub || showMathLanding -> Unit
+            showPhysicsHub || showChemistryHub || showBiologyHub || showLearningIntelligence -> withoutRecordingIntent { openSubjectHub() }
             shapeExplorerScene -> withoutRecordingIntent { openShapesExplorer() }
             else -> withoutRecordingIntent { returnToMathMenu() }
         }
@@ -2543,23 +2427,6 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     var showSplash by rememberSaveable { mutableStateOf(true) }
     var showAppearanceSettings by rememberSaveable { mutableStateOf(false) }
     val applicationContext = LocalContext.current.applicationContext
-    val copyLaunchDiagnostics = remember(applicationContext, vm) {
-        {
-            val report = buildString {
-                appendLine("AI Explorer launch diagnostics")
-                appendLine("Version: 1.0 (Maths launch)")
-                appendLine("Device: ${Build.MANUFACTURER} ${Build.MODEL}")
-                appendLine("Android: ${Build.VERSION.RELEASE} / SDK ${Build.VERSION.SDK_INT}")
-                appendLine("Active module: ${vm.state.module.label}")
-                appendLine("Status: ${vm.status}")
-                appendLine("Maths only: enabled")
-                appendLine("Upcoming: Physics, Chemistry, Biology, Astro Physics, IQ Labs")
-            }
-            val clipboard = applicationContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboard.setPrimaryClip(ClipData.newPlainText("AI Explorer launch diagnostics", report))
-            vm.updateStatus("Launch diagnostics copied")
-        }
-    }
     val durableStore = remember(applicationContext) { DurableMathStore(applicationContext) }
     var persistenceReady by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -2600,7 +2467,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     BackHandler(enabled = showAppearanceSettings) {
         showAppearanceSettings = false
     }
-	    BackHandler(enabled = !showAppearanceSettings && (!vm.showSubjectHub || vm.hasDismissibleOverlay())) {
+	    BackHandler(enabled = !showAppearanceSettings && (!vm.showMathLanding || vm.hasDismissibleOverlay())) {
         vm.navigateBackIntent()
 	    }
     val activePalette = vm.settings.colorScheme.palette
@@ -2634,47 +2501,9 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         menuOffset = Offset.Zero
                         dockOffset = Offset.Zero
                     }
-                    if (vm.showSubjectHub) {
-                        SubjectHubScreen(
-                            modifier = Modifier.fillMaxSize(),
-                            wide = wide,
-                            onOpenSubject = { subject: String ->
-                                when (subject) {
-                                    "Maths" -> vm.enterMaths()
-                                    "Physics" -> vm.openPhysicsHub()
-                                    "Chemistry" -> vm.openChemistryHub()
-                                    "Biology" -> vm.openBiologyHub()
-                                }
-                            },
-                            onOpenLearningIntelligence = vm::openLearningIntelligence,
-                            onOpenSmartBoard = vm::openSmartBoard,
-                            onOpenAugmentedReality = { vm.open(MathModule.SpatialAR) },
-                            onOpenMathFormulas = { vm.openKnowledgeHub(KnowledgeSection.Formulas) },
-                            onOpenMathGraph = { vm.open(MathModule.Graph2D) },
-                            onOpenMathArGraph = {
-                                if (vm.state.surfaceExpression.isBlank()) vm.setSurfaceExpression("z = x^2 + y^2")
-                                vm.open(MathModule.SpatialAR)
-                            },
-                            onCopyLaunchReport = copyLaunchDiagnostics,
-                        )
-                    } else {
-	                    if (vm.showSmartBoard) {
-	                        SmartBoardFeatureRoot(
-	                            onExit = vm::navigateBackIntent,
-                            onOpenGraph2D = { expression -> vm.openSmartBoardMathModule(MathModule.Graph2D, expression) },
-                            onOpenGraph3D = { expression -> vm.openSmartBoardMathModule(MathModule.Graph3D, expression) },
-                            onOpenGeometry2D = { vm.openSmartBoardMathModule(MathModule.Geometry2D) },
-                            onOpenGeometry3D = { vm.openSmartBoardMathModule(MathModule.Geometry3D) },
-                            onOpenPhysicsWorkspace = { vm.openPhysicsHub() },
-                        )
-	                    } else if (vm.showLearningIntelligence) {
+                    if (!vm.showSubjectHub) {
+	                    if (vm.showLearningIntelligence) {
 	                        LearningIntelligenceFeatureRoot(onExit = vm::navigateBackIntent)
-	                    } else if (vm.showBiologyHub) {
-	                        BiologyFeatureRoot(onExit = vm::navigateBackIntent)
-	                    } else if (vm.showChemistryHub) {
-	                        ChemistryFeatureRoot(onExit = vm::navigateBackIntent)
-                    } else if (vm.showPhysicsHub) {
-                        PhysicsHubScreen(vm, wide)
                     } else if (vm.showMathLanding) {
                         MathematicsHubScreen(vm, wide)
                     } else if (vm.showShapesExplorer) {
@@ -2683,6 +2512,8 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         UnifiedMathStudioScreen(vm.state, vm::commitUnifiedStudio, vm::returnToMathMenu)
                     } else if (vm.showAdaptiveMathLearning) {
                         AdaptiveMathLearningScreen(vm.state, vm::returnToMathMenu)
+                    } else if (vm.showGamifyMaths) {
+                        GamifyMathsRoot(onExit = vm::navigateBackIntent)
                     } else if (vm.showMathNotebook) {
                         MathNotebookScreen(vm, wide = wide)
                     } else if (vm.showProblemSolver) {
@@ -2708,7 +2539,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     }
                     if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
-                    if (!imeVisible && vm.state.module != MathModule.SpatialAR && !vm.showSmartBoard && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showMathLanding && !vm.shapeExplorerScene && !vm.showShapesExplorer && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showScientificCalculator && !vm.showSetLogicVisualizer && !vm.showProblemSolver && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) BottomModeSelector(vm.state.module, vm::open, compact, Modifier.align(Alignment.BottomCenter))
+                    if (!imeVisible && vm.state.module != MathModule.SpatialAR && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showGamifyMaths && !vm.showLearningIntelligence && !vm.showMathLanding && !vm.shapeExplorerScene && !vm.showShapesExplorer && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showScientificCalculator && !vm.showSetLogicVisualizer && !vm.showProblemSolver && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) BottomModeSelector(vm.state.module, vm::open, compact, Modifier.align(Alignment.BottomCenter))
                     if (vm.showActionDock && vm.state.module != MathModule.Graph2D && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) MiniDock(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -2749,7 +2580,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         },
                     )
                 }
-                if (!showSplash) {
+                if (!showSplash && !vm.showGamifyMaths) {
                     Box(
                         Modifier
                             .align(Alignment.TopEnd)
@@ -2786,6 +2617,7 @@ private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
     when (title) {
         "Unified Math Studio" -> vm.openUnifiedMathStudio()
         "Adaptive Math Coach" -> vm.openAdaptiveMathLearning()
+        "GamifyMaths", "Math Games" -> vm.openGamifyMaths()
         "Scientific Calculator" -> vm.openScientificCalculator()
         "Math Notebook" -> vm.openMathNotebook()
         "Problem Solver" -> vm.openProblemSolver()
@@ -3785,18 +3617,14 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
             TogglePill(if (oneHanded) "One-handed" else "Full width", oneHanded) { oneHanded = !oneHanded }
             TogglePill(if (calculatorHaptics) "Haptics on" else "Haptics off", calculatorHaptics) { calculatorHaptics = !calculatorHaptics }
-            TogglePill(if (showRecognition) "Hide import" else "Voice / OCR", showRecognition) { showRecognition = !showRecognition }
+            TogglePill(if (showRecognition) "Hide voice input" else "Voice input", showRecognition) { showRecognition = !showRecognition }
         }
         if (showRecognition) {
-            IntentAwareMathField(recognitionInput, { recognitionInput = it }, "Voice transcript or recognized maths", Modifier.fillMaxWidth(), singleLine = false, minLines = 2)
+            IntentAwareMathField(recognitionInput, { recognitionInput = it }, "Voice transcript", Modifier.fillMaxWidth(), singleLine = false, minLines = 2)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 GlowButton("Normalize voice", enabled = recognitionInput.isNotBlank()) {
                     val recognized = CalculatorRecognitionAdapters.voice(recognitionInput)
                     setExpression(recognized.normalized); recognitionMessage = recognized.warnings.firstOrNull() ?: "Voice text normalized. Confirm it, then calculate."
-                }
-                GlowButton("Clean OCR", enabled = recognitionInput.isNotBlank()) {
-                    val recognized = CalculatorRecognitionAdapters.ocr(recognitionInput)
-                    setExpression(recognized.normalized); recognitionMessage = recognized.warnings.firstOrNull() ?: "OCR symbols cleaned. Confirm ambiguous characters before calculating."
                 }
             }
             recognitionMessage?.let { Text(it, color = Muted, fontSize = 11.sp) }
@@ -4113,38 +3941,10 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
     var importText by remember { mutableStateOf("") }
     var importMessage by remember { mutableStateOf("Paste CSV or TSV to create a notebook-scoped matrix.") }
     var showImport by remember { mutableStateOf(false) }
-    var captureMessage by remember { mutableStateOf("Voice, handwriting and photo recognitions are always reviewed before evaluation.") }
-    var captureDraft by remember { mutableStateOf("") }
+    var captureMessage by remember { mutableStateOf("Voice mathematics is always reviewed before evaluation.") }
     var variableName by remember { mutableStateOf("a") }
     var variableExpression by remember { mutableStateOf("2") }
     var variableScope by remember { mutableStateOf(CasVariableScope.FollowingRows) }
-    var pendingCasImage by remember { mutableStateOf<ByteArray?>(null) }
-    var launchCasCamera by remember { mutableStateOf(false) }
-    var recognitionCandidates by remember { mutableStateOf<List<String>>(emptyList()) }
-    var recognitionModality by remember { mutableStateOf(CasInputModality.Photo) }
-    var showInkPad by remember { mutableStateOf(false) }
-    var inkStrokes by remember { mutableStateOf<List<List<MathInkPoint>>>(emptyList()) }
-    var inkPadSize by remember { mutableStateOf(androidx.compose.ui.unit.IntSize.Zero) }
-    val handwritingRecognizer = remember { CasHandwritingRecognizer() }
-    DisposableEffect(handwritingRecognizer) { onDispose { handwritingRecognizer.close() } }
-    fun recognizePhoto(bytes: ByteArray) {
-        captureMessage = "Recognizing the image locallyÃ¢â‚¬Â¦"
-        CasPhotoMathRecognizer.recognize(bytes, onSuccess = { result ->
-            recognitionModality = CasInputModality.Photo; recognitionCandidates = result.candidates; captureDraft = result.candidates.first(); captureMessage = "${result.message} Confidence ${(result.confidence * 100).toInt()}%."
-        }, onFailure = { captureMessage = it })
-    }
-    val casPhotoPicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        pendingCasImage = uri?.let { context.contentResolver.openInputStream(it)?.use { stream -> stream.readBytes() } }
-        pendingCasImage?.let(::recognizePhoto)
-    }
-    val casCamera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-        pendingCasImage = bitmap?.let { image -> java.io.ByteArrayOutputStream().use { output -> image.compress(android.graphics.Bitmap.CompressFormat.JPEG, 90, output); output.toByteArray() } }
-        pendingCasImage?.let(::recognizePhoto)
-    }
-    val cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted && launchCasCamera) casCamera.launch(null) else if (!granted) captureMessage = "Camera permission is needed to photograph mathematics."
-        launchCasCamera = false
-    }
     val voiceCapture = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val candidates = result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).orEmpty()
         if (result.resultCode == Activity.RESULT_OK && candidates.isNotEmpty()) {
@@ -4280,54 +4080,6 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 GlowButton("Voice math") { audioPermission.launch(Manifest.permission.RECORD_AUDIO) }
-                GlowButton(if (showInkPad) "Close handwriting" else "Write mathematics") { showInkPad = !showInkPad }
-                GlowButton("Select math photo") { recognitionCandidates = emptyList(); casPhotoPicker.launch("image/*") }
-                GlowButton("Capture math photo") { recognitionCandidates = emptyList(); launchCasCamera = true; cameraPermission.launch(Manifest.permission.CAMERA) }
-            }
-            pendingCasImage?.let { Text("Transient local image Ã‚Â· ${it.size} bytes Ã‚Â· removed after confirmation", color = Cyan, fontSize = 10.sp) }
-            AnimatedVisibility(showInkPad) {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Write one line naturally with a finger or stylus", color = Ink, fontWeight = FontWeight.SemiBold)
-                    Canvas(
-                        Modifier.fillMaxWidth().height(190.dp).clip(RoundedCornerShape(14.dp)).background(Color(0xCC08111C))
-                            .border(1.dp, Cyan.copy(.55f), RoundedCornerShape(14.dp)).onSizeChanged { inkPadSize = it }
-                            .pointerInput(Unit) {
-                                detectDragGestures(
-                                    onDragStart = { start -> inkStrokes = inkStrokes + listOf(listOf(MathInkPoint(start.x, start.y, System.currentTimeMillis()))) },
-                                    onDrag = { change, _ -> change.consume(); val next = MathInkPoint(change.position.x, change.position.y, System.currentTimeMillis()); inkStrokes = inkStrokes.dropLast(1) + listOf(inkStrokes.last() + next) },
-                                )
-                            }.semantics { contentDescription = "Handwriting input pad with ${inkStrokes.size} strokes" },
-                    ) {
-                        inkStrokes.forEach { stroke -> stroke.zipWithNext().forEach { (a, b) -> drawLine(Cyan, Offset(a.x, a.y), Offset(b.x, b.y), 5f, StrokeCap.Round) } }
-                    }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        GlowButton("Recognize handwriting", enabled = inkStrokes.isNotEmpty()) {
-                            captureMessage = "Preparing the offline handwriting modelÃ¢â‚¬Â¦"
-                            handwritingRecognizer.recognize(inkStrokes, inkPadSize.width.toFloat(), inkPadSize.height.toFloat(), casInput.text, onSuccess = { result ->
-                                recognitionModality = CasInputModality.Handwriting; recognitionCandidates = result.candidates; captureDraft = result.candidates.first(); captureMessage = "${result.message} Confidence ${(result.confidence * 100).toInt()}%."
-                            }, onFailure = { captureMessage = it })
-                        }
-                        GlowButton("Undo stroke", enabled = inkStrokes.isNotEmpty()) { inkStrokes = inkStrokes.dropLast(1) }
-                        GlowButton("Clear ink", enabled = inkStrokes.isNotEmpty()) { inkStrokes = emptyList(); recognitionCandidates = emptyList() }
-                    }
-                }
-            }
-            if (recognitionCandidates.isNotEmpty()) {
-                Text("Recognition candidates", color = Ink, fontWeight = FontWeight.SemiBold)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    recognitionCandidates.forEach { candidate -> GlowButton(if (captureDraft == candidate) "Selected: $candidate" else candidate) { captureDraft = candidate } }
-                }
-            }
-            if (captureDraft.isNotEmpty() && recognitionCandidates.isNotEmpty()) {
-                IntentAwareMathField(captureDraft, { captureDraft = it }, "Recognized handwriting or photo maths", Modifier.fillMaxWidth(), singleLine = false, minLines = 2)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    GlowButton("Confirm recognized mathematics") {
-                        val ranked = listOf(captureDraft to .9) + recognitionCandidates.filter { it != captureDraft }.mapIndexed { index, text -> text to (.78 - index * .06).coerceAtLeast(.4) }
-                        val capture = CasCaptureNormalizer.normalize(recognitionModality, ranked)
-                        casInput = TextFieldValue(capture.recognizedText, TextRange(capture.recognizedText.length)); pendingCasImage = null
-                        captureMessage = "Recognized candidate moved to interpretation preview; source image data was released."
-                    }
-                }
             }
             Text(captureMessage, color = Muted, fontSize = 10.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -5885,7 +5637,7 @@ private fun QuizDashboard(
             TransparentIcon("Q", Violet)
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            QuizSubject.entries.forEach { option ->
+            listOf(QuizSubject.Maths).forEach { option ->
                 GlowButton(if (subject == option) "Ã¢â‚¬Â¢ ${option.label}" else option.label) { onSubject(option) }
             }
         }
@@ -5919,7 +5671,7 @@ private fun QuizIntroCard(subject: QuizSubject, level: QuizLevel) {
     ) {
         Text("${subject.label} Ã‚Â· ${level.label}", color = Cyan, fontWeight = FontWeight.Bold)
         Text("Choose Start to generate a focused 15-question quiz. Each answer locks instantly and shows a short explanation.", color = Muted, fontSize = 12.sp)
-        Text("Scoring is local and reusable for Maths, Physics, Chemistry, Biology, Astro Physics and IQ Labs.", color = Ink, fontSize = 12.sp)
+        Text("Scoring is local and designed for focused mathematics practice.", color = Ink, fontSize = 12.sp)
     }
 }
 
@@ -7265,7 +7017,7 @@ private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier
                 .semantics { contentDescription = "Breadcrumb ${vm.mathsBreadcrumb.joinToString(" Ã¢â€ â€™ ")}" },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("AI Explorer ${if (expanded) "Ã¢Å’Æ’" else "Ã¢Å’â€ž"}", color = Ink, fontSize = if (compact) 18.sp else 24.sp, fontWeight = FontWeight.ExtraBold)
+            Text("AI Maths Explorer ${if (expanded) "Ã¢Å’Æ’" else "Ã¢Å’â€ž"}", color = Ink, fontSize = if (compact) 18.sp else 24.sp, fontWeight = FontWeight.ExtraBold)
             Text(
                 vm.mathsBreadcrumb.joinToString(" Ã¢â€ â€™ "),
                 color = Muted,

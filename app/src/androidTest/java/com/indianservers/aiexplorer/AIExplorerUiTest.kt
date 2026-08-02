@@ -10,13 +10,14 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import org.junit.Rule
 import org.junit.Test
+import org.junit.Assert.assertTrue
 
 class AIExplorerUiTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private fun openMaths() {
-        composeRule.onNodeWithContentDescription("Open Maths laboratory").performClick()
+        composeRule.onNodeWithText("AI Maths Explorer", substring = true).assertIsDisplayed()
     }
 
     private fun expandNavigation() {
@@ -24,14 +25,12 @@ class AIExplorerUiTest {
     }
 
     @Test
-    fun appLaunchesWithSubjectHubAndPlannedSciences() {
-        composeRule.onNodeWithText("AI Explorer").assertIsDisplayed()
-        composeRule.onNodeWithText("Maths").assertIsDisplayed()
-        composeRule.onNodeWithText("Physics").assertIsDisplayed()
-        composeRule.onNodeWithText("Chemistry").assertIsDisplayed()
-        composeRule.onNodeWithText("Biology").assertIsDisplayed()
-        composeRule.onNodeWithText("Astro Physics").assertIsDisplayed()
-        composeRule.onNodeWithText("IQ Labs").assertIsDisplayed()
+    fun appLaunchesDirectlyIntoAiMathsExplorer() {
+        composeRule.onNodeWithText("AI Maths Explorer", substring = true).assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Search maths tools").assertIsDisplayed()
+        listOf("Physics", "Chemistry", "Biology", "Astro Physics").forEach { subject ->
+            assertTrue(composeRule.onAllNodesWithText(subject).fetchSemanticsNodes().isEmpty())
+        }
     }
 
     @Test
