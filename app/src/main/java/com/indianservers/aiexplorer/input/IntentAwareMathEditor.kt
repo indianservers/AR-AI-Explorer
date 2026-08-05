@@ -19,14 +19,21 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -106,7 +113,24 @@ fun IntentAwareMathField(
     imeAction: ImeAction = ImeAction.Done,
     onDone: (() -> Unit)? = null,
     showLegend: Boolean = true,
+    keyboardContext: MathKeyboardContext = inferMathKeyboardContext(label),
+    useMathKeyboard: Boolean = isMathematicalInputLabel(label),
+    onFocusChange: (Boolean) -> Unit = {},
 ) {
+    var editorValue by remember { mutableStateOf(TextFieldValue(value, TextRange(value.length))) }
+    var keyboardVisible by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(value) {
+        if (editorValue.text != value) {
+            editorValue = editorValue.copy(
+                text = value,
+                selection = TextRange(
+                    editorValue.selection.start.coerceAtMost(value.length),
+                    editorValue.selection.end.coerceAtMost(value.length),
+                ),
+            )
+        }
+    }
     val analysis = remember(value) { MathInputIntelligence.analyze(value) }
     val transformation = remember { IntentAwareMathVisualTransformation() }
     val healthy = analysis.validBrackets && !analysis.hasErrors
@@ -135,9 +159,15 @@ fun IntentAwareMathField(
             Text("${(analysis.confidence * 100).toInt()}% understood", color = IntentMathPalette.Muted, fontSize = 9.sp)
         }
         OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
+            value = editorValue,
+            onValueChange = {
+                editorValue = it
+                onValueChange(it.text)
+            },
+            modifier = Modifier.fillMaxWidth().onFocusChanged {
+                keyboardVisible = useMathKeyboard && it.isFocused
+                onFocusChange(it.isFocused)
+            },
             label = { Text(label) },
             placeholder = { Text(placeholder, color = IntentMathPalette.Muted) },
             visualTransformation = transformation,
@@ -146,6 +176,7 @@ fun IntentAwareMathField(
             minLines = minLines,
             keyboardOptions = KeyboardOptions(imeAction = imeAction),
             keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
+            readOnly = useMathKeyboard,
             isError = !healthy,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = IntentMathPalette.Ink,
@@ -167,6 +198,25 @@ fun IntentAwareMathField(
         if (showLegend) TokenLegend(analysis)
         analysis.suggestions.firstOrNull()?.let { suggestion -> Text("TIP  $suggestion", color = IntentMathPalette.Constant, fontSize = 9.sp) }
     }
+    if (keyboardVisible) {
+        AdaptiveMathKeyboardPopup(
+            value = editorValue,
+            onValueChange = {
+                editorValue = it
+                onValueChange(it.text)
+            },
+            context = keyboardContext,
+            onDone = {
+                onDone?.invoke()
+                keyboardVisible = false
+                focusManager.clearFocus()
+            },
+            onDismiss = {
+                keyboardVisible = false
+                focusManager.clearFocus()
+            },
+        )
+    }
 }
 
 /** Cursor/selection-preserving variant for calculator and solver editors. */
@@ -182,7 +232,12 @@ fun IntentAwareMathValueField(
     showLegend: Boolean = true,
     imeAction: ImeAction = ImeAction.Default,
     onDone: (() -> Unit)? = null,
+    keyboardContext: MathKeyboardContext = inferMathKeyboardContext(label),
+    useMathKeyboard: Boolean = isMathematicalInputLabel(label),
+    onFocusChange: (Boolean) -> Unit = {},
 ) {
+    var keyboardVisible by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     val analysis = remember(value.text) { MathInputIntelligence.analyze(value.text) }
     val transformation = remember { IntentAwareMathVisualTransformation() }
     val healthy = analysis.validBrackets && !analysis.hasErrors
@@ -202,12 +257,19 @@ fun IntentAwareMathValueField(
             Text("${(analysis.confidence * 100).toInt()}% understood", color = IntentMathPalette.Muted, fontSize = 9.sp)
         }
         OutlinedTextField(
-            value = value, onValueChange = onValueChange, modifier = Modifier.fillMaxWidth(), label = { Text(label) },
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier.fillMaxWidth().onFocusChanged {
+                keyboardVisible = useMathKeyboard && it.isFocused
+                onFocusChange(it.isFocused)
+            },
+            label = { Text(label) },
             placeholder = { Text(placeholder, color = IntentMathPalette.Muted) }, visualTransformation = transformation,
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Medium),
             singleLine = singleLine, minLines = minLines, isError = !healthy,
             keyboardOptions = KeyboardOptions(imeAction = imeAction),
             keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
+            readOnly = useMathKeyboard,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = IntentMathPalette.Ink, unfocusedTextColor = IntentMathPalette.Ink,
                 focusedBorderColor = accent, unfocusedBorderColor = accent.copy(.35f), cursorColor = IntentMathPalette.Number,
@@ -221,6 +283,104 @@ fun IntentAwareMathValueField(
         }
         if (showLegend) TokenLegend(analysis)
         analysis.suggestions.firstOrNull()?.let { Text("TIP  $it", color = IntentMathPalette.Constant, fontSize = 9.sp) }
+    }
+    if (keyboardVisible) {
+        AdaptiveMathKeyboardPopup(
+            value = value,
+            onValueChange = onValueChange,
+            context = keyboardContext,
+            onDone = {
+                onDone?.invoke()
+                keyboardVisible = false
+                focusManager.clearFocus()
+            },
+            onDismiss = {
+                keyboardVisible = false
+                focusManager.clearFocus()
+            },
+        )
+    }
+}
+
+private fun inferMathKeyboardContext(label: String): MathKeyboardContext {
+    val normalized = label.lowercase()
+    return when {
+        "3d" in normalized || "surface" in normalized -> MathKeyboardContext.GRAPH_3D
+        "graph" in normalized || "expression" in normalized -> MathKeyboardContext.GRAPH_2D
+        "matrix" in normalized || "determinant" in normalized -> MathKeyboardContext.MATRIX
+        normalized.startsWith("set") || "set expression" in normalized -> MathKeyboardContext.SETS
+        "stat" in normalized || "probab" in normalized || "data" in normalized -> MathKeyboardContext.STATISTICS
+        "derivative" in normalized || "integral" in normalized || "limit" in normalized -> MathKeyboardContext.CALCULUS
+        "physics" in normalized || "chemistry" in normalized || "unit" in normalized -> MathKeyboardContext.SCIENCE
+        else -> MathKeyboardContext.GENERAL
+    }
+}
+
+private fun isMathematicalInputLabel(label: String): Boolean {
+    val normalized = label.lowercase()
+    return listOf("search", "note", "caption", "folder", "name", "annotation", "voice", "transcript").none { it in normalized }
+}
+
+@Composable
+fun CompactMathField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    keyboardContext: MathKeyboardContext = MathKeyboardContext.GENERAL,
+    onDone: (() -> Unit)? = null,
+) {
+    var editorValue by remember { mutableStateOf(TextFieldValue(value, TextRange(value.length))) }
+    var keyboardVisible by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(value) {
+        if (value != editorValue.text) {
+            editorValue = editorValue.copy(
+                text = value,
+                selection = TextRange(
+                    editorValue.selection.start.coerceAtMost(value.length),
+                    editorValue.selection.end.coerceAtMost(value.length),
+                ),
+            )
+        }
+    }
+    OutlinedTextField(
+        value = editorValue,
+        onValueChange = {
+            editorValue = it
+            onValueChange(it.text)
+        },
+        label = { Text(label) },
+        singleLine = true,
+        readOnly = true,
+        visualTransformation = remember { IntentAwareMathVisualTransformation() },
+        modifier = modifier.onFocusChanged { keyboardVisible = it.isFocused },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = IntentMathPalette.Ink,
+            unfocusedTextColor = IntentMathPalette.Ink,
+            focusedBorderColor = IntentMathPalette.Number,
+            unfocusedBorderColor = IntentMathPalette.Number.copy(alpha = .35f),
+            cursorColor = IntentMathPalette.Number,
+        ),
+    )
+    if (keyboardVisible) {
+        AdaptiveMathKeyboardPopup(
+            value = editorValue,
+            onValueChange = {
+                editorValue = it
+                onValueChange(it.text)
+            },
+            context = keyboardContext,
+            onDone = {
+                onDone?.invoke()
+                keyboardVisible = false
+                focusManager.clearFocus()
+            },
+            onDismiss = {
+                keyboardVisible = false
+                focusManager.clearFocus()
+            },
+        )
     }
 }
 

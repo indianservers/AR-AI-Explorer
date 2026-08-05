@@ -101,7 +101,7 @@ internal fun FormulaCategoryGallery(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Choose a formula category", color = Ink, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-        Text("Formulas are organised by topic, then by subcategory.", color = Muted, fontSize = 11.sp)
+        Text("Open a main category to see its formulas directly.", color = Muted, fontSize = 11.sp)
         FlowRow(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -124,13 +124,49 @@ internal fun FormulaCategoryGallery(
                         Text("$count", color = Muted, fontSize = 10.sp)
                     }
                     Text(category.label, color = if (count > 0) Ink else Muted, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    Text(
-                        "${category.subcategories.size} subcategories",
-                        color = Violet,
-                        fontSize = 10.sp,
-                    )
+                    Text("Tap to browse formulas", color = Violet, fontSize = 10.sp)
                 }
             }
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalLayoutApi::class)
+internal fun FormulaDirectCategoryLibrary(
+    category: FormulaCategory,
+    formulas: List<FormulaCard>,
+    selectedTag: String?,
+    onTag: (String?) -> Unit,
+    onBack: () -> Unit,
+) {
+    var formulaScale by rememberFormulaFontScalePreference("math_formulas")
+    val tags = formulas.flatMap { it.tags }.distinct().sortedByFormulaFilter()
+    val visible = formulas.filter { selectedTag == null || selectedTag in it.tags }
+    Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            GlowButton("Back to categories", icon = "back", iconOnly = true, onClick = onBack)
+            Column(Modifier.weight(1f)) {
+                Text(category.label, color = Cyan, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text("${visible.size} formulas · choose a tag to filter", color = Muted, fontSize = 10.sp)
+            }
+        }
+        if (tags.isNotEmpty()) {
+            Text("Filters", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                FormulaCategoryChip("All", "•", selectedTag == null) { onTag(null) }
+                tags.forEach { tag ->
+                    FormulaCategoryChip(tag.replaceFirstChar(Char::uppercase), "#", selectedTag == tag) {
+                        onTag(if (selectedTag == tag) null else tag)
+                    }
+                }
+            }
+        }
+        FormulaFontControls(formulaScale) { formulaScale = it }
+        if (visible.isEmpty()) {
+            Text("No formulas match this tag and search.", color = Amber)
+        } else {
+            visible.forEach { formula -> FormulaItemCard(formula, formulaScale) }
         }
     }
 }
@@ -222,7 +258,11 @@ private fun FormulaItemCard(formula: FormulaCard, scale: Float) {
         Text(formula.title, color = Ink, fontWeight = FontWeight.SemiBold, fontSize = scaledSp(13, scale))
         Text(displayLatexFormula(formula.expression), color = Cyan, fontSize = scaledSp(18, scale), fontWeight = FontWeight.Bold)
         Text("${formula.category.label} · ${formula.subcategory} · ${formula.level.label}", color = Violet, fontSize = scaledSp(10, scale))
+        Text(formula.introduction, color = Ink.copy(alpha = .86f), fontSize = scaledSp(10, scale), lineHeight = scaledSp(13, scale))
         Text(formula.useCase, color = Muted, fontSize = scaledSp(11, scale))
+        if (formula.tags.isNotEmpty()) {
+            Text(formula.tags.joinToString("  ") { "#$it" }, color = Green, fontSize = scaledSp(10, scale))
+        }
         if (formula.variables.isNotEmpty()) {
             Text("Variables: ${formula.variables.joinToString()}", color = Muted, fontSize = scaledSp(11, scale))
         }
@@ -240,3 +280,17 @@ private fun FormulaFontControls(scale: Float, onScale: (Float) -> Unit) {
 }
 
 private fun scaledSp(base: Int, scale: Float) = (base * scale).sp
+
+private fun List<String>.sortedByFormulaFilter(): List<String> {
+    val priority = listOf(
+        "area", "perimeter", "volume", "distance", "angle", "triangle", "circle",
+        "identity", "equation", "derivative", "integral", "matrix", "vector",
+        "probability", "statistics", "counting",
+    )
+    return distinct().sortedWith(
+        compareBy<String> {
+            val index = priority.indexOf(it)
+            if (index == -1) priority.size else index
+        }.thenBy { it },
+    )
+}

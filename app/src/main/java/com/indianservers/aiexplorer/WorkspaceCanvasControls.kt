@@ -6,11 +6,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,8 +24,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,15 +66,22 @@ private fun CanvasChip(label: String, selected: Boolean, accent: Color, enabled:
 @Composable
 fun GeometryManipulationBar(
     current: Transform2DMode,
+    selectedAvailable: Boolean = true,
     onSelect: (Transform2DMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier.background(ControlSurface, RoundedCornerShape(16.dp))
+        modifier.alpha(if (selectedAvailable) .96f else .22f)
+            .background(ControlSurface, RoundedCornerShape(16.dp))
             .border(1.dp, ControlCyan.copy(.42f), RoundedCornerShape(16.dp)).padding(5.dp),
     ) {
         Transform2DMode.entries.forEach { mode ->
-            CanvasChip(mode.name, current == mode, ControlCyan) { onSelect(mode) }
+            CanvasChip(
+                mode.name,
+                current == mode,
+                ControlCyan,
+                enabled = selectedAvailable || mode == Transform2DMode.Select,
+            ) { onSelect(mode) }
         }
     }
 }
@@ -117,13 +134,18 @@ fun SpatialManipulationBar(
     selectedAvailable: Boolean,
     onSelect: (SpatialEditMode) -> Unit,
     modifier: Modifier = Modifier,
+    formulasVisible: Boolean = false,
+    onFormulas: (() -> Unit)? = null,
 ) {
     Row(
-        modifier.alpha(if (selectedAvailable) .8f else .3f).background(ControlSurface, RoundedCornerShape(16.dp))
+        modifier.alpha(if (selectedAvailable) .96f else .22f).background(ControlSurface, RoundedCornerShape(16.dp))
             .border(1.dp, ControlViolet.copy(.46f), RoundedCornerShape(16.dp)).padding(5.dp),
     ) {
         SpatialEditMode.entries.forEach { mode ->
-            CanvasChip(mode.name, current == mode, ControlViolet, enabled = selectedAvailable) { onSelect(mode) }
+            CanvasChip(mode.name, current == mode, ControlViolet, enabled = selectedAvailable || mode == SpatialEditMode.Select) { onSelect(mode) }
+        }
+        if (onFormulas != null) {
+            CanvasChip("Formulas", formulasVisible, ControlGreen, enabled = selectedAvailable) { onFormulas() }
         }
     }
 }
@@ -187,6 +209,88 @@ fun SelectedSolidDetails(solid: Solid, modifier: Modifier = Modifier) {
         Text("Position (${number(solid.position.x)}, ${number(solid.position.y)}, ${number(solid.position.z)})", color = ControlMuted, fontSize = 9.sp)
         Text("Rotation (${number(solid.rotation.x)}°, ${number(solid.rotation.y)}°, ${number(solid.rotation.z)}°)", color = ControlMuted, fontSize = 9.sp)
         Text("${measurements.faces} faces · ${measurements.edges} edges · ${measurements.vertices} vertices", color = ControlMuted, fontSize = 9.sp)
+    }
+}
+
+/**
+ * A selected object never opens a blocking property sheet by itself. The compact
+ * strip stays unobtrusive until the user explicitly asks for controls.
+ */
+@Composable
+fun SmartSelectionHud(
+    title: String,
+    instruction: String,
+    modifier: Modifier = Modifier,
+    initiallyExpanded: Boolean = false,
+    selectionKey: Any? = title,
+    actions: @Composable () -> Unit,
+) {
+    var expanded by remember(selectionKey) { mutableStateOf(initiallyExpanded) }
+    Column(
+        modifier
+            .widthIn(max = 560.dp)
+            .alpha(if (expanded) .98f else .72f)
+            .background(
+                Brush.linearGradient(listOf(SurfaceA.copy(.96f), SurfaceB.copy(.94f))),
+                RoundedCornerShape(18.dp),
+            )
+            .border(1.dp, Cyan.copy(alpha = if (expanded) .55f else .30f), RoundedCornerShape(18.dp))
+            .animateContentSize()
+            .padding(horizontal = 10.dp, vertical = 8.dp)
+            .semantics {
+                contentDescription =
+                    if (expanded) "Selected object controls for $title" else "Open selected object controls for $title"
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(title, color = Cyan, fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1)
+            Text(
+                if (expanded) "Controls open" else "Controls",
+                color = Green,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .background(Green.copy(.12f), RoundedCornerShape(10.dp))
+                    .border(1.dp, Green.copy(.42f), RoundedCornerShape(10.dp))
+                    .clickable(enabled = !expanded) { expanded = true }
+                    .padding(horizontal = 9.dp, vertical = 6.dp),
+            )
+        }
+        AnimatedVisibility(expanded) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(7.dp),
+            ) {
+                Text(instruction, color = Muted, fontSize = 10.sp, maxLines = 2)
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 210.dp)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        verticalArrangement = Arrangement.spacedBy(5.dp),
+                    ) { actions() }
+                }
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Cyan.copy(.08f), RoundedCornerShape(10.dp))
+                        .clickable { expanded = false }
+                        .padding(vertical = 7.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("Collapse controls ▲", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+        }
     }
 }
 

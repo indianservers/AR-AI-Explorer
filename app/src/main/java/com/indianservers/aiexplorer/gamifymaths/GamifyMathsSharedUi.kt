@@ -89,12 +89,14 @@ internal fun GameScreen(
             ),
         ),
     ) {
-        val compact = maxHeight < 760.dp || maxWidth < 390.dp
+        // Phone play areas should use the condensed layout even on tall screens.
+        // Height alone made modern narrow phones render tablet-sized game boards.
+        val compact = maxHeight < 900.dp || maxWidth < 600.dp
         CompositionLocalProvider(LocalCompactGameLayout provides compact) {
             Column(
                 Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-                    .padding(if (compact) 8.dp else 12.dp),
-                verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp),
+                    .padding(horizontal = if (compact) 7.dp else 12.dp, vertical = if (compact) 6.dp else 12.dp),
+                verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 12.dp),
             ) {
                 GameTopBar(title, level, hearts, accent, onBack, onHint)
                 GameLearningPhaseBanner(level, accent)
@@ -112,7 +114,7 @@ internal fun GameLearningPhaseBanner(level: Int, accent: Color, prompt: String =
         Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
             .background(accent.copy(.1f)).border(1.dp, accent.copy(.35f), RoundedCornerShape(14.dp))
             .semantics { contentDescription = "${guidance.phase.label} phase. ${guidance.objective}" }
-            .padding(horizontal = 11.dp, vertical = 8.dp),
+            .padding(horizontal = 10.dp, vertical = if (LocalCompactGameLayout.current) 5.dp else 8.dp),
         horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

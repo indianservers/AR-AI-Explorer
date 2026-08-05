@@ -335,7 +335,15 @@ private fun AlgebraAnswerPanel(challenge: AlgebraChallenge, selected: String, ac
                 DraggableGameTile(choice, listOf(GamePurple, GameGreen, GameGold, GameBlue)[index % 4], "answer $choice") { onSelect(choice) }
             }
         }
-        SecondaryGameButton("Clear Selection", accent) { onSelect("") }
+        GameComponentControls(
+            status = if (selected.isBlank()) "No result selected" else "Selected: $selected",
+            accent = accent,
+            actions = listOf(
+                GameComponentAction("Remove result", "−", selected.isNotBlank(), "Remove the selected algebra result") { onSelect("") },
+                GameComponentAction("Clear answer", "×", selected.isNotBlank(), "Clear the algebra answer") { onSelect("") },
+            ),
+            guidance = "Tap an answer card to add it to the balance. Choosing another card replaces it.",
+        )
     }
 }
 

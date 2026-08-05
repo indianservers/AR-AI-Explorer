@@ -239,7 +239,15 @@ private fun MeasurementAnswerPanel(task: MeasureChallenge, selected: String, acc
                 DraggableGameTile(choice, listOf(GameBlue, GamePurple, GameGreen, GameGold)[index]) { onSelect(choice) }
             }
         }
-        SecondaryGameButton("Clear answer", accent) { onSelect("") }
+        GameComponentControls(
+            status = if (selected.isBlank()) "No measurement" else "Selected: $selected",
+            accent = accent,
+            actions = listOf(
+                GameComponentAction("Remove result", "−", selected.isNotBlank(), "Remove the selected measurement") { onSelect("") },
+                GameComponentAction("Clear answer", "×", selected.isNotBlank(), "Clear the measurement answer") { onSelect("") },
+            ),
+            guidance = "Tap a result card to add it. Choosing another result replaces the current measurement.",
+        )
     }
 }
 
@@ -339,11 +347,11 @@ private fun BridgeBuilderScreen(stage: Int, onBack: () -> Unit, onSolved: () -> 
             if (wide) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.Top) {
                     BridgeCanvas(mission.span, beams, joints, selectedIndex, Modifier.weight(1.35f)) { selectedIndex = it }
-                    BridgeControls(mission, beams, joints, span, strong, available, Modifier.weight(.65f),
+                    BridgeControls(mission, beams, joints, span, strong, available, selectedIndex in beams.indices, Modifier.weight(.65f),
                         onBeam = { length -> if (available(length) > 0) { beams += length; selectedIndex = beams.lastIndex; tested = null } },
                         onJoint = { if (joints < (beams.size - 1).coerceAtLeast(0)) joints++; tested = null },
                         onDelete = { if (selectedIndex in beams.indices) { beams.removeAt(selectedIndex); selectedIndex = -1; joints = joints.coerceAtMost((beams.size - 1).coerceAtLeast(0)); tested = null } },
-                        onUndo = { if (beams.isNotEmpty()) beams.removeAt(beams.lastIndex) else if (joints > 0) joints--; selectedIndex = -1; tested = null },
+                        onUndo = { if (joints > 0) joints-- else if (beams.isNotEmpty()) beams.removeAt(beams.lastIndex); selectedIndex = -1; tested = null },
                         onReset = { beams.clear(); joints = 0; selectedIndex = -1; tested = null },
                         onTest = { tested = assessment.success },
                     )
@@ -351,11 +359,11 @@ private fun BridgeBuilderScreen(stage: Int, onBack: () -> Unit, onSolved: () -> 
             } else {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     BridgeCanvas(mission.span, beams, joints, selectedIndex) { selectedIndex = it }
-                    BridgeControls(mission, beams, joints, span, strong, available,
+                    BridgeControls(mission, beams, joints, span, strong, available, selectedIndex in beams.indices,
                         onBeam = { length -> if (available(length) > 0) { beams += length; selectedIndex = beams.lastIndex; tested = null } },
                         onJoint = { if (joints < (beams.size - 1).coerceAtLeast(0)) joints++; tested = null },
                         onDelete = { if (selectedIndex in beams.indices) { beams.removeAt(selectedIndex); selectedIndex = -1; joints = joints.coerceAtMost((beams.size - 1).coerceAtLeast(0)); tested = null } },
-                        onUndo = { if (beams.isNotEmpty()) beams.removeAt(beams.lastIndex) else if (joints > 0) joints--; selectedIndex = -1; tested = null },
+                        onUndo = { if (joints > 0) joints-- else if (beams.isNotEmpty()) beams.removeAt(beams.lastIndex); selectedIndex = -1; tested = null },
                         onReset = { beams.clear(); joints = 0; selectedIndex = -1; tested = null },
                         onTest = { tested = assessment.success },
                     )
@@ -447,6 +455,7 @@ private fun BridgeControls(
     span: Int,
     strong: Boolean,
     available: (Int) -> Int,
+    hasSelection: Boolean,
     modifier: Modifier = Modifier,
     onBeam: (Int) -> Unit,
     onJoint: () -> Unit,
@@ -471,11 +480,16 @@ private fun BridgeControls(
             }
         }
         PrimaryGameButton("Add Joint", GameBlue, onJoint, enabled = beams.size >= 2 && joints < beams.size - 1)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-            MiniEngineerButton("Delete", GameRed, Modifier.weight(1f), onDelete)
-            MiniEngineerButton("Undo", GameGold, Modifier.weight(1f), onUndo)
-            MiniEngineerButton("Reset", GameBlue, Modifier.weight(1f), onReset)
-        }
+        GameComponentControls(
+            status = "${beams.size} beams · $joints joints",
+            accent = GameBlue,
+            actions = listOf(
+                GameComponentAction("Delete selected", "−", hasSelection, "Delete the selected bridge beam", onDelete),
+                GameComponentAction("Undo last", "↶", beams.isNotEmpty() || joints > 0, "Undo the last beam or joint", onUndo),
+                GameComponentAction("Reset bridge", "×", beams.isNotEmpty() || joints > 0, "Remove every bridge component", onReset),
+            ),
+            guidance = "Tap a beam card to add it. Tap a placed beam label to select it before using Delete selected.",
+        )
         PrimaryGameButton("Test Bridge", GameGreen, onTest, enabled = beams.isNotEmpty())
     }
 }
@@ -513,13 +527,4 @@ private fun ChecklistRow(label: String, checked: Boolean) {
         }
         Text(label, color = if (checked) GameGreen else GameInk, fontSize = 11.sp, fontWeight = FontWeight.Bold)
     }
-}
-
-@Composable
-private fun MiniEngineerButton(label: String, accent: Color, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Box(
-        modifier.height(48.dp).background(accent.copy(.25f), RoundedCornerShape(13.dp)).border(1.dp, accent.copy(.75f), RoundedCornerShape(13.dp))
-            .clickable(onClick = onClick).focusable().semantics { contentDescription = label },
-        contentAlignment = Alignment.Center,
-    ) { Text(label, color = GameInk, fontSize = 10.sp, fontWeight = FontWeight.Black) }
 }

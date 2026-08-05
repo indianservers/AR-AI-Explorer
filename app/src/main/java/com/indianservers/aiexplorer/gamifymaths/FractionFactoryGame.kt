@@ -119,6 +119,21 @@ private fun FractionTaskScreen(level: Int, onBack: () -> Unit, onSolved: () -> U
                 }
             }
         }
+        GameComponentControls(
+            status = if (selected.isBlank()) "No piece selected" else "Selected: $selected",
+            accent = FractionLevels[level].accent,
+            actions = listOf(
+                GameComponentAction("Remove piece", "−", selected.isNotBlank(), "Remove the selected fraction piece or symbol") {
+                    selected = ""
+                    result = null
+                },
+                GameComponentAction("Clear workspace", "×", selected.isNotBlank(), "Clear the fraction workspace") {
+                    selected = ""
+                    result = null
+                },
+            ),
+            guidance = "Tap or drag a piece to add it. Choosing another piece replaces the current answer.",
+        )
         PrimaryGameButton("Check", GameGreen, { result = selected == task.answer }, enabled = selected.isNotBlank())
         result?.let { ResultPanel(it, task.explanation, "Use the visible parts to compare or rewrite the fractions with a common denominator.", onSolved) }
     }

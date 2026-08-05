@@ -109,7 +109,7 @@ private fun RecipeScreen(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
             Text(recipe.instruction, color = GameInk, fontSize = 11.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
         CookingPan(selected, KitchenLevels[level].accent)
-        Text("Drag the correct ingredient card into the pan.", color = GameMuted, fontSize = 11.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        Text("Tap or drag an ingredient card to add it to the pan.", color = GameMuted, fontSize = 11.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.spacedBy(9.dp)) {
             choices.forEachIndexed { index, value ->
                 DraggableGameTile(value.toString(), listOf(GameGreen, GameGold, GameBlue, GamePurple)[index]) {
@@ -117,7 +117,21 @@ private fun RecipeScreen(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                 }
             }
         }
-        SecondaryGameButton("Clear pan", KitchenLevels[level].accent) { selected = 0; result = null }
+        GameComponentControls(
+            status = if (selected == 0) "Pan is empty" else "$selected in pan",
+            accent = KitchenLevels[level].accent,
+            actions = listOf(
+                GameComponentAction("Remove ingredient", "−", selected != 0, "Remove the selected ingredient from the pan") {
+                    selected = 0
+                    result = null
+                },
+                GameComponentAction("Clear pan", "×", selected != 0, "Clear all ingredients from the pan") {
+                    selected = 0
+                    result = null
+                },
+            ),
+            guidance = "Choosing another card replaces the current ingredient. Remove is disabled when the pan is empty.",
+        )
         PrimaryGameButton("Check Recipe", GameGreen, { result = selected == recipe.answer }, enabled = selected != 0)
         result?.let { ResultPanel(it, recipe.explanation, "The recipe is not balanced yet. Recalculate and drag another quantity.", onSolved) }
     }

@@ -52,6 +52,8 @@ import com.indianservers.aiexplorer.gamifymaths.GameBlue
 import com.indianservers.aiexplorer.gamifymaths.GameGold
 import com.indianservers.aiexplorer.gamifymaths.GameGreen
 import com.indianservers.aiexplorer.gamifymaths.GameInk
+import com.indianservers.aiexplorer.gamifymaths.GameComponentAction
+import com.indianservers.aiexplorer.gamifymaths.GameComponentControls
 import com.indianservers.aiexplorer.gamifymaths.GameIntroScreen
 import com.indianservers.aiexplorer.gamifymaths.GameMuted
 import com.indianservers.aiexplorer.gamifymaths.GamePanel
@@ -66,7 +68,6 @@ import com.indianservers.aiexplorer.gamifymaths.PrimaryGameButton
 import com.indianservers.aiexplorer.gamifymaths.ResultPanel
 import com.indianservers.aiexplorer.gamifymaths.RoundGameButton
 import com.indianservers.aiexplorer.gamifymaths.ScorePill
-import com.indianservers.aiexplorer.gamifymaths.SecondaryGameButton
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.exp
@@ -303,7 +304,15 @@ private fun ArcadeAnswerPanel(game: ArcadeMiniGame, challenge: ArcadeChallenge, 
                 DraggableGameTile(choice, listOf(game.accent, GamePurple, GameGreen, GameGold)[index % 4], "answer $choice") { onSelect(choice) }
             }
         }
-        SecondaryGameButton("Clear", game.accent) { onSelect("") }
+        GameComponentControls(
+            status = if (selected.isBlank()) "No result selected" else "Selected: $selected",
+            accent = game.accent,
+            actions = listOf(
+                GameComponentAction("Remove result", "−", selected.isNotBlank(), "Remove the selected probability result") { onSelect("") },
+                GameComponentAction("Clear answer", "×", selected.isNotBlank(), "Clear the probability answer") { onSelect("") },
+            ),
+            guidance = "Tap an answer card to add it. Choosing another result replaces the current selection.",
+        )
     }
 }
 

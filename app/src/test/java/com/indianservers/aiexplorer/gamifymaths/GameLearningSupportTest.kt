@@ -58,7 +58,7 @@ class GameLearningSupportTest {
     @Test
     fun everyGeneralMissionHasUniqueChoicesAnswerAndTeachingExplanation() {
         val missions = gamifyMissionAudit()
-        assertTrue(missions.size >= 40)
+        assertTrue(missions.size >= 110)
         assertEquals(missions.size, missions.map { "${it.gameId}:${it.title}" }.distinct().size)
         missions.forEach { mission ->
             assertTrue("${mission.gameId}/${mission.title} answer must be selectable", mission.answer in mission.choices)
@@ -73,5 +73,35 @@ class GameLearningSupportTest {
         assertTrue(byGame.getValue("vectors").size >= 8)
         assertTrue(byGame.getValue("patterns").size >= 8)
         assertTrue(byGame.getValue("logic").size >= 8)
+    }
+
+    @Test
+    fun onlyCalculationModesAreUntaggedAndEveryDifficultyIsRepresented() {
+        val catalogue = gamifyCatalogueAudit()
+        assertEquals(29, catalogue.size)
+        assertEquals(
+            setOf("speed-basic", "speed-advanced"),
+            catalogue.filter { it.difficulty == null }.map { it.id }.toSet(),
+        )
+        GameDifficulty.entries.forEach { difficulty ->
+            assertTrue(
+                "$difficulty should be represented in the game catalogue",
+                catalogue.any { it.difficulty == difficulty },
+            )
+        }
+    }
+
+    @Test
+    fun expandedWorldsAreUniqueAndHaveCompleteLearningRuns() {
+        val catalogue = gamifyCatalogueAudit()
+        assertEquals(catalogue.size, catalogue.map { it.id }.distinct().size)
+        assertEquals(catalogue.size, catalogue.map { it.title }.distinct().size)
+
+        val additions = catalogue.filter { it.id in expandedMathsGameIds }
+        assertEquals(15, additions.size)
+        additions.forEach { game ->
+            assertTrue("${game.title} needs a meaningful learning run", game.missionCount >= 5)
+            assertTrue("${game.title} needs a difficulty tag", game.difficulty != null)
+        }
     }
 }

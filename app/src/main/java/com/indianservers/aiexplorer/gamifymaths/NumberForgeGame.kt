@@ -131,12 +131,19 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                     onRemoveOne = { if (ones > 0) ones--; result = null },
                 )
                 BaseTenVisual(hundreds, tens, ones)
-                Text("Add a block below. Tap any place-value column to remove one.", color = GameMuted, fontSize = 11.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                    DraggableGameTile("100", GameGreen, "one hundred block") { if (hundreds < 9) hundreds++; result = null }
-                    DraggableGameTile("10", GameGold, "one tens rod") { if (tens < 9) tens++; result = null }
-                    DraggableGameTile("1", GameBlue, "one unit cube") { if (ones < 9) ones++; result = null }
-                }
+                GameComponentControls(
+                    status = "Built ${hundreds * 100 + tens * 10 + ones}",
+                    accent = ForgeLevels[level].accent,
+                    actions = listOf(
+                        GameComponentAction("Add 100", "+", hundreds < 9, "Add one hundred block") { hundreds++; result = null },
+                        GameComponentAction("Add 10", "+", tens < 9, "Add one tens rod") { tens++; result = null },
+                        GameComponentAction("Add 1", "+", ones < 9, "Add one unit cube") { ones++; result = null },
+                        GameComponentAction("Clear build", "×", hundreds + tens + ones > 0, "Remove every place-value block") {
+                            hundreds = 0; tens = 0; ones = 0; result = null
+                        },
+                    ),
+                    guidance = "Use Add buttons to build. Tap a Hundreds, Tens, or Ones column above to remove one block.",
+                )
                 PrimaryGameButton("Check", GameGreen, onClick = { result = hundreds * 100 + tens * 10 + ones == target })
             }
             2 -> {
@@ -151,7 +158,15 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                         }
                     }
                 }
-                Text("Tap any filled digit slot to remove that digit.", color = GameMuted, fontSize = 10.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                GameComponentControls(
+                    status = if (chosen.isBlank()) "No digits" else "Built: $chosen",
+                    accent = GamePurple,
+                    actions = listOf(
+                        GameComponentAction("Backspace", "←", chosen.isNotEmpty(), "Remove the last digit") { chosen = chosen.dropLast(1); result = null },
+                        GameComponentAction("Clear digits", "×", chosen.isNotEmpty(), "Remove all digits") { chosen = ""; result = null },
+                    ),
+                    guidance = "Tap a digit card to add it. Tap any filled slot to remove that exact digit.",
+                )
                 PrimaryGameButton("Check", GameGreen, onClick = { result = chosen == "132" })
             }
             3 -> {
@@ -170,6 +185,14 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                         DraggableGameTile(symbol, GamePurple) { chosen = symbol; result = null }
                     }
                 }
+                GameComponentControls(
+                    status = if (chosen.isBlank()) "No symbol" else "Selected: $chosen",
+                    accent = GamePurple,
+                    actions = listOf(
+                        GameComponentAction("Remove symbol", "−", chosen.isNotBlank(), "Remove the comparison symbol") { chosen = ""; result = null },
+                    ),
+                    guidance = "Tap >, =, or < to add it between the numbers. Choosing another symbol replaces it.",
+                )
                 PrimaryGameButton("Check", GameGreen, onClick = { result = chosen == "<" })
             }
             else -> {
@@ -186,7 +209,15 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                         }
                     }
                 }
-                Text("Tap any filled digit slot to remove that digit.", color = GameMuted, fontSize = 10.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                GameComponentControls(
+                    status = if (chosen.isBlank()) "No digits" else "Built: $chosen",
+                    accent = Color(0xFF35C67A),
+                    actions = listOf(
+                        GameComponentAction("Backspace", "←", chosen.isNotEmpty(), "Remove the last digit") { chosen = chosen.dropLast(1); result = null },
+                        GameComponentAction("Clear digits", "×", chosen.isNotEmpty(), "Remove all digits") { chosen = ""; result = null },
+                    ),
+                    guidance = "Tap a digit card to add it. Tap any filled slot to remove that exact digit.",
+                )
                 PrimaryGameButton("Check", GameGreen, onClick = { result = chosen == "352" })
             }
         }

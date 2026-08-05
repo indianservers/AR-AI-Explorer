@@ -146,6 +146,7 @@ private data class VariableNode(val name: String) : Node {
     override fun eval(v: Map<String, Double>) = when (name) {
         "pi", "π" -> PI
         "e" -> kotlin.math.E
+        "infinity" -> Double.POSITIVE_INFINITY
         else -> v[name] ?: error("Missing value for $name")
     }
 }
@@ -195,6 +196,46 @@ private data class FunctionNode(val name: String, val args: List<Node>) : Node {
         if (normalized == "if") {
             require(args.size == 3) { "if requires condition, true value, false value" }
             return if (args[0].eval(v) != 0.0) args[1].eval(v) else args[2].eval(v)
+        }
+        if (normalized == "derivative" || normalized == "partial") {
+            require(args.size == 2) { "$name requires an expression and variable" }
+            val variable = (args[1] as? VariableNode)?.name ?: error("$name requires a variable")
+            val center = v[variable] ?: 0.0
+            val h = max(1e-6, abs(center) * 1e-5)
+            return (args[0].eval(v + (variable to center + h)) - args[0].eval(v + (variable to center - h))) / (2.0 * h)
+        }
+        if (normalized == "limit") {
+            require(args.size == 3) { "limit requires an expression, variable, and target" }
+            val variable = (args[1] as? VariableNode)?.name ?: error("limit requires a variable")
+            val target = args[2].eval(v)
+            val h = max(1e-7, abs(target) * 1e-6)
+            return (args[0].eval(v + (variable to target - h)) + args[0].eval(v + (variable to target + h))) / 2.0
+        }
+        if (normalized == "integral") {
+            require(args.size == 2 || args.size == 4) { "integral requires expression, variable, and optional bounds" }
+            val variable = (args[1] as? VariableNode)?.name ?: error("integral requires a variable")
+            val start = if (args.size == 4) args[2].eval(v) else 0.0
+            val end = if (args.size == 4) args[3].eval(v) else v[variable] ?: 0.0
+            val steps = 160
+            val width = (end - start) / steps
+            var total = args[0].eval(v + (variable to start)) + args[0].eval(v + (variable to end))
+            for (index in 1 until steps) {
+                val weight = if (index % 2 == 0) 2.0 else 4.0
+                total += weight * args[0].eval(v + (variable to start + index * width))
+            }
+            return total * width / 3.0
+        }
+        if (normalized == "sum" || normalized == "product") {
+            require(args.size == 4) { "$name requires expression, variable, start, and end" }
+            val variable = (args[1] as? VariableNode)?.name ?: error("$name requires a variable")
+            val start = args[2].eval(v).toInt()
+            val end = args[3].eval(v).toInt()
+            require(end - start in 0..100_000) { "$name range is too large" }
+            return if (normalized == "sum") {
+                (start..end).sumOf { args[0].eval(v + (variable to it.toDouble())) }
+            } else {
+                (start..end).fold(1.0) { result, index -> result * args[0].eval(v + (variable to index.toDouble())) }
+            }
         }
         val values = args.map { it.eval(v) }
         val x = values.firstOrNull() ?: error("$name requires an argument")

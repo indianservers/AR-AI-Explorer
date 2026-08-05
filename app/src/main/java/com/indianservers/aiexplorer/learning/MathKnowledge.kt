@@ -1,6 +1,13 @@
 package com.indianservers.aiexplorer.learning
 
 enum class KnowledgeLevel(val label: String) { School("School"), UG("UG"), PG("PG") }
+enum class TheoremBand(val label: String) {
+    CLASS_6_8("Classes 6–8"),
+    CLASS_9_10("Classes 9–10"),
+    CLASS_11_12("Classes 11–12"),
+    UG("Undergraduate"),
+    PG("Postgraduate"),
+}
 enum class KnowledgeTopic(val label: String) { Algebra("Algebra"), Calculus("Calculus"), Geometry("Geometry"), Statistics("Statistics"), Probability("Probability") }
 enum class DictionaryClassBand(val label: String) { CLASS_6_8("Classes 6–8"), CLASS_9_10("Classes 9–10"), CLASS_11_12("Classes 11–12"), UNIVERSITY("University") }
 enum class DictionaryDifficulty(val label: String) { FOUNDATION("Foundation"), STANDARD("Standard"), ADVANCED("Advanced") }
@@ -8,7 +15,8 @@ enum class QuizSubject(val label: String) { Maths("Maths"), Physics("Physics"), 
 enum class QuizLevel(val label: String, val difficulty: Int) { Basic("Basic", 1), Intermediate("Intermediate", 2), Advanced("Advanced", 3) }
 enum class FormulaCategory(val label: String, val topic: KnowledgeTopic, val subcategories: List<String>) {
     AlgebraFunctions("Algebra and Functions", KnowledgeTopic.Algebra, listOf("Quadratics", "Identities", "Sequences", "Logarithms", "Polynomials")),
-    GeometryTrigonometry("Geometry and Trigonometry", KnowledgeTopic.Geometry, listOf("Plane Geometry", "Mensuration", "Right Triangles", "Trigonometric Identities", "Triangle Laws")),
+    GeometryMensuration("Geometry", KnowledgeTopic.Geometry, listOf("Plane Geometry", "Mensuration", "Circles", "Polygons", "Coordinate Shapes")),
+    Trigonometry("Trigonometry", KnowledgeTopic.Geometry, listOf("Right Triangles", "Trigonometric Identities", "Angle Formulas", "Triangle Laws", "Radians")),
     CalculusAnalysis("Calculus and Analysis", KnowledgeTopic.Calculus, listOf("Limits", "Derivatives", "Integrals", "Series", "Multivariable Calculus")),
     DifferentialEquations("Differential Equations", KnowledgeTopic.Calculus, listOf("First-order ODEs", "Second-order ODEs", "Growth Models", "Laplace Methods", "Numerical ODEs")),
     LinearAlgebraVectors("Linear Algebra and Vectors", KnowledgeTopic.Algebra, listOf("Matrices", "Determinants", "Eigenvalues", "Dot Products", "Projections")),
@@ -22,13 +30,14 @@ enum class FormulaCategory(val label: String, val topic: KnowledgeTopic, val sub
 
     companion object {
         // Retains source compatibility with the former category name.
-        val Trigonometry: FormulaCategory get() = GeometryTrigonometry
+        val GeometryTrigonometry: FormulaCategory get() = GeometryMensuration
     }
 }
 
 fun FormulaCategory.icon(): String = when (this) {
     FormulaCategory.AlgebraFunctions -> "x2"
-    FormulaCategory.GeometryTrigonometry -> "tri"
+    FormulaCategory.GeometryMensuration -> "geo"
+    FormulaCategory.Trigonometry -> "tri"
     FormulaCategory.CalculusAnalysis -> "int"
     FormulaCategory.DifferentialEquations -> "dy"
     FormulaCategory.LinearAlgebraVectors -> "mat"
@@ -50,11 +59,19 @@ fun FormulaCategory.subcategoryFor(title: String): String {
             "logarithm" in name || "base" in name || "exponential" in name -> "Logarithms"
             else -> "Polynomials"
         }
-        FormulaCategory.GeometryTrigonometry -> when {
+        FormulaCategory.GeometryMensuration -> when {
+            listOf("circle", "sector", "arc").any { it in name } -> "Circles"
+            listOf("polygon", "interior angle", "regular").any { it in name } -> "Polygons"
+            listOf("coordinate", "diagonal", "distance", "midpoint").any { it in name } -> "Coordinate Shapes"
+            listOf("volume", "surface", "sphere", "cylinder", "cone", "frustum").any { it in name } -> "Mensuration"
+            else -> "Plane Geometry"
+        }
+        FormulaCategory.Trigonometry -> when {
             listOf("sine", "cosine", "tangent", "secant", "cosecant", "angle", "radians").any { it in name } -> "Trigonometric Identities"
             "law of" in name -> "Triangle Laws"
-            listOf("triangle", "pythagorean", "heron").any { it in name } -> "Plane Geometry"
-            listOf("volume", "surface", "sphere", "cylinder", "cone", "frustum").any { it in name } -> "Mensuration"
+            listOf("ratio", "right").any { it in name } -> "Right Triangles"
+            listOf("double", "half", "addition", "product", "sum").any { it in name } -> "Angle Formulas"
+            listOf("radian", "degree").any { it in name } -> "Radians"
             else -> "Right Triangles"
         }
         FormulaCategory.CalculusAnalysis -> when {
@@ -133,7 +150,9 @@ data class FormulaCard(
     val expression: String,
     val variables: List<String>,
     val useCase: String,
+    val introduction: String = "",
     val relatedTerms: List<String> = emptyList(),
+    val tags: List<String> = emptyList(),
 )
 
 data class TheoremCard(
@@ -145,6 +164,13 @@ data class TheoremCard(
     val conditions: List<String>,
     val applications: List<String>,
     val proofSketch: List<String>,
+    val category: String = topic.label,
+    val tags: List<String> = applications,
+    val band: TheoremBand = when (level) {
+        KnowledgeLevel.School -> TheoremBand.CLASS_9_10
+        KnowledgeLevel.UG -> TheoremBand.UG
+        KnowledgeLevel.PG -> TheoremBand.PG
+    },
 )
 
 data class VisualProofCard(
@@ -296,30 +322,99 @@ data class KnowledgeSearchResult(
 }
 
 object MathKnowledgeCatalog {
+    private fun formulaIntroduction(title: String, category: FormulaCategory, subcategory: String, useCase: String, tags: List<String>): String {
+        val domain = when (category) {
+            FormulaCategory.AlgebraFunctions -> "algebra, equations, functions, and pattern work"
+            FormulaCategory.GeometryMensuration -> "geometry diagrams, measurements, construction, and mensuration"
+            FormulaCategory.Trigonometry -> "angle, triangle, wave, navigation, and periodic-motion problems"
+            FormulaCategory.CalculusAnalysis -> "rate, accumulation, approximation, and advanced graph analysis"
+            FormulaCategory.DifferentialEquations -> "changing systems such as growth, decay, motion, circuits, and flow"
+            FormulaCategory.LinearAlgebraVectors -> "vectors, matrices, transformations, projections, and data models"
+            FormulaCategory.CoordinateGeometry3D -> "coordinate geometry, analytic geometry, 3D objects, and graph work"
+            FormulaCategory.ProbabilityCombinatorics -> "chance, counting, uncertainty, games, risk, and discrete models"
+            FormulaCategory.StatisticsDistributions -> "data summaries, inference, regression, and distribution models"
+            FormulaCategory.NumberTheory -> "integers, divisibility, modular arithmetic, primes, and sequences"
+            FormulaCategory.ComplexNumbers -> "complex-plane, oscillation, roots, phasor, and advanced algebra work"
+            FormulaCategory.NumericalMethods -> "computer-based approximation, numerical solving, interpolation, and optimization"
+        }
+        val trigger = when {
+            "area" in tags -> "Use it when a problem asks for area or surface measure."
+            "volume" in tags -> "Use it when a 3D capacity or solid measure is required."
+            "perimeter" in tags -> "Use it when boundary length or circumference is required."
+            "distance" in tags -> "Use it when two points, objects, or positions must be compared by length."
+            "angle" in tags -> "Use it when angles, triangles, rotations, or direction relationships are involved."
+            "derivative" in tags -> "Use it when instantaneous change, slope, or sensitivity is required."
+            "integral" in tags -> "Use it when accumulation, total change, or area under a curve is required."
+            "probability" in tags -> "Use it when outcomes are uncertain and likelihood must be computed."
+            "statistics" in tags -> "Use it when data must be summarized, compared, or modeled."
+            "matrix" in tags || "vector" in tags -> "Use it when quantities are arranged as vectors, matrices, or transformations."
+            "equation" in tags -> "Use it when an unknown value must be solved or classified."
+            "identity" in tags -> "Use it when an expression must be simplified, transformed, or verified."
+            else -> "Use it when the given quantities match the variables in the formula."
+        }
+        return "$title is a $subcategory formula used in $domain. $trigger $useCase"
+    }
+
+    private fun formulaTags(title: String, useCase: String, expression: String, category: FormulaCategory, subcategory: String, relatedTerms: List<String>): List<String> {
+        val text = "$title $useCase $expression ${category.label} $subcategory ${relatedTerms.joinToString()}".lowercase()
+        val candidates = linkedMapOf(
+            "area" to listOf("area", "surface"),
+            "perimeter" to listOf("perimeter", "circumference"),
+            "volume" to listOf("volume"),
+            "distance" to listOf("distance", "length"),
+            "angle" to listOf("angle", "radian"),
+            "triangle" to listOf("triangle", "trapezium", "pythagorean", "heron"),
+            "circle" to listOf("circle", "sector", "arc", "radius", "diameter"),
+            "identity" to listOf("identity", "theorem"),
+            "equation" to listOf("equation", "root", "solution"),
+            "derivative" to listOf("derivative", "differentiate", "gradient", "rate"),
+            "integral" to listOf("integral", "accumulation"),
+            "matrix" to listOf("matrix", "determinant", "eigen", "rank", "trace"),
+            "vector" to listOf("vector", "dot", "cross", "projection"),
+            "probability" to listOf("probability", "odds", "bayes"),
+            "statistics" to listOf("mean", "variance", "distribution", "regression"),
+            "counting" to listOf("permutation", "combination", "count", "arrangement", "graph"),
+            "transform" to listOf("transform", "laplace", "fourier"),
+        )
+        val categoryTags = when (category) {
+            FormulaCategory.GeometryMensuration -> listOf("geometry")
+            FormulaCategory.Trigonometry -> listOf("trigonometry", "angle")
+            FormulaCategory.AlgebraFunctions -> listOf("algebra")
+            FormulaCategory.CalculusAnalysis -> listOf("calculus")
+            FormulaCategory.DifferentialEquations -> listOf("ode")
+            FormulaCategory.LinearAlgebraVectors -> listOf("matrix", "vector")
+            FormulaCategory.CoordinateGeometry3D -> listOf("coordinate")
+            FormulaCategory.ProbabilityCombinatorics -> listOf("probability")
+            FormulaCategory.StatisticsDistributions -> listOf("statistics")
+            FormulaCategory.NumberTheory -> listOf("number")
+            FormulaCategory.ComplexNumbers -> listOf("complex")
+            FormulaCategory.NumericalMethods -> listOf("numerical")
+        }
+        return (categoryTags + candidates.filterValues { needles -> needles.any(text::contains) }.keys).distinct().take(7)
+    }
+
     val formulas = (formulaGroups() + additionalFormulaGroups()).flatMap { group ->
         group.items.mapIndexed { index, item ->
+            val subcategory = group.category.subcategoryFor(item.title)
+            val tags = formulaTags(item.title, item.useCase, item.expression, group.category, subcategory, item.relatedTerms)
             FormulaCard(
                 id = "${group.category.name}-${item.title}".slug(),
                 title = item.title,
                 topic = group.category.topic,
                 category = group.category,
-                subcategory = group.category.subcategoryFor(item.title),
+                subcategory = subcategory,
                 level = item.level,
                 expression = item.expression,
                 variables = item.variables,
                 useCase = item.useCase,
+                introduction = formulaIntroduction(item.title, group.category, subcategory, item.useCase, tags),
                 relatedTerms = item.relatedTerms + group.category.label + group.category.subcategories,
+                tags = tags,
             )
         }
     }
 
-    val theorems = listOf(
-        TheoremCard("pythagoras", "Pythagorean theorem", KnowledgeTopic.Geometry, KnowledgeLevel.School, "In a right triangle, the square on the hypotenuse equals the sum of the squares on the legs.", listOf("Right triangle", "Euclidean plane"), listOf("Distance formula", "Circle equations", "Vector length"), listOf("Build squares on each side.", "Rearrange equal-area pieces.", "Compare total areas.")),
-        TheoremCard("fundamental-calculus", "Fundamental theorem of calculus", KnowledgeTopic.Calculus, KnowledgeLevel.UG, "Differentiation and accumulation are inverse processes under continuity.", listOf("Continuous function on [a,b]", "Antiderivative exists"), listOf("Evaluate definite integrals", "Connect area and rates"), listOf("Partition the interval.", "Use accumulated area F(x).", "Show F'(x)=f(x).")),
-        TheoremCard("central-limit", "Central limit theorem", KnowledgeTopic.Statistics, KnowledgeLevel.UG, "Standardized sums of many independent variables approach a normal distribution under broad conditions.", listOf("Independent samples", "Finite variance", "Large sample size"), listOf("Confidence intervals", "Sampling distributions", "Hypothesis tests"), listOf("Track sample means.", "Scale by standard error.", "Observe convergence to the normal curve.")),
-        TheoremCard("bayes-rule", "Bayes theorem", KnowledgeTopic.Probability, KnowledgeLevel.UG, "Posterior odds combine prior belief with evidence likelihood.", listOf("P(B) not zero"), listOf("Diagnosis", "Machine learning", "Decision analysis"), listOf("Start from P(A and B).", "Write it both as P(A|B)P(B) and P(B|A)P(A).", "Rearrange.")),
-        TheoremCard("spectral", "Spectral theorem foundation", KnowledgeTopic.Algebra, KnowledgeLevel.PG, "A real symmetric matrix has orthogonal eigenvectors and real eigenvalues.", listOf("Real symmetric matrix"), listOf("Quadratic forms", "PCA", "Optimization"), listOf("Use symmetry of inner products.", "Show distinct eigenspaces are orthogonal.", "Build an orthonormal basis.")),
-    )
+    val theorems = expandedTheoremCatalog()
 
     val visualProofs = listOf(
         VisualProofCard("triangle-angle-sum", "Triangle angle sum", KnowledgeTopic.Geometry, KnowledgeLevel.School, MathModuleTarget.Geometry2D, listOf("Create triangle ABC.", "Draw a parallel through A to BC.", "Drag vertices and watch the three copied angles form a straight line."), "The total angle remains 180 degrees.", "Move one vertex until the triangle is nearly flat, then explain what stays constant."),
@@ -344,8 +439,8 @@ object MathKnowledgeCatalog {
             (topic == null || topic == itemTopic) && (level == null || level == itemLevel)
         fun textMatches(vararg parts: String) = normalized.isBlank() || parts.any { it.lowercase().contains(normalized) }
         return KnowledgeSearchResult(
-            formulas = formulas.filter { (formulaCategory == null || it.category == formulaCategory) && topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.expression, it.useCase, it.relatedTerms.joinToString(), it.category.label, it.subcategory, it.category.subcategories.joinToString()) },
-            theorems = theorems.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.statement, it.applications.joinToString()) },
+            formulas = formulas.filter { (formulaCategory == null || it.category == formulaCategory) && topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.expression, it.useCase, it.introduction, it.relatedTerms.joinToString(), it.tags.joinToString(), it.category.label, it.subcategory, it.category.subcategories.joinToString()) },
+            theorems = theorems.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.statement, it.applications.joinToString(), it.category, it.tags.joinToString()) },
             visualProofs = visualProofs.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.invariant, it.learnerPrompt) },
             dictionary = dictionary.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.term, it.definition, it.notation, it.example) },
             mcqs = mcqs.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.prompt, it.choices.joinToString(), it.explanation) },
@@ -385,7 +480,7 @@ object MathKnowledgeCatalog {
             item("Geometric sequence", """a_{n}=a_{1}r^{n-1}""", "a_1,r,n", "Find terms with constant ratio."),
             item("Geometric series", """S_{n}=a_{1}\frac{1-r^{n}}{1-r}""", "S_n,a_1,r,n", "Sum a finite geometric progression."),
         )),
-        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
+        FormulaGroup(FormulaCategory.GeometryMensuration, listOf(
             item("Triangle area", """A=\frac{1}{2}bh""", "A,b,h", "Find area from base and height."),
             item("Heron's formula", """A=\sqrt{s\left(s-a\right)\left(s-b\right)\left(s-c\right)}""", "A,s,a,b,c", "Find triangle area from three sides."),
             item("Semiperimeter", """s=\frac{a+b+c}{2}""", "s,a,b,c", "Prepare Heron's formula."),
@@ -399,7 +494,7 @@ object MathKnowledgeCatalog {
             item("Cylinder volume", """V=\pi r^{2}h""", "V,r,h", "Find volume of a cylinder."),
             item("Sphere volume", """V=\frac{4}{3}\pi r^{3}""", "V,r", "Find volume of a sphere."),
         )),
-        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
+        FormulaGroup(FormulaCategory.Trigonometry, listOf(
             item("Sine ratio", """\sin\theta=\frac{\text{opposite}}{\text{hypotenuse}}""", "theta", "Use right-triangle sine."),
             item("Cosine ratio", """\cos\theta=\frac{\text{adjacent}}{\text{hypotenuse}}""", "theta", "Use right-triangle cosine."),
             item("Tangent ratio", """\tan\theta=\frac{\sin\theta}{\cos\theta}""", "theta", "Connect tangent to sine and cosine."),
@@ -591,14 +686,14 @@ object MathKnowledgeCatalog {
             item("Exponential inverse", """b^{\log_{b}x}=x""", "b,x", "Undo logarithms and exponentials."),
             item("Remainder theorem", """f\left(a\right)=\operatorname{rem}\left(f\left(x\right),x-a\right)""", "f,a,x", "Find polynomial remainders.", KnowledgeLevel.UG),
         )),
-        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
+        FormulaGroup(FormulaCategory.GeometryMensuration, listOf(
             item("Cone surface area", """S=\pi r\left(r+\ell\right)""", "S,r,ell", "Find total surface area of a cone."),
             item("Cone slant height", """\ell=\sqrt{r^{2}+h^{2}}""", "ell,r,h", "Find cone slant height."),
             item("Frustum volume", """V=\frac{1}{3}\pi h\left(R^{2}+Rr+r^{2}\right)""", "V,h,R,r", "Find volume of a conical frustum.", KnowledgeLevel.UG),
             item("Regular polygon area", """A=\frac{1}{2}aP""", "A,a,P", "Find area from apothem and perimeter."),
             item("Interior angle sum", """S=\left(n-2\right)180^{\circ}""", "S,n", "Find total interior angle measure."),
         )),
-        FormulaGroup(FormulaCategory.GeometryTrigonometry, listOf(
+        FormulaGroup(FormulaCategory.Trigonometry, listOf(
             item("Half-angle sine", """\sin^{2}\frac{\theta}{2}=\frac{1-\cos\theta}{2}""", "theta", "Use half-angle identities.", KnowledgeLevel.UG),
             item("Half-angle cosine", """\cos^{2}\frac{\theta}{2}=\frac{1+\cos\theta}{2}""", "theta", "Use half-angle identities.", KnowledgeLevel.UG),
             item("Product to sum sine cosine", """\sin A\cos B=\frac{1}{2}\left[\sin\left(A+B\right)+\sin\left(A-B\right)\right]""", "A,B", "Convert products to sums.", KnowledgeLevel.UG),

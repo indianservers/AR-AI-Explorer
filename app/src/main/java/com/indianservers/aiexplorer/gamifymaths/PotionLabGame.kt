@@ -148,7 +148,21 @@ private fun PotionPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -> Uni
                 }
             }
         }
-        SecondaryGameButton("Empty answer flask", accent) { selected = ""; result = null }
+        GameComponentControls(
+            status = if (selected.isBlank()) "Flask is empty" else "$selected units in flask",
+            accent = accent,
+            actions = listOf(
+                GameComponentAction("Remove potion", "−", selected.isNotBlank(), "Remove the potion from the answer flask") {
+                    selected = ""
+                    result = null
+                },
+                GameComponentAction("Empty flask", "×", selected.isNotBlank(), "Empty the answer flask") {
+                    selected = ""
+                    result = null
+                },
+            ),
+            guidance = "Tap or drag a potion to add it. Selecting another potion replaces the current amount.",
+        )
         PrimaryGameButton("Check Potion", GameGreen, { result = selected == challenge.answer }, enabled = selected.isNotBlank())
         result?.let { ResultPanel(it, challenge.explanation, "That potion amount does not satisfy the formula. Recalculate and try another flask.", onSolved) }
     }

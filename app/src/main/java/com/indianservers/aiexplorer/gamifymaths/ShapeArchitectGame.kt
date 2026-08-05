@@ -131,7 +131,7 @@ private fun ArchitectPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -> 
     GameScreen("${challenge.title} • ${stage + 1}/3", index + 1, accent, if (result == false) 2 else 3, onBack, { hint = !hint }) {
         if (hint) GlossyPanel(GameGold) { Text(challenge.explanation, color = GameInk) }
         GlossyPanel(accent) {
-            Text(challenge.prompt, color = GameInk, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            Text(challenge.prompt, color = GameInk, fontSize = if (LocalCompactGameLayout.current) 14.sp else 17.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
         BoxWithConstraints(Modifier.fillMaxWidth()) {
             val wide = maxWidth >= 720.dp
@@ -151,8 +151,21 @@ private fun ArchitectPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -> 
                 }
             }
         }
-        Text("Tap any placed shape to remove it.", color = GameMuted, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-        SecondaryGameButton("Clear all pieces", accent) { selected.clear(); result = null }
+        GameComponentControls(
+            status = "${selected.size}/${challenge.required.size} pieces",
+            accent = accent,
+            actions = listOf(
+                GameComponentAction("Undo last", "↶", selected.isNotEmpty(), "Remove the last placed shape") {
+                    selected.removeAt(selected.lastIndex)
+                    result = null
+                },
+                GameComponentAction("Clear all", "×", selected.isNotEmpty(), "Remove all placed shapes") {
+                    selected.clear()
+                    result = null
+                },
+            ),
+            guidance = "Tap a shape card to add it. Tap a placed shape to remove that exact piece, or use Undo last.",
+        )
         PrimaryGameButton("Check Blueprint", GameGreen, {
             result = selected.sorted() == challenge.required.sorted()
         }, enabled = selected.size == challenge.required.size)
@@ -170,12 +183,12 @@ private fun ArchitectWorkspace(
 ) {
     val compact = LocalCompactGameLayout.current
     Column(
-        modifier.fillMaxWidth().height(if (compact) 220.dp else 290.dp).background(Color(0xFFF7F3E9), RoundedCornerShape(24.dp))
+        modifier.fillMaxWidth().height(if (compact) 148.dp else 290.dp).background(Color(0xFFF7F3E9), RoundedCornerShape(24.dp))
             .border(2.dp, accent.copy(.65f), RoundedCornerShape(24.dp)).padding(if (compact) 10.dp else 14.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp),
     ) {
-        Text(target, color = GamePurple, fontSize = 22.sp, fontWeight = FontWeight.Black)
+        Text(target, color = GamePurple, fontSize = if (compact) 17.sp else 22.sp, fontWeight = FontWeight.Black)
         Box(
             Modifier.fillMaxWidth().weight(1f).background(Color.White.copy(.7f), RoundedCornerShape(20.dp))
                 .border(2.dp, Color(0xFF7A6B62).copy(.5f), RoundedCornerShape(20.dp)),
@@ -189,7 +202,7 @@ private fun ArchitectWorkspace(
                         ShapeGlyph(
                             shape,
                             listOf(GameGreen, GameBlue, GameGold, GamePurple)[i % 4],
-                            Modifier.size(if (compact) 58.dp else 74.dp).clickable { onRemove(i) },
+                            Modifier.size(if (compact) 42.dp else 74.dp).clickable { onRemove(i) },
                         )
                     }
                 }
@@ -201,8 +214,9 @@ private fun ArchitectWorkspace(
 
 @Composable
 private fun ShapePalette(choices: List<String>, accent: Color, modifier: Modifier = Modifier, onShape: (String) -> Unit) {
+    val compact = LocalCompactGameLayout.current
     FlowRow(
-        modifier.fillMaxWidth().background(GamePanel, RoundedCornerShape(22.dp)).border(1.dp, accent.copy(.6f), RoundedCornerShape(22.dp)).padding(12.dp),
+        modifier.fillMaxWidth().background(GamePanel, RoundedCornerShape(22.dp)).border(1.dp, accent.copy(.6f), RoundedCornerShape(22.dp)).padding(if (compact) 7.dp else 12.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -214,20 +228,21 @@ private fun ShapePalette(choices: List<String>, accent: Color, modifier: Modifie
 
 @Composable
 private fun DraggableShape(shape: String, color: Color, onDrop: () -> Unit) {
+    val compact = LocalCompactGameLayout.current
     var dx by remember { mutableFloatStateOf(0f) }
     var dy by remember { mutableFloatStateOf(0f) }
     Column(
-        Modifier.width(88.dp).height(108.dp).graphicsLayer { translationX = dx; translationY = dy }
+        Modifier.width(if (compact) 70.dp else 88.dp).height(if (compact) 78.dp else 108.dp).graphicsLayer { translationX = dx; translationY = dy }
             .background(Color(0xFFFFF5DC), RoundedCornerShape(17.dp)).border(1.dp, color.copy(.7f), RoundedCornerShape(17.dp))
             .pointerInput(shape) {
                 detectDragGestures(
                     onDragEnd = { val moved = dy < -24f || kotlin.math.abs(dx) > 45f; dx = 0f; dy = 0f; if (moved) onDrop() },
                     onDragCancel = { dx = 0f; dy = 0f },
                 ) { change, amount -> change.consume(); dx += amount.x; dy += amount.y }
-            }.clickable(onClick = onDrop).focusable().semantics { contentDescription = "Drag $shape" }.padding(7.dp),
+            }.clickable(onClick = onDrop).focusable().semantics { contentDescription = "Drag $shape" }.padding(if (compact) 4.dp else 7.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ShapeGlyph(shape, color, Modifier.size(66.dp))
+        ShapeGlyph(shape, color, Modifier.size(if (compact) 48.dp else 66.dp))
         Text(shape.replaceFirstChar(Char::uppercase), color = GameSpace, fontSize = 9.sp, fontWeight = FontWeight.Bold)
     }
 }

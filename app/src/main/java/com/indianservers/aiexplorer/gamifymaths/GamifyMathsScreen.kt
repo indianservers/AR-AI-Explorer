@@ -65,7 +65,7 @@ private val Coral = Color(0xFFFF668F)
 
 private enum class GameDestination { Home, Worlds, Progress, Profile }
 
-private data class GameMission(
+internal data class GameMission(
     val title: String,
     val prompt: String,
     val tokens: List<String>,
@@ -73,7 +73,14 @@ private data class GameMission(
     val explanation: String,
 )
 
-private data class MathsGame(
+internal enum class GameDifficulty(val label: String) {
+    Beginner("BEGINNER"),
+    Intermediate("INTERMEDIATE"),
+    Advanced("ADVANCED"),
+    Expert("EXPERT"),
+}
+
+internal data class MathsGame(
     val id: String,
     val title: String,
     val currentTopic: String,
@@ -82,6 +89,7 @@ private data class MathsGame(
     val subtopics: List<String>,
     val mechanic: String,
     val missions: List<GameMission>,
+    val difficulty: GameDifficulty? = null,
 )
 
 private val MathsGame.levelCount: Int
@@ -94,7 +102,7 @@ private val MathsGame.levelCount: Int
         else -> missions.size
     }
 
-private val Games = listOf(
+private val CoreGames = listOf(
     MathsGame(
         "speed-basic", "Speed Calculation", "Rapid Arithmetic", "30s", Cyan,
         listOf("Addition", "Subtraction", "Multiplication", "Division", "Percentages", "1–3 digit numbers"),
@@ -240,9 +248,19 @@ private val Games = listOf(
     ),
 )
 
+private fun coreDifficulty(gameId: String): GameDifficulty? = when (gameId) {
+    "forge", "kitchen", "fractions", "shapes" -> GameDifficulty.Beginner
+    "potions", "balance", "measure", "vectors", "patterns", "data", "chance" -> GameDifficulty.Intermediate
+    "logic" -> GameDifficulty.Advanced
+    else -> null
+}
+
+private val Games = CoreGames.map { it.copy(difficulty = coreDifficulty(it.id)) } + expandedMathsGames()
+
 private val DisplayGames: List<MathsGame>
     get() {
-        val order = listOf("speed-basic", "speed-advanced", "forge", "kitchen", "fractions", "balance", "shapes", "potions", "measure", "vectors", "patterns", "data", "chance", "logic")
+        val order = listOf("speed-basic", "speed-advanced", "forge", "kitchen", "fractions", "balance", "shapes", "potions", "measure", "vectors", "patterns", "data", "chance", "logic") +
+            expandedMathsGameIds
         return Games.sortedBy { order.indexOf(it.id).let { index -> if (index < 0) Int.MAX_VALUE else index } }
     }
 
@@ -254,6 +272,16 @@ internal data class GameMissionAudit(
     val answer: String,
     val explanation: String,
 )
+
+internal data class GameCatalogueAudit(
+    val id: String,
+    val title: String,
+    val difficulty: GameDifficulty?,
+    val missionCount: Int,
+)
+
+internal fun gamifyCatalogueAudit(): List<GameCatalogueAudit> =
+    Games.map { GameCatalogueAudit(it.id, it.title, it.difficulty, it.missions.size) }
 
 internal fun gamifyMissionAudit(): List<GameMissionAudit> = Games.filterNot { it.id.startsWith("speed-") }.flatMap { game ->
     game.missions.map { mission ->
@@ -356,7 +384,7 @@ private fun GameHome(completed: Map<String, Int>, onExit: () -> Unit, onOpenGame
         JourneyCard(completed.values.sum(), onClick = { onOpenGame(continueGame) })
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Text("Choose Your Mission", color = Ink, fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
-            Text("12 WORLDS", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            Text("${Games.size} GAMES", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         }
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             DisplayGames.forEach { game -> GameCard(game, completed[game.id] ?: 0, Modifier.weight(1f), onOpenGame) }
@@ -396,6 +424,28 @@ private fun JourneyCard(totalCompleted: Int, onClick: () -> Unit) {
 }
 
 @Composable
+private fun DifficultyTag(difficulty: GameDifficulty, compact: Boolean = false) {
+    val color = when (difficulty) {
+        GameDifficulty.Beginner -> Green
+        GameDifficulty.Intermediate -> Cyan
+        GameDifficulty.Advanced -> Amber
+        GameDifficulty.Expert -> Coral
+    }
+    Text(
+        difficulty.label,
+        color = color,
+        fontSize = if (compact) 8.sp else 9.sp,
+        fontWeight = FontWeight.Black,
+        letterSpacing = if (compact) 0.5.sp else 1.sp,
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(color.copy(.13f))
+            .border(1.dp, color.copy(.7f), CircleShape)
+            .padding(horizontal = if (compact) 7.dp else 9.dp, vertical = if (compact) 3.dp else 4.dp),
+    )
+}
+
+@Composable
 private fun GameCard(game: MathsGame, completed: Int, modifier: Modifier = Modifier, onClick: (MathsGame) -> Unit) {
     Column(
         modifier
@@ -406,7 +456,12 @@ private fun GameCard(game: MathsGame, completed: Int, modifier: Modifier = Modif
             .background(Brush.linearGradient(listOf(game.accent.copy(.28f), Panel, Color(0xF20A0C22))))
             .border(1.dp, game.accent.copy(.78f), RoundedCornerShape(22.dp))
             .clickable { onClick(game) }
-            .semantics { contentDescription = "Open ${game.title}, current topic ${game.currentTopic}" }
+            .semantics {
+                contentDescription = buildString {
+                    append("Open ${game.title}, current topic ${game.currentTopic}")
+                    game.difficulty?.let { append(", ${it.label.lowercase()} difficulty") }
+                }
+            }
             .padding(13.dp),
         verticalArrangement = Arrangement.spacedBy(7.dp),
     ) {
@@ -417,6 +472,7 @@ private fun GameCard(game: MathsGame, completed: Int, modifier: Modifier = Modif
             Text(game.icon, color = game.accent, fontSize = 20.sp, fontWeight = FontWeight.Black)
         }
         Text(game.title, color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold, maxLines = 2)
+        game.difficulty?.let { DifficultyTag(it, compact = true) }
         Text(game.currentTopic, color = game.accent, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.weight(1f))
         Text("${completed}/${game.levelCount} MISSIONS", color = Muted, fontSize = 9.sp, fontWeight = FontWeight.Bold)
@@ -435,8 +491,8 @@ private fun WorldsScreen(completed: Map<String, Int>, onOpenGame: (MathsGame) ->
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 14.dp, end = 14.dp, top = 18.dp, bottom = 94.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("12 Maths Worlds", color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black)
-        Text("Every world teaches a different way of thinking.", color = Muted, fontSize = 12.sp)
+        Text("${Games.size} Maths Games", color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black)
+        Text("${Games.count { it.difficulty != null }} tagged learning worlds from beginner to expert.", color = Muted, fontSize = 12.sp)
         DisplayGames.forEach { game ->
             Row(
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Panel)
@@ -448,7 +504,10 @@ private fun WorldsScreen(completed: Map<String, Int>, onOpenGame: (MathsGame) ->
                     Text(game.icon, color = game.accent, fontWeight = FontWeight.Black)
                 }
                 Column(Modifier.weight(1f)) {
-                    Text(game.title, color = Ink, fontWeight = FontWeight.ExtraBold)
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        Text(game.title, color = Ink, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
+                        game.difficulty?.let { DifficultyTag(it, compact = true) }
+                    }
                     Text(game.subtopics.take(4).joinToString(" • "), color = Muted, fontSize = 9.sp, maxLines = 2)
                 }
                 Text("${completed[game.id] ?: 0}/${game.levelCount}", color = game.accent, fontWeight = FontWeight.Bold)
@@ -554,7 +613,10 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
             Text("MISSION ${missionIndex + 1}/${game.missions.size}", color = game.accent, fontSize = 10.sp, fontWeight = FontWeight.Black)
         }
         Column {
-            Text(game.title, color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+                Text(game.title, color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black, modifier = Modifier.weight(1f))
+                game.difficulty?.let { DifficultyTag(it) }
+            }
             Text(game.mechanic, color = Muted, fontSize = 11.sp)
         }
         GameLearningPhaseBanner(missionIndex + 1, game.accent, mission.prompt)
@@ -602,6 +664,21 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
                 }
             }
         }
+        GameComponentControls(
+            status = selected?.let { "Core: $it" } ?: "Reactor empty",
+            accent = game.accent,
+            actions = listOf(
+                GameComponentAction("Remove core", "−", selected != null, "Remove the selected answer core") {
+                    selected = null
+                    result = null
+                },
+                GameComponentAction("Clear reactor", "×", selected != null, "Clear the answer reactor") {
+                    selected = null
+                    result = null
+                },
+            ),
+            guidance = "Tap or drag a core to add it. Adding another core replaces the one currently in the reactor.",
+        )
         if (result != null) {
             Column(
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp))

@@ -96,8 +96,8 @@ class MathKnowledgeTest {
     }
 
     @Test
-    fun formulaLibraryHasFifteenCategoriesWithAtLeastTwelveLatexFormulasEach() {
-        assertEquals(15, FormulaCategory.entries.size)
+    fun formulaLibraryHasMainCategoriesWithTaggedLatexFormulas() {
+        assertTrue(FormulaCategory.entries.size in 10..14)
         FormulaCategory.entries.forEach { category ->
             val formulas = MathKnowledgeCatalog.formulas.filter { it.category == category }
             assertTrue("${category.label} should have at least 17 formulas", formulas.size >= 17)
@@ -105,7 +105,40 @@ class MathKnowledgeTest {
                 assertFalse("${formula.title} should not use plain slash division", "/" in formula.expression)
                 assertFalse("${formula.title} should not use unbraced power notation", Regex("\\^[A-Za-z0-9]").containsMatchIn(formula.expression))
                 assertTrue("${formula.title} should use KaTeX-style notation", "\\" in formula.expression || "_{" in formula.expression || "^{" in formula.expression)
+                assertTrue("${formula.title} should have a basic introduction", formula.introduction.length >= 80)
+                assertTrue("${formula.title} introduction should explain use", formula.introduction.contains("used in", ignoreCase = true))
+                assertTrue("${formula.title} introduction should explain when to use it", formula.introduction.contains("Use it when", ignoreCase = true))
             }
+        }
+        assertTrue(MathKnowledgeCatalog.formulas.any { "area" in it.tags })
+        assertTrue(MathKnowledgeCatalog.formulas.any { "perimeter" in it.tags })
+        assertTrue(MathKnowledgeCatalog.formulas.any { "volume" in it.tags })
+        assertTrue(MathKnowledgeCatalog.formulas.any { "angle" in it.tags })
+        assertTrue(MathKnowledgeCatalog.search("navigation").formulas.any { it.category == FormulaCategory.Trigonometry })
+        MathKnowledgeCatalog.formulas.forEach { formula ->
+            val display = displayLatexFormula(formula.expression)
+            assertFalse("${formula.title} display should not use raw slash division", "/" in display)
+            assertFalse("${formula.title} display should not use raw caret powers", "^" in display)
+        }
+    }
+
+    @Test
+    fun theoremLibraryCoversClassSixThroughPgAcrossExpandedCategories() {
+        assertEquals(20, com.indianservers.aiexplorer.learning.theoremCategories.size)
+        assertTrue(MathKnowledgeCatalog.theorems.size >= 100)
+        com.indianservers.aiexplorer.learning.theoremCategories.forEach { category ->
+            assertTrue("$category should have at least five important theorems", MathKnowledgeCatalog.theorems.count { it.category == category } >= 5)
+        }
+        com.indianservers.aiexplorer.learning.TheoremBand.entries.forEach { band ->
+            assertTrue("$band should be represented", MathKnowledgeCatalog.theorems.any { it.band == band })
+        }
+        assertEquals(MathKnowledgeCatalog.theorems.size, MathKnowledgeCatalog.theorems.map { it.id }.distinct().size)
+        assertTrue(MathKnowledgeCatalog.theorems.all { it.tags.isNotEmpty() })
+        assertTrue(MathKnowledgeCatalog.theorems.all { it.proofSketch.isNotEmpty() })
+        assertTrue(MathKnowledgeCatalog.theorems.all { it.conditions.isNotEmpty() })
+        assertTrue(MathKnowledgeCatalog.search("area").theorems.isNotEmpty())
+        listOf("pythagoras", "bayes-rule", "spectral", "ode-existence", "residue", "max-flow-min-cut", "kkt").forEach { id ->
+            assertTrue("$id should be in the theorem library", MathKnowledgeCatalog.theorems.any { it.id == id })
         }
     }
 
@@ -116,5 +149,9 @@ class MathKnowledgeTest {
         assertTrue(result.formulas.size >= 12)
         assertTrue(result.formulas.all { it.category == FormulaCategory.Trigonometry })
         assertTrue(result.formulas.any { it.title == "Law of cosines" })
+        assertFalse(result.formulas.any { it.title == "Sector area" })
+        val geometry = MathKnowledgeCatalog.search("", formulaCategory = FormulaCategory.GeometryMensuration)
+        assertTrue(geometry.formulas.any { it.title == "Sector area" })
+        assertFalse(geometry.formulas.any { it.title == "Law of cosines" })
     }
 }
