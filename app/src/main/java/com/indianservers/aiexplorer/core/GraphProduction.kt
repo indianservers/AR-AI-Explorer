@@ -56,7 +56,7 @@ object TypedGraphExpressionParser {
                 val y = parts.firstOrNull { it.lowercase().replace(" ", "").startsWith("y(t)=") }?.let(::stripEquation) ?: error("Missing y(t).")
                 TypedGraphExpression.Parametric(clean, x, y, parameters(listOf(x, y)))
             }
-            Regex("<=|>=|<|>").containsMatchIn(clean) -> TypedGraphExpression.Inequality(clean, clean, parameters(listOf(clean)))
+            hasTopLevelInequality(clean) -> TypedGraphExpression.Inequality(clean, clean, parameters(listOf(clean)))
             '=' in clean && !compact.startsWith("y=") && !Regex("^[a-z][a-z0-9_]*\\(x\\)=", RegexOption.IGNORE_CASE).containsMatchIn(compact) -> {
                 val sides = clean.split('=', limit = 2)
                 val residual = "(${sides[0]})-(${sides[1]})"
@@ -69,6 +69,18 @@ object TypedGraphExpressionParser {
     private fun parameters(expressions: List<String>): Set<String> = expressions.flatMap { source ->
         Regex("[A-Za-z][A-Za-z0-9_]*").findAll(source).map { it.value.lowercase() }.toList()
     }.filterNot { it in reserved }.toSortedSet()
+
+    private fun hasTopLevelInequality(source: String): Boolean {
+        var depth = 0
+        source.forEach { character ->
+            when (character) {
+                '(', '[', '{' -> depth++
+                ')', ']', '}' -> depth = (depth - 1).coerceAtLeast(0)
+                '<', '>' -> if (depth == 0) return true
+            }
+        }
+        return false
+    }
 }
 
 class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEngine()) {

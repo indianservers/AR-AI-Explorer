@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -39,6 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 
 enum class MathKeyboardContext {
@@ -58,7 +64,7 @@ enum class MathKeyboardPage(val label: String) {
     LETTERS("abc"),
     CALCULUS("∫∑"),
     SYMBOLS("αβ"),
-    COMMANDS("⌕"),
+    COMMANDS("..."),
 }
 
 data class MathKey(
@@ -188,24 +194,104 @@ private val symbolKeys = listOf(
 private val letterKeys = ("qwertyuiopasdfghjklzxcvbnm".map { MathKey(it.toString()) } +
     listOf(MathKey(","), MathKey("_"), MathKey("[ ]", "[]", 1), MathKey("{ }", "{}", 1)))
 
-private val commands = listOf(
+internal val commonMathKeys = listOf(
+    MathKey("=", description = "Equals"),
+    MathKey("+", description = "Add"),
+    MathKey("−", "-", description = "Subtract"),
+    MathKey("×", "*", description = "Multiply"),
+    MathKey("÷", "/", description = "Divide"),
+    MathKey("( )", "()", 1, description = "Parentheses"),
+    MathKey(",", description = "Comma"),
+)
+
+internal val mathKeyboardCommands = listOf(
     MathCommand("Explicit graph", "Graph", MathKey("y=f(x)", "y=", description = "Explicit graph"), "Plot y as a function of x.", setOf(MathKeyboardContext.GRAPH_2D)),
     MathCommand("Polar graph", "Graph", MathKey("r=f(θ)", "r=", description = "Polar graph"), "Plot radius against angle.", setOf(MathKeyboardContext.GRAPH_2D)),
     MathCommand("Parametric curve", "Graph", MathKey("x(t), y(t)", "x(t)=; y(t)=", 8, description = "Parametric curve"), "Plot x and y from parameter t.", setOf(MathKeyboardContext.GRAPH_2D)),
+    MathCommand("Inequality", "Graph", MathKey("y≤f(x)", "y<=", description = "Graph inequality"), "Shade values satisfying an inequality."),
     MathCommand("Point", "Geometry", MathKey("(x,y)", "(,)", 2, description = "Point"), "Insert a two-dimensional point."),
+    MathCommand("Distance", "Geometry", MathKey("distance", "distance((,),(,))", 8, description = "Distance between points"), "Find the distance between two points."),
+    MathCommand("Midpoint", "Geometry", MathKey("midpoint", "midpoint((,),(,))", 8, description = "Midpoint"), "Find the midpoint of a segment."),
+    MathCommand("Circle", "Conics", MathKey("circle", "(x-)^2+(y-)^2=^2", 14, description = "Circle equation"), "Insert centre-radius form."),
+    MathCommand("Parabola", "Conics", MathKey("parabola", "y=()*(x-)^2+", 10, description = "Parabola equation"), "Insert vertex form of a parabola."),
+    MathCommand("Ellipse", "Conics", MathKey("ellipse", "(x-)^2/^2+(y-)^2/^2=1", 20, description = "Ellipse equation"), "Insert standard ellipse form."),
+    MathCommand("Hyperbola", "Conics", MathKey("hyperbola", "(x-)^2/^2-(y-)^2/^2=1", 20, description = "Hyperbola equation"), "Insert standard hyperbola form."),
     MathCommand("3D point", "3D", MathKey("(x,y,z)", "(,,)", 3, description = "3D point"), "Insert a three-dimensional point.", setOf(MathKeyboardContext.GRAPH_3D)),
     MathCommand("Explicit surface", "3D", MathKey("z=f(x,y)", "z=", description = "Explicit surface"), "Plot height z from x and y.", setOf(MathKeyboardContext.GRAPH_3D)),
     MathCommand("Sphere", "3D", MathKey("Sphere", "x^2+y^2+z^2=", 0, description = "Sphere equation"), "Create a sphere equation.", setOf(MathKeyboardContext.GRAPH_3D)),
+    MathCommand("Plane", "3D", MathKey("Plane", "z=()*x+()*y+", 10, description = "Plane equation"), "Insert an explicit plane."),
+    MathCommand("Cylinder", "3D", MathKey("Cylinder", "x^2+y^2=^2", 2, description = "Cylinder equation"), "Insert a vertical cylinder."),
     MathCommand("Vector", "Vectors", MathKey("Vector", "vector(,,)", 3, description = "Vector"), "Insert a vector template."),
     MathCommand("Matrix 2×2", "Matrices", MathKey("[2×2]", "[[,],[,]]", 7, description = "Two by two matrix"), "Insert a 2 by 2 matrix.", setOf(MathKeyboardContext.MATRIX)),
-    MathCommand("Mean", "Statistics", MathKey("mean", "mean()", 1, description = "Mean"), "Calculate the arithmetic mean.", setOf(MathKeyboardContext.STATISTICS)),
-    MathCommand("Standard deviation", "Statistics", MathKey("stdev", "stdev()", 1, description = "Standard deviation"), "Measure data spread.", setOf(MathKeyboardContext.STATISTICS)),
+    MathCommand("Matrix 3×3", "Matrices", MathKey("[3×3]", "[[,,],[,,],[,,]]", 13, description = "Three by three matrix"), "Insert a 3 by 3 matrix."),
+    MathCommand("Determinant", "Matrices", MathKey("det", "det()", 1, description = "Determinant"), "Calculate a matrix determinant."),
+    MathCommand("Inverse matrix", "Matrices", MathKey("A⁻¹", "inverse()", 1, description = "Inverse matrix"), "Find a matrix inverse."),
+    MathCommand("Transpose", "Matrices", MathKey("Aᵀ", "transpose()", 1, description = "Matrix transpose"), "Transpose a matrix."),
+    MathCommand("Dot product", "Vectors", MathKey("a·b", "dot(,)", 2, description = "Dot product"), "Calculate a scalar product."),
+    MathCommand("Cross product", "Vectors", MathKey("a×b", "cross(,)", 2, description = "Cross product"), "Calculate a vector product."),
+    MathCommand("Mean", "Statistics", MathKey("mean", "mean()", 1, description = "Mean"), "Calculate the arithmetic mean."),
+    MathCommand("Median", "Statistics", MathKey("median", "median()", 1, description = "Median"), "Find the middle ordered value."),
+    MathCommand("Mode", "Statistics", MathKey("mode", "mode()", 1, description = "Mode"), "Find the most frequent value."),
+    MathCommand("Standard deviation", "Statistics", MathKey("stdev", "stdev()", 1, description = "Standard deviation"), "Measure data spread."),
+    MathCommand("Variance", "Statistics", MathKey("variance", "variance()", 1, description = "Variance"), "Measure squared data spread."),
+    MathCommand("Quartile", "Statistics", MathKey("quartile", "quartile(,)", 2, description = "Quartile"), "Find a dataset quartile."),
+    MathCommand("Correlation", "Statistics", MathKey("corr", "correlation(,)", 2, description = "Correlation"), "Measure linear association."),
+    MathCommand("Regression", "Statistics", MathKey("regression", "regression(,)", 2, description = "Linear regression"), "Fit a straight line to paired data."),
+    MathCommand("Factorial", "Discrete Maths", MathKey("n!", "factorial()", 1, description = "Factorial"), "Count arrangements of distinct items."),
+    MathCommand("Combination", "Discrete Maths", MathKey("nCr", "nCr(,)", 2, description = "Combination"), "Choose items when order does not matter."),
+    MathCommand("Permutation", "Discrete Maths", MathKey("nPr", "nPr(,)", 2, description = "Permutation"), "Choose and arrange items."),
+    MathCommand("Greatest common divisor", "Discrete Maths", MathKey("gcd", "gcd(,)", 2, description = "Greatest common divisor"), "Find the largest common divisor."),
+    MathCommand("Least common multiple", "Discrete Maths", MathKey("lcm", "lcm(,)", 2, description = "Least common multiple"), "Find the smallest common multiple."),
+    MathCommand("Modulo", "Discrete Maths", MathKey("mod", "mod(,)", 2, description = "Modulo"), "Find a division remainder."),
+    MathCommand("Fibonacci", "Discrete Maths", MathKey("fib", "fibonacci()", 1, description = "Fibonacci number"), "Find a term of the Fibonacci sequence."),
+    MathCommand("Binomial probability", "Probability", MathKey("Binomial", "binomial(,,,)", 4, description = "Binomial probability"), "Model successes in fixed independent trials."),
+    MathCommand("Normal probability", "Probability", MathKey("Normal", "normalcdf(,,,)", 4, description = "Normal probability"), "Find probability under a normal curve."),
+    MathCommand("Conditional probability", "Probability", MathKey("P(A|B)", "conditional(,,)", 3, description = "Conditional probability"), "Find probability given another event."),
+    MathCommand("Expected value", "Probability", MathKey("E(X)", "expectation()", 1, description = "Expected value"), "Calculate a probability-weighted mean."),
+    MathCommand("Simple interest", "Finance", MathKey("I=Prt", "()*()*()", 6, description = "Simple interest"), "Calculate interest without compounding."),
+    MathCommand("Compound value", "Finance", MathKey("A=P(1+r)ⁿ", "()*((1+())^())", 12, description = "Compound value"), "Calculate compounded growth."),
+    MathCommand("Present value", "Finance", MathKey("PV", "()/((1+())^())", 11, description = "Present value"), "Discount a future amount."),
+    MathCommand("List", "Lists", MathKey("{…}", "{,,}", 3, description = "List"), "Insert a list of values."),
+    MathCommand("Sequence", "Lists", MathKey("aₙ", "sequence(,n,,)", 4, description = "Sequence"), "Generate terms from a rule."),
+    MathCommand("Sort", "Lists", MathKey("sort", "sort()", 1, description = "Sort list"), "Sort values into ascending order."),
+    MathCommand("And", "Logic", MathKey("AND", " and ", description = "Logical and"), "Require both conditions."),
+    MathCommand("Or", "Logic", MathKey("OR", " or ", description = "Logical or"), "Require either condition."),
+    MathCommand("Not", "Logic", MathKey("NOT", "not()", 1, description = "Logical not"), "Negate a condition."),
+    MathCommand("Implication", "Logic", MathKey("⇒", " implies ", description = "Logical implication"), "Insert a logical implication."),
     MathCommand("Union", "Sets", MathKey("A∪B", " union ", description = "Set union"), "Combine elements from two sets.", setOf(MathKeyboardContext.SETS)),
     MathCommand("Intersection", "Sets", MathKey("A∩B", " intersection ", description = "Set intersection"), "Keep common elements from two sets.", setOf(MathKeyboardContext.SETS)),
+    MathCommand("Set difference", "Sets", MathKey("A\\B", " difference ", description = "Set difference"), "Remove elements of one set from another."),
+    MathCommand("Translate", "Transformations", MathKey("translate", "translate(,,,)", 4, description = "Translation"), "Move an object by a vector."),
+    MathCommand("Rotate", "Transformations", MathKey("rotate", "rotate(,,)", 3, description = "Rotation"), "Rotate an object through an angle."),
+    MathCommand("Reflect", "Transformations", MathKey("reflect", "reflect(,)", 2, description = "Reflection"), "Reflect an object in a line or plane."),
+    MathCommand("Minimum", "Optimisation", MathKey("min", "min()", 1, description = "Minimum"), "Find a minimum value."),
+    MathCommand("Maximum", "Optimisation", MathKey("max", "max()", 1, description = "Maximum"), "Find a maximum value."),
     MathCommand("Derivative", "Calculus", calculusKeys[0], "Find the rate of change.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
     MathCommand("Definite integral", "Calculus", calculusKeys[3], "Find accumulated signed area.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
+    MathCommand("Limit", "Calculus", calculusKeys[4], "Find the value approached by a function."),
+    MathCommand("Summation", "Calculus", calculusKeys[5], "Add terms over an index range."),
     MathCommand("Piecewise function", "Functions", functionKeys.last(), "Choose an expression using a condition."),
 )
+
+internal fun filterMathCommands(
+    query: String = "",
+    category: String? = null,
+    context: MathKeyboardContext = MathKeyboardContext.GENERAL,
+): List<MathCommand> {
+    val cleanQuery = query.trim()
+    return mathKeyboardCommands
+        .filter { category == null || it.category == category }
+        .filter {
+            cleanQuery.isBlank() ||
+                listOf(it.name, it.category, it.explanation, it.template.label)
+                    .any { text -> text.contains(cleanQuery, ignoreCase = true) }
+        }
+        .sortedWith(
+            compareByDescending<MathCommand> { it.contexts.isNotEmpty() && context in it.contexts }
+                .thenBy { it.category }
+                .thenBy { it.name },
+        )
+}
 
 private fun contextualKeys(context: MathKeyboardContext): List<MathKey> = when (context) {
     MathKeyboardContext.GRAPH_2D -> listOf(
@@ -233,7 +319,8 @@ fun AdaptiveMathKeyboardPopup(
     onDismiss: () -> Unit,
 ) {
     Popup(
-        alignment = Alignment.BottomCenter,
+        popupPositionProvider = MathKeyboardBottomDockPositionProvider,
+        onDismissRequest = onDismiss,
         properties = PopupProperties(focusable = false, dismissOnBackPress = true, dismissOnClickOutside = false),
     ) {
         AdaptiveMathKeyboard(
@@ -242,9 +329,21 @@ fun AdaptiveMathKeyboardPopup(
             context = context,
             onDone = onDone,
             onDismiss = onDismiss,
-            modifier = Modifier.widthIn(max = 720.dp),
+            modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(),
         )
     }
+}
+
+private object MathKeyboardBottomDockPositionProvider : PopupPositionProvider {
+    override fun calculatePosition(
+        anchorBounds: IntRect,
+        windowSize: IntSize,
+        layoutDirection: LayoutDirection,
+        popupContentSize: IntSize,
+    ): IntOffset = IntOffset(
+        x = ((windowSize.width - popupContentSize.width) / 2).coerceAtLeast(0),
+        y = (windowSize.height - popupContentSize.height).coerceAtLeast(0),
+    )
 }
 
 @Composable
@@ -259,17 +358,26 @@ fun AdaptiveMathKeyboard(
     var page by remember { mutableStateOf(MathKeyboardPage.BASIC) }
     var expert by remember { mutableStateOf(false) }
     var commandQuery by remember { mutableStateOf("") }
+    var commandCategory by remember { mutableStateOf<String?>(null) }
+    var workingValue by remember { mutableStateOf(value) }
     val undo = remember { mutableStateListOf<TextFieldValue>() }
     val redo = remember { mutableStateListOf<TextFieldValue>() }
+    LaunchedEffect(value) {
+        if (value != workingValue) workingValue = value
+    }
+    val emit: (TextFieldValue) -> Unit = { next ->
+        workingValue = next
+        onValueChange(next)
+    }
     val applyEdit: (TextFieldValue) -> Unit = { next ->
-        if (next != value) {
-            undo.add(value)
+        if (next != workingValue) {
+            undo.add(workingValue)
             while (undo.size > 40) undo.removeAt(0)
             redo.clear()
-            onValueChange(next)
+            emit(next)
         }
     }
-    val edit: (MathKey) -> Unit = { applyEdit(MathTextEditing.insert(value, it)) }
+    val edit: (MathKey) -> Unit = { applyEdit(MathTextEditing.insert(workingValue, it)) }
     val keys = when (page) {
         MathKeyboardPage.BASIC -> basicKeys
         MathKeyboardPage.FUNCTIONS -> functionKeys
@@ -278,13 +386,7 @@ fun AdaptiveMathKeyboard(
         MathKeyboardPage.SYMBOLS -> symbolKeys
         MathKeyboardPage.COMMANDS -> emptyList()
     }
-    val visibleKeys = remember(page, context, expert) {
-        if (page == MathKeyboardPage.BASIC && !expert) {
-            (contextualKeys(context) + basicKeys).distinctBy { it.insertion }
-        } else {
-            keys
-        }
-    }
+    val visibleKeys = keys
     Column(
         modifier
             .fillMaxWidth()
@@ -296,10 +398,10 @@ fun AdaptiveMathKeyboard(
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text("Math", color = IntentMathPalette.Ink, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-            Text(prettyMath(value.text).ifBlank { "Ready" }, color = IntentMathPalette.Number, fontFamily = FontFamily.Monospace, fontSize = 11.sp, maxLines = 1, modifier = Modifier.weight(1f))
-            val favourite = value.text.trim().takeIf(String::isNotBlank)?.let { it in MathKeyboardHistory.favourites } == true
+            Text(prettyMath(workingValue.text).ifBlank { "Ready" }, color = IntentMathPalette.Number, fontFamily = FontFamily.Monospace, fontSize = 11.sp, maxLines = 1, modifier = Modifier.weight(1f))
+            val favourite = workingValue.text.trim().takeIf(String::isNotBlank)?.let { it in MathKeyboardHistory.favourites } == true
             KeyboardActionKey(if (favourite) "★" else "☆", if (favourite) "Remove favourite" else "Save favourite") {
-                val expression = value.text.trim()
+                val expression = workingValue.text.trim()
                 if (expression.isNotBlank()) {
                     if (favourite) MathKeyboardHistory.favourites.remove(expression)
                     else MathKeyboardHistory.favourites.add(0, expression)
@@ -317,6 +419,8 @@ fun AdaptiveMathKeyboard(
             CommandBrowser(
                 query = commandQuery,
                 onQueryChange = { commandQuery = it },
+                category = commandCategory,
+                onCategoryChange = { commandCategory = it },
                 context = context,
                 onInsert = edit,
             )
@@ -338,25 +442,32 @@ fun AdaptiveMathKeyboard(
                 }
             }
         }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            commonMathKeys.forEach { key ->
+                KeyboardActionKey(key.label, key.description, Modifier.weight(1f)) { edit(key) }
+            }
+            KeyboardActionKey("⌫", "Backspace", Modifier.weight(1f), accent = IntentMathPalette.Variable) {
+                applyEdit(MathTextEditing.backspace(workingValue))
+            }
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             KeyboardActionKey("↶", "Undo last edit", Modifier.weight(1f)) {
                 if (undo.isNotEmpty()) {
-                    redo.add(value)
-                    onValueChange(undo.removeAt(undo.lastIndex))
+                    redo.add(workingValue)
+                    emit(undo.removeAt(undo.lastIndex))
                 }
             }
             KeyboardActionKey("↷", "Redo last edit", Modifier.weight(1f)) {
                 if (redo.isNotEmpty()) {
-                    undo.add(value)
-                    onValueChange(redo.removeAt(redo.lastIndex))
+                    undo.add(workingValue)
+                    emit(redo.removeAt(redo.lastIndex))
                 }
             }
-            KeyboardActionKey("←", "Move cursor left", Modifier.weight(1f)) { onValueChange(MathTextEditing.move(value, -1)) }
-            KeyboardActionKey("→", "Move cursor right", Modifier.weight(1f)) { onValueChange(MathTextEditing.move(value, 1)) }
-            KeyboardActionKey("⌫", "Delete", Modifier.weight(1f)) { applyEdit(MathTextEditing.backspace(value)) }
-            KeyboardActionKey("Clear", "Clear entry", Modifier.weight(1.25f)) { applyEdit(MathTextEditing.clear(value)) }
+            KeyboardActionKey("←", "Move cursor left", Modifier.weight(1f)) { emit(MathTextEditing.move(workingValue, -1)) }
+            KeyboardActionKey("→", "Move cursor right", Modifier.weight(1f)) { emit(MathTextEditing.move(workingValue, 1)) }
+            KeyboardActionKey("Clear", "Clear entry", Modifier.weight(1.25f)) { applyEdit(MathTextEditing.clear(workingValue)) }
             KeyboardActionKey("↵", "Finish math entry", Modifier.weight(1.15f), accent = IntentMathPalette.Variable) {
-                MathKeyboardHistory.remember(value.text)
+                MathKeyboardHistory.remember(workingValue.text)
                 onDone()
             }
         }
@@ -367,13 +478,13 @@ fun AdaptiveMathKeyboard(
 private fun CommandBrowser(
     query: String,
     onQueryChange: (String) -> Unit,
+    category: String?,
+    onCategoryChange: (String?) -> Unit,
     context: MathKeyboardContext,
     onInsert: (MathKey) -> Unit,
 ) {
-    val visible = commands.filter {
-        (it.contexts.isEmpty() || context in it.contexts) &&
-            (query.isBlank() || listOf(it.name, it.category, it.explanation).any { text -> text.contains(query, ignoreCase = true) })
-    }
+    val visible = filterMathCommands(query, category, context)
+    val categories = mathKeyboardCommands.map(MathCommand::category).distinct().sorted()
     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             BasicTextField(
@@ -394,12 +505,18 @@ private fun CommandBrowser(
             KeyboardActionKey("⌫", "Delete search character") { if (query.isNotEmpty()) onQueryChange(query.dropLast(1)) }
         }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            KeyboardTab("All", category == null) { onCategoryChange(null) }
+            categories.forEach { item ->
+                KeyboardTab(item, category == item) { onCategoryChange(item) }
+            }
+        }
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             (MathKeyboardHistory.favourites + MathKeyboardHistory.recent).distinct().take(4).forEach { expression ->
                 KeyboardActionKey(expression.take(16), "Insert saved expression $expression") {
                     onInsert(MathKey(expression.take(16), expression, description = "Saved expression $expression"))
                 }
             }
-            visible.take(8).forEach { command ->
+            visible.take(12).forEach { command ->
                 Column(
                     Modifier
                         .widthIn(min = 112.dp, max = 165.dp)

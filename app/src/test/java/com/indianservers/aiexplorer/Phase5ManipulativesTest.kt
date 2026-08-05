@@ -18,7 +18,7 @@ class Phase5ManipulativesTest {
     @Test
     fun formulaTypographyRemovesProgrammingStyleOperators() {
         val rendered = latexStyleFormula("sqrt(x^2) + b^2/2 <= pi * r^2; theta_1 -> theta_2")
-        assertEquals("√(x²) + b²⁄2 ≤ π × r²; θ₁ → θ₂", rendered)
+        assertEquals("√(x²) + b² ÷ 2 ≤ π × r²; θ₁ → θ₂", rendered)
         assertFalse(rendered.contains('^'))
         assertFalse(rendered.contains('/'))
     }

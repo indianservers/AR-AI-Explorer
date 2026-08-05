@@ -190,6 +190,19 @@ private data class ComparisonNode(val op: String, val left: Node, val right: Nod
     }
 }
 
+/**
+ * School-style convenience: a trig call containing only decimal numbers is
+ * interpreted in degrees, while variable and pi-based graph expressions stay
+ * in radians. Thus sin(30)=0.5 and sin(pi/2)=1, while y=sin(x) remains the
+ * conventional radian graph.
+ */
+private fun Node.isPlainNumericAngle(): Boolean = when (this) {
+    is NumberNode -> true
+    is UnaryNode -> node.isPlainNumericAngle()
+    is BinaryNode -> left.isPlainNumericAngle() && right.isPlainNumericAngle()
+    else -> false
+}
+
 private data class FunctionNode(val name: String, val args: List<Node>) : Node {
     override fun eval(v: Map<String, Double>): Double {
         val normalized = name.lowercase()
@@ -239,19 +252,21 @@ private data class FunctionNode(val name: String, val args: List<Node>) : Node {
         }
         val values = args.map { it.eval(v) }
         val x = values.firstOrNull() ?: error("$name requires an argument")
+        val numericAngle = args.firstOrNull()?.isPlainNumericAngle() == true
+        val angle = if (numericAngle) Math.toRadians(x) else x
         return when (normalized) {
-            "sin" -> sin(x)
-            "cos" -> cos(x)
-            "tan" -> tan(x)
-            "sec" -> 1.0 / cos(x)
-            "csc" -> 1.0 / sin(x)
-            "cot" -> 1.0 / tan(x)
+            "sin" -> sin(angle)
+            "cos" -> cos(angle)
+            "tan" -> tan(angle)
+            "sec" -> 1.0 / cos(angle)
+            "csc" -> 1.0 / sin(angle)
+            "cot" -> 1.0 / tan(angle)
             "sinh" -> kotlin.math.sinh(x)
             "cosh" -> kotlin.math.cosh(x)
             "tanh" -> kotlin.math.tanh(x)
-            "asin" -> asin(x)
-            "acos" -> acos(x)
-            "atan" -> atan(x)
+            "asin" -> asin(x).let { if (numericAngle) Math.toDegrees(it) else it }
+            "acos" -> acos(x).let { if (numericAngle) Math.toDegrees(it) else it }
+            "atan" -> atan(x).let { if (numericAngle) Math.toDegrees(it) else it }
             "sqrt" -> sqrt(x)
             "abs" -> abs(x)
             "exp" -> exp(x)

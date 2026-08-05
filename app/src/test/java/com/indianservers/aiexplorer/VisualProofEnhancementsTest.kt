@@ -109,4 +109,47 @@ class VisualProofEnhancementsTest {
             assertFalse(playback.playing)
         }
     }
+
+    @Test
+    fun anscombeProofUsesAllPublishedObservationsAndComputedStatistics() {
+        val dataSet = VisualProofCatalog.anscombeQuartet
+        assertEquals(44, dataSet.rows.size)
+        assertEquals(listOf("series", "x", "y"), dataSet.columns)
+        assertTrue(dataSet.sourceUrl.startsWith("https://doi.org/"))
+        assertEquals(setOf(1, 2, 3, 4), dataSet.rows.map { it[0].toInt() }.toSet())
+        assertTrue((1..4).all { series -> dataSet.rows.count { it[0].toInt() == series } == 11 })
+
+        val engine = VisualProofEngine()
+        val frames = (1..4).map { series ->
+            engine.setParameter(engine.start("anscombe-quartet"), "series", series.toDouble()).frame
+        }
+        frames.forEach { frame ->
+            assertTrue(frame.holds)
+            assertEquals(9.0, frame.measurements.getValue("mean x"), .01)
+            assertEquals(7.5, frame.measurements.getValue("mean y"), .01)
+            assertEquals(.5, frame.measurements.getValue("slope"), .01)
+            assertEquals(3.0, frame.measurements.getValue("intercept"), .02)
+            assertEquals(11.0, frame.measurements.getValue("observations"), 0.0)
+        }
+
+        val distinctPointSets = (1..4).map { series ->
+            dataSet.rows.filter { it[0].toInt() == series }.map { it[1] to it[2] }.toSet()
+        }.toSet()
+        assertEquals(4, distinctPointSets.size)
+    }
+
+    @Test
+    fun integralProofShowsMeasuredConvergenceInsteadOfAnExactLinearShortcut() {
+        val engine = VisualProofEngine()
+        val initial = engine.setParameter(engine.start("integral-area"), "b", 3.0)
+        val coarse = engine.setParameter(initial, "n", 2.0).frame
+        val fine = engine.setParameter(initial, "n", 100.0).frame
+
+        assertTrue(coarse.measurements.getValue("absolute error") > 0.0)
+        assertTrue(fine.measurements.getValue("absolute error") < coarse.measurements.getValue("absolute error"))
+        assertTrue(coarse.measurements.getValue("absolute error") <= coarse.measurements.getValue("certified error bound") + 1e-9)
+        assertEquals(9.0, fine.measurements.getValue("exact area"), 1e-12)
+        assertTrue(coarse.holds)
+        assertTrue(fine.holds)
+    }
 }

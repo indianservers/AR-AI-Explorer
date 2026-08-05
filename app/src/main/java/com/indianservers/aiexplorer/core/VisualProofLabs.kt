@@ -8,6 +8,13 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 data class ProofParameter(val name: String, val minimum: Double, val maximum: Double, val initial: Double)
+data class ProofDataSet(
+    val title: String,
+    val sourceLabel: String,
+    val sourceUrl: String,
+    val columns: List<String>,
+    val rows: List<List<Double>>,
+)
 data class VisualProofLab(
     val id: String,
     val title: String,
@@ -17,6 +24,7 @@ data class VisualProofLab(
     val changesPrompt: String,
     val invariantPrompt: String,
     val formalResult: String,
+    val dataSet: ProofDataSet? = null,
 )
 data class ProofFrame(
     val lab: VisualProofLab,
@@ -77,11 +85,36 @@ object VisualProofCatalog {
         "Coordinate Geometry", "Probability & Statistics", "Vectors", "Number Theory", "Mensuration",
     )
 
+    val anscombeQuartet = ProofDataSet(
+        title = "Anscombe's Quartet",
+        sourceLabel = "F. J. Anscombe, Graphs in Statistical Analysis (1973)",
+        sourceUrl = "https://doi.org/10.1080/00031305.1973.10478966",
+        columns = listOf("series", "x", "y"),
+        rows = listOf(
+            listOf(1.0, 10.0, 8.04), listOf(1.0, 8.0, 6.95), listOf(1.0, 13.0, 7.58),
+            listOf(1.0, 9.0, 8.81), listOf(1.0, 11.0, 8.33), listOf(1.0, 14.0, 9.96),
+            listOf(1.0, 6.0, 7.24), listOf(1.0, 4.0, 4.26), listOf(1.0, 12.0, 10.84),
+            listOf(1.0, 7.0, 4.82), listOf(1.0, 5.0, 5.68),
+            listOf(2.0, 10.0, 9.14), listOf(2.0, 8.0, 8.14), listOf(2.0, 13.0, 8.74),
+            listOf(2.0, 9.0, 8.77), listOf(2.0, 11.0, 9.26), listOf(2.0, 14.0, 8.10),
+            listOf(2.0, 6.0, 6.13), listOf(2.0, 4.0, 3.10), listOf(2.0, 12.0, 9.13),
+            listOf(2.0, 7.0, 7.26), listOf(2.0, 5.0, 4.74),
+            listOf(3.0, 10.0, 7.46), listOf(3.0, 8.0, 6.77), listOf(3.0, 13.0, 12.74),
+            listOf(3.0, 9.0, 7.11), listOf(3.0, 11.0, 7.81), listOf(3.0, 14.0, 8.84),
+            listOf(3.0, 6.0, 6.08), listOf(3.0, 4.0, 5.39), listOf(3.0, 12.0, 8.15),
+            listOf(3.0, 7.0, 6.42), listOf(3.0, 5.0, 5.73),
+            listOf(4.0, 8.0, 6.58), listOf(4.0, 8.0, 5.76), listOf(4.0, 8.0, 7.71),
+            listOf(4.0, 8.0, 8.84), listOf(4.0, 8.0, 8.47), listOf(4.0, 8.0, 7.04),
+            listOf(4.0, 8.0, 5.25), listOf(4.0, 19.0, 12.50), listOf(4.0, 8.0, 5.56),
+            listOf(4.0, 8.0, 7.91), listOf(4.0, 8.0, 6.89),
+        ),
+    )
+
     val labs = listOf(
         VisualProofLab("triangle-angle-sum", "Triangle angle sum", "Geometry", listOf("Build triangle ABC.", "Copy its three angles.", "Arrange them on a straight line.", "Drag a vertex to test."), listOf(ProofParameter("height", .2, 6.0, 3.0), ProofParameter("offset", -3.0, 5.0, 1.0)), "Which individual angles change as C moves?", "Why does their total stay 180°?", "A + B + C = 180°"),
         VisualProofLab("pythagorean", "Pythagorean rearrangement", "Geometry", listOf("Create a right triangle.", "Build squares on each side.", "Rearrange four copies.", "Compare uncovered areas."), listOf(ProofParameter("a", .5, 6.0, 3.0), ProofParameter("b", .5, 6.0, 4.0)), "How do the three square areas change?", "What area remains equal after rearrangement?", "a² + b² = c²"),
         VisualProofLab("derivative-slope", "Derivative as slope", "Calculus", listOf("Plot f(x)=x².", "Place a secant h away.", "Shrink h.", "Reveal the tangent."), listOf(ProofParameter("x", -4.0, 4.0, 2.0), ProofParameter("h", .001, 2.0, 1.0)), "How does the secant slope change as h shrinks?", "What limiting slope is stable?", "d(x²)/dx = 2x"),
-        VisualProofLab("integral-area", "Integral as accumulated area", "Calculus", listOf("Partition [0,b].", "Build rectangles.", "Increase their count.", "Compare with the exact area."), listOf(ProofParameter("b", .5, 5.0, 3.0), ProofParameter("n", 2.0, 200.0, 10.0)), "What changes when rectangles become thinner?", "Which exact accumulated area is approached?", "∫₀ᵇ x dx = b²/2"),
+        VisualProofLab("integral-area", "Integral as accumulated area", "Calculus", listOf("Plot f(x)=x² on [0,b].", "Build midpoint rectangles.", "Increase their count.", "Compare the approximation, exact area, and error bound."), listOf(ProofParameter("b", .5, 5.0, 3.0), ProofParameter("n", 2.0, 200.0, 10.0)), "How does the measured error change when rectangles become thinner?", "Which exact accumulated area is approached?", "∫₀ᵇ x² dx = b³/3"),
         VisualProofLab("normal-area", "Normal probability area", "Probability", listOf("Draw the normal curve.", "Place symmetric bounds.", "Shade the interval.", "Compare tail areas."), listOf(ProofParameter("z", .1, 3.5, 1.0)), "How does shaded probability change with z?", "What remains symmetric about zero?", "P(-z≤Z≤z)=2Φ(z)-1"),
         VisualProofLab("vector-addition", "Vector addition", "Vectors", listOf("Draw vectors u and v.", "Use head-to-tail addition.", "Swap their order.", "Compare endpoints."), listOf(ProofParameter("ux", -4.0, 4.0, 2.0), ProofParameter("uy", -4.0, 4.0, 1.0), ProofParameter("vx", -4.0, 4.0, -1.0), ProofParameter("vy", -4.0, 4.0, 3.0)), "What changes when u and v move?", "Why is the final endpoint unchanged when order swaps?", "u + v = v + u"),
         VisualProofLab("matrix-transform", "Matrix area transformation", "Linear algebra", listOf("Start with a unit square.", "Apply a 2×2 matrix.", "Measure transformed area.", "Compare with determinant."), listOf(ProofParameter("a", -3.0, 3.0, 2.0), ProofParameter("b", -3.0, 3.0, 1.0), ProofParameter("c", -3.0, 3.0, 0.0), ProofParameter("d", -3.0, 3.0, 2.0)), "How does the image shape change?", "What scalar controls signed area?", "area scale = |det(A)|"),
@@ -106,13 +139,29 @@ object VisualProofCatalog {
         VisualProofLab("eigenvector-direction", "Eigenvector direction", "Linear algebra", listOf("Draw a vector v on a transformation grid.", "Apply a diagonal linear transformation.", "Compare v with Av.", "Identify directions that do not turn."), listOf(ProofParameter("lambda", -3.0, 3.0, 2.0), ProofParameter("other", -3.0, 3.0, .5)), "How does length or orientation change with λ?", "Which line through the origin is preserved?", "Av = λv"),
         VisualProofLab("counting-paths", "Counting paths", "Probability", listOf("Branch into right or up choices.", "Arrange endpoints on a lattice.", "Group paths by their final step.", "Read Pascal's recurrence."), listOf(ProofParameter("right", 1.0, 6.0, 3.0), ProofParameter("up", 1.0, 6.0, 2.0)), "How many paths are added when the grid grows?", "Why does every path end with exactly one of two moves?", "C(r+u,r)=C(r+u−1,r−1)+C(r+u−1,r)"),
         VisualProofLab("modular-clock", "Congruence on a clock", "Number Theory", listOf("Place a on an n-hour clock.", "Add whole turns of n.", "Compare the final clock positions.", "State the congruence."), listOf(ProofParameter("a", -20.0, 30.0, 17.0), ProofParameter("n", 2.0, 16.0, 12.0)), "How does the integer change after a full turn?", "Which remainder position stays fixed?", "a ≡ b (mod n) ⇔ n | (a−b)"),
+        VisualProofLab(
+            "anscombe-quartet",
+            "Anscombe's Quartet: always plot the data",
+            "Statistics",
+            listOf(
+                "Load the 44 published observations.",
+                "Compute each series' mean and sample variance.",
+                "Fit its least-squares regression line.",
+                "Switch series and compare the visibly different point patterns.",
+            ),
+            listOf(ProofParameter("series", 1.0, 4.0, 1.0)),
+            "How can the point pattern change while the summary values barely move?",
+            "Why are numerical summaries alone insufficient to describe a dataset?",
+            "matching summaries do not imply matching distributions",
+            anscombeQuartet,
+        ),
     )
 
     val certificates = listOf(
         VisualProofCertificate("triangle-angle-sum", "Parallel-line angle transfer", listOf("Draw a line through one vertex parallel to the opposite side.", "Alternate interior angles copy the other two vertex angles onto that line.", "The three adjacent angles form a straight angle, so their sum is 180°."), listOf("Euclidean parallel postulate", "Non-degenerate triangle")),
         VisualProofCertificate("pythagorean", "Area-preserving dissection", listOf("Arrange four congruent right triangles inside a square of side a+b.", "The remaining central square has side c, so its area is c².", "Computing the same outer area from the four triangles and simplifying gives c²=a²+b²."), listOf("Right triangle", "Euclidean area additivity")),
         VisualProofCertificate("derivative-slope", "Secant-to-tangent limit", listOf("For f(x)=x² the secant slope is ((x+h)²-x²)/h.", "For h≠0 this simplifies exactly to 2x+h.", "Taking h→0 leaves 2x, the tangent slope."), listOf("h approaches zero through non-zero values", "Real differentiability")),
-        VisualProofCertificate("integral-area", "Riemann-sum limit", listOf("Partition [0,b] into n equal strips.", "The rectangle sum is a finite arithmetic sum of sampled heights times width.", "As strip width tends to zero, the sum converges to b²/2."), listOf("b≥0", "Riemann integrability of f(x)=x")),
+        VisualProofCertificate("integral-area", "Midpoint Riemann-sum limit", listOf("Partition [0,b] into n equal strips and sample x² at every midpoint.", "The displayed sum is computed from those n observed rectangle areas; its error is bounded by b³/(12n²).", "As n grows, that bound tends to zero, so the sums converge to b³/3."), listOf("b≥0", "Riemann integrability of f(x)=x²")),
         VisualProofCertificate("normal-area", "Symmetry and CDF subtraction", listOf("The standard normal density is symmetric about zero.", "Area from -z to z equals Φ(z)-Φ(-z).", "Symmetry gives Φ(-z)=1-Φ(z), hence the area is 2Φ(z)-1."), listOf("z≥0", "Standard normal distribution")),
         VisualProofCertificate("vector-addition", "Parallelogram construction", listOf("Translate vectors without rotating or scaling them.", "Head-to-tail paths u then v and v then u are opposite routes around one parallelogram.", "Both routes have the same endpoint, proving u+v=v+u."), listOf("Vectors in the same affine space")),
         VisualProofCertificate("matrix-transform", "Determinant area decomposition", listOf("A matrix sends the unit-square basis edges to its two column vectors.", "Those columns span the image parallelogram.", "Its signed area is ad-bc, so ordinary area scales by |det A|."), listOf("Linear transformation in R²")),
@@ -137,6 +186,16 @@ object VisualProofCatalog {
         VisualProofCertificate("eigenvector-direction", "Invariant one-dimensional subspace", listOf("An eigenvector satisfies Av=λv by definition.", "Scalar multiplication changes length and may reverse orientation, but cannot turn the containing line.", "Thus v and Av remain collinear and the direction subspace is preserved."), listOf("v≠0", "Linear transformation A")),
         VisualProofCertificate("counting-paths", "Last-step decomposition", listOf("Every monotone path to (r,u) ends with either a right step or an up step.", "Removing that final step gives disjoint path sets ending at (r−1,u) and (r,u−1).", "Adding their counts gives Pascal's recurrence and the binomial coefficient."), listOf("r,u are non-negative integers", "Only right and up moves")),
         VisualProofCertificate("modular-clock", "Remainder classes", listOf("Moving n places around an n-position clock completes one full turn.", "Integers differing by a multiple of n therefore land at the same position.", "Conversely, equal clock positions have a difference divisible by n, which is congruence modulo n."), listOf("Integer modulus n≥2", "Integer values")),
+        VisualProofCertificate(
+            "anscombe-quartet",
+            "Published-data counterexample",
+            listOf(
+                "Compute the same seven summary statistics directly from each published 11-point series.",
+                "To displayed precision, the four series share their means, sample variances, regression line, and coefficient of determination.",
+                "Their scatterplots are nevertheless structurally different, so equal summaries cannot determine the underlying distribution or reveal influential observations.",
+            ),
+            listOf("Anscombe's published rounded observations", "Ordinary least-squares regression with an intercept"),
+        ),
     )
 
     private val hierarchy = linkedMapOf(
@@ -169,6 +228,7 @@ object VisualProofCatalog {
         "Probability & Statistics" to listOf(
             VisualProofSubcategory("Continuous Distributions", "Connect probability with symmetric area under a density curve", listOf("normal-area")),
             VisualProofSubcategory("Sets & Counting", "Compare logical regions and count branching lattice paths", listOf("set-de-morgan", "counting-paths")),
+            VisualProofSubcategory("Data Literacy", "Use published observations to expose what summary statistics can hide", listOf("anscombe-quartet")),
         ),
         "Vectors" to listOf(
             VisualProofSubcategory("Vector Operations", "Build vector laws with movable arrows and common endpoints", listOf("vector-addition")),
@@ -215,6 +275,7 @@ object VisualProofCatalog {
         "odd-sum-square" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.LatticePoints, ProofEnhancement.RecursiveStructure),
         "modular-clock" to setOf(ProofEnhancement.ModularClock, ProofEnhancement.MotionTrails),
         "normal-area" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.AccumulationStrips, ProofEnhancement.SymmetryAxes),
+        "anscombe-quartet" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.Counterexample, ProofEnhancement.ErrorTrap),
         "circle-angle" to setOf(ProofEnhancement.SymmetryAxes),
         "circle-ratio" to setOf(ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.MotionTrails),
         "shear-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.MotionTrails),
@@ -262,6 +323,7 @@ object VisualProofCatalog {
         "equation-balance" -> "An operation on only one side tips the balance and changes the solution set."
         "epsilon-delta" -> "δ must control every qualifying x, not just one tested point."
         "matrix-transform" -> "Signed determinant records orientation; ordinary area uses |det A|."
+        "anscombe-quartet" -> "Matching means and regression coefficients do not make the four point clouds interchangeable."
         else -> "A matching sketch alone is not a proof; use the highlighted invariant and validity reason."
     }
 
@@ -271,6 +333,7 @@ object VisualProofCatalog {
         "set-de-morgan" -> "Test one point in neither set: both expressions are true."
         "modular-clock" -> "17 and 5 land together on a 12-hour clock because 17−5=12."
         "counting-paths" -> "A 2×1 grid has three move orders: RRU, RUR, URR."
+        "anscombe-quartet" -> "Series I is roughly linear; Series II curves, Series III has an influential point, and Series IV is nearly vertical."
         else -> "Set the controls to small whole numbers and compare both measured quantities."
     }
 
@@ -411,8 +474,25 @@ class VisualProofEngine {
                 measurements.putAll(mapOf("secant slope" to secant, "tangent slope" to tangent)); residual = abs(secant - tangent); invariant = "secant → 2x as h → 0"
             }
             "integral-area" -> {
-                val b = p.getValue("b"); val n = p.getValue("n").toInt().coerceAtLeast(1); val width = b / n; val sum = (0 until n).sumOf { (it + .5) * width * width }; val exact = b * b / 2
-                measurements.putAll(mapOf("rectangle sum" to sum, "exact area" to exact)); residual = abs(sum - exact); invariant = "rectangle sum → b²/2"
+                val b = p.getValue("b")
+                val n = p.getValue("n").toInt().coerceAtLeast(1)
+                val width = b / n
+                val sum = (0 until n).sumOf { index ->
+                    val midpoint = (index + .5) * width
+                    midpoint * midpoint * width
+                }
+                val exact = b.pow(3) / 3
+                val errorBound = b.pow(3) / (12 * n * n)
+                measurements.putAll(
+                    mapOf(
+                        "midpoint rectangle sum" to sum,
+                        "exact area" to exact,
+                        "absolute error" to abs(sum - exact),
+                        "certified error bound" to errorBound,
+                    ),
+                )
+                residual = abs(sum - exact)
+                invariant = "midpoint sum → b³/3 with error ≤ b³/(12n²)"
             }
             "normal-area" -> {
                 val z = p.getValue("z"); val middle = 2 * normalCdf(z) - 1
@@ -522,9 +602,47 @@ class VisualProofEngine {
                 measurements.putAll(mapOf("a" to a.toDouble(), "modulus n" to n.toDouble(), "remainder" to remainder.toDouble(), "equivalent a−n" to equivalent.toDouble()))
                 residual = abs((((equivalent % n) + n) % n) - remainder).toDouble(); invariant = "whole turns preserve the remainder position"
             }
+            "anscombe-quartet" -> {
+                val selectedSeries = p.getValue("series").toInt().coerceIn(1, 4)
+                val dataSet = requireNotNull(lab.dataSet)
+                fun rowsFor(series: Int): List<Pair<Double, Double>> = dataSet.rows
+                    .filter { it[0].toInt() == series }
+                    .map { it[1] to it[2] }
+                fun summary(rows: List<Pair<Double, Double>>): DoubleArray {
+                    val meanX = rows.map { it.first }.average()
+                    val meanY = rows.map { it.second }.average()
+                    val centeredX = rows.sumOf { (it.first - meanX).pow(2) }
+                    val centeredY = rows.sumOf { (it.second - meanY).pow(2) }
+                    val cross = rows.sumOf { (it.first - meanX) * (it.second - meanY) }
+                    val slope = cross / centeredX
+                    val intercept = meanY - slope * meanX
+                    val rSquared = cross * cross / (centeredX * centeredY)
+                    return doubleArrayOf(
+                        meanX,
+                        meanY,
+                        centeredX / (rows.size - 1),
+                        centeredY / (rows.size - 1),
+                        slope,
+                        intercept,
+                        rSquared,
+                    )
+                }
+                val selected = summary(rowsFor(selectedSeries))
+                val reference = summary(rowsFor(1))
+                val names = listOf("mean x", "mean y", "sample variance x", "sample variance y", "slope", "intercept", "R²")
+                names.indices.forEach { index -> measurements[names[index]] = selected[index] }
+                measurements["observations"] = rowsFor(selectedSeries).size.toDouble()
+                residual = selected.indices.maxOf { index -> abs(selected[index] - reference[index]) }
+                invariant = "all four published series match the same rounded summaries but have different shapes"
+            }
             else -> error("No verified proof engine registered for ${lab.id}")
         }
-        val tolerance = when (lab.id) { "derivative-slope" -> p.getValue("h") + 1e-9; "integral-area" -> 1.0 / p.getValue("n").coerceAtLeast(1.0); else -> 1e-7 }
+        val tolerance = when (lab.id) {
+            "derivative-slope" -> p.getValue("h") + 1e-9
+            "integral-area" -> measurements.getValue("certified error bound") + 1e-9
+            "anscombe-quartet" -> .02
+            else -> 1e-7
+        }
         return ProofFrame(lab, step.coerceIn(0, lab.steps.lastIndex), p, measurements, invariant, residual, residual <= tolerance)
     }
 
