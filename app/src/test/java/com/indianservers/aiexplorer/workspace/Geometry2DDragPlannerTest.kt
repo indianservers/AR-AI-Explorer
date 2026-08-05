@@ -114,6 +114,50 @@ class Geometry2DDragPlannerTest {
         assertEquals(before.shapes, command.undo(moved).shapes)
     }
 
+    @Test
+    fun handleDragDetachesAFreePointFromTheSelectedShapeOnly() {
+        val before = state(
+            points = listOf(Vec2(0.0, 0.0), Vec2(2.0, 0.0), Vec2(0.0, 2.0)),
+            shapes = listOf(
+                Shape2D("a", Shape2DType.Segment, listOf(0, 1)),
+                Shape2D("b", Shape2DType.Segment, listOf(0, 2)),
+            ),
+        )
+
+        val plan = Geometry2DDragPlanner.planHandleDrag(before, 0, 0)
+
+        assertTrue(plan.detached)
+        assertNotEquals(0, plan.pointIndex)
+        assertEquals(plan.pointIndex, plan.state.shapes[0].pointIndices.first())
+        assertEquals(0, plan.state.shapes[1].pointIndices.first())
+        assertEquals(before.points[0], plan.state.points[plan.pointIndex])
+    }
+
+    @Test
+    fun constrainedSharedHandleRemainsConnected() {
+        val before = state(
+            points = listOf(Vec2(0.0, 0.0), Vec2(2.0, 0.0), Vec2(0.0, 2.0)),
+            shapes = listOf(
+                Shape2D("a", Shape2DType.Segment, listOf(0, 1)),
+                Shape2D("b", Shape2DType.Segment, listOf(0, 2)),
+            ),
+        ).copy(
+            geometryConstraints = listOf(
+                GeometryConstraint2D(
+                    id = "fixed-junction",
+                    type = GeometryConstraint2DType.FixedLength,
+                    pointIndices = listOf(0, 1),
+                ),
+            ),
+        )
+
+        val plan = Geometry2DDragPlanner.planHandleDrag(before, 0, 0)
+
+        assertFalse(plan.detached)
+        assertEquals(0, plan.pointIndex)
+        assertEquals(before, plan.state)
+    }
+
     private fun state(points: List<Vec2>, shapes: List<Shape2D>) = WorkspaceState(
         points = points,
         shapes = shapes,

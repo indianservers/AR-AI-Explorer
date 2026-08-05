@@ -107,15 +107,8 @@ data class WorkspaceState(
         FunctionDefinition("f", "f(x)", "x^2 - 4*x + 3", "cyan"),
         FunctionDefinition("g", "g(x)", "x - 1", "violet"),
     ),
-    val solids: List<Solid> = listOf(
-        Solid(SolidType.Cube, width = 2.0, position = Vec3(-2.6, 0.0, 0.0)),
-        Solid(SolidType.Cylinder, width = 2.0, height = 2.2, radius = 0.9, position = Vec3(0.0, 0.0, 0.0)),
-        Solid(SolidType.Cone, width = 2.0, height = 2.5, radius = 0.9, position = Vec3(2.6, 0.0, 0.0)),
-    ),
-    val vectors3D: List<Vector3D> = listOf(
-        Vector3D("u", Vec3(-2.0, -1.0, -1.0), Vec3(1.4, 1.2, 1.0), "u"),
-        Vector3D("v", Vec3(0.2, -1.3, 1.1), Vec3(2.4, .7, -1.0), "v"),
-    ),
+    val solids: List<Solid> = emptyList(),
+    val vectors3D: List<Vector3D> = emptyList(),
     val graphRowMetadata: Map<String, GraphRowMetadataState> = emptyMap(),
     val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
     val surfaceExpression: String = "x^2 + y^2",
@@ -146,6 +139,15 @@ sealed interface WorkspaceCommand {
     val label: String
     fun apply(state: WorkspaceState): WorkspaceState
     fun undo(state: WorkspaceState): WorkspaceState
+}
+
+data class ReplaceWorkspaceCommand(
+    val from: WorkspaceState,
+    val to: WorkspaceState,
+    override val label: String = "Clear workspace",
+) : WorkspaceCommand {
+    override fun apply(state: WorkspaceState) = to.copy(modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = from.copy(modifiedAt = System.currentTimeMillis())
 }
 
 data class MovePointCommand(val index: Int, val from: Vec2, val to: Vec2) : WorkspaceCommand {

@@ -650,28 +650,30 @@ data class Solid(
 data class SolidMeasurements(val volume: Double, val surfaceArea: Double, val faces: Int, val edges: Int, val vertices: Int)
 
 object Geometry3D {
-    fun formula(type: SolidType): String = when (type) {
-        SolidType.Cube -> "V = a cubed; A = 6a squared"
-        SolidType.Cuboid -> "V = lwh; A = 2(lw + lh + wh)"
-        SolidType.Sphere -> "V = 4 pi r cubed / 3; A = 4 pi r squared"
-        SolidType.Hemisphere -> "V = 2 pi r cubed / 3; A = 3 pi r squared"
-        SolidType.Cylinder -> "V = pi r squared h; A = 2 pi r(r + h)"
-        SolidType.Cone -> "V = pi r squared h / 3; A = pi r(r + s)"
-        SolidType.Frustum -> "V = pi h(R squared + Rr + r squared) / 3"
-        SolidType.Pyramid -> "V = base area times h / 3"
-        SolidType.TriangularPrism -> "V = triangle base area times length"
-        SolidType.PentagonalPrism -> "V = pentagon base area times h"
-        SolidType.HexagonalPrism -> "V = 3 sqrt(3) s squared h / 2"
-        SolidType.OctagonalPrism -> "V = 2(1 + sqrt(2))s squared h"
-        SolidType.Tetrahedron -> "V = a cubed / (6 sqrt(2)); A = sqrt(3) a squared"
-        SolidType.TriangularPyramid -> "V = triangle base area times h / 3"
-        SolidType.Octahedron -> "V = sqrt(2) a cubed / 3; A = 2 sqrt(3) a squared"
-        SolidType.Wedge -> "V = base times height times length / 2"
-        SolidType.Torus -> "V = 2 pi squared R r squared; A = 4 pi squared Rr"
-        SolidType.Ellipsoid -> "V = 4 pi abc / 3"
-        SolidType.Paraboloid -> "V = pi r squared h / 2"
-        SolidType.Capsule -> "V = pi r squared l + 4 pi r cubed / 3"
+    fun formulas(type: SolidType): List<Pair<String, String>> = when (type) {
+        SolidType.Cube -> listOf("Volume" to "V = a^3", "Surface area" to "A = 6a^2", "Face diagonal" to "d_f = a√2", "Space diagonal" to "d = a√3")
+        SolidType.Cuboid -> listOf("Volume" to "V = lwh", "Surface area" to "A = 2(lw + lh + wh)", "Diagonal" to "d = √(l^2 + w^2 + h^2)")
+        SolidType.Sphere -> listOf("Volume" to "V = 4πr^3/3", "Surface area" to "A = 4πr^2", "Great-circle circumference" to "C = 2πr")
+        SolidType.Hemisphere -> listOf("Volume" to "V = 2πr^3/3", "Total area" to "A = 3πr^2", "Curved area" to "A_c = 2πr^2")
+        SolidType.Cylinder -> listOf("Volume" to "V = πr^2h", "Total area" to "A = 2πr(r + h)", "Curved area" to "A_c = 2πrh")
+        SolidType.Cone -> listOf("Volume" to "V = πr^2h/3", "Total area" to "A = πr(r + s)", "Curved area" to "A_c = πrs", "Slant height" to "s = √(r^2 + h^2)")
+        SolidType.Frustum -> listOf("Volume" to "V = πh(R^2 + Rr + r^2)/3", "Total area" to "A = π(R + r)s + π(R^2 + r^2)", "Slant height" to "s = √((R-r)^2 + h^2)")
+        SolidType.Pyramid -> listOf("Volume" to "V = Bh/3", "Surface area" to "A = B + Pl/2")
+        SolidType.TriangularPrism -> listOf("Volume" to "V = B_△L", "Surface area" to "A = 2B_△ + PL")
+        SolidType.PentagonalPrism -> listOf("Volume" to "V = B_5h", "Surface area" to "A = 2B_5 + P_5h")
+        SolidType.HexagonalPrism -> listOf("Volume" to "V = 3√3s^2h/2", "Base area" to "B = 3√3s^2/2", "Surface area" to "A = 2B + 6sh")
+        SolidType.OctagonalPrism -> listOf("Volume" to "V = 2(1 + √2)s^2h", "Base area" to "B = 2(1 + √2)s^2", "Surface area" to "A = 2B + 8sh")
+        SolidType.Tetrahedron -> listOf("Volume" to "V = a^3/(6√2)", "Surface area" to "A = √3a^2", "Height" to "h = a√(2/3)")
+        SolidType.TriangularPyramid -> listOf("Volume" to "V = B_△h/3", "Surface area" to "A = B_△ + ΣA_faces")
+        SolidType.Octahedron -> listOf("Volume" to "V = √2a^3/3", "Surface area" to "A = 2√3a^2")
+        SolidType.Wedge -> listOf("Volume" to "V = bhl/2", "Triangular base" to "B = bh/2")
+        SolidType.Torus -> listOf("Volume" to "V = 2π^2Rr^2", "Surface area" to "A = 4π^2Rr")
+        SolidType.Ellipsoid -> listOf("Volume" to "V = 4πabc/3", "Axes" to "x^2/a^2 + y^2/b^2 + z^2/c^2 = 1")
+        SolidType.Paraboloid -> listOf("Volume" to "V = πr^2h/2", "Surface equation" to "z/h = (x^2 + y^2)/r^2")
+        SolidType.Capsule -> listOf("Volume" to "V = πr^2l + 4πr^3/3", "Surface area" to "A = 2πrl + 4πr^2")
     }
+
+    fun formula(type: SolidType): String = formulas(type).joinToString("; ") { it.second }
 
     fun measure(solid: Solid): SolidMeasurements = when (solid.type) {
         SolidType.Cube -> SolidMeasurements(solid.width.pow(3), 6 * solid.width.pow(2), 6, 12, 8)

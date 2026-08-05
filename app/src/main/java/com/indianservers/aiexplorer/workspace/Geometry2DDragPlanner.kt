@@ -13,6 +13,12 @@ data class Geometry2DDragPlan(
     val detached: Boolean get() = detachedPointIndices.isNotEmpty()
 }
 
+data class Geometry2DHandlePlan(
+    val state: WorkspaceState,
+    val pointIndex: Int,
+    val detached: Boolean,
+)
+
 object Geometry2DDragPlanner {
     fun eligibleHandleIndices(state: WorkspaceState, selectedShapeIndices: Set<Int>): Set<Int> {
         val selected = selectedShapeIndices
@@ -76,5 +82,38 @@ object Geometry2DDragPlanner {
             index in detachedState.points.indices && detachedState.pointDependencies.none { it.outputIndex == index }
         }
         return Geometry2DDragPlan(detachedState, selected, movable, remap)
+    }
+
+    fun planHandleDrag(state: WorkspaceState, shapeIndex: Int, pointIndex: Int): Geometry2DHandlePlan {
+        val shape = state.shapes.getOrNull(shapeIndex)
+            ?: return Geometry2DHandlePlan(state, pointIndex, false)
+        if (pointIndex !in shape.pointIndices || pointIndex !in state.points.indices) {
+            return Geometry2DHandlePlan(state, pointIndex, false)
+        }
+        val sharedByAnotherShape = state.shapes.indices.any { index ->
+            index != shapeIndex && pointIndex in state.shapes[index].pointIndices
+        }
+        val protected = state.pointDependencies.any {
+            it.outputIndex == pointIndex || pointIndex in it.inputIndices
+        } || state.geometryConstraints.any { pointIndex in it.pointIndices }
+        if (!sharedByAnotherShape || protected) {
+            return Geometry2DHandlePlan(state, pointIndex, false)
+        }
+
+        val detachedIndex = state.points.size
+        val detachedShape = shape.copy(
+            pointIndices = shape.pointIndices.map { if (it == pointIndex) detachedIndex else it },
+        )
+        return Geometry2DHandlePlan(
+            state.copy(
+                points = state.points + state.points[pointIndex],
+                shapes = state.shapes.mapIndexed { index, value ->
+                    if (index == shapeIndex) detachedShape else value
+                },
+                modifiedAt = System.currentTimeMillis(),
+            ),
+            detachedIndex,
+            true,
+        )
     }
 }

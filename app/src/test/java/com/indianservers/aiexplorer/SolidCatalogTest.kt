@@ -20,6 +20,12 @@ class SolidCatalogTest {
             assertTrue("$type has a positive volume", measurements.volume > 0.0)
             assertTrue("$type has a positive area", measurements.surfaceArea > 0.0)
             assertTrue("$type has a formula", Geometry3D.formula(type).isNotBlank())
+            assertTrue("$type exposes multiple formulas or properties", Geometry3D.formulas(type).size >= 2)
+            assertEquals(
+                "$type formula labels are unique",
+                Geometry3D.formulas(type).size,
+                Geometry3D.formulas(type).map { it.first }.distinct().size,
+            )
         }
     }
 }
