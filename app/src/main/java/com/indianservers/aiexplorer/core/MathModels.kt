@@ -127,7 +127,7 @@ object Geometry2D {
 }
 
 class ExpressionEngine {
-    fun compile(source: String): Expression = Parser(source).parse()
+    fun compile(source: String): Expression = Parser(MathExpressionNormalizer.normalize(source)).parse()
 }
 
 class Expression internal constructor(private val root: Node, val source: String) {

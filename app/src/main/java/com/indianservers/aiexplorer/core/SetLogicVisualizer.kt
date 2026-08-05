@@ -245,4 +245,187 @@ object SetTheoryStudioEngine {
         return MappingAnalysis(isFunction, injective, surjective, injective && surjective)
     }
     fun inclusionExclusion(a: Set<String>, b: Set<String>): Int = a.size + b.size - a.intersect(b).size
+    fun inclusionExclusion(a: Set<String>, b: Set<String>, c: Set<String>): Int =
+        a.size + b.size + c.size -
+            a.intersect(b).size - a.intersect(c).size - b.intersect(c).size +
+            a.intersect(b).intersect(c).size
+
+    fun isSubset(candidate: Set<String>, parent: Set<String>): Boolean = parent.containsAll(candidate)
+    fun isProperSubset(candidate: Set<String>, parent: Set<String>): Boolean = candidate != parent && parent.containsAll(candidate)
+    fun symmetricDifference(a: Set<String>, b: Set<String>): Set<String> = (a - b) + (b - a)
+}
+
+@JvmInline
+value class MembershipMask(val value: Int) {
+    init { require(value in 0..7) }
+    fun contains(setName: String): Boolean = when (setName.uppercase()) {
+        "U" -> true
+        "A" -> value and 4 != 0
+        "B" -> value and 2 != 0
+        "C" -> value and 1 != 0
+        else -> false
+    }
+}
+
+sealed interface SetExpression {
+    data class Reference(val name: String) : SetExpression
+    data class Union(val left: SetExpression, val right: SetExpression) : SetExpression
+    data class Intersection(val left: SetExpression, val right: SetExpression) : SetExpression
+    data class Difference(val left: SetExpression, val right: SetExpression) : SetExpression
+    data class SymmetricDifference(val left: SetExpression, val right: SetExpression) : SetExpression
+    data class Complement(val operand: SetExpression) : SetExpression
+}
+
+data class SetParseResult(val expression: SetExpression?, val error: String? = null) {
+    val valid: Boolean get() = expression != null && error == null
+}
+
+private enum class SetTokenKind { Name, Union, Intersection, Difference, SymmetricDifference, Complement, Left, Right, End }
+private data class SetToken(val kind: SetTokenKind, val source: String, val position: Int)
+
+object SetExpressionParser {
+    fun parse(source: String): SetParseResult {
+        if (source.isBlank()) return SetParseResult(null, "Enter a set expression.")
+        return runCatching {
+            val parser = Parser(tokenize(source))
+            val expression = parser.union()
+            parser.expect(SetTokenKind.End, "Unexpected input")
+            SetParseResult(expression)
+        }.getOrElse { SetParseResult(null, it.message ?: "Invalid set expression.") }
+    }
+
+    private fun tokenize(source: String): List<SetToken> {
+        val output = mutableListOf<SetToken>()
+        var index = 0
+        while (index < source.length) {
+            val char = source[index]
+            when {
+                char.isWhitespace() -> index++
+                char == '(' -> { output += SetToken(SetTokenKind.Left, "(", index); index++ }
+                char == ')' -> { output += SetToken(SetTokenKind.Right, ")", index); index++ }
+                char == '∪' -> { output += SetToken(SetTokenKind.Union, char.toString(), index); index++ }
+                char == '∩' -> { output += SetToken(SetTokenKind.Intersection, char.toString(), index); index++ }
+                char == '\\' || char == '-' || char == '−' -> { output += SetToken(SetTokenKind.Difference, char.toString(), index); index++ }
+                char == '△' || char == 'Δ' -> { output += SetToken(SetTokenKind.SymmetricDifference, char.toString(), index); index++ }
+                char == '\'' || char == 'ᶜ' -> { output += SetToken(SetTokenKind.Complement, char.toString(), index); index++ }
+                char.isLetter() -> {
+                    val start = index
+                    while (index < source.length && (source[index].isLetterOrDigit() || source[index] == '_')) index++
+                    val word = source.substring(start, index)
+                    val kind = when (word.lowercase()) {
+                        "union" -> SetTokenKind.Union
+                        "intersection" -> SetTokenKind.Intersection
+                        "difference" -> SetTokenKind.Difference
+                        "symmetricdifference" -> SetTokenKind.SymmetricDifference
+                        "complement" -> SetTokenKind.Complement
+                        else -> SetTokenKind.Name
+                    }
+                    output += SetToken(kind, word, start)
+                }
+                else -> error("Unexpected '${source[index]}' at position $index.")
+            }
+        }
+        output += SetToken(SetTokenKind.End, "", source.length)
+        return output
+    }
+
+    private class Parser(private val tokens: List<SetToken>) {
+        private var index = 0
+        private val current get() = tokens[index]
+        fun union(): SetExpression {
+            var result = symmetric()
+            while (accept(SetTokenKind.Union)) result = SetExpression.Union(result, symmetric())
+            return result
+        }
+        private fun symmetric(): SetExpression {
+            var result = difference()
+            while (accept(SetTokenKind.SymmetricDifference)) result = SetExpression.SymmetricDifference(result, difference())
+            return result
+        }
+        private fun difference(): SetExpression {
+            var result = intersection()
+            while (accept(SetTokenKind.Difference)) result = SetExpression.Difference(result, intersection())
+            return result
+        }
+        private fun intersection(): SetExpression {
+            var result = complement()
+            while (accept(SetTokenKind.Intersection)) result = SetExpression.Intersection(result, complement())
+            return result
+        }
+        private fun complement(): SetExpression {
+            var prefixCount = 0
+            while (accept(SetTokenKind.Complement)) prefixCount++
+            var result = primary()
+            while (accept(SetTokenKind.Complement)) result = SetExpression.Complement(result)
+            repeat(prefixCount) { result = SetExpression.Complement(result) }
+            return result
+        }
+        private fun primary(): SetExpression {
+            if (accept(SetTokenKind.Left)) {
+                val nested = union()
+                expect(SetTokenKind.Right, "Missing closing parenthesis")
+                return nested
+            }
+            if (current.kind == SetTokenKind.Name) return SetExpression.Reference(tokens[index++].source.uppercase())
+            error("Expected a set name at position ${current.position}.")
+        }
+        private fun accept(kind: SetTokenKind): Boolean {
+            if (current.kind != kind) return false
+            index++
+            return true
+        }
+        fun expect(kind: SetTokenKind, message: String) {
+            if (!accept(kind)) error("$message at position ${current.position}.")
+        }
+    }
+}
+
+object SetExpressionEvaluator {
+    fun evaluate(
+        expression: SetExpression,
+        sets: Map<String, Set<String>>,
+        universe: Set<String>,
+    ): Set<String> = when (expression) {
+        is SetExpression.Reference -> if (expression.name == "U") universe else sets[expression.name].orEmpty()
+        is SetExpression.Union -> evaluate(expression.left, sets, universe) + evaluate(expression.right, sets, universe)
+        is SetExpression.Intersection -> evaluate(expression.left, sets, universe).intersect(evaluate(expression.right, sets, universe))
+        is SetExpression.Difference -> evaluate(expression.left, sets, universe) - evaluate(expression.right, sets, universe)
+        is SetExpression.SymmetricDifference -> SetTheoryStudioEngine.symmetricDifference(evaluate(expression.left, sets, universe), evaluate(expression.right, sets, universe))
+        is SetExpression.Complement -> universe - evaluate(expression.operand, sets, universe)
+    }
+
+    fun contains(expression: SetExpression, mask: MembershipMask): Boolean = when (expression) {
+        is SetExpression.Reference -> mask.contains(expression.name)
+        is SetExpression.Union -> contains(expression.left, mask) || contains(expression.right, mask)
+        is SetExpression.Intersection -> contains(expression.left, mask) && contains(expression.right, mask)
+        is SetExpression.Difference -> contains(expression.left, mask) && !contains(expression.right, mask)
+        is SetExpression.SymmetricDifference -> contains(expression.left, mask) xor contains(expression.right, mask)
+        is SetExpression.Complement -> !contains(expression.operand, mask)
+    }
+}
+
+object VennRegionEngine {
+    val threeSetRegionNames = linkedMapOf(
+        0 to "Outside all sets", 1 to "C only", 2 to "B only", 3 to "B ∩ C only",
+        4 to "A only", 5 to "A ∩ C only", 6 to "A ∩ B only", 7 to "A ∩ B ∩ C",
+    )
+    fun highlighted(expression: SetExpression, setCount: Int): Set<Int> {
+        require(setCount in 2..3)
+        val masks = if (setCount == 2) listOf(0, 2, 4, 6) else (0..7).toList()
+        return masks.filter { SetExpressionEvaluator.contains(expression, MembershipMask(it)) }.toSet()
+    }
+    fun maskFor(element: String, sets: Map<String, Set<String>>): MembershipMask = MembershipMask(
+        (if (element in sets["A"].orEmpty()) 4 else 0) or
+            (if (element in sets["B"].orEmpty()) 2 else 0) or
+            (if (element in sets["C"].orEmpty()) 1 else 0),
+    )
+    fun elementsByRegion(universe: Set<String>, sets: Map<String, Set<String>>): Map<Int, Set<String>> =
+        universe.groupBy { maskFor(it, sets).value }.mapValues { it.value.toSet() }
+    fun describe(regions: Set<Int>): String =
+        regions.sorted().joinToString { threeSetRegionNames[it] ?: "Region $it" }
+}
+
+object SetLawVerifier {
+    fun equivalent(left: SetExpression, right: SetExpression, setCount: Int = 3): Boolean =
+        VennRegionEngine.highlighted(left, setCount) == VennRegionEngine.highlighted(right, setCount)
 }

@@ -51,6 +51,19 @@ class MathEngineTest {
     }
 
     @Test
+    fun expressionParserRecognizesNativeKeyboardAndTextbookMathSymbols() {
+        val engine = ExpressionEngine()
+
+        assertEquals(PI, engine.compile("π").eval(), epsilon)
+        assertEquals(PI, engine.compile("pie").eval(), epsilon)
+        assertEquals(13.0, engine.compile("3² + 2 × 2").eval(), epsilon)
+        assertEquals(3.0, engine.compile("√9").eval(), epsilon)
+        assertEquals(.5, engine.compile("1 ÷ 2").eval(), epsilon)
+        assertEquals(1.0, engine.compile("2 ≤ 3").eval(), epsilon)
+        assertEquals(.25, engine.compile("¼").eval(), epsilon)
+    }
+
+    @Test
     fun coordinateGeometryMatchesRequiredExample() {
         val measurement = Geometry2D.segment(Vec2(1.0, 2.0), Vec2(4.0, 5.0))
 
@@ -141,6 +154,19 @@ class MathEngineTest {
         assertEquals("z >= 0", insight.range)
         assertEquals(0.0, insight.vertex!!.z, epsilon)
         assertTrue(mesh.vertices.any { it.x == 1.5 && it.y == 1.5 && it.z == 4.5 })
+    }
+
+    @Test
+    fun surfaceProbeReportsGradientNormalAndCurvature() {
+        val calculus = com.indianservers.aiexplorer.core.SurfaceCalculus()
+        val differential = calculus.analyze("z = x² + y²", 0.0, 0.0)
+        val curvature = calculus.curvature("z = x² + y²", 0.0, 0.0)
+
+        assertEquals(0.0, differential.point.z, epsilon)
+        assertEquals(0.0, differential.gradient.x, epsilon)
+        assertEquals(1.0, differential.unitNormal.z, epsilon)
+        assertEquals(4.0, curvature.gaussian, 1e-4)
+        assertEquals(2.0, curvature.mean, 1e-4)
     }
 
     @Test

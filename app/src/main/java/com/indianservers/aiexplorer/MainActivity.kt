@@ -1,4 +1,4 @@
-﻿package com.indianservers.aiexplorer
+package com.indianservers.aiexplorer
 
 import android.Manifest
 import android.app.Activity
@@ -12,6 +12,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,6 +61,8 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -157,6 +160,9 @@ import com.indianservers.aiexplorer.persistence.LocalReliabilityMonitor
 import com.indianservers.aiexplorer.persistence.MathFileExchange
 import com.indianservers.aiexplorer.phase2.mathstudio.UnifiedMathStudioScreen
 import com.indianservers.aiexplorer.phase3.mathlearning.AdaptiveMathLearningScreen
+import com.indianservers.aiexplorer.probabilitystats.ProbabilityStatisticsPhase1Screen
+import com.indianservers.aiexplorer.probabilitystats.ProbabilityStatisticsPhase2Screen
+import com.indianservers.aiexplorer.probabilitystats.ProbabilityStatisticsPhase3Screen
 import com.indianservers.aiexplorer.core.TrustedMathKernel
 import com.indianservers.aiexplorer.core.EquivalenceEvidence
 import com.indianservers.aiexplorer.core.InteractiveTrigEngine
@@ -547,6 +553,9 @@ private data class AppIntentSnapshot(
     val requestedProbabilitySection: Int,
     val showKnowledgeHub: Boolean,
     val activeKnowledgeSection: KnowledgeSection,
+    val showConceptLibrary: Boolean,
+    val selectedMathConcept: String?,
+    val selectedMathSubConcept: String?,
     val showChrome: Boolean,
     val status: String,
 )
@@ -557,6 +566,9 @@ internal val MathCreationTools = listOf(
     MathWorkspaceOption("Scientific Calculator", "Scientific keypad, constants and conversions", "Sci"),
     MathWorkspaceOption("Math Notebook", "Named values, linked functions and reusable exact results", "#"),
     MathWorkspaceOption("Problem Solver", "Explainable, step-by-step answers with verification", "Fx"),
+    MathWorkspaceOption("2D Geometry", "Construct points, lines, circles, polygons and constraints", "2D"),
+    MathWorkspaceOption("3D Geometry", "Explore solids, vectors, sections and measurements", "3D"),
+    MathWorkspaceOption("Graphs Explorer", "Plot and investigate 2D functions, curves and inequalities", "Graph"),
     MathWorkspaceOption("Shapes Explorer", "Construct and investigate interactive 2D shapes", "2D"),
     MathWorkspaceOption("Manipulatives", "Algebra tiles, fractions, balance and tactile labs", "Tiles"),
     MathWorkspaceOption("Probability & Statistics", "Distributions, intervals and probability plots", "Stat"),
@@ -572,7 +584,50 @@ internal val MathLearningTools = listOf(
     MathWorkspaceOption("Visual Dictionary", "Terms, notation, diagrams and examples", "A-Z"),
     MathWorkspaceOption("MCQs", "Practice questions with explanations", "?"),
     MathWorkspaceOption("Formula Visualizer", "Turn formulas into interactive scenes", "View"),
-    MathWorkspaceOption("Set Theory & Logic", "Interactive Venn diagrams, identities and truth tables", "Ã¢Ë†ÂªÃ¢Ë†Â§"),
+    MathWorkspaceOption("Set Theory & Logic", "Interactive Venn diagrams, identities and truth tables", "∪∧"),
+)
+
+private data class MathLearningCategory(
+    val title: String,
+    val description: String,
+    val icon: String,
+    val toolTitles: List<String>,
+)
+
+private val MathLearningCategories = listOf(
+    MathLearningCategory("Guided Practice", "Coaching, quizzes and practice", "GO", listOf("Adaptive Math Coach", "MCQs")),
+    MathLearningCategory("Formula Lab", "Reference and visual formulas", "Fx", listOf("Formulas", "Formula Visualizer")),
+    MathLearningCategory("Proofs & Theorems", "See why mathematics works", "QED", listOf("Visual Proofs", "Theorems")),
+    MathLearningCategory("Concept Library", "Explore 27 branches of maths", "27", listOf("Math Concepts", "Visual Dictionary")),
+    MathLearningCategory("Logic & Sets", "Venn diagrams and reasoning", "AND", listOf("Set Theory & Logic")),
+)
+
+private data class MathHomeCategory(
+    val title: String,
+    val description: String,
+    val icon: String,
+    val toolTitles: List<String>,
+)
+
+private val MathHomeCategories = listOf(
+    MathHomeCategory("GamifyMaths", "Games, speed challenges and mastery worlds", "PLAY", listOf("GamifyMaths")),
+    MathHomeCategory("Solve & Calculate", "Calculator, solver, notebook and linked studio", "Fx", listOf("Unified Math Studio", "Scientific Calculator", "Problem Solver", "Math Notebook")),
+    MathHomeCategory(
+        "Visual Workspaces",
+        "Geometry, graphs, tiles and spatial exploration",
+        "3D",
+        listOf("2D Geometry", "3D Geometry", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
+    ),
+    MathHomeCategory("Data & Probability", "Statistics, distributions and probability labs", "STAT", listOf("Probability & Statistics")),
+    MathHomeCategory("Learn & Practise", "Coaching, concepts and explained questions", "GO", listOf("Adaptive Math Coach", "Math Concepts", "MCQs")),
+    MathHomeCategory("Formulas & Proofs", "Formula tools, theorems and visual proofs", "QED", listOf("Formulas", "Formula Visualizer", "Visual Proofs", "Theorems")),
+    MathHomeCategory("Reference & Logic", "Dictionary, notation, sets and logical reasoning", "A-Z", listOf("Visual Dictionary", "Set Theory & Logic")),
+    MathHomeCategory(
+        "Discover More",
+        "Challenges, paths, exams, history and real-world maths",
+        "MORE",
+        listOf("Daily Challenge", "Practice Paths", "Math Games", "Exam Prep", "Real-World Math", "Math History"),
+    ),
 )
 
 internal val SuggestedMathTools = listOf(
@@ -582,15 +637,6 @@ internal val SuggestedMathTools = listOf(
     MathWorkspaceOption("Exam Prep", "Timed topic tests and revision plans", "Test"),
     MathWorkspaceOption("Real-World Math", "Model money, motion, data and everyday decisions", "Life"),
     MathWorkspaceOption("Math History", "Discover ideas through mathematicians and milestones", "Time"),
-)
-
-private val MathConceptCategories = listOf(
-    "Arithmetic", "Pre-Algebra", "Algebra", "Linear Algebra", "Geometry", "Coordinate Geometry",
-    "Trigonometry", "Precalculus", "Calculus", "Multivariable Calculus", "Differential Equations",
-    "Discrete Mathematics", "Number Theory", "Set Theory", "Logic", "Combinatorics",
-    "Probability", "Statistics", "Numerical Methods", "Optimization", "Graph Theory",
-    "Topology", "Complex Analysis", "Real Analysis", "Abstract Algebra", "Financial Mathematics",
-    "Mathematical Modelling",
 )
 
 private data class PointGesture(
@@ -710,6 +756,18 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         private set
     var activeKnowledgeSection by mutableStateOf(KnowledgeSection.Formulas)
         private set
+    var showConceptLibrary by mutableStateOf(false)
+        private set
+    var selectedMathConcept by mutableStateOf<String?>(null)
+        private set
+    var selectedMathSubConcept by mutableStateOf<String?>(null)
+        private set
+    var savedSetTheoryWorkspaces by mutableStateOf(savedStateHandle.get<ArrayList<String>>("savedSetTheoryWorkspaces").orEmpty().toList())
+        private set
+    var completedVisualFormulaIds by mutableStateOf(savedStateHandle.get<ArrayList<String>>("completedVisualFormulaIds").orEmpty().toSet())
+        private set
+    var favouriteVisualFormulaIds by mutableStateOf(savedStateHandle.get<ArrayList<String>>("favouriteVisualFormulaIds").orEmpty().toSet())
+        private set
     var pinnedMathTools by mutableStateOf(savedStateHandle.get<ArrayList<String>>("pinnedMathTools").orEmpty().toSet())
         private set
     var recentMathTools by mutableStateOf(savedStateHandle.get<ArrayList<String>>("recentMathTools").orEmpty().toList())
@@ -809,6 +867,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         requestedProbabilitySection = requestedProbabilitySection,
         showKnowledgeHub = showKnowledgeHub,
         activeKnowledgeSection = activeKnowledgeSection,
+        showConceptLibrary = showConceptLibrary,
+        selectedMathConcept = selectedMathConcept,
+        selectedMathSubConcept = selectedMathSubConcept,
         showChrome = showChrome,
         status = status,
     )
@@ -843,6 +904,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         requestedProbabilitySection = snapshot.requestedProbabilitySection
         showKnowledgeHub = snapshot.showKnowledgeHub
         activeKnowledgeSection = snapshot.activeKnowledgeSection
+        showConceptLibrary = snapshot.showConceptLibrary
+        selectedMathConcept = snapshot.selectedMathConcept
+        selectedMathSubConcept = snapshot.selectedMathSubConcept
         showChrome = snapshot.showChrome
         showActionDock = false
         hidePanels()
@@ -882,6 +946,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
+        showConceptLibrary = false
+        selectedMathConcept = null
+        selectedMathSubConcept = null
         showMathMenu = false
         hidePanels()
     }
@@ -908,9 +975,12 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
+        showConceptLibrary = false
+        selectedMathConcept = null
+        selectedMathSubConcept = null
         showShapesExplorer = false
         shapeExplorerScene = false
-        showMathMenu = true
+        showMathMenu = false
         showChrome = true
         showActionDock = false
         hidePanels()
@@ -952,7 +1022,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         shapeExplorerScene = true
         showChrome = true
         rememberShape("2d:$id")
-        status = "${preset.label} loaded Ã‚Â· drag its handles to resize"
+        status = "${preset.label} loaded · drag its handles to resize"
     }
 
 	    fun loadExplorerShape3D(type: SolidType) {
@@ -969,7 +1039,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         shapeExplorerScene = true
         showChrome = true
         rememberShape("3d:${type.name}")
-        status = "${type.name} loaded Ã‚Â· pinch or drag in Scale mode to resize"
+        status = "${type.name} loaded · pinch or drag in Scale mode to resize"
     }
 
     fun toggleFavoriteShape(key: String) {
@@ -1279,11 +1349,80 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = false
         showProbabilityLab = false
         showKnowledgeHub = true
+        showConceptLibrary = false
+        selectedMathConcept = null
+        selectedMathSubConcept = null
         activeKnowledgeSection = section
         showMathMenu = false
         showActionDock = false
         hidePanels()
         status = "Maths ${section.title}"
+    }
+
+    fun openConceptLibrary(concept: String? = null, subConcept: String? = null) {
+        if (concept == "Visual Formulas") {
+            openKnowledgeHub(KnowledgeSection.Visualize)
+            return
+        }
+        rememberCurrentIntent()
+        showSubjectHub = false
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showGamifyMaths = false
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showConceptLibrary = true
+        selectedMathConcept = concept
+        selectedMathSubConcept = subConcept
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = concept?.let { "$it concepts" } ?: "Math Concepts"
+    }
+
+    fun selectMathConcept(concept: String?) {
+        selectedMathConcept = concept
+        selectedMathSubConcept = null
+        status = concept?.let { "$it concepts" } ?: "Math Concepts"
+    }
+
+    fun selectMathSubConcept(subConcept: String?) {
+        selectedMathSubConcept = subConcept
+        status = if (subConcept == null) {
+            selectedMathConcept?.let { "$it concepts" } ?: "Math Concepts"
+        } else {
+            "$subConcept lesson"
+        }
+    }
+
+    fun saveSetTheoryWorkspace(snapshot: String) {
+        savedSetTheoryWorkspaces = (listOf(snapshot) + savedSetTheoryWorkspaces.filterNot { it.substringBefore('|') == snapshot.substringBefore('|') }).take(20)
+        savedStateHandle["savedSetTheoryWorkspaces"] = ArrayList(savedSetTheoryWorkspaces)
+        status = "Set Theory workspace saved"
+    }
+
+    fun deleteSetTheoryWorkspace(snapshot: String) {
+        savedSetTheoryWorkspaces = savedSetTheoryWorkspaces - snapshot
+        savedStateHandle["savedSetTheoryWorkspaces"] = ArrayList(savedSetTheoryWorkspaces)
+        status = "Set Theory workspace deleted"
+    }
+
+    fun completeVisualFormula(formulaId: String) {
+        completedVisualFormulaIds = completedVisualFormulaIds + formulaId
+        savedStateHandle["completedVisualFormulaIds"] = ArrayList(completedVisualFormulaIds)
+        status = "Visual formula discovery completed"
+    }
+
+    fun toggleVisualFormulaFavourite(formulaId: String) {
+        favouriteVisualFormulaIds = if (formulaId in favouriteVisualFormulaIds) favouriteVisualFormulaIds - formulaId else favouriteVisualFormulaIds + formulaId
+        savedStateHandle["favouriteVisualFormulaIds"] = ArrayList(favouriteVisualFormulaIds)
     }
 
 	    fun openScientificCalculator() {
@@ -1307,6 +1446,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         rememberCurrentIntent()
 	        showSubjectHub = false
         showMathLanding = false
+        showConceptLibrary = false
+        selectedMathConcept = null
+        selectedMathSubConcept = null
         showPhysicsHub = false
         showShapesExplorer = false
         shapeExplorerScene = false
@@ -1461,8 +1603,6 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 	    fun navigateBackFromMathWorkspace() {
 	        when {
 	            hasDismissibleOverlay() -> dismissTopOverlay()
-            restorePreviousIntent() -> Unit
-	            shapeExplorerScene -> withoutRecordingIntent { openShapesExplorer() }
 	            else -> withoutRecordingIntent { returnToMathMenu() }
 	        }
 	    }
@@ -1470,10 +1610,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun navigateBackIntent() {
         when {
             hasDismissibleOverlay() -> dismissTopOverlay()
-            restorePreviousIntent() -> Unit
             showSubjectHub || showMathLanding -> Unit
-            showPhysicsHub || showChemistryHub || showBiologyHub || showLearningIntelligence -> withoutRecordingIntent { openSubjectHub() }
-            shapeExplorerScene -> withoutRecordingIntent { openShapesExplorer() }
             else -> withoutRecordingIntent { returnToMathMenu() }
         }
     }
@@ -1563,7 +1700,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             geometryTool = tool
             pendingPointIndices = inputs.map<Int, Int?> { it }
             pendingConstruction = inputs.mapNotNull(state.points::getOrNull)
-            status = "${tool.name}: ${inputs.size} selected Ã‚Â· tap ${required - inputs.size} more point${if (required - inputs.size == 1) "" else "s"}"
+            status = "${tool.name}: ${inputs.size} selected · tap ${required - inputs.size} more point${if (required - inputs.size == 1) "" else "s"}"
             return
         }
         val dependencyType = tool.toPointDependencyType()
@@ -2256,7 +2393,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         val from = state.spatialPlacement
         val (to, validation) = SpatialPlacementEngine.place(from, hit, System.currentTimeMillis())
         if (from != to) state = history.execute(state, TransformSpatialPlacementCommand(from, to, "Place scene on ${hit.type.name.lowercase()}"))
-        status = if (validation.accepted) "Spatial scene placed Ã‚Â· Ã‚Â±${trim(hit.uncertaintyMeters)} m" else validation.messages.joinToString(" ")
+        status = if (validation.accepted) "Spatial scene placed · ±${trim(hit.uncertaintyMeters)} m" else validation.messages.joinToString(" ")
     }
 
     fun resetSpatialScene() = transformSpatialPlacement("Reset spatial anchor") {
@@ -2426,6 +2563,8 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     var dockOffset by remember { mutableStateOf(Offset.Zero) }
     var showSplash by rememberSaveable { mutableStateOf(true) }
     var showAppearanceSettings by rememberSaveable { mutableStateOf(false) }
+    var showExitConfirmation by rememberSaveable { mutableStateOf(false) }
+    val hostActivity = LocalActivity.current
     val applicationContext = LocalContext.current.applicationContext
     val durableStore = remember(applicationContext) { DurableMathStore(applicationContext) }
     var persistenceReady by remember { mutableStateOf(false) }
@@ -2464,12 +2603,14 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     LaunchedEffect(vm.settings.colorScheme) {
         applyAppPalette(vm.settings.colorScheme.palette)
     }
-    BackHandler(enabled = showAppearanceSettings) {
-        showAppearanceSettings = false
+    BackHandler {
+        when {
+            showAppearanceSettings -> showAppearanceSettings = false
+            showExitConfirmation -> showExitConfirmation = false
+            vm.showMathLanding && !vm.hasDismissibleOverlay() -> showExitConfirmation = true
+            else -> vm.navigateBackIntent()
+        }
     }
-	    BackHandler(enabled = !showAppearanceSettings && (!vm.showMathLanding || vm.hasDismissibleOverlay())) {
-        vm.navigateBackIntent()
-	    }
     val activePalette = vm.settings.colorScheme.palette
     MaterialTheme(
         colorScheme = darkColorScheme(
@@ -2505,7 +2646,11 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
 	                    if (vm.showLearningIntelligence) {
 	                        LearningIntelligenceFeatureRoot(onExit = vm::navigateBackIntent)
                     } else if (vm.showMathLanding) {
-                        MathematicsHubScreen(vm, wide)
+                        MathHubUi.Screen(
+                            vm = vm,
+                            wide = wide,
+                            onAppearanceClick = { showAppearanceSettings = true },
+                        )
                     } else if (vm.showShapesExplorer) {
                         ShapesExplorerScreen(vm, wide = wide)
                     } else if (vm.showUnifiedMathStudio) {
@@ -2524,6 +2669,8 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         SetTheoryLogicVisualizerScreen(vm, wide = wide)
                     } else if (vm.showProbabilityLab) {
                         ProbabilityLabScreen(vm, wide = wide)
+                    } else if (vm.showConceptLibrary) {
+                        MathConceptExplorerScreen(vm, wide = wide)
                     } else if (vm.showKnowledgeHub) {
                         MathKnowledgeScreen(vm, wide = wide)
                     } else {
@@ -2580,7 +2727,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         },
                     )
                 }
-                if (!showSplash && !vm.showGamifyMaths) {
+                if (!showSplash && !vm.showGamifyMaths && !vm.showMathLanding) {
                     Box(
                         Modifier
                             .align(Alignment.TopEnd)
@@ -2605,6 +2752,22 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         onDismiss = { showAppearanceSettings = false },
                     )
                 }
+                if (showExitConfirmation) {
+                    Dialog(onDismissRequest = { showExitConfirmation = false }) {
+                        GlassPanel(Modifier.fillMaxWidth().widthIn(max = 360.dp)) {
+                            Text("Exit Mathematics Explorer?", color = Ink, fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                            Text("Your current work is autosaved. Do you want to close the app?", color = Muted, fontSize = 12.sp)
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                                GlowButton("No") { showExitConfirmation = false }
+                                Spacer(Modifier.width(8.dp))
+                                GlowButton("Yes", icon = "X") {
+                                    showExitConfirmation = false
+                                    hostActivity?.finish()
+                                }
+                            }
+                        }
+                    }
+                }
                 if (showSplash) AiExplorerSplashScreen(Modifier.fillMaxSize())
             }
         }
@@ -2628,40 +2791,87 @@ private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
         "Visual Proofs" -> vm.openKnowledgeHub(KnowledgeSection.Proofs)
         "Visual Dictionary" -> vm.openKnowledgeHub(KnowledgeSection.Dictionary)
         "Probability & Statistics" -> vm.openProbabilityLab()
+        "2D Geometry" -> vm.open(MathModule.Geometry2D)
+        "3D Geometry" -> vm.open(MathModule.Geometry3D)
+        "Graphs Explorer" -> vm.open(MathModule.Graph2D)
         "Manipulatives" -> vm.open(MathModule.Manipulatives)
         "Shapes Explorer" -> vm.openShapesExplorer()
         "Set Theory & Logic" -> vm.openSetLogicVisualizer()
+        "Math Concepts" -> vm.openConceptLibrary()
+        "Daily Challenge", "Practice Paths", "Real-World Math" -> vm.openAdaptiveMathLearning()
+        "Exam Prep" -> vm.openKnowledgeHub(KnowledgeSection.Mcqs)
+        "Math History" -> vm.openConceptLibrary("Number Theory")
         else -> return false
     }
     return true
 }
 
+private object MathHubUi {
 @Composable
-private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
+fun Screen(
+    vm: ExplorerViewModel,
+    wide: Boolean,
+    onAppearanceClick: () -> Unit,
+) {
     var query by rememberSaveable { mutableStateOf("") }
-    var showWorkspaces by rememberSaveable { mutableStateOf(true) }
+    var showWorkspaces by rememberSaveable { mutableStateOf(false) }
     var showConcepts by rememberSaveable { mutableStateOf(false) }
+    var selectedLearningCategory by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedHomeCategory by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPreview by rememberSaveable { mutableStateOf<String?>(null) }
+    var workspaceOpenRequest by remember { mutableIntStateOf(0) }
+    val hubScrollState = rememberScrollState()
+    val workspacesRequester = remember { BringIntoViewRequester() }
     val allTools = remember { (MathCreationTools + MathLearningTools + SuggestedMathTools).distinctBy { it.title } }
     val visibleTools = remember(query) {
         val normalized = query.trim().lowercase()
         if (normalized.isBlank()) allTools
         else allTools.filter { normalized in it.title.lowercase() || normalized in it.description.lowercase() }
     }
+    val visibleConcepts = remember(query) {
+        if (query.isBlank()) emptyList() else MathConceptCatalog.search(query, null)
+    }
 
     fun openOption(option: MathWorkspaceOption) {
         when (option.title) {
-            "Explore Workspaces" -> showWorkspaces = true
-            "Math Concepts" -> showConcepts = !showConcepts
+            "Explore Workspaces" -> {
+                query = ""
+                selectedHomeCategory = null
+                showConcepts = false
+                showWorkspaces = true
+                workspaceOpenRequest++
+            }
+            "Math Concepts" -> {
+                selectedHomeCategory = null
+                showWorkspaces = false
+                showConcepts = true
+            }
             else -> if (!openMathTool(vm, option.title)) selectedPreview = option.title
         }
     }
 
+    LaunchedEffect(workspaceOpenRequest) {
+        if (workspaceOpenRequest > 0 && showWorkspaces) {
+            workspacesRequester.bringIntoView()
+        }
+    }
+
+    LaunchedEffect(selectedHomeCategory, showConcepts) {
+        if (selectedHomeCategory != null || showConcepts) {
+            hubScrollState.scrollTo(0)
+        }
+    }
+
     @Composable
-    fun MathHubCard(option: MathWorkspaceOption, accent: Color, status: String = "OPEN") {
+    fun MathHubCard(
+        option: MathWorkspaceOption,
+        accent: Color,
+        status: String = "OPEN",
+        modifier: Modifier = Modifier,
+    ) {
         val pinned = option.title in vm.pinnedMathTools
         Column(
-            Modifier
+            modifier
                 .width(if (wide) 225.dp else 165.dp)
                 .heightIn(min = 132.dp)
                 .clip(RoundedCornerShape(18.dp))
@@ -2709,11 +2919,13 @@ private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
         }
     }
 
+    Box(Modifier.fillMaxSize()) {
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(hubScrollState)
             .padding(horizontal = if (wide) 34.dp else 8.dp, vertical = 12.dp)
+            .padding(bottom = 64.dp)
             .semantics { contentDescription = "Mathematics Explorer menu" },
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -2722,83 +2934,357 @@ private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(
+                modifier = Modifier.weight(1f).padding(end = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
                 TransparentIcon("SUM", Cyan)
-                Column {
-                    Text("Mathematics Explorer", color = Cyan, fontSize = if (wide) 28.sp else 22.sp, fontWeight = FontWeight.Bold)
-                    Text("${allTools.size} interactive tools and learning spaces", color = Muted, fontSize = 11.sp)
+                Column(Modifier.weight(1f)) {
+                    Text("Mathematics", color = Ink, fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Explorer", color = Cyan, fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Explore  ·  Learn  ·  Master", color = Muted, fontSize = 9.sp, maxLines = 1)
                 }
             }
-            GlowButton("Home", icon = "H", onClick = vm::openSubjectHub)
-        }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .heightIn(min = 100.dp)
-                .clip(RoundedCornerShape(18.dp))
-                .background(Brush.horizontalGradient(listOf(Cyan.copy(.18f), Color(0xCC102B36))))
-                .border(1.dp, Cyan.copy(.68f), RoundedCornerShape(18.dp))
-                .clickable { openMathTool(vm, "Unified Math Studio") }
-                .semantics { contentDescription = "Open Unified Math Studio" }
-                .padding(14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("UNIFIED MATH STUDIO", color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
-                Text("Algebra, graph, table, geometry and CAS in one linked workspace", color = Ink, fontSize = 11.sp)
-                Text("Direct manipulation - shared variables - live updates", color = Green, fontSize = 9.sp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                GlowButton(
+                    label = "Home",
+                    icon = "H",
+                    iconOnly = !wide,
+                    onClick = vm::openSubjectHub,
+                )
+                GlowButton(
+                    label = "Appearance",
+                    icon = "settings",
+                    iconOnly = true,
+                    onClick = onAppearanceClick,
+                )
             }
-            Text("OPEN  >", color = Amber, fontWeight = FontWeight.Bold)
-        }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .heightIn(min = 96.dp)
-                .clip(RoundedCornerShape(18.dp))
-                .background(Brush.horizontalGradient(listOf(Violet.copy(.14f), Color(0xCC17132B))))
-                .border(1.dp, Violet.copy(.68f), RoundedCornerShape(18.dp))
-                .clickable { openMathTool(vm, "Adaptive Math Coach") }
-                .semantics { contentDescription = "Open Adaptive Math Coach" }
-                .padding(14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("ADAPTIVE LEARNING JOURNEY", color = Violet, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
-                Text("Explore, practise and master concepts with workspace-aware guidance", color = Ink, fontSize = 11.sp)
-            }
-            Text("START  >", color = Green, fontWeight = FontWeight.Bold)
         }
 
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("Search Mathematics") },
-            placeholder = { Text("Try algebra, graphing, geometry, statistics or proofs") },
+            placeholder = { Text("Search Mathematics") },
+            leadingIcon = { Text("⌕", color = Violet, fontSize = 25.sp, fontWeight = FontWeight.Bold) },
+            trailingIcon = { Text("≋", color = Cyan, fontSize = 20.sp, fontWeight = FontWeight.Bold) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search Mathematics tools" },
         )
 
         if (query.isBlank()) {
-            val pinned = allTools.filter { it.title in vm.pinnedMathTools }
-            val recent = vm.recentMathTools.mapNotNull { title -> allTools.singleOrNull { it.title == title } }.take(4)
-            if (pinned.isNotEmpty() || recent.isNotEmpty()) {
+            val gamifyCategory = MathHomeCategories.first()
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = if (wide) 124.dp else 104.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(Violet.copy(.42f), Cyan.copy(.17f), Color(0xED091426)),
+                        ),
+                    )
+                    .border(1.dp, Violet.copy(.78f), RoundedCornerShape(24.dp))
+                    .clickable { openOption(MathLearningTools.first { it.title == "GamifyMaths" }) }
+                    .focusable()
+                    .semantics { contentDescription = "Play GamifyMaths games and speed challenges" }
+                    .padding(horizontal = 15.dp, vertical = 13.dp),
+                horizontalArrangement = Arrangement.spacedBy(13.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
+                    Modifier
+                        .size(if (wide) 72.dp else 64.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(Brush.radialGradient(listOf(Violet, Violet.copy(.38f))))
+                        .border(1.dp, Color.White.copy(.38f), RoundedCornerShape(18.dp)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    MathHomeArtwork.Draw("GamifyMaths", Color.White, Modifier.fillMaxSize().padding(7.dp))
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("GAMIFYMATHS", color = Ink, fontSize = if (wide) 22.sp else 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(gamifyCategory.description, color = Muted, fontSize = 10.sp, maxLines = 2)
+                    Text("NEW · SPEED CALCULATION", color = Green, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
+                }
+                Text("PLAY  >", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+            }
+
+            if (selectedHomeCategory == null && !showWorkspaces) {
+            Text("QUICK EXPLORE", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                MathQuickLaunchButton("2D", "2D", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Geometry2D) }
+                MathQuickLaunchButton("3D", "3D", Violet, Modifier.weight(1f)) { vm.open(MathModule.Geometry3D) }
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                MathQuickLaunchButton("Graphs", "↗", Amber, Modifier.weight(1f)) { vm.open(MathModule.Graph2D) }
+                MathQuickLaunchButton("3D Graph", "xyz", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Graph3D) }
+            }
+            val conceptsAccent = Color(0xFFFF67A6)
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 66.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(conceptsAccent.copy(if (showConcepts) .32f else .18f), Violet.copy(.14f), Color(0xE60A1323)),
+                        ),
+                    )
+                    .border(1.dp, conceptsAccent.copy(if (showConcepts) .92f else .58f), RoundedCornerShape(18.dp))
+                    .clickable {
+                        showConcepts = !showConcepts
+                        selectedHomeCategory = null
+                        showWorkspaces = false
+                    }
+                    .focusable()
+                    .semantics {
+                        contentDescription = "${if (showConcepts) "Collapse" else "Expand"} Math Concepts with ${MathConceptCatalog.concepts.size} subjects"
+                    }
+                    .padding(horizontal = 13.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(11.dp),
+            ) {
+                Box(
+                    Modifier.size(44.dp).clip(RoundedCornerShape(13.dp))
+                        .background(conceptsAccent.copy(.2f))
+                        .border(1.dp, conceptsAccent.copy(.7f), RoundedCornerShape(13.dp)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("Fx", color = conceptsAccent, fontSize = 17.sp, fontWeight = FontWeight.Black)
+                }
+                Column(Modifier.weight(1f)) {
+                    Text("MATH CONCEPTS", color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("${MathConceptCatalog.concepts.size} subjects · Class 6 to PG", color = Muted, fontSize = 9.sp)
+                }
+                Text(if (showConcepts) "COLLAPSE  ▲" else "EXPAND  ▼", color = conceptsAccent, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
+            }
+
+            AnimatedVisibility(showConcepts) {
                 Column(
                     Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color(0x99101824))
-                        .border(1.dp, Amber.copy(alpha = .32f), RoundedCornerShape(16.dp))
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(7.dp),
+                        .clip(RoundedCornerShape(19.dp))
+                        .background(Brush.verticalGradient(listOf(conceptsAccent.copy(.11f), Color(0xE6091222))))
+                        .border(1.dp, conceptsAccent.copy(.42f), RoundedCornerShape(19.dp))
+                        .padding(9.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text("QUICK ACCESS", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        (pinned + recent).distinctBy { it.title }.take(6).forEach { option ->
-                            GlowButton(option.title, icon = option.icon) { openOption(option) }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Column {
+                            Text("EXPLORE ALL CONCEPTS", color = conceptsAccent, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                            Text("Tap once to open lessons and visual workspaces", color = Muted, fontSize = 9.sp)
+                        }
+                        Text("${MathConceptCatalog.concepts.size}", color = conceptsAccent, fontSize = 20.sp, fontWeight = FontWeight.Black)
+                    }
+                    BoxWithConstraints(Modifier.fillMaxWidth()) {
+                        val conceptColumns = if (maxWidth >= 760.dp) 4 else if (maxWidth >= 520.dp) 3 else 2
+                        val conceptGap = 7.dp
+                        val conceptWidth = (maxWidth - conceptGap * (conceptColumns - 1)) / conceptColumns
+                        FlowRow(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(conceptGap),
+                            verticalArrangement = Arrangement.spacedBy(conceptGap),
+                        ) {
+                            MathConceptCatalog.concepts.forEach { concept ->
+                                val isTrig = concept.title == "Trigonometry"
+                                val conceptAccent = if (isTrig) Color(0xFFFFC23E) else when (concept.title.hashCode().ushr(1) % 4) {
+                                    0 -> Cyan
+                                    1 -> Violet
+                                    2 -> Green
+                                    else -> conceptsAccent
+                                }
+                                Row(
+                                    Modifier
+                                        .width(conceptWidth)
+                                        .heightIn(min = if (isTrig) 118.dp else 108.dp)
+                                        .clip(RoundedCornerShape(15.dp))
+                                        .background(
+                                            if (isTrig) Brush.linearGradient(listOf(Color(0x66FF9D00), Color(0x332B1549), Color(0xDD0A1323)))
+                                            else Brush.linearGradient(listOf(conceptAccent.copy(.13f), Color(0xDD0A1323))),
+                                        )
+                                        .border(if (isTrig) 2.dp else 1.dp, conceptAccent.copy(if (isTrig) .95f else .45f), RoundedCornerShape(15.dp))
+                                        .clickable { vm.openConceptLibrary(concept.title) }
+                                        .focusable()
+                                        .semantics {
+                                            contentDescription = "${if (isTrig) "Featured " else ""}${concept.title}. ${concept.summary}"
+                                        }
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(7.dp),
+                                ) {
+                                    Box(
+                                        Modifier.size(36.dp).clip(RoundedCornerShape(11.dp))
+                                            .background(conceptAccent.copy(.18f))
+                                            .border(1.dp, conceptAccent.copy(.72f), RoundedCornerShape(11.dp)),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(concept.icon, color = conceptAccent, fontSize = if (concept.icon.length > 3) 8.sp else 12.sp, fontWeight = FontWeight.Black)
+                                    }
+                                    Column(Modifier.weight(1f)) {
+                                        if (isTrig) Text("★ FEATURED", color = conceptAccent, fontSize = 7.sp, fontWeight = FontWeight.ExtraBold)
+                                        Text(concept.title, color = Ink, fontSize = if (isTrig) 12.sp else 10.sp, fontWeight = FontWeight.Bold, maxLines = 2)
+                                        concept.subtopics.forEach { subConcept ->
+                                            Text(
+                                                subConcept,
+                                                color = Muted,
+                                                fontSize = 7.sp,
+                                                maxLines = 1,
+                                                modifier = Modifier.fillMaxWidth()
+                                                    .clickable { vm.openConceptLibrary(concept.title, subConcept) }
+                                                    .semantics { contentDescription = "Open ${concept.title}, $subConcept lesson" }
+                                                    .padding(vertical = 2.dp),
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            AnimatedVisibility(!showConcepts) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                MathQuickLaunchButton("Formulas", "Fx", Violet, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Formulas) }
+                MathQuickLaunchButton("Proofs", "QED", Green, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Proofs) }
+                MathQuickLaunchButton("Theorems", "Thm", Amber, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Theorems) }
+            }
+
+            Text("EXPLORE MATHEMATICS", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val columns = if (maxWidth >= 760.dp) 4 else if (maxWidth >= 560.dp) 3 else 2
+                val gap = 9.dp
+                val availableWidth = maxWidth
+                val cardWidth = (availableWidth - gap * (columns - 1)) / columns
+                val categories = MathHomeCategories.drop(1).filterNot { it.title == "Learn & Practise" }
+                FlowRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(gap),
+                    verticalArrangement = Arrangement.spacedBy(gap),
+                ) {
+                    categories.forEachIndexed { index, category ->
+                        val accent = when (category.title) {
+                            "Solve & Calculate" -> Cyan
+                            "Visual Workspaces" -> Green
+                            "Data & Probability" -> Amber
+                            "Formulas & Proofs" -> Color(0xFFFF67A6)
+                            "Reference & Logic" -> Color(0xFF45DDCD)
+                            else -> Color(0xFFFFA65C)
+                        }
+                        val selected = selectedHomeCategory == category.title
+                        Column(
+                            Modifier
+                                .width(cardWidth)
+                                .heightIn(min = 154.dp)
+                                .clip(RoundedCornerShape(19.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(accent.copy(if (selected) .3f else .16f), Color(0xE60A1323)),
+                                    ),
+                                )
+                                .border(1.dp, accent.copy(if (selected) .95f else .52f), RoundedCornerShape(19.dp))
+                                .clickable {
+                                    showConcepts = false
+                                    showWorkspaces = false
+                                    selectedHomeCategory = if (selected) null else category.title
+                                }
+                                .focusable()
+                                .semantics { contentDescription = "Open ${category.title}. ${category.description}" }
+                                .padding(11.dp),
+                            verticalArrangement = Arrangement.spacedBy(5.dp),
+                        ) {
+                            Box(Modifier.fillMaxWidth().height(58.dp)) {
+                                TransparentIcon(category.icon, accent)
+                                MathHomeArtwork.Draw(
+                                    category = category.title,
+                                    accent = accent,
+                                    modifier = Modifier.align(Alignment.CenterEnd),
+                                )
+                                Text(
+                                    if (selected) "CLOSE" else "VIEW",
+                                    color = accent,
+                                    fontSize = 8.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.align(Alignment.TopEnd),
+                                )
+                            }
+                            Text(category.title, color = Ink, fontSize = if (wide) 15.sp else 13.sp, fontWeight = FontWeight.ExtraBold, maxLines = 2)
+                            Text(category.description, color = Muted, fontSize = 9.sp, maxLines = 2)
+                        }
+                    }
+                }
+            }
+            }
+            }
+            }
+
+            selectedHomeCategory?.let { selectedTitle ->
+                val category = MathHomeCategories.firstOrNull { it.title == selectedTitle }
+                val tools = category?.toolTitles.orEmpty().mapNotNull { title -> allTools.firstOrNull { it.title == title } }
+                if (category != null && tools.isNotEmpty()) {
+                    val accent = when (category.title) {
+                        "Solve & Calculate" -> Cyan
+                        "Visual Workspaces" -> Green
+                        "Data & Probability" -> Amber
+                        "Learn & Practise" -> Violet
+                        "Formulas & Proofs" -> Color(0xFFFF67A6)
+                        "Reference & Logic" -> Color(0xFF45DDCD)
+                        else -> Color(0xFFFFA65C)
+                    }
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Brush.verticalGradient(listOf(accent.copy(.12f), Color(0xD90A1323))))
+                            .border(1.dp, accent.copy(.48f), RoundedCornerShape(20.dp))
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(7.dp),
+                    ) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                "‹  ALL CATEGORIES",
+                                color = accent,
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .clickable { selectedHomeCategory = null }
+                                    .padding(horizontal = 7.dp, vertical = 5.dp),
+                            )
+                            Column(Modifier.weight(1f)) {
+                                Text(category.title.uppercase(), color = accent, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                                Text("${tools.size} tools", color = Muted, fontSize = 9.sp)
+                            }
+                        }
+                        tools.forEach { option ->
+                            val pinned = option.title in vm.pinnedMathTools
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .background(Color.White.copy(.045f))
+                                    .clickable { openOption(option) }
+                                    .focusable()
+                                    .padding(horizontal = 10.dp, vertical = 9.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                TransparentIcon(option.icon, accent)
+                                Column(Modifier.weight(1f)) {
+                                    Text(option.title, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                    Text(option.description, color = Muted, fontSize = 9.sp, maxLines = 2)
+                                }
+                                Text(
+                                    if (pinned) "PINNED" else "OPEN  >",
+                                    color = if (pinned) Amber else Green,
+                                    fontSize = 8.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                )
+                            }
                         }
                     }
                 }
@@ -2806,14 +3292,18 @@ private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
         }
 
         val creation = MathCreationTools.filter { it in visibleTools && it.title != "Unified Math Studio" }
-        if (creation.isNotEmpty()) {
+        if (creation.isNotEmpty() && query.isNotBlank()) {
             Text("CREATE & SOLVE", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
-            FlowRow(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(9.dp),
-                verticalArrangement = Arrangement.spacedBy(9.dp),
-            ) {
-                creation.forEach { MathHubCard(it, Cyan) }
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val columns = if (maxWidth >= 720.dp) 3 else 2
+                val cardWidth = (maxWidth - 9.dp * (columns - 1)) / columns
+                FlowRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(9.dp),
+                    verticalArrangement = Arrangement.spacedBy(9.dp),
+                ) {
+                    creation.forEach { MathHubCard(it, Cyan, modifier = Modifier.width(cardWidth)) }
+                }
             }
         }
 
@@ -2821,6 +3311,7 @@ private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
             Column(
                 Modifier
                     .fillMaxWidth()
+                    .bringIntoViewRequester(workspacesRequester)
                     .clip(RoundedCornerShape(18.dp))
                     .background(Cyan.copy(alpha = .06f))
                     .border(1.dp, Cyan.copy(alpha = .34f), RoundedCornerShape(18.dp))
@@ -2876,37 +3367,141 @@ private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
         }
 
-        val learning = MathLearningTools.filter { it in visibleTools && it.title != "Adaptive Math Coach" }
-        if (learning.isNotEmpty()) {
+        val learning = MathLearningTools.filter { it in visibleTools }
+        if (learning.isNotEmpty() && query.isNotBlank()) {
             Text("LEARN & PRACTISE", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
-            FlowRow(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(9.dp),
-                verticalArrangement = Arrangement.spacedBy(9.dp),
-            ) {
-                learning.forEach { MathHubCard(it, Violet) }
+            if (query.isNotBlank()) {
+                BoxWithConstraints(Modifier.fillMaxWidth()) {
+                    val columns = if (maxWidth >= 720.dp) 3 else 2
+                    val cardWidth = (maxWidth - 9.dp * (columns - 1)) / columns
+                    FlowRow(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(9.dp),
+                        verticalArrangement = Arrangement.spacedBy(9.dp),
+                    ) {
+                        learning.forEach { MathHubCard(it, Violet, modifier = Modifier.width(cardWidth)) }
+                    }
+                }
+            } else {
+                val gamify = MathLearningTools.first { it.title == "GamifyMaths" }
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 104.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(Brush.horizontalGradient(listOf(Violet.copy(.34f), Cyan.copy(.15f), Color(0xCC111A31))))
+                        .border(1.dp, Violet.copy(.72f), RoundedCornerShape(20.dp))
+                        .clickable { openOption(gamify) }
+                        .semantics { contentDescription = "Open GamifyMaths games" }
+                        .padding(14.dp),
+                    horizontalArrangement = Arrangement.spacedBy(13.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TransparentIcon("PLAY", Violet)
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text("GAMIFYMATHS", color = Ink, fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+                        Text("Play interactive worlds, timed challenges and mastery missions", color = Muted, fontSize = 10.sp, maxLines = 2)
+                    }
+                    Text("PLAY  >", color = Green, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                }
+
+                BoxWithConstraints(Modifier.fillMaxWidth()) {
+                    val columns = if (maxWidth >= 720.dp) 3 else 2
+                    val cardWidth = (maxWidth - 9.dp * (columns - 1)) / columns
+                    FlowRow(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(9.dp),
+                        verticalArrangement = Arrangement.spacedBy(9.dp),
+                    ) {
+                        MathLearningCategories.forEach { category ->
+                            val selected = selectedLearningCategory == category.title
+                            Column(
+                                Modifier
+                                    .width(cardWidth)
+                                    .heightIn(min = 106.dp)
+                                    .clip(RoundedCornerShape(17.dp))
+                                    .background(if (selected) Violet.copy(.2f) else Color(0xCC0B1420))
+                                    .border(1.dp, if (selected) Violet else Violet.copy(.38f), RoundedCornerShape(17.dp))
+                                    .clickable { selectedLearningCategory = if (selected) null else category.title }
+                                    .padding(11.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    TransparentIcon(category.icon, Violet)
+                                    Text(if (selected) "CLOSE" else "OPEN", color = Green, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
+                                }
+                                Text(category.title, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 2)
+                                Text(category.description, color = Muted, fontSize = 9.sp, maxLines = 2)
+                            }
+                        }
+                    }
+                }
+
+                selectedLearningCategory?.let { selectedTitle ->
+                    val category = MathLearningCategories.firstOrNull { it.title == selectedTitle }
+                    val categoryTools = category?.toolTitles.orEmpty().mapNotNull { title ->
+                        MathLearningTools.firstOrNull { it.title == title }
+                    }
+                    if (category != null && categoryTools.isNotEmpty()) {
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(18.dp))
+                                .background(Violet.copy(.07f))
+                                .border(1.dp, Violet.copy(.42f), RoundedCornerShape(18.dp))
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Text(category.title.uppercase(), color = Violet, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+                            categoryTools.forEach { option ->
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(13.dp))
+                                        .background(Color.White.copy(.04f))
+                                        .clickable { openOption(option) }
+                                        .padding(horizontal = 11.dp, vertical = 10.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    TransparentIcon(option.icon, Violet)
+                                    Column(Modifier.weight(1f)) {
+                                        Text(option.title, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                        Text(option.description, color = Muted, fontSize = 9.sp, maxLines = 2)
+                                    }
+                                    Text("OPEN >", color = Green, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        AnimatedVisibility(showConcepts) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(Violet.copy(alpha = .07f))
-                    .border(1.dp, Violet.copy(alpha = .38f), RoundedCornerShape(18.dp))
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text("MATH CONCEPTS - 27 SUBJECTS", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    MathConceptCategories.forEach { concept -> GlowButton(concept) { selectedPreview = concept } }
+        if (query.isNotBlank()) {
+            if (visibleConcepts.isNotEmpty()) {
+                Text("MATH CONCEPTS", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                visibleConcepts.forEach { concept ->
+                    Row(
+                        Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Violet.copy(.08f))
+                            .border(1.dp, Violet.copy(.35f), RoundedCornerShape(14.dp))
+                            .clickable { vm.openConceptLibrary(concept.title) }.padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(9.dp),
+                    ) {
+                        TransparentIcon(concept.icon, Violet)
+                        Column(Modifier.weight(1f)) {
+                            Text(concept.title, color = Ink, fontWeight = FontWeight.Bold)
+                            Text(concept.subtopics.joinToString(" · "), color = Muted, fontSize = 9.sp, maxLines = 2)
+                        }
+                        Text("OPEN >", color = Green, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }
 
         val suggested = SuggestedMathTools.filter { it in visibleTools }
-        if (suggested.isNotEmpty()) {
+        if (suggested.isNotEmpty() && query.isNotBlank()) {
             Text("DISCOVER MORE", color = Amber, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
             FlowRow(
                 Modifier.fillMaxWidth(),
@@ -2917,30 +3512,37 @@ private fun MathematicsHubScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
         }
 
-        selectedPreview?.let { selection ->
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(Amber.copy(alpha = .08f))
-                    .border(1.dp, Amber.copy(alpha = .35f), RoundedCornerShape(14.dp))
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(9.dp),
-            ) {
-                TransparentIcon("+", Amber)
-                Column(Modifier.weight(1f)) {
-                    Text(selection, color = Ink, fontWeight = FontWeight.Bold)
-                    Text("Preview selected. This learning space is ready for its next content pack.", color = Muted, fontSize = 10.sp)
-                }
-            }
-        }
-
-        if (visibleTools.isEmpty()) {
+        if (visibleTools.isEmpty() && visibleConcepts.isEmpty()) {
             Text("No Mathematics tools match this search.", color = Amber, fontWeight = FontWeight.SemiBold)
         }
-        Text("Touch, mouse, keyboard and TV remote ready", color = Muted, fontSize = 11.sp)
     }
+        Row(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(22.dp))
+                .background(Brush.horizontalGradient(listOf(Color(0xD9122350), Color(0xE00A1028), Color(0xD91C1245))))
+                .border(1.dp, Violet.copy(.55f), RoundedCornerShape(22.dp))
+                .padding(horizontal = 4.dp, vertical = 5.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            MathHomeNavItem("⌂", "Home", true, Cyan) {
+                selectedHomeCategory = null
+                showWorkspaces = false
+                showConcepts = false
+            }
+            MathHomeNavItem("▤", "Learn", false, Violet) {
+                showConcepts = false
+                showWorkspaces = false
+                selectedHomeCategory = "Learn & Practise"
+            }
+            MathHomeNavItem("◇", "Explore", false, Violet) {
+                vm.openConceptLibrary()
+            }
+        }
+    }
+}
 }
 
 @Composable
@@ -2959,21 +3561,26 @@ private fun SetTheoryLogicVisualizerScreen(vm: ExplorerViewModel, wide: Boolean)
     val live = remember(law, values) { SetLogicEngine.evaluate(law, values) }
     val rows = remember(law) { SetLogicEngine.rows(law) }
 
+    if (setMode) {
+        SetTheoryInteractiveModule(vm = vm, wide = wide, onOpenLogic = { setMode = false })
+        return
+    }
+
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = if (wide) 26.dp else 6.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            GlowButton("Back", icon = "Ã¢â€ Â", iconOnly = true, onClick = vm::returnToMathMenu)
+            GlowButton("Back", icon = "←", iconOnly = true, onClick = vm::returnToMathMenu)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("SET THEORY & LOGIC", color = Cyan, fontSize = if (wide) 22.sp else 17.sp, fontWeight = FontWeight.Bold)
                 Text("Interactive Formula Visualizer", color = Muted, fontSize = 10.sp)
             }
-            TransparentIcon("Ã¢Ë†ÂªÃ¢Ë†Â§", Violet)
+            TransparentIcon("∪∧", Violet)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            GlowButton(if (setMode) "Ã¢â‚¬Â¢ Set Theory" else "Set Theory", icon = "Ã¢Ë†Âª") { setMode = true; formulasOpen = true; visualOpen = false; selectedPoint = null }
-            GlowButton(if (!setMode) "Ã¢â‚¬Â¢ Logic" else "Logic", icon = "Ã¢Ë†Â§") { setMode = false; formulasOpen = true; visualOpen = false }
+            GlowButton(if (setMode) "• Set Theory" else "Set Theory", icon = "∪") { setMode = true; formulasOpen = true; visualOpen = false; selectedPoint = null }
+            GlowButton(if (!setMode) "• Logic" else "Logic", icon = "∧") { setMode = false; formulasOpen = true; visualOpen = false }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
@@ -2986,7 +3593,7 @@ private fun SetTheoryLogicVisualizerScreen(vm: ExplorerViewModel, wide: Boolean)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 (if (setMode) SetLogicCatalog.setLaws else SetLogicCatalog.logicLaws).forEach { option ->
                     val formulaLabel = if (setMode) SetLogicCatalog.shortSetFormula(option) else option.formula
-                    GlowButton(if (option.id == law.id && visualOpen) "Ã¢â‚¬Â¢ $formulaLabel" else formulaLabel) {
+                    GlowButton(if (option.id == law.id && visualOpen) "• $formulaLabel" else formulaLabel) {
                         if (setMode) selectedSetLaw = option else selectedLogicLaw = option
                         formulasOpen = false
                         visualOpen = true
@@ -3014,7 +3621,7 @@ private fun SetTheoryLogicVisualizerScreen(vm: ExplorerViewModel, wide: Boolean)
                     ) {
                         SetDiagramLegendChip("A", SetDiagramAColor)
                         SetDiagramLegendChip("B", SetDiagramBColor)
-                        SetDiagramLegendChip("A Ã¢Ë†Âª B  (A U B)", SetDiagramUnionColor)
+                        SetDiagramLegendChip("A ∪ B  (A U B)", SetDiagramUnionColor)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Overlap", color = Muted, fontSize = 11.sp, modifier = Modifier.width(70.dp))
@@ -3024,7 +3631,7 @@ private fun SetTheoryLogicVisualizerScreen(vm: ExplorerViewModel, wide: Boolean)
                 }
             }
             if (!visualOpen) {
-                Text("Select a formula such as A Ã¢Ë†Âª B to open its interactive diagram.", color = Green, fontSize = 12.sp)
+                Text("Select a formula such as A ∪ B to open its interactive diagram.", color = Green, fontSize = 12.sp)
             }
             SetTheoryLearningStudioPanel(law)
         } else {
@@ -3047,7 +3654,7 @@ private fun SetTheoryLogicVisualizerScreen(vm: ExplorerViewModel, wide: Boolean)
                 Text(law.leftLabel, color = Cyan, fontSize = 11.sp)
                 Text(if (live.left) "TRUE" else "FALSE", color = if (live.left) Green else Muted, fontWeight = FontWeight.Bold)
             }
-            Text(if (live.equivalent) "=" else "Ã¢â€°Â ", color = if (live.equivalent) Green else Amber, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+            Text(if (live.equivalent) "=" else "≠", color = if (live.equivalent) Green else Amber, fontSize = 28.sp, fontWeight = FontWeight.Bold)
             Column(horizontalAlignment = Alignment.End) {
                 Text(law.rightLabel, color = Violet, fontSize = 11.sp)
                 Text(if (live.right) "TRUE" else "FALSE", color = if (live.right) Green else Muted, fontWeight = FontWeight.Bold)
@@ -3109,7 +3716,7 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text("Set Theory Learning Studio", color = Violet, fontWeight = FontWeight.Bold)
-                Text("50 concepts Ã‚Â· 50 interactive learning features", color = Muted, fontSize = 10.sp)
+                Text("50 concepts · 50 interactive learning features", color = Muted, fontSize = 10.sp)
             }
             GlowButton(if (studioOpen) "Close studio" else "Open studio") { studioOpen = !studioOpen }
         }
@@ -3121,7 +3728,7 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                 }
                 AnimatedVisibility(toolMenuOpen) {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        SetStudioTool.entries.forEach { tool -> GlowButton(if (activeTool == tool) "Ã¢â‚¬Â¢ ${tool.label}" else tool.label) { activeTool = tool; toolMenuOpen = false } }
+                        SetStudioTool.entries.forEach { tool -> GlowButton(if (activeTool == tool) "• ${tool.label}" else tool.label) { activeTool = tool; toolMenuOpen = false } }
                     }
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -3134,11 +3741,11 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                         if (recent.isNotEmpty()) Text("Recent: ${recent.mapNotNull { id -> SetTheoryLearningCatalog.concepts.firstOrNull { it.id == id }?.title }.joinToString()}", color = Muted, fontSize = 10.sp)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                             SetTheoryLearningCatalog.concepts.filter { it.title.contains(conceptQuery, true) || it.category.contains(conceptQuery, true) }.forEach { concept ->
-                                GlowButton(if (concept.id in favourites) "Ã¢Ëœâ€¦ ${concept.title}" else concept.title) { chooseConcept(concept.id) }
+                                GlowButton(if (concept.id in favourites) "★ ${concept.title}" else concept.title) { chooseConcept(concept.id) }
                             }
                         }
                         SetTheoryLearningCatalog.concepts.firstOrNull { it.id == selectedConceptId }?.let { concept ->
-                            KnowledgeCard(concept.title, concept.definition, "${concept.category} Ã‚Â· Level ${concept.level}", concept.example, Green)
+                            KnowledgeCard(concept.title, concept.definition, "${concept.category} · Level ${concept.level}", concept.example, Green)
                             GlowButton(if (concept.id in favourites) "Remove favourite" else "Add favourite") { favourites = if (concept.id in favourites) favourites - concept.id else favourites + concept.id }
                         }
                     }
@@ -3146,12 +3753,12 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                 when (activeTool) {
                     SetStudioTool.Venn -> {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            (1..4).forEach { count -> GlowButton(if (setCount == count) "Ã¢â‚¬Â¢ $count sets" else "$count sets") { setCount = count } }
+                            (1..4).forEach { count -> GlowButton(if (setCount == count) "• $count sets" else "$count sets") { setCount = count } }
                             TogglePill(if (eulerMode) "Euler mode" else "Venn mode", eulerMode) { eulerMode = !eulerMode }
                             TogglePill("High contrast", highContrast) { highContrast = !highContrast }
                             TogglePill("Spoken maths", spokenMath) { spokenMath = !spokenMath }
                         }
-                        Insight("Region cardinality", "|$setAName âˆª $setBName| = ${SetTheoryStudioEngine.inclusionExclusion(a.toSet(), b.toSet())}", Cyan)
+                        Insight("Region cardinality", "|$setAName ∪ $setBName| = ${SetTheoryStudioEngine.inclusionExclusion(a.toSet(), b.toSet())}", Cyan)
                         Text("Pinch/pan, animated shading and image export controls apply to the live Venn canvas above.", color = Muted, fontSize = 11.sp)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             GlowButton("Export image") { sharePreview = runCatching { exportSetDiagramPng(context, setAName, a, setBName, b) }.getOrElse { "Export failed: ${it.message}" } }
@@ -3167,7 +3774,7 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                         OutlinedTextField(inputA, { updateInputs(nextA = it) }, modifier = Modifier.fillMaxWidth(), label = { Text("$setAName elements: text, numbers or symbols") })
                         OutlinedTextField(inputB, { updateInputs(nextB = it) }, modifier = Modifier.fillMaxWidth(), label = { Text("$setBName elements") })
                         Insight("Roster", "$setAName=${SetTheoryStudioEngine.roster(a)}  $setBName=${SetTheoryStudioEngine.roster(b)}", Cyan)
-                        Insight("Set-builder", "$setAName={x âˆˆ $universeName | x is one of ${a.joinToString()}}", Violet)
+                        Insight("Set-builder", "$setAName={x ∈ $universeName | x is one of ${a.joinToString()}}", Violet)
                         Text("Duplicates are removed automatically. Tap or drag elements on the Venn canvas to change region membership.", color = Green, fontSize = 11.sp)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             GlowButton("Undo", enabled = undo.isNotEmpty()) { undo.lastOrNull()?.let { snapshot -> redo = redo + (inputA to inputB); inputA = snapshot.first; inputB = snapshot.second; undo = undo.dropLast(1) } }
@@ -3186,17 +3793,17 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                         val subsets = runCatching { SetTheoryStudioEngine.powerSet(a) }.getOrElse { emptyList() }
                         Insight("Power-set size", "2^${a.size} = ${subsets.size}", Violet)
                         Text(subsets.take(64).joinToString { SetTheoryStudioEngine.roster(it) }, color = Ink, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
-                        Text("Subset tree: Ã¢Ë†â€¦ Ã¢â€ â€™ singletons Ã¢â€ â€™ pairs Ã¢â€ â€™ Ã¢â‚¬Â¦ Ã¢â€ â€™ $setAName", color = Green, fontSize = 11.sp)
+                        Text("Subset tree: ∅ → singletons → pairs → … → $setAName", color = Green, fontSize = 11.sp)
                     }
                     SetStudioTool.Cartesian -> {
                         val product = SetTheoryStudioEngine.cartesianProduct(a, b)
-                        Insight("Product", "|$setAName Ã— $setBName| = ${product.size}", Cyan)
+                        Insight("Product", "|$setAName × $setBName| = ${product.size}", Cyan)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { product.forEach { (x, y) -> Insight("", "($x,$y)", Violet) } }
                     }
                     SetStudioTool.Relations -> {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                             domain.forEach { x -> domain.forEach { y ->
-                                val pair = x to y; TogglePill(if (relationMatrix) "${if (pair in relation) 1 else 0}" else "$x â†’ $y", pair in relation) { relation = if (pair in relation) relation - pair else relation + pair }
+                                val pair = x to y; TogglePill(if (relationMatrix) "${if (pair in relation) 1 else 0}" else "$x → $y", pair in relation) { relation = if (pair in relation) relation - pair else relation + pair }
                             } }
                         }
                         GlowButton(if (relationMatrix) "Arrow view" else "Matrix view") { relationMatrix = !relationMatrix }
@@ -3219,13 +3826,13 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                         val numbers = a.mapNotNull { it.toIntOrNull() }.filter { it != 0 }.toSet()
                         val covers = SetTheoryStudioEngine.hasseCovers(numbers)
                         Text("Divisibility Hasse covers", color = Cyan, fontWeight = FontWeight.Bold)
-                        Text(covers.joinToString { "${it.first} Ã¢â€°Âº ${it.second}" }.ifBlank { "Add comparable non-zero integers to set A." }, color = Ink, fontFamily = FontFamily.Monospace)
+                        Text(covers.joinToString { "${it.first} ≺ ${it.second}" }.ifBlank { "Add comparable non-zero integers to set A." }, color = Ink, fontFamily = FontFamily.Monospace)
                         Text("Drag-to-order nodes use the cover pairs above; transitive edges are removed.", color = Muted, fontSize = 10.sp)
                     }
                     SetStudioTool.Functions -> {
                         val codomain = b.toSet(); val mapping = a.mapIndexedNotNull { index, item -> b.getOrNull(index % b.size.coerceAtLeast(1))?.let { item to it } }.toMap()
                         val analysis = SetTheoryStudioEngine.analyzeMapping(domain, codomain, mapping)
-                        Text(mapping.entries.joinToString { "${it.key} Ã¢â€ â€™ ${it.value}" }, color = Ink, fontFamily = FontFamily.Monospace)
+                        Text(mapping.entries.joinToString { "${it.key} → ${it.value}" }, color = Ink, fontFamily = FontFamily.Monospace)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                             Insight("Function", analysis.isFunction.toString(), Cyan); Insight("Injective", analysis.injective.toString(), Violet)
                             Insight("Surjective", analysis.surjective.toString(), Green); Insight("Bijective", analysis.bijective.toString(), Amber)
@@ -3238,7 +3845,7 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                     }
                     SetStudioTool.Challenge -> {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            (1..4).forEach { level -> GlowButton(if (difficulty == level) "Ã¢â‚¬Â¢ Level $level" else "Level $level") { difficulty = level } }
+                            (1..4).forEach { level -> GlowButton(if (difficulty == level) "• Level $level" else "Level $level") { difficulty = level } }
                             TogglePill("Guided", guided) { guided = !guided }
                         }
                         Text("Predict: Is ${activeLaw.formula} true for every membership assignment?", color = Ink, fontWeight = FontWeight.Bold)
@@ -3247,7 +3854,7 @@ private fun SetTheoryLearningStudioPanel(activeLaw: BooleanFormulaLaw) {
                             GlowButton("Has counterexample") { prediction = false; reveal = false }
                             GlowButton(if (reveal) "Hide result" else "Reveal") { reveal = !reveal }
                         }
-                        if (reveal) Insight("Result", if (prediction == SetLogicEngine.verified(activeLaw)) "Correct Ã‚Â· mastery +1" else "Try again Ã‚Â· inspect the full table", if (prediction == SetLogicEngine.verified(activeLaw)) Green else Amber)
+                        if (reveal) Insight("Result", if (prediction == SetLogicEngine.verified(activeLaw)) "Correct · mastery +1" else "Try again · inspect the full table", if (prediction == SetLogicEngine.verified(activeLaw)) Green else Amber)
                         Insight("Mastery", "${favourites.size + recent.size}/50 concepts explored", Violet)
                     }
                 }
@@ -3282,7 +3889,7 @@ private fun exportSetDiagramPng(
     canvas.drawCircle(730f, 390f, 245f, fillB); canvas.drawCircle(730f, 390f, 245f, strokeB)
     canvas.drawText("$setAName = ${SetTheoryStudioEngine.roster(a)}", 80f, 90f, text)
     canvas.drawText("$setBName = ${SetTheoryStudioEngine.roster(b)}", 650f, 90f, text)
-    canvas.drawText("$setAName Ã¢Ë†Â© $setBName = ${SetTheoryStudioEngine.roster(a.toSet().intersect(b.toSet()))}", 330f, 735f, text)
+    canvas.drawText("$setAName ∩ $setBName = ${SetTheoryStudioEngine.roster(a.toSet().intersect(b.toSet()))}", 330f, 735f, text)
     val directory = context.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES) ?: context.filesDir
     val file = java.io.File(directory, "set-theory-${System.currentTimeMillis()}.png")
     java.io.FileOutputStream(file).use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
@@ -3410,7 +4017,7 @@ private fun SetFormulaVennCanvas(
         if ("A" in law.variables && "B" in law.variables) {
             val unionY = (minOf(centers[0].y, centers[1].y) - radius - 17.dp.toPx())
                 .coerceAtLeast(25.dp.toPx())
-            drawRegionBadge("A Ã¢Ë†Âª B", Offset((centers[0].x + centers[1].x) / 2, unionY), SetDiagramUnionColor)
+            drawRegionBadge("A ∪ B", Offset((centers[0].x + centers[1].x) / 2, unionY), SetDiagramUnionColor)
         }
         selectedPoint?.let { point ->
             drawCircle(Amber.copy(.22f), 14f, point)
@@ -3450,7 +4057,7 @@ private fun BooleanFormulaTable(law: BooleanFormulaLaw, rows: List<com.indianser
             val active = law.variables.all { row.inputs[it] == selected[it] }
             Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).background(if (active) Violet.copy(.18f) else Color.Transparent).padding(6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(law.variables.joinToString("   ") { if (row.inputs[it] == true) "1" else "0" }, color = if (active) Ink else Muted, fontFamily = FontFamily.Monospace)
-                Text(" ${if (row.left) 1 else 0}     ${if (row.right) 1 else 0}    ${if (row.equivalent) "Ã¢Å“â€œ" else "Ã¢Å“â€”"}", color = if (row.equivalent) Green else Amber, fontFamily = FontFamily.Monospace)
+                Text(" ${if (row.left) 1 else 0}     ${if (row.right) 1 else 0}    ${if (row.equivalent) "✓" else "✗"}", color = if (row.equivalent) Green else Amber, fontFamily = FontFamily.Monospace)
             }
         }
     }
@@ -3535,11 +4142,11 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            GlowButton("Back", icon = "Ã¢â€ Â", iconOnly = true, onClick = vm::returnToMathMenu)
+            GlowButton("Back", icon = "←", iconOnly = true, onClick = vm::returnToMathMenu)
             Text("SCIENTIFIC", color = Ink, fontSize = 18.sp, fontWeight = FontWeight.Light, letterSpacing = 3.sp)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                GlowButton("History", icon = "Ã¢â€ Â¶", iconOnly = true) { showHistory = !showHistory; if (showHistory) showAdvancedTools = true }
-                GlowButton("Settings", icon = "Ã¢Å¡â„¢", iconOnly = true) { showAdvancedTools = !showAdvancedTools }
+                GlowButton("History", icon = "↶", iconOnly = true) { showHistory = !showHistory; if (showHistory) showAdvancedTools = true }
+                GlowButton("Settings", icon = "⚙", iconOnly = true) { showAdvancedTools = !showAdvancedTools }
             }
         }
         Column(
@@ -3653,7 +4260,7 @@ private fun ScientificCalculatorScreen(vm: ExplorerViewModel, wide: Boolean) {
         }
         if (favouriteKeys.isNotEmpty()) {
             Text("Favourite keys", color = Muted, fontSize = 11.sp)
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) { favouriteKeys.forEach { token -> GlowButton("Ã¢Ëœâ€¦ $token") { if (calculatorHaptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress); appendToken(token) } } }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) { favouriteKeys.forEach { token -> GlowButton("★ $token") { if (calculatorHaptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress); appendToken(token) } } }
         }
         FlowRow(
             modifier = if (oneHanded) Modifier.widthIn(max = 360.dp).align(Alignment.End) else Modifier.fillMaxWidth(),
@@ -3786,21 +4393,21 @@ private fun ScientificReferenceKeypad(
     val red = Color(0xFFFF5A70)
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         KeyRow(
-            Triple(if (shiftActive) "SHIFT Ã¢â‚¬Â¢" else "SHIFT", "#shift", Color(0xFFFFB52E)),
-            Triple(if (alphaActive) "ALPHA Ã¢â‚¬Â¢" else "ALPHA", "#alpha", Violet),
-            Triple("Ã¢â€”â‚¬", "#left", normal), Triple("Ã¢â€“Â¶", "#right", normal), Triple("MODE", "#mode", normal),
+            Triple(if (shiftActive) "SHIFT •" else "SHIFT", "#shift", Color(0xFFFFB52E)),
+            Triple(if (alphaActive) "ALPHA •" else "ALPHA", "#alpha", Violet),
+            Triple("◀", "#left", normal), Triple("▶", "#right", normal), Triple("MODE", "#mode", normal),
         )
-        KeyRow(Triple("CALC", "#calculate", normal), Triple("Ã¢Ë†Â«dx", "integrate ", normal), Triple("x!", "!", normal), Triple("(", "(", normal), Triple(")", ")", normal), Triple("AC", "#clear", red))
-        KeyRow(Triple("SOLVE", "#solve", normal), Triple("d/dx", "differentiate ", normal), Triple("Ã¢Ë†Å¡", "sqrt(", normal), Triple("xÃŠÂ¸", "^", normal), Triple("log", "log(", normal), Triple("DEL", "#delete", red))
-        KeyRow(Triple("sinÃ¢ÂÂ»Ã‚Â¹", "asin(", normal), Triple("cosÃ¢ÂÂ»Ã‚Â¹", "acos(", normal), Triple("tanÃ¢ÂÂ»Ã‚Â¹", "atan(", normal), Triple("logÃ¢â€šÂÃ¢â€šâ‚¬", "log(", normal), Triple("ln", "ln(", normal), Triple("%", "%", normal))
-        KeyRow(Triple("sin", "sin(", normal), Triple("cos", "cos(", normal), Triple("tan", "tan(", normal), Triple("xÃ‚Â²", "^2", normal), Triple("xÃ‚Â³", "^3", normal), Triple("xÃŠÂ¸", "^", normal))
-        KeyRow(Triple("Ãâ‚¬", "pi", normal), Triple("e", "e", normal), Triple("^", "^", normal), Triple("10Ã‹Â£", "10^(", normal), Triple("Ans", "#answer", normal), Triple("EXP", "e^(", normal))
-        KeyRow(Triple("7", "7", normal), Triple("8", "8", normal), Triple("9", "9", normal), Triple("ÃƒÂ·", "/", operatorBlue), Triple("Ãƒâ€”", "*", operatorBlue))
-        KeyRow(Triple("4", "4", normal), Triple("5", "5", normal), Triple("6", "6", normal), Triple("Ã¢Ë†â€™", "-", operatorBlue), Triple("+", "+", operatorBlue))
+        KeyRow(Triple("CALC", "#calculate", normal), Triple("∫dx", "integrate ", normal), Triple("x!", "!", normal), Triple("(", "(", normal), Triple(")", ")", normal), Triple("AC", "#clear", red))
+        KeyRow(Triple("SOLVE", "#solve", normal), Triple("d/dx", "differentiate ", normal), Triple("√", "sqrt(", normal), Triple("xʸ", "^", normal), Triple("log", "log(", normal), Triple("DEL", "#delete", red))
+        KeyRow(Triple("sin⁻¹", "asin(", normal), Triple("cos⁻¹", "acos(", normal), Triple("tan⁻¹", "atan(", normal), Triple("log₁₀", "log(", normal), Triple("ln", "ln(", normal), Triple("%", "%", normal))
+        KeyRow(Triple("sin", "sin(", normal), Triple("cos", "cos(", normal), Triple("tan", "tan(", normal), Triple("x²", "^2", normal), Triple("x³", "^3", normal), Triple("xʸ", "^", normal))
+        KeyRow(Triple("π", "pi", normal), Triple("e", "e", normal), Triple("^", "^", normal), Triple("10ˣ", "10^(", normal), Triple("Ans", "#answer", normal), Triple("EXP", "e^(", normal))
+        KeyRow(Triple("7", "7", normal), Triple("8", "8", normal), Triple("9", "9", normal), Triple("÷", "/", operatorBlue), Triple("×", "*", operatorBlue))
+        KeyRow(Triple("4", "4", normal), Triple("5", "5", normal), Triple("6", "6", normal), Triple("−", "-", operatorBlue), Triple("+", "+", operatorBlue))
         Row(Modifier.fillMaxWidth().height(118.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Column(Modifier.weight(4f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 KeyRow(Triple("1", "1", normal), Triple("2", "2", normal), Triple("3", "3", normal))
-                KeyRow(Triple("0", "0", normal), Triple(".", ".", normal), Triple("Ã‚Â±", "#sign", normal))
+                KeyRow(Triple("0", "0", normal), Triple(".", ".", normal), Triple("±", "#sign", normal))
             }
             ScientificCalculatorKey("=", operatorBlue, Modifier.weight(1f).fillMaxHeight(), onCalculate)
         }
@@ -3900,10 +4507,10 @@ private fun CalculatorConversionsPanel(
         OutlinedTextField(value = value, onValueChange = onValueChange, label = { Text("Value") }, singleLine = true)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             calculator.conversions.forEach { conversion ->
-                GlowButton("${conversion.fromUnit}Ã¢â€ â€™${conversion.toUnit}") { onSelected(conversion) }
+                GlowButton("${conversion.fromUnit}→${conversion.toUnit}") { onSelected(conversion) }
             }
         }
-        Insight(selected.title, "${selected.fromUnit} Ã¢â€ â€™ ${selected.toUnit}", Violet)
+        Insight(selected.title, "${selected.fromUnit} → ${selected.toUnit}", Violet)
         Insight("Factor", trim(selected.factor), Green)
         Insight("Result", converted?.let { "${trim(it)} ${selected.toUnit}" } ?: "Enter a number", Cyan)
         Text(selected.example, color = Muted, fontSize = 11.sp)
@@ -3969,7 +4576,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
             val parsed = CasStructuredImportEngine.structured(name, text, context.contentResolver.getType(uri))
             casSession = notebookCas.import(casSession, parsed.data)
             val expression = parsed.data.name; casInput = TextFieldValue(expression, TextRange(expression.length))
-            importMessage = "Imported ${parsed.format}: ${parsed.data.rows} Ãƒâ€” ${parsed.data.columns} as ${parsed.data.name}. ${parsed.warnings.joinToString()}"
+            importMessage = "Imported ${parsed.format}: ${parsed.data.rows} × ${parsed.data.columns} as ${parsed.data.name}. ${parsed.warnings.joinToString()}"
         }.onFailure { importMessage = it.message ?: "The structured file could not be imported." }
     }
     val interpretationOptions = remember(casInput.text, casOperation) { CasInterpretationResolver.options(casInput.text, casOperation) }
@@ -4004,7 +4611,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
     fun InputPanel(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
             PanelHeader("Unified Math Notebook", vm::returnToMathMenu, Cyan, icon = "#")
-            Text("Define with := Ã‚Â· edit a symbol by defining it again Ã‚Â· dependent cells recalculate automatically.", color = Muted, fontSize = 12.sp)
+            Text("Define with := · edit a symbol by defining it again · dependent cells recalculate automatically.", color = Muted, fontSize = 12.sp)
             IntentAwareMathField(
                 value = input, onValueChange = { input = it }, label = "Expression or assignment",
                 modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Notebook maths input" },
@@ -4012,7 +4619,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 GlowButton("Run cell", enabled = input.isNotBlank()) { vm.submitNotebook(input) }
-                GlowButton(if (exactMode) "Exact Ã¢â‚¬Â¢" else "Decimal Ã¢â‚¬Â¢") { exactMode = !exactMode }
+                GlowButton(if (exactMode) "Exact •" else "Decimal •") { exactMode = !exactMode }
                 GlowButton("Clear", enabled = vm.notebookDocument.cells.isNotEmpty(), onClick = vm::clearNotebook)
             }
             Text("Examples", color = Ink, fontWeight = FontWeight.SemiBold)
@@ -4027,7 +4634,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             Insight("Named objects", vm.notebookDocument.symbolNames().joinToString().ifBlank { "None yet" }, Violet)
             Insight("Revision", vm.notebookDocument.revision.toString(), Green)
-            Text("Cell references use #1, #2Ã¢â‚¬Â¦ and must point backward. Function cells can be sent directly to Graph.", color = Muted, fontSize = 11.sp)
+            Text("Cell references use #1, #2… and must point backward. Function cells can be sent directly to Graph.", color = Muted, fontSize = 11.sp)
         }
     }
 
@@ -4049,7 +4656,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("#${index + 1} Ã‚Â· ${cell.kind.label}${cell.symbol?.let { " Ã‚Â· $it" } ?: ""}", color = accent, fontWeight = FontWeight.Bold)
+                        Text("#${index + 1} · ${cell.kind.label}${cell.symbol?.let { " · $it" } ?: ""}", color = accent, fontWeight = FontWeight.Bold)
                         GlowButton("Delete") { vm.removeNotebookCell(cell.id) }
                     }
                     Text(cell.input, color = Ink, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
@@ -4090,7 +4697,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                     "ode", "nonlinear ode", "higher ode", "pde", "laplace", "inverse laplace", "fourier", "inverse fourier", "z transform",
                     "residue", "contour integral", "special functions", "number theory", "finite algebra",
                 ).forEach { operation ->
-                    GlowButton(if (casPreview.operation == operation) "Ã¢â‚¬Â¢ $operation" else operation) {
+                    GlowButton(if (casPreview.operation == operation) "• $operation" else operation) {
                         casOperation = operation
                         val expression = casPreview.expression
                         casInput = TextFieldValue(expression, TextRange(expression.length))
@@ -4113,7 +4720,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                 }
                 Text(casPreview.explanation, color = Ink, fontSize = 12.sp)
                 Text("Expression: ${casPreview.expression}", color = Green, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
-                Text("Operation ${casPreview.operation} Ã‚Â· variable ${casPreview.variable}", color = Violet, fontSize = 10.sp)
+                Text("Operation ${casPreview.operation} · variable ${casPreview.variable}", color = Violet, fontSize = 10.sp)
                 casPreview.warnings.forEach { Text("Check: $it", color = Amber, fontSize = 10.sp) }
             }
             if (interpretationOptions.size > 1) {
@@ -4139,10 +4746,10 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                 Text("Assumptions", color = Ink, fontWeight = FontWeight.SemiBold)
                 GlowButton(if (showAssumptions) "Close editor" else "Edit assumptions") { showAssumptions = !showAssumptions }
             }
-            if (casAssumptions.variables.isEmpty()) Text("No assumptions Ã¢â‚¬â€ real variables use guarded identities only.", color = Muted, fontSize = 10.sp)
+            if (casAssumptions.variables.isEmpty()) Text("No assumptions — real variables use guarded identities only.", color = Muted, fontSize = 10.sp)
             else FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 casAssumptions.variables.values.sortedBy { it.variable }.forEach { assumption ->
-                    GlowButton("${assumption.description()} Ãƒâ€”") { casAssumptions = casAssumptions.copy(variables = casAssumptions.variables - assumption.variable) }
+                    GlowButton("${assumption.description()} ×") { casAssumptions = casAssumptions.copy(variables = casAssumptions.variables - assumption.variable) }
                 }
             }
             Text("Shared variables", color = Ink, fontWeight = FontWeight.SemiBold)
@@ -4158,7 +4765,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                     CasScopedVariable(variableName.trim(), variableExpression.trim(), variableScope, casSession.rows.lastOrNull()?.id)
                 }.onSuccess { casSession = notebookCas.define(casSession, it) }.onFailure { assumptionMessage = it.message ?: "Check the variable." }
             }
-            if (casSession.variables.isNotEmpty()) Text(casSession.variables.joinToString(" Ã‚Â· ") { "${it.name}=${it.expression} [${it.scope.name}]" }, color = Green, fontSize = 10.sp)
+            if (casSession.variables.isNotEmpty()) Text(casSession.variables.joinToString(" · ") { "${it.name}=${it.expression} [${it.scope.name}]" }, color = Green, fontSize = 10.sp)
             AnimatedVisibility(showAssumptions) {
                 Column(
                     Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color(0x331D1330)).border(1.dp, Violet.copy(.45f), RoundedCornerShape(14.dp)).padding(9.dp),
@@ -4194,8 +4801,8 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                 CasKeyboardCatalog.layers.getValue(keyboardLayer).forEach { key -> GlowButton(key.label) { insertCasText(key.insertion, key.cursorBack) } }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                GlowButton("Ã¢â€ Â") { casInput = casInput.copy(selection = TextRange((casInput.selection.min - 1).coerceAtLeast(0))) }
-                GlowButton("Ã¢â€ â€™") { casInput = casInput.copy(selection = TextRange((casInput.selection.max + 1).coerceAtMost(casInput.text.length))) }
+                GlowButton("←") { casInput = casInput.copy(selection = TextRange((casInput.selection.min - 1).coerceAtLeast(0))) }
+                GlowButton("→") { casInput = casInput.copy(selection = TextRange((casInput.selection.max + 1).coerceAtMost(casInput.text.length))) }
                 GlowButton("Backspace", onClick = ::deleteCasBackward)
                 GlowButton("Clear") { casInput = TextFieldValue("") }
             }
@@ -4211,12 +4818,12 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             AnimatedVisibility(showImport) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("CSV Ã‚Â· TSV Ã‚Â· JSON arrays Ã‚Â· whitespace matrices Ã‚Â· Matrix Market", color = Cyan, fontSize = 10.sp)
+                    Text("CSV · TSV · JSON arrays · whitespace matrices · Matrix Market", color = Cyan, fontSize = 10.sp)
                     GlowButton("Choose structured file") { casStructuredPicker.launch(arrayOf("text/csv", "text/tab-separated-values", "application/json", "text/plain", "application/octet-stream")) }
                     OutlinedTextField(importText, { importText = it }, Modifier.fillMaxWidth(), label = { Text("Paste structured matrix data") }, minLines = 3)
                     GlowButton("Parse pasted data", enabled = importText.isNotBlank()) {
                         runCatching { CasStructuredImportEngine.structured("import_${casSession.imports.size + 1}.txt", importText) }
-                            .onSuccess { parsed -> val data = parsed.data; casSession = notebookCas.import(casSession, data); casInput = TextFieldValue(data.name, TextRange(data.name.length)); importMessage = "Imported ${parsed.format}: ${data.rows} Ãƒâ€” ${data.columns} as ${data.name}." }
+                            .onSuccess { parsed -> val data = parsed.data; casSession = notebookCas.import(casSession, data); casInput = TextFieldValue(data.name, TextRange(data.name.length)); importMessage = "Imported ${parsed.format}: ${data.rows} × ${data.columns} as ${data.name}." }
                             .onFailure { importMessage = it.message ?: "Could not import this data." }
                     }
                     Text(importMessage, color = if (importMessage.startsWith("Imported")) Green else Muted, fontSize = 10.sp)
@@ -4247,7 +4854,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                         val depth = casStepDisclosureDepths[index] ?: 1
                         Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                             disclosures.take(depth).forEach { disclosure ->
-                                Text("${disclosure.level.label} Ã‚Â· ${disclosure.title}", color = if (disclosure.revealsIntermediate) Green else Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                Text("${disclosure.level.label} · ${disclosure.title}", color = if (disclosure.revealsIntermediate) Green else Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                                 Text(disclosure.content, color = Muted, fontSize = 11.sp)
                             }
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -4284,7 +4891,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                 ) {
                     val manipulation = manipulationStates[interactiveRow.id] ?: CasManipulationState(interactiveRow.source)
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("${interactiveRow.id} Ã‚Â· ${interactiveRow.interpretation.operation}", color = Violet, fontWeight = FontWeight.Bold)
+                        Text("${interactiveRow.id} · ${interactiveRow.interpretation.operation}", color = Violet, fontWeight = FontWeight.Bold)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                             GlowButton(if (interactiveRow.pinned) "Unpin" else "Pin") { casSession = notebookCas.pin(casSession, interactiveRow.id) }
                             GlowButton(if (interactiveRow.id in casSession.compareRowIds) "Comparing" else "Compare") { casSession = notebookCas.compare(casSession, interactiveRow.id) }
@@ -4309,7 +4916,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                             val scrubKey = "${interactiveRow.id}:${handle.variable}"; val value = scrubValues[scrubKey] ?: 0f
                             AxisSlider("Scrub ${handle.variable}", value, -10f..10f) { scrubValues = scrubValues + (scrubKey to it) }
                             val scrubbed = directCas.scrub(manipulation.expression, handle.variable, value.toDouble())
-                            Text("${handle.variable}=${trim(value.toDouble())} Ã¢â€ â€™ ${scrubbed.result.exact}", color = Cyan, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                            Text("${handle.variable}=${trim(value.toDouble())} → ${scrubbed.result.exact}", color = Cyan, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                         }
                     }
                     interactiveRow.pods.forEach { pod ->
@@ -4359,7 +4966,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                     Text("Try another method", color = Ink, fontWeight = FontWeight.SemiBold, fontSize = 11.sp)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         casInteraction.availableMethods(interactiveRow.interpretation.operation).filter { it != CasSolutionMethod.Auto }.forEach { method ->
-                            GlowButton(if (interactiveRow.method == method) "${method.label} Ã‚Â· current" else method.label) {
+                            GlowButton(if (interactiveRow.method == method) "${method.label} · current" else method.label) {
                                 if (interactiveRow.method != method) {
                                     val next = notebookCas.evaluate(casSession, interactiveRow.source, interactiveRow.interpretation, method, "cas-${casSession.rows.size + 1}")
                                     val newId = next.rows.last().id
@@ -4392,7 +4999,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
                         }
                         manipulation.preview?.let { preview ->
                             Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0x44251B35)).padding(8.dp)) {
-                                Text("PREVIEW Ã‚Â· ${preview.action.name}", color = Violet, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                Text("PREVIEW · ${preview.action.name}", color = Violet, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                                 Text("Before: ${preview.before}", color = Muted, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                                 Text("After: ${preview.after}", color = Green, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                                 preview.domain.descriptions.forEach { Text(it, color = Amber, fontSize = 9.sp) }
@@ -4407,7 +5014,7 @@ private fun MathNotebookScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             if (casSession.compareRowIds.size > 1) {
                 val compared = casSession.rows.filter { it.id in casSession.compareRowIds }
-                Insight("Pinned comparison", compared.joinToString("  Ã¢â€ â€  ") { "${it.id}: ${it.result.exact}" }, Amber)
+                Insight("Pinned comparison", compared.joinToString("  ↔  ") { "${it.id}: ${it.result.exact}" }, Amber)
             }
         }
     }
@@ -4446,7 +5053,6 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     var visualProofCategory by remember { mutableStateOf("Geometry") }
     var visualProofSubcategory by remember { mutableStateOf(VisualProofCatalog.subcategoriesFor("Geometry").first().name) }
     var proofWorkspaceOpen by remember { mutableStateOf(false) }
-    var knowledgeFiltersOpen by remember { mutableStateOf(false) }
     var proofCategoriesOpen by remember { mutableStateOf(false) }
     var proofFormulasOpen by remember { mutableStateOf(true) }
     var proofExplanationOpen by remember { mutableStateOf(false) }
@@ -4454,11 +5060,42 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     var proofResultsOpen by remember { mutableStateOf(false) }
     var visualProofError by remember { mutableStateOf<String?>(null) }
     var knowledgeLoading by remember { mutableStateOf(true) }
-    BackHandler(
-        enabled = vm.activeKnowledgeSection == KnowledgeSection.Formulas &&
-            (formulaCategory != null || formulaSubcategory != null),
-    ) {
-        if (formulaSubcategory != null) formulaSubcategory = null else formulaCategory = null
+    if (vm.activeKnowledgeSection == KnowledgeSection.Visualize) {
+        VisualFormulaDiscoveryModule(vm, wide)
+        return
+    }
+    val knowledgeDetailOpen =
+        (vm.activeKnowledgeSection == KnowledgeSection.Formulas &&
+            (formulaCategory != null || formulaSubcategory != null)) ||
+            (vm.activeKnowledgeSection == KnowledgeSection.Proofs &&
+                (proofWorkspaceOpen || proofCategoriesOpen)) ||
+            (vm.activeKnowledgeSection == KnowledgeSection.Mcqs && quizSession != null)
+    BackHandler(enabled = knowledgeDetailOpen) {
+        when {
+            vm.activeKnowledgeSection == KnowledgeSection.Proofs && proofWorkspaceOpen -> {
+                if (visualProofPlayback.playing) {
+                    visualProofPlayback = visualProofEngine.togglePlaying(visualProofPlayback)
+                }
+                proofWorkspaceOpen = false
+                proofFormulasOpen = true
+                proofExplanationOpen = false
+                proofControlsOpen = false
+                proofResultsOpen = false
+                visualProofError = null
+            }
+            vm.activeKnowledgeSection == KnowledgeSection.Proofs && proofCategoriesOpen -> {
+                proofCategoriesOpen = false
+            }
+            vm.activeKnowledgeSection == KnowledgeSection.Formulas && formulaSubcategory != null -> {
+                formulaSubcategory = null
+            }
+            vm.activeKnowledgeSection == KnowledgeSection.Formulas && formulaCategory != null -> {
+                formulaCategory = null
+            }
+            vm.activeKnowledgeSection == KnowledgeSection.Mcqs && quizSession != null -> {
+                quizSession = null
+            }
+        }
     }
     LaunchedEffect(vm.activeKnowledgeSection) {
         if (vm.activeKnowledgeSection == KnowledgeSection.Formulas) {
@@ -4493,84 +5130,6 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
         // Keep at least one composed frame so a destination/filter change never flashes blank.
         delay(90)
         knowledgeLoading = false
-    }
-
-    @Composable
-    fun Filters() {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("Knowledge Intelligence", color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            GlowButton(if (knowledgeFiltersOpen) "Close filters" else "Open filters") { knowledgeFiltersOpen = !knowledgeFiltersOpen }
-        }
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            KnowledgeSection.entries.forEach { section ->
-                GlowButton(if (vm.activeKnowledgeSection == section) "Ã¢â‚¬Â¢ ${section.title}" else section.title) {
-                    vm.openKnowledgeHub(section)
-                }
-            }
-        }
-        AnimatedVisibility(knowledgeFiltersOpen) {
-            Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                Text("Search and filter the knowledge library", color = Muted, fontSize = 12.sp)
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Knowledge search input" },
-                    label = { Text("Search maths knowledge") },
-                    placeholder = { Text("Try derivative, normal, Bayes, eigenvector") },
-                    singleLine = true,
-                )
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    GlowButton(if (topic == null) "All topics" else "All") { topic = null }
-                    KnowledgeTopic.entries.forEach { item -> GlowButton(if (topic == item) "Ã¢â‚¬Â¢ ${item.label}" else item.label) { topic = item } }
-                }
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    GlowButton(if (level == null) "All levels" else "All") { level = null }
-                    KnowledgeLevel.entries.forEach { item -> GlowButton(if (level == item) "Ã¢â‚¬Â¢ ${item.label}" else item.label) { level = item } }
-                }
-                if (vm.activeKnowledgeSection == KnowledgeSection.Visualize) {
-                    Text("Formula categories", color = Ink, fontWeight = FontWeight.SemiBold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        FormulaCategoryChip("All", "*", formulaCategory == null) { formulaCategory = null; formulaSubcategory = null }
-                        FormulaCategory.entries.forEach { category ->
-                            FormulaCategoryChip(category.label, category.icon(), formulaCategory == category) {
-                                formulaCategory = category
-                                formulaSubcategory = null
-                            }
-                        }
-                    }
-                    formulaCategory?.let { selected ->
-                        Text("Sub categories", color = Ink, fontWeight = FontWeight.SemiBold)
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                            GlowButton(if (formulaSubcategory == null) "Ã¢â‚¬Â¢ All" else "All") { formulaSubcategory = null }
-                            selected.subcategories.forEach { subcategory ->
-                                GlowButton(if (formulaSubcategory == subcategory) "Ã¢â‚¬Â¢ $subcategory" else subcategory) { formulaSubcategory = subcategory }
-                            }
-                        }
-                    }
-                }
-                if (vm.activeKnowledgeSection == KnowledgeSection.Dictionary) {
-                    Text("AÃ¢â‚¬â€œZ", color = Ink, fontWeight = FontWeight.SemiBold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        GlowButton(if (dictionaryInitial == null) "Ã¢â‚¬Â¢ All" else "All") { dictionaryInitial = null }
-                        ('A'..'Z').forEach { letter ->
-                            GlowButton(if (dictionaryInitial == letter) "Ã¢â‚¬Â¢ $letter" else letter.toString()) { dictionaryInitial = letter }
-                        }
-                    }
-                    Text("Class", color = Ink, fontWeight = FontWeight.SemiBold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        GlowButton(if (dictionaryClassBand == null) "Ã¢â‚¬Â¢ All classes" else "All classes") { dictionaryClassBand = null }
-                        DictionaryClassBand.entries.forEach { band -> GlowButton(if (dictionaryClassBand == band) "Ã¢â‚¬Â¢ ${band.label}" else band.label) { dictionaryClassBand = band } }
-                    }
-                    Text("Difficulty", color = Ink, fontWeight = FontWeight.SemiBold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        GlowButton(if (dictionaryDifficulty == null) "Ã¢â‚¬Â¢ All difficulties" else "All difficulties") { dictionaryDifficulty = null }
-                        DictionaryDifficulty.entries.forEach { difficulty -> GlowButton(if (dictionaryDifficulty == difficulty) "Ã¢â‚¬Â¢ ${difficulty.label}" else difficulty.label) { dictionaryDifficulty = difficulty } }
-                    }
-                }
-                Insight("Matches", "${result.total}", Green)
-                Insight("Coverage", "${FormulaCategory.entries.size} formula categories Ã‚Â· ${MathKnowledgeCatalog.formulas.size} formulas", Violet)
-            }
-        }
     }
 
     @Composable
@@ -4626,29 +5185,43 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                         )
                     }
                 KnowledgeSection.Theorems -> result.theorems.forEach { theorem ->
-                    KnowledgeCard(theorem.title, theorem.statement, "${theorem.topic.label} Ã‚Â· ${theorem.level.label}", "Applications: ${theorem.applications.joinToString()}", Violet)
+                    KnowledgeCard(theorem.title, theorem.statement, "${theorem.topic.label} · ${theorem.level.label}", "Applications: ${theorem.applications.joinToString()}", Violet)
                     Text("Proof sketch: ${theorem.proofSketch.joinToString(" -> ")}", color = Muted, fontSize = 11.sp)
                 }
                 KnowledgeSection.Visualize -> {
                     result.formulas.take(5).forEach { formula ->
-                        KnowledgeCard(formula.title, formula.expression, "Visual formula", "Open graph/notebook and connect variables: ${formula.variables.joinToString()}", Green)
+                        KnowledgeCard(
+                            formula.title,
+                            formula.expression,
+                            "Interactive visual formula",
+                            "Tap to open a live workspace. Variables: ${formula.variables.joinToString()}",
+                            Green,
+                        ) {
+                            when (formula.topic) {
+                                KnowledgeTopic.Geometry -> vm.open(MathModule.Geometry2D)
+                                KnowledgeTopic.Calculus, KnowledgeTopic.Algebra -> vm.open(MathModule.Graph2D)
+                                KnowledgeTopic.Statistics, KnowledgeTopic.Probability -> vm.openProbabilityLab()
+                            }
+                        }
                     }
                     result.visualProofs.forEach { proof ->
-                        KnowledgeCard(proof.title, proof.invariant, proof.workspace.label, proof.learnerPrompt, Cyan)
+                        KnowledgeCard(proof.title, proof.invariant, "${proof.workspace.label} · TAP TO EXPLORE", proof.learnerPrompt, Cyan) {
+                            vm.openKnowledgeHub(KnowledgeSection.Proofs)
+                        }
                     }
                 }
                 KnowledgeSection.Proofs -> {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Column {
                             Text("Verified Visual Proofs", color = Cyan, fontWeight = FontWeight.Bold)
-                            Text("${VisualProofCatalog.categories.size} categories Ã‚Â· ${VisualProofCatalog.labs.size} interactive formulas", color = Green, fontSize = 11.sp)
+                            Text("${VisualProofCatalog.categories.size} categories · ${VisualProofCatalog.labs.size} interactive formulas", color = Green, fontSize = 11.sp)
                         }
                         GlowButton(if (proofCategoriesOpen) "Close categories" else "Open categories") { proofCategoriesOpen = !proofCategoriesOpen }
                     }
                     AnimatedVisibility(proofCategoriesOpen) {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                             VisualProofCatalog.categories.forEach { category ->
-                                GlowButton(if (visualProofCategory == category) "Ã¢â‚¬Â¢ $category" else category) {
+                                GlowButton(if (visualProofCategory == category) "• $category" else category) {
                                     visualProofCategory = category
                                     visualProofSubcategory = VisualProofCatalog.subcategoriesFor(category).first().name
                                     proofCategoriesOpen = false
@@ -4670,7 +5243,7 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                                 proofSubcategories.forEach { group ->
-                                    GlowButton(if (visualProofSubcategory == group.name) "Ã¢â‚¬Â¢ ${group.name}" else group.name) {
+                                    GlowButton(if (visualProofSubcategory == group.name) "• ${group.name}" else group.name) {
                                         visualProofSubcategory = group.name
                                         proofWorkspaceOpen = false
                                     }
@@ -4725,7 +5298,7 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                             val proofCertificate = VisualProofCatalog.certificateFor(visualProofPlayback.frame.lab.id)
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
-                                    Text("$visualProofCategory Ã¢â‚¬Âº $visualProofSubcategory", color = Muted, fontSize = 10.sp)
+                                    Text("$visualProofCategory › $visualProofSubcategory", color = Muted, fontSize = 10.sp)
                                     MathFormulaText(visualProofPlayback.frame.lab.formalResult, color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                                 }
                                 GlowButton("Close proof") { proofWorkspaceOpen = false; proofFormulasOpen = true }
@@ -4764,7 +5337,7 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                             AnimatedVisibility(proofResultsOpen) {
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     visualProofPlayback.frame.measurements.forEach { (name, value) -> Insight(name, trim(value), Violet) }
-                                    Insight("Invariant", "${visualProofPlayback.frame.invariant} Ã‚Â· residual ${trim(visualProofPlayback.frame.residual)}", if (visualProofPlayback.frame.holds) Green else Amber)
+                                    Insight("Invariant", "${visualProofPlayback.frame.invariant} · residual ${trim(visualProofPlayback.frame.residual)}", if (visualProofPlayback.frame.holds) Green else Amber)
                                 }
                             }
                         }
@@ -4772,7 +5345,7 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                 }
                 KnowledgeSection.Dictionary -> result.dictionary.forEach { term ->
                     DictionaryTermDiagram(term)
-                    KnowledgeCard(term.term, term.definition, "${term.topic.label} Ã‚Â· ${term.classBands.joinToString { it.label }} Ã‚Â· ${term.difficulty.label}", "${term.notation}\nÃ¢Å“â€œ Example: ${term.example}\nÃ¢Å“â€¢ Non-example: ${term.nonExample}", Amber)
+                    KnowledgeCard(term.term, term.definition, "${term.topic.label} · ${term.classBands.joinToString { it.label }} · ${term.difficulty.label}", "${term.notation}\n✓ Example: ${term.example}\n✕ Non-example: ${term.nonExample}", Amber)
                 }
                 KnowledgeSection.Mcqs -> {
                     QuizDashboard(
@@ -4800,23 +5373,16 @@ private fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
         }
     }
 
-    if (wide) {
-        Row(
-            Modifier.fillMaxSize().padding(top = 74.dp, bottom = 72.dp, start = 12.dp, end = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            GlassPanel(Modifier.weight(.36f).fillMaxHeight()) { Filters() }
-            Content(Modifier.weight(.64f).fillMaxHeight())
-        }
-    } else {
-        Column(
-            Modifier.fillMaxSize().padding(top = 70.dp, bottom = 70.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Content(Modifier.fillMaxWidth().weight(1f))
-            GlassPanel(Modifier.fillMaxWidth().heightIn(max = 210.dp)) { Filters() }
-        }
-    }
+    Content(
+        Modifier
+            .fillMaxSize()
+            .padding(
+                top = if (wide) 74.dp else 70.dp,
+                bottom = if (wide) 72.dp else 70.dp,
+                start = if (wide) 12.dp else 0.dp,
+                end = if (wide) 12.dp else 0.dp,
+            ),
+    )
 }
 
 @Composable
@@ -4924,13 +5490,14 @@ private fun DictionaryTermDiagram(term: DictionaryTerm) {
 }
 
 @Composable
-private fun KnowledgeCard(title: String, body: String, meta: String, detail: String, accent: Color) {
+private fun KnowledgeCard(title: String, body: String, meta: String, detail: String, accent: Color, onClick: (() -> Unit)? = null) {
     Column(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
             .background(Color(0x33101824))
             .border(1.dp, accent.copy(.55f), RoundedCornerShape(14.dp))
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick).semantics { contentDescription = "Open interactive $title" } else Modifier)
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
@@ -4973,7 +5540,7 @@ internal val InteractiveVisualProofSceneIds = setOf(
 private fun proofValue(value: Double): String = trim(round(value * 100.0) / 100.0)
 
 @Composable
-private fun InteractiveVisualProofCanvas(
+internal fun InteractiveVisualProofCanvas(
     playback: com.indianservers.aiexplorer.core.ProofPlayback,
     onParameter: (String, Double) -> Unit,
 ) {
@@ -5060,14 +5627,14 @@ private fun InteractiveVisualProofCanvas(
                     label("A", a + Offset(-28f, 30f), Violet, 25f)
                     label("B", b + Offset(14f, 30f), Green, 25f)
                     label("C", c + Offset(-7f, -18f), Amber, 25f)
-                    label("Ã¢Ë†Â A ${proofValue(angleA)}Ã‚Â°", a + Offset(26f, -12f), Violet, 19f)
-                    label("Ã¢Ë†Â B ${proofValue(angleB)}Ã‚Â°", b + Offset(-112f, -12f), Green, 19f)
-                    label("Ã¢Ë†Â C ${proofValue(angleC)}Ã‚Â°", c + Offset(-38f, 48f), Amber, 19f)
+                    label("∠A ${proofValue(angleA)}°", a + Offset(26f, -12f), Violet, 19f)
+                    label("∠B ${proofValue(angleB)}°", b + Offset(-112f, -12f), Green, 19f)
+                    label("∠C ${proofValue(angleC)}°", c + Offset(-38f, 48f), Amber, 19f)
                     label("a = ${proofValue(sideA)}", (b + c) / 2f + Offset(14f, -8f), Green, 19f)
                     label("b = ${proofValue(sideB)}", (c + a) / 2f + Offset(-68f, -8f), Violet, 19f)
                     label("c = ${proofValue(sideC)}", (a + b) / 2f + Offset(-34f, 31f), Cyan, 19f)
                     label(
-                        "${proofValue(angleA)}Ã‚Â° + ${proofValue(angleB)}Ã‚Â° + ${proofValue(angleC)}Ã‚Â° = 180Ã‚Â°",
+                        "${proofValue(angleA)}° + ${proofValue(angleB)}° + ${proofValue(angleC)}° = 180°",
                         Offset(w * .48f, h * .10f),
                         Green,
                         24f,
@@ -5088,7 +5655,7 @@ private fun InteractiveVisualProofCanvas(
                     polygon(listOf(o, y, y + Offset(-bv.y, 0f), o + Offset(-bv.y, 0f)), Violet)
                     val normal = Offset((y - x).y, -(y - x).x); val unit = normal / normal.getDistance().coerceAtLeast(1f)
                     polygon(listOf(x, y, y + unit * (y - x).getDistance(), x + unit * (y - x).getDistance()), Green)
-                    label("aÃ‚Â² + bÃ‚Â² = cÃ‚Â²", Offset(w * .35f, h * .14f), Green, 29f)
+                    label("a² + b² = c²", Offset(w * .35f, h * .14f), Green, 29f)
                 }
                 "circle-ratio" -> {
                     val r = frame.parameters.getValue("r"); val radius = (r * scale * .55).toFloat().coerceIn(28f, h * .27f)
@@ -5096,7 +5663,7 @@ private fun InteractiveVisualProofCanvas(
                     drawCircle(Cyan.copy(.13f), radius, center); drawCircle(Cyan, radius, center, style = Stroke(4f)); drawLine(Amber, center, center + Offset(radius, 0f), 5f)
                     val length = (2 * PI * radius).toFloat().coerceAtMost(w * .58f)
                     drawLine(Violet, Offset(w * .38f, h * .73f), Offset(w * .38f + length, h * .73f), 7f, cap = StrokeCap.Round)
-                    label("C = 2Ãâ‚¬r", Offset(w * .52f, h * .68f), Violet); label("d = 2r", Offset(w * .17f, h * .88f), Amber)
+                    label("C = 2πr", Offset(w * .52f, h * .68f), Violet); label("d = 2r", Offset(w * .17f, h * .88f), Amber)
                 }
                 "triangle-area" -> {
                     val base = frame.parameters.getValue("base"); val height = frame.parameters.getValue("height"); val apex = frame.parameters.getValue("apex")
@@ -5128,13 +5695,13 @@ private fun InteractiveVisualProofCanvas(
                         val x0 = left + i * rectWidth / (n / 2); val x1 = left + (i + 1) * rectWidth / (n / 2)
                         polygon(listOf(Offset(x0, top + radius), Offset(x1, top + radius), Offset((x0 + x1) / 2, top)), if (i % 2 == 0) Violet else Green)
                     }
-                    label("base Ã¢â€ â€™ Ãâ‚¬r", Offset(left + rectWidth * .25f, top + radius + 34f), Amber); label("height = r", Offset(left, top - 12f), Cyan); label("A = Ãâ‚¬rÃ‚Â²", Offset(w * .64f, h * .18f), Green)
+                    label("base → πr", Offset(left + rectWidth * .25f, top + radius + 34f), Amber); label("height = r", Offset(left, top - 12f), Cyan); label("A = πr²", Offset(w * .64f, h * .18f), Green)
                 }
                 "polygon-angle-sum" -> {
                     val n = frame.parameters.getValue("n").toInt().coerceIn(3, 12); val radius = (frame.parameters.getValue("radius") * scale * .55).toFloat().coerceIn(45f, h * .3f); val center = Offset(w * .45f, h * .52f)
                     val vertices = (0 until n).map { i -> val angle = -PI / 2 + 2 * PI * i / n; center + Offset(cos(angle).toFloat() * radius, sin(angle).toFloat() * radius) }
                     polygon(vertices, Cyan); vertices.drop(2).dropLast(1).forEach { drawLine(Violet, vertices.first(), it, 3f) }
-                    label("${n - 2} triangles", Offset(w * .68f, h * .32f), Amber); label("S = (${n}-2)Ãƒâ€”180Ã‚Â°", Offset(w * .59f, h * .17f), Green)
+                    label("${n - 2} triangles", Offset(w * .68f, h * .32f), Amber); label("S = (${n}-2)×180°", Offset(w * .59f, h * .17f), Green)
                 }
                 "similar-triangles" -> {
                     val aLen = frame.parameters.getValue("a"); val bLen = frame.parameters.getValue("b"); val k = frame.parameters.getValue("k"); val factor = 2.2 / maxOf(aLen, bLen)
@@ -5146,12 +5713,12 @@ private fun InteractiveVisualProofCanvas(
                     val radius = (frame.parameters.getValue("r") * scale * .6).toFloat().coerceIn(50f, h * .3f); val center = Offset(w * .43f, h * .52f); val px = center.x + frame.parameters.getValue("p").toFloat() * radius; val p = Offset(px, center.y); val angle = Math.toRadians(frame.parameters.getValue("angle")); val u = Offset(cos(angle).toFloat(), -sin(angle).toFloat())
                     drawCircle(Cyan.copy(.1f), radius, center); drawCircle(Cyan, radius, center, style = Stroke(4f)); drawLine(Violet, Offset(center.x - radius, center.y), Offset(center.x + radius, center.y), 4f)
                     val dot = (p.x - center.x) * u.x; val root = kotlin.math.sqrt((dot * dot + radius * radius - (p.x - center.x) * (p.x - center.x)).coerceAtLeast(0f)); drawLine(Amber, p - u * (root + dot), p + u * (root - dot), 4f); drawCircle(Green, 9f, p)
-                    label("P", p + Offset(10f, -10f), Green); label("PAÃ‚Â·PB = PCÃ‚Â·PD", Offset(w * .56f, h * .16f), Green)
+                    label("P", p + Offset(10f, -10f), Green); label("PA·PB = PC·PD", Offset(w * .56f, h * .16f), Green)
                 }
                 "circle-angle" -> {
                     val radius = (frame.parameters.getValue("r") * scale * .55).toFloat().coerceIn(50f, h * .3f); val center = Offset(w * .43f, h * .53f); val arc = Math.toRadians(frame.parameters.getValue("arc")); val cAngle = Math.toRadians(frame.parameters.getValue("c")); val a = center + Offset(cos(-arc / 2).toFloat() * radius, sin(-arc / 2).toFloat() * radius); val b = center + Offset(cos(arc / 2).toFloat() * radius, sin(arc / 2).toFloat() * radius); val c = center + Offset(cos(cAngle).toFloat() * radius, sin(cAngle).toFloat() * radius)
                     drawCircle(Cyan.copy(.08f), radius, center); drawCircle(Cyan, radius, center, style = Stroke(4f)); drawLine(Violet, center, a, 4f); drawLine(Violet, center, b, 4f); drawLine(Amber, c, a, 4f); drawLine(Amber, c, b, 4f)
-                    drawCircle(Green, 8f, center); label("O", center + Offset(10f, -8f), Green); label("Ã¢Ë†Â AOB = 2Ã¢Ë†Â ACB", Offset(w * .57f, h * .16f), Green)
+                    drawCircle(Green, 8f, center); label("O", center + Offset(10f, -8f), Green); label("∠AOB = 2∠ACB", Offset(w * .57f, h * .16f), Green)
                 }
                 "derivative-slope" -> {
                     val x0 = frame.parameters.getValue("x"); val delta = frame.parameters.getValue("h")
@@ -5162,7 +5729,7 @@ private fun InteractiveVisualProofCanvas(
                     val p = graphPoint(x0); val q = graphPoint(x0 + delta); drawCircle(Violet, 8f, p); drawCircle(Amber, 8f, q)
                     val secantDirection = q - p; val secantUnit = secantDirection / secantDirection.getDistance().coerceAtLeast(1f); drawLine(Amber, p - secantUnit * 220f, q + secantUnit * 220f, 4f)
                     val tangentSlope = 2 * x0; val dx = 1.2; val t1 = graphPoint(x0 - dx); val rawT2 = graphPoint(x0 + dx); val pixelsPerX = (right - left) / 10f; val pixelsPerY = (bottom - top) / 25f; val t2 = Offset(t1.x + 2.4f * pixelsPerX, t1.y - (tangentSlope * 2.4).toFloat() * pixelsPerY); drawLine(Violet, t1, t2, 4f)
-                    label("secant h=${trim(delta)}", Offset(w * .58f, h * .28f), Amber); label("hÃ¢â€ â€™0: slopeÃ¢â€ â€™2x", Offset(w * .56f, h * .14f), Green)
+                    label("secant h=${trim(delta)}", Offset(w * .58f, h * .28f), Amber); label("h→0: slope→2x", Offset(w * .56f, h * .14f), Green)
                 }
                 "integral-area" -> {
                     val bound = frame.parameters.getValue("b"); val requestedN = frame.parameters.getValue("n").toInt().coerceAtLeast(2); val visualN = requestedN.coerceAtMost(40)
@@ -5173,7 +5740,7 @@ private fun InteractiveVisualProofCanvas(
                         val x0 = left + i * chartWidth / visualN; val x1 = left + (i + 1) * chartWidth / visualN; val midpoint = (i + .5f) / visualN; val y = bottom - midpoint * chartHeight
                         drawRect(if (i % 2 == 0) Violet.copy(.18f) else Green.copy(.18f), Offset(x0, y), Size(x1 - x0, bottom - y)); drawRect(if (i % 2 == 0) Violet else Green, Offset(x0, y), Size(x1 - x0, bottom - y), style = Stroke(1.5f))
                     }
-                    label("${requestedN} midpoint rectangles", Offset(w * .5f, h * .9f), Amber); label("Ã¢Ë†Â«Ã¢â€šâ‚¬Ã¡Âµâ€¡x dx = bÃ‚Â²/2 = ${trim(bound * bound / 2)}", Offset(w * .38f, h * .13f), Green)
+                    label("${requestedN} midpoint rectangles", Offset(w * .5f, h * .9f), Amber); label("∫₀ᵇx dx = b²/2 = ${trim(bound * bound / 2)}", Offset(w * .38f, h * .13f), Green)
                 }
                 "normal-area" -> {
                     val z = frame.parameters.getValue("z"); val left = w * .08f; val right = w * .92f; val baseline = h * .76f; val amplitude = h * .5f
@@ -5203,24 +5770,24 @@ private fun InteractiveVisualProofCanvas(
                     val a = frame.parameters.getValue("a"); val b = frame.parameters.getValue("b"); val total = a + b; val side = minOf(w * .58f, h * .58f); val left = w * .2f; val top = h * .18f; val splitX = left + side * (a / total).toFloat(); val splitY = top + side * (a / total).toFloat()
                     drawRect(Cyan.copy(.22f), Offset(left, top), Size(splitX - left, splitY - top)); drawRect(Violet.copy(.22f), Offset(splitX, top), Size(left + side - splitX, splitY - top)); drawRect(Violet.copy(.22f), Offset(left, splitY), Size(splitX - left, top + side - splitY)); drawRect(Green.copy(.22f), Offset(splitX, splitY), Size(left + side - splitX, top + side - splitY))
                     drawRect(Ink, Offset(left, top), Size(side, side), style = Stroke(5f)); drawLine(Ink, Offset(splitX, top), Offset(splitX, top + side), 3f); drawLine(Ink, Offset(left, splitY), Offset(left + side, splitY), 3f)
-                    label("aÃ‚Â²", Offset(left + 18f, top + 34f), Cyan); label("ab", Offset(splitX + 12f, top + 34f), Violet); label("ab", Offset(left + 18f, splitY + 34f), Violet); label("bÃ‚Â²", Offset(splitX + 12f, splitY + 34f), Green); label("(a+b)Ã‚Â² = aÃ‚Â²+2ab+bÃ‚Â²", Offset(w * .42f, h * .88f), Amber)
+                    label("a²", Offset(left + 18f, top + 34f), Cyan); label("ab", Offset(splitX + 12f, top + 34f), Violet); label("ab", Offset(left + 18f, splitY + 34f), Violet); label("b²", Offset(splitX + 12f, splitY + 34f), Green); label("(a+b)² = a²+2ab+b²", Offset(w * .42f, h * .88f), Amber)
                 }
                 "shear-area" -> {
                     val base = frame.parameters.getValue("base"); val height = frame.parameters.getValue("height"); val shear = frame.parameters.getValue("shear"); val k = 4.2 / maxOf(base, height); val p0 = point(-2.5, -.9); val p1 = point(-2.5 + base * k, -.9); val p2 = point(-2.5 + (base + shear) * k, -.9 + height * k); val p3 = point(-2.5 + shear * k, -.9 + height * k)
                     drawRect(Muted.copy(.08f), p0.copy(y = p3.y), Size(p1.x - p0.x, p0.y - p3.y)); drawRect(Muted, p0.copy(y = p3.y), Size(p1.x - p0.x, p0.y - p3.y), style = Stroke(2f)); polygon(listOf(p0, p1, p2, p3), Cyan)
-                    drawLine(Amber, p3, Offset(p3.x, p0.y), 4f); label("fixed h", Offset(p3.x + 10f, (p3.y + p0.y) / 2), Amber); label("same base Ãƒâ€” height", Offset(w * .58f, h * .17f), Green)
+                    drawLine(Amber, p3, Offset(p3.x, p0.y), 4f); label("fixed h", Offset(p3.x + 10f, (p3.y + p0.y) / 2), Amber); label("same base × height", Offset(w * .58f, h * .17f), Green)
                 }
                 "unit-circle-identity" -> {
                     val theta = Math.toRadians(frame.parameters.getValue("theta")); val radius = minOf(w, h) * .27f; val center = Offset(w * .42f, h * .54f); val p = center + Offset(cos(theta).toFloat() * radius, -sin(theta).toFloat() * radius); val projection = Offset(p.x, center.y)
                     drawCircle(Cyan.copy(.09f), radius, center); drawCircle(Cyan, radius, center, style = Stroke(5f)); drawLine(Grid, Offset(center.x - radius - 25f, center.y), Offset(center.x + radius + 25f, center.y), 2f); drawLine(Grid, Offset(center.x, center.y - radius - 25f), Offset(center.x, center.y + radius + 25f), 2f)
                     polygon(listOf(center, projection, p), Violet); drawLine(Cyan, center, projection, 6f); drawLine(Violet, projection, p, 6f); drawLine(Amber, center, p, 6f); drawCircle(Green, 10f, p)
-                    label("cos ÃŽÂ¸", (center + projection) / 2f + Offset(0f, 28f), Cyan); label("sin ÃŽÂ¸", (projection + p) / 2f + Offset(10f, 0f), Violet); label("1", (center + p) / 2f, Amber); label("sinÃ‚Â²ÃŽÂ¸ + cosÃ‚Â²ÃŽÂ¸ = 1", Offset(w * .6f, h * .18f), Green)
+                    label("cos θ", (center + projection) / 2f + Offset(0f, 28f), Cyan); label("sin θ", (projection + p) / 2f + Offset(10f, 0f), Violet); label("1", (center + p) / 2f, Amber); label("sin²θ + cos²θ = 1", Offset(w * .6f, h * .18f), Green)
                 }
                 "odd-sum-square" -> {
                     val n = frame.parameters.getValue("n").toInt().coerceIn(1, 15); val gridSide = minOf(w * .62f, h * .65f); val cell = gridSide / n; val left = w * .18f; val top = h * .13f
                     repeat(n) { row -> repeat(n) { col -> val layer = maxOf(row, col); val color = listOf(Cyan, Violet, Green, Amber)[layer % 4]; drawRect(color.copy(.22f), Offset(left + col * cell, top + row * cell), Size(cell, cell)); drawRect(color.copy(.7f), Offset(left + col * cell, top + row * cell), Size(cell, cell), style = Stroke(1.2f)) } }
                     repeat(n) { layer -> label((2 * layer + 1).toString(), Offset(left + gridSide + 14f, top + (layer + .65f) * cell), listOf(Cyan, Violet, Green, Amber)[layer % 4], 18f) }
-                    label("1+3+...+${2 * n - 1} = ${n}Ã‚Â²", Offset(w * .48f, h * .88f), Green)
+                    label("1+3+...+${2 * n - 1} = ${n}²", Offset(w * .48f, h * .88f), Green)
                 }
                 "absolute-inequality" -> {
                     val xValue = frame.parameters.getValue("x"); val radius = frame.parameters.getValue("r")
@@ -5235,7 +5802,7 @@ private fun InteractiveVisualProofCanvas(
                     drawCircle(Amber, 13f, Offset(numberPoint(xValue), axisY)); drawCircle(Violet, 8f, Offset(numberPoint(-xValue), axisY))
                     drawLine(Green, Offset(numberPoint(0.0), axisY - 55f), Offset(numberPoint(xValue), axisY - 55f), 4f, cap = StrokeCap.Round)
                     label("distance |x|", Offset((numberPoint(0.0) + numberPoint(xValue)) / 2f - 45f, axisY - 72f), Green, 20f)
-                    label("Ã¢Ë†â€™r Ã¢â€°Â¤ x Ã¢â€°Â¤ r", Offset(w * .38f, h * .18f), Green, 29f)
+                    label("−r ≤ x ≤ r", Offset(w * .38f, h * .18f), Green, 29f)
                     label(if (abs(xValue) <= radius) "x is inside" else "x is outside", Offset(w * .7f, h * .32f), if (abs(xValue) <= radius) Green else Amber)
                 }
                 "equation-balance" -> {
@@ -5259,7 +5826,7 @@ private fun InteractiveVisualProofCanvas(
                     drawRect(Ink, universe.topLeft, universe.size, style = Stroke(4f)); drawCircle(Cyan, radius, ca, style = Stroke(5f)); drawCircle(Amber, radius, cb, style = Stroke(5f))
                     label("A", ca + Offset(-radius * .62f, -radius * .55f), Cyan); label("B", cb + Offset(radius * .42f, -radius * .55f), Amber)
                     label("same shaded region", Offset(w * .36f, h * .12f), Green, 25f)
-                    label("A B | Ã‚Â¬(AÃ¢Ë†Â¨B) | Ã‚Â¬AÃ¢Ë†Â§Ã‚Â¬B", Offset(w * .23f, h * .82f), Ink, 20f)
+                    label("A B | ¬(A∨B) | ¬A∧¬B", Offset(w * .23f, h * .82f), Ink, 20f)
                     label("0 0 |     1      |     1", Offset(w * .3f, h * .89f), Green, 19f)
                     label("other rows: 0 = 0", Offset(w * .38f, h * .95f), Muted, 18f)
                 }
@@ -5277,8 +5844,8 @@ private fun InteractiveVisualProofCanvas(
                     val p1 = graphPoint(-1.0, -2.0); val p2 = graphPoint(3.0, 6.0); drawLine(Green, p1, p2, 5f)
                     drawLine(Cyan, Offset(x0 - dxPixels, top), Offset(x0 - dxPixels, bottom), 3f); drawLine(Cyan, Offset(x0 + dxPixels, top), Offset(x0 + dxPixels, bottom), 3f)
                     drawLine(Violet, Offset(left, y0 - dyPixels), Offset(right, y0 - dyPixels), 3f); drawLine(Violet, Offset(left, y0 + dyPixels), Offset(right, y0 + dyPixels), 3f)
-                    label("ÃŽÂ´ input band", Offset(x0 - 65f, bottom - 14f), Cyan, 19f); label("ÃŽÂµ output band", Offset(left + 8f, y0 - dyPixels - 8f), Violet, 19f)
-                    label(if (2 * delta <= epsilon) "band containment verified" else "shrink ÃŽÂ´ to fit ÃŽÂµ", Offset(w * .56f, h * .16f), if (2 * delta <= epsilon) Green else Amber, 22f)
+                    label("δ input band", Offset(x0 - 65f, bottom - 14f), Cyan, 19f); label("ε output band", Offset(left + 8f, y0 - dyPixels - 8f), Violet, 19f)
+                    label(if (2 * delta <= epsilon) "band containment verified" else "shrink δ to fit ε", Offset(w * .56f, h * .16f), if (2 * delta <= epsilon) Green else Amber, 22f)
                 }
                 "slope-triangle" -> {
                     val slope = frame.parameters.getValue("m"); val run = frame.parameters.getValue("run"); val rise = slope * run
@@ -5304,9 +5871,9 @@ private fun InteractiveVisualProofCanvas(
                         polygon(listOf(end, end - direction * 24f + normal * 11f, end - direction * 24f - normal * 11f), color, color); label(name, end + Offset(8f, -8f), color)
                     }
                     vectorArrow(origin + Offset(unit * 1.35f, 0f), Cyan, "v")
-                    vectorArrow(origin + Offset((unit * 1.35f * lambda).toFloat(), 0f), Green, "Av=ÃŽÂ»v")
+                    vectorArrow(origin + Offset((unit * 1.35f * lambda).toFloat(), 0f), Green, "Av=λv")
                     drawLine(Amber.copy(.55f), origin, origin + Offset(0f, (-unit * other).toFloat()), 4f)
-                    label("direction line preserved", Offset(w * .57f, h * .18f), Green, 24f); label("other axis Ãƒâ€”${trim(other)}", Offset(w * .58f, h * .3f), Amber, 19f)
+                    label("direction line preserved", Offset(w * .57f, h * .18f), Green, 24f); label("other axis ×${trim(other)}", Offset(w * .58f, h * .3f), Amber, 19f)
                 }
                 "counting-paths" -> {
                     val rightSteps = frame.parameters.getValue("right").toInt().coerceIn(1, 6); val upSteps = frame.parameters.getValue("up").toInt().coerceIn(1, 6)
@@ -5329,7 +5896,7 @@ private fun InteractiveVisualProofCanvas(
                     }
                     val angle = -PI / 2 + 2 * PI * remainder / modulus; val end = center + Offset(cos(angle).toFloat() * radius * .78f, sin(angle).toFloat() * radius * .78f)
                     drawLine(Amber, center, end, 7f, cap = StrokeCap.Round); drawArc(Violet.copy(.55f), -90f, 300f, false, Offset(center.x - radius * .55f, center.y - radius * .55f), Size(radius * 1.1f, radius * 1.1f), style = Stroke(4f))
-                    label("$a Ã¢â€°Â¡ ${a - modulus} (mod $modulus)", Offset(w * .6f, h * .18f), Green, 25f); label("same remainder $remainder", Offset(w * .62f, h * .3f), Amber, 22f)
+                    label("$a ≡ ${a - modulus} (mod $modulus)", Offset(w * .6f, h * .18f), Green, 25f); label("same remainder $remainder", Offset(w * .62f, h * .3f), Amber, 22f)
                 }
                 else -> {
                     drawCircle(Cyan.copy(alpha = .12f), minOf(w, h) * .22f, Offset(w / 2f, h * .5f))
@@ -5339,7 +5906,7 @@ private fun InteractiveVisualProofCanvas(
                 }
             }
             if (profile.notToScale) label("NOT TO SCALE", Offset(w - 178f, 28f), Amber, 18f)
-            label("Step ${frame.step + 1}/${frame.lab.steps.size} Ã‚Â· drag horizontally", Offset(22f, h - 22f), Muted, 21f)
+            label("Step ${frame.step + 1}/${frame.lab.steps.size} · drag horizontally", Offset(22f, h - 22f), Muted, 21f)
         }
         ProofLiveEvidence(frame)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -5383,7 +5950,7 @@ private fun ProofLearningCycle(frame: com.indianservers.aiexplorer.core.ProofFra
 private fun ProofLiveEvidence(frame: com.indianservers.aiexplorer.core.ProofFrame) {
     fun displayValue(name: String, value: Double): String = when {
         name == "inside interval" -> if (value >= .5) "YES" else "NO"
-        name.startsWith("Ã¢Ë†Â ") || "angle" in name.lowercase() -> "${proofValue(value)}Ã‚Â°"
+        name.startsWith("∠") || "angle" in name.lowercase() -> "${proofValue(value)}°"
         else -> proofValue(value)
     }
     Column(
@@ -5410,10 +5977,10 @@ private fun ProofLiveEvidence(frame: com.indianservers.aiexplorer.core.ProofFram
         ) {
             Column {
                 Text("LIVE VALUES", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
-                Text("Drag the diagram or slidersÃ¢â‚¬â€every value updates immediately.", color = Muted, fontSize = 10.sp)
+                Text("Drag the diagram or sliders—every value updates immediately.", color = Muted, fontSize = 10.sp)
             }
             Text(
-                if (frame.holds) "Ã¢Å“â€œ VERIFIED" else "ADJUST TO VERIFY",
+                if (frame.holds) "✓ VERIFIED" else "ADJUST TO VERIFY",
                 color = if (frame.holds) Green else Amber,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -5481,10 +6048,10 @@ private fun ProofStageStrip(frame: com.indianservers.aiexplorer.core.ProofFrame)
                 Modifier.weight(1f).clip(RoundedCornerShape(11.dp)).background(color.copy(.11f)).border(1.dp, color.copy(.55f), RoundedCornerShape(11.dp)).padding(7.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                Text("${index + 1} Ã‚Â· $title", color = color, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
+                Text("${index + 1} · $title", color = color, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
                 Text(detail, color = Ink, fontSize = 9.sp, maxLines = 2)
             }
-            if (index < stages.lastIndex) Text("Ã¢Å¾Å“", color = Violet, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            if (index < stages.lastIndex) Text("➜", color = Violet, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -5501,7 +6068,7 @@ private fun ProofPathBreadcrumbs(frame: com.indianservers.aiexplorer.core.ProofF
                 fontWeight = if (index == frame.step) FontWeight.Bold else FontWeight.Normal,
                 modifier = Modifier.clip(RoundedCornerShape(10.dp)).background(if (index == frame.step) Violet.copy(.24f) else SurfaceB.copy(.45f)).border(1.dp, if (reached) Violet.copy(.55f) else Grid, RoundedCornerShape(10.dp)).padding(horizontal = 8.dp, vertical = 6.dp),
             )
-            if (index < frame.lab.steps.lastIndex) Text("Ã¢â€ â€™", color = if (reached) Violet else Muted)
+            if (index < frame.lab.steps.lastIndex) Text("→", color = if (reached) Violet else Muted)
         }
     }
 }
@@ -5526,12 +6093,12 @@ private fun ProofReasoningLens(
             }
         }
         Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Green.copy(.09f)).border(1.dp, Green.copy(.55f), RoundedCornerShape(12.dp)).padding(10.dp)) {
-            Text("CHECKPOINT ${frame.step + 1} Ã‚Â· INVARIANT", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+            Text("CHECKPOINT ${frame.step + 1} · INVARIANT", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
             Text(frame.invariant, color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            Text(if (frame.holds) "Verified at current values Ã‚Â· residual ${trim(frame.residual)}" else "Not yet contained Ã‚Â· adjust the highlighted control Ã‚Â· residual ${trim(frame.residual)}", color = if (frame.holds) Green else Amber, fontSize = 10.sp)
+            Text(if (frame.holds) "Verified at current values · residual ${trim(frame.residual)}" else "Not yet contained · adjust the highlighted control · residual ${trim(frame.residual)}", color = if (frame.holds) Green else Amber, fontSize = 10.sp)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ProofMiniPanel("ASSUMPTIONS", profile.assumptions.joinToString(" Ã‚Â· "), Cyan, Modifier.weight(1f))
+            ProofMiniPanel("ASSUMPTIONS", profile.assumptions.joinToString(" · "), Cyan, Modifier.weight(1f))
             ProofMiniPanel("DOMAIN", profile.domainRestriction, Violet, Modifier.weight(1f))
         }
         ProofDefinitionsAndRepresentations(frame, profile)
@@ -5541,12 +6108,12 @@ private fun ProofReasoningLens(
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ProofMiniPanel("TEST A SIMPLE CASE", profile.simpleCase, Violet, Modifier.weight(1f))
-            ProofMiniPanel("CONTRADICTION PATH", "Assume the conclusion is false Ã¢â€ â€™ the two highlighted representations would measure differently Ã¢â€ â€™ this conflicts with ${frame.invariant}.", Amber, Modifier.weight(1f))
+            ProofMiniPanel("CONTRADICTION PATH", "Assume the conclusion is false → the two highlighted representations would measure differently → this conflicts with ${frame.invariant}.", Amber, Modifier.weight(1f))
         }
         profile.analogy?.let { ProofMiniPanel("REAL-WORLD ANALOGY", it, Cyan, Modifier.fillMaxWidth()) }
         ProofLegend()
         Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Green.copy(.16f)).border(2.dp, Green, RoundedCornerShape(12.dp)).padding(11.dp)) {
-            Text("THEREFORE Ã‚Â· ${frame.lab.formalResult}", color = Green, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
+            Text("THEREFORE · ${frame.lab.formalResult}", color = Green, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold)
             Text(profile.takeaway, color = Ink, fontSize = 11.sp)
         }
     }
@@ -5558,7 +6125,7 @@ private fun BeforeAfterProofDiagram(
     profile: com.indianservers.aiexplorer.core.ProofVisualProfile,
 ) {
     Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(13.dp)).background(SurfaceB.copy(.55f)).border(1.dp, Violet.copy(.48f), RoundedCornerShape(13.dp)).padding(8.dp)) {
-        Text("BEFORE Ã¢â€ â€™ SAME QUANTITY, DIFFERENT SHAPE Ã¢â€ â€™ AFTER", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+        Text("BEFORE → SAME QUANTITY, DIFFERENT SHAPE → AFTER", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         Canvas(Modifier.fillMaxWidth().height(128.dp).semantics { contentDescription = "Before and after comparison for ${frame.lab.title}; transparent overlay marks the invariant" }) {
             val leftCenter = Offset(size.width * .22f, size.height * .52f); val rightCenter = Offset(size.width * .78f, size.height * .52f)
             val before = Path().apply { moveTo(leftCenter.x - 58f, leftCenter.y + 38f); lineTo(leftCenter.x + 58f, leftCenter.y + 38f); lineTo(leftCenter.x + 22f, leftCenter.y - 42f); lineTo(leftCenter.x - 42f, leftCenter.y - 42f); close() }
@@ -5582,7 +6149,7 @@ private fun ProofDefinitionsAndRepresentations(
 ) {
     Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(SurfaceB.copy(.5f)).border(1.dp, Cyan.copy(.35f), RoundedCornerShape(12.dp)).padding(9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
         Text("DEFINITIONS BESIDE THE VISUAL", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-        profile.definitions.entries.take(5).forEach { (symbol, definition) -> Text("$symbol Ã‚Â· $definition", color = Ink, fontSize = 9.sp) }
+        profile.definitions.entries.take(5).forEach { (symbol, definition) -> Text("$symbol · $definition", color = Ink, fontSize = 9.sp) }
         Text("EQUIVALENT REPRESENTATIONS", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             listOf(
@@ -5612,7 +6179,7 @@ private fun ProofMiniPanel(title: String, body: String, accent: Color, modifier:
 private fun ProofLegend() {
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).clip(RoundedCornerShape(11.dp)).background(SurfaceB.copy(.5f)).padding(8.dp), horizontalArrangement = Arrangement.spacedBy(13.dp), verticalAlignment = Alignment.CenterVertically) {
         Text("LEGEND", color = Ink, fontSize = 9.sp, fontWeight = FontWeight.Bold)
-        listOf("Ã¢â€”Â known" to Cyan, "Ã¢â€”Â transform / unknown" to Amber, "Ã¢â€”Â conclusion" to Green, "Ã¢â€¡Â¢ movement" to Violet, "Ã¢â€“â€™ overlay = equal measure" to Muted).forEach { (label, color) -> Text(label, color = color, fontSize = 9.sp) }
+        listOf("● known" to Cyan, "● transform / unknown" to Amber, "● conclusion" to Green, "⇢ movement" to Violet, "▒ overlay = equal measure" to Muted).forEach { (label, color) -> Text(label, color = color, fontSize = 9.sp) }
     }
 }
 
@@ -5632,18 +6199,18 @@ private fun QuizDashboard(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text("Interactive MCQ Quiz", color = Cyan, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Text("15 questions per quiz Ã‚Â· score, progress and explanations", color = Muted, fontSize = 12.sp)
+                Text("15 questions per quiz · score, progress and explanations", color = Muted, fontSize = 12.sp)
             }
             TransparentIcon("Q", Violet)
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             listOf(QuizSubject.Maths).forEach { option ->
-                GlowButton(if (subject == option) "Ã¢â‚¬Â¢ ${option.label}" else option.label) { onSubject(option) }
+                GlowButton(if (subject == option) "• ${option.label}" else option.label) { onSubject(option) }
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             QuizLevel.entries.forEach { option ->
-                GlowButton(if (level == option) "Ã¢â‚¬Â¢ ${option.label}" else option.label) { onLevel(option) }
+                GlowButton(if (level == option) "• ${option.label}" else option.label) { onLevel(option) }
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -5669,7 +6236,7 @@ private fun QuizIntroCard(subject: QuizSubject, level: QuizLevel) {
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Text("${subject.label} Ã‚Â· ${level.label}", color = Cyan, fontWeight = FontWeight.Bold)
+        Text("${subject.label} · ${level.label}", color = Cyan, fontWeight = FontWeight.Bold)
         Text("Choose Start to generate a focused 15-question quiz. Each answer locks instantly and shows a short explanation.", color = Muted, fontSize = 12.sp)
         Text("Scoring is local and designed for focused mathematics practice.", color = Ink, fontSize = 12.sp)
     }
@@ -5692,7 +6259,7 @@ private fun QuizSessionCard(session: QuizSession, onAnswer: (Int) -> Unit, onRes
         verticalArrangement = Arrangement.spacedBy(9.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("${session.subject.label} Ã‚Â· ${session.level.label}", color = Cyan, fontWeight = FontWeight.Bold)
+            Text("${session.subject.label} · ${session.level.label}", color = Cyan, fontWeight = FontWeight.Bold)
             Text("${session.score}/${session.questions.size}", color = Green, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
         }
         Canvas(Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(8.dp))) {
@@ -5702,7 +6269,7 @@ private fun QuizSessionCard(session: QuizSession, onAnswer: (Int) -> Unit, onRes
         Text("Question ${(session.currentIndex + 1).coerceAtMost(session.questions.size)} of ${session.questions.size}", color = Muted, fontSize = 11.sp)
         if (session.completed) {
             Text("Quiz complete", color = Green, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text("Score ${session.score}/${session.questions.size} Ã‚Â· ${session.percent}%", color = Ink, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            Text("Score ${session.score}/${session.questions.size} · ${session.percent}%", color = Ink, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
             val message = when {
                 session.percent >= 85 -> "Excellent. Ready for the next level."
                 session.percent >= 60 -> "Good progress. Review the missed explanations."
@@ -5739,10 +6306,10 @@ private fun McqCard(question: McqQuestion, selected: Int?, onSelect: (Int) -> Un
     ) {
         Text(question.prompt, color = Ink, fontWeight = FontWeight.Bold)
         question.choices.forEachIndexed { index, choice ->
-            GlowButton(if (selected == index) "Ã¢â‚¬Â¢ $choice" else choice) { onSelect(index) }
+            GlowButton(if (selected == index) "• $choice" else choice) { onSelect(index) }
         }
         checked?.let {
-            Text("${it.message} Ã‚Â· next difficulty ${it.nextDifficulty}", color = if (it.correct) Green else Amber, fontWeight = FontWeight.SemiBold)
+            Text("${it.message} · next difficulty ${it.nextDifficulty}", color = if (it.correct) Green else Amber, fontWeight = FontWeight.SemiBold)
             Text(it.explanation, color = Muted, fontSize = 12.sp)
         }
     }
@@ -5826,7 +6393,7 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
             Text("Choose a method", color = Ink, fontWeight = FontWeight.SemiBold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 SolverMethod.entries.forEach { method ->
-                    GlowButton(if (selectedMethod == method) "Ã¢â‚¬Â¢ ${method.label}" else method.label) {
+                    GlowButton(if (selectedMethod == method) "• ${method.label}" else method.label) {
                         selectedMethod = method
                         if (guided != null) solveNow()
                     }
@@ -5848,7 +6415,7 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
             AnimatedVisibility(showMathKeyboard) {
                 Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        listOf("sin(" to "sin(", "cos(" to "cos(", "tan(" to "tan(", "Ã¢Ë†Å¡" to "sqrt(", "ln(" to "ln(", "eÃ‹Â£" to "exp(", "x" to "x", "y" to "y", "xÃ‚Â²" to "^2", "+" to "+", "Ã¢Ë†â€™" to "-", "ÃƒÂ·" to "/", "Ãâ‚¬" to "pi", "Ã¢Ë†Â«" to "Integrate ", "d/dx" to "Differentiate ", "bounds" to " from 0 to pi").forEach { (label, snippet) ->
+                        listOf("sin(" to "sin(", "cos(" to "cos(", "tan(" to "tan(", "√" to "sqrt(", "ln(" to "ln(", "eˣ" to "exp(", "x" to "x", "y" to "y", "x²" to "^2", "+" to "+", "−" to "-", "÷" to "/", "π" to "pi", "∫" to "Integrate ", "d/dx" to "Differentiate ", "bounds" to " from 0 to pi").forEach { (label, snippet) ->
                             GlowButton(label) { insertMath(snippet) }
                         }
                     }
@@ -5859,7 +6426,7 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                         SyntaxLegend("pi e", Amber)
                         SyntaxLegend("+ - =", Ink)
                     }
-                    syntax.suggestions.firstOrNull()?.let { Text("AI hint Ã‚Â· $it", color = Violet, fontSize = 11.sp) }
+                    syntax.suggestions.firstOrNull()?.let { Text("AI hint · $it", color = Violet, fontSize = 11.sp) }
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -5888,11 +6455,11 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
             if (result == null) {
                 Text("Your solution will appear here", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Text("Choose an example or enter a question, then tap Solve step by step.", color = Muted)
-                Insight("Current coverage", "Exact CAS Ã‚Â· matrices Ã‚Â· units Ã‚Â· calculus Ã‚Â· inequalities Ã‚Â· series Ã‚Â· data", Cyan)
+                Insight("Current coverage", "Exact CAS · matrices · units · calculus · inequalities · series · data", Cyan)
                 Insight("Safety", "No invented unsupported answers", Amber)
             } else {
                 val solution = result.solution
-                SolverAnswerSummary(solution, if (reveal == SolverReveal.Answer) solution.answer else "Answer hidden Ã‚Â· use the hints")
+                SolverAnswerSummary(solution, if (reveal == SolverReveal.Answer) solution.answer else "Answer hidden · use the hints")
                 Column(
                     Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Cyan.copy(.08f))
                         .border(1.dp, Cyan.copy(.45f), RoundedCornerShape(14.dp)).padding(11.dp),
@@ -5901,10 +6468,10 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     Text("How I interpreted it", color = Cyan, fontWeight = FontWeight.Bold)
                     Insight("Intent", result.interpretation.selected.intent.label, Violet)
                     Text(result.interpretation.selected.normalizedQuery, color = Ink, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
-                    Text("Confidence ${trim(result.interpretation.selected.confidence * 100)}% Ã‚Â· ${result.interpretation.status.name}", color = Muted, fontSize = 11.sp)
-                    result.interpretation.assumptions.forEach { Text("Assumption Ã‚Â· $it", color = Amber, fontSize = 11.sp) }
-                    result.interpretation.ambiguities.forEach { Text("Ambiguity Ã‚Â· $it", color = Amber, fontWeight = FontWeight.SemiBold, fontSize = 11.sp) }
-                    result.interpretation.alternatives.forEach { Text("Possible reading Ã‚Â· ${it.normalizedQuery}", color = Violet, fontSize = 11.sp) }
+                    Text("Confidence ${trim(result.interpretation.selected.confidence * 100)}% · ${result.interpretation.status.name}", color = Muted, fontSize = 11.sp)
+                    result.interpretation.assumptions.forEach { Text("Assumption · $it", color = Amber, fontSize = 11.sp) }
+                    result.interpretation.ambiguities.forEach { Text("Ambiguity · $it", color = Amber, fontWeight = FontWeight.SemiBold, fontSize = 11.sp) }
+                    result.interpretation.alternatives.forEach { Text("Possible reading · ${it.normalizedQuery}", color = Violet, fontSize = 11.sp) }
                 }
                 Insight("Method", result.method.label, Violet)
                 Text(result.methodReason, color = Muted, fontSize = 12.sp)
@@ -5912,7 +6479,7 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     Text("Try another verified method", color = Ink, fontWeight = FontWeight.SemiBold)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         result.alternatives.forEach { alternate ->
-                            GlowButton("${alternate.method.label} Ã‚Â· ${alternate.stepCount} steps") {
+                            GlowButton("${alternate.method.label} · ${alternate.stepCount} steps") {
                                 selectedMethod = alternate.method
                                 guided = tutor.solve(question.text, alternate.method)
                                 reveal = SolverReveal.FirstHint
@@ -5926,9 +6493,9 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     model.quantities.forEach { quantity ->
                         Insight(quantity.name, quantity.value?.let { "$it ${quantity.unit.orEmpty()}".trim() } ?: "unknown (${quantity.symbol})", if (quantity.unknown) Amber else Green)
                     }
-                    model.relationships.forEach { Text("Relationship Ã‚Â· $it", color = Ink, fontSize = 12.sp) }
-                    model.equations.forEach { Text("Setup Ã‚Â· $it", color = Violet, fontWeight = FontWeight.SemiBold) }
-                    model.ambiguity.forEach { Text("Clarify Ã‚Â· $it", color = Amber, fontSize = 12.sp) }
+                    model.relationships.forEach { Text("Relationship · $it", color = Ink, fontSize = 12.sp) }
+                    model.equations.forEach { Text("Setup · $it", color = Violet, fontWeight = FontWeight.SemiBold) }
+                    model.ambiguity.forEach { Text("Clarify · $it", color = Amber, fontSize = 12.sp) }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     GlowButton("Next step", enabled = solution.steps.isNotEmpty() && revealedSteps < solution.steps.size) {
@@ -5965,7 +6532,7 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     Text("Answer forms", color = Cyan, fontWeight = FontWeight.Bold)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         result.resultForms.forEach { form ->
-                            GlowButton(if (selectedResultForm == form.kind) "Ã¢â‚¬Â¢ ${form.kind.label}" else form.kind.label, enabled = form.available) { selectedResultForm = form.kind }
+                            GlowButton(if (selectedResultForm == form.kind) "• ${form.kind.label}" else form.kind.label, enabled = form.available) { selectedResultForm = form.kind }
                         }
                     }
                     result.resultForms.firstOrNull { it.kind == selectedResultForm }?.let { form ->
@@ -5976,13 +6543,13 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     }
                     Text("Verification", color = Amber, fontWeight = FontWeight.Bold)
                     Text(solution.verification, color = Ink, fontSize = 13.sp)
-                    solution.warnings.forEach { Text("Ã¢â‚¬Â¢ $it", color = Amber, fontSize = 12.sp) }
+                    solution.warnings.forEach { Text("• $it", color = Amber, fontSize = 12.sp) }
                     Text("Send result without retyping", color = Cyan, fontWeight = FontWeight.Bold)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         GlowButton("Graph", enabled = result.handoffs.any { it.destination == SolverDestination.Graph && it.enabled }) { vm.sendSolverToGraph(result) }
                         GlowButton("Spreadsheet") { vm.sendSolverToTable(result) }
                         GlowButton("Notebook") { vm.saveSolverToNotebook(result) }
-                        GlowButton("Generate MCQ") { learnerWork = "Practice generated Ã‚Â· ${solution.question} Ã‚Â· verify against the solved example" }
+                        GlowButton("Generate MCQ") { learnerWork = "Practice generated · ${solution.question} · verify against the solved example" }
                     }
                 }
                 Text("Check my working", color = Ink, fontWeight = FontWeight.SemiBold)
@@ -6106,12 +6673,38 @@ private fun SolverMetric(label: String, value: String, accent: Color) {
 
 @Composable
 private fun ProbabilityLabScreen(vm: ExplorerViewModel, wide: Boolean) {
+    var showPhase1 by rememberSaveable(vm.requestedProbabilitySection) {
+        mutableStateOf(vm.requestedProbabilitySection == ProbabilityLabSection.Distributions.ordinal)
+    }
+    var modernPhase by rememberSaveable { mutableIntStateOf(1) }
     var section by remember(vm.requestedProbabilitySection) { mutableStateOf(ProbabilityLabSection.entries.getOrElse(vm.requestedProbabilitySection) { ProbabilityLabSection.Distributions }) }
     var kind by remember { mutableStateOf(DistributionKind.Normal) }
     var first by remember { mutableFloatStateOf(0f) }
     var second by remember { mutableFloatStateOf(1f) }
     var lower by remember { mutableFloatStateOf(-1f) }
     var upper by remember { mutableFloatStateOf(1f) }
+
+    if (showPhase1) {
+        if (modernPhase == 3) {
+            ProbabilityStatisticsPhase3Screen(
+                onBackToPhase2 = { modernPhase = 2 },
+                onExit = vm::returnToMathMenu,
+            )
+        } else if (modernPhase == 2) {
+            ProbabilityStatisticsPhase2Screen(
+                onBackToPhase1 = { modernPhase = 1 },
+                onOpenPhase3 = { modernPhase = 3 },
+                onExit = vm::returnToMathMenu,
+            )
+        } else {
+            ProbabilityStatisticsPhase1Screen(
+                onExit = vm::returnToMathMenu,
+                onOpenPhase2 = { modernPhase = 2 },
+                onOpenLegacy = { showPhase1 = false },
+            )
+        }
+        return
+    }
 
     if (section == ProbabilityLabSection.Statistics) {
         StatisticsLabScreen(vm, wide, onSection = { section = it })
@@ -6149,31 +6742,31 @@ private fun ProbabilityLabScreen(vm: ExplorerViewModel, wide: Boolean) {
     @Composable
     fun Controls(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
-            PanelHeader("Probability & Distributions", vm::returnToMathMenu, Cyan, icon = "ÃÆ’")
+            PanelHeader("Probability & Distributions", vm::returnToMathMenu, Cyan, icon = "σ")
             ProbabilitySectionSelector(section) { section = it }
             Text("Choose a validated model, adjust its parameters, and inspect interval probability, density, CDF, and quantiles.", color = Muted, fontSize = 12.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                DistributionKind.entries.forEach { option -> GlowButton(if (kind == option) "Ã¢â‚¬Â¢ ${option.name}" else option.name) { select(option) } }
+                DistributionKind.entries.forEach { option -> GlowButton(if (kind == option) "• ${option.name}" else option.name) { select(option) } }
             }
             when (kind) {
                 DistributionKind.Normal -> {
-                    AxisSlider("Mean ÃŽÂ¼", first, -10f..10f) { first = it }
-                    AxisSlider("Std dev ÃÆ’", second, .1f..8f) { second = it }
+                    AxisSlider("Mean μ", first, -10f..10f) { first = it }
+                    AxisSlider("Std dev σ", second, .1f..8f) { second = it }
                 }
                 DistributionKind.Binomial -> {
                     AxisSlider("Trials n", first, 1f..100f) { first = it.roundToInt().toFloat() }
                     AxisSlider("Success p", second, 0f..1f) { second = it }
                 }
-                DistributionKind.Poisson -> AxisSlider("Rate ÃŽÂ»", first, .1f..30f) { first = it }
+                DistributionKind.Poisson -> AxisSlider("Rate λ", first, .1f..30f) { first = it }
                 DistributionKind.Uniform -> {
                     AxisSlider("Minimum a", first, -10f..9f) { first = minOf(it, second - .1f) }
                     AxisSlider("Maximum b", second, -9f..10f) { second = maxOf(it, first + .1f) }
                 }
-                DistributionKind.Exponential -> AxisSlider("Rate ÃŽÂ»", first, .1f..10f) { first = it }
+                DistributionKind.Exponential -> AxisSlider("Rate λ", first, .1f..10f) { first = it }
             }
             AxisSlider("Interval low", lower, -10f..30f) { lower = minOf(it, upper) }
             AxisSlider("Interval high", upper, -10f..30f) { upper = maxOf(it, lower) }
-            Text("P(${trim(lower.toDouble())} Ã¢â€°Â¤ X Ã¢â€°Â¤ ${trim(upper.toDouble())}) = ${probability?.let(::trim) ?: "invalid"}", color = Green, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text("P(${trim(lower.toDouble())} ≤ X ≤ ${trim(upper.toDouble())}) = ${probability?.let(::trim) ?: "invalid"}", color = Green, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
     }
 
@@ -6215,7 +6808,7 @@ private fun ProbabilityLabScreen(vm: ExplorerViewModel, wide: Boolean) {
 private fun ProbabilitySectionSelector(active: ProbabilityLabSection, onSelect: (ProbabilityLabSection) -> Unit) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         ProbabilityLabSection.entries.forEach { section ->
-            GlowButton(if (section == active) "Ã¢â‚¬Â¢ ${section.name}" else section.name) { onSelect(section) }
+            GlowButton(if (section == active) "• ${section.name}" else section.name) { onSelect(section) }
         }
     }
 }
@@ -6234,13 +6827,13 @@ private fun SpreadsheetLabScreen(vm: ExplorerViewModel, wide: Boolean, onSection
 
     @Composable fun Editor(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
-            PanelHeader("Spreadsheet & Lists", vm::returnToMathMenu, Cyan, icon = "Ã¢â€“Â¦")
+            PanelHeader("Spreadsheet & Lists", vm::returnToMathMenu, Cyan, icon = "▦")
             ProbabilitySectionSelector(ProbabilityLabSection.Spreadsheet, onSection)
-            Text("Editable CSV grid Ã‚Â· A1 formulas Ã‚Â· named lists Ã‚Â· linked analysis", color = Muted, fontSize = 12.sp)
+            Text("Editable CSV grid · A1 formulas · named lists · linked analysis", color = Muted, fontSize = 12.sp)
             OutlinedTextField(value = csv, onValueChange = { csv = it }, label = { Text("CSV data") }, minLines = 7, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Spreadsheet CSV editor" })
             IntentAwareMathField(value = formula, onValueChange = { formula = it }, label = "Formula in C1", modifier = Modifier.fillMaxWidth(), placeholder = "=A1+B1", showLegend = false)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                MissingDataPolicy.entries.forEach { policy -> GlowButton(if (missing == policy) "Ã¢â‚¬Â¢ ${policy.name}" else policy.name) { missing = policy } }
+                MissingDataPolicy.entries.forEach { policy -> GlowButton(if (missing == policy) "• ${policy.name}" else policy.name) { missing = policy } }
                 GlowButton("Export CSV") { snapshot?.let { exported = engine.exportCsv(it) } }
             }
             if (exported.isNotBlank()) Text(exported, color = Green, fontFamily = FontFamily.Monospace, fontSize = 10.sp)
@@ -6264,13 +6857,13 @@ private fun SpreadsheetLabScreen(vm: ExplorerViewModel, wide: Boolean, onSection
                         series.points.forEach { drawCircle(Violet, 8f, point(it)) }
                     }
                 }
-                Insight("Lists", "${series.xName} Ã¢â€ â€ ${series.yName}", Cyan)
+                Insight("Lists", "${series.xName} ↔ ${series.yName}", Cyan)
                 Insight("Rows linked", series.points.size.toString(), Green)
                 Insight("Revision", series.revision.toString(), Amber)
             }
             regression?.let { model ->
                 Insight("Linear model", "y=${trim(model.coefficients[0])} + ${trim(model.coefficients[1])}x", Violet)
-                Insight("RÃ‚Â²", model.rSquared?.let(::trim) ?: "n/a", Green)
+                Insight("R²", model.rSquared?.let(::trim) ?: "n/a", Green)
                 model.diagnostics.forEach { Insight(it.name, it.detail, if (it.passed) Green else Amber) }
                 Text("Assumptions: ${model.assumptions.joinToString()}", color = Muted, fontSize = 11.sp)
             }
@@ -6307,23 +6900,23 @@ private fun ProbabilityExperimentsScreen(vm: ExplorerViewModel, wide: Boolean, o
         ProbabilitySectionSelector(ProbabilityLabSection.Experiments, onSection)
         Text("Seeded simulations are exactly reproducible.", color = Muted)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            RandomExperimentKind.entries.forEach { option -> GlowButton(if (kind == option) "Ã¢â‚¬Â¢ ${option.name}" else option.name) { kind = option } }
+            RandomExperimentKind.entries.forEach { option -> GlowButton(if (kind == option) "• ${option.name}" else option.name) { kind = option } }
         }
         AxisSlider("Trials", trials, 100f..20_000f) { trials = it.roundToInt().toFloat() }
         OutlinedTextField(value = seedText, onValueChange = { seedText = it.filter(Char::isDigit).take(12) }, label = { Text("Random seed") }, modifier = Modifier.widthIn(max = 260.dp))
         result.outcomes.forEach { outcome ->
-            Insight(outcome.label, "${outcome.count} Ã‚Â· observed=${trim(outcome.probability)} Ã‚Â· expected=${trim(result.expected[outcome.label] ?: 0.0)}", Cyan)
+            Insight(outcome.label, "${outcome.count} · observed=${trim(outcome.probability)} · expected=${trim(result.expected[outcome.label] ?: 0.0)}", Cyan)
         }
-        Insight("Monte Carlo Ãâ‚¬", "${trim(pi.first)} Ã‚Â± ${trim(pi.second)}", Violet)
+        Insight("Monte Carlo π", "${trim(pi.first)} ± ${trim(pi.second)}", Violet)
         Text("Conditional probability & Bayes tree", color = Ink, fontWeight = FontWeight.Bold)
         AxisSlider("Prior", prior, .01f..99f) { prior = it.coerceIn(.01f, .99f) }
         AxisSlider("Sensitivity", sensitivity, .01f..99f) { sensitivity = it.coerceIn(.01f, .99f) }
         AxisSlider("False positive", falsePositive, .01f..99f) { falsePositive = it.coerceIn(.01f, .99f) }
         Insight("P(positive)", trim(bayes.evidenceProbability), Amber)
         bayes.branches.forEach { branch ->
-            Insight(branch.hypothesis, "prior=${trim(branch.prior)} Ã‚Â· likelihood=${trim(branch.evidenceLikelihood)} Ã‚Â· posterior=${trim(branch.posterior)}", Green)
+            Insight(branch.hypothesis, "prior=${trim(branch.prior)} · likelihood=${trim(branch.evidenceLikelihood)} · posterior=${trim(branch.posterior)}", Green)
         }
-        Text("Combinatorics lab Ã‚Â· n=10, r=3", color = Ink, fontWeight = FontWeight.Bold)
+        Text("Combinatorics lab · n=10, r=3", color = Ink, fontWeight = FontWeight.Bold)
         Insight("Permutations", combinatorics.permutations.toString(), Cyan)
         Insight("Combinations", combinatorics.combinations.toString(), Violet)
         Insight("With replacement", combinatorics.withReplacement.toString(), Amber)
@@ -6358,7 +6951,7 @@ private fun StatisticsLabScreen(
     @Composable
     fun DataControls(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
-            PanelHeader("Interactive Statistics Lab", vm::returnToMathMenu, Cyan, icon = "xÃŒâ€ž")
+            PanelHeader("Interactive Statistics Lab", vm::returnToMathMenu, Cyan, icon = "x̄")
             ProbabilitySectionSelector(ProbabilityLabSection.Statistics, onSection)
             Text("Enter raw observations separated by commas or spaces. Every chart and statistic updates from the same data.", color = Muted, fontSize = 12.sp)
             OutlinedTextField(
@@ -6376,12 +6969,12 @@ private fun StatisticsLabScreen(
             }
             Text("Chart", color = Ink, fontWeight = FontWeight.SemiBold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                StatisticsChartType.entries.forEach { type -> GlowButton(if (chartType == type) "Ã¢â‚¬Â¢ ${type.label}" else type.label) { chartType = type } }
+                StatisticsChartType.entries.forEach { type -> GlowButton(if (chartType == type) "• ${type.label}" else type.label) { chartType = type } }
             }
             if (chartType == StatisticsChartType.Histogram) AxisSlider("Bins", binCount, 2f..16f) { binCount = it.roundToInt().toFloat() }
-            AxisSlider("HÃ¢â€šâ‚¬ mean", hypothesizedMean, -10f..30f) { hypothesizedMean = it }
+            AxisSlider("H₀ mean", hypothesizedMean, -10f..30f) { hypothesizedMean = it }
             tTest?.let { test ->
-                Insight("One-sample t", "t=${trim(test.statistic)} Ã‚Â· df=${trim(test.degreesOfFreedom)}", Violet)
+                Insight("One-sample t", "t=${trim(test.statistic)} · df=${trim(test.degreesOfFreedom)}", Violet)
                 Insight("Two-sided p", trim(test.pValueTwoSided), if (test.rejectAtFivePercent) Amber else Green)
             }
         }
@@ -6405,26 +6998,26 @@ private fun StatisticsLabScreen(
                 Insight("Range / IQR", "${trim(summary.range)} / ${trim(summary.interquartileRange)}", Green)
                 Insight("Population variance", trim(summary.populationVariance), Cyan)
                 Insight("Sample variance", trim(summary.sampleVariance), Violet)
-                Insight("Population ÃÆ’", trim(summary.populationStandardDeviation), Cyan)
+                Insight("Population σ", trim(summary.populationStandardDeviation), Cyan)
                 Insight("Sample s", trim(summary.sampleStandardDeviation), Green)
                 Insight("Standard error", trim(summary.standardError), Amber)
                 Insight("Mean abs deviation", trim(summary.meanAbsoluteDeviation), Cyan)
                 Insight("Median abs deviation", trim(summary.medianAbsoluteDeviation), Violet)
-                Insight("Skewness", summary.skewness?.let(::trim) ?: "needs n Ã¢â€°Â¥ 3", Green)
-                Insight("Excess kurtosis", summary.excessKurtosis?.let(::trim) ?: "needs n Ã¢â€°Â¥ 4", Amber)
-                Insight("Outliers (1.5Ãƒâ€”IQR)", summary.outliers.joinToString { trim(it) }.ifBlank { "none" }, if (summary.outliers.isEmpty()) Green else Amber)
+                Insight("Skewness", summary.skewness?.let(::trim) ?: "needs n ≥ 3", Green)
+                Insight("Excess kurtosis", summary.excessKurtosis?.let(::trim) ?: "needs n ≥ 4", Amber)
+                Insight("Outliers (1.5×IQR)", summary.outliers.joinToString { trim(it) }.ifBlank { "none" }, if (summary.outliers.isEmpty()) Green else Amber)
                 confidence?.let { interval -> Insight("95% mean CI", "[${trim(interval.lower)}, ${trim(interval.upper)}]", Cyan) }
                 regression?.let { model ->
-                    Insight("Regression", "slope=${trim(model.coefficients[1])} Ã‚Â· RÃ‚Â²=${model.rSquared?.let(::trim)}", Violet)
+                    Insight("Regression", "slope=${trim(model.coefficients[1])} · R²=${model.rSquared?.let(::trim)}", Violet)
                     Insight("Residual range", "${trim(model.residuals.min())} to ${trim(model.residuals.max())}", Amber)
                     model.diagnostics.forEach { diagnostic -> Insight(diagnostic.name, diagnostic.detail, if (diagnostic.passed) Green else Amber) }
                     Text("Regression assumptions: ${model.assumptions.joinToString()}", color = Muted, fontSize = 11.sp)
                 }
                 anova?.let { test ->
-                    Insight("ANOVA", "F=${trim(test.statistic)} Ã‚Â· p=${trim(test.pValue)} Ã‚Â· ÃŽÂ·Ã‚Â²=${test.effectSize?.let(::trim)}", Cyan)
+                    Insight("ANOVA", "F=${trim(test.statistic)} · p=${trim(test.pValue)} · η²=${test.effectSize?.let(::trim)}", Cyan)
                     test.diagnostics.forEach { diagnostic -> Insight(diagnostic.name, diagnostic.detail, if (diagnostic.passed) Green else Amber) }
                 }
-                bootstrap?.let { result -> Insight("Seeded bootstrap mean", "${trim(result.observed)} Ã‚Â· 95% [${trim(result.lower)}, ${trim(result.upper)}]", Green) }
+                bootstrap?.let { result -> Insight("Seeded bootstrap mean", "${trim(result.observed)} · 95% [${trim(result.lower)}, ${trim(result.upper)}]", Green) }
             }
         }
     }
@@ -6467,11 +7060,11 @@ private fun InteractiveStatisticsChart(
                     val value = minX + (tap.x / size.width).coerceIn(0f, 1f) * (maxX - minX)
                     if (type == StatisticsChartType.Histogram) {
                         val bin = histogram.firstOrNull { value >= it.lower && value <= it.upper } ?: histogram.lastOrNull()
-                        bin?.let { onSelect("Bin ${trim(it.lower)}Ã¢â‚¬â€œ${trim(it.upper)}: ${it.count} observations (${trim(it.relativeFrequency * 100)}%)") }
+                        bin?.let { onSelect("Bin ${trim(it.lower)}–${trim(it.upper)}: ${it.count} observations (${trim(it.relativeFrequency * 100)}%)") }
                     } else {
                         val nearest = sorted.minBy { abs(it - value) }
                         val rank = sorted.indexOf(nearest) + 1
-                        onSelect("Value ${trim(nearest)} Ã‚Â· ordered rank $rank of ${sorted.size}")
+                        onSelect("Value ${trim(nearest)} · ordered rank $rank of ${sorted.size}")
                     }
                 }
             }
@@ -6564,10 +7157,10 @@ private fun StatisticsMaterialsScreen(
             .fillMaxSize()
             .padding(top = 74.dp, bottom = 70.dp, start = if (wide) 42.dp else 4.dp, end = if (wide) 42.dp else 4.dp),
     ) {
-        PanelHeader("Statistics Learning Path Ã‚Â· School to PG", vm::returnToMathMenu, Cyan, icon = "Ã¢Ë†â€˜")
+        PanelHeader("Statistics Learning Path · School to PG", vm::returnToMathMenu, Cyan, icon = "∑")
         ProbabilitySectionSelector(ProbabilityLabSection.Learn, onSection)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            StatisticsStudyLevel.entries.forEach { option -> GlowButton(if (level == option) "Ã¢â‚¬Â¢ ${option.label}" else option.label) { level = option } }
+            StatisticsStudyLevel.entries.forEach { option -> GlowButton(if (level == option) "• ${option.label}" else option.label) { level = option } }
         }
         Text("${level.label} syllabus foundation", color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         lessons.forEachIndexed { index, lesson ->
@@ -6576,7 +7169,7 @@ private fun StatisticsMaterialsScreen(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text("${index + 1}. ${lesson.title}", color = Ink, fontWeight = FontWeight.Bold)
-                Text(lesson.concepts.joinToString(" Ã‚Â· "), color = Cyan, fontSize = 12.sp)
+                Text(lesson.concepts.joinToString(" · "), color = Cyan, fontSize = 12.sp)
                 Text("Interactive lab: ${lesson.lab}", color = Green, fontSize = 12.sp)
                 Text("Outcome: ${lesson.outcome}", color = Muted, fontSize = 11.sp)
             }
@@ -6666,11 +7259,11 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                         Text("Choose a shape to load its interactive scene", color = Muted, fontSize = 11.sp)
                     }
                 }
-                GlowButton("Back", icon = "Ã¢â€ Â", onClick = ::dismissTopLayerOrNavigateBack)
+                GlowButton("Back", icon = "←", onClick = ::dismissTopLayerOrNavigateBack)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                GlowButton(if (dimension == 2) "2D Ã‚Â· ${ShapeExplorer2DShapes.size}" else "2D", icon = "2D") { dimension = 2; category = "All"; compareKeys = emptyList() }
-                GlowButton(if (dimension == 3) "3D Ã‚Â· ${SolidType.entries.size}" else "3D", icon = "3D") { dimension = 3; category = "All"; compareKeys = emptyList() }
+                GlowButton(if (dimension == 2) "2D · ${ShapeExplorer2DShapes.size}" else "2D", icon = "2D") { dimension = 2; category = "All"; compareKeys = emptyList() }
+                GlowButton(if (dimension == 3) "3D · ${SolidType.entries.size}" else "3D", icon = "3D") { dimension = 3; category = "All"; compareKeys = emptyList() }
                 GlowButton(if (multiAdd) "Add: ON" else "Add many", icon = "+") { multiAdd = !multiAdd; compareMode = false }
                 GlowButton(if (compareMode) "Compare: ON" else "Compare", icon = "=") { compareMode = !compareMode; multiAdd = false; compareKeys = emptyList() }
             }
@@ -6682,8 +7275,8 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                 modifier = Modifier.fillMaxWidth(),
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                categories.forEach { item -> GlowButton(if (category == item) "Ã¢â‚¬Â¢ $item" else item) { category = item } }
-                GlowButton(if (favouritesOnly) "Ã¢â‚¬Â¢ Favourites" else "Favourites", icon = "Ã¢Ëœâ€¦") { favouritesOnly = !favouritesOnly }
+                categories.forEach { item -> GlowButton(if (category == item) "• $item" else item) { category = item } }
+                GlowButton(if (favouritesOnly) "• Favourites" else "Favourites", icon = "★") { favouritesOnly = !favouritesOnly }
             }
             if (vm.recentShapeKeys.isNotEmpty()) {
                 Text("RECENT", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.Bold)
@@ -6728,11 +7321,11 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             if (compareKeys.isNotEmpty()) {
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Violet.copy(.08f)).border(1.dp, Violet.copy(.35f), RoundedCornerShape(14.dp)).padding(9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    Text("Shape comparison Ã‚Â· choose ${2 - compareKeys.size} more", color = Violet, fontWeight = FontWeight.Bold)
+                    Text("Shape comparison · choose ${2 - compareKeys.size} more", color = Violet, fontWeight = FontWeight.Bold)
                     compareKeys.forEach { key ->
                         val formulas = if (key.startsWith("2d:")) ShapeExplorer2DShapes.firstOrNull { it.id == key.substringAfter(':') }?.let { shape2DFormulaLibrary(it.label) }.orEmpty()
                         else runCatching { SolidType.valueOf(key.substringAfter(':')) }.getOrNull()?.let(::solidFormulaLibrary).orEmpty()
-                        Text("${key.substringAfter(':')} Ã‚Â· ${formulas.size} formulas Ã‚Â· ${formulas.take(2).joinToString { it.expression }}", color = Ink, fontSize = 11.sp)
+                        Text("${key.substringAfter(':')} · ${formulas.size} formulas · ${formulas.take(2).joinToString { it.expression }}", color = Ink, fontSize = 11.sp)
                     }
                 }
             }
@@ -6748,7 +7341,7 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                 ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Column {
-                            Text("$title Ã‚Â· All Formulas", color = Violet, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                            Text("$title · All Formulas", color = Violet, fontSize = 17.sp, fontWeight = FontWeight.Bold)
                             Text("${formulas.size} formulas available", color = Muted, fontSize = 10.sp)
                         }
                         GlowButton("Close", icon = "X") { formulaKey = null }
@@ -6805,8 +7398,8 @@ private fun ShapeCatalogButton(label: String, icon: String, favourite: Boolean, 
     ) {
         TransparentIcon(icon, if (selected) Violet else Cyan)
         Text(label, color = Ink, fontSize = 12.sp, maxLines = 1)
-        Text("Ã†â€™", color = Violet, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable(onClick = onFormulas).padding(5.dp).semantics { contentDescription = "Show all formulas for $label" })
-        Text(if (favourite) "Ã¢Ëœâ€¦" else "Ã¢Ëœâ€ ", color = if (favourite) Amber else Muted, fontSize = 18.sp, modifier = Modifier.clickable(onClick = onFavourite).padding(5.dp).semantics { contentDescription = "${if (favourite) "Remove" else "Add"} $label favourite" })
+        Text("ƒ", color = Violet, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable(onClick = onFormulas).padding(5.dp).semantics { contentDescription = "Show all formulas for $label" })
+        Text(if (favourite) "★" else "☆", color = if (favourite) Amber else Muted, fontSize = 18.sp, modifier = Modifier.clickable(onClick = onFavourite).padding(5.dp).semantics { contentDescription = "${if (favourite) "Remove" else "Add"} $label favourite" })
     }
 }
 
@@ -6858,7 +7451,7 @@ private fun MathematicsMenuPanel(
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
             GlowButton(option.title, icon = option.icon) { openWorkspaceOption(option.title) }
             Text(
-                if (option.title in vm.pinnedMathTools) "Ã¢Ëœâ€¦" else "Ã¢Ëœâ€ ",
+                if (option.title in vm.pinnedMathTools) "★" else "☆",
                 color = if (option.title in vm.pinnedMathTools) Amber else Muted,
                 fontSize = 18.sp,
                 modifier = Modifier.clickable { vm.togglePinnedMathTool(option.title) }.padding(5.dp)
@@ -6868,8 +7461,8 @@ private fun MathematicsMenuPanel(
     }
 
     GlassPanel(modifier) {
-        PanelHeader("Maths Tool Launcher", vm::toggleMathMenu, Cyan, icon = "Ã¢Å’â€¢", onMove = onMove)
-        Text(vm.mathsBreadcrumb.joinToString(" Ã¢â€ â€™ "), color = Green, fontSize = 11.sp, modifier = Modifier.semantics { contentDescription = "Maths breadcrumb" })
+        PanelHeader("Maths Tool Launcher", vm::toggleMathMenu, Cyan, icon = "⌕", onMove = onMove)
+        Text(vm.mathsBreadcrumb.joinToString(" → "), color = Green, fontSize = 11.sp, modifier = Modifier.semantics { contentDescription = "Maths breadcrumb" })
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GlowButton("Home", icon = "H", onClick = vm::openSubjectHub)
             GlowButton("Current Workspace", onClick = vm::toggleMathMenu)
@@ -6930,10 +7523,29 @@ private fun MathematicsMenuPanel(
                             .padding(9.dp),
                         verticalArrangement = Arrangement.spacedBy(7.dp),
                     ) {
-                        Text("Math Concepts Ã‚Â· 27 subjects", color = Violet, fontWeight = FontWeight.SemiBold)
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                            MathConceptCategories.forEach { concept ->
-                                GlowButton(concept) { futureSelection = concept }
+                        Text(
+                            "Math Concepts · ${MathConceptCatalog.concepts.size} subjects · ${MathConceptCatalog.concepts.sumOf { it.subtopics.size }} sub-concepts",
+                            color = Violet,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        MathConceptCatalog.concepts.forEach { concept ->
+                            Column(
+                                Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
+                                    .background(Violet.copy(alpha = .06f))
+                                    .border(1.dp, Violet.copy(alpha = .22f), RoundedCornerShape(10.dp))
+                                    .padding(7.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp),
+                            ) {
+                                GlowButton("${concept.title} · All", icon = concept.icon) {
+                                    vm.openConceptLibrary(concept.title)
+                                }
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                    concept.subtopics.forEach { subConcept ->
+                                        GlowButton(subConcept) {
+                                            vm.openConceptLibrary(concept.title, subConcept)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -6986,6 +7598,7 @@ private fun radialBackdrop() = Brush.radialGradient(
 private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(!compact) }
     val activity = LocalActivity.current
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     val scope = rememberCoroutineScope()
     val importProject = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri == null || activity == null) return@rememberLauncherForActivityResult
@@ -7009,25 +7622,30 @@ private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-            GlowButton("Back", icon = "Ã¢â€ Â", iconOnly = compact, onClick = vm::navigateBackIntent)
-            GlowButton("Menu", icon = "Ã¢â€°Â¡", iconOnly = compact, onClick = vm::toggleMathMenu)
+            GlowButton(
+                "Back",
+                icon = "←",
+                iconOnly = compact,
+                onClick = { backDispatcher?.onBackPressed() ?: vm.navigateBackIntent() },
+            )
+            GlowButton("Menu", icon = "≡", iconOnly = compact, onClick = vm::toggleMathMenu)
         }
         Column(
             Modifier.clickable { expanded = !expanded }.padding(horizontal = 5.dp)
-                .semantics { contentDescription = "Breadcrumb ${vm.mathsBreadcrumb.joinToString(" Ã¢â€ â€™ ")}" },
+                .semantics { contentDescription = "Breadcrumb ${vm.mathsBreadcrumb.joinToString(" → ")}" },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("AI Maths Explorer ${if (expanded) "Ã¢Å’Æ’" else "Ã¢Å’â€ž"}", color = Ink, fontSize = if (compact) 18.sp else 24.sp, fontWeight = FontWeight.ExtraBold)
+            Text("AI Maths Explorer ${if (expanded) "⌃" else "⌄"}", color = Ink, fontSize = if (compact) 18.sp else 24.sp, fontWeight = FontWeight.ExtraBold)
             Text(
-                vm.mathsBreadcrumb.joinToString(" Ã¢â€ â€™ "),
+                vm.mathsBreadcrumb.joinToString(" → "),
                 color = Muted,
                 fontSize = if (compact) 9.sp else 12.sp,
                 maxLines = 1,
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 8.dp)) {
-            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "Ã¢â€ Â¶" else "Undo", enabled = vm.canUndo, onClick = vm::undo) }
-            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "Ã¢â€ Â·" else "Redo", enabled = vm.canRedo, onClick = vm::redo) }
+            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "↶" else "Undo", enabled = vm.canUndo, onClick = vm::undo) }
+            AnimatedVisibility(expanded || !compact) { GlowButton(if (compact) "↷" else "Redo", enabled = vm.canRedo, onClick = vm::redo) }
             AnimatedVisibility(expanded && !compact) { GlowButton("Save", onClick = vm::saveWorkspace) }
             AnimatedVisibility(expanded && !compact) { GlowButton("Import") { importProject.launch(arrayOf("application/*", "text/plain")) } }
             AnimatedVisibility(expanded && !compact) {
@@ -7043,7 +7661,7 @@ private fun TopShell(vm: ExplorerViewModel, compact: Boolean, modifier: Modifier
                 }
             }
             AnimatedVisibility(vm.state.module != MathModule.Graph2D) {
-                GlowButton(if (compact) "Ã¢â€¹Â®" else "More", enabled = true, onClick = vm::toggleActionDock)
+                GlowButton(if (compact) "⋮" else "More", enabled = true, onClick = vm::toggleActionDock)
             }
         }
     }
@@ -7062,21 +7680,21 @@ private fun LearningCoachPanel(vm: ExplorerViewModel, modifier: Modifier = Modif
     ) {
         PanelHeader("Learning Coach", vm::hidePanels, Green)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            GlowButton(if (vm.learningRole == LearningRole.Learner) "Ã¢â‚¬Â¢ Learner" else "Learner", onClick = { vm.switchLearningRole(LearningRole.Learner) })
-            GlowButton(if (vm.learningRole == LearningRole.Teacher) "Ã¢â‚¬Â¢ Teacher" else "Teacher", onClick = { vm.switchLearningRole(LearningRole.Teacher) })
+            GlowButton(if (vm.learningRole == LearningRole.Learner) "• Learner" else "Learner", onClick = { vm.switchLearningRole(LearningRole.Learner) })
+            GlowButton(if (vm.learningRole == LearningRole.Teacher) "• Teacher" else "Teacher", onClick = { vm.switchLearningRole(LearningRole.Teacher) })
         }
-        Text("Progress $progress Ã‚Â· ${vm.activeProgress?.percent(activity) ?: 0}% current", color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+        Text("Progress $progress · ${vm.activeProgress?.percent(activity) ?: 0}% current", color = Cyan, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
         Text(activity.title, color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Text(activity.objective, color = Muted, fontSize = 13.sp)
         Insight("Allowed", activity.allowedTools.joinToString().ifBlank { "Open exploration" }, Cyan)
         Insight(
             "Linked maths",
-            "CAS ${linkedSnapshot.objectsFor(LinkedMathView.CAS).size} Ã‚Â· Graph ${linkedSnapshot.objectsFor(LinkedMathView.Graph).size} Ã‚Â· Table ${linkedSnapshot.objectsFor(LinkedMathView.Table).size} Ã‚Â· Geometry ${linkedSnapshot.objectsFor(LinkedMathView.Geometry).size} Ã‚Â· Probability ${linkedSnapshot.objectsFor(LinkedMathView.Probability).size}",
+            "CAS ${linkedSnapshot.objectsFor(LinkedMathView.CAS).size} · Graph ${linkedSnapshot.objectsFor(LinkedMathView.Graph).size} · Table ${linkedSnapshot.objectsFor(LinkedMathView.Table).size} · Geometry ${linkedSnapshot.objectsFor(LinkedMathView.Geometry).size} · Probability ${linkedSnapshot.objectsFor(LinkedMathView.Probability).size}",
             Violet,
         )
         Insight(
             "Maths authority",
-            "${universalDocument.objects.size} typed objects Ã‚Â· revision ${universalDocument.revision} Ã‚Â· one dependency graph",
+            "${universalDocument.objects.size} typed objects · revision ${universalDocument.revision} · one dependency graph",
             Green,
         )
         if (linkedSnapshot.diagnostics.isNotEmpty()) Insight("Kernel diagnostics", linkedSnapshot.diagnostics.take(2).joinToString(), Amber)
@@ -7086,7 +7704,7 @@ private fun LearningCoachPanel(vm: ExplorerViewModel, modifier: Modifier = Modif
             val result = vm.lastValidation.checkpoints.firstOrNull { it.checkpointId == checkpoint.id }
             val completed = checkpoint.id in vm.activeProgress?.completedCheckpointIds.orEmpty()
             Insight(
-                if (completed || result?.passed == true) "Ã¢Å“â€œ ${checkpoint.title}" else "Ã¢â€”â€¹ ${checkpoint.title}",
+                if (completed || result?.passed == true) "✓ ${checkpoint.title}" else "○ ${checkpoint.title}",
                 result?.message ?: checkpoint.instruction,
                 if (completed || result?.passed == true) Green else Cyan,
             )
@@ -7101,14 +7719,14 @@ private fun LearningCoachPanel(vm: ExplorerViewModel, modifier: Modifier = Modif
             GlowButton("Package", onClick = { vm.exportLearningPackage() })
         }
         vm.activeProgress?.let {
-            Text("Attempts ${it.attempts} Ã‚Â· hints ${it.hintsUsed} Ã‚Â· offline changes ${vm.pendingLearningOperations}", color = Muted, fontSize = 11.sp)
+            Text("Attempts ${it.attempts} · hints ${it.hintsUsed} · offline changes ${vm.pendingLearningOperations}", color = Muted, fontSize = 11.sp)
         }
         if (vm.learningRole == LearningRole.Teacher) {
             val summary = vm.teacherSummary
             Text("Teacher dashboard", color = Ink, fontWeight = FontWeight.SemiBold)
             Insight("Assignment", vm.assignments.first().title, Violet)
-            Insight("Completion", "${summary.completedLessons}/${summary.assignedLessons} lessons Ã‚Â· ${summary.checkpointsCompleted} checkpoints", Green)
-            Insight("Support", "${summary.attempts} attempts Ã‚Â· ${summary.hintsUsed} hints", Amber)
+            Insight("Completion", "${summary.completedLessons}/${summary.assignedLessons} lessons · ${summary.checkpointsCompleted} checkpoints", Green)
+            Insight("Support", "${summary.attempts} attempts · ${summary.hintsUsed} hints", Amber)
             Insight("Needs attention", summary.needsAttention.joinToString().ifBlank { "No learner flags" }, summary.needsAttention.takeIf { it.isNotEmpty() }?.let { Amber } ?: Green)
         }
         InteractiveActivityStudioCard(vm.learningRole)
@@ -7204,19 +7822,19 @@ private fun ProductionReadinessCard(vm: ExplorerViewModel) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text("Project & device readiness", color = Green, fontWeight = FontWeight.Bold)
-                Text("Checksummed save Ã‚Â· exchange coverage Ã‚Â· adaptive quality", color = Muted, fontSize = 11.sp)
+                Text("Checksummed save · exchange coverage · adaptive quality", color = Muted, fontSize = 11.sp)
             }
             GlowButton(if (expanded) "Hide" else "Inspect") { expanded = !expanded }
         }
-        Insight("Runtime", "${performance.status} ${performance.score}/100 Ã‚Â· ${device.tier}", if (performance.score >= 90) Green else Amber)
+        Insight("Runtime", "${performance.status} ${performance.score}/100 · ${device.tier}", if (performance.score >= 90) Green else Amber)
         if (expanded) {
-            Insight("Local reliability", "${"%.2f".format(reliability.cleanSessionRate * 100)}% clean Ã‚Â· ${reliability.sessions} sessions", if (reliability.cleanSessionRate >= .998) Green else Amber)
-            Insight("Project archive", "${archive.toByteArray().size / 1024} KB Ã‚Â· ${document.objects.size} typed maths objects", Cyan)
-            Insight("GeoGebra XML", "${exchange.exported} translated Ã‚Â· ${exchange.skipped.size} explicitly skipped", Violet)
+            Insight("Local reliability", "${"%.2f".format(reliability.cleanSessionRate * 100)}% clean · ${reliability.sessions} sessions", if (reliability.cleanSessionRate >= .998) Green else Amber)
+            Insight("Project archive", "${archive.toByteArray().size / 1024} KB · ${document.objects.size} typed maths objects", Cyan)
+            Insight("GeoGebra XML", "${exchange.exported} translated · ${exchange.skipped.size} explicitly skipped", Violet)
             Insight("Fallback", if ("live AR" in device.enabled) "Live AR available" else "Full simulator and 2D maths remain enabled", Amber)
             Insight("Surface density", device.recommendedSurfaceDensity.toString(), Cyan)
             performance.messages.forEach { Text(it, color = if (performance.status.name == "Pass") Green else Amber, fontSize = 11.sp) }
-            exchange.skipped.take(3).forEach { Text("Exchange gap Ã‚Â· $it", color = Amber, fontSize = 10.sp) }
+            exchange.skipped.take(3).forEach { Text("Exchange gap · $it", color = Amber, fontSize = 10.sp) }
             Text("Live AR capability is finalized inside the AR workspace after permission and ARCore checks.", color = Muted, fontSize = 10.sp)
         }
     }
@@ -7318,14 +7936,14 @@ private fun InteractiveActivityStudioCard(role: LearningRole) {
             }
             GlowButton(if (expanded) "Collapse" else "Open") { expanded = !expanded }
         }
-        Insight("Activity", "${document.blocks.size} blocks Ã‚Â· ${if (validation.valid) "ready" else "needs links"} Ã‚Â· revision ${document.revision}", if (validation.valid) Green else Amber)
+        Insight("Activity", "${document.blocks.size} blocks · ${if (validation.valid) "ready" else "needs links"} · revision ${document.revision}", if (validation.valid) Green else Amber)
         if (expanded) {
             if (role == LearningRole.Teacher) {
                 Text("Author blocks", color = Cyan, fontWeight = FontWeight.SemiBold)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     listOf("Instruction", "Math check", "MCQ", "Workspace", "Tiles", "Proof", "Branch", "Reflection").forEach { label -> TransparentIcon(label.take(2), Cyan) }
                 }
-                document.blocks.forEachIndexed { index, block -> Text("${index + 1}. ${block.javaClass.simpleName} Ã‚Â· ${block.title}", color = Muted, fontSize = 11.sp) }
+                document.blocks.forEachIndexed { index, block -> Text("${index + 1}. ${block.javaClass.simpleName} · ${block.title}", color = Muted, fontSize = 11.sp) }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     GlowButton("Add reflection") {
                         val id = "reflection-${document.revision + 1}"
@@ -7339,10 +7957,10 @@ private fun InteractiveActivityStudioCard(role: LearningRole) {
                     GlowButton("Validate") { document = document.copy(revision = document.revision + 1) }
                 }
                 validation.errors.forEach { Text(it, color = Amber, fontSize = 11.sp) }
-                Text("Export Ã‚Â· ${InteractiveActivityAuthoring.serialize(document).take(72)}Ã¢â‚¬Â¦", color = Muted, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                Text("Export · ${InteractiveActivityAuthoring.serialize(document).take(72)}…", color = Muted, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
             } else if (run.completed) {
-                Text("Activity complete Ã‚Â· score ${run.score}%", color = Green, fontWeight = FontWeight.Bold)
-                run.mastery.values.forEach { Insight(it.skill, "${trim(it.score * 100)}% Ã‚Â· ${it.band}", Green) }
+                Text("Activity complete · score ${run.score}%", color = Green, fontWeight = FontWeight.Bold)
+                run.mastery.values.forEach { Insight(it.skill, "${trim(it.score * 100)}% · ${it.band}", Green) }
                 GlowButton("Restart") { run = engine.start(document); response = "" }
             } else if (current != null) {
                 Text(current.title, color = Cyan, fontWeight = FontWeight.Bold)
@@ -7452,7 +8070,7 @@ private fun BottomModeSelector(active: MathModule, onSelect: (MathModule) -> Uni
         if (!expanded) {
             TransparentIcon(visualModuleIcon(active), Cyan)
             Text(activeLabel, color = Ink, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
-            Text("Ã¢Å’Æ’", color = Cyan, fontSize = 18.sp, modifier = Modifier.clickable { expanded = true }.padding(horizontal = 12.dp, vertical = 8.dp).semantics { contentDescription = "Show navigation" })
+            Text("⌃", color = Cyan, fontSize = 18.sp, modifier = Modifier.clickable { expanded = true }.padding(horizontal = 12.dp, vertical = 8.dp).semantics { contentDescription = "Show navigation" })
         }
         if (expanded) MathModule.entries.forEach { module ->
             val selected = module == active
@@ -7480,7 +8098,7 @@ private fun BottomModeSelector(active: MathModule, onSelect: (MathModule) -> Uni
                 Text(compactLabel, color = if (selected) Color.White else Muted, textAlign = TextAlign.Center, maxLines = 1, fontSize = 10.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)
             }
         }
-        if (expanded) Text("Ã¢Å’â€ž", color = Muted, modifier = Modifier.clickable { expanded = false }.padding(horizontal = 6.dp, vertical = 10.dp).semantics { contentDescription = "Collapse navigation" })
+        if (expanded) Text("⌄", color = Muted, modifier = Modifier.clickable { expanded = false }.padding(horizontal = 6.dp, vertical = 10.dp).semantics { contentDescription = "Collapse navigation" })
     }
 }
 
@@ -7568,7 +8186,7 @@ private fun Shape2DStudioPanel(vm: ExplorerViewModel, shape: Shape2D, compact: B
     val allShapeDetails = vm.state.shapes.map { shapeExplorer2DDetails(it, vm.state.points) }
     val panelModifier = if (compact) modifier.fillMaxWidth(.96f) else modifier.padding(top = 64.dp).width(380.dp)
     GlassPanel(panelModifier) {
-        PanelHeader("2D Shape Studio", vm::hidePanels, Violet, icon = "Ã†â€™")
+        PanelHeader("2D Shape Studio", vm::hidePanels, Violet, icon = "ƒ")
         OutlinedTextField(value = name, onValueChange = { name = it }, singleLine = true, label = { Text("Object name") }, modifier = Modifier.fillMaxWidth())
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             GlowButton("Rename") { vm.renameExplorerSelection(name) }
@@ -7581,7 +8199,7 @@ private fun Shape2DStudioPanel(vm: ExplorerViewModel, shape: Shape2D, compact: B
             OutlinedTextField(value = heightText, onValueChange = { heightText = it }, singleLine = true, label = { Text("Height") }, modifier = Modifier.weight(1f))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            GlowButton(if (keepProportions) "Ã¢â‚¬Â¢ Keep ratio" else "Free ratio") { keepProportions = !keepProportions }
+            GlowButton(if (keepProportions) "• Keep ratio" else "Free ratio") { keepProportions = !keepProportions }
             GlowButton("Set dimensions") { vm.resizeExplorerShape2D(widthText.toDoubleOrNull() ?: currentWidth, heightText.toDoubleOrNull() ?: currentHeight, keepProportions) }
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -7590,11 +8208,11 @@ private fun Shape2DStudioPanel(vm: ExplorerViewModel, shape: Shape2D, compact: B
             GlowButton(if (shape.locked) "Unlock" else "Lock") { vm.updateSelectedShape { it.copy(locked = !it.locked) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            GlowButton("Rotate -15Ã‚Â°") { vm.rotateExplorerShape2D(-15.0) }
-            GlowButton("Rotate +15Ã‚Â°") { vm.rotateExplorerShape2D(15.0) }
+            GlowButton("Rotate -15°") { vm.rotateExplorerShape2D(-15.0) }
+            GlowButton("Rotate +15°") { vm.rotateExplorerShape2D(15.0) }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            listOf("unit", "cm", "mm", "in").forEach { choice -> GlowButton(if (unit == choice) "Ã¢â‚¬Â¢ $choice" else choice) { unit = choice } }
+            listOf("unit", "cm", "mm", "in").forEach { choice -> GlowButton(if (unit == choice) "• $choice" else choice) { unit = choice } }
         }
         Insight("Area", "${trim(details.area * unitFactor * unitFactor)} ${unit}^2", Violet)
         Insight("Perimeter", "${trim(details.perimeter * unitFactor)} $unit", Green)
@@ -7602,19 +8220,19 @@ private fun Shape2DStudioPanel(vm: ExplorerViewModel, shape: Shape2D, compact: B
             Insight("Composite area", trim(allShapeDetails.sumOf { it.area }), Amber)
             Insight("Composite perimeter", trim(allShapeDetails.sumOf { it.perimeter }), Amber)
         }
-        Text("ALL FORMULAS Ã‚Â· ${formulas.size}", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+        Text("ALL FORMULAS · ${formulas.size}", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         formulas.forEach { formula -> Insight(formula.name, latexStyleFormula(formula.expression), Violet) }
         GlowButton("Copy all formulas", icon = "Copy") { copyShapeText(context, "${shape.name} formulas", formulas.joinToString("\n") { "${it.name}: ${it.expression}" }) }
         Text("SUBSTITUTION & METHOD", color = Green, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         Text("Current result: A = ${trim(details.area)}, P = ${trim(details.perimeter)}. Measure the labelled control points, substitute them into the selected identity, preserve units, then simplify.", color = Ink, fontSize = 11.sp)
-        Insight("Variables", "A area Ã‚Â· P perimeter Ã‚Â· a,b sides Ã‚Â· h height Ã‚Â· r radius", Cyan)
+        Insight("Variables", "A area · P perimeter · a,b sides · h height · r radius", Cyan)
         Insight("Symmetry", when (preset?.label) { "Circle" -> "infinitely many lines"; "Square" -> "4 lines, order 4"; "Rectangle", "Rhombus" -> "2 lines, order 2"; "Equilateral Triangle" -> "3 lines, order 3"; else -> "depends on current geometry" }, Amber)
-        Insight("Angles", "Interior sum = (n-2) Ãƒâ€” 180Ã‚Â°", Amber)
-        Insight("Circles", "Inradius r = A/s Ã‚Â· circumradius R from perpendicular bisectors", Amber)
-        Text("Decompose into triangles to verify area; combine multiple objects for composite figures. Resizing demonstrates that perimeter scales by k while area scales by kÃ‚Â².", color = Muted, fontSize = 10.sp)
+        Insight("Angles", "Interior sum = (n-2) × 180°", Amber)
+        Insight("Circles", "Inradius r = A/s · circumradius R from perpendicular bisectors", Amber)
+        Text("Decompose into triangles to verify area; combine multiple objects for composite figures. Resizing demonstrates that perimeter scales by k while area scales by k².", color = Muted, fontSize = 10.sp)
         Text("GUIDED CONSTRUCTION", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         val steps = listOf("Identify defining dimensions", "Place the first control point", "Construct remaining vertices", "Check constraints and symmetry", "Verify area and perimeter")
-        Text("${lessonStep + 1}/${steps.size} Ã‚Â· ${steps[lessonStep]}", color = Ink, fontWeight = FontWeight.SemiBold)
+        Text("${lessonStep + 1}/${steps.size} · ${steps[lessonStep]}", color = Ink, fontWeight = FontWeight.SemiBold)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton("Previous", enabled = lessonStep > 0) { lessonStep-- }
             GlowButton("Next", enabled = lessonStep < steps.lastIndex) { lessonStep++ }
@@ -7627,7 +8245,7 @@ private fun Shape2DStudioPanel(vm: ExplorerViewModel, shape: Shape2D, compact: B
         Text("EXPORT", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             GlowButton("SVG") { val file = writeShapeTextAsset(context, shape.name, "svg", shape2DSvg(shape, vm.state.points)); copyShapeText(context, "SVG export", file.absolutePath) }
-            GlowButton("PNG") { val file = writeShapePng(context, shape.name, "Area ${trim(details.area)} Ã‚Â· Perimeter ${trim(details.perimeter)}"); copyShapeText(context, "PNG export", file.absolutePath) }
+            GlowButton("PNG") { val file = writeShapePng(context, shape.name, "Area ${trim(details.area)} · Perimeter ${trim(details.perimeter)}"); copyShapeText(context, "PNG export", file.absolutePath) }
             GlowButton("PDF") { val file = writeShapePdf(context, shape.name, formulas.map { "${it.name}: ${it.expression}" } + "Area: ${trim(details.area)}" + "Perimeter: ${trim(details.perimeter)}"); copyShapeText(context, "PDF export", file.absolutePath) }
         }
     }
@@ -7660,27 +8278,27 @@ private fun Shape3DStudioPanel(vm: ExplorerViewModel, index: Int, solid: Solid, 
             GlowButton("Rotate X") { vm.transformSolid(index) { it.copy(rotation = it.rotation + Vec3(15.0, 0.0, 0.0)) } }
             GlowButton("Rotate Y") { vm.transformSolid(index) { it.copy(rotation = it.rotation + Vec3(0.0, 15.0, 0.0)) } }
         }
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { listOf("unit", "cm", "mm", "in").forEach { choice -> GlowButton(if (unit == choice) "Ã¢â‚¬Â¢ $choice" else choice) { unit = choice } } }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { listOf("unit", "cm", "mm", "in").forEach { choice -> GlowButton(if (unit == choice) "• $choice" else choice) { unit = choice } } }
         Insight("Surface area", "${trim(measurements.surfaceArea * factor * factor)} ${unit}^2", Violet)
         Insight("Volume", "${trim(measurements.volume * factor * factor * factor)} ${unit}^3", Green)
-        Insight("Topology", "${measurements.faces} faces Â· ${measurements.edges} edges Â· ${measurements.vertices} vertices", Cyan)
+        Insight("Topology", "${measurements.faces} faces · ${measurements.edges} edges · ${measurements.vertices} vertices", Cyan)
         if (vm.state.solids.size > 1) {
             Insight("Composite surface", trim(totals.sumOf { it.surfaceArea }), Amber)
             Insight("Composite volume", trim(totals.sumOf { it.volume }), Amber)
         }
-        Text("ALL FORMULAS Ã‚Â· ${formulas.size}", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+        Text("ALL FORMULAS · ${formulas.size}", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         formulas.forEach { formula -> Insight(formula.name, latexStyleFormula(formula.expression), Violet) }
         GlowButton("Copy all formulas", icon = "Copy") { copyShapeText(context, "${solid.type} formulas", formulas.joinToString("\n") { "${it.name}: ${it.expression}" }) }
         Text("DERIVATION & VARIABLES", color = Green, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         Text("Substitute the live dimensions shown above. Base-area methods use V = Bh for prisms and V = Bh/3 for pyramids; surface area is the sum of every exposed face.", color = Ink, fontSize = 11.sp)
-        Insight("Variables", "B base Ã‚Â· p perimeter Ã‚Â· h height Ã‚Â· r radius Ã‚Â· s slant", Cyan)
-        Insight("Bounds", "${trim(solid.width)} Ãƒâ€” ${trim(solid.height)} Ãƒâ€” ${trim(solid.depth)}", Amber)
+        Insight("Variables", "B base · p perimeter · h height · r radius · s slant", Cyan)
+        Insight("Bounds", "${trim(solid.width)} × ${trim(solid.height)} × ${trim(solid.depth)}", Amber)
         Text("NET & CROSS-SECTION", color = Amber, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-        Text("Net: ${measurements.faces} connected face panels Ã‚Â· fold ${trim(fold.toDouble() * 100)}%", color = Ink, fontSize = 11.sp)
+        Text("Net: ${measurements.faces} connected face panels · fold ${trim(fold.toDouble() * 100)}%", color = Ink, fontSize = 11.sp)
         Slider(value = fold, onValueChange = { fold = it }, valueRange = 0f..1f)
-        Text("Use the 3D Tools pane outside Shape Studio for live clipping and planar cross-sections. Scaling by k preserves shape while surface changes by kÃ‚Â² and volume by kÃ‚Â³.", color = Muted, fontSize = 10.sp)
+        Text("Use the 3D Tools pane outside Shape Studio for live clipping and planar cross-sections. Scaling by k preserves shape while surface changes by k² and volume by k³.", color = Muted, fontSize = 10.sp)
         val steps = listOf("Identify the base", "Construct or inspect the net", "Fold faces around shared edges", "Measure height and radius", "Verify surface area and volume")
-        Text("Lesson ${lessonStep + 1}/${steps.size} Ã‚Â· ${steps[lessonStep]}", color = Ink, fontWeight = FontWeight.SemiBold)
+        Text("Lesson ${lessonStep + 1}/${steps.size} · ${steps[lessonStep]}", color = Ink, fontWeight = FontWeight.SemiBold)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton("Previous", enabled = lessonStep > 0) { lessonStep-- }
             GlowButton("Next", enabled = lessonStep < steps.lastIndex) { lessonStep++ }
@@ -7693,7 +8311,7 @@ private fun Shape3DStudioPanel(vm: ExplorerViewModel, index: Int, solid: Solid, 
         Text("EXPORT", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             GlowButton("OBJ model") { val file = writeShapeTextAsset(context, solid.type.name, "obj", solidObj(solid)); copyShapeText(context, "OBJ export", file.absolutePath) }
-            GlowButton("PNG") { val file = writeShapePng(context, solid.type.name, "Surface ${trim(measurements.surfaceArea)} Ã‚Â· Volume ${trim(measurements.volume)}"); copyShapeText(context, "PNG export", file.absolutePath) }
+            GlowButton("PNG") { val file = writeShapePng(context, solid.type.name, "Surface ${trim(measurements.surfaceArea)} · Volume ${trim(measurements.volume)}"); copyShapeText(context, "PNG export", file.absolutePath) }
             GlowButton("PDF") { val file = writeShapePdf(context, solid.type.name, formulas.map { "${it.name}: ${it.expression}" } + "Surface: ${trim(measurements.surfaceArea)}" + "Volume: ${trim(measurements.volume)}"); copyShapeText(context, "PDF export", file.absolutePath) }
         }
     }
@@ -7915,17 +8533,17 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text(selectedShape.name, color = Cyan, fontSize = 17.sp, fontWeight = FontWeight.Bold)
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        GlowButton("All formulas", icon = "Ã†â€™", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
+                        GlowButton("All formulas", icon = "ƒ", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
                         GlowButton("Shapes", icon = "SE", iconOnly = compact, onClick = vm::openShapesExplorer)
                     }
                 }
                 Text(details.formula, color = Ink, fontSize = if (compact) 11.sp else 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 2)
-                Text("Area ${trim(details.area)}  Ã‚Â·  Perimeter ${trim(details.perimeter)}", color = Green, fontSize = 12.sp, maxLines = 1)
+                Text("Area ${trim(details.area)}  ·  Perimeter ${trim(details.perimeter)}", color = Green, fontSize = 12.sp, maxLines = 1)
                 Text("Drag a glowing point to resize.", color = Muted, fontSize = 10.sp, maxLines = 1)
             }
         }
         if (!vm.shapeExplorerScene) InteractionHint(
-            "Drag a junction to resize Ã‚Â· drag shape to move Ã‚Â· empty canvas pans Ã‚Â· empty two-finger pinch zooms",
+            "Drag a junction to resize · drag shape to move · empty canvas pans · empty two-finger pinch zooms",
             Modifier.align(Alignment.BottomEnd),
         )
         DeleteDropTarget(
@@ -7935,11 +8553,11 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
         )
         if (!vm.shapeExplorerScene && selectedShape != null) SmartSelectionHud(
             title = selectedShape.name,
-            instruction = if (selectedShape.locked) "Locked Ã‚Â· unlock to drag or resize" else "Drag body to move Ã‚Â· junctions resize Ã‚Â· top handle rotates",
+            instruction = if (selectedShape.locked) "Locked · unlock to drag or resize" else "Drag body to move · junctions resize · top handle rotates",
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 76.dp),
         ) {
             GlowButton(if (selectedShape.locked) "Unlock" else "Lock") { vm.updateSelectedShape { it.copy(locked = !it.locked) } }
-            GlowButton("Delete", icon = "Ãƒâ€”", onClick = vm::deleteSelectedShape)
+            GlowButton("Delete", icon = "×", onClick = vm::deleteSelectedShape)
         }
         if (!vm.shapeExplorerScene) Column(
             Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(.82f)).animateContentSize().padding(4.dp),
@@ -7955,10 +8573,10 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             }
             AnimatedVisibility(viewToolsExpanded) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    GlowButton("Ã¢Å’â€š Fit") { homeRequest++ }
+                    GlowButton("⌂ Fit") { homeRequest++ }
                     GlowButton("Undo view") { undoViewRequest++ }
-                    GlowButton(if (lassoEnabled) "Ã¢â€”Â Lasso" else "Lasso") { lassoEnabled = !lassoEnabled; if (lassoEnabled) boxSelectEnabled = false }
-                    GlowButton(if (boxSelectEnabled) "Ã¢â€”Â Box" else "Box") { boxSelectEnabled = !boxSelectEnabled; if (boxSelectEnabled) lassoEnabled = false }
+                    GlowButton(if (lassoEnabled) "● Lasso" else "Lasso") { lassoEnabled = !lassoEnabled; if (lassoEnabled) boxSelectEnabled = false }
+                    GlowButton(if (boxSelectEnabled) "● Box" else "Box") { boxSelectEnabled = !boxSelectEnabled; if (boxSelectEnabled) lassoEnabled = false }
                     GlowButton("Copy", enabled = vm.selectedShapes.isNotEmpty()) { copyShapeText(context, "AI Explorer geometry", vm.exportSelectedGeometry()) }
                     GlowButton("Paste") {
                         val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
@@ -7984,7 +8602,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(shape.name, color = Amber, fontWeight = FontWeight.Bold)
-                        GlowButton("Ãƒâ€”") { contextMenuShapeIndex = null }
+                        GlowButton("×") { contextMenuShapeIndex = null }
                     }
                     Text("Object actions at the touched geometry", color = Muted, fontSize = 10.sp)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -7995,7 +8613,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                         GlowButton("Back") { vm.reorderSelectedShape(false); contextMenuShapeIndex = null }
                         GlowButton("Style") { vm.updateSelectedShape { it.copy(styleKey = if (it.styleKey == "default") "accent" else "default") } }
                         GlowButton("Copy") { copyShapeText(context, "AI Explorer geometry", vm.exportSelectedGeometry()) }
-                        GlowButton("RenameÃ¢â‚¬Â¦") { vm.togglePanel(PanelSlot.Right); contextMenuShapeIndex = null }
+                        GlowButton("Rename…") { vm.togglePanel(PanelSlot.Right); contextMenuShapeIndex = null }
                         GlowButton("Delete") { vm.deleteSelectedShape(); contextMenuShapeIndex = null }
                     }
                 }
@@ -8018,7 +8636,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 AnimatedVisibility(contextToolsExpanded) {
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         quickContextTools.forEach { tool -> GlowButton(tool.label) { vm.applyContextualGeometryTool(tool.toolName, tool.pointIndices) } }
-                        GlowButton("MoreÃ¢â‚¬Â¦") { vm.togglePanel(PanelSlot.Right) }
+                        GlowButton("More…") { vm.togglePanel(PanelSlot.Right) }
                     }
                 }
             }
@@ -8044,7 +8662,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
         }
         if (replayingProtocol) {
             Text(
-                "Protocol replay Ã‚Â· ${protocolStep.roundToInt()}/$protocolSize Ã‚Â· editing paused",
+                "Protocol replay · ${protocolStep.roundToInt()}/$protocolSize · editing paused",
                 color = Amber,
                 fontSize = 11.sp,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 72.dp).clip(RoundedCornerShape(12.dp)).background(SurfaceA.copy(.94f)).padding(horizontal = 10.dp, vertical = 7.dp),
@@ -8064,13 +8682,13 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             Text("Tap flow: ${vm.geometryTool.name} needs ${vm.geometryTool.requiredTapCount()} tap(s)", color = Muted, fontSize = 12.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 GeometryTool.entries.filterNot { it == GeometryTool.Measure }.forEach {
-                    GlowButton(if (vm.geometryTool == it) "Ã¢â‚¬Â¢ ${it.name}" else it.name, onClick = { vm.selectGeometryTool(it) })
+                    GlowButton(if (vm.geometryTool == it) "• ${it.name}" else it.name, onClick = { vm.selectGeometryTool(it) })
                 }
             }
             Text("Objects", color = Ink, fontWeight = FontWeight.SemiBold)
             vm.state.shapes.forEachIndexed { index, shape ->
                 Text(
-                    text = "${if (index in vm.selectedShapes) "Ã¢â‚¬Â¢ " else ""}${shape.name}${if (!shape.visible) " (hidden)" else ""}${if (shape.locked) " Ã°Å¸â€â€™" else ""}",
+                    text = "${if (index in vm.selectedShapes) "• " else ""}${shape.name}${if (!shape.visible) " (hidden)" else ""}${if (shape.locked) " 🔒" else ""}",
                     color = if (index in vm.selectedShapes) Amber else Muted,
                     fontSize = 12.sp,
                     modifier = Modifier
@@ -8087,7 +8705,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             Text(contextInspector.title, color = Violet, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Text(contextInspector.kind, color = Muted, fontSize = 11.sp)
             contextInspector.properties.forEach { (name, value) -> Insight(name, value, when (name) { "State" -> Green; "Coordinates" -> Cyan; else -> Violet }) }
-            Insight("Parents", contextInspector.parentIds.joinToString().ifBlank { "none Ã¢â‚¬â€ directly defined" }, Cyan)
+            Insight("Parents", contextInspector.parentIds.joinToString().ifBlank { "none — directly defined" }, Cyan)
             Insight("Drives", contextInspector.dependentIds.joinToString().ifBlank { "no dependent objects" }, Amber)
             Text("Available from this selection", color = Ink, fontWeight = FontWeight.SemiBold)
             contextInspector.tools.groupBy { it.category }.forEach { (category, tools) ->
@@ -8114,8 +8732,8 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                     val color = when (feedback.level) { ConstraintFeedbackLevel.Satisfied -> Green; ConstraintFeedbackLevel.NearlySatisfied -> Cyan; ConstraintFeedbackLevel.Violated -> Amber; ConstraintFeedbackLevel.Invalid -> Color.Red }
                     Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(11.dp)).border(1.dp, color.copy(.45f), RoundedCornerShape(11.dp)).padding(7.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("${feedback.constraint.type.label} Ã‚Â· ${feedback.level.name}", color = color, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                            GlowButton("Ãƒâ€”") { vm.removeGeometryConstraint(feedback.constraint.id) }
+                            Text("${feedback.constraint.type.label} · ${feedback.level.name}", color = color, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            GlowButton("×") { vm.removeGeometryConstraint(feedback.constraint.id) }
                         }
                         Text(feedback.statement, color = Ink, fontSize = 9.sp)
                         Text(feedback.guidance, color = Muted, fontSize = 9.sp)
@@ -8126,16 +8744,16 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             if (hasGuideSegment) {
                 Insight("Midpoint", "(${trim(m.midpoint.x)}, ${trim(m.midpoint.y)})", Cyan)
                 Insight("Slope", m.slope?.let(::trim) ?: "undefined", Violet)
-                Insight("Distance AB", "${m.exactDistance} Ã¢â€°Ë† ${trim(m.distance)}", Cyan)
+                Insight("Distance AB", "${m.exactDistance} ≈ ${trim(m.distance)}", Cyan)
                 val exactDistance = dynamicEngine.distance(dynamicDocument, "A", "B")
-                Insight("Exact distance", "${exactDistance.exact} Ã‚Â· ${trim(exactDistance.decimal)}", Cyan)
+                Insight("Exact distance", "${exactDistance.exact} · ${trim(exactDistance.decimal)}", Cyan)
                 Insight("Exact triangle area", dynamicEngine.polygonArea(dynamicDocument, listOf("A", "B", "C")).exact, Violet)
                 Insight("Angle BAC", dynamicEngine.angle(dynamicDocument, "B", "A", "C").exact, Amber)
                 dynamicEngine.ellipseParameters(dynamicDocument, "ellipse").forEach { (name, value) -> Insight("Ellipse $name", value.exact, Green) }
                 analyticLine?.let { line ->
                     Insight("Line AB", "${trim(-line.direction.y)}x + ${trim(line.direction.x)}y = ${trim(-line.direction.y * line.point.x + line.direction.x * line.point.y)}", Green)
                 }
-                Insight("Triangle area", "${trim(Geometry2D.polygonArea(listOf(a, b, third)))} uÃ‚Â²", Violet)
+                Insight("Triangle area", "${trim(Geometry2D.polygonArea(listOf(a, b, third)))} u²", Violet)
             }
             selectedShape?.let { shape ->
                 OutlinedTextField(
@@ -8156,7 +8774,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                     })
                     GlowButton("Delete", onClick = vm::deleteSelectedShape)
                     GlowButton("Translate", onClick = { vm.transformSelectedShape(PointDependencyType.Translate, listOf(1.0, 1.0)) })
-                    GlowButton("Rotate 30Ã‚Â°", onClick = { vm.transformSelectedShape(PointDependencyType.Rotate, listOf(30.0, 0.0, 0.0)) })
+                    GlowButton("Rotate 30°", onClick = { vm.transformSelectedShape(PointDependencyType.Rotate, listOf(30.0, 0.0, 0.0)) })
                     GlowButton("Reflect X", onClick = { vm.transformSelectedShape(PointDependencyType.ReflectX) })
                     GlowButton("Dilate", onClick = { vm.transformSelectedShape(PointDependencyType.Dilate, listOf(1.25, 0.0, 0.0)) })
                 }
@@ -8195,18 +8813,18 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                     GeometryTool.Arc,
                     GeometryTool.Measure,
                 ).forEach {
-                    GlowButton(if (vm.geometryTool == it) "Ã¢â‚¬Â¢ ${it.name}" else it.name, onClick = { vm.selectGeometryTool(it) })
+                    GlowButton(if (vm.geometryTool == it) "• ${it.name}" else it.name, onClick = { vm.selectGeometryTool(it) })
                 }
                 GlowButton("Reset", onClick = { vm.reset() })
             }
             Text("Movement constraint", color = Ink, fontWeight = FontWeight.SemiBold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 listOf(AxisConstraint.Free, AxisConstraint.X, AxisConstraint.Y).forEach { axis ->
-                    GlowButton(if (axisConstraint == axis) "Ã¢â€”Â ${axis.name}" else axis.name) { axisConstraint = axis }
+                    GlowButton(if (axisConstraint == axis) "● ${axis.name}" else axis.name) { axisConstraint = axis }
                 }
-                GlowButton(if (precisionMode) "Ã¢â€”Â Precision" else "Precision") { precisionMode = !precisionMode }
-                GlowButton(if (lassoEnabled) "Ã¢â€”Â Lasso" else "Lasso") { lassoEnabled = !lassoEnabled; if (lassoEnabled) boxSelectEnabled = false }
-                GlowButton(if (boxSelectEnabled) "Ã¢â€”Â Box" else "Box") { boxSelectEnabled = !boxSelectEnabled; if (boxSelectEnabled) lassoEnabled = false }
+                GlowButton(if (precisionMode) "● Precision" else "Precision") { precisionMode = !precisionMode }
+                GlowButton(if (lassoEnabled) "● Lasso" else "Lasso") { lassoEnabled = !lassoEnabled; if (lassoEnabled) boxSelectEnabled = false }
+                GlowButton(if (boxSelectEnabled) "● Box" else "Box") { boxSelectEnabled = !boxSelectEnabled; if (boxSelectEnabled) lassoEnabled = false }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
@@ -8216,10 +8834,10 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 Text("${protocolStep.roundToInt()}/$protocolSize", color = Cyan, fontWeight = FontWeight.Bold)
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                GlowButton("|Ã¢â€ Â") { protocolStep = 0f; focusedProtocolId = null }
-                GlowButton("Ã¢â€ Â Step", enabled = protocolStep > 0f) { protocolStep = (protocolStep - 1f).coerceAtLeast(0f) }
+                GlowButton("|←") { protocolStep = 0f; focusedProtocolId = null }
+                GlowButton("← Step", enabled = protocolStep > 0f) { protocolStep = (protocolStep - 1f).coerceAtLeast(0f) }
                 GlowButton(if (protocolPlaying) "Pause" else "Play") { protocolPlaying = !protocolPlaying }
-                GlowButton("Step Ã¢â€ â€™", enabled = protocolStep < protocolSize) { protocolStep = (protocolStep + 1f).coerceAtMost(protocolSize.toFloat()) }
+                GlowButton("Step →", enabled = protocolStep < protocolSize) { protocolStep = (protocolStep + 1f).coerceAtMost(protocolSize.toFloat()) }
                 GlowButton("Live") { protocolStep = protocolSize.toFloat(); focusedProtocolId = null }
             }
             Text("Macros and traces", color = Ink, fontWeight = FontWeight.SemiBold)
@@ -8233,7 +8851,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 GlowButton(if (geometryTrace?.recording == true) "Stop trace" else "Trace selected point", enabled = vm.selectedPoint in vm.state.points.indices || geometryTrace?.recording == true) {
                     geometryTrace = if (geometryTrace?.recording == true) geometryTrace?.copy(recording = false) else com.indianservers.aiexplorer.workspace.GeometryTraceSession("P${vm.selectedPoint + 1}", recording = true)
                 }
-                Text("${macroDraft.recordedIds.size} macro objects Ã‚Â· ${geometryTrace?.samples?.size ?: 0} trace samples", color = Muted, fontSize = 9.sp)
+                Text("${macroDraft.recordedIds.size} macro objects · ${geometryTrace?.samples?.size ?: 0} trace samples", color = Muted, fontSize = 9.sp)
             }
             AxisSlider("Timeline position", protocolStep, 0f..protocolSize.toFloat().coerceAtLeast(1f)) { protocolStep = it.roundToInt().toFloat() }
             protocolTimeline.entries.forEachIndexed { index, entry ->
@@ -8358,10 +8976,10 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
 
     @Composable fun ToolPanel(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
-            PanelHeader("Manipulatives", vm::returnToMathMenu, Cyan, icon = "Ã¢â€“Â¦")
+            PanelHeader("Manipulatives", vm::returnToMathMenu, Cyan, icon = "▦")
             Text("Choose a tray, then add tactile objects.", color = Muted, fontSize = 12.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                com.indianservers.aiexplorer.core.ManipulativeTray.entries.forEach { option -> GlowButton(if (tray == option) "Ã¢â‚¬Â¢ ${option.name}" else option.name) { tray = option } }
+                com.indianservers.aiexplorer.core.ManipulativeTray.entries.forEach { option -> GlowButton(if (tray == option) "• ${option.name}" else option.name) { tray = option } }
             }
             Text("Tray", color = Ink, fontWeight = FontWeight.Bold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -8372,7 +8990,7 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
                 GlowButton("Clone", enabled = selectedItem != null) { selectedItem?.let { scene = engine.duplicate(scene, it.id) } }
                 GlowButton("Group", enabled = selected.size >= 2) { scene = engine.group(scene, selected) }
                 GlowButton("Ungroup", enabled = selectedItem?.groupId != null) { selectedItem?.groupId?.let { scene = engine.ungroup(scene, it) } }
-                GlowButton("Rotate 15Ã‚Â°", enabled = selectedItem != null) { selectedItem?.let { scene = engine.transform(scene, it.id, 15.0) } }
+                GlowButton("Rotate 15°", enabled = selectedItem != null) { selectedItem?.let { scene = engine.transform(scene, it.id, 15.0) } }
                 GlowButton("Scale +", enabled = selectedItem != null) { selectedItem?.let { scene = engine.transform(scene, it.id, scaleFactor = 1.15) } }
                 GlowButton("Scale -", enabled = selectedItem != null) { selectedItem?.let { scene = engine.transform(scene, it.id, scaleFactor = .87) } }
                 GlowButton(if (selectedItem?.locked == true) "Unlock" else "Lock", enabled = selectedItem != null) { selectedItem?.let { scene = engine.setLocked(scene, it.id, !it.locked) } }
@@ -8382,7 +9000,7 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
                 OutlinedTextField(value = item.label, onValueChange = { scene = engine.annotate(scene, item.id, it, item.annotation) }, label = { Text("Label") }, modifier = Modifier.fillMaxWidth())
                 OutlinedTextField(value = item.annotation, onValueChange = { scene = engine.annotate(scene, item.id, item.label, it) }, label = { Text("Annotation") }, modifier = Modifier.fillMaxWidth())
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    GlowButton("Value Ã¢Ë†â€™") { scene = engine.configure(scene, item.id, value = item.value - 1) }
+                    GlowButton("Value −") { scene = engine.configure(scene, item.id, value = item.value - 1) }
                     GlowButton("Value +") { scene = engine.configure(scene, item.id, value = item.value + 1) }
                 }
             }
@@ -8408,7 +9026,7 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
     @Composable fun Board(modifier: Modifier = Modifier) {
         GlassPanel(modifier) {
             Text("Snap Board", color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text("Drag objects Ã‚Â· tap multiple objects to group Ã‚Â· locked objects stay fixed", color = Muted, fontSize = 11.sp)
+            Text("Drag objects · tap multiple objects to group · locked objects stay fixed", color = Muted, fontSize = 11.sp)
             Box(
                 Modifier.fillMaxWidth().height(520.dp).clip(RoundedCornerShape(18.dp)).background(Color(0x6600060D))
                     .semantics { contentDescription = "Interactive manipulative snap board" },
@@ -8454,7 +9072,7 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
         GlassPanel(modifier) {
             Text("Interactive Visual Proofs", color = Cyan, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                VisualProofCatalog.labs.forEach { lab -> GlowButton(if (playback.frame.lab.id == lab.id) "Ã¢â‚¬Â¢ ${lab.title}" else lab.title) { playback = proofEngine.start(lab.id) } }
+                VisualProofCatalog.labs.forEach { lab -> GlowButton(if (playback.frame.lab.id == lab.id) "• ${lab.title}" else lab.title) { playback = proofEngine.start(lab.id) } }
             }
             Text(playback.frame.lab.steps[playback.frame.step], color = Ink, fontWeight = FontWeight.Bold)
             Text("Step ${playback.frame.step + 1}/${playback.frame.lab.steps.size}", color = Violet)
@@ -8469,7 +9087,7 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
                 }
             }
             playback.frame.measurements.forEach { (name, value) -> Insight(name, trim(value), Violet) }
-            Insight("Invariant", "${playback.frame.invariant} Ã‚Â· residual ${trim(playback.frame.residual)}", if (playback.frame.holds) Green else Amber)
+            Insight("Invariant", "${playback.frame.invariant} · residual ${trim(playback.frame.residual)}", if (playback.frame.holds) Green else Amber)
             Text("What changes? ${playback.frame.lab.changesPrompt}", color = Cyan, fontSize = 12.sp)
             Text("What stays same? ${playback.frame.lab.invariantPrompt}", color = Green, fontSize = 12.sp)
             MathFormulaText(playback.frame.lab.formalResult, color = Amber, fontSize = 17.sp, fontWeight = FontWeight.Bold)
@@ -8487,6 +9105,9 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
 
 @Composable
 private fun Graph2DScreen(vm: ExplorerViewModel) {
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val graphScope = rememberCoroutineScope()
     val graph = remember { GraphAnalysis() }
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
     val advancedGraph = remember { AdvancedGraphEngine() }
@@ -8528,6 +9149,12 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
     var directCurveDelta by remember { mutableStateOf<Vec2?>(null) }
     var splitComparison by remember { mutableStateOf(false) }
     var showResidualPlot by remember { mutableStateOf(false) }
+    var presentationMode by remember { mutableStateOf(false) }
+    var graphLayerQuery by rememberSaveable { mutableStateOf("") }
+    var showPointsOfInterest by remember { mutableStateOf(true) }
+    var showSplitTable by remember { mutableStateOf(false) }
+    var snapshotOpacity by remember { mutableFloatStateOf(.45f) }
+    var accessibilityMode by remember { mutableStateOf(false) }
     val objectGraphSnapshot = vm.mathObjectGraphSnapshot(graphParameterValues)
     val graphRowMetadata = vm.state.graphRowMetadata
     val graphSliderMetadata = vm.state.graphSliderMetadata
@@ -8591,6 +9218,32 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
     }
     val dataPoints = remember(dataText) { parseDataPoints(dataText) }
     val dataSummary = remember(dataPoints) { StatisticsEngine.summarize(dataPoints) }
+    val traceY = remember(primaryExpression, traceX, graphParameterValues) {
+        primaryExpression?.let { expression ->
+            runCatching {
+                engine.compile(stripEquation(expression)).eval(graphParameterValues + ("x" to traceX.toDouble()))
+            }.getOrNull()?.takeIf(Double::isFinite)
+        }
+    }
+    val traceSlope = remember(primaryExpression, traceX) {
+        primaryExpression?.let { runCatching { graph.derivative(it, traceX.toDouble()) }.getOrNull() }
+    }
+    val pointsOfInterest = remember(roots, extrema, intersections) {
+        buildList {
+            roots.forEach { add("Root" to Vec2(it, 0.0)) }
+            extrema.forEach { add("Extremum" to it) }
+            intersections.forEach { add("Intersection" to it) }
+        }.sortedBy { it.second.x }
+    }
+    LaunchedEffect(presentationMode) {
+        if (presentationMode) {
+            equationEditorExpanded = false
+            graphAddMenuExpanded = false
+            graphViewToolsExpanded = false
+            showAxisSheet = false
+            vm.hidePanels()
+        }
+    }
     Box(Modifier.fillMaxSize()) {
         GraphCanvas(
             modifier = Modifier.fillMaxSize(),
@@ -8618,6 +9271,7 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             showResidualPlot = showResidualPlot,
             splitComparison = splitComparison,
             snapshotExpressions = graphSnapshotOverlay?.expressions.orEmpty(),
+            snapshotOpacity = snapshotOpacity,
             selectedFunctionId = selectedGraphRowId,
             onSelectFunction = {
                 selectedGraphRowId = it
@@ -8662,11 +9316,92 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             onViewportChange = { graphViewport = it },
             onContextMenu = { id, point -> contextMenuFunctionId = id; contextMenuPosition = point },
         )
-        if (!graphTypingMode) InteractionHint(
-            "Drag to pan Ã‚Â· pinch to zoom Ã‚Â· tap a graph to edit",
+        if (presentationMode) {
+            GlowButton("Exit presentation") { presentationMode = false }
+        }
+        if (!presentationMode && showPointsOfInterest && pointsOfInterest.isNotEmpty() && !graphTypingMode) {
+            Row(
+                Modifier.align(Alignment.TopCenter).padding(top = 142.dp, start = 10.dp, end = 10.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                pointsOfInterest.take(12).forEach { (kind, point) ->
+                    GlowButton("$kind (${trim(point.x)}, ${trim(point.y)})") {
+                        traceX = point.x.toFloat()
+                        graphTool = GraphTool.Trace
+                        if (vm.settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
+                }
+            }
+        }
+        if (graphTool in setOf(GraphTool.Trace, GraphTool.Tangent, GraphTool.Derivative) && traceY != null) {
+            Column(
+                Modifier.align(Alignment.BottomCenter).padding(bottom = if (presentationMode) 24.dp else 72.dp)
+                    .clip(RoundedCornerShape(14.dp)).background(SurfaceA.copy(.9f))
+                    .border(1.dp, Green.copy(.55f), RoundedCornerShape(14.dp))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text("Trace (${trim(traceX.toDouble())}, ${trim(traceY)})", color = Green, fontWeight = FontWeight.Bold)
+                Text("slope ${traceSlope?.let(::trim) ?: "undefined"} · ${analysisFunction?.name ?: "function"}", color = Muted, fontSize = 10.sp)
+            }
+        }
+        if (!presentationMode && showSplitTable && objectGraphSnapshot.generatedTable.isNotEmpty()) {
+            GlassPanel(Modifier.align(Alignment.CenterEnd).width(260.dp)) {
+                PanelHeader("Linked Table", { showSplitTable = false }, Green)
+                GeneratedTablePreview(objectGraphSnapshot.generatedTable)
+            }
+        }
+        if (!presentationMode && objectGraphSnapshot.parameterRows.isNotEmpty() && !vm.showLeftPanel && !graphTypingMode) {
+            Column(
+                Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 78.dp)
+                    .widthIn(max = 300.dp).clip(RoundedCornerShape(14.dp))
+                    .background(SurfaceA.copy(.88f)).padding(7.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text("Parameters", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                objectGraphSnapshot.parameterRows.take(3).forEach { parameter ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("${parameter.name}=${trim(parameter.value)}", color = Ink, fontSize = 10.sp, modifier = Modifier.width(72.dp))
+                        Slider(
+                            value = parameter.value.toFloat(),
+                            onValueChange = { value ->
+                                graphParameterValues = graphParameterValues + (parameter.name to value.toDouble())
+                                if (parameter.name == "a") parameterA = value
+                            },
+                            valueRange = parameter.min.toFloat()..parameter.max.toFloat(),
+                            modifier = Modifier.weight(1f),
+                        )
+                        GlowButton(if (parameter.name in playingParameters) "Pause" else "Play") {
+                            playingParameters = if (parameter.name in playingParameters) playingParameters - parameter.name else playingParameters + parameter.name
+                        }
+                    }
+                }
+            }
+        }
+        if (!presentationMode && accessibilityMode && !graphTypingMode) {
+            val spokenSummary = buildString {
+                append("Graph workspace. ${visibleFunctions.size} visible functions. ")
+                append("${roots.size} roots, ${extrema.size} extrema, and ${intersections.size} intersections. ")
+                traceY?.let { append("Trace x ${trim(traceX.toDouble())}, y ${trim(it)}.") }
+            }
+            Column(
+                Modifier.align(Alignment.CenterStart).padding(start = 12.dp).widthIn(max = 270.dp)
+                    .clip(RoundedCornerShape(14.dp)).background(SurfaceA.copy(.92f))
+                    .border(1.dp, Amber.copy(.55f), RoundedCornerShape(14.dp)).padding(9.dp),
+            ) {
+                Text("Accessible graph", color = Amber, fontWeight = FontWeight.Bold)
+                Text(spokenSummary, color = Ink, fontSize = 10.sp)
+                GlowButton("Read description") {
+                    (context as? Activity)?.window?.decorView?.announceForAccessibility(spokenSummary)
+                }
+            }
+        }
+        if (!graphTypingMode && !presentationMode) InteractionHint(
+            "Drag to pan · pinch to zoom · tap a graph to edit",
             Modifier.align(Alignment.BottomEnd),
         )
-        if (!graphTypingMode && !vm.hasDismissibleOverlay()) {
+        if (!graphTypingMode && !presentationMode && !vm.hasDismissibleOverlay()) {
             AddShapeTarget(
                 onAdd = {
                     vm.addFunction("x")
@@ -8679,7 +9414,7 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
                 modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 14.dp),
             )
         }
-        if (!graphTypingMode && !vm.hasDismissibleOverlay()) DeleteDropTarget(
+        if (!graphTypingMode && !presentationMode && !vm.hasDismissibleOverlay()) DeleteDropTarget(
             enabled = selectedFunction != null,
             onDelete = {
                 selectedFunction?.let { function ->
@@ -8693,12 +9428,12 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             },
             modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
         )
-        if (!graphTypingMode && selectedFunction != null) SmartSelectionHud(
+        if (!graphTypingMode && !presentationMode && selectedFunction != null) SmartSelectionHud(
             title = selectedFunction.name,
             instruction = if (Regex("\\ba\\b").containsMatchIn(selectedFunction.expression)) {
-                "Drag the curve handle to change a Ã‚Â· drag endpoint handles to edit its domain"
+                "Drag the curve handle to change a · drag endpoint handles to edit its domain"
             } else {
-                "Tap/hold the curve for actions Ã‚Â· drag its label or domain endpoints directly"
+                "Tap/hold the curve for actions · drag its label or domain endpoints directly"
             },
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 76.dp),
         ) {
@@ -8713,7 +9448,7 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             GlowButton("Domain") {
                 graphDomains = graphDomains + (selectedFunction.id to (graphDomains[selectedFunction.id] ?: GraphDomainSelection()))
             }
-            GlowButton("Delete", icon = "Ãƒâ€”") {
+            GlowButton("Delete", icon = "×") {
                 val index = vm.state.functions.indexOfFirst { it.id == selectedFunction.id }
                 if (index >= 0) {
                     vm.deleteFunction(index)
@@ -8721,7 +9456,7 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
                 }
             }
         }
-        if (!graphTypingMode) Column(
+        if (!graphTypingMode && !presentationMode) Column(
             Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 72.dp, end = 10.dp)
@@ -8744,14 +9479,21 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             }
             AnimatedVisibility(graphViewToolsExpanded) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    GlowButton("Undo", enabled = vm.canUndo, onClick = vm::undo)
+                    GlowButton("Redo", enabled = vm.canRedo, onClick = vm::redo)
                     GlowButton("Back") { graphBackRequest++ }
                     GlowButton("Forward") { graphForwardRequest++ }
                     GlowButton("Fit") { graphHomeRequest++ }
                     GlowButton("Axis") { showAxisSheet = !showAxisSheet }
+                    TogglePill("Mini map", showMiniMap) { showMiniMap = it }
+                    TogglePill("POI", showPointsOfInterest) { showPointsOfInterest = it }
+                    TogglePill("Table split", showSplitTable) { showSplitTable = it }
+                    TogglePill("Accessible", accessibilityMode) { accessibilityMode = it }
+                    GlowButton("Present") { presentationMode = true }
                 }
             }
         }
-        GraphEquationEditor(
+        if (!presentationMode) GraphEquationEditor(
             Modifier.align(Alignment.TopCenter),
             functions = liveFunctions,
             selectedId = selectedGraphRowId,
@@ -8859,8 +9601,21 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
         )
         if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(300.dp)) {
             PanelHeader("Equations & Definitions", vm::hidePanels, Cyan)
-            Text("Desmos-style rows Ã‚Â· expressions, sliders and generated tables share one object graph.", color = Muted, fontSize = 11.sp)
-            objectGraphSnapshot.expressionRows.forEachIndexed { index, row ->
+            Text("Desmos-style rows · expressions, sliders and generated tables share one object graph.", color = Muted, fontSize = 11.sp)
+            OutlinedTextField(
+                value = graphLayerQuery,
+                onValueChange = { graphLayerQuery = it },
+                label = { Text("Search equations, notes or folders") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            objectGraphSnapshot.expressionRows.mapIndexed { index, row -> index to row }
+                .filter { (_, row) ->
+                    val metadata = graphRowMetadata[row.id] ?: GraphRowMetadataState()
+                    graphLayerQuery.isBlank() || listOf(row.name, row.expression, metadata.note, metadata.folder)
+                        .any { it.contains(graphLayerQuery.trim(), ignoreCase = true) }
+                }
+                .forEach { (index, row) ->
                 val rowUi = graphRowMetadata[row.id] ?: GraphRowMetadataState()
                 DesmosExpressionRow(
                     row = row,
@@ -8922,7 +9677,7 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
         if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(270.dp)) {
             PanelHeader("Graph Insights", vm::hidePanels, Violet)
             Insight("Selected row", selectedFunction?.name ?: "Tap a row", Amber)
-            Insight("Object graph", "${objectGraphSnapshot.expressionRows.size} rows Ã‚Â· ${objectGraphSnapshot.parameterRows.size} sliders", Cyan)
+            Insight("Object graph", "${objectGraphSnapshot.expressionRows.size} rows · ${objectGraphSnapshot.parameterRows.size} sliders", Cyan)
             Insight("Linked table", "${objectGraphSnapshot.generatedTable.size} x-values", Green)
             objectGraphSnapshot.diagnostics.take(1).forEach { Text(it, color = Amber, fontSize = 11.sp) }
             Insight("Tool", graphTool.name, Green)
@@ -8931,20 +9686,20 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             Insight("Roots", roots.joinToString { trim(it) }.ifBlank { "none detected" }, Cyan)
             Insight("Extrema", extrema.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }.ifBlank { "none detected" }, Green)
             adaptiveSample?.let { sample ->
-                Insight("Adaptive sample", "${sample.points.size} points Ã‚Â· ${sample.segments.size} segments", Cyan)
+                Insight("Adaptive sample", "${sample.points.size} points · ${sample.segments.size} segments", Cyan)
                 Insight("Arc length", trim(advancedGraph.arcLength(sample)), Violet)
                 Insight("Detected breaks", "${sample.discontinuities}", Amber)
             }
             primaryExpression?.let {
                 Insight("Derivative", runCatching { trim(graph.derivative(it, traceX.toDouble())) }.getOrDefault("undefined"), Amber)
-                Insight("Integral 0Ã¢â€ â€™x", runCatching { trim(graph.integral(it, 0.0, traceX.toDouble())) }.getOrDefault("undefined"), Cyan)
+                Insight("Integral 0→x", runCatching { trim(graph.integral(it, 0.0, traceX.toDouble())) }.getOrDefault("undefined"), Cyan)
             }
             Insight("Intersections", intersections.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }, Violet)
             if (graphTool == GraphTool.Data) {
                 Insight("Data", "${dataSummary.count} points", Cyan)
                 Insight("Mean", "(${trim(dataSummary.meanX)}, ${trim(dataSummary.meanY)})", Green)
-                Insight("ÃÆ’ y", trim(dataSummary.standardDeviationY), Violet)
-                dataSummary.regression?.let { Insight("Regression", "y=${trim(it.slope)}x+${trim(it.intercept)} Ã‚Â· r=${trim(it.correlation)}", Amber) }
+                Insight("σ y", trim(dataSummary.standardDeviationY), Violet)
+                dataSummary.regression?.let { Insight("Regression", "y=${trim(it.slope)}x+${trim(it.intercept)} · r=${trim(it.correlation)}", Amber) }
             }
         }
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
@@ -9000,12 +9755,13 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             if (selectedFunction != null) AxisSlider("Transform amount", graphTransformAmount, -2f..2f) { graphTransformAmount = it }
             brushInterval?.let { interval ->
                 val area = primaryExpression?.let { expression -> runCatching { GraphDirectManipulationEngine.signedArea(engine.compile(stripEquation(expression)), interval.start, interval.endInclusive) }.getOrNull() }
-                Insight("Brushed interval", "${trim(interval.start)} to ${trim(interval.endInclusive)} Ã‚Â· signed area ${area?.let(::trim) ?: "undefined"}", Cyan)
+                Insight("Brushed interval", "${trim(interval.start)} to ${trim(interval.endInclusive)} · signed area ${area?.let(::trim) ?: "undefined"}", Cyan)
             }
-            latestSketchFit?.let { fit -> Insight("Sketch fit", "${fit.expression} Ã‚Â· RÃ‚Â² ${trim(fit.rSquared)}", Green) }
+            latestSketchFit?.let { fit -> Insight("Sketch fit", "${fit.expression} · R² ${trim(fit.rSquared)}", Green) }
             if (graphSnapshots.isNotEmpty()) {
                 Text("Saved graph states", color = Ink, fontWeight = FontWeight.SemiBold)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { graphSnapshots.forEach { snapshot -> GlowButton(if (graphSnapshotOverlay == snapshot) "Overlay on: ${snapshot.name}" else snapshot.name, onClick = { graphSnapshotOverlay = if (graphSnapshotOverlay == snapshot) null else snapshot }) } }
+                if (graphSnapshotOverlay != null) AxisSlider("Overlay opacity", snapshotOpacity, .1f..1f) { snapshotOpacity = it }
             }
             selectedGraphRowId?.let { id -> graphDomains[id]?.let { domain ->
                 Text("Domain ${if (domain.leftClosed) "[" else "("}${trim(domain.minimum)}, ${trim(domain.maximum)}${if (domain.rightClosed) "]" else ")"} - drag axis handles to paint", color = Amber)
@@ -9013,9 +9769,25 @@ private fun Graph2DScreen(vm: ExplorerViewModel) {
             } }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 GraphTool.entries.forEach { tool ->
-                    GlowButton(if (graphTool == tool) "Ã¢â‚¬Â¢ ${tool.name}" else tool.name, onClick = { graphTool = tool })
+                    GlowButton(if (graphTool == tool) "• ${tool.name}" else tool.name, onClick = { graphTool = tool })
                 }
                 GlowButton("Export JSON", onClick = { vm.exportJson() })
+                GlowButton("Share graph") {
+                    (context as? Activity)?.let { activity ->
+                        graphScope.launch {
+                            runCatching { MathFileExchange.shareProject(activity, vm.state) }
+                                .onFailure { vm.reportStatus("Share failed: ${it.message}") }
+                        }
+                    }
+                }
+                GlowButton("Export image") {
+                    (context as? Activity)?.let { activity ->
+                        graphScope.launch {
+                            runCatching { MathFileExchange.sharePng(activity, vm.state) }
+                                .onFailure { vm.reportStatus("Image export failed: ${it.message}") }
+                        }
+                    }
+                }
             }
         }
     }
@@ -9089,7 +9861,7 @@ private fun DesmosExpressionRow(
         }
         graphObject?.let {
             Text("Resolved: ${it.resolvedExpression}", color = Cyan, fontSize = 11.sp, fontFamily = FontFamily.Monospace, maxLines = 2)
-            Text("Table rows ${it.table.size} Ã‚Â· roots ${it.roots.size} Ã‚Â· extrema ${it.extrema.size}", color = Muted, fontSize = 10.sp)
+            Text("Table rows ${it.table.size} · roots ${it.roots.size} · extrema ${it.extrema.size}", color = Muted, fontSize = 10.sp)
         }
         row.metadata.error?.let { Text("Check: $it", color = Amber, fontSize = 11.sp) }
         if (uiState.note.isNotBlank()) Text(uiState.note, color = Muted, fontSize = 11.sp)
@@ -9136,7 +9908,7 @@ private fun ParameterRowCard(
             Text("${trim(uiState.speed)}x", color = Cyan, fontFamily = FontFamily.Monospace, fontSize = 12.sp)
             GlowButton("Faster", onClick = { onSpeedChange(uiState.speed * 2.0) })
         }
-        Text("range ${trim(parameter.min)} to ${trim(parameter.max)} Ã‚Â· step ${trim(parameter.step)} Ã‚Â· ${uiState.mode.name.lowercase()} Ã‚Â· direction ${uiState.direction}", color = Muted, fontSize = 10.sp)
+        Text("range ${trim(parameter.min)} to ${trim(parameter.max)} · step ${trim(parameter.step)} · ${uiState.mode.name.lowercase()} · direction ${uiState.direction}", color = Muted, fontSize = 10.sp)
         Slider(
             value = parameter.value.toFloat().coerceIn(parameter.min.toFloat(), parameter.max.toFloat()),
             onValueChange = { raw ->
@@ -9196,9 +9968,9 @@ private fun SpatialVisualMode.displayLabel() = when (this) {
 }
 
 private fun SpatialVisualMode.displayIcon() = when (this) {
-    SpatialVisualMode.Solid -> "Ã¢â€”â€°"
-    SpatialVisualMode.XRay -> "Ã¢â€”Â"
-    SpatialVisualMode.Wireframe -> "Ã¢â€”â€¡"
+    SpatialVisualMode.Solid -> "◉"
+    SpatialVisualMode.XRay -> "◐"
+    SpatialVisualMode.Wireframe -> "◇"
 }
 
 private fun SpatialVisualMode.nextDisplayMode() = when (this) {
@@ -9384,7 +10156,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             },
         )
         if (collisions.isNotEmpty()) Text(
-            "Ã¢Å¡Â  ${collisions.size} overlap${if (collisions.size == 1) "" else "s"}",
+            "⚠ ${collisions.size} overlap${if (collisions.size == 1) "" else "s"}",
             color = Amber,
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 76.dp).clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(8.dp),
         )
@@ -9408,12 +10180,12 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                         GlowButton(visualMode.displayLabel(), icon = visualMode.displayIcon(), iconOnly = compact) {
                             visualMode = visualMode.nextDisplayMode()
                         }
-                        GlowButton("All formulas", icon = "Ã†â€™", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
+                        GlowButton("All formulas", icon = "ƒ", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
                         GlowButton("Shapes", icon = "SE", iconOnly = compact, onClick = vm::openShapesExplorer)
                     }
                 }
                 Text(Geometry3D.formula(selectedSolid.type), color = Ink, fontSize = if (compact) 11.sp else 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 2)
-                Text("Surface ${trim(measurements.surfaceArea)}  Ã‚Â·  Volume ${trim(measurements.volume)}", color = Green, fontSize = 12.sp, maxLines = 1)
+                Text("Surface ${trim(measurements.surfaceArea)}  ·  Volume ${trim(measurements.volume)}", color = Green, fontSize = 12.sp, maxLines = 1)
                 Text("Drag the solid to resize.", color = Muted, fontSize = 10.sp, maxLines = 1)
             }
         }
@@ -9431,7 +10203,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             },
         )
         if (!vm.shapeExplorerScene) InteractionHint(
-            "Drag empty space to orbit Ã‚Â· two fingers pan/zoom Ã‚Â· drag object to transform",
+            "Drag empty space to orbit · two fingers pan/zoom · drag object to transform",
             Modifier.align(Alignment.BottomEnd),
         )
         DeleteDropTarget(
@@ -9446,12 +10218,12 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 14.dp),
         )
         if (!vm.shapeExplorerScene && selectedSolid != null) SmartSelectionHud(
-            title = subSelection?.let { "${selectedSolid.type.name} Ã‚Â· ${it.mode.name} ${it.index + 1}" } ?: selectedSolid.type.name,
-            instruction = if (subSelection != null) "Sub-object selected Ã‚Â· use coloured gizmo handles Ã‚Â· empty space orbits" else "Drag a coloured gizmo handle to ${transformMode.name.lowercase()} on one axis",
+            title = subSelection?.let { "${selectedSolid.type.name} · ${it.mode.name} ${it.index + 1}" } ?: selectedSolid.type.name,
+            instruction = if (subSelection != null) "Sub-object selected · use coloured gizmo handles · empty space orbits" else "Drag a coloured gizmo handle to ${transformMode.name.lowercase()} on one axis",
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 76.dp),
         ) {
             Transform3DMode.entries.forEach { mode ->
-                GlowButton(if (mode == transformMode) "Ã¢â‚¬Â¢ ${mode.name}" else mode.name) { transformMode = mode }
+                GlowButton(if (mode == transformMode) "• ${mode.name}" else mode.name) { transformMode = mode }
             }
             GlowButton(if (selectedIndex in lockedSolidIndices) "Unlock" else "Lock") {
                 lockedSolidIndices = if (selectedIndex in lockedSolidIndices) lockedSolidIndices - selectedIndex else lockedSolidIndices + selectedIndex
@@ -9463,7 +10235,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 }
             }
             GlowButton("Mirror X") { vm.transformSolid(selectedIndex) { AdvancedSpatialInteractionEngine.reflect(it, SpatialAlignment.X) } }
-            GlowButton("Delete", icon = "Ãƒâ€”", onClick = ::deleteCurrent3DSelection)
+            GlowButton("Delete", icon = "×", onClick = ::deleteCurrent3DSelection)
         }
         extrusionPreview?.let { preview ->
             Column(
@@ -9471,7 +10243,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                     .background(SurfaceA.copy(.97f)).border(1.dp, Amber.copy(.65f), RoundedCornerShape(14.dp)).padding(9.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                Text("Extrusion preview Ã‚Â· face ${preview.faceIndex + 1} Ã‚Â· ${trim(preview.amount)} units", color = Amber, fontWeight = FontWeight.Bold)
+                Text("Extrusion preview · face ${preview.faceIndex + 1} · ${trim(preview.amount)} units", color = Amber, fontWeight = FontWeight.Bold)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     GlowButton("Commit", enabled = preview.valid) {
                         vm.transformSolid(preview.solidIndex) { preview.preview }
@@ -9501,7 +10273,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             Modifier.align(Alignment.TopStart).padding(top = 116.dp, start = 10.dp).horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            GlowButton("Ã¢Å’â€š Home") { rotateX = 25f; rotateY = -35f; rotateZ = 15f; zoom = 1f; cameraPan = Offset.Zero }
+            GlowButton("⌂ Home") { rotateX = 25f; rotateY = -35f; rotateZ = 15f; zoom = 1f; cameraPan = Offset.Zero }
             GlowButton(visualMode.displayLabel(), icon = visualMode.displayIcon()) {
                 visualMode = visualMode.nextDisplayMode()
             }
@@ -9515,7 +10287,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             }
             GlowButton("Show all", enabled = hiddenSolidIndices.isNotEmpty()) { hiddenSolidIndices = emptySet(); isolatedSolidIndices = null }
             if (gestureMode != GestureMode.Idle) Text(gestureMode.label, color = Cyan, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
-            Text("${trim(zoom.toDouble())}Ãƒâ€”", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
+            Text("${trim(zoom.toDouble())}×", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
         }
         if (!vm.shapeExplorerScene) FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
@@ -9532,7 +10304,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 val measure = Geometry3D.measure(solid)
                 val accent = if (index == selectedIndex) Cyan else if (solid.type == SolidType.Cube) Cyan else Violet
                 Text(
-                    text = "${if (index == selectedIndex) "Ã¢â‚¬Â¢ " else ""}${solid.type.name}",
+                    text = "${if (index == selectedIndex) "• " else ""}${solid.type.name}",
                     color = accent,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
@@ -9541,7 +10313,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                         .clickable { vm.selectSolid(index) }
                         .padding(8.dp),
                 )
-                Insight("Measure", "V ${trim(measure.volume)} Ã‚Â· A ${trim(measure.surfaceArea)}", accent)
+                Insight("Measure", "V ${trim(measure.volume)} · A ${trim(measure.surfaceArea)}", accent)
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 SolidType.entries.forEach { type -> GlowButton(type.name.take(6), onClick = { vm.addSolid(type) }) }
@@ -9552,7 +10324,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 vm.state.vectors3D.forEachIndexed { index, vector ->
                     val accent = if (index == selectedVectorIndex) Amber else Green
                     Text(
-                        text = "${if (index == selectedVectorIndex) "Ã¢â‚¬Â¢ " else ""}${vector.name} = <${trim(vector.components.x)}, ${trim(vector.components.y)}, ${trim(vector.components.z)}>",
+                        text = "${if (index == selectedVectorIndex) "• " else ""}${vector.name} = <${trim(vector.components.x)}, ${trim(vector.components.y)}, ${trim(vector.components.z)}>",
                         color = accent,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -9569,7 +10341,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
         if (vm.showRightPanel && vm.shapeExplorerScene && selectedSolid != null) Shape3DStudioPanel(vm, selectedIndex, selectedSolid, compact, Modifier.align(if (compact) Alignment.Center else Alignment.TopEnd))
         if (vm.showRightPanel && !vm.shapeExplorerScene) GlassPanel(Modifier.align(Alignment.TopEnd).padding(top = 64.dp).width(260.dp)) {
             PanelHeader("3D Context Inspector", vm::hidePanels, Violet)
-            Insight("Shared GPU", "${sharedRenderScene.primitives.size} objects Ã‚Â· ${sharedRenderPlan.vertices.size / 10} vertices", Cyan)
+            Insight("Shared GPU", "${sharedRenderScene.primitives.size} objects · ${sharedRenderPlan.vertices.size / 10} vertices", Cyan)
             listOf("Zoom +", "Zoom -", "Scale +", "Scale -", "Reset").forEach {
                 GlowButton(it, onClick = {
                     if (it == "Zoom +") zoom = (zoom + .1f).coerceAtMost(1.8f)
@@ -9632,16 +10404,16 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                 listOf(AxisConstraint.Free, AxisConstraint.X, AxisConstraint.Y, AxisConstraint.Z).forEach { axis ->
-                    GlowButton(if (axisConstraint == axis) "Ã¢â€”Â ${axis.name}" else axis.name) { axisConstraint = axis }
+                    GlowButton(if (axisConstraint == axis) "● ${axis.name}" else axis.name) { axisConstraint = axis }
                 }
-                GlowButton(if (precisionMode) "Ã¢â€”Â Precision" else "Precision") { precisionMode = !precisionMode }
+                GlowButton(if (precisionMode) "● Precision" else "Precision") { precisionMode = !precisionMode }
             }
             Text("Professional direct manipulation", color = Cyan, fontWeight = FontWeight.SemiBold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                SpatialTransformSpace.entries.forEach { space -> GlowButton(if (transformSpace == space) "Ã¢â€”Â ${space.name}" else space.name) { transformSpace = space } }
-                SpatialDragPlane.entries.forEach { plane -> GlowButton(if (dragPlane == plane) "Ã¢â€”Â ${plane.name}" else plane.name) { dragPlane = plane } }
+                SpatialTransformSpace.entries.forEach { space -> GlowButton(if (transformSpace == space) "● ${space.name}" else space.name) { transformSpace = space } }
+                SpatialDragPlane.entries.forEach { plane -> GlowButton(if (dragPlane == plane) "● ${plane.name}" else plane.name) { dragPlane = plane } }
                 SpatialVisualMode.entries.forEach { mode ->
-                    GlowButton(if (visualMode == mode) "Ã¢â€”Â ${mode.displayLabel()}" else mode.displayLabel(), icon = mode.displayIcon()) {
+                    GlowButton(if (visualMode == mode) "● ${mode.displayLabel()}" else mode.displayLabel(), icon = mode.displayIcon()) {
                         visualMode = mode
                     }
                 }
@@ -9685,7 +10457,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 }
             }
             booleanResult?.let { result ->
-                Insight("Boolean ${result.operation.name.lowercase()}", "${result.mesh.vertices.size} vertices Ã‚Â· ${result.mesh.faces.size} faces Ã‚Â· ${result.diagnostic}", if (result.verified) Green else Amber)
+                Insight("Boolean ${result.operation.name.lowercase()}", "${result.mesh.vertices.size} vertices · ${result.mesh.faces.size} faces · ${result.diagnostic}", if (result.verified) Green else Amber)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     GlowButton("Copy Boolean OBJ") { copyShapeText(context, "boolean.obj", com.indianservers.aiexplorer.core.SpatialExportEngine.obj(result.mesh, "Boolean${result.operation.name}")) }
                     GlowButton("Copy Boolean STL") { copyShapeText(context, "boolean.stl", com.indianservers.aiexplorer.core.SpatialExportEngine.stl(result.mesh, "Boolean${result.operation.name}")) }
@@ -9784,7 +10556,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 }
                 val mesh = SolidMeshFactory.create(solid)
                 val euler = com.indianservers.aiexplorer.core.SolidInteractionLab.euler(mesh)
-                Insight("Euler proof", "V ${euler.vertices} - E ${euler.edges} + F ${euler.faces} = ${euler.value}${if (euler.holds) " Ã¢Å“â€œ" else ""}", Green)
+                Insight("Euler proof", "V ${euler.vertices} - E ${euler.edges} + F ${euler.faces} = ${euler.value}${if (euler.holds) " ✓" else ""}", Green)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     GlowButton("Measure volume") { spatialMeasurements += com.indianservers.aiexplorer.core.SpatialMeasurementEngine.volume(solid) }
                     subSelection?.takeIf { it.solidIndex == selectedIndex && it.mode == Selection3DMode.Face }?.let { selection ->
@@ -10597,7 +11369,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     drawLine(color, center - Offset(0f, 30f), center + Offset(0f, 30f), strokeWidth = 2f)
                 }
                 Text(
-                    reticleHit?.let { "${it.type.name} Â· ${(it.confidence * 100).roundToInt()}% Â· Â±${trim(it.uncertaintyMeters)} m" }
+                    reticleHit?.let { "${it.type.name} · ${(it.confidence * 100).roundToInt()}% · ±${trim(it.uncertaintyMeters)} m" }
                         ?: "Tap to place from camera 6DoF",
                     color = Ink,
                     fontSize = 12.sp,
@@ -10630,14 +11402,14 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    GlowButton("Hide", icon = "Ã¢Å’â€ž", iconOnly = true) {
+                    GlowButton("Hide", icon = "⌄", iconOnly = true) {
                         arHudHidden = true
                         arHudExpanded = false
                         showAdvancedTools = false
                         showAnalysisTools = false
                         showSpatialDetails = false
                     }
-                    GlowButton(if (arHudExpanded) "Collapse" else "Open", icon = if (arHudExpanded) "Ã¢Ë†â€™" else "Ã¢Å’Æ’", iconOnly = true) {
+                    GlowButton(if (arHudExpanded) "Collapse" else "Open", icon = if (arHudExpanded) "−" else "⌃", iconOnly = true) {
                         arHudExpanded = !arHudExpanded
                     }
                     GlowButton("Home", icon = "H", iconOnly = true, onClick = vm::returnToMathMenu)
@@ -10652,7 +11424,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         ArMathWorkspaceMode.Graph3D,
                     ).forEach { mode ->
                         GlowButton(
-                            if (arWorkspaceMode == mode) "Ã¢â‚¬Â¢ ${mode.shortLabel}" else mode.shortLabel,
+                            if (arWorkspaceMode == mode) "• ${mode.shortLabel}" else mode.shortLabel,
                             iconOnly = false,
                             onClick = {
                                 arWorkspaceMode = mode
@@ -10675,7 +11447,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                             resetArDisplay()
                         },
                     )
-                    GlowButton("Tools", icon = "Ã¢â€¹Â®", iconOnly = true) {
+                    GlowButton("Tools", icon = "⋮", iconOnly = true) {
                         arHudExpanded = true
                         showAdvancedTools = true
                     }
@@ -10696,7 +11468,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Text(arWorkspaceMode.description, color = Muted, fontSize = 10.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 ArMathWorkspaceMode.entries.forEach { mode ->
-                    GlowButton(if (arWorkspaceMode == mode) "Ã¢â‚¬Â¢ ${mode.shortLabel}" else mode.shortLabel) {
+                    GlowButton(if (arWorkspaceMode == mode) "• ${mode.shortLabel}" else mode.shortLabel) {
                         arWorkspaceMode = mode
                     }
                 }
@@ -10760,15 +11532,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 GlowButton(if (liveAR) "Camera on" else "Open camera", onClick = { startLiveAr(userRequestedInstall = true) })
-                GlowButton(if (arPlacementMode == ArPlacementMode.Screen) "Ã¢â‚¬Â¢ Screen" else "Screen") {
+                GlowButton(if (arPlacementMode == ArPlacementMode.Screen) "• Screen" else "Screen") {
                     arPlacementMode = ArPlacementMode.Screen
                     displayFirstMode = true
                     placementMode = false
                     reticleHit = null
                     if (!placement.isPlaced) vm.placeSpatialScene()
                 }
-                GlowButton(if (instant6DofMode) "Ã¢â‚¬Â¢ Recenter 6DoF" else "6DoF", onClick = ::enterInstant6Dof)
-                GlowButton(if (anchorPlacementMode) "â€¢ Tap place" else "Tap place") {
+                GlowButton(if (instant6DofMode) "• Recenter 6DoF" else "6DoF", onClick = ::enterInstant6Dof)
+                GlowButton(if (anchorPlacementMode) "• Tap place" else "Tap place") {
                     arPlacementMode = ArPlacementMode.PlaneAnchor
                     displayFirstMode = false
                     placementMode = true
@@ -10788,10 +11560,10 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             })
             Insight("Scale", placement.visibleScale, Violet)
             if (showAdvancedTools) {
-            Insight("Estimate", "Ã‚Â±${trim(placement.measurementUncertaintyMeters)} m Ã‚Â· educational only", Amber)
+            Insight("Estimate", "±${trim(placement.measurementUncertaintyMeters)} m · educational only", Amber)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GlowButton(if (placement.scaleMode == ARScaleMode.OneToOne) "Ã¢â‚¬Â¢ 1:1" else "1:1", onClick = { vm.setSpatialScaleMode(ARScaleMode.OneToOne) })
-                GlowButton(if (placement.scaleMode == ARScaleMode.FitToSpace) "Ã¢â‚¬Â¢ Fit" else "Fit", onClick = { vm.setSpatialScaleMode(ARScaleMode.FitToSpace) })
+                GlowButton(if (placement.scaleMode == ARScaleMode.OneToOne) "• 1:1" else "1:1", onClick = { vm.setSpatialScaleMode(ARScaleMode.OneToOne) })
+                GlowButton(if (placement.scaleMode == ARScaleMode.FitToSpace) "• Fit" else "Fit", onClick = { vm.setSpatialScaleMode(ARScaleMode.FitToSpace) })
                 TogglePill("Depth occlusion", placement.depthOcclusionEnabled) {
                     vm.setDepthOcclusion(it && capabilities.depthSupported)
                 }
@@ -10803,21 +11575,21 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             }, if (capabilities.depthSupported) Green else Muted)
             }
             reticleHit?.takeIf { anchorPlacementMode }?.let {
-                Insight("Placement preview", "${it.type.name} Â· ${(it.confidence * 100).roundToInt()}% confidence", Green)
-                Insight("Uncertainty", "Â±${trim(it.uncertaintyMeters)} m Â· ${placement.visibleScale}", Amber)
+                Insight("Placement preview", "${it.type.name} · ${(it.confidence * 100).roundToInt()}% confidence", Green)
+                Insight("Uncertainty", "±${trim(it.uncertaintyMeters)} m · ${placement.visibleScale}", Amber)
             }
             if (!anchorPlacementMode) {
                 Text("Direct manipulation", color = Ink, fontWeight = FontWeight.Bold)
                 if (!trackingAllowsDirectManipulation) {
-                    Text("Tracking paused Ã‚Â· object selection and gizmos are temporarily frozen; mathematical state and selection are preserved.", color = Amber, fontSize = 11.sp)
+                    Text("Tracking paused · object selection and gizmos are temporarily frozen; mathematical state and selection are preserved.", color = Amber, fontSize = 11.sp)
                 }
                 if (showAdvancedTools || arSelection.primaryObjectId != null) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     ArGizmoMode.entries.forEach { mode ->
-                        GlowButton(if (gizmoMode == mode) "Ã¢â‚¬Â¢ ${mode.name}" else mode.name) { gizmoMode = mode }
+                        GlowButton(if (gizmoMode == mode) "• ${mode.name}" else mode.name) { gizmoMode = mode }
                     }
                     ArGizmoAxis.entries.forEach { axis ->
-                        GlowButton(if (gizmoAxis == axis) "Ã¢â‚¬Â¢ ${axis.name}" else axis.name) { gizmoAxis = axis }
+                        GlowButton(if (gizmoAxis == axis) "• ${axis.name}" else axis.name) { gizmoAxis = axis }
                     }
                 }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -10830,7 +11602,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         }
                     }
                     ArSubObjectKind.entries.forEach { kind ->
-                        GlowButton(if (subObjectKind == kind) "Ã¢â‚¬Â¢ ${kind.name}" else kind.name) { subObjectKind = kind }
+                        GlowButton(if (subObjectKind == kind) "• ${kind.name}" else kind.name) { subObjectKind = kind }
                     }
                 }
                 if (snapEnabled) {
@@ -10860,7 +11632,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         buildString {
                             append(selectedId)
                             arSelection.subObject?.takeIf { it.kind != ArSubObjectKind.Whole }?.let {
-                                append(" Ã‚Â· ${it.kind.name} ${(it.subObjectIndex ?: 0) + 1}")
+                                append(" · ${it.kind.name} ${(it.subObjectIndex ?: 0) + 1}")
                             }
                         },
                         Cyan,
@@ -10965,7 +11737,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         numericRotation,
                         { numericRotation = it },
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text(if (selectedVectorIndex != null) "Vector end x, y, z" else "Rotation xÃ‚Â°, yÃ‚Â°, zÃ‚Â°") },
+                        label = { Text(if (selectedVectorIndex != null) "Vector end x, y, z" else "Rotation x°, y°, z°") },
                         singleLine = true,
                     )
                     if (selectedVectorIndex == null) OutlinedTextField(
@@ -11001,12 +11773,12 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     }
                 }
                 stylusHoverHit?.let {
-                    Insight("Stylus hover", "${it.objectId} Ã‚Â· ${it.kind.name.lowercase()} preview", Green)
+                    Insight("Stylus hover", "${it.objectId} · ${it.kind.name.lowercase()} preview", Green)
                 }
                 if (arSelection.hiddenObjectIds.isNotEmpty() || arSelection.isolatedObjectIds != null) {
                     GlowButton("Show all objects") { arSelection = ArSelectionEngine.showAll(arSelection) }
                 }
-                if (arGroups.isNotEmpty()) Insight("Groups", "${arGroups.size} AR group(s) Ã‚Â· shared transforms enabled", Violet)
+                if (arGroups.isNotEmpty()) Insight("Groups", "${arGroups.size} AR group(s) · shared transforms enabled", Violet)
                 GlowButton(if (showAnalysisTools) "Hide analysis" else "Analysis & measurements", onClick = { showAnalysisTools = !showAnalysisTools })
                 if (showAnalysisTools) {
                 Text("Surface analysis & measurement", color = Ink, fontWeight = FontWeight.Bold)
@@ -11032,11 +11804,11 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     Text(phase5Analysis.surfaceStatus, color = Muted, fontSize = 11.sp)
                     Text(phase5Analysis.sectionStatus, color = Muted, fontSize = 11.sp)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        GlowButton(if (arGradientAscending) "Ã¢â‚¬Â¢ Ascent" else "Ascent") {
+                        GlowButton(if (arGradientAscending) "• Ascent" else "Ascent") {
                             arGradientAscending = true
                             arGradientStep = 0
                         }
-                        GlowButton(if (!arGradientAscending) "Ã¢â‚¬Â¢ Descent" else "Descent") {
+                        GlowButton(if (!arGradientAscending) "• Descent" else "Descent") {
                             arGradientAscending = false
                             arGradientStep = 0
                         }
@@ -11080,17 +11852,17 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 Text("Spatial lesson", color = Ink, fontWeight = FontWeight.SemiBold)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     SpatialLessonCatalog.lessons.forEachIndexed { index, item ->
-                        GlowButton(if (index == selectedLesson) "Ã¢â‚¬Â¢ ${item.title.take(12)}" else item.title.take(12), onClick = { selectedLesson = index })
+                        GlowButton(if (index == selectedLesson) "• ${item.title.take(12)}" else item.title.take(12), onClick = { selectedLesson = index })
                     }
                 }
                 Text(lesson.learningGoal, color = Muted, fontSize = 11.sp)
-                Insight("Shared renderer", "${sharedScene.primitives.size} objects Ã‚Â· ${gpuPlan.vertices.size / 10} GPU vertices", Cyan)
-                Insight("Lighting", if (frameState?.lighting?.valid == true) "${trim(frameState?.lighting?.pixelIntensity?.toDouble() ?: 1.0)}Ãƒâ€” environment" else "Simulator neutral light", Green)
+                Insight("Shared renderer", "${sharedScene.primitives.size} objects · ${gpuPlan.vertices.size / 10} GPU vertices", Cyan)
+                Insight("Lighting", if (frameState?.lighting?.valid == true) "${trim(frameState?.lighting?.pixelIntensity?.toDouble() ?: 1.0)}× environment" else "Simulator neutral light", Green)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     ThermalLevel.entries.forEach { level -> GlowButton(level.name.take(4), onClick = { thermalLevel = level }) }
                 }
-                Insight("Performance", "${policy.quality.name} Ã‚Â· ${policy.targetFps} fps Ã‚Â· mesh ${policy.surfaceDensity}", if (thermalLevel >= ThermalLevel.Severe) Amber else Green)
-                Insight("Privacy & safety", "${ARPrivacySafetyChecklist.items.size} mandatory checks Ã‚Â· camera frames stay local", Violet)
+                Insight("Performance", "${policy.quality.name} · ${policy.targetFps} fps · mesh ${policy.surfaceDensity}", if (thermalLevel >= ThermalLevel.Severe) Amber else Green)
+                Insight("Privacy & safety", "${ARPrivacySafetyChecklist.items.size} mandatory checks · camera frames stay local", Violet)
                 if (liveError.isNotBlank()) Text(liveError, color = Amber, fontSize = 11.sp)
             }
             Text("Placement and measurements are educational estimates, not certified physical measurements.", color = Amber, fontSize = 11.sp)
@@ -11247,7 +12019,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             }
         }
         if (!arHudHidden && arHudExpanded && !showAdvancedTools) InteractionHint(
-            "Drag scene Ã‚Â· pinch scale Ã‚Â· twist rotate",
+            "Drag scene · pinch scale · twist rotate",
             Modifier.align(Alignment.BottomEnd),
         )
     }
@@ -11289,6 +12061,11 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var graph3DEquationExpanded by remember { mutableStateOf(false) }
     var graph3DHintExpanded by remember { mutableStateOf(false) }
     var graph3DViewExpanded by remember { mutableStateOf(false) }
+    var graph3DPresentationMode by remember { mutableStateOf(false) }
+    var surfaceLayerQuery by rememberSaveable { mutableStateOf("") }
+    var contourMinimum by remember { mutableFloatStateOf(-2f) }
+    var contourMaximum by remember { mutableFloatStateOf(6f) }
+    var showOrientationCube by remember { mutableStateOf(true) }
     fun applyView(preset: SurfaceViewPreset) {
         viewPreset = preset
         when (preset) {
@@ -11310,11 +12087,24 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     val additionalSurfaceMeshes = remember(surfaceLayers, density) {
         surfaceLayers.drop(1).filter { it.visible }.mapIndexedNotNull { index, layer ->
             val qualityDensity = when (layer.quality) { com.indianservers.aiexplorer.core.SpatialQuality.Battery -> 12; com.indianservers.aiexplorer.core.SpatialQuality.Balanced -> 24; com.indianservers.aiexplorer.core.SpatialQuality.High -> 36; com.indianservers.aiexplorer.core.SpatialQuality.Ultra -> 52 }
-            runCatching { graph3D.mesh(layer.expression, density = qualityDensity) }.getOrNull()?.let { it to listOf(Violet, Green, Amber, Color(0xFFFF6FAE))[index % 4] }
+            runCatching { graph3D.mesh(layer.expression, density = qualityDensity) }.getOrNull()?.let {
+                it to listOf(Violet, Green, Amber, Color(0xFFFF6FAE))[index % 4].copy(alpha = layer.opacity.toFloat())
+            }
         }
     }
     val differential = remember(vm.state.surfaceExpression, traceX, traceY) {
         runCatching { surfaceCalculus.analyze(vm.state.surfaceExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+    }
+    val curvature = remember(vm.state.surfaceExpression, traceX, traceY) {
+        runCatching { surfaceCalculus.curvature(vm.state.surfaceExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+    }
+    LaunchedEffect(graph3DPresentationMode) {
+        if (graph3DPresentationMode) {
+            graph3DEquationExpanded = false
+            graph3DHintExpanded = false
+            graph3DViewExpanded = false
+            vm.hidePanels()
+        }
     }
     LaunchedEffect(gradientPlayback.playing) {
         while (gradientPlayback.playing) { delay(90); gradientPlayback = gradientPlayback.tick() }
@@ -11345,6 +12135,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             expression = vm.state.surfaceExpression,
             mesh = mesh,
             additionalMeshes = additionalSurfaceMeshes,
+            surfaceOpacity = (surfaceLayers.firstOrNull()?.opacity ?: 1.0).toFloat(),
             gradientPath = gradientPlayback.path,
             gradientPathIndex = gradientPlayback.index,
             rotation = rotation,
@@ -11378,7 +12169,71 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 traceY = point.y.toFloat().coerceIn(-3f, 3f)
             },
         )
-        Column(
+        if (graph3DPresentationMode) {
+            GlowButton("Exit presentation") { graph3DPresentationMode = false }
+        }
+        if (!graph3DPresentationMode && showOrientationCube) {
+            OrientationCube(
+                modifier = Modifier.align(Alignment.TopEnd).padding(top = 154.dp, end = 12.dp),
+                onPreset = { preset ->
+                    applyView(
+                        when (preset) {
+                            "Top" -> SurfaceViewPreset.Z
+                            "Side" -> SurfaceViewPreset.X
+                            else -> SurfaceViewPreset.Y
+                        },
+                    )
+                },
+            )
+        }
+        if (!graph3DPresentationMode) {
+            Column(
+                Modifier.align(Alignment.TopStart).padding(top = 82.dp, start = 12.dp)
+                    .clip(RoundedCornerShape(12.dp)).background(SurfaceA.copy(.86f))
+                    .border(1.dp, Cyan.copy(.4f), RoundedCornerShape(12.dp)).padding(horizontal = 9.dp, vertical = 6.dp),
+            ) {
+                Text("Mode: ${activeTool.name}", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    when (activeTool) {
+                        SurfaceTool.Trace, SurfaceTool.Gradient -> "Drag the probe across the mesh"
+                        SurfaceTool.Slice -> "Use the slice plane scrubber"
+                        else -> "Drag orbit · two fingers pan · pinch zoom · twist roll"
+                    },
+                    color = Muted,
+                    fontSize = 9.sp,
+                )
+            }
+        }
+        if (!graph3DPresentationMode && differential != null) {
+            Column(
+                Modifier.align(Alignment.CenterEnd).padding(end = 12.dp).widthIn(max = 270.dp)
+                    .clip(RoundedCornerShape(14.dp)).background(SurfaceA.copy(.9f))
+                    .border(1.dp, Amber.copy(.52f), RoundedCornerShape(14.dp)).padding(9.dp),
+                verticalArrangement = Arrangement.spacedBy(3.dp),
+            ) {
+                Text("Surface probe", color = Amber, fontWeight = FontWeight.Bold)
+                Text("point (${trim(differential.point.x)}, ${trim(differential.point.y)}, ${trim(differential.point.z)})", color = Ink, fontSize = 10.sp)
+                Text("gradient (${trim(differential.gradient.x)}, ${trim(differential.gradient.y)})", color = Green, fontSize = 10.sp)
+                Text("normal (${trim(differential.unitNormal.x)}, ${trim(differential.unitNormal.y)}, ${trim(differential.unitNormal.z)})", color = Cyan, fontSize = 10.sp)
+                Text("tangent ${SurfaceAnalysisHandleEngine.tangentPlaneEquation(differential)}", color = Violet, fontSize = 10.sp)
+                curvature?.let {
+                    Text("Gaussian K=${trim(it.gaussian)} · mean H=${trim(it.mean)}", color = Amber, fontSize = 10.sp)
+                }
+            }
+        }
+        if (!graph3DPresentationMode && showContours) {
+            Column(
+                Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 80.dp)
+                    .width(180.dp).clip(RoundedCornerShape(12.dp)).background(SurfaceA.copy(.86f)).padding(8.dp),
+            ) {
+                Text("Contour colour range", color = Ink, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Row(Modifier.fillMaxWidth()) {
+                    Box(Modifier.weight(1f).height(8.dp).background(Brush.horizontalGradient(listOf(Violet, Cyan, Green, Amber)), RoundedCornerShape(8.dp)))
+                }
+                Text("${trim(contourMinimum.toDouble())}  →  ${trim(contourMaximum.toDouble())}", color = Muted, fontSize = 9.sp)
+            }
+        }
+        if (!graph3DPresentationMode) Column(
             Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 84.dp, start = 10.dp, end = 10.dp)
@@ -11394,7 +12249,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                    TransparentIcon("ÃŽÂ£", Cyan)
+                    TransparentIcon("Σ", Cyan)
                     Column {
                         Text("3D Equation", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                         Text(vm.state.surfaceExpression, color = Green, fontSize = 10.sp, maxLines = 1)
@@ -11423,7 +12278,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 }
             }
         }
-        Column(
+        if (!graph3DPresentationMode) Column(
             Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 120.dp)
@@ -11454,8 +12309,12 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                     },
                 )
             }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                TogglePill("View cube", showOrientationCube) { showOrientationCube = it }
+                GlowButton("Present") { graph3DPresentationMode = true }
+            }
         }
-        Column(
+        if (!graph3DPresentationMode) Column(
             Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 12.dp, bottom = 64.dp)
@@ -11479,7 +12338,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 )
             }
         }
-        AddShapeTarget(
+        if (!graph3DPresentationMode) AddShapeTarget(
             onAdd = {
                 surfaceLayers = surfaceLayers + com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
                     "surface-${System.currentTimeMillis()}",
@@ -11491,12 +12350,12 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             contentDescription = "Add a 3D graph surface to the workspace",
             modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 14.dp),
         )
-        DeleteDropTarget(
+        if (!graph3DPresentationMode) DeleteDropTarget(
             enabled = surfaceLayers.size > 1,
             onDelete = { surfaceLayers = surfaceLayers.dropLast(1) },
             modifier = Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
         )
-        FloatingPanelLaunchers(
+        if (!graph3DPresentationMode) FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
             leftLabel = "Equation",
             rightLabel = "Surface",
@@ -11516,7 +12375,16 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             AxisSlider("Tilt", tilt, -89f..89f) { tilt = it }
             AxisSlider("Roll", roll, -180f..180f) { roll = it }
             Text("Surface object drawer", color = Ink, fontWeight = FontWeight.Bold)
-            surfaceLayers.forEachIndexed { index, layer ->
+            OutlinedTextField(
+                value = surfaceLayerQuery,
+                onValueChange = { surfaceLayerQuery = it },
+                label = { Text("Search surfaces") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            surfaceLayers.mapIndexed { index, layer -> index to layer }
+                .filter { (_, layer) -> surfaceLayerQuery.isBlank() || layer.expression.contains(surfaceLayerQuery.trim(), ignoreCase = true) }
+                .forEach { (index, layer) ->
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(11.dp)).background(Color(0x22101824)).padding(7.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     OutlinedTextField(
                         layer.expression,
@@ -11532,13 +12400,16 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                     AxisSlider("Domain radius", maxOf(abs(layer.domain.uMin), abs(layer.domain.uMax)).toFloat(), 1f..10f) { radius ->
                         surfaceLayers = surfaceLayers.mapIndexed { i, old -> if (i == index) old.copy(domain = com.indianservers.aiexplorer.core.SurfaceDomain3D(-radius.toDouble(), radius.toDouble(), -radius.toDouble(), radius.toDouble())) else old }
                     }
+                    AxisSlider("Opacity", layer.opacity.toFloat(), .1f..1f) { opacity ->
+                        surfaceLayers = surfaceLayers.mapIndexed { i, old -> if (i == index) old.copy(opacity = opacity.toDouble()) else old }
+                    }
                 }
             }
             GlowButton("+ Surface") { surfaceLayers = surfaceLayers + com.indianservers.aiexplorer.core.SpatialSurfaceLayer("surface-${System.currentTimeMillis()}", "sin(x)+cos(y)", material = com.indianservers.aiexplorer.core.SpatialMaterial.Gloss) }
         }
         if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(250.dp)) {
             PanelHeader("Surface Insights", vm::hidePanels, Violet)
-            Insight("Shared GPU renderer", "${sharedSurfacePlan.vertices.size / 10} vertices Ã‚Â· ${sharedSurfacePlan.triangleIndices.size / 3} triangles", Cyan)
+            Insight("Shared GPU renderer", "${sharedSurfacePlan.vertices.size / 10} vertices · ${sharedSurfacePlan.triangleIndices.size / 3} triangles", Cyan)
             Insight("Surface", insight.classification, Cyan)
             Insight("Vertex", insight.vertex?.let { "(${trim(it.x)}, ${trim(it.y)}, ${trim(it.z)})" } ?: "sampled", Violet)
             Insight("Range", insight.range, Cyan)
@@ -11551,8 +12422,12 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 Text("Tangent plane", color = Ink, fontWeight = FontWeight.SemiBold)
                 MathFormulaText(SurfaceAnalysisHandleEngine.tangentPlaneEquation(value), color = Violet, fontSize = 11.sp)
             }
+            curvature?.let {
+                Insight("Gaussian curvature", trim(it.gaussian), Amber)
+                Insight("Mean curvature", trim(it.mean), Violet)
+            }
             Insight("Slice", "z = ${trim(sliceZ.toDouble())}", Violet)
-            Insight("Checks", "z(0,0)=0 Ã‚Â· z(1,1)=2", Green)
+            Insight("Checks", "z(0,0)=0 · z(1,1)=2", Green)
         }
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
             PanelHeader("3D Graph Controls", vm::hidePanels, Ink)
@@ -11561,13 +12436,15 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             AxisSlider("Roll", roll, -180f..180f) { roll = it }
             AxisSlider("Zoom", zoom, .55f..1.7f) { zoom = it }
             AxisSlider("Mesh", density, 8f..56f) { density = it }
-            AxisSlider("Slice z", sliceZ, -4f..6f) { sliceZ = it }
+            AxisSlider("Slice plane z", sliceZ, -4f..6f) { sliceZ = it; activeTool = SurfaceTool.Slice; showSlice = true }
             AxisSlider("Contour level handle", contourLevel, -4f..8f) { contourLevel = it; sliceZ = it }
+            AxisSlider("Contour colour minimum", contourMinimum, -8f..contourMaximum.coerceAtLeast(contourMinimum + .25f)) { contourMinimum = it.coerceAtMost(contourMaximum - .25f) }
+            AxisSlider("Contour colour maximum", contourMaximum, contourMinimum.coerceAtMost(contourMaximum - .25f)..10f) { contourMaximum = it.coerceAtLeast(contourMinimum + .25f) }
             AxisSlider("Trace x", traceX, -3f..3f) { traceX = it }
             AxisSlider("Trace y", traceY, -3f..3f) { traceY = it }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 SurfaceTool.entries.forEach { tool ->
-                    GlowButton(if (activeTool == tool) "Ã¢â‚¬Â¢ ${tool.name}" else tool.name, onClick = {
+                    GlowButton(if (activeTool == tool) "• ${tool.name}" else tool.name, onClick = {
                         activeTool = tool
                         if (tool == SurfaceTool.Wireframe) showWireframe = !showWireframe
                         if (tool == SurfaceTool.Contours) showContours = !showContours
@@ -11782,12 +12659,12 @@ private fun LegacyTrigonometryScreen(vm: ExplorerViewModel) {
             onAngleChange = { angle = snapAngle(it) },
         )
         InteractionHint(
-            "One finger moves the circle point or wave cursor Ã‚Â· two fingers pan and pinch zoom Ã‚Â· double-tap resets",
+            "One finger moves the circle point or wave cursor · two fingers pan and pinch zoom · double-tap resets",
             Modifier.align(Alignment.BottomEnd),
         )
         Row(Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            GlowButton("Ã¢Å’â€š Home") { trigHomeRequest++ }
-            Text("${trim(trigZoom.toDouble())}Ãƒâ€”", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
+            GlowButton("⌂ Home") { trigHomeRequest++ }
+            Text("${trim(trigZoom.toDouble())}×", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
         }
         FloatingPanelLaunchers(
             modifier = Modifier.align(Alignment.CenterStart),
@@ -11801,19 +12678,19 @@ private fun LegacyTrigonometryScreen(vm: ExplorerViewModel) {
         if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(210.dp)) {
             PanelHeader("Trig Tools", vm::hidePanels, Cyan)
             Text("Drag the circle point or wave cursor.", color = Muted, fontSize = 12.sp)
-            TrigFunction.entries.forEach { value -> GlowButton(if (function == value) "Ã¢â‚¬Â¢ ${value.name}" else value.name, onClick = { function = value; showWave = true }) }
+            TrigFunction.entries.forEach { value -> GlowButton(if (function == value) "• ${value.name}" else value.name, onClick = { function = value; showWave = true }) }
             GlowButton("Next identity", onClick = { identityIndex = (identityIndex + 1) % identityLab.catalog.size })
         }
         if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(250.dp)) {
             PanelHeader("Angle Insights", vm::hidePanels, Violet)
             Insight("Angle", "${trim(snapshot.degrees)} deg", Cyan)
             Insight("Radians", "${radianLabel(angle.toDouble())} rad", Violet)
-            Insight("Quadrant", "Q${snapshot.quadrant} Ã‚Â· ref ${trim(snapshot.referenceAngleDegrees)}Ã‚Â°", Cyan)
-            Insight("sin ÃŽÂ¸", snapshot.exactSine ?: trim(snapshot.sine), Violet)
-            Insight("cos ÃŽÂ¸", snapshot.exactCosine ?: trim(snapshot.cosine), Cyan)
-            Insight("tan ÃŽÂ¸", snapshot.exactTangent ?: snapshot.tangent?.let(::trim) ?: "undefined", Green)
+            Insight("Quadrant", "Q${snapshot.quadrant} · ref ${trim(snapshot.referenceAngleDegrees)}°", Cyan)
+            Insight("sin θ", snapshot.exactSine ?: trim(snapshot.sine), Violet)
+            Insight("cos θ", snapshot.exactCosine ?: trim(snapshot.cosine), Cyan)
+            Insight("tan θ", snapshot.exactTangent ?: snapshot.tangent?.let(::trim) ?: "undefined", Green)
             Insight("Triangle", "c=${trim(triangle.c)}, area=${trim(triangle.area)}", Amber)
-            Insight(identity.label, if (identity.evidence.equivalent) "Verified Ã‚Â· residual 0" else identity.evidence.explanation, Green)
+            Insight(identity.label, if (identity.evidence.equivalent) "Verified · residual 0" else identity.evidence.explanation, Green)
             Text("Assumptions: ${identity.evidence.leftDomain.description}", color = Muted, fontSize = 11.sp)
         }
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
@@ -11885,6 +12762,27 @@ private fun SurfaceEquationInput(
     onValueChange: (String) -> Unit,
     onPlot: () -> Unit,
 ) {
+    var editorValue by remember {
+        mutableStateOf(TextFieldValue(value, selection = TextRange(value.length)))
+    }
+    var recentSurfaces by remember { mutableStateOf<List<String>>(emptyList()) }
+    fun commitSurface() {
+        editorValue.text.takeIf(String::isNotBlank)?.let { expression ->
+            recentSurfaces = (listOf(expression) + recentSurfaces.filterNot { it == expression }).take(6)
+        }
+        onPlot()
+    }
+    LaunchedEffect(value) {
+        if (value != editorValue.text) {
+            editorValue = editorValue.copy(
+                text = value,
+                selection = TextRange(
+                    editorValue.selection.start.coerceAtMost(value.length),
+                    editorValue.selection.end.coerceAtMost(value.length),
+                ),
+            )
+        }
+    }
     Column(
         Modifier
             .widthIn(max = 760.dp)
@@ -11901,17 +12799,40 @@ private fun SurfaceEquationInput(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text("Enter your 3D equation", color = Ink, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            Text("Explicit surface Ã‚Â· z = f(x,y)", color = Cyan, fontSize = 10.sp)
+            Text("Explicit surface · z = f(x,y)", color = Cyan, fontSize = 10.sp)
         }
-        IntentAwareMathField(
-            value = value,
-            onValueChange = onValueChange,
+        IntentAwareMathValueField(
+            value = editorValue,
+            onValueChange = {
+                editorValue = it
+                onValueChange(it.text)
+            },
             label = "Surface equation",
             modifier = Modifier.fillMaxWidth(),
             placeholder = "Example: z = sin(x) + cos(y)",
-            imeAction = ImeAction.Done,
-            onDone = onPlot,
+            singleLine = true,
             showLegend = false,
+            imeAction = ImeAction.Done,
+            onDone = ::commitSurface,
+        )
+        val normalized = remember(editorValue.text) {
+            com.indianservers.aiexplorer.core.MathExpressionNormalizer.normalize(editorValue.text)
+        }
+        val validation = remember(editorValue.text) {
+            com.indianservers.aiexplorer.core.SurfaceInputInterpreter.explicit(editorValue.text)
+                .mapCatching { ExpressionEngine().compile(it.expression); "Valid explicit surface" }
+                .getOrElse { "Incomplete or invalid · ${it.message?.take(72) ?: "check notation"}" }
+        }
+        Text(
+            "$validation · recognized as $normalized",
+            color = if (validation.startsWith("Valid")) Green else Amber,
+            fontSize = 10.sp,
+            maxLines = 2,
+        )
+        Text(
+            "Your normal keyboard works: pi or π · x² + y² · √(x²+y²) · × · ÷",
+            color = Muted,
+            fontSize = 10.sp,
         )
         Row(
             Modifier.fillMaxWidth(),
@@ -11927,7 +12848,17 @@ private fun SurfaceEquationInput(
                     maxLines = 2,
                 )
             } ?: Spacer(Modifier.weight(1f))
-            GlowButton("Plot surface", enabled = value.isNotBlank(), onClick = onPlot)
+            GlowButton("Plot surface", enabled = value.isNotBlank(), onClick = ::commitSurface)
+        }
+        if (recentSurfaces.isNotEmpty()) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                recentSurfaces.take(3).forEach { expression ->
+                    GlowButton(expression.take(24)) {
+                        editorValue = TextFieldValue(expression, selection = TextRange(expression.length))
+                        onValueChange(expression)
+                    }
+                }
+            }
         }
     }
 }
@@ -11949,7 +12880,7 @@ private fun SurfaceViewChips(
     ) {
         SurfaceViewPreset.entries.forEach { preset ->
             Text(
-                text = if (preset == active) "Ã¢â‚¬Â¢ ${preset.name}" else preset.name,
+                text = if (preset == active) "• ${preset.name}" else preset.name,
                 color = if (preset == active) Color.White else Muted,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -12290,13 +13221,13 @@ private fun CoordinateCanvas(
             drawLine(Green, center - Offset(0f, 10f), center + Offset(0f, 10f), 2f)
             val measure = if (selectedWorld.size >= 2) {
                 val segment = Geometry2D.segment(selectedWorld.first(), selectedWorld.last())
-                "ÃŽâ€x ${trim(bounds.width)} Ã‚Â· ÃŽâ€y ${trim(bounds.height)} Ã‚Â· length ${trim(segment.distance)} Ã‚Â· slope ${segment.slope?.let(::trim) ?: "Ã¢Ë†Å¾"}"
+                "Δx ${trim(bounds.width)} · Δy ${trim(bounds.height)} · length ${trim(segment.distance)} · slope ${segment.slope?.let(::trim) ?: "∞"}"
             } else "(${trim(bounds.center.x)}, ${trim(bounds.center.y)})"
             drawGraphLabel(measure, boxTopLeft + Offset(8f, -48f), Amber)
         }
         coordinateTooltip?.let { point -> drawGraphLabel("(${trim(point.x)}, ${trim(point.y)})", tx(point) + Offset(18f, -54f), Green) }
         if (gestureMode != GestureMode.Idle) drawGraphLabel(gestureMode.label, Offset(size.width / 2f - 95f, 92f), Cyan)
-        drawGraphLabel("${trim(cameraZoom.toDouble())}Ãƒâ€” Ã‚Â· ${trim((size.width / scale).toDouble())} units wide", Offset(size.width - 205f, 92f), Muted)
+        drawGraphLabel("${trim(cameraZoom.toDouble())}× · ${trim((size.width / scale).toDouble())} units wide", Offset(size.width - 205f, 92f), Muted)
     }
 }
 
@@ -12427,7 +13358,7 @@ private fun SolidTrackballPalette(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     groups.forEachIndexed { index, group ->
-                        GlowButton(if (category == index) "Ã¢â‚¬Â¢ ${group.first}" else group.first) { category = index }
+                        GlowButton(if (category == index) "• ${group.first}" else group.first) { category = index }
                     }
                 }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -12436,10 +13367,10 @@ private fun SolidTrackballPalette(
                 }
                 Text("Drag object: ${transformMode.name.lowercase()}", color = Muted, fontSize = 11.sp)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Transform3DMode.entries.forEach { mode -> GlowButton(if (mode == transformMode) "Ã¢â‚¬Â¢ ${mode.name}" else mode.name) { onTransformMode(mode) } }
+                    Transform3DMode.entries.forEach { mode -> GlowButton(if (mode == transformMode) "• ${mode.name}" else mode.name) { onTransformMode(mode) } }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Selection3DMode.entries.forEach { mode -> GlowButton(if (mode == selectionMode) "Ã¢â‚¬Â¢ ${mode.name}" else mode.name) { onSelectionMode(mode) } }
+                    Selection3DMode.entries.forEach { mode -> GlowButton(if (mode == selectionMode) "• ${mode.name}" else mode.name) { onSelectionMode(mode) } }
                 }
                 selectedSolid?.let { solid ->
                     Text(solid.type.name, color = Cyan, fontWeight = FontWeight.Bold)
@@ -12577,21 +13508,21 @@ private fun SolidShapeLibrary(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
                 Text("Add to 3D space", color = Ink, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Text("${SolidType.entries.size} solids Ã‚Â· $sceneObjectCount currently in scene", color = Green, fontSize = 10.sp)
+                Text("${SolidType.entries.size} solids · $sceneObjectCount currently in scene", color = Green, fontSize = 10.sp)
             }
-            GlowButton("Close", icon = "Ãƒâ€”", onClick = onDismiss)
+            GlowButton("Close", icon = "×", onClick = onDismiss)
         }
         OutlinedTextField(
             value = search,
             onValueChange = { search = it },
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Search all shapes") },
-            placeholder = { Text("sphere, prism, pyramidÃ¢â‚¬Â¦") },
+            placeholder = { Text("sphere, prism, pyramid…") },
             singleLine = true,
         )
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             categories.forEach { option ->
-                GlowButton(if (category == option) "Ã¢â‚¬Â¢ $option" else option) { category = option }
+                GlowButton(if (category == option) "• $option" else option) { category = option }
             }
         }
         Row(
@@ -12849,7 +13780,7 @@ private fun SpatialSceneNavigator(
             drawCircle(color.copy(.22f), if (index in selected) 10f else 7f, map(solid.position))
             drawCircle(color, if (index in selected) 5f else 3.5f, map(solid.position))
         }
-        drawGraphLabel("TOP Ã‚Â· scene", Offset(8f, 20f), Muted)
+        drawGraphLabel("TOP · scene", Offset(8f, 20f), Muted)
     }
 }
 
@@ -12879,6 +13810,7 @@ private fun GraphCanvas(
     showResidualPlot: Boolean,
     splitComparison: Boolean,
     snapshotExpressions: List<String>,
+    snapshotOpacity: Float,
     selectedFunctionId: String?,
     onSelectFunction: (String) -> Unit,
     onClearSelection: () -> Unit,
@@ -13254,10 +14186,10 @@ private fun GraphCanvas(
             val originPoint = tx(Vec2(0.0, 0.0))
             drawCircle(Violet.copy(.18f), scale, originPoint)
             drawCircle(Violet, scale, originPoint, style = Stroke(2.5f))
-            listOf(Vec2(0.0, 1.0) to "i", Vec2(0.0, -1.0) to "Ã¢Ë†â€™i", Vec2(1.0, 0.0) to "1", Vec2(-1.0, 0.0) to "Ã¢Ë†â€™1").forEach { (point, label) ->
+            listOf(Vec2(0.0, 1.0) to "i", Vec2(0.0, -1.0) to "−i", Vec2(1.0, 0.0) to "1", Vec2(-1.0, 0.0) to "−1").forEach { (point, label) ->
                 drawRadiantPoint(tx(point), Amber, label)
             }
-            drawGraphLabel("Complex plane Ã‚Â· horizontal Re(z), vertical Im(z)", Offset(18f, 165f), Violet)
+            drawGraphLabel("Complex plane · horizontal Re(z), vertical Im(z)", Offset(18f, 165f), Violet)
         }
         previewExpression?.let { expression ->
             val sample = runCatching { graph.sampleDefinition(expression, minX, maxX, 420) }.getOrNull()
@@ -13266,7 +14198,7 @@ private fun GraphCanvas(
         }
         snapshotExpressions.forEach { expression ->
             val sample = runCatching { graph.sampleDefinition(expression, minX, maxX, 260) }.getOrNull()
-            sample?.points?.zipWithNext()?.forEachIndexed { index, pair -> if (!sample.breaks.contains(index)) drawLine(Color.White.copy(.32f), tx(pair.first), tx(pair.second), 2f, pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(7f, 7f))) }
+            sample?.points?.zipWithNext()?.forEachIndexed { index, pair -> if (!sample.breaks.contains(index)) drawLine(Color.White.copy(snapshotOpacity.coerceIn(.1f, 1f)), tx(pair.first), tx(pair.second), 2f, pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(7f, 7f))) }
         }
         if (snapshotExpressions.isNotEmpty()) drawGraphLabel("Saved-state overlay", Offset(18f, 258f), Color.White)
         if (dataPoints.isNotEmpty()) {
@@ -13328,7 +14260,7 @@ private fun GraphCanvas(
             val a = miniPoint(mini.viewport.minimum); val b = miniPoint(mini.viewport.maximum)
             drawRect(Amber.copy(.85f), topLeft = Offset(min(a.x, b.x), min(a.y, b.y)), size = Size(abs(b.x - a.x), abs(b.y - a.y)), style = Stroke(2f))
         }
-        drawGraphLabel("${trim(cameraZoom.toDouble())}Ãƒâ€” Ã‚Â· ${trim((size.width / scale).toDouble())} units", Offset(size.width - 205f, 118f), Muted)
+        drawGraphLabel("${trim(cameraZoom.toDouble())}× · ${trim((size.width / scale).toDouble())} units", Offset(size.width - 205f, 118f), Muted)
     }
 }
 
@@ -13767,7 +14699,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSineWavePane(
     val py = origin.y - currentValue.toFloat().coerceIn(-3.2f, 3.2f) * scaleY
     drawLine(Violet.copy(alpha = .7f), Offset(px, origin.y), Offset(px, py), 2f)
     drawRadiantPoint(Offset(px, py), Violet, "${trim(angleDegrees.toDouble())} deg")
-    drawTrigText("${function.name}: A f(2Ãâ‚¬(x-h)/P)+k", topLeft.x + 22f, topLeft.y + 28f, Ink)
+    drawTrigText("${function.name}: A f(2π(x-h)/P)+k", topLeft.x + 22f, topLeft.y + 28f, Ink)
 }
 
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawTrigTransformHandles(topLeft: Offset, paneSize: Size, transform: TrigTransform) {
@@ -14114,7 +15046,7 @@ private fun Projected3DCanvas(
             )
             if (index == stylusHoverSolid) {
                 val hover = project(rotate(solid.position, rx, ry, rz), center, 74f * zoom, perspective)
-                drawGraphLabel("Stylus preview Ã‚Â· ${solid.type.name}", hover + Offset(14f, -22f), Amber)
+                drawGraphLabel("Stylus preview · ${solid.type.name}", hover + Offset(14f, -22f), Amber)
             }
             if (index == selectedIndex) {
                 val handles = projectedGizmoHandles(solid, subSelection?.takeIf { it.solidIndex == index }, rx, ry, rz, center, 74f * zoom, perspective)
@@ -14135,6 +15067,7 @@ private fun SurfaceCanvas3D(
     expression: String,
     mesh: com.indianservers.aiexplorer.core.SurfaceMesh?,
     additionalMeshes: List<Pair<com.indianservers.aiexplorer.core.SurfaceMesh, Color>>,
+    surfaceOpacity: Float,
     gradientPath: List<Vec3>,
     gradientPathIndex: Int,
     rotation: Float,
@@ -14234,19 +15167,19 @@ private fun SurfaceCanvas3D(
         if (showBox) drawSurfaceBox(::map)
         mesh?.vertices?.chunked(mesh.columns)?.forEachIndexed { rowIndex, row ->
             row.zipWithNext().forEachIndexed { columnIndex, (a, b) ->
-                val alpha = if (showWireframe || rowIndex % 3 == 0 || columnIndex % 3 == 0) .78f else .28f
+                val alpha = (if (showWireframe || rowIndex % 3 == 0 || columnIndex % 3 == 0) .78f else .28f) * surfaceOpacity
                 drawLine(Cyan.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.8f else 1.1f)
             }
         }
         mesh?.vertices?.groupBy { it.y }?.values?.forEachIndexed { index, col ->
             col.zipWithNext().forEach { (a, b) ->
-                val alpha = if (showWireframe || index % 3 == 0) .58f else .22f
+                val alpha = (if (showWireframe || index % 3 == 0) .58f else .22f) * surfaceOpacity
                 drawLine(Violet.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.3f else .9f)
             }
         }
         additionalMeshes.forEach { (surface, color) ->
-            surface.vertices.chunked(surface.columns).forEach { row -> row.zipWithNext().forEach { (a, b) -> drawLine(color.copy(.72f), map(a), map(b), 1.5f) } }
-            surface.vertices.groupBy { it.y }.values.forEach { column -> column.zipWithNext().forEach { (a, b) -> drawLine(color.copy(.42f), map(a), map(b), 1.1f) } }
+            surface.vertices.chunked(surface.columns).forEach { row -> row.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = color.alpha * .72f), map(a), map(b), 1.5f) } }
+            surface.vertices.groupBy { it.y }.values.forEach { column -> column.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = color.alpha * .42f), map(a), map(b), 1.1f) } }
         }
         if (gradientPath.size >= 2) {
             val visiblePath = gradientPath.take((gradientPathIndex + 1).coerceAtLeast(2))
@@ -14371,7 +15304,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSurfaceAnalysis
         val dx = fx / gradientMagnitude; val dy = fy / gradientMagnitude
         val gradientEnd = point + Vec3(dx, dy, fx * dx + fy * dy).normalized() * .95
         drawLine(Green, map(point), map(gradientEnd), 5f, cap = StrokeCap.Round)
-        drawCircle(Green, 9f, map(gradientEnd)); drawGraphLabel("Ã¢Ë†â€¡f", map(gradientEnd) + Offset(8f, 14f), Green)
+        drawCircle(Green, 9f, map(gradientEnd)); drawGraphLabel("∇f", map(gradientEnd) + Offset(8f, 14f), Green)
     }
     drawCircle(Amber.copy(.22f), 28f, map(point)); drawCircle(Color.White, 6f, map(point))
 }
@@ -14894,7 +15827,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjection
             }
             if (section.size >= 3) drawPath(sectionPath, Amber.copy(.28f))
             drawPath(sectionPath, Amber, style = Stroke(5f))
-            drawGraphLabel("section nÃ‚Â·p=${trim(sectionPlane.offset)}", p(section.first()) + Offset(12f, -18f), Amber)
+            drawGraphLabel("section n·p=${trim(sectionPlane.offset)}", p(section.first()) + Offset(12f, -18f), Amber)
         }
     }
     if (selected) {
@@ -15078,10 +16011,10 @@ private fun MiniDock(modifier: Modifier = Modifier, items: List<String>, onMove:
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            TransparentIcon("Ã¢Å“Â¥", Cyan)
+            TransparentIcon("✥", Cyan)
             if (expanded) Text("Quick actions", color = Ink, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             Text(
-                if (expanded) "Ã¢â‚¬Âº" else "Ã¢â‚¬Â¹",
+                if (expanded) "›" else "‹",
                 color = Cyan,
                 fontSize = 20.sp,
                 modifier = Modifier
@@ -15146,7 +16079,7 @@ private fun FloatingPanelLaunchers(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(7.dp),
         ) {
-            TransparentIcon("Ã¢Å“Â¥", Cyan)
+            TransparentIcon("✥", Cyan)
             Text(if (expanded) "Hide tools" else "Open tools", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
             Text("drag", color = Muted, fontSize = 9.sp)
         }
@@ -15184,7 +16117,9 @@ private fun GraphEquationEditor(
 ) {
     val selected = functions.firstOrNull { it.id == selectedId }
     val focusManager = LocalFocusManager.current
+    val expressionEngine = remember { ExpressionEngine() }
     var isTyping by remember(selectedId) { mutableStateOf(false) }
+    var recentExpressions by remember { mutableStateOf<List<String>>(emptyList()) }
     Column(
         modifier
             .padding(top = 70.dp, start = 8.dp, end = 8.dp)
@@ -15209,6 +16144,9 @@ private fun GraphEquationEditor(
             if (!isTyping) selected?.let { Text(it.name, color = graphColor(it.colorKey), fontSize = 11.sp, fontWeight = FontWeight.Bold) }
             if (isTyping) {
                 GlowButton("Done") {
+                    selected?.expression?.takeIf(String::isNotBlank)?.let { expression ->
+                        recentExpressions = (listOf(expression) + recentExpressions.filterNot { it == expression }).take(8)
+                    }
                     focusManager.clearFocus()
                     isTyping = false
                     onTypingChange(false)
@@ -15220,7 +16158,7 @@ private fun GraphEquationEditor(
                     onExpandedChange(false)
                     if (addMenuExpanded) onToggleAddMenu()
                 })
-                GlowButton(if (expanded) "Ã¢Ë†â€™" else "Edit", onClick = { onExpandedChange(!expanded) })
+                GlowButton(if (expanded) "−" else "Edit", onClick = { onExpandedChange(!expanded) })
             }
         }
         AnimatedVisibility(addMenuExpanded && !isTyping) {
@@ -15240,7 +16178,7 @@ private fun GraphEquationEditor(
                             val accent = graphColor(function.colorKey)
                             var swipeDistance by remember(function.id) { mutableFloatStateOf(0f) }
                             Text(
-                                text = "${if (function.visible) "Ã¢â€”Â" else "Ã¢â€”â€¹"} ${function.name}",
+                                text = "${if (function.visible) "●" else "○"} ${function.name}",
                                 color = if (function.visible) Ink else Muted,
                                 fontSize = 11.sp,
                                 fontWeight = if (active) FontWeight.Bold else FontWeight.Normal,
@@ -15260,14 +16198,39 @@ private fun GraphEquationEditor(
                         }
                     }
                     selected?.let { function ->
+                        var editorValue by remember(function.id) {
+                            mutableStateOf(
+                                TextFieldValue(
+                                    text = function.expression,
+                                    selection = TextRange(function.expression.length),
+                                ),
+                            )
+                        }
+                        LaunchedEffect(function.expression) {
+                            if (function.expression != editorValue.text) {
+                                editorValue = editorValue.copy(
+                                    text = function.expression,
+                                    selection = TextRange(
+                                        editorValue.selection.start.coerceAtMost(function.expression.length),
+                                        editorValue.selection.end.coerceAtMost(function.expression.length),
+                                    ),
+                                )
+                            }
+                        }
                         OutlinedTextField(
-                            value = function.expression,
-                            onValueChange = { onExpressionChange(function.id, it) },
-                            label = { Text("${function.name} Ã¢â‚¬â€ edit directly") },
+                            value = editorValue,
+                            onValueChange = {
+                                editorValue = it
+                                onExpressionChange(function.id, it.text)
+                            },
+                            label = { Text("${function.name} — edit directly") },
                             visualTransformation = MathSyntaxVisualTransformation(),
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                             keyboardActions = KeyboardActions(onDone = {
+                                editorValue.text.takeIf(String::isNotBlank)?.let { expression ->
+                                    recentExpressions = (listOf(expression) + recentExpressions.filterNot { it == expression }).take(8)
+                                }
                                 focusManager.clearFocus()
                                 isTyping = false
                                 onTypingChange(false)
@@ -15282,6 +16245,37 @@ private fun GraphEquationEditor(
                                 }
                                 .semantics { contentDescription = "Edit selected graph equation ${function.name}" },
                         )
+                        val normalized = remember(editorValue.text) {
+                            com.indianservers.aiexplorer.core.MathExpressionNormalizer.normalize(editorValue.text)
+                        }
+                        val parseMessage = remember(editorValue.text) {
+                            if (editorValue.text.isBlank()) "Incomplete · enter an expression"
+                            else runCatching {
+                                expressionEngine.compile(stripEquation(editorValue.text))
+                                "Valid expression"
+                            }.getOrElse { "Incomplete or invalid · ${it.message?.take(70) ?: "check notation"}" }
+                        }
+                        Text(
+                            "$parseMessage · recognized as $normalized",
+                            color = if (parseMessage.startsWith("Valid")) Green else Amber,
+                            fontSize = 10.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            maxLines = 2,
+                        )
+                        Text(
+                            "Use your keyboard: pi or π · x^2 or x² · × · ÷ · √ · ≤ · ≥",
+                            color = Muted,
+                            fontSize = 10.sp,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        if (!isTyping && recentExpressions.isNotEmpty()) {
+                            Text("Recent equations", color = Muted, fontSize = 10.sp)
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                recentExpressions.take(4).forEach { expression ->
+                                    GlowButton(expression.take(24)) { onExpressionChange(function.id, expression) }
+                                }
+                            }
+                        }
                         if (!isTyping) {
                             Text("Smart actions for ${function.name}", color = Muted, fontSize = 10.sp)
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -15290,7 +16284,7 @@ private fun GraphEquationEditor(
                                 GlowButton("Copy") { onDuplicate(function.id) }
                                 GlowButton("Delete") { onDelete(function.id) }
                                 listOf(GraphTool.Plot, GraphTool.Trace, GraphTool.Tangent, GraphTool.Derivative, GraphTool.Integral, GraphTool.Table).forEach { tool ->
-                                    GlowButton(if (activeTool == tool) "Ã¢â€”Â ${tool.name}" else tool.name) { onTool(tool) }
+                                    GlowButton(if (activeTool == tool) "● ${tool.name}" else tool.name) { onTool(tool) }
                                 }
                             }
                         }
@@ -15351,7 +16345,7 @@ private fun PanelHeader(
                 .semantics { contentDescription = "Close $title" },
         )
         Text(
-            text = "Ãƒâ€”",
+            text = "×",
             color = Muted,
             fontSize = 20.sp,
             modifier = Modifier
@@ -15365,7 +16359,7 @@ private fun PanelHeader(
 
 @Composable
 internal fun GlowButton(label: String, enabled: Boolean = true, icon: String = menuIcon(label), iconOnly: Boolean = false, onClick: () -> Unit) {
-    val symbolOnly = label in setOf("Ã¢â€ Â¶", "Ã¢â€ Â·", "Ã¢â€¹Â®")
+    val symbolOnly = label in setOf("↶", "↷", "⋮")
     Button(
         onClick = onClick,
         enabled = enabled,
@@ -15380,6 +16374,104 @@ internal fun GlowButton(label: String, enabled: Boolean = true, icon: String = m
             Text(label, fontSize = 12.sp, maxLines = 1)
         }
     }
+}
+
+private object MathHomeArtwork {
+@Composable
+fun Draw(category: String, accent: Color, modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .size(width = 78.dp, height = 54.dp)
+            .graphicsLayer { alpha = .72f },
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(Modifier.fillMaxSize()) {
+            val stroke = 1.7.dp.toPx()
+            val glow = accent.copy(alpha = .2f)
+            for (step in 1..3) {
+                val y = size.height * step / 4f
+                drawLine(glow, Offset(0f, y), Offset(size.width, y), strokeWidth = .7.dp.toPx())
+            }
+            when (category) {
+                "GamifyMaths" -> {
+                    val body = Path().apply {
+                        moveTo(size.width * .2f, size.height * .7f)
+                        quadraticBezierTo(size.width * .25f, size.height * .25f, size.width * .45f, size.height * .38f)
+                        lineTo(size.width * .55f, size.height * .38f)
+                        quadraticBezierTo(size.width * .75f, size.height * .25f, size.width * .8f, size.height * .7f)
+                        quadraticBezierTo(size.width * .7f, size.height * .86f, size.width * .58f, size.height * .64f)
+                        lineTo(size.width * .42f, size.height * .64f)
+                        quadraticBezierTo(size.width * .3f, size.height * .86f, size.width * .2f, size.height * .7f)
+                    }
+                    drawPath(body, accent, style = Stroke(width = stroke))
+                    drawLine(accent, Offset(size.width * .32f, size.height * .49f), Offset(size.width * .32f, size.height * .65f), strokeWidth = stroke)
+                    drawLine(accent, Offset(size.width * .25f, size.height * .57f), Offset(size.width * .39f, size.height * .57f), strokeWidth = stroke)
+                    drawCircle(accent, 2.3.dp.toPx(), Offset(size.width * .66f, size.height * .52f))
+                    drawCircle(accent, 2.3.dp.toPx(), Offset(size.width * .72f, size.height * .61f))
+                }
+                "Solve & Calculate" -> {
+                    drawRoundRect(accent.copy(.14f), Offset(size.width * .35f, size.height * .05f), Size(size.width * .48f, size.height * .88f), CornerRadius(6.dp.toPx()))
+                    drawRoundRect(accent, Offset(size.width * .35f, size.height * .05f), Size(size.width * .48f, size.height * .88f), CornerRadius(6.dp.toPx()), style = Stroke(stroke))
+                    drawRect(accent.copy(.3f), Offset(size.width * .42f, size.height * .16f), Size(size.width * .34f, size.height * .18f))
+                    repeat(3) { row -> repeat(3) { col ->
+                        drawCircle(accent, 1.8.dp.toPx(), Offset(size.width * (.45f + col * .13f), size.height * (.49f + row * .15f)))
+                    } }
+                }
+                "Visual Workspaces" -> {
+                    val a = Offset(size.width * .5f, size.height * .12f)
+                    val b = Offset(size.width * .78f, size.height * .31f)
+                    val c = Offset(size.width * .78f, size.height * .72f)
+                    val d = Offset(size.width * .5f, size.height * .9f)
+                    val e = Offset(size.width * .22f, size.height * .72f)
+                    val f = Offset(size.width * .22f, size.height * .31f)
+                    listOf(a to b, b to c, c to d, d to e, e to f, f to a, a to d, f to c, b to e).forEach {
+                        drawLine(accent, it.first, it.second, strokeWidth = stroke)
+                    }
+                }
+                "Data & Probability" -> {
+                    repeat(4) { index ->
+                        val h = size.height * (.22f + index * .14f)
+                        drawRect(accent.copy(.38f), Offset(size.width * (.08f + index * .13f), size.height - h), Size(size.width * .08f, h))
+                    }
+                    val curve = Path().apply {
+                        moveTo(size.width * .05f, size.height * .82f)
+                        cubicTo(size.width * .28f, size.height * .78f, size.width * .32f, size.height * .12f, size.width * .55f, size.height * .16f)
+                        cubicTo(size.width * .72f, size.height * .2f, size.width * .75f, size.height * .76f, size.width * .96f, size.height * .82f)
+                    }
+                    drawPath(curve, accent, style = Stroke(stroke))
+                }
+                "Reference & Logic" -> {
+                    val book = Path().apply {
+                        moveTo(size.width * .12f, size.height * .22f)
+                        quadraticBezierTo(size.width * .34f, size.height * .12f, size.width * .5f, size.height * .34f)
+                        quadraticBezierTo(size.width * .66f, size.height * .12f, size.width * .88f, size.height * .22f)
+                        lineTo(size.width * .88f, size.height * .78f)
+                        quadraticBezierTo(size.width * .66f, size.height * .68f, size.width * .5f, size.height * .88f)
+                        quadraticBezierTo(size.width * .34f, size.height * .68f, size.width * .12f, size.height * .78f)
+                        close()
+                    }
+                    drawPath(book, accent, style = Stroke(stroke))
+                    drawLine(accent, Offset(size.width * .5f, size.height * .34f), Offset(size.width * .5f, size.height * .88f), strokeWidth = stroke)
+                }
+                "Discover More" -> {
+                    val mountains = Path().apply {
+                        moveTo(size.width * .04f, size.height * .82f)
+                        lineTo(size.width * .31f, size.height * .42f)
+                        lineTo(size.width * .47f, size.height * .65f)
+                        lineTo(size.width * .67f, size.height * .26f)
+                        lineTo(size.width * .96f, size.height * .82f)
+                    }
+                    drawPath(mountains, accent, style = Stroke(stroke))
+                    drawLine(accent, Offset(size.width * .67f, size.height * .26f), Offset(size.width * .67f, size.height * .05f), strokeWidth = stroke)
+                    drawLine(accent, Offset(size.width * .67f, size.height * .05f), Offset(size.width * .83f, size.height * .12f), strokeWidth = stroke)
+                }
+            }
+        }
+        if (category == "Formulas & Proofs") {
+            Text("√x²", color = accent, fontSize = 25.sp, fontWeight = FontWeight.Light)
+        }
+    }
+}
 }
 
 @Composable
@@ -15501,38 +16593,38 @@ private fun visualModuleIcon(module: MathModule): String = when (module) {
 }
 
 private fun moduleIcon(module: MathModule): String = when (module) {
-    MathModule.Geometry2D -> "Ã¢â€“Â³"
-    MathModule.Geometry3D -> "Ã¢â€”â€¡"
-    MathModule.Graph2D -> "Ã†â€™"
-    MathModule.Graph3D -> "Ã¢Å’Â"
-    MathModule.Trigonometry -> "ÃŽÂ¸"
-    MathModule.Manipulatives -> "Ã¢â€“Â¦"
+    MathModule.Geometry2D -> "△"
+    MathModule.Geometry3D -> "◇"
+    MathModule.Graph2D -> "ƒ"
+    MathModule.Graph3D -> "⌁"
+    MathModule.Trigonometry -> "θ"
+    MathModule.Manipulatives -> "▦"
     MathModule.SpatialAR -> "AR"
 }
 
 internal fun menuIcon(label: String): String = when {
-    label.contains("menu", true) -> "Ã¢ËœÂ°"
-    label.contains("subject", true) -> "Ã¢Å’â€š"
-    label.contains("solver", true) || label.contains("solve", true) -> "Ã¢Å“Â¦"
-    label.contains("equation", true) || label.contains("function", true) -> "Ã†â€™"
-    label.contains("graph", true) || label.contains("surface", true) -> "Ã¢Å’Â"
-    label.contains("3d", true) || label.contains("object", true) -> "Ã¢â€”â€¡"
-    label.contains("tool", true) -> "Ã¢Å’Ëœ"
+    label.contains("menu", true) -> "☰"
+    label.contains("subject", true) -> "⌂"
+    label.contains("solver", true) || label.contains("solve", true) -> "✦"
+    label.contains("equation", true) || label.contains("function", true) -> "ƒ"
+    label.contains("graph", true) || label.contains("surface", true) -> "⌁"
+    label.contains("3d", true) || label.contains("object", true) -> "◇"
+    label.contains("tool", true) -> "⌘"
     label.contains("info", true) || label.contains("insight", true) -> "i"
     label.contains("learn", true) || label.contains("hint", true) -> "?"
-    label.contains("export", true) || label.contains("save", true) -> "Ã¢â€¡Â©"
-    label.contains("delete", true) || label.contains("close", true) -> "Ãƒâ€”"
-    label.contains("undo", true) || label == "Ã¢â€ Â¶" -> "Ã¢â€ Â¶"
-    label.contains("redo", true) || label == "Ã¢â€ Â·" -> "Ã¢â€ Â·"
-    label.contains("zoom", true) -> "Ã¢Å’â€¢"
-    label.contains("reset", true) || label.contains("fit", true) -> "Ã¢â€”Å½"
-    label.contains("move", true) -> "Ã¢Å“Â¥"
-    label.contains("rotate", true) -> "Ã¢â€ Â»"
-    label.contains("scale", true) -> "Ã¢â€ â€"
-    label.contains("planned", true) -> "Ã¢â€”Â·"
-    label.contains("workspace", true) -> "Ã¢â€“Â¦"
-    label.contains("more", true) || label == "Ã¢â€¹Â®" -> "Ã¢â€¹Â®"
-    else -> label.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "Ã‚Â·"
+    label.contains("export", true) || label.contains("save", true) -> "⇩"
+    label.contains("delete", true) || label.contains("close", true) -> "×"
+    label.contains("undo", true) || label == "↶" -> "↶"
+    label.contains("redo", true) || label == "↷" -> "↷"
+    label.contains("zoom", true) -> "⌕"
+    label.contains("reset", true) || label.contains("fit", true) -> "◎"
+    label.contains("move", true) -> "✥"
+    label.contains("rotate", true) -> "↻"
+    label.contains("scale", true) -> "↔"
+    label.contains("planned", true) -> "◷"
+    label.contains("workspace", true) -> "▦"
+    label.contains("more", true) || label == "⋮" -> "⋮"
+    else -> label.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "·"
 }
 
 @Composable

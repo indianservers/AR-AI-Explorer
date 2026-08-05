@@ -63,6 +63,7 @@ private fun String.renderLatexRoots(): String {
 private fun String.renderLatexCommands(): String {
     val replacements = linkedMapOf(
         "\\pm" to "±", "\\mp" to "∓", "\\times" to "×", "\\cdot" to "·", "\\div" to "÷",
+        "\\circ" to "°", "\\%" to "%",
         "\\leq" to "≤", "\\le" to "≤", "\\geq" to "≥", "\\ge" to "≥", "\\neq" to "≠",
         "\\approx" to "≈", "\\sim" to "∼", "\\equiv" to "≡", "\\to" to "→", "\\infty" to "∞",
         "\\cup" to "∪", "\\cap" to "∩", "\\subseteq" to "⊆", "\\subset" to "⊂", "\\in" to "∈",

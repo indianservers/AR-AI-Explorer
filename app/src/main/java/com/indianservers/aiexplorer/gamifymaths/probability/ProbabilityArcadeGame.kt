@@ -61,6 +61,7 @@ import com.indianservers.aiexplorer.gamifymaths.GameRed
 import com.indianservers.aiexplorer.gamifymaths.GameScreen
 import com.indianservers.aiexplorer.gamifymaths.GameSpace
 import com.indianservers.aiexplorer.gamifymaths.GlossyPanel
+import com.indianservers.aiexplorer.gamifymaths.LocalCompactGameLayout
 import com.indianservers.aiexplorer.gamifymaths.PrimaryGameButton
 import com.indianservers.aiexplorer.gamifymaths.ResultPanel
 import com.indianservers.aiexplorer.gamifymaths.RoundGameButton
@@ -248,20 +249,21 @@ private fun ArcadeExperiment(
     modifier: Modifier = Modifier,
     onExperiment: (Boolean) -> Unit,
 ) {
+    val compact = LocalCompactGameLayout.current
     val rotation by animateFloatAsState(
         targetValue = experimentCount * 137f,
         animationSpec = spring(dampingRatio = .62f, stiffness = 85f),
         label = "probability experiment animation",
     )
     Column(
-        modifier.fillMaxWidth().heightIn(min = 310.dp).background(
+        modifier.fillMaxWidth().heightIn(min = if (compact) 235.dp else 310.dp).background(
             Brush.radialGradient(listOf(game.accent.copy(.25f), GamePanel)),
             RoundedCornerShape(24.dp),
         ).border(1.dp, game.accent.copy(.7f), RoundedCornerShape(24.dp)).padding(13.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(9.dp),
     ) {
-        ArcadeIcon(game.visual, game.accent, Modifier.fillMaxWidth().height(205.dp).graphicsLayer {
+        ArcadeIcon(game.visual, game.accent, Modifier.fillMaxWidth().height(if (compact) 145.dp else 205.dp).graphicsLayer {
             if (game.visual == ArcadeVisual.Spinner) rotationZ = rotation
             if (game.visual == ArcadeVisual.Coin) rotationY = rotation
         }, challenge.values)
@@ -285,6 +287,7 @@ private fun ArcadeExperiment(
 
 @Composable
 private fun ArcadeAnswerPanel(game: ArcadeMiniGame, challenge: ArcadeChallenge, selected: String, modifier: Modifier = Modifier, onSelect: (String) -> Unit) {
+    val compact = LocalCompactGameLayout.current
     Column(
         modifier.fillMaxWidth().background(GamePanel, RoundedCornerShape(22.dp)).border(1.dp, game.accent.copy(.65f), RoundedCornerShape(22.dp)).padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -292,7 +295,7 @@ private fun ArcadeAnswerPanel(game: ArcadeMiniGame, challenge: ArcadeChallenge, 
     ) {
         Text("SELECT YOUR RESULT", color = GameMuted, fontSize = 10.sp, fontWeight = FontWeight.Black)
         Box(
-            Modifier.fillMaxWidth().height(66.dp).background(Color.White.copy(.09f), RoundedCornerShape(15.dp)).border(1.dp, game.accent.copy(.6f), RoundedCornerShape(15.dp)),
+            Modifier.fillMaxWidth().height(if (compact) 54.dp else 66.dp).background(Color.White.copy(.09f), RoundedCornerShape(15.dp)).border(1.dp, game.accent.copy(.6f), RoundedCornerShape(15.dp)),
             contentAlignment = Alignment.Center,
         ) { Text(selected.ifBlank { "?" }, color = if (selected.isBlank()) GameMuted else game.accent, fontSize = if (selected.length > 12) 16.sp else 24.sp, fontWeight = FontWeight.Black, textAlign = TextAlign.Center) }
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.spacedBy(9.dp)) {

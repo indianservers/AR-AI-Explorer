@@ -1,0 +1,104 @@
+
+C:\Indian Servers\AIExplorer>if "Windows_NT" == "Windows_NT" setlocal
+
+C:\Indian Servers\AIExplorer>set DIRNAME=C:\Indian Servers\AIExplorer\ 
+
+C:\Indian Servers\AIExplorer>if "C:\Indian Servers\AIExplorer\" == "" set DIRNAME=. 
+
+C:\Indian Servers\AIExplorer>set APP_BASE_NAME=gradlew 
+
+C:\Indian Servers\AIExplorer>set APP_HOME=C:\Indian Servers\AIExplorer\ 
+
+C:\Indian Servers\AIExplorer>for %i in ("C:\Indian Servers\AIExplorer\") do set APP_HOME=%~fi 
+
+C:\Indian Servers\AIExplorer>set APP_HOME=C:\Indian Servers\AIExplorer\ 
+
+C:\Indian Servers\AIExplorer>set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m" 
+
+C:\Indian Servers\AIExplorer>if defined JAVA_HOME goto findJavaFromJavaHome 
+
+C:\Indian Servers\AIExplorer>set JAVA_EXE=java.exe 
+
+C:\Indian Servers\AIExplorer>java.exe -version  1>NUL 2>&1 
+
+C:\Indian Servers\AIExplorer>if 0 EQU 0 goto execute 
+
+C:\Indian Servers\AIExplorer>set CLASSPATH= 
+
+C:\Indian Servers\AIExplorer>"java.exe" "-Xmx64m" "-Xms64m"   "-Dorg.gradle.appname=gradlew" -classpath "" -jar "C:\Indian Servers\AIExplorer\\gradle\wrapper\gradle-wrapper.jar" :app:assembleDebug --no-daemon --console=plain 
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:compileDebugKotlin UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :arengine:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :arengine:generateDebugAssets UP-TO-DATE
+> Task :arengine:mergeDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :arengine:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :arengine:extractDeepLinksDebug UP-TO-DATE
+> Task :arengine:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :arengine:mapDebugSourceSetPaths UP-TO-DATE
+> Task :arengine:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:dexBuilderDebug
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :arengine:processDebugJavaRes UP-TO-DATE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :arengine:mergeDebugJniLibFolders UP-TO-DATE
+> Task :arengine:mergeDebugNativeLibs NO-SOURCE
+> Task :arengine:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug
+
+BUILD SUCCESSFUL in 1m 8s
+55 actionable tasks: 4 executed, 51 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+
+C:\Indian Servers\AIExplorer>if 0 EQU 0 goto mainEnd 
+
+C:\Indian Servers\AIExplorer>if "Windows_NT" == "Windows_NT" endlocal

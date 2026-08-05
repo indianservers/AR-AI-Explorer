@@ -125,8 +125,9 @@ private fun RecipeScreen(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
 
 @Composable
 private fun CookingPan(value: Int, accent: Color) {
+    val compact = LocalCompactGameLayout.current
     Box(
-        Modifier.fillMaxWidth().height(178.dp).background(
+        Modifier.fillMaxWidth().height(if (compact) 140.dp else 178.dp).background(
             Brush.radialGradient(listOf(accent.copy(.2f), GamePanel)),
             RoundedCornerShape(24.dp),
         ).border(1.dp, accent.copy(.6f), RoundedCornerShape(24.dp)),

@@ -2,6 +2,7 @@ package com.indianservers.aiexplorer.core
 
 import kotlin.math.abs
 import kotlin.math.acos
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 data class Line2D(val point: Vec2, val direction: Vec2) {
@@ -124,6 +125,7 @@ object AnalyticGeometry3D {
 }
 
 data class SurfaceDifferential(val point: Vec3, val gradient: Vec3, val unitNormal: Vec3, val tangentPlane: Plane3D)
+data class SurfaceCurvature(val gaussian: Double, val mean: Double)
 
 class SurfaceCalculus(private val expressions: ExpressionEngine = ExpressionEngine()) {
     fun analyze(expression: String, x: Double, y: Double): SurfaceDifferential {
@@ -137,5 +139,21 @@ class SurfaceCalculus(private val expressions: ExpressionEngine = ExpressionEngi
         val normal = Vec3(-fx, -fy, 1.0).normalized()
         val point = Vec3(x, y, z)
         return SurfaceDifferential(point, Vec3(fx, fy, 0.0), normal, Plane3D(point, normal))
+    }
+
+    fun curvature(expression: String, x: Double, y: Double): SurfaceCurvature {
+        val compiled = expressions.compile(stripEquation(expression))
+        fun f(a: Double, b: Double) = compiled.eval(mapOf("x" to a, "y" to b))
+        val h = maxOf(1e-4, maxOf(abs(x), abs(y)) * 1e-4)
+        val z = f(x, y)
+        val fx = (f(x + h, y) - f(x - h, y)) / (2 * h)
+        val fy = (f(x, y + h) - f(x, y - h)) / (2 * h)
+        val fxx = (f(x + h, y) - 2 * z + f(x - h, y)) / (h * h)
+        val fyy = (f(x, y + h) - 2 * z + f(x, y - h)) / (h * h)
+        val fxy = (f(x + h, y + h) - f(x + h, y - h) - f(x - h, y + h) + f(x - h, y - h)) / (4 * h * h)
+        val base = 1 + fx * fx + fy * fy
+        val gaussian = (fxx * fyy - fxy * fxy) / (base * base)
+        val mean = ((1 + fy * fy) * fxx - 2 * fx * fy * fxy + (1 + fx * fx) * fyy) / (2 * base.pow(1.5))
+        return SurfaceCurvature(gaussian, mean)
     }
 }

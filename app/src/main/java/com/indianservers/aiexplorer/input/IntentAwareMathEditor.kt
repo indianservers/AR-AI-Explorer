@@ -180,6 +180,8 @@ fun IntentAwareMathValueField(
     singleLine: Boolean = false,
     minLines: Int = 2,
     showLegend: Boolean = true,
+    imeAction: ImeAction = ImeAction.Default,
+    onDone: (() -> Unit)? = null,
 ) {
     val analysis = remember(value.text) { MathInputIntelligence.analyze(value.text) }
     val transformation = remember { IntentAwareMathVisualTransformation() }
@@ -204,6 +206,8 @@ fun IntentAwareMathValueField(
             placeholder = { Text(placeholder, color = IntentMathPalette.Muted) }, visualTransformation = transformation,
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Medium),
             singleLine = singleLine, minLines = minLines, isError = !healthy,
+            keyboardOptions = KeyboardOptions(imeAction = imeAction),
+            keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = IntentMathPalette.Ink, unfocusedTextColor = IntentMathPalette.Ink,
                 focusedBorderColor = accent, unfocusedBorderColor = accent.copy(.35f), cursorColor = IntentMathPalette.Number,

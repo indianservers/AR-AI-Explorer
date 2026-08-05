@@ -156,8 +156,9 @@ private fun PotionPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -> Uni
 
 @Composable
 private fun PotionWorkspace(selected: String, accent: Color, modifier: Modifier = Modifier) {
+    val compact = LocalCompactGameLayout.current
     Column(
-        modifier.fillMaxWidth().height(270.dp).background(
+        modifier.fillMaxWidth().height(if (compact) 210.dp else 270.dp).background(
             Brush.radialGradient(listOf(accent.copy(.28f), GamePanel)),
             RoundedCornerShape(24.dp),
         ).border(2.dp, accent.copy(.7f), RoundedCornerShape(24.dp)).padding(14.dp),
@@ -165,7 +166,7 @@ private fun PotionWorkspace(selected: String, accent: Color, modifier: Modifier 
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text("ANSWER FLASK", color = GameMuted, fontWeight = FontWeight.Black, fontSize = 10.sp, letterSpacing = 1.5.sp)
-        PotionFlask(accent, if (selected.isBlank()) "?" else selected, Modifier.size(180.dp))
+        PotionFlask(accent, if (selected.isBlank()) "?" else selected, Modifier.size(if (compact) 140.dp else 180.dp))
         Text(if (selected.isBlank()) "Drag a potion here" else "$selected units selected", color = GameInk, fontWeight = FontWeight.Bold)
     }
 }

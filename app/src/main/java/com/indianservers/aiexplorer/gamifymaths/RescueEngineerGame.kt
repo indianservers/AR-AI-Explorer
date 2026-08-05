@@ -206,8 +206,9 @@ private fun MeasurementPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -
 
 @Composable
 private fun MeasurementWorkspace(task: MeasureChallenge, accent: Color, modifier: Modifier = Modifier) {
+    val compact = LocalCompactGameLayout.current
     Column(
-        modifier.fillMaxWidth().heightIn(min = 310.dp).background(
+        modifier.fillMaxWidth().heightIn(min = if (compact) 235.dp else 310.dp).background(
             Brush.radialGradient(listOf(accent.copy(.2f), Color(0xFF0B2856), GamePanel)),
             RoundedCornerShape(24.dp),
         ).border(1.dp, accent.copy(.7f), RoundedCornerShape(24.dp)).padding(14.dp),
@@ -216,12 +217,13 @@ private fun MeasurementWorkspace(task: MeasureChallenge, accent: Color, modifier
     ) {
         Text(task.prompt, color = GameInk, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center)
         Text(task.formula, color = GameGold, fontSize = 14.sp, fontWeight = FontWeight.Black)
-        MeasurementDiagram(task.visual, task.dimensions, accent, Modifier.fillMaxWidth().height(220.dp))
+        MeasurementDiagram(task.visual, task.dimensions, accent, Modifier.fillMaxWidth().height(if (compact) 155.dp else 220.dp))
     }
 }
 
 @Composable
 private fun MeasurementAnswerPanel(task: MeasureChallenge, selected: String, accent: Color, modifier: Modifier = Modifier, onSelect: (String) -> Unit) {
+    val compact = LocalCompactGameLayout.current
     Column(
         modifier.fillMaxWidth().background(GamePanel, RoundedCornerShape(22.dp)).border(1.dp, accent.copy(.6f), RoundedCornerShape(22.dp)).padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -229,7 +231,7 @@ private fun MeasurementAnswerPanel(task: MeasureChallenge, selected: String, acc
     ) {
         Text("SELECT THE RESULT", color = GameMuted, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp)
         Box(
-            Modifier.fillMaxWidth().height(66.dp).background(Color.White.copy(.1f), RoundedCornerShape(15.dp)).border(1.dp, accent.copy(.55f), RoundedCornerShape(15.dp)),
+            Modifier.fillMaxWidth().height(if (compact) 54.dp else 66.dp).background(Color.White.copy(.1f), RoundedCornerShape(15.dp)).border(1.dp, accent.copy(.55f), RoundedCornerShape(15.dp)),
             contentAlignment = Alignment.Center,
         ) { Text(selected.ifBlank { "?" }, color = if (selected.isBlank()) GameMuted else accent, fontSize = 26.sp, fontWeight = FontWeight.Black) }
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.spacedBy(9.dp)) {
@@ -377,8 +379,9 @@ private fun BridgeBuilderScreen(stage: Int, onBack: () -> Unit, onSolved: () -> 
 
 @Composable
 private fun BridgeCanvas(target: Int, beams: List<Int>, joints: Int, selected: Int, modifier: Modifier = Modifier, onSelect: (Int) -> Unit) {
+    val compact = LocalCompactGameLayout.current
     Column(
-        modifier.fillMaxWidth().heightIn(min = 390.dp).background(
+        modifier.fillMaxWidth().heightIn(min = if (compact) 300.dp else 390.dp).background(
             Brush.verticalGradient(listOf(Color(0xFF52BCEF), Color(0xFFBDEAFF), Color(0xFF1E73A4))),
             RoundedCornerShape(24.dp),
         ).border(2.dp, GameBlue, RoundedCornerShape(24.dp)).padding(12.dp),
@@ -391,7 +394,7 @@ private fun BridgeCanvas(target: Int, beams: List<Int>, joints: Int, selected: I
             }
             ScorePill("${beams.sum()} / $target m", if (beams.sum() == target) GameGreen else GameGold)
         }
-        Box(Modifier.fillMaxWidth().height(300.dp).background(Color.White.copy(.18f), RoundedCornerShape(18.dp))) {
+        Box(Modifier.fillMaxWidth().height(if (compact) 215.dp else 300.dp).background(Color.White.copy(.18f), RoundedCornerShape(18.dp))) {
             Canvas(Modifier.matchParentSize()) {
                 val deckY = size.height * .52f
                 val left = 38f

@@ -319,6 +319,7 @@ private fun AlgebraChallengeScreen(challenge: AlgebraChallenge, globalLevel: Int
 
 @Composable
 private fun AlgebraAnswerPanel(challenge: AlgebraChallenge, selected: String, accent: Color, modifier: Modifier = Modifier, onSelect: (String) -> Unit) {
+    val compact = LocalCompactGameLayout.current
     Column(
         modifier.fillMaxWidth().background(GamePanel, RoundedCornerShape(22.dp)).border(1.dp, accent.copy(.65f), RoundedCornerShape(22.dp)).padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -326,7 +327,7 @@ private fun AlgebraAnswerPanel(challenge: AlgebraChallenge, selected: String, ac
     ) {
         Text("CHOOSE THE BALANCED RESULT", color = GameMuted, fontSize = 10.sp, fontWeight = FontWeight.Black)
         Box(
-            Modifier.fillMaxWidth().height(68.dp).background(Color.White.copy(.1f), RoundedCornerShape(15.dp)).border(1.dp, accent.copy(.6f), RoundedCornerShape(15.dp)),
+            Modifier.fillMaxWidth().height(if (compact) 56.dp else 68.dp).background(Color.White.copy(.1f), RoundedCornerShape(15.dp)).border(1.dp, accent.copy(.6f), RoundedCornerShape(15.dp)),
             contentAlignment = Alignment.Center,
         ) { Text(selected.ifBlank { "?" }, color = if (selected.isBlank()) GameMuted else GameGold, fontSize = if (selected.length > 15) 16.sp else 25.sp, fontWeight = FontWeight.Black, textAlign = TextAlign.Center) }
         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.spacedBy(9.dp)) {
@@ -340,8 +341,9 @@ private fun AlgebraAnswerPanel(challenge: AlgebraChallenge, selected: String, ac
 
 @Composable
 private fun AlgebraVisual(challenge: AlgebraChallenge, accent: Color, modifier: Modifier = Modifier) {
+    val compact = LocalCompactGameLayout.current
     Column(
-        modifier.fillMaxWidth().heightIn(min = 300.dp).background(
+        modifier.fillMaxWidth().heightIn(min = if (compact) 225.dp else 300.dp).background(
             Brush.radialGradient(listOf(accent.copy(.22f), Color(0xFF16305D), GamePanel)),
             RoundedCornerShape(24.dp),
         ).border(1.dp, accent.copy(.7f), RoundedCornerShape(24.dp)).padding(12.dp),
@@ -358,7 +360,7 @@ private fun AlgebraVisual(challenge: AlgebraChallenge, accent: Color, modifier: 
             },
             color = GameGold, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.1.sp,
         )
-        Canvas(Modifier.fillMaxWidth().height(235.dp)) {
+        Canvas(Modifier.fillMaxWidth().height(if (compact) 165.dp else 235.dp)) {
             when (challenge.visual) {
                 AlgebraVisualKind.Balance -> drawAlgebraBalance(accent)
                 AlgebraVisualKind.Tiles -> drawAlgebraTiles(accent)

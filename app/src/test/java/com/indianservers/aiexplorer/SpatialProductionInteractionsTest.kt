@@ -69,11 +69,12 @@ class SpatialProductionInteractionsTest {
         val trace = SurfaceTraceEngine3D.constrain(SurfaceTrace3D("f", mesh.vertices[0]), mesh, Vec3(.9, .9, 2.1))
         val contour = ContourInteractionEngine.inspect(2.0, listOf(Vec3(0.0, 0.0, 2.0) to Vec3(1.0, 1.0, 2.0)), Vec3(.4, .4, 2.2))
         val playback = GradientPlayback3D(mesh.vertices).play().tick().moveWaypoint(1, Vec3(2.0, 2.0, 8.0))
-        val layer = SpatialSurfaceLayer("f", "x^2+y^2", material = SpatialMaterial.Glass, quality = SpatialQuality.High)
+        val layer = SpatialSurfaceLayer("f", "x^2+y^2", material = SpatialMaterial.Glass, quality = SpatialQuality.High, opacity = .45)
         val accessible = SpatialAccessibilityEngine.describe(listOf(Solid(SolidType.Cube, 2.0)))
 
         assertEquals(mesh.vertices[1], trace.point)
         assertTrue(contour != null)
+        assertEquals(.45, layer.opacity, 0.0)
         assertEquals(Vec3(2.0, 2.0, 8.0), playback.path[1])
         assertTrue(layer.visible)
         assertTrue(accessible.single().measurements.any { it.startsWith("volume") })

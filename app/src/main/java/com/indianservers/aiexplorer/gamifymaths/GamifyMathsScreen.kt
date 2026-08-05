@@ -96,6 +96,22 @@ private val MathsGame.levelCount: Int
 
 private val Games = listOf(
     MathsGame(
+        "speed-basic", "Speed Calculation", "Rapid Arithmetic", "30s", Cyan,
+        listOf("Addition", "Subtraction", "Multiplication", "Division", "Percentages", "1–3 digit numbers"),
+        "Configure a timer and solve as many arithmetic problems as possible.",
+        listOf(
+            GameMission("Rapid arithmetic", "Solve as many calculations as possible before time runs out.", listOf("30 sec", "45 sec", "1–5 min"), "Start", "Build speed and accuracy with a configurable sprint."),
+        ),
+    ),
+    MathsGame(
+        "speed-advanced", "Advanced Speed", "Algebra & Trigonometry", "ƒx", Violet,
+        listOf("Advanced calculation", "Trigonometry", "Algebra", "Order of operations", "Exact values"),
+        "Configure advanced topics and race against the clock.",
+        listOf(
+            GameMission("Advanced sprint", "Mix algebra, trigonometry and advanced mental calculations.", listOf("Algebra", "Trigonometry", "Mixed"), "Start", "Choose your topics and solve accurately under time pressure."),
+        ),
+    ),
+    MathsGame(
         "forge", "Number Forge", "Prime Codes", "123", Violet,
         listOf("Place value", "Integers", "Factors", "Multiples", "Primes", "Divisibility", "Powers", "Roots"),
         "Drag number cores into the forge to construct the requested value.",
@@ -119,8 +135,8 @@ private val Games = listOf(
         listOf("Equivalent fractions", "Comparison", "Mixed numbers", "Operations", "Decimals", "Percentages", "Conversions"),
         "Drag the matching fraction segment into the assembly ring.",
         listOf(
-            GameMission("Equivalent module", "Which fraction is equivalent to 3/4?", listOf("4/6", "6/8", "8/10", "9/16"), "6/8", "Multiplying 3/4 by 2/2 gives 6/8."),
-            GameMission("Decimal port", "Which decimal is equal to 1/5?", listOf("0.1", "0.2", "0.25", "0.5"), "0.2", "1 divided by 5 equals 0.2."),
+            GameMission("Equivalent module", "Which fraction is equivalent to 3/4?", listOf("4/6", "6/8", "8/10", "9/16"), "6/8", "Multiplying both numerator and denominator of 3/4 by 2 preserves its value and gives 6/8."),
+            GameMission("Decimal port", "Which decimal is equal to 1/5?", listOf("0.1", "0.2", "0.25", "0.5"), "0.2", "Dividing one whole into five equal parts gives 1÷5=0.2, so each part is two tenths."),
         ),
     ),
     MathsGame(
@@ -138,7 +154,7 @@ private val Games = listOf(
         "Drag the value that keeps both sides of the quantum balance equal.",
         listOf(
             GameMission("Vault equation", "Balance x + 5 = 12. What is x?", listOf("5", "6", "7", "17"), "7", "Subtract 5 from both sides: x = 12 - 5 = 7."),
-            GameMission("Double lock", "Balance 2x = 18. What is x?", listOf("7", "8", "9", "16"), "9", "Divide both sides by 2: x = 9."),
+            GameMission("Double lock", "Balance 2x = 18. What is x?", listOf("7", "8", "9", "16"), "9", "Divide both sides into two equal groups: x=9, and checking gives 2×9=18."),
         ),
     ),
     MathsGame(
@@ -165,7 +181,13 @@ private val Games = listOf(
         "Drag the correct navigation coordinate into the flight computer.",
         listOf(
             GameMission("Quadrant jump", "Which point lies in Quadrant II?", listOf("(3,4)", "(-3,4)", "(-3,-4)", "(3,-4)"), "(-3,4)", "In Quadrant II, x is negative and y is positive."),
-            GameMission("Slope drive", "Slope from (0,0) to (3,6)?", listOf("1/2", "2", "3", "6"), "2", "Slope is rise/run = 6/3 = 2."),
+            GameMission("Slope drive", "Slope from (0,0) to (3,6)?", listOf("1/2", "2", "3", "6"), "2", "Slope is vertical change divided by horizontal change: rise/run=6/3=2."),
+            GameMission("Distance beacon", "Find the distance from (1,2) to (4,6).", listOf("4", "5", "6", "7"), "5", "The horizontal and vertical changes are 3 and 4. Pythagoras gives √(3²+4²)=5."),
+            GameMission("Midpoint dock", "Find the midpoint of (−2,4) and (6,8).", listOf("(2,6)", "(4,6)", "(2,4)", "(8,12)"), "(2,6)", "Average corresponding coordinates: ((−2+6)/2,(4+8)/2)=(2,6)."),
+            GameMission("Line signal", "Which equation has slope 3 and y-intercept −2?", listOf("y=3x−2", "y=−2x+3", "y=3x+2", "y=2x−3"), "y=3x−2", "In y=mx+c, m is the slope and c is the y-intercept."),
+            GameMission("Function scanner", "For f(x)=2x²−1, find f(3).", listOf("11", "15", "17", "35"), "17", "Substitute x=3 carefully: square first, then multiply, so 2(3²)−1=18−1=17."),
+            GameMission("Translation route", "Translate (−1,3) by vector (4,−2).", listOf("(3,1)", "(−5,5)", "(3,5)", "(−3,1)"), "(3,1)", "Add vector components to the point: (−1+4,3−2)=(3,1)."),
+            GameMission("Perpendicular course", "A line has slope 2/3. What is a perpendicular slope?", listOf("−3/2", "3/2", "−2/3", "2/3"), "−3/2", "Perpendicular non-vertical slopes are negative reciprocals, so their product is −1."),
         ),
     ),
     MathsGame(
@@ -174,7 +196,13 @@ private val Games = listOf(
         "Drag the missing signal into the sequence core.",
         listOf(
             GameMission("Signal sequence", "Complete 4, 7, 10, 13, ...", listOf("14", "15", "16", "17"), "16", "The sequence increases by 3 each time, so 13 + 3 = 16."),
-            GameMission("Growth pulse", "Complete 3, 6, 12, 24, ...", listOf("30", "36", "48", "72"), "48", "Each term doubles, so 24 x 2 = 48."),
+            GameMission("Growth pulse", "Complete 3, 6, 12, 24, ...", listOf("30", "36", "48", "72"), "48", "Each term is twice the previous term, so the same rule gives 24×2=48."),
+            GameMission("Difference decoder", "Find the nth term of 5, 8, 11, 14, ...", listOf("3n+2", "3n+5", "5n−2", "n+4"), "3n+2", "The common difference is 3, so start with 3n. At n=1, add 2 to obtain 5."),
+            GameMission("Term locator", "For aₙ=4n−1, what is the 10th term?", listOf("35", "39", "40", "41"), "39", "The term number is n, so substitute n=10: a₁₀=4(10)−1=39."),
+            GameMission("Recursive relay", "Given a₁=2 and aₙ=aₙ₋₁+5, find a₄.", listOf("12", "15", "17", "22"), "17", "Build consecutive terms: 2, 7, 12, 17."),
+            GameMission("Geometric formula", "Find the nth term of 2, 6, 18, 54, ...", listOf("2·3ⁿ⁻¹", "2+3n", "3·2ⁿ⁻¹", "6·3ⁿ"), "2·3ⁿ⁻¹", "The first term is 2 and every transition multiplies by 3, repeated n−1 times."),
+            GameMission("Triangular pattern", "The pattern has 1, 3, 6, 10 dots. How many dots are in figure 5?", listOf("12", "14", "15", "16"), "15", "Successive layers add 2,3,4, then 5 dots: 10+5=15."),
+            GameMission("Sequence proof", "Which check proves 3n+1 generates 4,7,10,...?", listOf("Substitute n=1,2,3", "Check only n=1", "Add all terms", "Divide terms by 3"), "Substitute n=1,2,3", "Testing consecutive term numbers gives 4,7,10 and verifies both the start and common difference."),
         ),
     ),
     MathsGame(
@@ -202,15 +230,36 @@ private val Games = listOf(
         listOf(
             GameMission("Code deduction", "All Zips are Lums. No Lums are Tars. Can a Zip be a Tar?", listOf("Always", "Sometimes", "Never", "Unknown"), "Never", "Every Zip is a Lum, and no Lum can be a Tar; therefore no Zip can be a Tar."),
             GameMission("Route count", "Two shirts and three trousers make how many outfits?", listOf("5", "6", "8", "9"), "6", "For each of 2 shirts there are 3 choices: 2 x 3 = 6."),
+            GameMission("Truth gate", "If p is true and q is false, what is p AND q?", listOf("True", "False", "Both", "Undefined"), "False", "A conjunction is true only when both statements are true."),
+            GameMission("Implication lock", "When is p → q false?", listOf("p true, q false", "p false, q true", "Both true", "Both false"), "p true, q false", "An implication fails only when its promise starts true but its conclusion is false."),
+            GameMission("Permutation bay", "How many orders can three different robots stand in?", listOf("3", "6", "8", "9"), "6", "There are 3 choices, then 2, then 1: 3!=3×2×1=6."),
+            GameMission("Combination vault", "How many pairs can be chosen from four students?", listOf("4", "6", "8", "12"), "6", "There are 4×3 ordered selections, but each pair is counted twice: 12/2=6."),
+            GameMission("Shortest path", "A grid route needs 2 right moves and 1 up move. How many shortest routes?", listOf("2", "3", "4", "6"), "3", "Arrange R,R,U. The distinct orders are RRU, RUR and URR."),
+            GameMission("Counterexample scan", "Which disproves: 'Every even number is divisible by 4'?", listOf("2", "4", "8", "12"), "2", "Two is even but not divisible by four, so one counterexample disproves the universal claim."),
         ),
     ),
 )
 
 private val DisplayGames: List<MathsGame>
     get() {
-        val order = listOf("forge", "kitchen", "fractions", "balance", "shapes", "potions", "measure", "vectors", "patterns", "data", "chance", "logic")
+        val order = listOf("speed-basic", "speed-advanced", "forge", "kitchen", "fractions", "balance", "shapes", "potions", "measure", "vectors", "patterns", "data", "chance", "logic")
         return Games.sortedBy { order.indexOf(it.id).let { index -> if (index < 0) Int.MAX_VALUE else index } }
     }
+
+internal data class GameMissionAudit(
+    val gameId: String,
+    val title: String,
+    val prompt: String,
+    val choices: List<String>,
+    val answer: String,
+    val explanation: String,
+)
+
+internal fun gamifyMissionAudit(): List<GameMissionAudit> = Games.filterNot { it.id.startsWith("speed-") }.flatMap { game ->
+    game.missions.map { mission ->
+        GameMissionAudit(game.id, mission.title, mission.prompt, mission.tokens, mission.answer, mission.explanation)
+    }
+}
 
 @Composable
 fun GamifyMathsRoot(onExit: () -> Unit) {
@@ -240,6 +289,8 @@ fun GamifyMathsRoot(onExit: () -> Unit) {
                 linkedProgressKeys.forEach { key -> completed[key] = maxOf(completed[key] ?: 0, value) }
             }
             when (selectedGame.id) {
+                "speed-basic" -> SpeedCalculationGame(SpeedCalculationMode.Basic, { selectedGameId = null }, recordComplete)
+                "speed-advanced" -> SpeedCalculationGame(SpeedCalculationMode.Advanced, { selectedGameId = null }, recordComplete)
                 "forge" -> NumberForgeGame(currentCompleted, { selectedGameId = null }, recordComplete)
                 "kitchen" -> MathsKitchenGame(currentCompleted, { selectedGameId = null }, recordComplete)
                 "fractions" -> FractionFactoryGame(currentCompleted, { selectedGameId = null }, recordComplete)
@@ -489,7 +540,10 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
     var missionIndex by rememberSaveable(game.id) { mutableIntStateOf(completedMissions.coerceIn(0, game.missions.lastIndex)) }
     var selected by rememberSaveable(game.id, missionIndex) { mutableStateOf<String?>(null) }
     var result by rememberSaveable(game.id, missionIndex) { mutableStateOf<Boolean?>(null) }
+    var showHint by rememberSaveable(game.id, missionIndex) { mutableStateOf(false) }
+    var attempts by rememberSaveable(game.id, missionIndex) { mutableIntStateOf(0) }
     val mission = game.missions[missionIndex]
+    val guidance = GameLearningCoach.guidance(missionIndex + 1, mission.prompt, mission.explanation)
 
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(14.dp),
@@ -503,6 +557,7 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
             Text(game.title, color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black)
             Text(game.mechanic, color = Muted, fontSize = 11.sp)
         }
+        GameLearningPhaseBanner(missionIndex + 1, game.accent, mission.prompt)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             game.subtopics.forEachIndexed { index, topic ->
                 Text(
@@ -522,6 +577,18 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
         ) {
             Text(mission.title.uppercase(), color = game.accent, fontSize = 11.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp)
             Text(mission.prompt, color = Ink, fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
+            Text("Learning goal: ${guidance.objective}", color = Muted, fontSize = 11.sp)
+        }
+        SecondaryGameButton(if (showHint) "Hide learning hint" else "Show learning hint", game.accent) { showHint = !showHint }
+        if (showHint) {
+            Column(
+                Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Amber.copy(.1f))
+                    .border(1.dp, Amber.copy(.5f), RoundedCornerShape(16.dp)).padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
+                Text("CLUE — WITHOUT THE ANSWER", color = Amber, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                Text(guidance.hint, color = Ink, fontSize = 12.sp)
+            }
         }
         DropReactor(game, selected, result)
         Text("DRAG A CORE INTO THE REACTOR", color = Muted, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
@@ -529,6 +596,7 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
             mission.tokens.forEach { token ->
                 DraggableAnswer(token, game.accent) {
                     selected = token
+                    attempts += 1
                     result = token == mission.answer
                     if (result == true) onComplete(missionIndex + 1)
                 }
@@ -542,7 +610,15 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(if (result == true) "CORE STABLE — CORRECT" else "ENERGY MISMATCH — TRY AGAIN", color = if (result == true) Green else Coral, fontWeight = FontWeight.Black)
-                Text(if (result == true) mission.explanation else "That core does not satisfy the mission. Compare it with the mathematical condition and drag another.", color = Ink, fontSize = 12.sp)
+                Text(if (result == true) mission.explanation else "That answer does not satisfy the condition yet. Your choice is useful evidence—use the retry plan below.", color = Ink, fontSize = 12.sp)
+                if (result == false) {
+                    Text("RETRY PLAN", color = Amber, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                    guidance.retrySteps.forEachIndexed { index, step -> Text("${index + 1}. $step", color = Ink, fontSize = 11.sp) }
+                    if (attempts >= 2) Text("Focused hint: ${guidance.hint}", color = Amber, fontSize = 11.sp)
+                } else {
+                    Text("REFLECT", color = Green, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                    Text(guidance.reflection, color = Muted, fontSize = 11.sp)
+                }
                 if (result == true) {
                     Button(
                         onClick = {
@@ -550,6 +626,8 @@ private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: (
                                 missionIndex += 1
                                 selected = null
                                 result = null
+                                attempts = 0
+                                showHint = false
                             } else onBack()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = game.accent, contentColor = Space),

@@ -137,17 +137,22 @@ private fun ArchitectPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -> 
             val wide = maxWidth >= 720.dp
             if (wide) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    ArchitectWorkspace(challenge.targetLabel, selected, accent, Modifier.weight(1.2f))
+                    ArchitectWorkspace(challenge.targetLabel, selected, accent, Modifier.weight(1.2f)) { piece ->
+                        selected.removeAt(piece); result = null
+                    }
                     ShapePalette(challenge.choices, accent, Modifier.weight(.8f)) { if (selected.size < challenge.required.size) selected += it; result = null }
                 }
             } else {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    ArchitectWorkspace(challenge.targetLabel, selected, accent)
+                Column(verticalArrangement = Arrangement.spacedBy(if (LocalCompactGameLayout.current) 8.dp else 12.dp)) {
+                    ArchitectWorkspace(challenge.targetLabel, selected, accent) { piece ->
+                        selected.removeAt(piece); result = null
+                    }
                     ShapePalette(challenge.choices, accent) { if (selected.size < challenge.required.size) selected += it; result = null }
                 }
             }
         }
-        SecondaryGameButton("Undo last piece", accent) { if (selected.isNotEmpty()) selected.removeAt(selected.lastIndex); result = null }
+        Text("Tap any placed shape to remove it.", color = GameMuted, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        SecondaryGameButton("Clear all pieces", accent) { selected.clear(); result = null }
         PrimaryGameButton("Check Blueprint", GameGreen, {
             result = selected.sorted() == challenge.required.sorted()
         }, enabled = selected.size == challenge.required.size)
@@ -156,12 +161,19 @@ private fun ArchitectPlayScreen(index: Int, onBack: () -> Unit, onSolved: () -> 
 }
 
 @Composable
-private fun ArchitectWorkspace(target: String, selected: List<String>, accent: Color, modifier: Modifier = Modifier) {
+private fun ArchitectWorkspace(
+    target: String,
+    selected: List<String>,
+    accent: Color,
+    modifier: Modifier = Modifier,
+    onRemove: (Int) -> Unit,
+) {
+    val compact = LocalCompactGameLayout.current
     Column(
-        modifier.fillMaxWidth().height(290.dp).background(Color(0xFFF7F3E9), RoundedCornerShape(24.dp))
-            .border(2.dp, accent.copy(.65f), RoundedCornerShape(24.dp)).padding(14.dp),
+        modifier.fillMaxWidth().height(if (compact) 220.dp else 290.dp).background(Color(0xFFF7F3E9), RoundedCornerShape(24.dp))
+            .border(2.dp, accent.copy(.65f), RoundedCornerShape(24.dp)).padding(if (compact) 10.dp else 14.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp),
     ) {
         Text(target, color = GamePurple, fontSize = 22.sp, fontWeight = FontWeight.Black)
         Box(
@@ -173,7 +185,13 @@ private fun ArchitectWorkspace(target: String, selected: List<String>, accent: C
                 Text("DRAG SHAPES HERE", color = Color(0xFF786E78), fontWeight = FontWeight.Bold)
             } else {
                 FlowRow(horizontalArrangement = Arrangement.Center, verticalArrangement = Arrangement.Center) {
-                    selected.forEachIndexed { i, shape -> ShapeGlyph(shape, listOf(GameGreen, GameBlue, GameGold, GamePurple)[i % 4], Modifier.size(74.dp)) }
+                    selected.forEachIndexed { i, shape ->
+                        ShapeGlyph(
+                            shape,
+                            listOf(GameGreen, GameBlue, GameGold, GamePurple)[i % 4],
+                            Modifier.size(if (compact) 58.dp else 74.dp).clickable { onRemove(i) },
+                        )
+                    }
                 }
             }
         }

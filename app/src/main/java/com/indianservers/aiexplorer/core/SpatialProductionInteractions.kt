@@ -16,6 +16,7 @@ data class SpatialSurfaceLayer(
     val material: SpatialMaterial = SpatialMaterial.Matte,
     val domain: SurfaceDomain3D = SurfaceDomain3D(),
     val quality: SpatialQuality = SpatialQuality.Balanced,
+    val opacity: Double = 1.0,
 )
 
 data class SpatialObjectGroup(val id: String, val name: String, val solidIndices: Set<Int>) { init { require(solidIndices.isNotEmpty()) } }

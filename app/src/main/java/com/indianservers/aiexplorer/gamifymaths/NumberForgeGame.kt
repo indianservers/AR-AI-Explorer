@@ -82,7 +82,9 @@ internal fun NumberForgeGame(
 
 @Composable
 private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
-    val targets = listOf(245, 347, 246, 0, 352, 583)
+    // The opening levels intentionally use small, ordered digits so children can
+    // learn the interaction before the place-value challenges become harder.
+    val targets = listOf(123, 240, 132, 0, 352, 583)
     val target = targets[level]
     var hundreds by rememberSaveable(level) { mutableIntStateOf(0) }
     var tens by rememberSaveable(level) { mutableIntStateOf(0) }
@@ -120,40 +122,37 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                     color = GameInk, fontSize = 13.sp,
                 )
                 TargetNumber(target, ForgeLevels[level].accent)
-                PlaceValueBins(hundreds, tens, ones, ForgeLevels[level].accent)
+                PlaceValueBins(
+                    hundreds = hundreds,
+                    tens = tens,
+                    ones = ones,
+                    onRemoveHundred = { if (hundreds > 0) hundreds--; result = null },
+                    onRemoveTen = { if (tens > 0) tens--; result = null },
+                    onRemoveOne = { if (ones > 0) ones--; result = null },
+                )
                 BaseTenVisual(hundreds, tens, ones)
-                Text("Drag blocks into their place-value columns.", color = GameMuted, fontSize = 11.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                Text("Add a block below. Tap any place-value column to remove one.", color = GameMuted, fontSize = 11.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     DraggableGameTile("100", GameGreen, "one hundred block") { if (hundreds < 9) hundreds++; result = null }
                     DraggableGameTile("10", GameGold, "one tens rod") { if (tens < 9) tens++; result = null }
                     DraggableGameTile("1", GameBlue, "one unit cube") { if (ones < 9) ones++; result = null }
                 }
-                if (hundreds + tens + ones > 0) {
-                    SecondaryGameButton("Undo last blocks", ForgeLevels[level].accent) {
-                        when {
-                            ones > 0 -> ones--
-                            tens > 0 -> tens--
-                            hundreds > 0 -> hundreds--
-                        }
-                        result = null
-                    }
-                }
                 PrimaryGameButton("Check", GameGreen, onClick = { result = hundreds * 100 + tens * 10 + ones == target })
             }
             2 -> {
                 Text("Count the blocks and build the number.", color = GameInk, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                GlossyPanel(GameBlue) { BaseTenVisual(2, 4, 6) }
-                DigitSlots(chosen, 3, GamePurple)
+                GlossyPanel(GameBlue) { BaseTenVisual(1, 3, 2) }
+                DigitSlots(chosen, 3, GamePurple) { index -> chosen = chosen.removeRange(index, index + 1); result = null }
                 FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("2", "4", "6", "8").forEach { digit ->
-                        DraggableGameTile(digit, if (digit == "2") GameGreen else if (digit == "4") GameGold else GameBlue) {
+                    listOf("1", "3", "2", "4").forEach { digit ->
+                        DraggableGameTile(digit, if (digit == "1") GameGreen else if (digit == "3") GameGold else GameBlue) {
                             if (chosen.length < 3) chosen += digit
                             result = null
                         }
                     }
                 }
-                SecondaryGameButton("Clear digits", GameBlue) { chosen = ""; result = null }
-                PrimaryGameButton("Check", GameGreen, onClick = { result = chosen == "246" })
+                Text("Tap any filled digit slot to remove that digit.", color = GameMuted, fontSize = 10.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                PrimaryGameButton("Check", GameGreen, onClick = { result = chosen == "132" })
             }
             3 -> {
                 Text("Which number is greater?", color = GameInk, fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -178,7 +177,7 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                 GlossyPanel(Color(0xFF35C67A)) {
                     Text("Three hundred fifty-two", color = GameInk, fontSize = 23.sp, fontWeight = FontWeight.Black, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                 }
-                DigitSlots(chosen, 3, Color(0xFF35C67A))
+                DigitSlots(chosen, 3, Color(0xFF35C67A)) { index -> chosen = chosen.removeRange(index, index + 1); result = null }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     listOf("3", "5", "2", "7").forEachIndexed { index, digit ->
                         DraggableGameTile(digit, listOf(GameGreen, GameGold, GameBlue, GamePurple)[index]) {
@@ -187,7 +186,7 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
                         }
                     }
                 }
-                SecondaryGameButton("Clear digits", Color(0xFF35C67A)) { chosen = ""; result = null }
+                Text("Tap any filled digit slot to remove that digit.", color = GameMuted, fontSize = 10.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                 PrimaryGameButton("Check", GameGreen, onClick = { result = chosen == "352" })
             }
         }
@@ -195,9 +194,9 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
             ResultPanel(
                 correct,
                 when (level) {
-                    0 -> "245 is 2 hundreds, 4 tens and 5 ones."
-                    1 -> "347 = 300 + 40 + 7."
-                    2 -> "2 hundreds + 4 tens + 6 ones = 246."
+                    0 -> "123 is 1 hundred, 2 tens and 3 ones."
+                    1 -> "240 = 200 + 40 + 0."
+                    2 -> "1 hundred + 3 tens + 2 ones = 132."
                     3 -> "285 is less than 287 because 5 ones is less than 7 ones."
                     4 -> "Three hundred fifty-two is written 352."
                     else -> "583 is 5 hundreds, 8 tens and 3 ones."
@@ -211,39 +210,60 @@ private fun ForgeLevel(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
 
 @Composable
 private fun TargetNumber(target: Int, accent: Color) {
+    val compact = LocalCompactGameLayout.current
     Box(
-        Modifier.fillMaxWidth().height(82.dp).background(Color.Black.copy(.3f), RoundedCornerShape(20.dp))
+        Modifier.fillMaxWidth().height(if (compact) 64.dp else 82.dp).background(Color.Black.copy(.3f), RoundedCornerShape(20.dp))
             .border(2.dp, accent.copy(.65f), RoundedCornerShape(20.dp)),
         contentAlignment = Alignment.Center,
     ) { Text(target.toString(), color = GameInk, fontSize = 43.sp, fontWeight = FontWeight.Black, letterSpacing = 5.sp) }
 }
 
 @Composable
-private fun PlaceValueBins(hundreds: Int, tens: Int, ones: Int, accent: Color) {
+private fun PlaceValueBins(
+    hundreds: Int,
+    tens: Int,
+    ones: Int,
+    onRemoveHundred: () -> Unit,
+    onRemoveTen: () -> Unit,
+    onRemoveOne: () -> Unit,
+) {
+    val compact = LocalCompactGameLayout.current
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-        listOf(Triple("Hundreds", hundreds, GameGreen), Triple("Tens", tens, GameGold), Triple("Ones", ones, GameBlue)).forEach { (label, value, color) ->
+        listOf(
+            PlaceValueBin("Hundreds", hundreds, GameGreen, onRemoveHundred),
+            PlaceValueBin("Tens", tens, GameGold, onRemoveTen),
+            PlaceValueBin("Ones", ones, GameBlue, onRemoveOne),
+        ).forEach { bin ->
             Column(
-                Modifier.weight(1f).height(88.dp).background(color.copy(.2f), RoundedCornerShape(16.dp))
-                    .border(1.dp, color.copy(.75f), RoundedCornerShape(16.dp)).padding(8.dp),
+                Modifier.weight(1f).height(if (compact) 72.dp else 88.dp).background(bin.color.copy(.2f), RoundedCornerShape(16.dp))
+                    .border(1.dp, bin.color.copy(.75f), RoundedCornerShape(16.dp))
+                    .clickable(enabled = bin.value > 0, onClick = bin.onRemove).padding(6.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(label, color = GameInk, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                Text(value.toString(), color = color, fontSize = 30.sp, fontWeight = FontWeight.Black)
+                Text(bin.label, color = GameInk, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text(bin.value.toString(), color = bin.color, fontSize = if (compact) 24.sp else 30.sp, fontWeight = FontWeight.Black)
+                Text(if (bin.value > 0) "TAP −1" else "EMPTY", color = GameMuted, fontSize = 8.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
 }
 
+private data class PlaceValueBin(val label: String, val value: Int, val color: Color, val onRemove: () -> Unit)
+
 @Composable
-private fun DigitSlots(value: String, count: Int, accent: Color) {
+private fun DigitSlots(value: String, count: Int, accent: Color, onRemove: (Int) -> Unit) {
+    val compact = LocalCompactGameLayout.current
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         repeat(count) { index ->
+            val digit = value.getOrNull(index)
             Box(
-                Modifier.padding(5.dp).height(62.dp).weight(1f).background(accent.copy(.22f), RoundedCornerShape(14.dp))
-                    .border(1.dp, accent.copy(.7f), RoundedCornerShape(14.dp)),
+                Modifier.padding(if (compact) 3.dp else 5.dp).height(if (compact) 50.dp else 62.dp).weight(1f)
+                    .background(accent.copy(.22f), RoundedCornerShape(14.dp))
+                    .border(1.dp, accent.copy(.7f), RoundedCornerShape(14.dp))
+                    .clickable(enabled = digit != null) { onRemove(index) },
                 contentAlignment = Alignment.Center,
-            ) { Text(value.getOrNull(index)?.toString() ?: "?", color = GameInk, fontSize = 28.sp, fontWeight = FontWeight.Black) }
+            ) { Text(digit?.toString() ?: "?", color = GameInk, fontSize = if (compact) 24.sp else 28.sp, fontWeight = FontWeight.Black) }
         }
     }
 }

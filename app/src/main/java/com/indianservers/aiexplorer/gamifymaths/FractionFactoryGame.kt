@@ -86,6 +86,7 @@ internal fun FractionFactoryGame(completed: Int, onBack: () -> Unit, onComplete:
 @Composable
 private fun FractionTaskScreen(level: Int, onBack: () -> Unit, onSolved: () -> Unit) {
     val task = FractionTasks[level]
+    val compact = LocalCompactGameLayout.current
     var selected by rememberSaveable(level) { mutableStateOf("") }
     var result by rememberSaveable(level) { mutableStateOf<Boolean?>(null) }
     var hint by rememberSaveable(level) { mutableStateOf(false) }
@@ -95,7 +96,7 @@ private fun FractionTaskScreen(level: Int, onBack: () -> Unit, onSolved: () -> U
             Text(task.prompt, color = GameInk, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
         Row(
-            Modifier.fillMaxWidth().height(240.dp).background(Color(0xFFEFF4FF), RoundedCornerShape(22.dp))
+            Modifier.fillMaxWidth().height(if (compact) 190.dp else 240.dp).background(Color(0xFFEFF4FF), RoundedCornerShape(22.dp))
                 .border(2.dp, FractionLevels[level].accent.copy(.65f), RoundedCornerShape(22.dp)).padding(14.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
