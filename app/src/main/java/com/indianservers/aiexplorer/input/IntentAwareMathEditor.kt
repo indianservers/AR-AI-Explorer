@@ -174,9 +174,8 @@ fun IntentAwareMathField(
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Medium),
             singleLine = singleLine,
             minLines = minLines,
-            keyboardOptions = KeyboardOptions(imeAction = imeAction),
+            keyboardOptions = KeyboardOptions(imeAction = imeAction, showKeyboardOnFocus = !useMathKeyboard),
             keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
-            readOnly = useMathKeyboard,
             isError = !healthy,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = IntentMathPalette.Ink,
@@ -267,9 +266,8 @@ fun IntentAwareMathValueField(
             placeholder = { Text(placeholder, color = IntentMathPalette.Muted) }, visualTransformation = transformation,
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Medium),
             singleLine = singleLine, minLines = minLines, isError = !healthy,
-            keyboardOptions = KeyboardOptions(imeAction = imeAction),
+            keyboardOptions = KeyboardOptions(imeAction = imeAction, showKeyboardOnFocus = !useMathKeyboard),
             keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
-            readOnly = useMathKeyboard,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = IntentMathPalette.Ink, unfocusedTextColor = IntentMathPalette.Ink,
                 focusedBorderColor = accent, unfocusedBorderColor = accent.copy(.35f), cursorColor = IntentMathPalette.Number,
@@ -352,7 +350,7 @@ fun CompactMathField(
         },
         label = { Text(label) },
         singleLine = true,
-        readOnly = true,
+        keyboardOptions = KeyboardOptions(showKeyboardOnFocus = false),
         visualTransformation = remember { IntentAwareMathVisualTransformation() },
         modifier = modifier.onFocusChanged { keyboardVisible = it.isFocused },
         colors = OutlinedTextFieldDefaults.colors(

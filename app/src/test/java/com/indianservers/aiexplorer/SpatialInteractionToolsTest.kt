@@ -55,7 +55,19 @@ class SpatialInteractionToolsTest {
 
         assertEquals(TransformGizmoAxis.X, hit?.axis)
         assertEquals(Vec3(3.0, 0.0, 0.0), TransformGizmoEngine.constrainTranslation(Vec3(3.0, 4.0, 5.0), TransformGizmoAxis.X))
+        assertEquals(
+            Vec3(0.525, 0.0, 0.0),
+            TransformGizmoEngine.translationDelta(Vec2(50.0, 20.0), handles.first()),
+        )
         assertEquals(Vec3(0.0, 25.0, 0.0), TransformGizmoEngine.rotationDelta(TransformGizmoAxis.Y, 25.0))
+    }
+
+    @Test fun screenDragFollowsTheCameraPlane() {
+        assertEquals(Vec3(1.0, -0.5, 0.0), screenDragToWorld(Vec2(100.0, 50.0), 100.0, 0f, 0f, 0f))
+        val sideView = screenDragToWorld(Vec2(100.0, 0.0), 100.0, 0f, 90f, 0f)
+        assertEquals(0.0, sideView.x, 1e-10)
+        assertEquals(0.0, sideView.y, 1e-10)
+        assertEquals(1.0, sideView.z, 1e-10)
     }
 
     @Test fun editableSectionPlaneMaintainsNormalizedGeometryAndBasis() {

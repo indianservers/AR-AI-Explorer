@@ -7129,7 +7129,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var visualMode by remember { mutableStateOf(SpatialVisualMode.Solid) }
     var explodeAmount by remember { mutableFloatStateOf(0f) }
     var multiSelectEnabled by remember { mutableStateOf(false) }
-    var editMode by remember { mutableStateOf(SpatialEditMode.Select) }
+    var editMode by remember(vm.shapeExplorerScene) {
+        mutableStateOf(if (vm.shapeExplorerScene) SpatialEditMode.Resize else SpatialEditMode.Select)
+    }
     var layersExpanded by remember { mutableStateOf(false) }
     var showWorkspaceGrid by remember { mutableStateOf(true) }
     var workspaceGridSize by remember { mutableFloatStateOf(1f) }
@@ -7153,6 +7155,22 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var addShapeOpen by remember { mutableStateOf(false) }
     var spatialViewToolsExpanded by remember { mutableStateOf(false) }
     var formulaInspectorOpen by remember { mutableStateOf(false) }
+    fun selectTransformMode(mode: Transform3DMode) {
+        transformMode = mode
+        editMode = when (mode) {
+            Transform3DMode.Move -> SpatialEditMode.Move
+            Transform3DMode.Rotate -> SpatialEditMode.Rotate
+            Transform3DMode.Scale -> SpatialEditMode.Resize
+        }
+    }
+    fun selectEditMode(mode: SpatialEditMode) {
+        editMode = mode
+        transformMode = when (mode) {
+            SpatialEditMode.Select, SpatialEditMode.Move -> Transform3DMode.Move
+            SpatialEditMode.Resize -> Transform3DMode.Scale
+            SpatialEditMode.Rotate -> Transform3DMode.Rotate
+        }
+    }
     BackHandler(enabled = addShapeOpen) { addShapeOpen = false }
     val selectedIndex = selectedSolidIndices.lastOrNull()?.takeIf { it in vm.state.solids.indices } ?: -1
     val selectedSolid = vm.state.solids.getOrNull(selectedIndex)
@@ -7304,14 +7322,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             SpatialManipulationBar(
                 current = editMode,
                 selectedAvailable = selectedSolid != null,
-                onSelect = { mode ->
-                    editMode = mode
-                    transformMode = when (mode) {
-                        SpatialEditMode.Select, SpatialEditMode.Move -> Transform3DMode.Move
-                        SpatialEditMode.Resize -> Transform3DMode.Scale
-                        SpatialEditMode.Rotate -> Transform3DMode.Rotate
-                    }
-                },
+                onSelect = ::selectEditMode,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 144.dp),
                 formulasVisible = formulaInspectorOpen,
                 onFormulas = { formulaInspectorOpen = !formulaInspectorOpen },
@@ -7400,7 +7411,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 selectedSolidIndices = setOf(vm.selectedSolid)
             },
             onAddVector = vm::addVector3D,
-            onTransformMode = { transformMode = it },
+            onTransformMode = ::selectTransformMode,
             onSelectionMode = {
                 selectionMode = it
                 subSelection = null
@@ -7449,12 +7460,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             SelectedSolidDetails(selectedSolid)
             Transform3DMode.entries.forEach { mode ->
                 GlowButton(if (mode == transformMode) "• ${mode.name}" else mode.name) {
-                    transformMode = mode
-                    editMode = when (mode) {
-                        Transform3DMode.Move -> SpatialEditMode.Move
-                        Transform3DMode.Rotate -> SpatialEditMode.Rotate
-                        Transform3DMode.Scale -> SpatialEditMode.Resize
-                    }
+                    selectTransformMode(mode)
                 }
             }
             GlowButton("Size −") {
@@ -9343,13 +9349,13 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var showGradient by remember { mutableStateOf(true) }
     var showBox by remember { mutableStateOf(false) }
     var activeTool by remember { mutableStateOf(SurfaceTool.Surface) }
-    var surfaceLayers by remember { mutableStateOf(listOf(com.indianservers.aiexplorer.core.SpatialSurfaceLayer("surface-1", vm.state.surfaceExpression))) }
-    var selectedSurfaceLayerIndex by remember { mutableIntStateOf(0) }
-    var selectedSurfaceLayerIndices by remember { mutableStateOf(setOf(0)) }
+    var surfaceLayers by remember { mutableStateOf(emptyList<com.indianservers.aiexplorer.core.SpatialSurfaceLayer>()) }
+    var selectedSurfaceLayerIndex by remember { mutableIntStateOf(-1) }
+    var selectedSurfaceLayerIndices by remember { mutableStateOf(emptySet<Int>()) }
     var contourLevel by remember { mutableFloatStateOf(2f) }
     var gradientPlayback by remember { mutableStateOf(com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())) }
     var viewPreset by remember { mutableStateOf(SurfaceViewPreset.Isometric) }
-    var surfaceDraft by rememberSaveable { mutableStateOf(vm.state.surfaceExpression) }
+    var surfaceDraft by rememberSaveable { mutableStateOf("") }
     var surfaceInputMessage by remember { mutableStateOf<String?>(null) }
     var addingSurfaceEquation by remember { mutableStateOf(false) }
     var graph3DEquationExpanded by remember { mutableStateOf(false) }
@@ -9443,7 +9449,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     LaunchedEffect(gradientPlayback.playing) {
         while (gradientPlayback.playing) { delay(90); gradientPlayback = gradientPlayback.tick() }
     }
-    val sharedSurfaceScene = remember(mesh) { SharedSpatialSceneBuilder.build("graph-3d-workspace", emptyList(), surface = mesh) }
+    val sharedSurfaceScene = remember(primaryMesh) { SharedSpatialSceneBuilder.build("graph-3d-workspace", emptyList(), surface = primaryMesh) }
     val sharedSurfacePlan = remember(sharedSurfaceScene) { SharedGpuSceneCompiler.compile(sharedSurfaceScene) }
     fun plotSurfaceDraft() {
         val interpretation = SurfaceInputInterpreter.explicit(surfaceDraft).getOrElse {

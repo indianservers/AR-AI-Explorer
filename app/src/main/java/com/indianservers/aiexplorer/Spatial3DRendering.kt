@@ -608,6 +608,16 @@ internal fun Projected3DCanvas(
                     val gestureRz = currentRz
                     val center = Offset(size.width * .52f, size.height * .45f) + currentPan
                     val scale = 74f * currentZoom
+                    val projectedMeshes = gestureSolids.mapIndexedNotNull { solidIndex, solid ->
+                        if (solidIndex !in currentVisibleSolidIndices) return@mapIndexedNotNull null
+                        val mesh = SolidMeshFactory.create(solid)
+                        ProjectedSpatialMesh(solidIndex, mesh.vertices.map { vertex ->
+                            val world = solidLocalToWorld(solid, vertex)
+                            val camera = rotate(world, gestureRx, gestureRy, gestureRz)
+                            val screen = project(camera, center, scale, currentPerspective)
+                            ProjectedSpatialPoint(Vec2(screen.x.toDouble(), screen.y.toDouble()), camera.z, world)
+                        }, mesh.edges, mesh.faces)
+                    }
                     fun vectorDistance(index: Int, target: Offset): Float {
                         val vector = gestureVectors[index]
                         val a = project(rotate(vector.start, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
@@ -615,22 +625,18 @@ internal fun Projected3DCanvas(
                         return pointSegmentDistance(target, a, b)
                     }
                     fun solidDistance(index: Int, target: Offset): Float {
-                        val projected = project(rotate(gestureSolids[index].position, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
-                        return (projected - target).getDistance()
+                        val mesh = projectedMeshes.firstOrNull { it.solidIndex == index } ?: return Float.MAX_VALUE
+                        return SpatialSubObjectPicker.pick(
+                            listOf(mesh),
+                            Vec2(target.x.toDouble(), target.y.toDouble()),
+                            SpatialSubObjectType.Face,
+                            Double.MAX_VALUE,
+                        )?.screenDistance?.toFloat() ?: Float.MAX_VALUE
                     }
 
                     fun pickSubObject(target: Offset): SubObjectSelection? {
                         val mode = currentSelectionMode
                         if (mode == Selection3DMode.Object) return null
-                        val projectedMeshes = gestureSolids.mapIndexedNotNull { solidIndex, solid ->
-                            if (solidIndex !in currentVisibleSolidIndices) return@mapIndexedNotNull null
-                            val mesh = SolidMeshFactory.create(solid)
-                            ProjectedSpatialMesh(solidIndex, mesh.vertices.map { vertex ->
-                                val world = solidLocalToWorld(solid, vertex); val camera = rotate(world, gestureRx, gestureRy, gestureRz)
-                                val screen = project(camera, center, scale, currentPerspective)
-                                ProjectedSpatialPoint(Vec2(screen.x.toDouble(), screen.y.toDouble()), camera.z, world)
-                            }, mesh.edges, mesh.faces)
-                        }
                         val type = when (mode) {
                             Selection3DMode.Vertex -> SpatialSubObjectType.Vertex
                             Selection3DMode.Edge -> SpatialSubObjectType.Edge
@@ -650,7 +656,8 @@ internal fun Projected3DCanvas(
                     val selectedForGizmo = gestureSolids.getOrNull(currentSelectedIndex)?.takeIf { currentSelectedIndex in currentVisibleSolidIndices }
                     val gizmoHandles = selectedForGizmo?.let { solid -> projectedGizmoHandles(solid, currentSubSelection?.takeIf { it.solidIndex == currentSelectedIndex }, gestureRx, gestureRy, gestureRz, center, scale, currentPerspective) }.orEmpty()
                     val gizmoKind = when (transformMode) { Transform3DMode.Move -> TransformGizmoKind.Move; Transform3DMode.Rotate -> TransformGizmoKind.Rotate; Transform3DMode.Scale -> TransformGizmoKind.Scale }
-                    val gizmoHit = TransformGizmoEngine.hitTest(Vec2(down.position.x.toDouble(), down.position.y.toDouble()), gizmoKind, gizmoHandles)
+                    val interactiveGizmoHandles = if (gizmoKind == TransformGizmoKind.Scale) gizmoHandles else gizmoHandles.filter { it.axis != TransformGizmoAxis.Uniform }
+                    val gizmoHit = TransformGizmoEngine.hitTest(Vec2(down.position.x.toDouble(), down.position.y.toDouble()), gizmoKind, interactiveGizmoHandles)
                     val sectionHandle = if ((currentSectionEnabled || currentClipSection) && selectedForGizmo != null) projectedSectionHandle(selectedForGizmo, currentSectionPlane, gestureRx, gestureRy, gestureRz, center, scale, currentPerspective) else null
                     val sectionHit = sectionHandle?.let { (it.end - down.position).getDistance() <= 24f || pointSegmentDistance(down.position, it.start, it.end) <= 12f } == true
                     if (gizmoHit != null && !sectionHit) {
@@ -668,7 +675,7 @@ internal fun Projected3DCanvas(
                     else null
                     var solidIndex = if (gizmoHit != null && !sectionHit) currentSelectedIndex else if (!sectionHit && vectorIndex == null) {
                         gestureSolids.indices.filter(currentVisibleSolidIndices::contains).minByOrNull { solidDistance(it, down.position) }
-                            ?.takeIf { solidDistance(it, down.position) < 104f }
+                            ?.takeIf { solidDistance(it, down.position) < 48f }
                     } else null
                     if (currentSelectionMode != Selection3DMode.Object || subHit != null) solidIndex = null
                     vectorIndex?.let {
@@ -711,7 +718,7 @@ internal fun Projected3DCanvas(
                                 when (transformMode) {
                                     Transform3DMode.Move -> onSolidMove(
                                         solidIndex,
-                                        Vec3((multiTouchPan.x / scale).toDouble(), 0.0, (multiTouchPan.y / scale).toDouble()),
+                                        screenDragToWorld(Vec2(multiTouchPan.x.toDouble(), multiTouchPan.y.toDouble()), scale.toDouble(), gestureRx, gestureRy, gestureRz),
                                     )
                                     Transform3DMode.Rotate -> onSolidRotate(
                                         solidIndex,
@@ -759,7 +766,10 @@ internal fun Projected3DCanvas(
                                     solidIndex != null && gizmoHit != null -> when (transformMode) {
                                         Transform3DMode.Move -> onSolidMove(
                                             solidIndex,
-                                            TransformGizmoEngine.constrainTranslation(Vec3((total.x / scale).toDouble(), (-total.y / scale).toDouble(), (-total.y / scale).toDouble()), gizmoHit.axis),
+                                            TransformGizmoEngine.translationDelta(
+                                                Vec2(total.x.toDouble(), total.y.toDouble()),
+                                                interactiveGizmoHandles.first { it.axis == gizmoHit.axis },
+                                            ),
                                         )
                                         Transform3DMode.Rotate -> onSolidRotate(solidIndex, TransformGizmoEngine.rotationDelta(gizmoHit.axis, (total.x - total.y) * .35))
                                         Transform3DMode.Scale -> {
@@ -770,7 +780,7 @@ internal fun Projected3DCanvas(
                                     solidIndex != null -> when (transformMode) {
                                         Transform3DMode.Move -> onSolidMove(
                                             solidIndex,
-                                            Vec3((total.x / scale).toDouble(), 0.0, (total.y / scale).toDouble()),
+                                            screenDragToWorld(Vec2(total.x.toDouble(), total.y.toDouble()), scale.toDouble(), gestureRx, gestureRy, gestureRz),
                                         )
                                         Transform3DMode.Rotate -> onSolidRotate(
                                             solidIndex,
@@ -1539,6 +1549,24 @@ private fun rotate(p: Vec3, rx: Float, ry: Float, rz: Float): Vec3 {
     val x3 = x * cos(az) - y * sin(az)
     y = x * sin(az) + y * cos(az)
     return Vec3(x3, y, z)
+}
+
+internal fun screenDragToWorld(delta: Vec2, pixelsPerUnit: Double, rx: Float, ry: Float, rz: Float): Vec3 {
+    if (pixelsPerUnit <= 1e-9) return Vec3(0.0, 0.0, 0.0)
+    val ax = Math.toRadians(rx.toDouble())
+    val ay = Math.toRadians(ry.toDouble())
+    val az = Math.toRadians(rz.toDouble())
+    val cameraX = delta.x / pixelsPerUnit
+    val cameraY = -delta.y / pixelsPerUnit
+    val xAfterZ = cameraX * cos(az) + cameraY * sin(az)
+    val yAfterZ = -cameraX * sin(az) + cameraY * cos(az)
+    val xAfterY = xAfterZ * cos(ay)
+    val zAfterY = xAfterZ * sin(ay)
+    return Vec3(
+        xAfterY,
+        yAfterZ * cos(ax) + zAfterY * sin(ax),
+        -yAfterZ * sin(ax) + zAfterY * cos(ax),
+    )
 }
 
 internal fun solidLocalToWorld(solid: Solid, vertex: Vec3): Vec3 = rotate(

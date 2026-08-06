@@ -5,10 +5,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.input.MathKey
 import com.indianservers.aiexplorer.input.MathKeyboardContext
+import com.indianservers.aiexplorer.input.MathKeyTone
 import com.indianservers.aiexplorer.input.MathTextEditing
+import com.indianservers.aiexplorer.input.basicNumberPadRows
 import com.indianservers.aiexplorer.input.commonMathKeys
 import com.indianservers.aiexplorer.input.filterMathCommands
+import com.indianservers.aiexplorer.input.fractionTemplate
+import com.indianservers.aiexplorer.input.matrixTemplate
 import com.indianservers.aiexplorer.input.mathKeyboardCommands
+import com.indianservers.aiexplorer.input.resolveMathKeyTone
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -65,6 +70,21 @@ class AdaptiveMathKeyboardTest {
     }
 
     @Test
+    fun clipboardEditsRespectCaretAndSelection() {
+        val source = TextFieldValue("sin(x)+1", TextRange(4, 5))
+        assertEquals("x", MathTextEditing.selectedOrAll(source))
+
+        val pasted = MathTextEditing.replaceSelection(source, "theta")
+        assertEquals("sin(theta)+1", pasted.text)
+        assertEquals(9, pasted.selection.start)
+
+        val cut = MathTextEditing.cutSelectionOrAll(source)
+        assertEquals("sin()+1", cut.text)
+        assertEquals(4, cut.selection.start)
+        assertEquals("", MathTextEditing.cutSelectionOrAll(TextFieldValue("x+1", TextRange(2))).text)
+    }
+
+    @Test
     fun calculusTemplatesEvaluateInExpressionKernel() {
         val engine = ExpressionEngine()
 
@@ -109,6 +129,34 @@ class AdaptiveMathKeyboardTest {
         assertEquals("Combination", filterMathCommands(query = "choose items").single().name)
         assertTrue(filterMathCommands(query = "discrete").any { it.name == "Factorial" })
         assertTrue(filterMathCommands(query = "normal").any { it.category == "Probability" })
+        assertEquals("Mean", filterMathCommands(query = "find the average of numbers").first().name)
+        assertEquals("Definite integral", filterMathCommands(query = "area under curve").single().name)
+    }
+
+    @Test
+    fun numberPadUsesFamiliarSerialRowsAndDistinctSemanticTones() {
+        assertEquals(listOf("7", "8", "9", "÷"), basicNumberPadRows[0].map { it.label })
+        assertEquals(listOf("4", "5", "6", "×"), basicNumberPadRows[1].map { it.label })
+        assertEquals(listOf("1", "2", "3", "−"), basicNumberPadRows[2].map { it.label })
+        assertEquals(MathKeyTone.NUMBER, resolveMathKeyTone(basicNumberPadRows[0][0]))
+        assertEquals(MathKeyTone.OPERATOR, resolveMathKeyTone(basicNumberPadRows[1][3]))
+        assertEquals(MathKeyTone.VARIABLE, resolveMathKeyTone(basicNumberPadRows[4][0]))
+        assertEquals(MathKeyTone.CONSTANT, resolveMathKeyTone(basicNumberPadRows[4][2]))
+    }
+
+    @Test
+    fun fractionAndMatrixBuildersPlaceCaretInFirstEditableSlot() {
+        val fraction = MathTextEditing.insert(TextFieldValue(""), fractionTemplate(false))
+        assertEquals("()/()", fraction.text)
+        assertEquals(1, fraction.selection.start)
+
+        val wrapped = MathTextEditing.insert(TextFieldValue("x+1", TextRange(0, 3)), fractionTemplate(true))
+        assertEquals("(x+1)/()", wrapped.text)
+        assertEquals(7, wrapped.selection.start)
+
+        val matrix = MathTextEditing.insert(TextFieldValue(""), matrixTemplate(3, 2))
+        assertEquals("[[,],[,],[,]]", matrix.text)
+        assertEquals(2, matrix.selection.start)
     }
 
     @Test

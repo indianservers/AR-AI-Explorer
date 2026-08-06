@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.indianservers.aiexplorer.features.numbertheory.visualproofs.presentation.NumberTheoryVisualProofScreen
 import com.indianservers.aiexplorer.workspace.MathModule
 import kotlin.math.cos
 import kotlin.math.sin
@@ -128,9 +129,15 @@ internal object MathConceptCatalog {
 internal fun MathConceptExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
     var query by rememberSaveable { mutableStateOf("") }
     var bandName by rememberSaveable { mutableStateOf<String?>(null) }
+    var showNumberTheoryProofs by rememberSaveable { mutableStateOf(false) }
     val selected = MathConceptCatalog.find(vm.selectedMathConcept)
     val selectedSubtopic = vm.selectedMathSubConcept
     val band = bandName?.let { value -> MathClassBand.entries.firstOrNull { it.name == value } }
+
+    if (showNumberTheoryProofs) {
+        NumberTheoryVisualProofScreen(onExit = { showNumberTheoryProofs = false })
+        return
+    }
 
     BackHandler {
         when {
@@ -214,6 +221,24 @@ internal fun MathConceptExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
         } else {
             ConceptHero(selected)
             if (selectedSubtopic == null) {
+                if (selected.title == "Number Theory") {
+                    Row(
+                        Modifier.fillMaxWidth().background(ConceptGreen.copy(.12f), RoundedCornerShape(15.dp))
+                            .border(1.dp, ConceptGreen.copy(.65f), RoundedCornerShape(15.dp))
+                            .clickable { showNumberTheoryProofs = true }
+                            .semantics { contentDescription = "Open Number Theory visual proofs" }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        ConceptIcon("QED", ConceptGreen)
+                        Column(Modifier.weight(1f)) {
+                            Text("Visual Proofs", color = ConceptInk, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                            Text("Build and test the reason behind number patterns.", color = ConceptMuted, fontSize = 10.sp)
+                        }
+                        Text("EXPLORE >", color = ConceptGreen, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                    }
+                }
                 Text("CHOOSE A SUB-CONCEPT", color = ConceptCyan, fontSize = 10.sp, fontWeight = FontWeight.Black)
                 selected.subtopics.forEachIndexed { index, subtopic ->
                     val accent = listOf(ConceptCyan, ConceptPurple, ConceptGreen, ConceptAmber)[index % 4]

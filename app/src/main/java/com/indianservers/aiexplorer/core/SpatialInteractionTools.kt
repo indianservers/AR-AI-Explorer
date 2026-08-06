@@ -81,6 +81,20 @@ object TransformGizmoEngine {
         TransformGizmoAxis.Uniform -> raw
     }
 
+    fun translationDelta(screenDelta: Vec2, handle: TransformGizmoHandle, worldExtent: Double = 1.05): Vec3 {
+        val direction = handle.end - handle.start
+        val screenLength = direction.distanceTo(Vec2(0.0, 0.0))
+        if (screenLength < 1e-9) return Vec3(0.0, 0.0, 0.0)
+        val signedPixels = (screenDelta.x * direction.x + screenDelta.y * direction.y) / screenLength
+        val amount = signedPixels / screenLength * worldExtent
+        return when (handle.axis) {
+            TransformGizmoAxis.X -> Vec3(amount, 0.0, 0.0)
+            TransformGizmoAxis.Y -> Vec3(0.0, amount, 0.0)
+            TransformGizmoAxis.Z -> Vec3(0.0, 0.0, amount)
+            TransformGizmoAxis.Uniform -> Vec3(amount, amount, amount)
+        }
+    }
+
     fun rotationDelta(axis: TransformGizmoAxis, degrees: Double): Vec3 = when (axis) {
         TransformGizmoAxis.X -> Vec3(degrees, 0.0, 0.0)
         TransformGizmoAxis.Y -> Vec3(0.0, degrees, 0.0)
