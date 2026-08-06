@@ -3,8 +3,11 @@ package com.indianservers.aiexplorer.core
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.acos
+import kotlin.math.acosh
 import kotlin.math.asin
+import kotlin.math.asinh
 import kotlin.math.atan
+import kotlin.math.atanh
 import kotlin.math.cos
 import kotlin.math.exp
 import kotlin.math.ceil
@@ -264,9 +267,21 @@ private data class FunctionNode(val name: String, val args: List<Node>) : Node {
             "sinh" -> kotlin.math.sinh(x)
             "cosh" -> kotlin.math.cosh(x)
             "tanh" -> kotlin.math.tanh(x)
+            "sech" -> 1.0 / kotlin.math.cosh(x)
+            "csch" -> 1.0 / kotlin.math.sinh(x)
+            "coth" -> 1.0 / kotlin.math.tanh(x)
             "asin" -> asin(x).let { if (numericAngle) Math.toDegrees(it) else it }
             "acos" -> acos(x).let { if (numericAngle) Math.toDegrees(it) else it }
             "atan" -> atan(x).let { if (numericAngle) Math.toDegrees(it) else it }
+            "asec" -> acos(1.0 / x).let { if (numericAngle) Math.toDegrees(it) else it }
+            "acsc" -> asin(1.0 / x).let { if (numericAngle) Math.toDegrees(it) else it }
+            "acot" -> atan(1.0 / x).let { if (numericAngle) Math.toDegrees(it) else it }
+            "asinh" -> asinh(x)
+            "acosh" -> acosh(x)
+            "atanh" -> atanh(x)
+            "asech" -> acosh(1.0 / x)
+            "acsch" -> asinh(1.0 / x)
+            "acoth" -> atanh(1.0 / x)
             "sqrt" -> sqrt(x)
             "abs" -> abs(x)
             "exp" -> exp(x)

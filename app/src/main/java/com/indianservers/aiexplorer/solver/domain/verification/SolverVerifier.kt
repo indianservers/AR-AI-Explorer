@@ -74,6 +74,40 @@ internal object SolverVerifier {
         )
     }
 
+    fun parametricEquation(
+        original: MathExpression.Equation,
+        isolated: MathExpression.Equation,
+        target: String,
+        freeVariables: List<String>,
+    ): VerificationResult {
+        val right = isolated.right
+        val samples = listOf(-5L, -1L, 0L, 2L, 7L)
+        val checks = samples.mapNotNull { sample ->
+            val freeValues = freeVariables.mapIndexed { index, variable ->
+                variable to ExactRational.of(sample + index)
+            }.toMap()
+            val targetValue = SolverExactMath.evaluate(right, freeValues).getOrNull() ?: return@mapNotNull null
+            val values = freeValues + (target to targetValue)
+            val leftValue = SolverExactMath.evaluate(original.left, values).getOrNull() ?: return@mapNotNull null
+            val rightValue = SolverExactMath.evaluate(original.right, values).getOrNull() ?: return@mapNotNull null
+            VerificationCheck(
+                freeValues.entries.joinToString { "${it.key}=${it.value}" },
+                leftValue == rightValue,
+                leftValue.toString(),
+                rightValue.toString(),
+            )
+        }
+        return verification(
+            VerificationMethod.Substitution,
+            checks,
+            if (checks.isNotEmpty() && checks.all { it.passed }) {
+                "Multiple exact values of the free variable satisfy the original equation."
+            } else {
+                "Exact substitution did not confirm the proposed solution family."
+            },
+        )
+    }
+
     fun equivalent(original: MathExpression, result: MathExpression): VerificationResult {
         val variables = (original.variables() + result.variables()).sorted()
         if (variables.isEmpty()) return arithmetic(original, result)

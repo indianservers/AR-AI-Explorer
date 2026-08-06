@@ -7,18 +7,32 @@ import com.indianservers.aiexplorer.input.MathKey
 import com.indianservers.aiexplorer.input.MathKeyboardContext
 import com.indianservers.aiexplorer.input.MathKeyTone
 import com.indianservers.aiexplorer.input.MathTextEditing
+import com.indianservers.aiexplorer.input.advancedNotationKeys
 import com.indianservers.aiexplorer.input.basicNumberPadRows
+import com.indianservers.aiexplorer.input.calculusKeys
 import com.indianservers.aiexplorer.input.commonMathKeys
 import com.indianservers.aiexplorer.input.filterMathCommands
 import com.indianservers.aiexplorer.input.fractionTemplate
+import com.indianservers.aiexplorer.input.functionKeys
 import com.indianservers.aiexplorer.input.matrixTemplate
+import com.indianservers.aiexplorer.input.matrixStructureKeys
 import com.indianservers.aiexplorer.input.mathKeyboardCommands
+import com.indianservers.aiexplorer.input.primaryMathKeyboardPages
 import com.indianservers.aiexplorer.input.resolveMathKeyTone
+import com.indianservers.aiexplorer.input.trigonometryKeys
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AdaptiveMathKeyboardTest {
+    @Test
+    fun primaryTabsExposeFrequentMathAndKeepAdvancedToolsInOverflow() {
+        assertEquals(listOf("123", "f(x)", "abc", "trig", "Math+", "αβ", "…"), primaryMathKeyboardPages.map { it.label })
+        assertTrue(trigonometryKeys(false).any { it.insertion == "sec()" })
+        assertTrue(trigonometryKeys(false).any { it.insertion == "sinh()" })
+        assertTrue(trigonometryKeys(false).any { it.insertion == "deg" })
+    }
+
     @Test
     fun templateWrapsSelectionAndKeepsCursorStable() {
         val source = TextFieldValue("x+1", TextRange(0, 3))
@@ -100,6 +114,16 @@ class AdaptiveMathKeyboardTest {
     }
 
     @Test
+    fun extendedTrigKeysEvaluateInsteadOfActingAsDecorativeTemplates() {
+        val engine = ExpressionEngine()
+
+        assertEquals(1.0, engine.compile("sech(0)").eval(), 1e-12)
+        assertEquals(60.0, engine.compile("asec(2)").eval(), 1e-9)
+        assertEquals(1.0, engine.compile("asinh(sinh(1))").eval(), 1e-9)
+        assertEquals(2.0, engine.compile("acsch(csch(2))").eval(), 1e-9)
+    }
+
+    @Test
     fun moreBrowserIncludesAdvancedMathCategoriesInGraphWorkspaces() {
         val categories = mathKeyboardCommands.map { it.category }.toSet()
 
@@ -142,6 +166,7 @@ class AdaptiveMathKeyboardTest {
         assertEquals(MathKeyTone.OPERATOR, resolveMathKeyTone(basicNumberPadRows[1][3]))
         assertEquals(MathKeyTone.VARIABLE, resolveMathKeyTone(basicNumberPadRows[4][0]))
         assertEquals(MathKeyTone.CONSTANT, resolveMathKeyTone(basicNumberPadRows[4][2]))
+        assertEquals(listOf("𝑥", "𝑦", "π", "(", ")", ","), basicNumberPadRows[4].map { it.label })
     }
 
     @Test
@@ -161,16 +186,45 @@ class AdaptiveMathKeyboardTest {
 
     @Test
     fun commonKeysAreAvailableAndEditAtTheCursor() {
-        assertEquals(listOf("=", "+", "−", "×", "÷", "( )", ","), commonMathKeys.map { it.label })
+        assertEquals(listOf("=", "+", "−", "×", "÷", "(", ")", ","), commonMathKeys.map { it.label })
 
         var value = TextFieldValue("x", TextRange(1))
-        listOf("=", "( )", "+").forEach { label ->
+        listOf("=", "(", "+", ")").forEach { label ->
             value = MathTextEditing.insert(value, commonMathKeys.single { it.label == label })
         }
 
         assertEquals("x=(+)", value.text)
-        assertEquals(4, value.selection.start)
-        assertEquals("x=()", MathTextEditing.backspace(value).text)
+        assertEquals(5, value.selection.start)
+        assertEquals("x=(+", MathTextEditing.backspace(value).text)
+    }
+
+    @Test
+    fun functionAndTrigPagesHaveDistinctResponsibilities() {
+        val directTrig = trigonometryKeys(inverse = false)
+        val inverseTrig = trigonometryKeys(inverse = true)
+
+        assertTrue(functionKeys.none { it.insertion in directTrig.map(MathKey::insertion) })
+        assertTrue(functionKeys.none { it.insertion in inverseTrig.map(MathKey::insertion) })
+        assertEquals(
+            listOf("sin⁻¹", "cos⁻¹", "tan⁻¹", "sec⁻¹", "csc⁻¹", "cot⁻¹"),
+            inverseTrig.take(6).map { it.label },
+        )
+        assertTrue(directTrig.any { it.insertion == "sech()" })
+        assertTrue(directTrig.any { it.insertion == "csch()" })
+        assertTrue(directTrig.any { it.insertion == "coth()" })
+        assertTrue(inverseTrig.any { it.insertion == "asinh()" })
+        assertTrue(inverseTrig.any { it.insertion == "asech()" })
+        assertTrue(functionKeys.none { it.label in setOf("√", "∛", "xʸ", "xₙ", "logₐ") })
+    }
+
+    @Test
+    fun mathPlusExposesNotationCalculusAndMatrixStructures() {
+        assertTrue(advancedNotationKeys.any { it.action.name == "TOGGLE_NTH_ROOT" })
+        assertTrue(calculusKeys.any { it.label == "∬" })
+        assertTrue(calculusKeys.any { it.label == "∭" })
+        assertTrue(calculusKeys.any { it.label == "∮" })
+        assertTrue(matrixStructureKeys.any { it.label == "1×4" })
+        assertTrue(matrixStructureKeys.any { it.label == "4×4" })
     }
 
     @Test

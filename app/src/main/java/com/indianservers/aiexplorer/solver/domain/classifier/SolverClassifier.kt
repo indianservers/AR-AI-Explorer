@@ -40,8 +40,16 @@ class SolverProblemClassifier {
             if (containsRatio(expression) || numericFractionEquality || "proportion" in source || "ratio" in source) {
                 return result(ProblemType.RatioOrProportion, .96f, "an equality between ratios or fractions was detected")
             }
-            return if (variables.size == 1) result(ProblemType.LinearEquation, .98f, "one equality and one variable were detected")
-            else result(ProblemType.UnsupportedOrAmbiguous, .95f, "Phase 1 equations require one variable unless entered as a two-equation system")
+            return when (variables.size) {
+                1 -> result(ProblemType.LinearEquation, .98f, "one equality and one variable were detected")
+                2 -> result(
+                    ProblemType.LinearEquation,
+                    .97f,
+                    "one linear relation with two variables was detected",
+                    "the answer will be expressed as a verified solution family",
+                )
+                else -> result(ProblemType.UnsupportedOrAmbiguous, .95f, "Enter one equation with at most two variables, or a two-equation system")
+            }
         }
         if ('%' in originalInput) return result(ProblemType.PercentageProblem, .99f, "the percent symbol was detected")
         if (containsRatio(expression) || ':' in originalInput) return result(ProblemType.RatioOrProportion, .99f, "ratio notation was detected")

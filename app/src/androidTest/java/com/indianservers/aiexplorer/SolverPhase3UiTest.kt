@@ -2,6 +2,8 @@ package com.indianservers.aiexplorer
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -48,11 +50,24 @@ class SolverPhase3UiTest {
     }
 
     private fun solve(expression: String) {
-        composeRule.onNodeWithText("AI Maths Explorer", substring = true).assertIsDisplayed()
-        composeRule.onNodeWithText("Menu").performClick()
-        composeRule.onNodeWithText("Solver").performClick()
+        composeRule.mainClock.advanceTimeBy(1_000)
+        composeRule.waitForIdle()
+        composeRule.waitUntil(3_000) {
+            composeRule.onAllNodesWithContentDescription("Editable Solver expression", substring = true)
+                .fetchSemanticsNodes().isNotEmpty() ||
+                composeRule.onAllNodesWithText("AI Maths Explorer", substring = true)
+                    .fetchSemanticsNodes().isNotEmpty()
+        }
+        if (composeRule.onAllNodesWithContentDescription("Editable Solver expression", substring = true)
+                .fetchSemanticsNodes().isEmpty()
+        ) {
+            composeRule.onNodeWithText("AI Maths Explorer", substring = true).assertIsDisplayed()
+            composeRule.onNodeWithText("Menu").performClick()
+            composeRule.onNodeWithText("Solver").performClick()
+        }
         composeRule.onNodeWithContentDescription("Editable Solver expression", substring = true)
             .performTextReplacement(expression)
         composeRule.onNodeWithText("Solve").performClick()
+        composeRule.onNodeWithText("Show steps").performClick()
     }
 }

@@ -9,27 +9,27 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,21 +45,12 @@ import com.indianservers.aiexplorer.Violet
 import com.indianservers.aiexplorer.input.IntentAwareMathValueField
 import com.indianservers.aiexplorer.input.MathKeyboardContext
 import com.indianservers.aiexplorer.solver.domain.model.SolverExpressionRenderer
-import com.indianservers.aiexplorer.solver.domain.model.ExplanationProfile
 import com.indianservers.aiexplorer.solver.domain.model.SolutionMethodOption
 import com.indianservers.aiexplorer.solver.domain.model.SolverOperation
 import com.indianservers.aiexplorer.solver.domain.model.SolverSolution
 import com.indianservers.aiexplorer.solver.domain.model.VerificationStatus
-import com.indianservers.aiexplorer.solver.domain.repository.SolverHistoryEntry
 import com.indianservers.aiexplorer.solver.domain.steps.SolverRuleRegistry
 import com.indianservers.aiexplorer.solver.presentation.components.SolverVisualisationPanel
-import com.indianservers.aiexplorer.solver.presentation.components.SolverCataloguePanel
-import com.indianservers.aiexplorer.solver.presentation.components.SolverHintPanel
-import com.indianservers.aiexplorer.solver.presentation.components.SolverMasteryPanel
-import com.indianservers.aiexplorer.solver.presentation.components.SolverPracticePanel
-import com.indianservers.aiexplorer.solver.presentation.components.SolverTutorPanel
-import java.text.DateFormat
-import java.util.Date
 import kotlinx.coroutines.delay
 
 @Composable
@@ -70,10 +61,17 @@ fun SolverScreen(
 ) {
     BackHandler(onBack = onExit)
     val state = model.state
+    val listState = rememberLazyListState()
     LaunchedEffect(state.visualisationPlaying, state.selectedVisualisationIndex, state.solution?.visualisations?.size) {
         if (state.visualisationPlaying && !state.reducedMotion) {
             delay(1200)
             model.nextVisualisation(stopAtEnd = true)
+        }
+    }
+    LaunchedEffect(state.solution) {
+        if (state.solution != null) {
+            delay(80)
+            listState.animateScrollToItem(1)
         }
     }
     Box(Modifier.fillMaxSize()) {
@@ -83,125 +81,44 @@ fun SolverScreen(
                 .widthIn(max = if (wide) 920.dp else 620.dp)
                 .fillMaxSize()
                 .padding(top = 78.dp, bottom = 78.dp, start = 8.dp, end = 8.dp)
-                .semantics { contentDescription = "Offline Solver screen with keyboard input, steps, verification, and local history" },
+                .semantics { contentDescription = "Offline Solver with editor-first input and direct answers" },
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(9.dp),
         ) {
             item {
-                SolverHeader(
-                    historyVisible = state.historyVisible,
-                    onExit = onExit,
-                    onClear = model::clearInput,
-                    onHistory = model::toggleHistory,
-                )
-            }
-            if (state.historyVisible) {
-                item {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("Solver history", color = Violet, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                        if (state.history.isNotEmpty()) GlowButton("Clear history", onClick = model::clearHistory)
-                    }
-                    OutlinedTextField(
-                        value = state.historyQuery,
-                        onValueChange = model::setHistoryQuery,
-                        label = { Text("Search history") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search Solver history" },
+                Column(
+                    Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(7.dp),
+                ) {
+                    IntentAwareMathValueField(
+                        value = state.input,
+                        onValueChange = model::updateInput,
+                        label = "Solver expression",
+                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Editable Solver expression using the mathematical keyboard" },
+                        placeholder = "Example: 3x + 5 = 20",
+                        minLines = 2,
+                        showLegend = false,
+                        keyboardContext = MathKeyboardContext.GENERAL,
+                        useMathKeyboard = true,
+                        onDone = { model.run(SolverOperation.Solve) },
                     )
+                    GlowButton(
+                        "Solve",
+                        enabled = state.input.text.isNotBlank(),
+                    ) { model.run(SolverOperation.Solve) }
                 }
-                val visibleHistory = state.history.filter {
-                    state.historyQuery.isBlank() ||
-                        it.originalInput.contains(state.historyQuery, true) ||
-                        it.finalResult.contains(state.historyQuery, true) ||
-                        it.problemType.name.contains(state.historyQuery, true)
-                }.sortedByDescending { it.id in state.bookmarkedHistoryIds }
-                if (visibleHistory.isEmpty()) {
-                    item { SolverPanel { Text("No Solver history yet. Verified keyboard solutions appear here.", color = Muted) } }
-                } else {
-                    items(visibleHistory, key = SolverHistoryEntry::id) { entry ->
-                        HistoryRow(
-                            entry,
-                            bookmarked = entry.id in state.bookmarkedHistoryIds,
-                            onReopen = { model.reopen(entry) },
-                            onBookmark = { model.toggleBookmark(entry.id) },
-                            onDelete = { model.deleteHistory(entry.id) },
-                        )
-                    }
-                }
-            } else {
-                if (state.catalogueVisible) {
-                    item {
-                        SolverCataloguePanel(
-                            query = state.catalogueQuery,
-                            onQuery = model::setCatalogueQuery,
-                            onChoose = model::chooseCalculator,
-                            onClose = model::toggleCatalogue,
-                        )
-                    }
-                }
-                if (state.masteryVisible) {
-                    item {
-                        SolverMasteryPanel(
-                            summary = state.learningSummary,
-                            onClear = model::clearLearningData,
-                            onClose = model::toggleMastery,
-                        )
-                    }
-                }
+            }
+            if (state.solution == null && state.input.text.isBlank()) {
+                item { EmptySolverState(onExample = { model.updateInput(it); model.run(SolverOperation.Solve) }) }
+            }
+            state.solution?.let { solution ->
                 item {
-                    SolverPanel {
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Column {
-                                Text("Keyboard input", color = Cyan, fontWeight = FontWeight.Bold)
-                                Text("Fully offline | keyboard input only", color = Muted, fontSize = 9.sp)
-                            }
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                GlowButton("Calculators", onClick = model::toggleCatalogue)
-                                GlowButton("Learning", onClick = model::toggleMastery)
-                            }
-                        }
-                        IntentAwareMathValueField(
-                            value = state.input,
-                            onValueChange = model::updateInput,
-                            label = "Solver expression",
-                            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Editable Solver expression using the existing mathematical keyboard" },
-                            placeholder = "Example: 3x + 5 = 20",
-                            minLines = 2,
-                            showLegend = false,
-                            keyboardContext = MathKeyboardContext.GENERAL,
-                            useMathKeyboard = true,
-                            onDone = { model.run() },
-                        )
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            SolverOperation.entries.forEach { operation ->
-                                GlowButton(
-                                    if (state.operation == operation) "* ${operation.name}" else operation.name,
-                                    enabled = state.input.text.isNotBlank(),
-                                ) { model.run(operation) }
-                            }
-                            GlowButton("Hint only", enabled = state.input.text.isNotBlank(), onClick = model::runHintOnly)
-                        }
-                        Text("Explanation", color = Muted, fontSize = 10.sp)
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                            ExplanationProfile.entries.forEach { profile ->
-                                GlowButton(if (state.explanationProfile == profile) "* ${profile.label}" else profile.label) {
-                                    model.setExplanationProfile(profile)
-                                }
-                            }
-                        }
-                    }
-                }
-                if (state.solution == null && state.input.text.isBlank()) {
-                    item { EmptySolverState(onExample = { model.updateInput(it); model.run() }) }
-                }
-                state.solution?.let { solution ->
-                    item {
-                        SolverResult(
+                    SolverResult(
                             solution = solution,
-                            hideWorking = state.hintOnlyMode,
                             showApproximate = state.showApproximateAnswer,
                             onToggleAnswer = model::toggleAnswerForm,
                             onTryMethod = model::tryMethod,
-                            onCopyExpression = model::copyExpression,
+                            onCopyAnswer = model::copyAnswer,
                             onCopyWorking = model::copyFullWorking,
                             selectedVisualisationIndex = state.selectedVisualisationIndex,
                             visualisationPlaying = state.visualisationPlaying,
@@ -216,83 +133,8 @@ fun SolverScreen(
                             onResetVisualisation = model::resetVisualisation,
                             onExpandVisualisation = model::toggleVisualisationExpanded,
                             onToggleFormula = model::toggleFormulaUnderstanding,
-                        )
-                    }
-                    if (state.hintOnlyMode) {
-                        item {
-                            SolverHintPanel(
-                                hint = state.hints.getOrNull(state.visibleHintIndex),
-                                hintNumber = state.visibleHintIndex,
-                                totalHints = state.hints.size.coerceAtLeast(6),
-                                onAnotherHint = model::requestNextHint,
-                                onRevealStep = model::revealNextTutorStepHint,
-                                onReturnToSolving = model::returnToIndependentSolving,
-                                onShowFullSolution = model::showFullSolution,
-                            )
-                        }
-                    } else if (solution.supported) {
-                        item {
-                            SolverPanel(accent = Cyan) {
-                                Text("Learn from this solution", color = Cyan, fontWeight = FontWeight.Bold)
-                                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                                    GlowButton("Give me only a hint", onClick = model::runHintOnly)
-                                    GlowButton("Ask me the next step", onClick = model::toggleTutor)
-                                    GlowButton("Practise similar", onClick = model::togglePractice)
-                                }
-                            }
-                        }
-                        if (state.tutorVisible) {
-                            item {
-                                SolverTutorPanel(
-                                    input = state.tutorInput,
-                                    stepIndex = state.tutorStepIndex,
-                                    totalSteps = solution.steps.size,
-                                    evaluations = state.tutorEvaluations,
-                                    onInputChange = model::updateTutorInput,
-                                    onCheck = model::evaluateTutorStep,
-                                    onClose = model::toggleTutor,
-                                )
-                            }
-                        }
-                        if (state.practiceVisible) {
-                            item {
-                                SolverPracticePanel(
-                                    problem = state.practiceProblem,
-                                    mode = state.practiceMode,
-                                    input = state.practiceInput,
-                                    feedback = state.practiceFeedback,
-                                    onMode = model::generatePractice,
-                                    onInput = model::updatePracticeInput,
-                                    onCheck = model::checkPractice,
-                                    onNew = { model.generatePractice(state.practiceMode) },
-                                    onClose = model::togglePractice,
-                                )
-                            }
-                        }
-                    }
+                    )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SolverHeader(
-    historyVisible: Boolean,
-    onExit: () -> Unit,
-    onClear: () -> Unit,
-    onHistory: () -> Unit,
-) {
-    SolverPanel {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Column {
-                Text("Solver", color = Cyan, fontSize = 23.sp, fontWeight = FontWeight.Bold, modifier = Modifier.semantics { heading() })
-                Text("OFFLINE | KEYBOARD ONLY", color = Green, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-            }
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                GlowButton("Back", icon = "back", iconOnly = true, onClick = onExit)
-                GlowButton("Clear", onClick = onClear)
-                GlowButton(if (historyVisible) "Close history" else "History", onClick = onHistory)
             }
         }
     }
@@ -317,11 +159,10 @@ private fun EmptySolverState(onExample: (androidx.compose.ui.text.input.TextFiel
 @Composable
 private fun SolverResult(
     solution: SolverSolution,
-    hideWorking: Boolean,
     showApproximate: Boolean,
     onToggleAnswer: () -> Unit,
     onTryMethod: (String) -> Unit,
-    onCopyExpression: () -> Unit,
+    onCopyAnswer: () -> Unit,
     onCopyWorking: () -> Unit,
     selectedVisualisationIndex: Int,
     visualisationPlaying: Boolean,
@@ -337,14 +178,8 @@ private fun SolverResult(
     onExpandVisualisation: () -> Unit,
     onToggleFormula: () -> Unit,
 ) {
+    var detailsExpanded by remember(solution) { mutableStateOf(false) }
     SolverPanel(accent = if (solution.supported) Green else Amber) {
-        Text(
-            if (solution.supported) solution.classification.type.name.replace(Regex("([a-z])([A-Z])"), "$1 $2") else "Unsupported or incomplete",
-            color = if (solution.supported) Green else Amber,
-            fontWeight = FontWeight.Bold,
-        )
-        Text("${(solution.classification.confidence * 100).toInt()}% classification confidence", color = Muted, fontSize = 10.sp)
-        solution.classification.evidence.forEach { Text("- $it", color = Muted, fontSize = 10.sp) }
         solution.parseError?.let { error ->
             ParseErrorDisplay(solution.input.normalized, error.span.start, error.span.endExclusive, error.message)
         }
@@ -353,6 +188,37 @@ private fun SolverResult(
             Text("No solution was invented. Edit the notation or choose a supported offline method.", color = Muted, fontSize = 11.sp)
             return@SolverPanel
         }
+        val displayedAnswer =
+            if (showApproximate) solution.approximateAnswer ?: solution.exactAnswer ?: solution.finalAnswer
+            else solution.exactAnswer ?: solution.finalAnswer
+        Text("Answer", color = Green, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        Text(
+            displayedAnswer ?: "No answer",
+            color = Cyan,
+            fontSize = 27.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Monospace,
+        )
+        Text(
+            if (solution.verification.status == VerificationStatus.Verified) "Verified offline" else solution.verification.status.name,
+            color = if (solution.verification.status == VerificationStatus.Verified) Green else Amber,
+            fontSize = 10.sp,
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            GlowButton(if (detailsExpanded) "Hide steps" else "Show steps") {
+                detailsExpanded = !detailsExpanded
+            }
+            GlowButton("Copy answer", onClick = onCopyAnswer)
+            if (solution.approximateAnswer != null) {
+                GlowButton(if (showApproximate) "Show exact" else "Show decimal", onClick = onToggleAnswer)
+            }
+        }
+        if (!detailsExpanded) return@SolverPanel
+        Text(
+            solution.classification.type.name.replace(Regex("([a-z])([A-Z])"), "$1 $2"),
+            color = Green,
+            fontWeight = FontWeight.Bold,
+        )
         if (solution.methods.isNotEmpty()) {
             Text("Method", color = Muted, fontSize = 10.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -373,10 +239,6 @@ private fun SolverResult(
                 solution.assumptions.forEach { Text("- ${it.statement}: ${it.reason}", color = Ink, fontSize = 10.sp) }
                 solution.restrictions.forEach { Text("- ${it.condition}: ${it.reason}", color = Ink, fontSize = 10.sp) }
             }
-        }
-        if (hideWorking) {
-            Text("Hint-only mode keeps the steps, verification and final answer hidden.", color = Green, fontSize = 11.sp)
-            return@SolverPanel
         }
         solution.steps.forEachIndexed { index, step ->
             val rule = SolverRuleRegistry.get(step.ruleId)
@@ -433,15 +295,7 @@ private fun SolverResult(
                 }
             }
         }
-        (if (showApproximate) solution.approximateAnswer ?: solution.exactAnswer else solution.exactAnswer ?: solution.finalAnswer)?.let {
-            Text("Final answer", color = Muted, fontSize = 10.sp)
-            Text(it, color = Cyan, fontSize = 24.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
-        }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            if (solution.approximateAnswer != null) {
-                GlowButton(if (showApproximate) "Show exact" else "Show approximate", onClick = onToggleAnswer)
-            }
-            GlowButton("Copy expression", onClick = onCopyExpression)
             GlowButton("Copy full working", onClick = onCopyWorking)
         }
         if (solution.commonMistakes.isNotEmpty()) {
@@ -504,31 +358,6 @@ private fun VerificationCard(solution: SolverSolution) {
         Text(verification.message, color = Ink, fontSize = 11.sp)
         verification.checks.forEach { check ->
             Text("${if (check.passed) "PASS" else "FAIL"} | ${check.label}: expected ${check.expected}, got ${check.actual}", color = if (check.passed) Green else color, fontSize = 10.sp)
-        }
-    }
-}
-
-@Composable
-private fun HistoryRow(
-    entry: SolverHistoryEntry,
-    bookmarked: Boolean,
-    onReopen: () -> Unit,
-    onBookmark: () -> Unit,
-    onDelete: () -> Unit,
-) {
-    SolverPanel(accent = Violet) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Column(Modifier.weight(1f).clickable(onClick = onReopen)) {
-                Text(entry.originalInput, color = Cyan, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
-                Text(entry.finalResult, color = Green, fontSize = 12.sp)
-                Text(
-                    "${entry.problemType} | ${entry.stepCount} steps | ${DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(entry.timestamp))}",
-                    color = Muted,
-                    fontSize = 9.sp,
-                )
-            }
-            GlowButton(if (bookmarked) "Unsave" else "Save", onClick = onBookmark)
-            GlowButton("Delete", icon = "delete", iconOnly = true, onClick = onDelete)
         }
     }
 }

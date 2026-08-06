@@ -62,13 +62,25 @@ class Phase1SolverEngineTest {
 
     @Test
     fun unsupportedAndInvalidProblemsNeverInventAnswers() {
-        val cases = listOf("1/0", "sqrt(2)", "x^2 = 4", "x + y = 3", "sin(x)", "2+")
+        val cases = listOf("1/0", "sqrt(2)", "x^2 = 4", "sin(x)", "2+")
         cases.forEach { source ->
             val solution = engine.solve(source)
             assertFalse("$source must not be presented as solved", solution.canPresentAsCorrect)
             assertEquals(null, solution.finalAnswer)
             assertTrue(solution.message.isNotBlank())
         }
+    }
+
+    @Test
+    fun oneLinearEquationWithTwoVariablesReturnsAVerifiedSolutionFamily() {
+        val solution = engine.solve("3x + y = 36")
+
+        assertTrue(solution.supported)
+        assertEquals(ProblemType.LinearEquation, solution.classification.type)
+        assertEquals("x = (36 - y)/3", solution.finalAnswer)
+        assertTrue(solution.steps.size >= 2)
+        assertEquals(VerificationStatus.Verified, solution.verification.status)
+        assertTrue(solution.canPresentAsCorrect)
     }
 
     @Test

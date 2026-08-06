@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.AnnotatedString
@@ -71,22 +72,50 @@ enum class MathKeyboardPage(val label: String) {
     BASIC("123"),
     FUNCTIONS("f(x)"),
     LETTERS("abc"),
-    CALCULUS("∫∑"),
+    TRIG("trig"),
+    ADVANCED("Math+"),
     SYMBOLS("αβ"),
     UNITS("units"),
-    COMMANDS("..."),
+    COMMANDS("…"),
 }
 
+private enum class AdvancedMathGroup(val label: String) {
+    NOTATION("√x"),
+    CALCULUS("∂"),
+    MATRICES("▦"),
+}
+
+internal val primaryMathKeyboardPages = listOf(
+    MathKeyboardPage.BASIC,
+    MathKeyboardPage.FUNCTIONS,
+    MathKeyboardPage.LETTERS,
+    MathKeyboardPage.TRIG,
+    MathKeyboardPage.ADVANCED,
+    MathKeyboardPage.SYMBOLS,
+    MathKeyboardPage.COMMANDS,
+)
+
 enum class MathKeyboardKeySize(val label: String, val mainHeight: Dp, val actionHeight: Dp, val fontScale: Float) {
-    COMPACT("Compact", 34.dp, 29.dp, .88f),
+    COMPACT("Compact", 31.dp, 27.dp, .88f),
     STANDARD("Standard", 40.dp, 32.dp, 1f),
     LARGE("Large", 48.dp, 38.dp, 1.14f),
 }
 
 object MathKeyboardPreferences {
     var beginnerMode by mutableStateOf(true)
-    var keySize by mutableStateOf(MathKeyboardKeySize.STANDARD)
+    var keySize by mutableStateOf(MathKeyboardKeySize.COMPACT)
     var highContrast by mutableStateOf(false)
+}
+
+enum class MathKeyAction {
+    INSERT,
+    TOGGLE_SUPERSCRIPT,
+    TOGGLE_SUBSCRIPT,
+    TOGGLE_FRACTION,
+    TOGGLE_ROOT,
+    TOGGLE_CUBE_ROOT,
+    TOGGLE_NTH_ROOT,
+    TOGGLE_LOG_BASE,
 }
 
 data class MathKey(
@@ -96,6 +125,7 @@ data class MathKey(
     val selectionLength: Int = 0,
     val description: String = label,
     val tone: MathKeyTone? = null,
+    val action: MathKeyAction = MathKeyAction.INSERT,
 )
 
 enum class MathKeyTone { NUMBER, VARIABLE, OPERATOR, FUNCTION, CONSTANT, BRACKET, RELATION, CALCULUS, UNIT, GENERAL }
@@ -200,43 +230,135 @@ internal val basicNumberPadRows = listOf(
         MathKey("𝑥", "x", description = "Variable x", tone = MathKeyTone.VARIABLE),
         MathKey("𝑦", "y", description = "Variable y", tone = MathKeyTone.VARIABLE),
         MathKey("π", "pi", description = "Pi constant", tone = MathKeyTone.CONSTANT),
-        MathKey("( )", "()", 1, description = "Parentheses", tone = MathKeyTone.BRACKET),
+        MathKey("(", description = "Open parenthesis", tone = MathKeyTone.BRACKET),
+        MathKey(")", description = "Close parenthesis", tone = MathKeyTone.BRACKET),
+        MathKey(",", description = "Comma", tone = MathKeyTone.GENERAL),
     ),
 )
 
 private val basicKeys = basicNumberPadRows.flatten()
 
-private val functionKeys = listOf(
-    MathKey("sin", "sin()", 1, description = "Sine"),
-    MathKey("cos", "cos()", 1, description = "Cosine"),
-    MathKey("tan", "tan()", 1, description = "Tangent"),
-    MathKey("x²", "(%s)^2", cursorBack = 0, description = "Square"),
-    MathKey("√", "sqrt(%s)", cursorBack = 1, description = "Square root"),
+internal val inverseFunctionKeys = listOf(
+    MathKey("sin⁻¹", "asin()", 1, description = "Inverse sine"),
+    MathKey("cos⁻¹", "acos()", 1, description = "Inverse cosine"),
+    MathKey("tan⁻¹", "atan()", 1, description = "Inverse tangent"),
+    MathKey("sec⁻¹", "asec()", 1, description = "Inverse secant"),
+    MathKey("csc⁻¹", "acsc()", 1, description = "Inverse cosecant"),
+    MathKey("cot⁻¹", "acot()", 1, description = "Inverse cotangent"),
+)
+
+internal val functionKeys = listOf(
     MathKey("ln", "ln()", 1, description = "Natural logarithm"),
     MathKey("log", "log()", 1, description = "Base ten logarithm"),
     MathKey("|x|", "abs(%s)", 1, description = "Absolute value"),
     MathKey("eˣ", "exp()", 1, description = "Exponential"),
-    MathKey("aⁿ", "(%s)^()", 1, description = "Power"),
-    MathKey("asin", "asin()", 1, description = "Inverse sine"),
-    MathKey("acos", "acos()", 1, description = "Inverse cosine"),
-    MathKey("atan", "atan()", 1, description = "Inverse tangent"),
+    MathKey("floor", "floor()", 1, description = "Floor"),
+    MathKey("ceil", "ceil()", 1, description = "Ceiling"),
     MathKey("min", "min(,)", 2, description = "Minimum"),
     MathKey("max", "max(,)", 2, description = "Maximum"),
     MathKey("if", "if(,,)", 3, description = "Piecewise condition"),
 )
 
-private val calculusKeys = listOf(
+private val directTrigonometryKeys = listOf(
+    MathKey("sin", "sin()", 1, description = "Sine"),
+    MathKey("cos", "cos()", 1, description = "Cosine"),
+    MathKey("tan", "tan()", 1, description = "Tangent"),
+    MathKey("sec", "sec()", 1, description = "Secant"),
+    MathKey("csc", "csc()", 1, description = "Cosecant"),
+    MathKey("cot", "cot()", 1, description = "Cotangent"),
+)
+
+private val directHyperbolicKeys = listOf(
+    MathKey("sinh", "sinh()", 1, description = "Hyperbolic sine"),
+    MathKey("cosh", "cosh()", 1, description = "Hyperbolic cosine"),
+    MathKey("tanh", "tanh()", 1, description = "Hyperbolic tangent"),
+    MathKey("sech", "sech()", 1, description = "Hyperbolic secant"),
+    MathKey("csch", "csch()", 1, description = "Hyperbolic cosecant"),
+    MathKey("coth", "coth()", 1, description = "Hyperbolic cotangent"),
+)
+
+private val inverseHyperbolicKeys = listOf(
+    MathKey("sinh⁻¹", "asinh()", 1, description = "Inverse hyperbolic sine"),
+    MathKey("cosh⁻¹", "acosh()", 1, description = "Inverse hyperbolic cosine"),
+    MathKey("tanh⁻¹", "atanh()", 1, description = "Inverse hyperbolic tangent"),
+    MathKey("sech⁻¹", "asech()", 1, description = "Inverse hyperbolic secant"),
+    MathKey("csch⁻¹", "acsch()", 1, description = "Inverse hyperbolic cosecant"),
+    MathKey("coth⁻¹", "acoth()", 1, description = "Inverse hyperbolic cotangent"),
+)
+
+private val trigonometryUtilityKeys = listOf(
+    MathKey("θ", "theta", description = "Angle variable theta", tone = MathKeyTone.VARIABLE),
+    MathKey("π", "pi", description = "Pi constant", tone = MathKeyTone.CONSTANT),
+    MathKey("°", "deg", description = "Degrees", tone = MathKeyTone.UNIT),
+    MathKey("rad", "rad", description = "Radians", tone = MathKeyTone.UNIT),
+)
+
+internal fun trigonometryKeys(inverse: Boolean): List<MathKey> =
+    if (inverse) {
+        inverseFunctionKeys + inverseHyperbolicKeys + trigonometryUtilityKeys
+    } else {
+        directTrigonometryKeys + directHyperbolicKeys + trigonometryUtilityKeys
+    }
+
+internal val calculusKeys = listOf(
     MathKey("d/dx", "derivative(%s,x)", 2, description = "Derivative"),
+    MathKey("d²/dx²", "derivative(derivative(%s,x),x)", 4, description = "Second derivative"),
     MathKey("∂/∂x", "partial(%s,x)", 2, description = "Partial derivative"),
+    MathKey("∂/∂y", "partial(%s,y)", 2, description = "Partial derivative with respect to y"),
+    MathKey("∂²/∂x²", "partial(partial(%s,x),x)", 4, description = "Second partial derivative"),
+    MathKey("∂²/∂x∂y", "partial(partial(%s,x),y)", 4, description = "Mixed partial derivative"),
     MathKey("∫", "integral(%s,x)", 2, description = "Indefinite integral"),
+    MathKey("∬", "integral(integral(%s,x),y)", 4, description = "Double integral"),
+    MathKey("∭", "integral(integral(integral(%s,x),y),z)", 6, description = "Triple integral"),
     MathKey("∫ᵃᵇ", "integral(%s,x,,)", 3, description = "Definite integral"),
     MathKey("lim", "limit(%s,x,)", 1, description = "Limit"),
     MathKey("Σ", "sum(%s,n,,)", 3, description = "Summation"),
     MathKey("Π", "product(%s,n,,)", 3, description = "Product"),
-    MathKey("∇", "sqrt(partial(%s,x)^2+partial(%s,y)^2)", 1, description = "Gradient magnitude"),
-    MathKey("f′", "derivative(%s,x)", 2, description = "First derivative"),
-    MathKey("f″", "derivative(derivative(%s,x),x)", 4, description = "Second derivative"),
+    MathKey("∮", "contour(%s,z)", 2, description = "Contour integral"),
+    MathKey("∇", "gradient(%s)", 1, description = "Gradient"),
+    MathKey("θ", "theta()", 1, description = "Heaviside theta"),
+    MathKey("δ", "delta()", 1, description = "Dirac delta"),
     MathKey("dx"), MathKey("dy"), MathKey("dt"), MathKey("∞", "infinity"),
+)
+
+internal val advancedNotationKeys = listOf(
+    MathKey("x²", "(%s)^2", description = "Square"),
+    MathKey("1/x", "1/(%s)", 1, description = "Reciprocal"),
+    MathKey(
+        "ⁿ√",
+        "nthroot(,)",
+        2,
+        description = "Toggle root index and radicand",
+        action = MathKeyAction.TOGGLE_NTH_ROOT,
+    ),
+    MathKey("∞", "infinity", description = "Positive infinity", tone = MathKeyTone.CONSTANT),
+    MathKey("−∞", "-infinity", description = "Negative infinity", tone = MathKeyTone.CONSTANT),
+    MathKey("e", description = "Euler's number", tone = MathKeyTone.CONSTANT),
+    MathKey("π", "pi", description = "Pi", tone = MathKeyTone.CONSTANT),
+    MathKey("10ˣ", "10^(%s)", 1, description = "Power of ten"),
+    MathKey("log₁₀", "logbase(10,)", 1, description = "Base ten logarithm"),
+    MathKey("⌊x⌋", "floor()", 1, description = "Floor"),
+    MathKey("⌈x⌉", "ceil()", 1, description = "Ceiling"),
+    MathKey("|x|", "abs(%s)", 1, description = "Absolute value"),
+    MathKey("≤x≤", "<=x<=", 3, description = "Closed range"),
+    MathKey("≠", "!=", description = "Not equal", tone = MathKeyTone.RELATION),
+)
+
+internal val matrixStructureKeys = listOf(
+    matrixTemplate(1, 2),
+    matrixTemplate(1, 3),
+    matrixTemplate(1, 4),
+    matrixTemplate(2, 1),
+    matrixTemplate(3, 1),
+    matrixTemplate(4, 1),
+    matrixTemplate(2, 2),
+    matrixTemplate(2, 3),
+    matrixTemplate(3, 2),
+    matrixTemplate(3, 3),
+    matrixTemplate(4, 4),
+    MathKey("det", "det()", 1, description = "Determinant"),
+    MathKey("A⁻¹", "inverse()", 1, description = "Inverse matrix"),
+    MathKey("Aᵀ", "transpose()", 1, description = "Matrix transpose"),
 )
 
 private val symbolKeys = listOf(
@@ -277,6 +399,27 @@ private val unitAndConstantKeys = listOf(
     MathKey("μ", "mu", description = "Micro prefix", tone = MathKeyTone.UNIT),
 )
 
+private val statisticsKeys = listOf(
+    MathKey("x̄", "mean()", 1, description = "Mean"),
+    MathKey("med", "median()", 1, description = "Median"),
+    MathKey("mode", "mode()", 1, description = "Mode"),
+    MathKey("σ", "stdev()", 1, description = "Standard deviation"),
+    MathKey("var", "variance()", 1, description = "Variance"),
+    MathKey("n!", "factorial()", 1, description = "Factorial"),
+    MathKey("nCr", "combination(,)", 2, description = "Combination"),
+    MathKey("nPr", "permutation(,)", 2, description = "Permutation"),
+)
+
+private val setAndLogicKeys = listOf(
+    MathKey("∈"), MathKey("∉"), MathKey("∪"), MathKey("∩"),
+    MathKey("⊂"), MathKey("⊆"), MathKey("∅", "{}"),
+    MathKey("¬", "not()", 1, description = "Logical not"),
+    MathKey("∧", " and ", description = "Logical and"),
+    MathKey("∨", " or ", description = "Logical or"),
+    MathKey("⇒", " implies ", description = "Implies"),
+    MathKey("⇔", " iff ", description = "If and only if"),
+)
+
 internal fun matrixTemplate(rows: Int, columns: Int): MathKey {
     val safeRows = rows.coerceIn(1, 6)
     val safeColumns = columns.coerceIn(1, 6)
@@ -291,8 +434,23 @@ internal fun matrixTemplate(rows: Int, columns: Int): MathKey {
 }
 
 internal fun fractionTemplate(hasSelection: Boolean): MathKey =
-    if (hasSelection) MathKey("a⁄b", "(%s)/()", 1, description = "Use selection as numerator")
-    else MathKey("a⁄b", "()/()", 4, description = "Insert a visual fraction")
+    if (hasSelection) {
+        MathKey(
+            "a⁄b",
+            "(%s)/()",
+            1,
+            description = "Use selection as numerator and enter denominator",
+            action = MathKeyAction.TOGGLE_FRACTION,
+        )
+    } else {
+        MathKey(
+            "a⁄b",
+            "()/()",
+            4,
+            description = "Toggle fraction numerator and denominator",
+            action = MathKeyAction.TOGGLE_FRACTION,
+        )
+    }
 
 internal val commonMathKeys = listOf(
     MathKey("=", description = "Equals"),
@@ -300,7 +458,8 @@ internal val commonMathKeys = listOf(
     MathKey("−", "-", description = "Subtract"),
     MathKey("×", "*", description = "Multiply"),
     MathKey("÷", "/", description = "Divide"),
-    MathKey("( )", "()", 1, description = "Parentheses"),
+    MathKey("(", description = "Open parenthesis"),
+    MathKey(")", description = "Close parenthesis"),
     MathKey(",", description = "Comma"),
 )
 
@@ -367,9 +526,9 @@ internal val mathKeyboardCommands = listOf(
     MathCommand("Minimum", "Optimisation", MathKey("min", "min()", 1, description = "Minimum"), "Find a minimum value."),
     MathCommand("Maximum", "Optimisation", MathKey("max", "max()", 1, description = "Maximum"), "Find a maximum value."),
     MathCommand("Derivative", "Calculus", calculusKeys[0], "Find the rate of change.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
-    MathCommand("Definite integral", "Calculus", calculusKeys[3], "Find accumulated signed area.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
-    MathCommand("Limit", "Calculus", calculusKeys[4], "Find the value approached by a function."),
-    MathCommand("Summation", "Calculus", calculusKeys[5], "Add terms over an index range."),
+    MathCommand("Definite integral", "Calculus", calculusKeys[9], "Find accumulated signed area.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
+    MathCommand("Limit", "Calculus", calculusKeys[10], "Find the value approached by a function."),
+    MathCommand("Summation", "Calculus", calculusKeys[11], "Add terms over an index range."),
     MathCommand("Piecewise function", "Functions", functionKeys.last(), "Choose an expression using a condition."),
 )
 
@@ -434,14 +593,21 @@ private fun contextualKeys(context: MathKeyboardContext): List<MathKey> = when (
     )
     MathKeyboardContext.GRAPH_3D -> listOf(
         MathKey("z=", "z="), MathKey("x"), MathKey("y"), MathKey("x²+y²", "x^2+y^2"),
-        MathKey("sin(x)", "sin(x)"), MathKey("cos(y)", "cos(y)"), MathKey("√", "sqrt()", 1),
+        MathKey("sin(x)", "sin(x)"), MathKey("cos(y)", "cos(y)"),
+        MathKey("√", "sqrt()", 1, description = "Toggle square-root radicand", action = MathKeyAction.TOGGLE_ROOT),
     )
     MathKeyboardContext.CALCULUS -> calculusKeys.take(7)
     MathKeyboardContext.MATRIX -> listOf(MathKey("[2×2]", "[[,],[,]]", 7), MathKey("det", "det()", 1), MathKey("⁻¹", "inverse()", 1), MathKey("T", "transpose()", 1))
     MathKeyboardContext.SETS -> listOf(MathKey("∈"), MathKey("∉"), MathKey("∪"), MathKey("∩"), MathKey("⊂"), MathKey("∅", "{}"))
     MathKeyboardContext.STATISTICS -> listOf(MathKey("mean", "mean()", 1), MathKey("median", "median()", 1), MathKey("σ", "stdev()", 1), MathKey("nCr", "nCr(,)", 2))
     MathKeyboardContext.SCIENCE -> listOf(MathKey("π", "pi"), MathKey("e"), MathKey("×10ⁿ", "*10^()", 1), MathKey("μ", "mu"), MathKey("Δ", "delta"))
-    MathKeyboardContext.GENERAL -> listOf(MathKey("x"), MathKey("y"), MathKey("π", "pi"), MathKey("x²", "(%s)^2"), MathKey("√", "sqrt(%s)", 1))
+    MathKeyboardContext.GENERAL -> listOf(
+        MathKey("x"),
+        MathKey("y"),
+        MathKey("π", "pi"),
+        MathKey("x²", "(%s)^2"),
+        MathKey("√", "sqrt(%s)", 1, description = "Toggle square-root radicand", action = MathKeyAction.TOGGLE_ROOT),
+    )
 }
 
 @Composable
@@ -491,17 +657,28 @@ fun AdaptiveMathKeyboard(
 ) {
     var page by remember { mutableStateOf(MathKeyboardPage.BASIC) }
     var showSettings by remember { mutableStateOf(false) }
+    var inverseFunctions by remember { mutableStateOf(false) }
+    var advancedGroup by remember { mutableStateOf(AdvancedMathGroup.NOTATION) }
     var commandQuery by remember { mutableStateOf("") }
     var commandCategory by remember { mutableStateOf<String?>(null) }
     var workingValue by remember { mutableStateOf(value) }
+    var expectedParentEcho by remember { mutableStateOf<TextFieldValue?>(null) }
     val clipboard = LocalClipboardManager.current
     val undo = remember { mutableStateListOf<TextFieldValue>() }
     val redo = remember { mutableStateListOf<TextFieldValue>() }
     LaunchedEffect(value) {
+        expectedParentEcho?.let { expected ->
+            if (value.text == expected.text) {
+                expectedParentEcho = null
+                if (value.selection == expected.selection) workingValue = value
+                return@LaunchedEffect
+            }
+        }
         if (value != workingValue) workingValue = value
     }
     val emit: (TextFieldValue) -> Unit = { next ->
         workingValue = next
+        expectedParentEcho = next
         onValueChange(next)
     }
     val applyEdit: (TextFieldValue) -> Unit = { next ->
@@ -512,22 +689,38 @@ fun AdaptiveMathKeyboard(
             emit(next)
         }
     }
-    val edit: (MathKey) -> Unit = {
-        MathKeyboardHistory.rememberSymbol(it)
-        applyEdit(MathTextEditing.insert(workingValue, it))
+    val edit: (MathKey) -> Unit = { key ->
+        MathKeyboardHistory.rememberSymbol(key)
+        applyEdit(
+            when (key.action) {
+                MathKeyAction.INSERT -> MathTextEditing.insert(workingValue, key)
+                MathKeyAction.TOGGLE_SUPERSCRIPT -> StructuredMathEditing.toggleSuperscript(workingValue)
+                MathKeyAction.TOGGLE_SUBSCRIPT -> StructuredMathEditing.toggleSubscript(workingValue)
+                MathKeyAction.TOGGLE_FRACTION -> StructuredMathEditing.toggleFraction(workingValue, key)
+                MathKeyAction.TOGGLE_ROOT -> StructuredMathEditing.toggleRoot(workingValue, key)
+                MathKeyAction.TOGGLE_CUBE_ROOT -> StructuredMathEditing.toggleCubeRoot(workingValue, key)
+                MathKeyAction.TOGGLE_NTH_ROOT -> StructuredMathEditing.toggleNthRoot(workingValue, key)
+                MathKeyAction.TOGGLE_LOG_BASE -> StructuredMathEditing.toggleLogBase(workingValue)
+            },
+        )
     }
+    val activeMode = StructuredMathEditing.modeAt(workingValue.text, workingValue.selection.end)
     val keys = when (page) {
         MathKeyboardPage.BASIC -> basicKeys
-        MathKeyboardPage.FUNCTIONS -> if (MathKeyboardPreferences.beginnerMode) functionKeys.take(10) else functionKeys
+        MathKeyboardPage.FUNCTIONS -> if (MathKeyboardPreferences.beginnerMode) functionKeys.take(8) else functionKeys
         MathKeyboardPage.LETTERS -> letterKeys
-        MathKeyboardPage.CALCULUS -> calculusKeys
+        MathKeyboardPage.TRIG -> trigonometryKeys(inverseFunctions)
+        MathKeyboardPage.ADVANCED -> when (advancedGroup) {
+            AdvancedMathGroup.NOTATION -> advancedNotationKeys
+            AdvancedMathGroup.CALCULUS -> calculusKeys
+            AdvancedMathGroup.MATRICES -> matrixStructureKeys
+        }
         MathKeyboardPage.SYMBOLS -> symbolKeys
         MathKeyboardPage.UNITS -> unitAndConstantKeys
         MathKeyboardPage.COMMANDS -> emptyList()
     }
     val visibleKeys = keys
-    val beginnerPages = listOf(MathKeyboardPage.BASIC, MathKeyboardPage.FUNCTIONS, MathKeyboardPage.LETTERS, MathKeyboardPage.COMMANDS)
-    val visiblePages = beginnerPages
+    val visiblePages = primaryMathKeyboardPages
     val visualEffects = LocalAppVisualEffects.current
     val keyboardShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
     val keyboardShell = modifier.fillMaxWidth().navigationBarsPadding()
@@ -575,33 +768,60 @@ fun AdaptiveMathKeyboard(
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Math", color = IntentMathPalette.Ink, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             Column(Modifier.weight(1f)) {
                 Text(caretPreview(workingValue), color = IntentMathPalette.Number, fontFamily = FontFamily.Monospace, fontSize = 11.sp, maxLines = 1)
-                Text(
-                    if (workingValue.selection.collapsed) {
-                        "Insertion point ${workingValue.selection.start + 1} of ${workingValue.text.length + 1}"
-                    } else {
-                        "${workingValue.selection.max - workingValue.selection.min} characters selected"
-                    },
-                    color = IntentMathPalette.Muted,
-                    fontSize = 8.sp,
-                    maxLines = 1,
-                )
             }
-            KeyboardActionKey(if (MathKeyboardPreferences.beginnerMode) "Beginner" else "All", "Switch progressive keyboard mode") {
-                MathKeyboardPreferences.beginnerMode = !MathKeyboardPreferences.beginnerMode
-                if (MathKeyboardPreferences.beginnerMode && page !in beginnerPages) page = MathKeyboardPage.BASIC
-            }
-            KeyboardActionKey("Aa", "Adjust key size and contrast") { showSettings = !showSettings }
+            Text(
+                when (activeMode) {
+                    MathInputMode.SUPERSCRIPT -> "Exponent"
+                    MathInputMode.SUBSCRIPT -> "Subscript"
+                    MathInputMode.NUMERATOR -> "Numerator"
+                    MathInputMode.DENOMINATOR -> "Denominator"
+                    MathInputMode.RADICAND -> "Inside root"
+                    MathInputMode.LOG_BASE -> "Log base"
+                    MathInputMode.FUNCTION_ARGUMENT -> "Argument"
+                    else -> "${workingValue.selection.end + 1}/${workingValue.text.length + 1}"
+                },
+                color = if (activeMode == MathInputMode.BASELINE) IntentMathPalette.Muted else IntentMathPalette.Variable,
+                fontSize = 8.sp,
+            )
+            KeyboardActionKey("Aa", "Keyboard display and clipboard tools") { showSettings = !showSettings }
             KeyboardActionKey("⌄", "Collapse math keyboard", onClick = onDismiss)
         }
-        if (showSettings) KeyboardAppearancePanel()
+        if (showSettings) {
+            KeyboardAppearancePanel()
+            CompactClipboardRow(
+                onSelectAll = { emit(MathTextEditing.selectAll(workingValue)) },
+                onCopy = {
+                    MathTextEditing.selectedOrAll(workingValue).takeIf(String::isNotEmpty)?.let {
+                        clipboard.setText(AnnotatedString(it))
+                    }
+                },
+                onCut = {
+                    MathTextEditing.selectedOrAll(workingValue).takeIf(String::isNotEmpty)?.let {
+                        clipboard.setText(AnnotatedString(it))
+                        applyEdit(MathTextEditing.cutSelectionOrAll(workingValue))
+                    }
+                },
+                onPaste = {
+                    clipboard.getText()?.text?.takeIf(String::isNotEmpty)?.let {
+                        applyEdit(MathTextEditing.replaceSelection(workingValue, it))
+                    }
+                },
+                onClear = { applyEdit(MathTextEditing.clear(workingValue)) },
+            )
+        }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             visiblePages.forEach { item ->
                 KeyboardTab(item.label, page == item) { page = item }
             }
         }
+        StructuredEntryStrip(
+            activeMode = activeMode,
+            currentSource = workingValue.text,
+            currentCursor = workingValue.selection.end,
+            onInsert = edit,
+        )
         if (page == MathKeyboardPage.COMMANDS) {
             CommandBrowser(
                 query = commandQuery,
@@ -611,21 +831,84 @@ fun AdaptiveMathKeyboard(
                 context = context,
                 onInsert = edit,
                 hasEditorSelection = !workingValue.selection.collapsed,
+                currentSource = workingValue.text,
+                currentCursor = workingValue.selection.end,
             )
         } else if (page == MathKeyboardPage.BASIC) {
             BasicNumberPad(onInsert = edit)
         } else {
+            if (page == MathKeyboardPage.ADVANCED) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    AdvancedMathGroup.entries.forEach { group ->
+                        KeyboardActionKey(
+                            label = group.label,
+                            description = when (group) {
+                                AdvancedMathGroup.NOTATION -> "Advanced roots and notation"
+                                AdvancedMathGroup.CALCULUS -> "Calculus structures"
+                                AdvancedMathGroup.MATRICES -> "Matrix templates"
+                            },
+                            modifier = Modifier.weight(1f),
+                            accent = if (advancedGroup == group) IntentMathPalette.Variable else IntentMathPalette.Command,
+                        ) {
+                            advancedGroup = group
+                        }
+                    }
+                }
+            }
             BoxWithConstraints(Modifier.fillMaxWidth()) {
                 val columns = when {
                     page == MathKeyboardPage.LETTERS -> 10
+                    page == MathKeyboardPage.ADVANCED -> 7
                     maxWidth >= 520.dp -> 10
                     maxWidth >= 350.dp -> 9
                     else -> 7
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    visibleKeys.chunked(columns).forEach { row ->
+                    val firstFunctionRow = if (page == MathKeyboardPage.TRIG) {
+                        visibleKeys.take((columns - 1).coerceAtLeast(1))
+                    } else {
+                        emptyList()
+                    }
+                    if (page == MathKeyboardPage.TRIG) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            row.forEach { key -> MathKeyboardKey(key, edit, Modifier.weight(1f)) }
+                            KeyboardActionKey(
+                                label = if (inverseFunctions) "Inv ✓" else "Inv",
+                                description = "Switch between direct and inverse trigonometric functions",
+                                modifier = Modifier.weight(1f),
+                                accent = if (inverseFunctions) IntentMathPalette.Variable else IntentMathPalette.Function,
+                            ) {
+                                inverseFunctions = !inverseFunctions
+                            }
+                            firstFunctionRow.forEach { key ->
+                                MathKeyboardKey(
+                                    key = key,
+                                    onClick = edit,
+                                    modifier = Modifier.weight(1f),
+                                    selected = false,
+                                )
+                            }
+                            repeat(columns - firstFunctionRow.size - 1) { Spacer(Modifier.weight(1f)) }
+                        }
+                    }
+                    val remainingKeys = if (page == MathKeyboardPage.TRIG) {
+                        visibleKeys.drop(firstFunctionRow.size)
+                    } else {
+                        visibleKeys
+                    }
+                    remainingKeys.chunked(columns).forEach { row ->
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            row.forEach { key ->
+                                MathKeyboardKey(
+                                    key = key,
+                                    onClick = edit,
+                                    modifier = Modifier.weight(1f),
+                                    selected = isStructuralKeyActive(
+                                        key = key,
+                                        source = workingValue.text,
+                                        cursor = workingValue.selection.end,
+                                    ),
+                                )
+                            }
                             repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
                         }
                     }
@@ -636,27 +919,6 @@ fun AdaptiveMathKeyboard(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 commonMathKeys.forEach { key ->
                     KeyboardActionKey(key.label, key.description, Modifier.weight(1f)) { edit(key) }
-                }
-            }
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            KeyboardActionKey("All", "Select the complete expression", Modifier.weight(1f)) {
-                emit(MathTextEditing.selectAll(workingValue))
-            }
-            KeyboardActionKey("Copy", "Copy selection, or the complete expression", Modifier.weight(1f)) {
-                MathTextEditing.selectedOrAll(workingValue).takeIf(String::isNotEmpty)?.let {
-                    clipboard.setText(AnnotatedString(it))
-                }
-            }
-            KeyboardActionKey("Cut", "Cut selection, or the complete expression", Modifier.weight(1f)) {
-                MathTextEditing.selectedOrAll(workingValue).takeIf(String::isNotEmpty)?.let {
-                    clipboard.setText(AnnotatedString(it))
-                    applyEdit(MathTextEditing.cutSelectionOrAll(workingValue))
-                }
-            }
-            KeyboardActionKey("Paste", "Paste at the insertion point or replace selection", Modifier.weight(1f), accent = IntentMathPalette.Variable) {
-                clipboard.getText()?.text?.takeIf(String::isNotEmpty)?.let {
-                    applyEdit(MathTextEditing.replaceSelection(workingValue, it))
                 }
             }
         }
@@ -673,12 +935,11 @@ fun AdaptiveMathKeyboard(
                     emit(redo.removeAt(redo.lastIndex))
                 }
             }
-            KeyboardActionKey("←", "Move cursor left", Modifier.weight(1f)) { emit(MathTextEditing.move(workingValue, -1)) }
-            KeyboardActionKey("→", "Move cursor right", Modifier.weight(1f)) { emit(MathTextEditing.move(workingValue, 1)) }
+            KeyboardActionKey("←", "Move cursor left", Modifier.weight(1f)) { emit(StructuredMathEditing.move(workingValue, -1)) }
+            KeyboardActionKey("→", "Move cursor right", Modifier.weight(1f)) { emit(StructuredMathEditing.move(workingValue, 1)) }
             KeyboardActionKey("⌫", "Backspace", Modifier.weight(1f), accent = IntentMathPalette.Variable) {
-                applyEdit(MathTextEditing.backspace(workingValue))
+                applyEdit(StructuredMathEditing.backspace(workingValue))
             }
-            KeyboardActionKey("Clear", "Clear entry", Modifier.weight(1.25f)) { applyEdit(MathTextEditing.clear(workingValue)) }
             KeyboardActionKey("↵", "Finish math entry", Modifier.weight(1.15f), accent = IntentMathPalette.Variable) {
                 MathKeyboardHistory.remember(workingValue.text)
                 onDone()
@@ -710,6 +971,81 @@ private fun KeyboardAppearancePanel() {
 }
 
 @Composable
+private fun StructuredEntryStrip(
+    activeMode: MathInputMode,
+    currentSource: String,
+    currentCursor: Int,
+    onInsert: (MathKey) -> Unit,
+) {
+    val keys = listOf(
+        MathKey("xʸ", description = "Toggle superscript", tone = MathKeyTone.FUNCTION, action = MathKeyAction.TOGGLE_SUPERSCRIPT),
+        MathKey("xₙ", description = "Toggle subscript", tone = MathKeyTone.VARIABLE, action = MathKeyAction.TOGGLE_SUBSCRIPT),
+        fractionTemplate(hasSelection = false).copy(tone = MathKeyTone.FUNCTION),
+        MathKey(
+            "√",
+            "sqrt()",
+            1,
+            description = "Toggle square-root radicand",
+            tone = MathKeyTone.FUNCTION,
+            action = MathKeyAction.TOGGLE_ROOT,
+        ),
+        MathKey(
+            "∛",
+            "cbrt()",
+            1,
+            description = "Toggle cube-root radicand",
+            tone = MathKeyTone.FUNCTION,
+            action = MathKeyAction.TOGGLE_CUBE_ROOT,
+        ),
+        MathKey(
+            "logₐ",
+            description = "Toggle logarithm base and argument",
+            tone = MathKeyTone.FUNCTION,
+            action = MathKeyAction.TOGGLE_LOG_BASE,
+        ),
+    )
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        keys.forEach { key ->
+            val selected = isStructuralKeyActive(key, currentSource, currentCursor, activeMode)
+            MathKeyboardKey(key, onInsert, Modifier.weight(1f), selected = selected)
+        }
+    }
+}
+
+internal fun isStructuralKeyActive(
+    key: MathKey,
+    source: String,
+    cursor: Int,
+    activeMode: MathInputMode = StructuredMathEditing.modeAt(source, cursor),
+): Boolean = when (key.action) {
+    MathKeyAction.TOGGLE_SUPERSCRIPT -> activeMode == MathInputMode.SUPERSCRIPT
+    MathKeyAction.TOGGLE_SUBSCRIPT -> activeMode == MathInputMode.SUBSCRIPT
+    MathKeyAction.TOGGLE_FRACTION -> StructuredMathEditing.isFractionActive(source, cursor)
+    MathKeyAction.TOGGLE_ROOT -> StructuredMathEditing.isRootActive(source, cursor)
+    MathKeyAction.TOGGLE_CUBE_ROOT -> StructuredMathEditing.isCubeRootActive(source, cursor)
+    MathKeyAction.TOGGLE_NTH_ROOT -> StructuredMathEditing.isNthRootActive(source, cursor)
+    MathKeyAction.TOGGLE_LOG_BASE -> StructuredMathEditing.isLogBaseActive(source, cursor)
+    MathKeyAction.INSERT -> false
+}
+
+@Composable
+private fun CompactClipboardRow(
+    onSelectAll: () -> Unit,
+    onCopy: () -> Unit,
+    onCut: () -> Unit,
+    onPaste: () -> Unit,
+    onClear: () -> Unit,
+) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        KeyboardActionKey("All", "Select the complete expression", Modifier.weight(1f), onClick = onSelectAll)
+        KeyboardActionKey("Copy", "Copy selection or expression", Modifier.weight(1f), onClick = onCopy)
+        KeyboardActionKey("Cut", "Cut selection or expression", Modifier.weight(1f), onClick = onCut)
+        KeyboardActionKey("Paste", "Paste at cursor", Modifier.weight(1f), accent = IntentMathPalette.Variable, onClick = onPaste)
+        KeyboardActionKey("Clear", "Clear entry", Modifier.weight(1f), onClick = onClear)
+    }
+}
+
+@Composable
 private fun BasicNumberPad(onInsert: (MathKey) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         basicNumberPadRows.forEach { row ->
@@ -721,15 +1057,30 @@ private fun BasicNumberPad(onInsert: (MathKey) -> Unit) {
 }
 
 @Composable
-private fun VisualFractionKey(modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun VisualFractionKey(
+    modifier: Modifier = Modifier,
+    selected: Boolean = false,
+    onClick: () -> Unit,
+) {
     val appearance = MathKeyboardPreferences.keySize
+    val accent = IntentMathPalette.Function
     Column(
         modifier
             .height(appearance.actionHeight + 5.dp)
             .clickable(role = Role.Button, onClick = onClick)
-            .background(if (MathKeyboardPreferences.highContrast) Color.Black else IntentMathPalette.Function.copy(.13f), RoundedCornerShape(7.dp))
-            .border(if (MathKeyboardPreferences.highContrast) 2.dp else 1.dp, if (MathKeyboardPreferences.highContrast) Color.White else IntentMathPalette.Function.copy(.55f), RoundedCornerShape(7.dp))
-            .semantics { contentDescription = "Visual fraction builder" },
+            .background(
+                if (MathKeyboardPreferences.highContrast) Color.Black else accent.copy(if (selected) .34f else .13f),
+                RoundedCornerShape(7.dp),
+            )
+            .border(
+                if (MathKeyboardPreferences.highContrast || selected) 2.dp else 1.dp,
+                if (MathKeyboardPreferences.highContrast) Color.White else accent.copy(if (selected) .95f else .55f),
+                RoundedCornerShape(7.dp),
+            )
+            .semantics {
+                contentDescription = "Toggle visual fraction numerator and denominator"
+                this.selected = selected
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -766,7 +1117,7 @@ private fun MatrixDimensionPicker(
     }
 }
 
-private enum class MoreKeyboardTool { MATRIX, SYMBOLS, UNITS }
+private enum class MoreKeyboardTool { MATRIX, STATISTICS, SETS, UNITS }
 
 @Composable
 private fun CommandBrowser(
@@ -777,6 +1128,8 @@ private fun CommandBrowser(
     context: MathKeyboardContext,
     onInsert: (MathKey) -> Unit,
     hasEditorSelection: Boolean,
+    currentSource: String,
+    currentCursor: Int,
 ) {
     var activeTool by remember { mutableStateOf<MoreKeyboardTool?>(null) }
     var matrixRows by remember { mutableStateOf(2) }
@@ -785,14 +1138,16 @@ private fun CommandBrowser(
     val categories = mathKeyboardCommands.map(MathCommand::category).distinct().sorted()
     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
-            VisualFractionKey(Modifier.weight(1f)) { onInsert(fractionTemplate(hasEditorSelection)) }
-            KeyboardActionKey("Matrix", "Open matrix dimension picker", Modifier.weight(1f)) {
+            KeyboardActionKey("▦", "Open matrix dimension picker", Modifier.weight(1f)) {
                 activeTool = MoreKeyboardTool.MATRIX.takeUnless { activeTool == it }
             }
-            KeyboardActionKey("Symbols", "Open symbols and recent symbols", Modifier.weight(1f)) {
-                activeTool = MoreKeyboardTool.SYMBOLS.takeUnless { activeTool == it }
+            KeyboardActionKey("x̄", "Open statistics keys", Modifier.weight(1f)) {
+                activeTool = MoreKeyboardTool.STATISTICS.takeUnless { activeTool == it }
             }
-            KeyboardActionKey("Units", "Open units and scientific constants", Modifier.weight(1f)) {
+            KeyboardActionKey("∈", "Open sets and logic keys", Modifier.weight(1f)) {
+                activeTool = MoreKeyboardTool.SETS.takeUnless { activeTool == it }
+            }
+            KeyboardActionKey("SI", "Open units and scientific constants", Modifier.weight(1f)) {
                 activeTool = MoreKeyboardTool.UNITS.takeUnless { activeTool == it }
             }
         }
@@ -807,12 +1162,27 @@ private fun CommandBrowser(
                     activeTool = null
                 },
             )
-            MoreKeyboardTool.SYMBOLS -> MoreKeyGrid(
-                keys = (MathKeyboardHistory.recentSymbols + symbolKeys).distinctBy { it.insertion },
+            MoreKeyboardTool.STATISTICS -> MoreKeyGrid(
+                keys = statisticsKeys,
                 onInsert = onInsert,
-                heading = if (MathKeyboardHistory.recentSymbols.isEmpty()) "Symbols" else "Recent first",
+                heading = "Statistics",
+                currentSource = currentSource,
+                currentCursor = currentCursor,
             )
-            MoreKeyboardTool.UNITS -> MoreKeyGrid(unitAndConstantKeys, onInsert, "Units & constants")
+            MoreKeyboardTool.SETS -> MoreKeyGrid(
+                keys = setAndLogicKeys,
+                onInsert = onInsert,
+                heading = "Sets & logic",
+                currentSource = currentSource,
+                currentCursor = currentCursor,
+            )
+            MoreKeyboardTool.UNITS -> MoreKeyGrid(
+                keys = unitAndConstantKeys,
+                onInsert = onInsert,
+                heading = "Units & constants",
+                currentSource = currentSource,
+                currentCursor = currentCursor,
+            )
             null -> Unit
         }
         if (activeTool == null) {
@@ -889,7 +1259,13 @@ private fun CommandBrowser(
 }
 
 @Composable
-private fun MoreKeyGrid(keys: List<MathKey>, onInsert: (MathKey) -> Unit, heading: String) {
+private fun MoreKeyGrid(
+    keys: List<MathKey>,
+    onInsert: (MathKey) -> Unit,
+    heading: String,
+    currentSource: String,
+    currentCursor: Int,
+) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(heading, color = IntentMathPalette.Muted, fontSize = 9.sp)
         BoxWithConstraints(Modifier.fillMaxWidth()) {
@@ -897,7 +1273,14 @@ private fun MoreKeyGrid(keys: List<MathKey>, onInsert: (MathKey) -> Unit, headin
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 keys.chunked(columns).forEach { row ->
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        row.forEach { key -> MathKeyboardKey(key, onInsert, Modifier.weight(1f)) }
+                        row.forEach { key ->
+                            MathKeyboardKey(
+                                key = key,
+                                onClick = onInsert,
+                                modifier = Modifier.weight(1f),
+                                selected = isStructuralKeyActive(key, currentSource, currentCursor),
+                            )
+                        }
                         repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
                     }
                 }
@@ -907,7 +1290,12 @@ private fun MoreKeyGrid(keys: List<MathKey>, onInsert: (MathKey) -> Unit, headin
 }
 
 @Composable
-private fun MathKeyboardKey(key: MathKey, onClick: (MathKey) -> Unit, modifier: Modifier = Modifier) {
+private fun MathKeyboardKey(
+    key: MathKey,
+    onClick: (MathKey) -> Unit,
+    modifier: Modifier = Modifier,
+    selected: Boolean = false,
+) {
     val appearance = MathKeyboardPreferences.keySize
     val tone = resolveMathKeyTone(key)
     val isMultiply = key.insertion == "*"
@@ -917,13 +1305,23 @@ private fun MathKeyboardKey(key: MathKey, onClick: (MathKey) -> Unit, modifier: 
         modifier
             .height(appearance.mainHeight)
             .clickable(role = Role.Button) { onClick(key) }
-            .background(if (MathKeyboardPreferences.highContrast) Color.Black else accent.copy(alpha = if (isMultiply || isVariable) .15f else .08f), RoundedCornerShape(7.dp))
-            .border(
-                if (MathKeyboardPreferences.highContrast) 2.dp else 1.dp,
-                if (MathKeyboardPreferences.highContrast) Color.White else accent.copy(alpha = if (isMultiply || isVariable) .65f else .3f),
+            .background(
+                when {
+                    MathKeyboardPreferences.highContrast -> Color.Black
+                    selected -> accent.copy(alpha = .34f)
+                    else -> accent.copy(alpha = if (isMultiply || isVariable) .15f else .08f)
+                },
                 RoundedCornerShape(7.dp),
             )
-            .semantics { contentDescription = key.description },
+            .border(
+                if (MathKeyboardPreferences.highContrast || selected) 2.dp else 1.dp,
+                if (MathKeyboardPreferences.highContrast) Color.White else accent.copy(alpha = if (selected) .95f else if (isMultiply || isVariable) .65f else .3f),
+                RoundedCornerShape(7.dp),
+            )
+            .semantics {
+                contentDescription = key.description
+                this.selected = selected
+            },
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
@@ -987,7 +1385,7 @@ private fun KeyboardTab(label: String, selected: Boolean, onClick: () -> Unit) {
             .clickable(role = Role.Tab, onClick = onClick)
             .background(if (selected) IntentMathPalette.Number else if (MathKeyboardPreferences.highContrast) Color.Black else Color(0xFF122538), RoundedCornerShape(7.dp))
             .border(if (MathKeyboardPreferences.highContrast) 1.dp else 0.dp, Color.White, RoundedCornerShape(7.dp))
-            .padding(horizontal = (12f * appearance.fontScale).dp, vertical = (6f * appearance.fontScale).dp),
+            .padding(horizontal = (9f * appearance.fontScale).dp, vertical = (6f * appearance.fontScale).dp),
     )
 }
 

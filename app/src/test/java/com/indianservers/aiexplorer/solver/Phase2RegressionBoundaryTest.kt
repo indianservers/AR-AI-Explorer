@@ -14,7 +14,7 @@ class Phase2RegressionBoundaryTest {
         val inputs = buildList {
             for (i in 1..50) add("$i + ${i + 1} * 2")
             for (i in 1..30) add("${i}x + 3 = ${i * 2 + 3}")
-            addAll(listOf("3/4+5/6", "25% of 80", "12:18", "-2x+3<=9", "x+y=7;x-y=1"))
+            addAll(listOf("3/4+5/6", "25% of 80", "12:18", "-2x+3<=9", "3x+y=36", "x+y=7;x-y=1"))
         }
         inputs.forEach { input ->
             val old = phase1.solve(input)

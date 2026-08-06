@@ -1,7 +1,10 @@
 package com.indianservers.aiexplorer
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -14,42 +17,36 @@ class SolverPhase4UiTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun hintOnlyModeHidesFinalAnswerAndRevealsProgressively() {
-        openSolver()
-        input("3x+5=20")
-        composeRule.onNodeWithText("Hint only").performClick()
-        composeRule.onNodeWithText("Hint-only mode", substring = true).assertIsDisplayed()
-        composeRule.onNodeWithText("Give me only a hint").assertIsDisplayed()
-        composeRule.onNodeWithText("Another hint").performClick()
-        composeRule.onNodeWithText("Hint 2 of 6", substring = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun nextStepTutorUsesExistingMathKeyboardField() {
+    fun solveShowsAnswerBeforeOptionalWorking() {
         solve("3x+5=20")
-        composeRule.onNodeWithText("Ask me the next step").performClick()
-        composeRule.onNodeWithContentDescription("Tutor next mathematical step input").assertIsDisplayed()
-        composeRule.onNodeWithText("Check this step").assertIsDisplayed()
+        composeRule.onNodeWithText("Answer").assertIsDisplayed()
+        composeRule.onNodeWithText("x = 5").assertIsDisplayed()
+        composeRule.onNodeWithText("Show steps").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Step 1", substring = true).assertCountEquals(0)
     }
 
     @Test
-    fun practiceModesStayCollapsedUntilRequested() {
+    fun stepsRemainAvailableThroughOneClearAction() {
         solve("3x+5=20")
-        composeRule.onNodeWithText("Practise similar").performClick()
-        composeRule.onNodeWithText("Practise similar problems").assertIsDisplayed()
-        composeRule.onNodeWithContentDescription("Practice answer using mathematical keyboard").assertIsDisplayed()
+        composeRule.onNodeWithText("Show steps").performClick()
+        composeRule.onNodeWithText("Step 1", substring = true).assertIsDisplayed()
+        composeRule.onNodeWithText("Hide steps").assertIsDisplayed()
     }
 
     @Test
-    fun calculatorCatalogueAndLocalLearningControlsAreDiscoverable() {
+    fun advancedModesAndLegacyTopControlsDoNotCrowdSolver() {
         openSolver()
-        composeRule.onNodeWithText("Calculators").performClick()
-        composeRule.onNodeWithContentDescription("Search shared Solver calculators").assertIsDisplayed()
-        composeRule.onNodeWithText("Derivative calculator").assertIsDisplayed()
-        composeRule.onNodeWithText("Close").performClick()
-        composeRule.onNodeWithText("Learning").performClick()
-        composeRule.onNodeWithText("Private, local and approximate").assertIsDisplayed()
-        composeRule.onNodeWithText("Clear Solver learning data").assertIsDisplayed()
+        listOf(
+            "Clear",
+            "History",
+            "Calculators",
+            "Learning",
+            "Hint only",
+            "Child-friendly",
+            "School examination",
+            "University",
+            "Rigorous",
+        ).forEach { composeRule.onAllNodesWithText(it, substring = true).assertCountEquals(0) }
     }
 
     private fun solve(expression: String) {
@@ -64,9 +61,20 @@ class SolverPhase4UiTest {
     }
 
     private fun openSolver() {
+        composeRule.mainClock.advanceTimeBy(1_000)
+        composeRule.waitForIdle()
+        composeRule.waitUntil(3_000) {
+            composeRule.onAllNodesWithContentDescription("Editable Solver expression", substring = true)
+                .fetchSemanticsNodes().isNotEmpty() ||
+                composeRule.onAllNodesWithText("AI Maths Explorer", substring = true)
+                    .fetchSemanticsNodes().isNotEmpty()
+        }
+        if (composeRule.onAllNodesWithContentDescription("Editable Solver expression", substring = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        ) return
         composeRule.onNodeWithText("AI Maths Explorer", substring = true).assertIsDisplayed()
         composeRule.onNodeWithText("Menu").performClick()
         composeRule.onNodeWithText("Solver").performClick()
-        composeRule.onNodeWithText("OFFLINE | KEYBOARD ONLY").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Editable Solver expression", substring = true).assertIsDisplayed()
     }
 }

@@ -260,6 +260,11 @@ class SolverViewModel(
         copyToClipboard("Solver expression", state.input.text)
     }
 
+    fun copyAnswer() {
+        val answer = state.solution?.exactAnswer ?: state.solution?.finalAnswer ?: return
+        copyToClipboard("Solver answer", answer)
+    }
+
     fun copyFullWorking() {
         val solution = state.solution ?: return
         val text = buildString {

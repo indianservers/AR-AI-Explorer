@@ -3204,6 +3204,11 @@ fun Screen(
                 Text("PLAY  >", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
             }
 
+            SolverHomeLaunch(
+                wide = wide,
+                onClick = { openOption(allTools.first { it.title == "Solver" }) },
+            )
+
             if (selectedHomeCategory == null && !showWorkspaces) {
             Text("QUICK EXPLORE", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {

@@ -23,6 +23,7 @@ class Phase3PerformanceRegressionTest {
                     "distance(0,0,3,4)",
                     "midpoint(0,2,4,6)",
                     "sin(30deg)",
+                    "3x+y=36",
                     "matrixadd([[1,2],[3,4]],[[2,3],[4,5]])",
                     "arithmeticterm(3,2,10)",
                     "geometricsum(2,1/2,5)",

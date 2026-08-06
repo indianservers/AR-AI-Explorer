@@ -221,7 +221,10 @@ class Phase1SolverEngine(
                 verification,
             )
         }
-        if (difference.coefficients.size != 1) return unsupported(input, equation, classification, "Phase 1 solves one-variable linear equations.")
+        if (difference.coefficients.size == 2) {
+            return solveLinearFamily(input, equation, classification, difference)
+        }
+        if (difference.coefficients.size != 1) return unsupported(input, equation, classification, "Enter a linear equation with one or two variables.")
         val (variable, coefficient) = difference.coefficients.entries.single()
         if (coefficient.isZero) {
             val answer = if (difference.constant.isZero) "All real values of $variable" else "No solution"
@@ -240,6 +243,88 @@ class Phase1SolverEngine(
             add(step("divide", collected, final, StepOperation.DivideBothSides, SolverRuleRegistry.DIVISION_EQUALITY, listOf(ExpressionPath(emptyList())), listOf(StepDetail("Non-zero divisor", coefficient.toString()))))
         }
         return success(input, equation, classification, steps, final, "$variable = $solution", SolverVerifier.equation(equation, variable, solution))
+    }
+
+    private fun solveLinearFamily(
+        input: SolverInput,
+        equation: MathExpression.Equation,
+        classification: ProblemClassification,
+        difference: LinearForm,
+    ): SolverSolution {
+        val target = difference.coefficients.keys.firstOrNull { it == "x" }
+            ?: difference.coefficients.keys.sorted().first()
+        val targetCoefficient = difference.coefficients.getValue(target)
+        val freeCoefficients = difference.coefficients.filterKeys { it != target }
+        val rightText = linearRightSideText(-difference.constant, freeCoefficients.mapValues { -it.value })
+        val collected = parseExpression("$targetCoefficient*$target=$rightText") as? MathExpression.Equation
+            ?: return unsupported(input, equation, classification, "The linear solution family could not be rendered.")
+        val final = parseExpression("$target=($rightText)/($targetCoefficient)") as? MathExpression.Equation
+            ?: return unsupported(input, equation, classification, "The isolated-variable form could not be rendered.")
+        val freeVariables = freeCoefficients.keys.sorted()
+        val steps = buildList {
+            if (collected != equation) {
+                add(
+                    step(
+                        "collect-family",
+                        equation,
+                        collected,
+                        StepOperation.CombineLikeTerms,
+                        SolverRuleRegistry.COMBINE_LIKE_TERMS,
+                        listOf(ExpressionPath(listOf(0)), ExpressionPath(listOf(1))),
+                        listOf(StepDetail("Free variable", freeVariables.joinToString())),
+                    ),
+                )
+            }
+            add(
+                step(
+                    "divide-family",
+                    collected,
+                    final,
+                    StepOperation.DivideBothSides,
+                    SolverRuleRegistry.DIVISION_EQUALITY,
+                    listOf(ExpressionPath(emptyList())),
+                    listOf(
+                        StepDetail("Non-zero divisor", targetCoefficient.toString()),
+                        StepDetail("Solution type", "Infinitely many ordered pairs"),
+                    ),
+                ),
+            )
+        }
+        val verification = SolverVerifier.parametricEquation(equation, final, target, freeVariables)
+        return success(
+            input,
+            equation,
+            classification,
+            steps,
+            final,
+            SolverExpressionRenderer.render(final),
+            verification,
+        )
+    }
+
+    private fun linearRightSideText(
+        constant: ExactRational,
+        coefficients: Map<String, ExactRational>,
+    ): String {
+        val terms = mutableListOf<Pair<ExactRational, String?>>()
+        if (!constant.isZero) terms += constant to null
+        coefficients.toSortedMap().forEach { (variable, coefficient) ->
+            if (!coefficient.isZero) terms += coefficient to variable
+        }
+        if (terms.isEmpty()) return "0"
+        return buildString {
+            terms.forEachIndexed { index, (coefficient, variable) ->
+                val negative = coefficient < ExactRational.ZERO
+                val magnitude = if (negative) -coefficient else coefficient
+                if (index > 0) append(if (negative) "-" else "+") else if (negative) append("-")
+                if (variable == null) {
+                    append(magnitude)
+                } else {
+                    if (magnitude != ExactRational.ONE) append(magnitude).append("*")
+                    append(variable)
+                }
+            }
+        }
     }
 
     private fun solveInequality(input: SolverInput, inequality: MathExpression.Inequality, classification: ProblemClassification): SolverSolution {
