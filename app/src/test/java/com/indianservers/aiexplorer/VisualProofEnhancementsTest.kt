@@ -20,7 +20,6 @@ class VisualProofEnhancementsTest {
         VisualProofCatalog.labs.forEach { lab ->
             val profile = VisualProofCatalog.profileFor(lab.id)
             assertTrue("${lab.id} has staged visual grammar", ProofEnhancement.ColorCodedStages in profile.features)
-            assertTrue("${lab.id} has before/after comparison", ProofEnhancement.BeforeAfter in profile.features)
             assertTrue("${lab.id} lists assumptions", profile.assumptions.isNotEmpty())
             assertTrue("${lab.id} marks an invariant", profile.invariant.isNotBlank())
             assertTrue("${lab.id} explains validity", profile.validityNotes.size >= 3)
@@ -30,6 +29,14 @@ class VisualProofEnhancementsTest {
             assertTrue("${lab.id} has a simple case", profile.simpleCase.isNotBlank())
             assertTrue("${lab.id} ends with a takeaway", profile.takeaway.startsWith("The picture proves this because"))
         }
+        val beforeAfterIds = VisualProofCatalog.labs
+            .filter { ProofEnhancement.BeforeAfter in VisualProofCatalog.profileFor(it.id).features }
+            .map { it.id }
+            .toSet()
+        assertEquals(
+            setOf("algebra-square", "pythagorean", "triangle-area", "parallelogram-area", "trapezoid-area", "circle-area"),
+            beforeAfterIds,
+        )
     }
 
     @Test

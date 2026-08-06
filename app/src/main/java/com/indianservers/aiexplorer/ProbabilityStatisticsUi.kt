@@ -684,7 +684,7 @@ private fun SpreadsheetLabScreen(vm: ExplorerViewModel, wide: Boolean, onSection
             Text("Linked plot & statistics", color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Text("Every edit rebuilds this series and its model.", color = Muted, fontSize = 12.sp)
             linked?.let { series ->
-                Canvas(Modifier.fillMaxWidth().height(230.dp).clip(RoundedCornerShape(14.dp)).background(Color(0x6600060D)).semantics { contentDescription = "Spreadsheet linked scatter plot" }) {
+                Canvas(Modifier.fillMaxWidth().height(230.dp).clip(RoundedCornerShape(14.dp)).background(Color(0x6600060D)).appWorkspaceTreatment(14.dp, Cyan, Violet).semantics { contentDescription = "Spreadsheet linked scatter plot" }) {
                     if (series.points.isNotEmpty()) {
                         val minX = series.points.minOf { it.x }; val maxX = series.points.maxOf { it.x }.takeIf { it > minX } ?: minX + 1
                         val minY = series.points.minOf { it.y }; val maxY = series.points.maxOf { it.y }.takeIf { it > minY } ?: minY + 1
@@ -889,6 +889,7 @@ private fun InteractiveStatisticsChart(
             .height(260.dp)
             .clip(RoundedCornerShape(14.dp))
             .background(Color(0x6600060D))
+            .appWorkspaceTreatment(14.dp, Cyan, Violet)
             .pointerInput(values, type, histogram) {
                 detectTapGestures { tap ->
                     if (values.isEmpty()) return@detectTapGestures
@@ -1022,6 +1023,7 @@ private fun DistributionPlot(points: List<com.indianservers.aiexplorer.core.Dist
             .height(230.dp)
             .clip(RoundedCornerShape(14.dp))
             .background(Color(0x6600060D))
+            .appWorkspaceTreatment(14.dp, Cyan, Violet)
             .semantics { contentDescription = "Distribution density with selected probability interval" },
     ) {
         if (points.size < 2) return@Canvas

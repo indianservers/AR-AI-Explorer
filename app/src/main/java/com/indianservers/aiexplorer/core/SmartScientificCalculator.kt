@@ -55,7 +55,7 @@ object CalculatorInputIntelligence {
         val stack = ArrayDeque<Int>()
         source.forEachIndexed { index, char -> when (char) {
             '(' -> stack.addLast(index)
-            ')' -> if (stack.isEmpty()) result += CalculatorDiagnostic("Closing bracket has no matching opening bracket.", index) else stack.removeLast()
+            ')' -> if (stack.isEmpty()) result += CalculatorDiagnostic("Closing bracket has no matching opening bracket.", index) else stack.removeAt(stack.lastIndex)
         } }
         stack.forEach { result += CalculatorDiagnostic("Opening bracket is not closed.", it) }
         if (Regex("[+*/^]\\s*$").containsMatchIn(source)) result += CalculatorDiagnostic("Expression ends with an operator.", source.lastIndex)

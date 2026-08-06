@@ -198,6 +198,9 @@ import com.indianservers.aiexplorer.core.TransformGizmoKind
 import com.indianservers.aiexplorer.core.Graph3D
 import com.indianservers.aiexplorer.core.GraphAnalysis
 import com.indianservers.aiexplorer.core.GraphDefinitionKind
+import com.indianservers.aiexplorer.core.CompareModeEngine
+import com.indianservers.aiexplorer.core.ComparisonAttribute
+import com.indianservers.aiexplorer.core.ComparisonItem
 import com.indianservers.aiexplorer.core.StatisticsEngine
 import com.indianservers.aiexplorer.core.ProbabilityEngine
 import com.indianservers.aiexplorer.core.AdvancedGraphDefinition
@@ -218,6 +221,8 @@ import com.indianservers.aiexplorer.core.GraphTransformKind
 import com.indianservers.aiexplorer.core.GraphUxEngine
 import com.indianservers.aiexplorer.core.GraphDirectManipulationEngine
 import com.indianservers.aiexplorer.core.GraphFitResult
+import com.indianservers.aiexplorer.core.ProfessionalGraphTable
+import com.indianservers.aiexplorer.core.ProfessionalGraphTableEngine
 import com.indianservers.aiexplorer.core.AdvancedSpatialInteractionEngine
 import com.indianservers.aiexplorer.core.SpatialAlignment
 import com.indianservers.aiexplorer.core.ConstraintAwareSpatialSnap
@@ -506,6 +511,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
     val advancedGraph = remember { AdvancedGraphEngine() }
     val engine = remember { ExpressionEngine() }
+    val dataTableEngine = remember { ProfessionalGraphTableEngine(engine) }
     var traceX by remember { mutableFloatStateOf(2f) }
     var graphTool by remember { mutableStateOf(GraphTool.Plot) }
     var parameterA by remember { mutableFloatStateOf(1f) }
@@ -536,6 +542,16 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     var graphTransformAmount by remember { mutableFloatStateOf(.5f) }
     var animateGraphTransform by remember { mutableStateOf(false) }
     var dataText by remember { mutableStateOf("-2,4; -1,1; 0,0; 1,1; 2,4") }
+    var functionTableStart by rememberSaveable { mutableStateOf("-4") }
+    var functionTableEnd by rememberSaveable { mutableStateOf("4") }
+    var functionTableStep by rememberSaveable { mutableStateOf("1") }
+    var csvSource by rememberSaveable { mutableStateOf("x,y\n0,0\n1,1\n2,4") }
+    var csvHasHeader by rememberSaveable { mutableStateOf(true) }
+    var importedTable by remember { mutableStateOf<ProfessionalGraphTable?>(null) }
+    var selectedCsvX by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedCsvY by rememberSaveable { mutableStateOf<String?>(null) }
+    var csvMessage by remember { mutableStateOf("Choose a CSV/TSV file or paste data.") }
+    var csvImportOpen by rememberSaveable { mutableStateOf(false) }
     var brushInterval by remember { mutableStateOf<ClosedFloatingPointRange<Double>?>(null) }
     var sketchPoints by remember { mutableStateOf<List<Vec2>>(emptyList()) }
     var latestSketchFit by remember { mutableStateOf<GraphFitResult?>(null) }
@@ -561,6 +577,11 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             graphSnapshots = emptyList()
             graphSnapshotOverlay = null
             dataText = ""
+            importedTable = null
+            selectedCsvX = null
+            selectedCsvY = null
+            csvMessage = "Choose a CSV/TSV file or paste data."
+            csvImportOpen = false
             brushInterval = null
             sketchPoints = emptyList()
             latestSketchFit = null
@@ -569,9 +590,58 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             clearEpochSeen = vm.workspaceClearEpoch
         }
     }
-    val objectGraphSnapshot = vm.mathObjectGraphSnapshot(graphParameterValues)
     val graphRowMetadata = vm.state.graphRowMetadata
     val graphSliderMetadata = vm.state.graphSliderMetadata
+    val persistedParameterValues = graphSliderMetadata.mapNotNull { (name, metadata) ->
+        metadata.value?.let { name to it }
+    }.toMap()
+    val functionTableInputs = remember(functionTableStart, functionTableEnd, functionTableStep) {
+        val start = functionTableStart.toDoubleOrNull()
+        val end = functionTableEnd.toDoubleOrNull()
+        val step = functionTableStep.toDoubleOrNull()
+        if (start == null || end == null || step == null) emptyList()
+        else runCatching { dataTableEngine.functionInputs(start, end, step) }.getOrDefault(emptyList())
+    }
+    val objectGraphSnapshot = vm.mathObjectGraphSnapshot(
+        persistedParameterValues + graphParameterValues,
+        functionTableInputs,
+    )
+    fun readCsv(source: String, label: String) {
+        runCatching {
+            val table = dataTableEngine.paste(source, csvHasHeader)
+            require(table.columns.count { column -> column.values.any { it != null } } >= 2) {
+                "CSV needs at least two numeric columns."
+            }
+            table
+        }
+            .onSuccess { table ->
+                importedTable = table
+                val numeric = table.columns.filter { column -> column.values.any { it != null } }
+                selectedCsvX = numeric.first().name
+                selectedCsvY = numeric.getOrElse(1) { numeric.first() }.name
+                csvMessage = "$label · ${table.rowCount} rows · ${table.columns.size} columns"
+            }
+            .onFailure { error ->
+                importedTable = null
+                selectedCsvX = null
+                selectedCsvY = null
+                csvMessage = error.message ?: "Could not read this CSV data."
+            }
+    }
+    val csvPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        runCatching {
+            val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                ?: error("The selected file could not be opened.")
+            require(bytes.size <= 12 * 1024 * 1024) { "Choose a CSV file smaller than 12 MB." }
+            bytes.toString(Charsets.UTF_8)
+        }.onSuccess { source ->
+            csvSource = source
+            readCsv(source, uri.lastPathSegment?.substringAfterLast('/') ?: "Imported file")
+        }.onFailure { error ->
+            csvMessage = error.message ?: "Could not open this CSV file."
+        }
+    }
     LaunchedEffect(playingParameters, objectGraphSnapshot.parameterRows, graphSliderMetadata) {
         while (playingParameters.isNotEmpty()) {
             delay(90)
@@ -660,7 +730,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     }
     Box(Modifier.fillMaxSize()) {
         GraphCanvas(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp),
             functions = liveFunctions,
             dataPoints = if (graphTool == GraphTool.Data) dataPoints else emptyList(),
             traceX = traceX.toDouble(),
@@ -1082,6 +1152,10 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                         onSpeedChange = { speed ->
                             vm.updateGraphSliderMetadata(parameter.name) { parameterUi.copy(speed = speed.coerceIn(0.25, 8.0)) }
                         },
+                        onValueChangeFinished = {
+                            val value = graphParameterValues[parameter.name] ?: parameter.value
+                            vm.updateGraphSliderMetadata(parameter.name) { parameterUi.copy(value = value) }
+                        },
                     ) { value ->
                         graphParameterValues = graphParameterValues + (parameter.name to value)
                         if (parameter.name == "a") parameterA = value.toFloat()
@@ -1129,15 +1203,15 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 AxisSlider("Parameter a", parameterA, -8f..8f) { parameterA = it }
             }
             if (graphTool == GraphTool.Table) {
-                Text("Value table", color = Ink, fontWeight = FontWeight.SemiBold)
-                val rows = (-4..4).joinToString("\n") { x ->
-                    val values = explicitFunctions.joinToString("  ") { fn ->
-                        val y = runCatching { engine.compile(fn.expression).eval(mapOf("x" to x.toDouble())) }.getOrDefault(Double.NaN)
-                        "${fn.name}:${trim(y)}"
-                    }
-                    "x=$x  $values"
-                }
-                Text(rows, color = Muted, fontSize = 12.sp)
+                FunctionDataTablePanel(
+                    rows = objectGraphSnapshot.generatedTable,
+                    start = functionTableStart,
+                    end = functionTableEnd,
+                    step = functionTableStep,
+                    onStart = { functionTableStart = it },
+                    onEnd = { functionTableEnd = it },
+                    onStep = { functionTableStep = it },
+                )
             }
             if (graphTool == GraphTool.Data) {
                 OutlinedTextField(
@@ -1146,6 +1220,42 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                     label = { Text("Data points: x,y; x,y") },
                     modifier = Modifier.fillMaxWidth(),
                 )
+                GlowButton(if (csvImportOpen) "Close CSV import" else "Import CSV", icon = "table") {
+                    csvImportOpen = !csvImportOpen
+                }
+                if (csvImportOpen) {
+                    CsvDataImportPanel(
+                        source = csvSource,
+                        hasHeader = csvHasHeader,
+                        table = importedTable,
+                        selectedX = selectedCsvX,
+                        selectedY = selectedCsvY,
+                        message = csvMessage,
+                        onSource = { csvSource = it },
+                        onToggleHeader = {
+                            csvHasHeader = !csvHasHeader
+                            importedTable = null
+                            csvMessage = "Header setting changed. Read the data again."
+                        },
+                        onChooseFile = {
+                            csvPicker.launch(arrayOf("text/csv", "text/tab-separated-values", "text/plain", "application/vnd.ms-excel"))
+                        },
+                        onParse = { readCsv(csvSource, "Pasted data") },
+                        onSelectX = { selectedCsvX = it },
+                        onSelectY = { selectedCsvY = it },
+                        onPlot = {
+                            val table = importedTable
+                            val x = selectedCsvX
+                            val y = selectedCsvY
+                            if (table != null && x != null && y != null) {
+                                val points = runCatching { dataTableEngine.series(table, x, y) }.getOrDefault(emptyList())
+                                dataText = points.joinToString("; ") { "${trim(it.x)},${trim(it.y)}" }
+                                csvMessage = "Plotted ${points.size} complete rows: $x vs $y"
+                                graphTool = GraphTool.Data
+                            }
+                        },
+                    )
+                }
             }
             if (graphTool == GraphTool.Probability) {
                 Text("Normal PDF at x=${trim(traceX.toDouble())}: ${trim(ProbabilityEngine.normalPdf(traceX.toDouble()))}", color = Cyan)
@@ -1167,6 +1277,27 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                         val transformed = GraphUxEngine.transform(selected.expression, graphTransformKind, graphTransformAmount.toDouble().let { if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(it).coerceAtLeast(.1) else it })
                         vm.duplicateFunction(selectedIndex); val newIndex = vm.state.functions.lastIndex; vm.editExpression(newIndex, transformed); selectedGraphRowId = vm.state.functions.getOrNull(newIndex)?.id
                     }
+                }
+            }
+            if (comparisonMode) {
+                val pair = visibleFunctions.take(2)
+                if (pair.size == 2) {
+                    val items = pair.mapIndexed { index, function ->
+                        ComparisonItem(
+                            id = function.id,
+                            title = function.name,
+                            primary = function.expression,
+                            attributes = listOf(
+                                ComparisonAttribute("Definition", graph.definitionKind(function.expression).name),
+                                ComparisonAttribute("Layer", (index + 1).toString()),
+                                ComparisonAttribute("Visible", if (function.visible) "Yes" else "No"),
+                                ComparisonAttribute("Color", function.colorKey),
+                            ),
+                        )
+                    }
+                    SideBySideComparePanel(CompareModeEngine.compare(items[0], items[1]))
+                } else {
+                    Text("Add or show a second equation to compare.", color = Amber, fontSize = 11.sp)
                 }
             }
             if (selectedFunction != null) AxisSlider("Transform amount", graphTransformAmount, -2f..2f) { graphTransformAmount = it }
@@ -1300,6 +1431,7 @@ private fun ParameterRowCard(
     onTogglePlaying: () -> Unit,
     onToggleMode: () -> Unit,
     onSpeedChange: (Double) -> Unit,
+    onValueChangeFinished: () -> Unit,
     onValueChange: (Double) -> Unit,
 ) {
     Column(
@@ -1332,6 +1464,7 @@ private fun ParameterRowCard(
                 val stepped = (round(raw.toDouble() / parameter.step) * parameter.step).coerceIn(parameter.min, parameter.max)
                 onValueChange(stepped)
             },
+            onValueChangeFinished = onValueChangeFinished,
             valueRange = parameter.min.toFloat()..parameter.max.toFloat(),
             modifier = Modifier.semantics { contentDescription = "Parameter slider ${parameter.name}" },
         )

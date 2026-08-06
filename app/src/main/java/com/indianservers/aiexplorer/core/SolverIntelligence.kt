@@ -86,7 +86,10 @@ data class GuidedSolution(
  * used to select a deterministic plan; the verified kernel result remains the
  * source of truth.
  */
-class MathSolverTutor(private val kernel: MathProblemSolver = MathProblemSolver()) {
+class MathSolverTutor(
+    private val kernel: MathProblemSolver = MathProblemSolver(),
+    private val learnerWorkAnalyzer: LearnerWorkAnalyzer = LearnerWorkAnalyzer(),
+) {
     fun solve(question: String, requested: SolverMethod = SolverMethod.Auto): GuidedSolution {
         val interpretation = DeterministicMathQueryInterpreter.interpret(question)
         val wordModel = WordProblemParser.parse(question)
@@ -142,6 +145,9 @@ class MathSolverTutor(private val kernel: MathProblemSolver = MathProblemSolver(
         }
         return issues.distinctBy { it.kind }
     }
+
+    fun analyzeLearnerWork(question: String, learnerWork: String): LearnerWorkReport =
+        learnerWorkAnalyzer.analyze(question, learnerWork)
 
     private fun selectMethod(solution: ProblemSolution, question: String, requested: SolverMethod): SolverMethod {
         if (requested != SolverMethod.Auto) return requested

@@ -547,6 +547,7 @@ internal fun Projected3DCanvas(
     var lastSubPickAt by remember { mutableStateOf(0L) }
     var activeGizmoAxis by remember { mutableStateOf<TransformGizmoAxis?>(null) }
     var stylusHoverSolid by remember { mutableStateOf<Int?>(null) }
+    val visualEffects = LocalAppVisualEffects.current
     val currentSolids by rememberUpdatedState(solids)
     val currentVectors by rememberUpdatedState(vectors)
     val currentRx by rememberUpdatedState(rx)
@@ -825,7 +826,7 @@ internal fun Projected3DCanvas(
             .semantics { contentDescription = "Interactive 3D workspace with object, vertex, edge and face selection. $structuredDescription" },
     ) {
         val center = Offset(size.width * .52f, size.height * .45f) + cameraPan
-        if (showGrid) drawPerspectiveGrid(center, gridSize)
+        if (showGrid) drawPerspectiveGrid(center, gridSize, visualEffects)
         vectors.forEachIndexed { index, vector ->
             drawVector3D(vector, rx, ry, rz, center, 74f * zoom, if (index == selectedVectorIndex) Amber else Green, index == selectedVectorIndex, perspective)
         }
@@ -888,6 +889,7 @@ internal fun SurfaceCanvas3D(
 ) {
     val engine = remember { ExpressionEngine() }
     val calculus = remember { SurfaceCalculus() }
+    val visualEffects = LocalAppVisualEffects.current
     val analysis = remember(expression, trace) { runCatching { calculus.analyze(expression, trace.x, trace.y) }.getOrNull() }
     var lastTapAt by remember { mutableStateOf(0L) }
     val currentZoom by rememberUpdatedState(zoom)
@@ -971,19 +973,31 @@ internal fun SurfaceCanvas3D(
         val center = Offset(size.width * .5f, size.height * .5f) + cameraPan
         val scale = 54f * zoom
         fun map(v: Vec3) = project(rotate(v, tilt, rotation, roll), center, scale)
-        drawPerspectiveGrid(center)
+        drawPerspectiveGrid(center, effects = visualEffects)
         drawCoordinatePlanes3D(::map)
         if (showBox) drawSurfaceBox(::map)
-        mesh?.vertices?.chunked(mesh.columns)?.forEachIndexed { rowIndex, row ->
+        val meshRows = mesh?.vertices?.chunked(mesh.columns).orEmpty()
+        meshRows.forEachIndexed { rowIndex, row ->
+            val rowColor = if (visualEffects.treatment == AppVisualTreatment.SpectralWireframe) {
+                androidx.compose.ui.graphics.lerp(Cyan, Violet, rowIndex.toFloat() / meshRows.lastIndex.coerceAtLeast(1))
+            } else {
+                Cyan
+            }
             row.zipWithNext().forEachIndexed { columnIndex, (a, b) ->
                 val alpha = (if (showWireframe || rowIndex % 3 == 0 || columnIndex % 3 == 0) .78f else .28f) * surfaceOpacity
-                drawLine(Cyan.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.8f else 1.1f)
+                drawLine(rowColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.8f else 1.1f)
             }
         }
-        mesh?.vertices?.groupBy { it.y }?.values?.forEachIndexed { index, col ->
+        val meshColumns = mesh?.vertices?.groupBy { it.y }?.values.orEmpty()
+        meshColumns.forEachIndexed { index, col ->
+            val columnColor = if (visualEffects.treatment == AppVisualTreatment.SpectralWireframe) {
+                androidx.compose.ui.graphics.lerp(Violet, Cyan, index.toFloat() / (meshColumns.size - 1).coerceAtLeast(1))
+            } else {
+                Violet
+            }
             col.zipWithNext().forEach { (a, b) ->
                 val alpha = (if (showWireframe || index % 3 == 0) .58f else .22f) * surfaceOpacity
-                drawLine(Violet.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.3f else .9f)
+                drawLine(columnColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.3f else .9f)
             }
         }
         additionalMeshes.forEach { (surface, color) ->
@@ -1118,7 +1132,12 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSurfaceAnalysis
     drawCircle(Amber.copy(.22f), 28f, map(point)); drawCircle(Color.White, 6f, map(point))
 }
 
-internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(origin: Offset, scale: Float, settings: GraphAxisSettings = GraphAxisSettings()) {
+internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(
+    origin: Offset,
+    scale: Float,
+    settings: GraphAxisSettings = GraphAxisSettings(),
+    effects: AppVisualEffects = AppVisualEffects.Standard,
+) {
     if (!scale.isFinite() || scale <= 0f) return
     val minX = (-origin.x / scale).toDouble()
     val maxX = ((size.width - origin.x) / scale).toDouble()
@@ -1128,11 +1147,19 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(origin: O
     val yTicks = GraphViewport.ticks(minY, maxY)
     xTicks.forEach { value ->
         val x = origin.x + value.toFloat() * scale
-        if (settings.gridVisible || value == 0.0) drawLine(if (value == 0.0) Color.White.copy(.85f) else Grid, Offset(x, 0f), Offset(x, size.height), if (value == 0.0) 2f else 1f)
+        if (settings.gridVisible || value == 0.0) {
+            if (value == 0.0 && effects.enhanced) drawLine(Cyan.copy(alpha = effects.gridGlowAlpha), Offset(x, 0f), Offset(x, size.height), 7f)
+            val gridColor = if (value == 0.0) Color.White.copy(.85f) else if (effects.enhanced) Cyan.copy(alpha = effects.gridGlowAlpha * .42f) else Grid
+            drawLine(gridColor, Offset(x, 0f), Offset(x, size.height), if (value == 0.0) 2f else 1f)
+        }
     }
     yTicks.forEach { value ->
         val y = origin.y - value.toFloat() * scale
-        if (settings.gridVisible || value == 0.0) drawLine(if (value == 0.0) Color.White.copy(.85f) else Grid, Offset(0f, y), Offset(size.width, y), if (value == 0.0) 2f else 1f)
+        if (settings.gridVisible || value == 0.0) {
+            if (value == 0.0 && effects.enhanced) drawLine(Violet.copy(alpha = effects.gridGlowAlpha), Offset(0f, y), Offset(size.width, y), 7f)
+            val gridColor = if (value == 0.0) Color.White.copy(.85f) else if (effects.enhanced) Violet.copy(alpha = effects.gridGlowAlpha * .42f) else Grid
+            drawLine(gridColor, Offset(0f, y), Offset(size.width, y), if (value == 0.0) 2f else 1f)
+        }
     }
     val labelAxisY = origin.y.coerceIn(24f, size.height - 8f)
     val labelAxisX = origin.x.coerceIn(8f, size.width - 38f)
@@ -1159,11 +1186,21 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(origin: O
     }
 }
 
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPerspectiveGrid(center: Offset, spacingScale: Float = 1f) {
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPerspectiveGrid(
+    center: Offset,
+    spacingScale: Float = 1f,
+    effects: AppVisualEffects = AppVisualEffects.Standard,
+) {
     val safeScale = spacingScale.coerceIn(.5f, 3f)
+    val gridColor = if (effects.enhanced) Cyan.copy(alpha = effects.gridGlowAlpha * .45f) else Grid
     for (i in -8..8) {
-        drawLine(Grid, Offset(center.x + i * 48f * safeScale, center.y - 330f), Offset(center.x + i * 78f * safeScale, center.y + 330f), 1f)
-        drawLine(Grid, Offset(center.x - 420f, center.y + i * 34f * safeScale), Offset(center.x + 420f, center.y + i * 34f * safeScale), 1f)
+        drawLine(gridColor, Offset(center.x + i * 48f * safeScale, center.y - 330f), Offset(center.x + i * 78f * safeScale, center.y + 330f), 1f)
+        drawLine(gridColor, Offset(center.x - 420f, center.y + i * 34f * safeScale), Offset(center.x + 420f, center.y + i * 34f * safeScale), 1f)
+    }
+    if (effects.enhanced) {
+        drawLine(Cyan.copy(alpha = effects.gridGlowAlpha), center, center + Offset(260f, 110f), 8f)
+        drawLine(Violet.copy(alpha = effects.gridGlowAlpha), center, center + Offset(-220f, 140f), 8f)
+        drawLine(Cyan.copy(alpha = effects.gridGlowAlpha), center, center + Offset(0f, -260f), 8f)
     }
     drawLine(Cyan, center, center + Offset(260f, 110f), 3f)
     drawLine(Cyan, center, center + Offset(-220f, 140f), 3f)

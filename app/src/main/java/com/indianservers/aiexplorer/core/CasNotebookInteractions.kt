@@ -387,7 +387,7 @@ class CasNotebookInteractionEngine(
         source.forEachIndexed { index, char ->
             if (char == '(') stack.addLast(index)
             if (char == ')' && stack.isNotEmpty()) {
-                val start = stack.removeLast(); if (index > start + 1) targets += target(source, start + 1, index)
+                val start = stack.removeAt(stack.lastIndex); if (index > start + 1) targets += target(source, start + 1, index)
             }
         }
         Regex("[A-Za-z][A-Za-z0-9_]*(?:\\^[0-9]+)?|(?:\\d+(?:\\.\\d+)?)").findAll(source).forEach { targets += target(source, it.range.first, it.range.last + 1) }

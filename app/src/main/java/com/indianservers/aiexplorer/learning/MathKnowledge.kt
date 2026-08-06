@@ -438,8 +438,25 @@ object MathKnowledgeCatalog {
         fun topicLevelMatches(itemTopic: KnowledgeTopic, itemLevel: KnowledgeLevel) =
             (topic == null || topic == itemTopic) && (level == null || level == itemLevel)
         fun textMatches(vararg parts: String) = normalized.isBlank() || parts.any { it.lowercase().contains(normalized) }
+        fun formulaMatches(formula: FormulaCard): Boolean {
+            if (normalized.isBlank()) return true
+            val stopWords = setOf("a", "all", "find", "for", "formula", "formulas", "me", "show", "the", "to", "what")
+            val terms = normalized.split(Regex("[^a-z0-9_]+")).filter { it.isNotBlank() && it !in stopWords }
+            val text = listOf(
+                formula.title,
+                formula.expression,
+                formula.useCase,
+                formula.introduction,
+                formula.relatedTerms.joinToString(),
+                formula.tags.joinToString(),
+                formula.category.label,
+                formula.subcategory,
+                formula.variables.joinToString(),
+            ).joinToString(" ").lowercase()
+            return terms.isEmpty() || terms.all(text::contains)
+        }
         return KnowledgeSearchResult(
-            formulas = formulas.filter { (formulaCategory == null || it.category == formulaCategory) && topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.expression, it.useCase, it.introduction, it.relatedTerms.joinToString(), it.tags.joinToString(), it.category.label, it.subcategory, it.category.subcategories.joinToString()) },
+            formulas = formulas.filter { (formulaCategory == null || it.category == formulaCategory) && topicLevelMatches(it.topic, it.level) && formulaMatches(it) },
             theorems = theorems.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.statement, it.applications.joinToString(), it.category, it.tags.joinToString()) },
             visualProofs = visualProofs.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.title, it.invariant, it.learnerPrompt) },
             dictionary = dictionary.filter { topicLevelMatches(it.topic, it.level) && textMatches(it.term, it.definition, it.notation, it.example) },

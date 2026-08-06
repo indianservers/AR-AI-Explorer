@@ -38,6 +38,7 @@ import com.indianservers.aiexplorer.tutor.VisualExplanationEngine
 import com.indianservers.aiexplorer.input.CameraQuestionImporter
 import com.indianservers.aiexplorer.input.ImportedQuestion
 import com.indianservers.aiexplorer.input.LocalVoiceCommandParser
+import com.indianservers.aiexplorer.input.SampledImageLoader
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.io.ByteArrayOutputStream
@@ -80,7 +81,7 @@ private enum class WorkspaceTab { TUTOR, INPUT, EXPERIMENT, ANALYSE, JOURNEYS, S
 @Composable private fun InputAssistanceWorkspace(){
     val context=LocalContext.current;var transcription by remember{mutableStateOf("Solve 2x + 4 = 10")};var imported by remember{mutableStateOf<ImportedQuestion?>(null)};var pendingImage by remember{mutableStateOf<ByteArray?>(null)};var voice by remember{mutableStateOf("Increase frequency to five hertz")};var voiceResult by remember{mutableStateOf("")};val importer=remember(transcription){CameraQuestionImporter{transcription}};val voiceParser=remember{LocalVoiceCommandParser()}
     var tts by remember{mutableStateOf<TextToSpeech?>(null)};DisposableEffect(context){val engine=TextToSpeech(context){status->if(status==TextToSpeech.SUCCESS)tts?.language=Locale.getDefault()};tts=engine;onDispose{engine.stop();engine.shutdown()}}
-    val picker=rememberLauncherForActivityResult(ActivityResultContracts.GetContent()){uri->pendingImage=uri?.let{context.contentResolver.openInputStream(it)?.use{stream->stream.readBytes()}}}
+    val picker=rememberLauncherForActivityResult(ActivityResultContracts.GetContent()){uri->pendingImage=uri?.let{SampledImageLoader.readCompressedJpeg(context.contentResolver,it)}}
     val camera=rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()){bitmap->pendingImage=bitmap?.let{ByteArrayOutputStream().use{out->it.compress(android.graphics.Bitmap.CompressFormat.JPEG,88,out);out.toByteArray()}}}
     var launchCamera by remember{mutableStateOf(false)};val cameraPermission=rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()){granted->if(granted&&launchCamera)camera.launch(null);launchCamera=false}
     val speech=rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()){result->result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.let{voice=it}}

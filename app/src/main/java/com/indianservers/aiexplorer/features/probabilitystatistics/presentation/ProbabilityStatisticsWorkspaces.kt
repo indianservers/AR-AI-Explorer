@@ -56,6 +56,12 @@ import com.indianservers.aiexplorer.features.probabilitystatistics.models.GroupS
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.OutcomeType
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.StatisticsTopic
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.TopicWorkspaceMode
+import com.indianservers.aiexplorer.SideBySideComparePanel
+import com.indianservers.aiexplorer.appWorkspaceTreatment
+import com.indianservers.aiexplorer.core.CompareModeEngine
+import com.indianservers.aiexplorer.core.DistributionEngine
+import com.indianservers.aiexplorer.core.DistributionKind
+import com.indianservers.aiexplorer.core.ProbabilityDistribution
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.max
@@ -241,6 +247,7 @@ private fun BinomialBars(n: Int, p: Double, selected: Int, onSelect: (Int) -> Un
             .fillMaxWidth()
             .height(210.dp)
             .background(PsSpace, RoundedCornerShape(6.dp))
+            .appWorkspaceTreatment(6.dp, PsCyan, PsAmber)
             .pointerInput(n) {
                 detectTapGestures { offset ->
                     val index = ((offset.x / size.width) * (n + 1)).toInt().coerceIn(0, n)
@@ -295,25 +302,127 @@ private fun PracticeBlock(topic: StatisticsTopic, model: ProbabilityStatisticsVi
 
 @Composable
 internal fun DistributionExplorerScreen(model: ProbabilityStatisticsViewModel) {
+    var compareMode by rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         Modifier.fillMaxSize().padding(horizontal = 12.dp),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 18.dp, bottom = 92.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        item { FeatureTopBar("Distribution Explorer", "PMF, CDF, moments and simulation", model::back) }
         item {
-            FeaturePanel(PsViolet, Modifier.fillMaxWidth()) {
-                Text("Binomial reference model", color = PsInk, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                BinomialInteractiveLab(TopicWorkspaceMode.Explore)
+            FeatureTopBar("Distribution Explorer", "PMF, CDF, moments and simulation", model::back)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                PrimaryAction(if (compareMode) "Close compare" else "Compare distributions", PsViolet) {
+                    compareMode = !compareMode
+                }
             }
         }
-        item {
-            FeaturePanel(PsCyan, Modifier.fillMaxWidth()) {
-                Text("More validated distributions", color = PsCyan, fontWeight = FontWeight.Bold)
-                Text("Normal, Poisson, uniform, exponential, sampling and comparison workspaces remain available in Advanced Labs from the home screen.", color = PsMuted, fontSize = 13.sp)
+        if (compareMode) {
+            item { DistributionCompareLab() }
+        } else {
+            item {
+                FeaturePanel(PsViolet, Modifier.fillMaxWidth()) {
+                    Text("Binomial reference model", color = PsInk, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    BinomialInteractiveLab(TopicWorkspaceMode.Explore)
+                }
+            }
+            item {
+                FeaturePanel(PsCyan, Modifier.fillMaxWidth()) {
+                    Text("Validated distribution family", color = PsCyan, fontWeight = FontWeight.Bold)
+                    Text("Use Compare distributions to inspect normal, binomial, Poisson, uniform, and exponential models side by side.", color = PsMuted, fontSize = 13.sp)
+                }
             }
         }
     }
+}
+
+@Composable
+private fun DistributionCompareLab() {
+    var leftKind by rememberSaveable { mutableStateOf(DistributionKind.Normal) }
+    var rightKind by rememberSaveable { mutableStateOf(DistributionKind.Binomial) }
+    val left = remember(leftKind) { referenceDistribution(leftKind) }
+    val right = remember(rightKind) { referenceDistribution(rightKind) }
+    FeaturePanel(PsViolet, Modifier.fillMaxWidth()) {
+        SectionTitle("Compare two distributions")
+        DistributionChoice("A", leftKind, rightKind) { leftKind = it }
+        DistributionChoice("B", rightKind, leftKind) { rightKind = it }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            DistributionMiniPlot(left, PsCyan, Modifier.weight(1f))
+            DistributionMiniPlot(right, PsViolet, Modifier.weight(1f))
+        }
+        SideBySideComparePanel(
+            report = CompareModeEngine.compare(
+                CompareModeEngine.distribution(left),
+                CompareModeEngine.distribution(right),
+            ),
+            leftAccent = PsCyan,
+            rightAccent = PsViolet,
+        )
+        Text(
+            "Each preview uses a validated PMF or PDF. Moments and percentiles are calculated from the selected reference models.",
+            color = PsMuted,
+            fontSize = 11.sp,
+        )
+    }
+}
+
+@Composable
+private fun DistributionChoice(
+    label: String,
+    selected: DistributionKind,
+    unavailable: DistributionKind,
+    onSelect: (DistributionKind) -> Unit,
+) {
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(label, color = PsAmber, fontWeight = FontWeight.Bold)
+        DistributionKind.entries.forEach { kind ->
+            PrimaryAction(
+                label = if (kind == selected) "• ${kind.name}" else kind.name,
+                accent = if (kind == selected) PsCyan else PsMuted,
+                enabled = kind != unavailable,
+            ) { onSelect(kind) }
+        }
+    }
+}
+
+@Composable
+private fun DistributionMiniPlot(distribution: ProbabilityDistribution, accent: Color, modifier: Modifier) {
+    val points = remember(distribution) { distribution.plotPoints(101) }
+    Canvas(
+        modifier
+            .height(128.dp)
+            .background(PsSpace, RoundedCornerShape(6.dp))
+            .appWorkspaceTreatment(6.dp, accent, PsCyan)
+            .semantics { contentDescription = "${distribution.summary.kind.name} distribution preview" },
+    ) {
+        if (points.size < 2) return@Canvas
+        val minX = points.minOf { it.x }
+        val maxX = points.maxOf { it.x }.takeIf { it > minX } ?: minX + 1.0
+        val maxY = points.maxOf { it.probability }.coerceAtLeast(1e-12)
+        drawLine(PsMuted.copy(alpha = .45f), Offset(5f, size.height - 10f), Offset(size.width - 5f, size.height - 10f), 1f)
+        val mapped = points.map { point ->
+            Offset(
+                x = (5f + ((point.x - minX) / (maxX - minX)).toFloat() * (size.width - 10f)),
+                y = (size.height - 10f - (point.probability / maxY).toFloat() * (size.height - 22f)),
+            )
+        }
+        if (distribution.summary.domain.name == "Discrete") {
+            mapped.forEach { point -> drawLine(accent, Offset(point.x, size.height - 10f), point, 3f) }
+        } else {
+            mapped.zipWithNext().forEach { (a, b) -> drawLine(accent, a, b, 3f) }
+        }
+    }
+}
+
+private fun referenceDistribution(kind: DistributionKind): ProbabilityDistribution = when (kind) {
+    DistributionKind.Normal -> DistributionEngine.create(kind, 0.0, 1.0)
+    DistributionKind.Binomial -> DistributionEngine.create(kind, 10.0, .5)
+    DistributionKind.Poisson -> DistributionEngine.create(kind, 4.0)
+    DistributionKind.Uniform -> DistributionEngine.create(kind, 0.0, 1.0)
+    DistributionKind.Exponential -> DistributionEngine.create(kind, 1.0)
 }
 
 @Composable
@@ -447,7 +556,7 @@ private fun MiniDataBars(values: List<Double>, accent: Color, description: Strin
     val bins = IntArray(12)
     values.forEach { bins[(((it - min) / width) * bins.lastIndex).roundToInt().coerceIn(0, bins.lastIndex)]++ }
     val highest = bins.maxOrNull()?.coerceAtLeast(1) ?: 1
-    Canvas(Modifier.fillMaxWidth().height(150.dp).background(PsSpace, RoundedCornerShape(6.dp)).semantics { contentDescription = description }) {
+    Canvas(Modifier.fillMaxWidth().height(150.dp).background(PsSpace, RoundedCornerShape(6.dp)).appWorkspaceTreatment(6.dp, accent, PsAmber).semantics { contentDescription = description }) {
         val slot = size.width / bins.size
         bins.forEachIndexed { index, count ->
             val h = count.toFloat() / highest * (size.height - 16f)

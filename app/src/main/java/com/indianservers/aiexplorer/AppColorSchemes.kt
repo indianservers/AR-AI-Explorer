@@ -155,15 +155,43 @@ internal fun applyAppPalette(palette: AppPalette) {
     Grid = palette.primary.copy(alpha = 0.20f)
 }
 
-internal fun appBackdrop(palette: AppPalette) = Brush.radialGradient(
-    colors = listOf(
-        palette.primary.copy(alpha = 0.20f),
-        palette.background,
-        palette.background,
-    ),
-    radius = 1100f,
-    center = Offset(420f, 220f),
-)
+internal fun appBackdrop(scheme: AppColorScheme): Brush {
+    val palette = scheme.palette
+    val effects = visualEffectsFor(scheme)
+    return when (effects.treatment) {
+        AppVisualTreatment.Standard -> Brush.radialGradient(
+            colors = listOf(
+                palette.primary.copy(alpha = 0.20f),
+                palette.background,
+                palette.background,
+            ),
+            radius = 1100f,
+            center = Offset(420f, 220f),
+        )
+        AppVisualTreatment.NeonGlass -> Brush.linearGradient(
+            colors = listOf(
+                palette.primary.copy(alpha = effects.backdropAccentAlpha),
+                palette.background,
+                palette.surfaceAlt.copy(alpha = .92f),
+                palette.secondary.copy(alpha = effects.backdropSecondaryAlpha),
+                palette.background,
+            ),
+            start = Offset.Zero,
+            end = Offset(1150f, 1700f),
+        )
+        AppVisualTreatment.SpectralWireframe -> Brush.linearGradient(
+            colors = listOf(
+                palette.background,
+                palette.primary.copy(alpha = effects.backdropAccentAlpha),
+                palette.background,
+                palette.secondary.copy(alpha = effects.backdropSecondaryAlpha),
+                palette.background,
+            ),
+            start = Offset(120f, 0f),
+            end = Offset(980f, 1500f),
+        )
+    }
+}
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)

@@ -16,16 +16,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.learning.FormulaCard
 import com.indianservers.aiexplorer.learning.FormulaCategory
+import com.indianservers.aiexplorer.learning.FormulaDimension
+import com.indianservers.aiexplorer.learning.FormulaExperienceEngine
+import com.indianservers.aiexplorer.learning.FormulaFilterSet
+import com.indianservers.aiexplorer.learning.FormulaPurpose
+import com.indianservers.aiexplorer.learning.KnowledgeLevel
+import com.indianservers.aiexplorer.learning.MathKnowledgeCatalog
 import com.indianservers.aiexplorer.learning.icon
 
 @Composable
@@ -139,16 +148,136 @@ internal fun FormulaDirectCategoryLibrary(
     selectedTag: String?,
     onTag: (String?) -> Unit,
     onBack: () -> Unit,
+    onOpenWorkspace: (FormulaCard) -> Unit,
 ) {
+    val context = LocalContext.current
+    val store = remember(context) { FormulaLibraryStore(context) }
+    var libraryState by remember { mutableStateOf(store.load()) }
     var formulaScale by rememberFormulaFontScalePreference("math_formulas")
+    var selectedFormulaId by remember(category) { mutableStateOf<String?>(null) }
+    var filtersOpen by remember(category) { mutableStateOf(false) }
+    var purpose by remember(category) { mutableStateOf<FormulaPurpose?>(null) }
+    var dimension by remember(category) { mutableStateOf<FormulaDimension?>(null) }
+    var level by remember(category) { mutableStateOf<KnowledgeLevel?>(null) }
+    var requiredVariable by remember(category) { mutableStateOf<String?>(null) }
+    var outputSymbol by remember(category) { mutableStateOf<String?>(null) }
+    var shelf by remember(category) { mutableStateOf<String?>(null) }
+
+    selectedFormulaId?.let { formulaId ->
+        MathKnowledgeCatalog.formulas.firstOrNull { it.id == formulaId }?.let { formula ->
+            FormulaWorkbench(
+                formula = formula,
+                allFormulas = MathKnowledgeCatalog.formulas,
+                libraryState = libraryState,
+                onLibraryState = { libraryState = it },
+                store = store,
+                onBack = { selectedFormulaId = null },
+                onOpenWorkspace = onOpenWorkspace,
+            )
+            return
+        }
+    }
+
     val tags = formulas.flatMap { it.tags }.distinct().sortedByFormulaFilter()
-    val visible = formulas.filter { selectedTag == null || selectedTag in it.tags }
+    val variables = formulas.flatMap { it.variables }.distinct().sorted().take(16)
+    val outputs = formulas.mapNotNull { FormulaExperienceEngine.details(it, formulas).outputSymbol }.distinct().sorted().take(12)
+    val filtered = FormulaExperienceEngine.filter(
+        formulas,
+        query = "",
+        filters = FormulaFilterSet(
+            purpose = purpose,
+            outputSymbol = outputSymbol,
+            requiredVariable = requiredVariable,
+            dimension = dimension,
+            level = level,
+        ),
+    )
+    val visible = filtered.filter { formula ->
+        (selectedTag == null || selectedTag in formula.tags) &&
+            when {
+                shelf == "favorites" -> formula.id in libraryState.favorites
+                shelf == "recent" -> formula.id in libraryState.recent
+                shelf?.startsWith("collection:") == true ->
+                    formula.id in libraryState.collections[shelf!!.substringAfter(':')].orEmpty()
+                else -> true
+            }
+    }.sortedBy { formula ->
+        libraryState.recent.indexOf(formula.id).takeIf { it >= 0 } ?: Int.MAX_VALUE
+    }
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             GlowButton("Back to categories", icon = "back", iconOnly = true, onClick = onBack)
             Column(Modifier.weight(1f)) {
                 Text(category.label, color = Cyan, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Text("${visible.size} formulas · choose a tag to filter", color = Muted, fontSize = 10.sp)
+            }
+        }
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            FormulaCategoryChip("All", "A", shelf == null) { shelf = null }
+            FormulaCategoryChip("Favorites", "☆", shelf == "favorites") {
+                shelf = if (shelf == "favorites") null else "favorites"
+            }
+            FormulaCategoryChip("Recent", "R", shelf == "recent") {
+                shelf = if (shelf == "recent") null else "recent"
+            }
+            libraryState.collections.keys.sorted().take(4).forEach { name ->
+                val key = "collection:$name"
+                FormulaCategoryChip(name, "C", shelf == key) { shelf = if (shelf == key) null else key }
+            }
+            FormulaCategoryChip(if (filtersOpen) "Close filters" else "More filters", "F", filtersOpen) {
+                filtersOpen = !filtersOpen
+            }
+        }
+        if (filtersOpen) {
+            Column(
+                Modifier.fillMaxWidth()
+                    .background(SurfaceB.copy(alpha = .24f), RoundedCornerShape(8.dp))
+                    .border(1.dp, Violet.copy(alpha = .28f), RoundedCornerShape(8.dp))
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Text("Purpose", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    FormulaCategoryChip("Any", "·", purpose == null) { purpose = null }
+                    FormulaPurpose.entries.forEach { item ->
+                        FormulaCategoryChip(item.label, "=", purpose == item) {
+                            purpose = if (purpose == item) null else item
+                        }
+                    }
+                }
+                Text("Output and level", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    FormulaDimension.entries.forEach { item ->
+                        FormulaCategoryChip(item.label, "u", dimension == item) {
+                            dimension = if (dimension == item) null else item
+                        }
+                    }
+                    KnowledgeLevel.entries.forEach { item ->
+                        FormulaCategoryChip(item.label, "L", level == item) {
+                            level = if (level == item) null else item
+                        }
+                    }
+                }
+                if (outputs.isNotEmpty()) {
+                    Text("Find output", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        outputs.forEach { symbol ->
+                            FormulaCategoryChip(symbol, "=", outputSymbol == symbol) {
+                                outputSymbol = if (outputSymbol == symbol) null else symbol
+                            }
+                        }
+                    }
+                }
+                if (variables.isNotEmpty()) {
+                    Text("Contains variable", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        variables.forEach { symbol ->
+                            FormulaCategoryChip(symbol, "v", requiredVariable == symbol) {
+                                requiredVariable = if (requiredVariable == symbol) null else symbol
+                            }
+                        }
+                    }
+                }
             }
         }
         if (tags.isNotEmpty()) {
@@ -166,7 +295,18 @@ internal fun FormulaDirectCategoryLibrary(
         if (visible.isEmpty()) {
             Text("No formulas match this tag and search.", color = Amber)
         } else {
-            visible.forEach { formula -> FormulaItemCard(formula, formulaScale) }
+            visible.forEach { formula ->
+                FormulaItemCard(
+                    formula = formula,
+                    scale = formulaScale,
+                    favorite = formula.id in libraryState.favorites,
+                    onFavorite = { libraryState = store.toggleFavorite(libraryState, formula.id) },
+                    onClick = {
+                        libraryState = store.viewed(libraryState, formula.id)
+                        selectedFormulaId = formula.id
+                    },
+                )
+            }
         }
     }
 }
@@ -245,17 +385,35 @@ internal fun FormulaSubcategoryLibrary(
 }
 
 @Composable
-private fun FormulaItemCard(formula: FormulaCard, scale: Float) {
+private fun FormulaItemCard(
+    formula: FormulaCard,
+    scale: Float,
+    favorite: Boolean = false,
+    onFavorite: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
+) {
     Column(
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(SurfaceB.copy(alpha = 0.28f))
             .border(1.dp, Cyan.copy(alpha = .22f), RoundedCornerShape(12.dp))
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(9.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(formula.title, color = Ink, fontWeight = FontWeight.SemiBold, fontSize = scaledSp(13, scale))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                formula.title,
+                color = Ink,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = scaledSp(13, scale),
+                modifier = Modifier.weight(1f),
+            )
+            onFavorite?.let {
+                FormulaCategoryChip(if (favorite) "Saved" else "Save", if (favorite) "★" else "☆", favorite, it)
+            }
+        }
         Text(displayLatexFormula(formula.expression), color = Cyan, fontSize = scaledSp(18, scale), fontWeight = FontWeight.Bold)
         Text("${formula.category.label} · ${formula.subcategory} · ${formula.level.label}", color = Violet, fontSize = scaledSp(10, scale))
         Text(formula.introduction, color = Ink.copy(alpha = .86f), fontSize = scaledSp(10, scale), lineHeight = scaledSp(13, scale))
@@ -265,6 +423,9 @@ private fun FormulaItemCard(formula: FormulaCard, scale: Float) {
         }
         if (formula.variables.isNotEmpty()) {
             Text("Variables: ${formula.variables.joinToString()}", color = Muted, fontSize = scaledSp(11, scale))
+        }
+        if (onClick != null) {
+            Text("Open details, calculator, derivation, examples and practice", color = Violet, fontSize = scaledSp(9, scale))
         }
     }
 }

@@ -521,6 +521,8 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     var proofExplanationOpen by remember { mutableStateOf(false) }
     var proofControlsOpen by remember { mutableStateOf(false) }
     var proofResultsOpen by remember { mutableStateOf(false) }
+    var proofCompareMode by rememberSaveable { mutableStateOf(false) }
+    var proofCompareIds by rememberSaveable { mutableStateOf<List<String>>(emptyList()) }
     var visualProofError by remember { mutableStateOf<String?>(null) }
     var proofZoom by rememberSaveable { mutableFloatStateOf(1f) }
     var knowledgeLoading by remember { mutableStateOf(true) }
@@ -669,6 +671,15 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                             onBack = { formulaCategory = null },
                             selectedTag = formulaTag,
                             onTag = { formulaTag = it },
+                            onOpenWorkspace = { formula ->
+                                when (formula.topic) {
+                                    KnowledgeTopic.Geometry -> vm.open(
+                                        if ("3d" in formula.tags || "volume" in formula.tags) MathModule.Graph3D else MathModule.Geometry2D,
+                                    )
+                                    KnowledgeTopic.Calculus, KnowledgeTopic.Algebra -> vm.open(MathModule.Graph2D)
+                                    KnowledgeTopic.Statistics, KnowledgeTopic.Probability -> vm.openProbabilityLab()
+                                }
+                            },
                         )
                     }
                 KnowledgeSection.Theorems -> if (theoremCategory == null) {
@@ -730,9 +741,22 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                         VisualProofList(
                             category = visualProofCategory,
                             query = query,
+                            compareMode = proofCompareMode,
+                            compareIds = proofCompareIds,
                             onCategories = {
                                 proofCategoriesOpen = true
                                 proofFormulasOpen = false
+                            },
+                            onCompareMode = { enabled ->
+                                proofCompareMode = enabled
+                                if (!enabled) proofCompareIds = emptyList()
+                            },
+                            onCompareSelection = { id ->
+                                proofCompareIds = if (id in proofCompareIds) {
+                                    proofCompareIds - id
+                                } else {
+                                    (proofCompareIds + id).takeLast(2)
+                                }
                             },
                             onOpen = { lab ->
                                 runCatching { visualProofEngine.start(lab.id) }

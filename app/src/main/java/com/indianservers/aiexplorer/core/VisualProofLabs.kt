@@ -15,6 +15,15 @@ data class ProofDataSet(
     val columns: List<String>,
     val rows: List<List<Double>>,
 )
+
+enum class VisualEvidenceType(val label: String) {
+    DeductiveProof("DEDUCTIVE PROOF"),
+    Derivation("DERIVATION"),
+    ApproximationProof("LIMIT / ERROR PROOF"),
+    ExperimentalDemonstration("MEASURED DEMONSTRATION"),
+    DataCounterexample("DATA COUNTEREXAMPLE"),
+}
+
 data class VisualProofLab(
     val id: String,
     val title: String,
@@ -25,6 +34,7 @@ data class VisualProofLab(
     val invariantPrompt: String,
     val formalResult: String,
     val dataSet: ProofDataSet? = null,
+    val evidenceType: VisualEvidenceType = VisualEvidenceType.DeductiveProof,
 )
 data class ProofFrame(
     val lab: VisualProofLab,
@@ -82,7 +92,8 @@ data class ProofVisualProfile(
 object VisualProofCatalog {
     val categories = listOf(
         "Geometry", "Trigonometry", "Algebra", "Calculus", "Linear Algebra",
-        "Coordinate Geometry", "Probability & Statistics", "Vectors", "Number Theory", "Mensuration",
+        "Coordinate Geometry", "Probability & Statistics", "Discrete Mathematics",
+        "Vectors", "Number Theory", "Mensuration",
     )
 
     val anscombeQuartet = ProofDataSet(
@@ -113,12 +124,12 @@ object VisualProofCatalog {
     val labs = listOf(
         VisualProofLab("triangle-angle-sum", "Triangle angle sum", "Geometry", listOf("Build triangle ABC.", "Copy its three angles.", "Arrange them on a straight line.", "Drag a vertex to test."), listOf(ProofParameter("height", .2, 6.0, 3.0), ProofParameter("offset", -3.0, 5.0, 1.0)), "Which individual angles change as C moves?", "Why does their total stay 180°?", "A + B + C = 180°"),
         VisualProofLab("pythagorean", "Pythagorean rearrangement", "Geometry", listOf("Create a right triangle.", "Build squares on each side.", "Rearrange four copies.", "Compare uncovered areas."), listOf(ProofParameter("a", .5, 6.0, 3.0), ProofParameter("b", .5, 6.0, 4.0)), "How do the three square areas change?", "What area remains equal after rearrangement?", "a² + b² = c²"),
-        VisualProofLab("derivative-slope", "Derivative as slope", "Calculus", listOf("Plot f(x)=x².", "Place a secant h away.", "Shrink h.", "Reveal the tangent."), listOf(ProofParameter("x", -4.0, 4.0, 2.0), ProofParameter("h", .001, 2.0, 1.0)), "How does the secant slope change as h shrinks?", "What limiting slope is stable?", "d(x²)/dx = 2x"),
-        VisualProofLab("integral-area", "Integral as accumulated area", "Calculus", listOf("Plot f(x)=x² on [0,b].", "Build midpoint rectangles.", "Increase their count.", "Compare the approximation, exact area, and error bound."), listOf(ProofParameter("b", .5, 5.0, 3.0), ProofParameter("n", 2.0, 200.0, 10.0)), "How does the measured error change when rectangles become thinner?", "Which exact accumulated area is approached?", "∫₀ᵇ x² dx = b³/3"),
-        VisualProofLab("normal-area", "Normal probability area", "Probability", listOf("Draw the normal curve.", "Place symmetric bounds.", "Shade the interval.", "Compare tail areas."), listOf(ProofParameter("z", .1, 3.5, 1.0)), "How does shaded probability change with z?", "What remains symmetric about zero?", "P(-z≤Z≤z)=2Φ(z)-1"),
+        VisualProofLab("derivative-slope", "Derivative as slope", "Calculus", listOf("Plot f(x)=x².", "Place a secant h away.", "Shrink h.", "Reveal the tangent."), listOf(ProofParameter("x", -4.0, 4.0, 2.0), ProofParameter("h", .001, 2.0, 1.0)), "How does the secant slope change as h shrinks?", "What limiting slope is stable?", "d(x²)/dx = 2x", evidenceType = VisualEvidenceType.Derivation),
+        VisualProofLab("integral-area", "Integral as accumulated area", "Calculus", listOf("Plot f(x)=x² on [0,b].", "Build midpoint rectangles.", "Increase their count.", "Compare the approximation, exact area, and error bound."), listOf(ProofParameter("b", .5, 5.0, 3.0), ProofParameter("n", 2.0, 200.0, 10.0)), "How does the measured error change when rectangles become thinner?", "Which exact accumulated area is approached?", "∫₀ᵇ x² dx = b³/3", evidenceType = VisualEvidenceType.ApproximationProof),
+        VisualProofLab("normal-area", "Normal probability area", "Probability & Statistics", listOf("Draw the normal curve.", "Place symmetric bounds.", "Shade the interval.", "Compare numerical area with the CDF identity."), listOf(ProofParameter("z", .1, 3.5, 1.0)), "How does shaded probability change with z?", "What remains symmetric about zero?", "P(-z≤Z≤z)=2Φ(z)-1", evidenceType = VisualEvidenceType.Derivation),
         VisualProofLab("vector-addition", "Vector addition", "Vectors", listOf("Draw vectors u and v.", "Use head-to-tail addition.", "Swap their order.", "Compare endpoints."), listOf(ProofParameter("ux", -4.0, 4.0, 2.0), ProofParameter("uy", -4.0, 4.0, 1.0), ProofParameter("vx", -4.0, 4.0, -1.0), ProofParameter("vy", -4.0, 4.0, 3.0)), "What changes when u and v move?", "Why is the final endpoint unchanged when order swaps?", "u + v = v + u"),
-        VisualProofLab("matrix-transform", "Matrix area transformation", "Linear algebra", listOf("Start with a unit square.", "Apply a 2×2 matrix.", "Measure transformed area.", "Compare with determinant."), listOf(ProofParameter("a", -3.0, 3.0, 2.0), ProofParameter("b", -3.0, 3.0, 1.0), ProofParameter("c", -3.0, 3.0, 0.0), ProofParameter("d", -3.0, 3.0, 2.0)), "How does the image shape change?", "What scalar controls signed area?", "area scale = |det(A)|"),
-        VisualProofLab("circle-ratio", "Circle circumference ratio", "Geometry", listOf("Choose a radius.", "Unroll the circumference.", "Compare with diameter.", "Drag radius and retest."), listOf(ProofParameter("r", .2, 6.0, 2.0)), "How do circumference and diameter change?", "Which ratio remains π?", "C/d = π"),
+        VisualProofLab("matrix-transform", "Matrix area transformation", "Linear Algebra", listOf("Start with a unit square.", "Apply a 2×2 matrix.", "Measure transformed area.", "Compare with determinant."), listOf(ProofParameter("a", -3.0, 3.0, 2.0), ProofParameter("b", -3.0, 3.0, 1.0), ProofParameter("c", -3.0, 3.0, 0.0), ProofParameter("d", -3.0, 3.0, 2.0)), "How does the image shape change?", "What scalar controls signed area?", "area scale = |det(A)|"),
+        VisualProofLab("circle-ratio", "Circle circumference ratio", "Mensuration", listOf("Choose a radius.", "Approximate the circle with a regular polygon.", "Unroll its perimeter.", "Increase the side count and compare with diameter."), listOf(ProofParameter("r", .2, 6.0, 2.0), ProofParameter("n", 6.0, 240.0, 24.0)), "How does the perimeter estimate change as the polygon gains sides?", "Which scale-independent ratio approaches π?", "C/d = π", evidenceType = VisualEvidenceType.ExperimentalDemonstration),
         VisualProofLab("algebra-square", "Square of a binomial", "Algebra", listOf("Build a square of side a+b.", "Partition it.", "Label the four regions.", "Sum their areas."), listOf(ProofParameter("a", .2, 5.0, 2.0), ProofParameter("b", .2, 5.0, 1.0)), "How do the four regions change?", "Why does total area remain the same?", "(a+b)² = a² + 2ab + b²"),
         VisualProofLab("shear-area", "Shear preserves area", "Transformations", listOf("Build a rectangle.", "Slide its top edge.", "Observe the parallelogram.", "Compare base×height."), listOf(ProofParameter("base", .5, 6.0, 4.0), ProofParameter("height", .5, 5.0, 2.0), ProofParameter("shear", -4.0, 4.0, 1.0)), "What changes as the top edge slides?", "Which dimensions keep area fixed?", "A = base × perpendicular height"),
         VisualProofLab("triangle-area", "Triangle area dissection", "Geometry", listOf("Build a triangle with base b and height h.", "Duplicate and rotate it.", "Join both copies into a parallelogram.", "Take half of the parallelogram area."), listOf(ProofParameter("base", .5, 7.0, 4.0), ProofParameter("height", .5, 6.0, 3.0), ProofParameter("apex", -2.0, 6.0, 1.5)), "How does the triangle change when its apex slides?", "Why is base times perpendicular height unchanged by a horizontal apex move?", "A = bh/2"),
@@ -128,17 +139,17 @@ object VisualProofCatalog {
         VisualProofLab("polygon-angle-sum", "Polygon triangulation", "Geometry", listOf("Choose a regular n-gon.", "Select one vertex.", "Draw every non-adjacent diagonal.", "Count the resulting triangles."), listOf(ProofParameter("n", 3.0, 12.0, 6.0), ProofParameter("radius", 1.0, 5.0, 2.8)), "How many triangles appear when a side is added?", "Why is each new triangle worth 180 degrees?", "S = (n-2) × 180°"),
         VisualProofLab("similar-triangles", "Similar triangle ratios", "Geometry", listOf("Build a reference triangle.", "Scale it from a common center.", "Compare corresponding sides.", "Move the scale control and retest."), listOf(ProofParameter("a", 1.0, 6.0, 3.0), ProofParameter("b", 1.0, 6.0, 2.0), ProofParameter("k", .25, 3.0, 1.5)), "How do the side lengths change with k?", "Which three side ratios stay equal?", "a'/a = b'/b = c'/c = k"),
         VisualProofLab("intersecting-chords", "Intersecting chords theorem", "Geometry", listOf("Draw two chords through an interior point P.", "Measure the four chord segments.", "Build rectangles from each segment pair.", "Move P while keeping both chords on the circle."), listOf(ProofParameter("r", 1.0, 5.0, 3.0), ProofParameter("p", -.75, .75, .2), ProofParameter("angle", 15.0, 165.0, 70.0)), "How do individual segment lengths change as P moves?", "Why do the two segment products remain equal?", "PA × PB = PC × PD"),
-        VisualProofLab("circle-angle", "Center and circumference angles", "Geometry", listOf("Choose chord AB.", "Join A and B to center O.", "Choose point C on the major arc.", "Compare angle AOB with angle ACB."), listOf(ProofParameter("arc", 20.0, 160.0, 80.0), ProofParameter("c", 185.0, 340.0, 250.0), ProofParameter("r", 1.0, 5.0, 3.0)), "How do both angles change when the chord changes?", "Why does the central angle stay twice the inscribed angle?", "angle AOB = 2 angle ACB"),
+        VisualProofLab("circle-angle", "Center and circumference angles", "Geometry", listOf("Choose chord AB.", "Join A and B to center O.", "Choose point C on the major arc.", "Measure both angles independently from their rays."), listOf(ProofParameter("arc", 20.0, 160.0, 80.0), ProofParameter("c", 185.0, 270.0, 250.0), ProofParameter("r", 1.0, 5.0, 3.0)), "How do both measured angles change when the chord changes?", "Why does the central angle stay twice the inscribed angle?", "angle AOB = 2 angle ACB"),
         VisualProofLab("unit-circle-identity", "Unit-circle identity", "Trigonometry", listOf("Place a point on the unit circle.", "Project it onto both axes.", "Read cosine and sine as legs.", "Apply Pythagoras to the radius."), listOf(ProofParameter("theta", -180.0, 180.0, 40.0)), "How do sine and cosine change as the point rotates?", "Why does their squared sum stay one?", "sin²(theta) + cos²(theta) = 1"),
         VisualProofLab("odd-sum-square", "Odd numbers build squares", "Number Theory", listOf("Start with one unit tile.", "Add the next odd L-shaped border.", "Repeat for n layers.", "Count the completed square."), listOf(ProofParameter("n", 1.0, 15.0, 6.0)), "How many tiles enter at each new layer?", "Why does the completed side length equal n?", "1+3+5+...+(2n-1) = n²"),
         VisualProofLab("absolute-inequality", "Absolute-value inequality", "Algebra", listOf("Mark −r and r on a number line.", "Interpret |x| as distance from zero.", "Shade points whose distance is at most r.", "Read the compound inequality."), listOf(ProofParameter("x", -6.0, 6.0, 2.0), ProofParameter("r", .5, 6.0, 3.0)), "How does membership change as x crosses either boundary?", "Why is distance from zero unchanged by reflection?", "|x| ≤ r ⇔ −r ≤ x ≤ r"),
         VisualProofLab("equation-balance", "Equation as a balance", "Algebra", listOf("Balance ax+b against c.", "Remove b from both pans.", "Split both sides into a equal groups.", "Read the value of x."), listOf(ProofParameter("a", 1.0, 6.0, 2.0), ProofParameter("b", -5.0, 5.0, 2.0), ProofParameter("c", -5.0, 15.0, 10.0)), "How does the solution move when a, b, or c changes?", "Why does doing the same operation to both sides preserve equality?", "ax+b=c ⇒ x=(c−b)/a"),
-        VisualProofLab("set-de-morgan", "De Morgan's law", "Probability", listOf("Draw overlapping sets A and B.", "Shade everything outside A∪B.", "Shade Aᶜ and Bᶜ separately.", "Compare the overlap and truth rows."), emptyList(), "Which regions are shaded on each side?", "Why do both expressions select exactly the same regions?", "(A∪B)ᶜ = Aᶜ∩Bᶜ"),
+        VisualProofLab("set-de-morgan", "De Morgan's law", "Set Theory & Logic", listOf("Draw overlapping sets A and B.", "Choose whether a test point belongs to each set.", "Evaluate both expressions independently.", "Generate and compare all four truth rows."), listOf(ProofParameter("inA", 0.0, 1.0, 0.0), ProofParameter("inB", 0.0, 1.0, 0.0)), "Which regions are selected on each side?", "Why do both expressions select exactly the same membership states?", "(A∪B)ᶜ = Aᶜ∩Bᶜ"),
         VisualProofLab("epsilon-delta", "Epsilon–delta limit", "Calculus", listOf("Choose a horizontal ε-band around L.", "Choose a vertical δ-band around a.", "Track the graph inside the δ-band.", "Verify its image stays inside the ε-band."), listOf(ProofParameter("epsilon", .2, 2.0, .8), ProofParameter("delta", .05, 1.0, .35)), "How small must δ become as ε shrinks?", "What implication remains true inside the bands?", "0<|x−a|<δ ⇒ |f(x)−L|<ε"),
         VisualProofLab("slope-triangle", "Slope triangles", "Coordinate Geometry", listOf("Plot a line through two points.", "Draw its horizontal run.", "Draw its vertical rise.", "Compare a second similar slope triangle."), listOf(ProofParameter("m", -3.0, 3.0, 1.5), ProofParameter("run", .5, 4.0, 2.0)), "How do rise and run change when the triangle is enlarged?", "Why does rise/run stay fixed along one line?", "m = rise/run = Δy/Δx"),
-        VisualProofLab("eigenvector-direction", "Eigenvector direction", "Linear algebra", listOf("Draw a vector v on a transformation grid.", "Apply a diagonal linear transformation.", "Compare v with Av.", "Identify directions that do not turn."), listOf(ProofParameter("lambda", -3.0, 3.0, 2.0), ProofParameter("other", -3.0, 3.0, .5)), "How does length or orientation change with λ?", "Which line through the origin is preserved?", "Av = λv"),
-        VisualProofLab("counting-paths", "Counting paths", "Probability", listOf("Branch into right or up choices.", "Arrange endpoints on a lattice.", "Group paths by their final step.", "Read Pascal's recurrence."), listOf(ProofParameter("right", 1.0, 6.0, 3.0), ProofParameter("up", 1.0, 6.0, 2.0)), "How many paths are added when the grid grows?", "Why does every path end with exactly one of two moves?", "C(r+u,r)=C(r+u−1,r−1)+C(r+u−1,r)"),
-        VisualProofLab("modular-clock", "Congruence on a clock", "Number Theory", listOf("Place a on an n-hour clock.", "Add whole turns of n.", "Compare the final clock positions.", "State the congruence."), listOf(ProofParameter("a", -20.0, 30.0, 17.0), ProofParameter("n", 2.0, 16.0, 12.0)), "How does the integer change after a full turn?", "Which remainder position stays fixed?", "a ≡ b (mod n) ⇔ n | (a−b)"),
+        VisualProofLab("eigenvector-direction", "Eigenvector direction", "Linear Algebra", listOf("Draw a test vector v on a transformation grid.", "Apply a diagonal linear transformation.", "Measure the turn using cross(v,Av).", "Compare an eigenvector with a general vector."), listOf(ProofParameter("lambda", -3.0, 3.0, 2.0), ProofParameter("other", -3.0, 3.0, .5), ProofParameter("vy", -2.0, 2.0, 0.0)), "How does the vector turn when it leaves an eigenvector axis?", "Which lines through the origin make cross(v,Av) zero?", "Av = λv"),
+        VisualProofLab("counting-paths", "Counting paths", "Combinatorics", listOf("Branch into right or up choices.", "Arrange endpoints on a lattice.", "Group paths by their final step.", "Read Pascal's recurrence."), listOf(ProofParameter("right", 1.0, 6.0, 3.0), ProofParameter("up", 1.0, 6.0, 2.0)), "How many paths are added when the grid grows?", "Why does every path end with exactly one of two moves?", "C(r+u,r)=C(r+u−1,r−1)+C(r+u−1,r)"),
+        VisualProofLab("modular-clock", "Congruence on a clock", "Number Theory", listOf("Place a and b on an n-hour clock.", "Compare their normalized remainders.", "Test whether n divides a−b.", "Confirm both conditions agree."), listOf(ProofParameter("a", -20.0, 30.0, 17.0), ProofParameter("b", -20.0, 30.0, 5.0), ProofParameter("n", 2.0, 16.0, 12.0)), "When do the two integers share a clock position?", "Why is sharing a remainder equivalent to a whole-number difference of turns?", "a ≡ b (mod n) ⇔ n | (a−b)"),
         VisualProofLab(
             "anscombe-quartet",
             "Anscombe's Quartet: always plot the data",
@@ -154,6 +165,7 @@ object VisualProofCatalog {
             "Why are numerical summaries alone insufficient to describe a dataset?",
             "matching summaries do not imply matching distributions",
             anscombeQuartet,
+            VisualEvidenceType.DataCounterexample,
         ),
     )
 
@@ -227,8 +239,11 @@ object VisualProofCatalog {
         ),
         "Probability & Statistics" to listOf(
             VisualProofSubcategory("Continuous Distributions", "Connect probability with symmetric area under a density curve", listOf("normal-area")),
-            VisualProofSubcategory("Sets & Counting", "Compare logical regions and count branching lattice paths", listOf("set-de-morgan", "counting-paths")),
             VisualProofSubcategory("Data Literacy", "Use published observations to expose what summary statistics can hide", listOf("anscombe-quartet")),
+        ),
+        "Discrete Mathematics" to listOf(
+            VisualProofSubcategory("Set Theory & Logic", "Compare set regions with independently generated truth rows", listOf("set-de-morgan")),
+            VisualProofSubcategory("Combinatorics", "Count lattice paths through disjoint cases and recurrence", listOf("counting-paths")),
         ),
         "Vectors" to listOf(
             VisualProofSubcategory("Vector Operations", "Build vector laws with movable arrows and common endpoints", listOf("vector-addition")),
@@ -243,40 +258,41 @@ object VisualProofCatalog {
     )
 
     private val commonFeatures = setOf(
-        ProofEnhancement.ColorCodedStages, ProofEnhancement.BeforeAfter, ProofEnhancement.MotionArrows,
-        ProofEnhancement.TransparentComparison, ProofEnhancement.MarkedInvariant, ProofEnhancement.ValidityLabels,
-        ProofEnhancement.ZoomDetail, ProofEnhancement.Checkpoints, ProofEnhancement.SymbolicVisualColumns,
-        ProofEnhancement.ConsistentColorGrammar, ProofEnhancement.Assumptions, ProofEnhancement.NotToScale,
+        ProofEnhancement.ColorCodedStages, ProofEnhancement.MarkedInvariant, ProofEnhancement.ValidityLabels,
+        ProofEnhancement.Checkpoints, ProofEnhancement.SymbolicVisualColumns,
+        ProofEnhancement.ConsistentColorGrammar, ProofEnhancement.Assumptions, ProofEnhancement.Counterexample,
         ProofEnhancement.ProofBreadcrumbs, ProofEnhancement.MatchedStepNumbers, ProofEnhancement.InlineDefinitions,
-        ProofEnhancement.EquivalentRepresentations, ProofEnhancement.ContradictionPanel, ProofEnhancement.ThereforeSummary,
+        ProofEnhancement.EquivalentRepresentations, ProofEnhancement.ThereforeSummary,
         ProofEnhancement.ReusableLegend, ProofEnhancement.DomainMask, ProofEnhancement.ErrorTrap,
-        ProofEnhancement.SimpleCase, ProofEnhancement.RealWorldAnalogy, ProofEnhancement.CompactTakeaway,
+        ProofEnhancement.SimpleCase, ProofEnhancement.CompactTakeaway,
     )
 
     private val featureMap = mapOf(
-        "algebra-square" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.GridBackground),
-        "pythagorean" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
-        "triangle-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
-        "parallelogram-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
-        "trapezoid-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
-        "circle-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.FadingLimit, ProofEnhancement.MotionTrails),
+        "algebra-square" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.BeforeAfter, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.TransparentComparison, ProofEnhancement.GridBackground),
+        "pythagorean" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.BeforeAfter, ProofEnhancement.MotionArrows, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.TransparentComparison, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
+        "triangle-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.BeforeAfter, ProofEnhancement.MotionArrows, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.TransparentComparison, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
+        "parallelogram-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.BeforeAfter, ProofEnhancement.MotionArrows, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.TransparentComparison, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
+        "trapezoid-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.BeforeAfter, ProofEnhancement.MotionArrows, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.TransparentComparison, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.MotionTrails),
+        "circle-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.BeforeAfter, ProofEnhancement.MotionArrows, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.TransparentComparison, ProofEnhancement.CutAndSlide, ProofEnhancement.Dissection, ProofEnhancement.FadingLimit, ProofEnhancement.MotionTrails),
         "absolute-inequality" to setOf(ProofEnhancement.NumberLine, ProofEnhancement.SymmetryAxes, ProofEnhancement.Counterexample),
-        "equation-balance" to setOf(ProofEnhancement.BalanceScale),
-        "set-de-morgan" to setOf(ProofEnhancement.VennDiagram, ProofEnhancement.TruthTable, ProofEnhancement.Counterexample),
+        "equation-balance" to setOf(ProofEnhancement.BalanceScale, ProofEnhancement.RealWorldAnalogy),
+        "set-de-morgan" to setOf(ProofEnhancement.VennDiagram, ProofEnhancement.TruthTable, ProofEnhancement.Counterexample, ProofEnhancement.ContradictionPanel, ProofEnhancement.NotToScale),
         "slope-triangle" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.SlopeTriangle),
-        "derivative-slope" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.SlopeTriangle, ProofEnhancement.TangentOverlay, ProofEnhancement.FadingLimit),
-        "integral-area" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.AccumulationStrips, ProofEnhancement.FadingLimit),
-        "epsilon-delta" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.FadingLimit, ProofEnhancement.EpsilonDeltaBands),
+        "derivative-slope" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.ZoomDetail, ProofEnhancement.SlopeTriangle, ProofEnhancement.TangentOverlay, ProofEnhancement.FadingLimit),
+        "integral-area" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.ZoomDetail, ProofEnhancement.AccumulationStrips, ProofEnhancement.FadingLimit, ProofEnhancement.RealWorldAnalogy),
+        "epsilon-delta" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.FadingLimit, ProofEnhancement.EpsilonDeltaBands, ProofEnhancement.NotToScale),
         "unit-circle-identity" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.UnitCircleOverlay, ProofEnhancement.SymmetryAxes, ProofEnhancement.VectorProjection),
         "vector-addition" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.VectorProjection, ProofEnhancement.MotionTrails),
         "matrix-transform" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.TransformationGrid, ProofEnhancement.DeterminantScaling, ProofEnhancement.MotionTrails),
-        "eigenvector-direction" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.TransformationGrid, ProofEnhancement.EigenvectorDirection, ProofEnhancement.MotionTrails),
+        "eigenvector-direction" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.TransformationGrid, ProofEnhancement.EigenvectorDirection, ProofEnhancement.MotionTrails, ProofEnhancement.RealWorldAnalogy),
         "counting-paths" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.CountingTree, ProofEnhancement.LatticePoints, ProofEnhancement.RecursiveStructure),
         "odd-sum-square" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.LatticePoints, ProofEnhancement.RecursiveStructure),
-        "modular-clock" to setOf(ProofEnhancement.ModularClock, ProofEnhancement.MotionTrails),
+        "modular-clock" to setOf(ProofEnhancement.ModularClock, ProofEnhancement.MotionTrails, ProofEnhancement.RealWorldAnalogy),
         "normal-area" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.AccumulationStrips, ProofEnhancement.SymmetryAxes),
         "anscombe-quartet" to setOf(ProofEnhancement.GridBackground, ProofEnhancement.Counterexample, ProofEnhancement.ErrorTrap),
-        "circle-angle" to setOf(ProofEnhancement.SymmetryAxes),
+        "triangle-angle-sum" to setOf(ProofEnhancement.NotToScale),
+        "circle-angle" to setOf(ProofEnhancement.SymmetryAxes, ProofEnhancement.NotToScale),
+        "intersecting-chords" to setOf(ProofEnhancement.NotToScale),
         "circle-ratio" to setOf(ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.MotionTrails),
         "shear-area" to setOf(ProofEnhancement.AreaModel, ProofEnhancement.SameQuantityDifferentShape, ProofEnhancement.CutAndSlide, ProofEnhancement.MotionTrails),
     )
@@ -308,33 +324,102 @@ object VisualProofCatalog {
     }
 
     private fun counterexampleFor(id: String): String = when (id) {
-        "absolute-inequality" -> "If r<0, no real x can satisfy |x|≤r; the assumption r≥0 is essential."
+        "triangle-angle-sum" -> "On a sphere, a triangle can have three right angles; the Euclidean parallel-postulate assumption matters."
+        "pythagorean" -> "For a non-right triangle the missing term is −2ab cos C, so a²+b² need not equal c²."
+        "derivative-slope" -> "At the corner of |x| at x=0, left and right secant slopes do not approach one tangent slope."
+        "integral-area" -> "A fixed finite rectangle count is only an approximation; it does not by itself equal the integral."
+        "normal-area" -> "For an asymmetric distribution the two tails at ±z need not match."
+        "vector-addition" -> "Matrix multiplication looks similar symbolically but is not generally commutative: AB can differ from BA."
+        "matrix-transform" -> "A nonlinear map can bend the square, so one constant determinant need not describe its whole image area."
+        "circle-ratio" -> "A six-sided polygon visibly underestimates circumference; one coarse measurement does not establish π."
+        "algebra-square" -> "The geometric partition needs non-negative lengths; signed algebra is required when a or b is negative."
+        "shear-area" -> "Changing perpendicular height while sliding the top edge changes area; a general distortion is not a shear."
+        "triangle-area" -> "Using a slanted side instead of perpendicular height gives the wrong area."
+        "parallelogram-area" -> "Measuring the slanted edge as height overestimates area unless that edge is perpendicular to the base."
+        "trapezoid-area" -> "If the named sides are not parallel, the rotated copies do not form the claimed parallelogram."
+        "circle-area" -> "With only a few sectors the rearranged boundary is scalloped, not an exact rectangle."
+        "polygon-angle-sum" -> "A self-intersecting star polygon is not covered by the simple-polygon triangulation used here."
+        "similar-triangles" -> "Equal-looking orientation is insufficient: changing only one side destroys the common scale ratio."
+        "intersecting-chords" -> "If one segment does not end on the same circle, the two products need not agree."
+        "circle-angle" -> "If the two angles do not subtend the same arc, the factor-of-two conclusion does not apply."
+        "unit-circle-identity" -> "On a circle of radius r, the squared coordinates sum to r², not automatically 1."
+        "odd-sum-square" -> "Replacing an odd border by an even number leaves a gap or protrusion instead of the next square."
+        "absolute-inequality" -> "The tempting rule |x|≤r ⇒ x≤r alone misses the lower boundary x≥−r."
         "equation-balance" -> "Dividing by a=0 is invalid and can turn one equation into a false conclusion."
         "set-de-morgan" -> "The tempting claim (A∪B)ᶜ=Aᶜ∪Bᶜ fails for a point lying in A only."
+        "epsilon-delta" -> "For the displayed f(x)=2x, choosing δ>ε/2 lets some allowed x escape the ε-band."
         "slope-triangle" -> "A vertical line has run 0, so rise/run is undefined."
         "eigenvector-direction" -> "A general vector need not preserve direction; only an eigenvector does."
-        else -> "Remove a listed assumption and the displayed construction may no longer establish the claim."
+        "counting-paths" -> "Allowing diagonal or backward moves creates paths outside the two final-step branches."
+        "modular-clock" -> "Equal ordinary distance from zero does not imply congruence; only equal normalized remainders do."
+        "anscombe-quartet" -> "Series I alone looks compatible with its summaries; assuming all matching summaries imply that shape fails on Series II–IV."
+        else -> error("Missing proof-specific counterexample for $id")
     }
 
     private fun errorTrapFor(id: String): String = when (id) {
+        "triangle-angle-sum" -> "Do not infer 180° merely from the drawing; transfer the angles using the constructed parallel line."
+        "pythagorean" -> "The theorem applies to right triangles; verify the right angle before comparing square areas."
         "algebra-square" -> "Do not drop the two ab rectangles: (a+b)² is not a²+b²."
         "derivative-slope" -> "Do not substitute h=0 before cancelling h; the difference quotient would divide by zero."
         "integral-area" -> "A finite rectangle sum is an approximation, not automatically the exact integral."
-        "equation-balance" -> "An operation on only one side tips the balance and changes the solution set."
-        "epsilon-delta" -> "δ must control every qualifying x, not just one tested point."
+        "normal-area" -> "2Φ(z)−1 is for symmetric bounds around zero in the standard normal distribution."
+        "vector-addition" -> "Translate a vector without rotating or resizing it when building the head-to-tail path."
         "matrix-transform" -> "Signed determinant records orientation; ordinary area uses |det A|."
+        "circle-ratio" -> "A polygon perimeter approaches circumference; do not label a coarse polygon estimate as exact."
+        "shear-area" -> "Use perpendicular height, not the slanted side length."
+        "triangle-area" -> "Sliding the apex preserves area only while base and perpendicular height remain fixed."
+        "parallelogram-area" -> "The removed triangle must be translated intact, with no overlap or gap."
+        "trapezoid-area" -> "The two copies form base a+b only when a and b are the parallel sides."
+        "circle-area" -> "The sector construction proves a limit; a finite sector rearrangement is not a perfect rectangle."
+        "polygon-angle-sum" -> "A fan from one vertex creates n−2 triangles, not n triangles."
+        "similar-triangles" -> "Compare corresponding sides in the same order."
+        "intersecting-chords" -> "Use the four distances from P to the circle, not full chord lengths."
+        "circle-angle" -> "The central and inscribed angles must intercept the same arc."
+        "unit-circle-identity" -> "The identity uses squared projection lengths; sin θ+cos θ is not constant."
+        "odd-sum-square" -> "The kth border contains 2k−1 tiles because the shared corner is counted once."
+        "absolute-inequality" -> "Distance at most r creates two boundaries, −r and r."
+        "equation-balance" -> "An operation on only one side tips the balance and changes the solution set."
+        "set-de-morgan" -> "Complement reverses union to intersection; it does not distribute without changing the operator."
+        "epsilon-delta" -> "δ must control every qualifying x, not just one tested point."
+        "slope-triangle" -> "Keep rise and run signed and never divide by a zero run."
+        "eigenvector-direction" -> "A stretched vector is an eigenvector only when Av is collinear with v."
+        "counting-paths" -> "The two recurrence branches are disjoint because the final step cannot be both right and up."
+        "modular-clock" -> "Normalize negative remainders into 0 through n−1 before comparing positions."
         "anscombe-quartet" -> "Matching means and regression coefficients do not make the four point clouds interchangeable."
-        else -> "A matching sketch alone is not a proof; use the highlighted invariant and validity reason."
+        else -> error("Missing proof-specific error trap for $id")
     }
 
     private fun simpleCaseFor(id: String): String = when (id) {
+        "triangle-angle-sum" -> "A right isosceles triangle gives 45°+45°+90°=180°."
         "pythagorean" -> "Try a=3, b=4: 9+16=25=5²."
+        "derivative-slope" -> "At x=2, secant slopes are 5 for h=1 and 4.1 for h=0.1, approaching 4."
+        "integral-area" -> "On [0,3], the exact area is 9; increase n and watch the midpoint sum approach it."
+        "normal-area" -> "At z=1, numerical integration and 2Φ(1)−1 both give about 0.6827."
+        "vector-addition" -> "Use u=(2,1), v=(−1,3): both orders finish at (1,4)."
+        "matrix-transform" -> "For diag(2,3), the transformed unit square has coordinate area 6=|det A|."
+        "circle-ratio" -> "Keep r=2 and increase n from 6 to 120; perimeter/diameter approaches π without changing scale."
         "algebra-square" -> "Try a=2, b=1: the four areas 4+2+2+1 total 9."
+        "shear-area" -> "A 4×2 rectangle and any horizontal shear of it both have coordinate area 8."
+        "triangle-area" -> "With base 4 and height 3, every horizontal apex position gives coordinate area 6."
+        "parallelogram-area" -> "Base 4 and height 2.5 give area 10 for shear 0, 1, or −2."
+        "trapezoid-area" -> "Parallel sides 5 and 3 with height 2 give area 8."
+        "circle-area" -> "For r=1, increase sectors from 6 to 60 and watch the area gap shrink toward zero."
+        "polygon-angle-sum" -> "A pentagon creates three fan triangles, so its measured interior sum is 540°."
+        "similar-triangles" -> "Scale a 3-4-5 triangle by 2; all three measured side ratios become 2."
+        "intersecting-chords" -> "At the circle center, each segment equals r and both products equal r²."
+        "circle-angle" -> "An 80° central angle and a point on the opposite arc produce a measured 40° inscribed angle."
+        "unit-circle-identity" -> "At 30°, the squared legs 3/4 and 1/4 add to radius²=1."
+        "odd-sum-square" -> "The borders 1,3,5,7 contain 16 tiles, forming a 4×4 square."
+        "absolute-inequality" -> "With r=3, x=2 satisfies both predicates and x=4 satisfies neither."
+        "equation-balance" -> "For 2x+2=10, subtract 2 and divide by 2 to get x=4; substitution restores equality."
         "set-de-morgan" -> "Test one point in neither set: both expressions are true."
+        "epsilon-delta" -> "For ε=0.8 in f(x)=2x near x=1, any δ≤0.4 keeps the graph inside the band."
+        "slope-triangle" -> "On y=1.5x, runs 2 and 4 give rises 3 and 6; both ratios are 1.5."
+        "eigenvector-direction" -> "Set vy=0: v lies on the x-axis and cross(v,Av)=0; then move vy to see a turn."
         "modular-clock" -> "17 and 5 land together on a 12-hour clock because 17−5=12."
         "counting-paths" -> "A 2×1 grid has three move orders: RRU, RUR, URR."
         "anscombe-quartet" -> "Series I is roughly linear; Series II curves, Series III has an influential point, and Series IV is nearly vertical."
-        else -> "Set the controls to small whole numbers and compare both measured quantities."
+        else -> error("Missing proof-specific simple case for $id")
     }
 
     private fun analogyFor(id: String): String? = when (id) {
@@ -466,8 +551,22 @@ class VisualProofEngine {
                 invariant = "∠A + ∠B + ∠C = 180°"
             }
             "pythagorean" -> {
-                val a = p.getValue("a"); val b = p.getValue("b"); val c2 = a * a + b * b
-                measurements.putAll(mapOf("a²" to a * a, "b²" to b * b, "c²" to c2)); residual = abs(c2 - a * a - b * b); invariant = "a²+b²=c²"
+                val a = p.getValue("a"); val b = p.getValue("b")
+                val hypotenuseSquared = Vec2(a, 0.0).distanceTo(Vec2(0.0, b)).pow(2)
+                val outerArea = (a + b).pow(2)
+                val centralAreaByDissection = outerArea - 4 * (a * b / 2)
+                measurements.putAll(
+                    mapOf(
+                        "a²+b² from legs" to a * a + b * b,
+                        "c² from distance" to hypotenuseSquared,
+                        "central area from dissection" to centralAreaByDissection,
+                    ),
+                )
+                residual = maxOf(
+                    abs(hypotenuseSquared - (a * a + b * b)),
+                    abs(centralAreaByDissection - hypotenuseSquared),
+                )
+                invariant = "leg-square area = dissection area = hypotenuse-square area"
             }
             "derivative-slope" -> {
                 val x = p.getValue("x"); val h = p.getValue("h"); val secant = ((x + h).pow(2) - x.pow(2)) / h; val tangent = 2 * x
@@ -495,55 +594,142 @@ class VisualProofEngine {
                 invariant = "midpoint sum → b³/3 with error ≤ b³/(12n²)"
             }
             "normal-area" -> {
-                val z = p.getValue("z"); val middle = 2 * normalCdf(z) - 1
-                measurements.putAll(mapOf("middle area" to middle, "left tail" to (1 - middle) / 2, "right tail" to (1 - middle) / 2)); residual = 0.0; invariant = "left tail = right tail"
+                val z = p.getValue("z")
+                val cdfArea = 2 * normalCdf(z) - 1
+                val integratedArea = simpsonIntegral(-z, z, 400) { x -> exp(-x * x / 2) / sqrt(2 * PI) }
+                val leftTail = normalCdf(-z)
+                val rightTail = 1 - normalCdf(z)
+                measurements.putAll(
+                    mapOf(
+                        "numerically integrated area" to integratedArea,
+                        "CDF identity area" to cdfArea,
+                        "left tail" to leftTail,
+                        "right tail" to rightTail,
+                    ),
+                )
+                residual = maxOf(abs(integratedArea - cdfArea), abs(leftTail - rightTail))
+                invariant = "independent numerical area agrees with symmetric CDF subtraction"
             }
             "vector-addition" -> {
                 val ux = p.getValue("ux"); val uy = p.getValue("uy"); val vx = p.getValue("vx"); val vy = p.getValue("vy")
-                measurements.putAll(mapOf("result x" to ux + vx, "result y" to uy + vy)); residual = abs((ux + vx) - (vx + ux)) + abs((uy + vy) - (vy + uy)); invariant = "u+v=v+u"
+                val endpointUv = Vec2(ux, uy) + Vec2(vx, vy)
+                val endpointVu = Vec2(vx, vy) + Vec2(ux, uy)
+                measurements.putAll(
+                    mapOf(
+                        "u then v endpoint x" to endpointUv.x,
+                        "u then v endpoint y" to endpointUv.y,
+                        "v then u endpoint x" to endpointVu.x,
+                        "v then u endpoint y" to endpointVu.y,
+                    ),
+                )
+                residual = endpointUv.distanceTo(endpointVu); invariant = "both translated head-to-tail paths finish at the same coordinate"
             }
             "matrix-transform" -> {
-                val determinant = p.getValue("a") * p.getValue("d") - p.getValue("b") * p.getValue("c")
-                measurements.putAll(mapOf("determinant" to determinant, "area scale" to abs(determinant))); residual = 0.0; invariant = "area scale = |det(A)|"
+                val a = p.getValue("a"); val b = p.getValue("b"); val c = p.getValue("c"); val d = p.getValue("d")
+                val determinant = a * d - b * c
+                val transformed = listOf(Vec2(0.0, 0.0), Vec2(a, c), Vec2(a + b, c + d), Vec2(b, d))
+                val measuredArea = polygonArea(transformed)
+                measurements.putAll(mapOf("determinant" to determinant, "coordinate polygon area" to measuredArea, "expected |det A|" to abs(determinant)))
+                residual = abs(measuredArea - abs(determinant))
+                invariant = "shoelace area of the transformed unit square equals |det(A)|"
             }
             "circle-ratio" -> {
-                val r = p.getValue("r"); val circumference = 2 * PI * r; val diameter = 2 * r
-                measurements.putAll(mapOf("circumference" to circumference, "diameter" to diameter, "ratio" to circumference / diameter)); residual = abs(circumference / diameter - PI); invariant = "C/d=π"
+                val r = p.getValue("r")
+                val n = p.getValue("n").toInt().coerceAtLeast(6)
+                val polygonPerimeter = 2 * n * r * kotlin.math.sin(PI / n)
+                val diameter = 2 * r
+                val estimatedRatio = polygonPerimeter / diameter
+                val convergenceBound = PI.pow(3) / (6 * n * n)
+                measurements.putAll(
+                    mapOf(
+                        "polygon sides" to n.toDouble(),
+                        "measured perimeter" to polygonPerimeter,
+                        "diameter" to diameter,
+                        "perimeter/diameter" to estimatedRatio,
+                        "error to π" to abs(estimatedRatio - PI),
+                        "certified ratio error bound" to convergenceBound,
+                    ),
+                )
+                residual = abs(estimatedRatio - PI)
+                invariant = "the scale-independent polygon ratio converges upward to π"
             }
             "algebra-square" -> {
-                val a = p.getValue("a"); val b = p.getValue("b"); val whole = (a + b).pow(2); val parts = a * a + 2 * a * b + b * b
-                measurements.putAll(mapOf("whole" to whole, "parts" to parts)); residual = abs(whole - parts); invariant = "(a+b)²=a²+2ab+b²"
+                val a = p.getValue("a"); val b = p.getValue("b")
+                val outerArea = polygonArea(listOf(Vec2(0.0, 0.0), Vec2(a + b, 0.0), Vec2(a + b, a + b), Vec2(0.0, a + b)))
+                val partitionAreas = listOf(a * a, a * b, a * b, b * b)
+                measurements.putAll(mapOf("coordinate outer-square area" to outerArea, "sum of four partition areas" to partitionAreas.sum(), "two ab rectangles" to partitionAreas[1] + partitionAreas[2]))
+                residual = abs(outerArea - partitionAreas.sum()); invariant = "the four non-overlapping coordinate regions exactly partition the outer square"
             }
             "shear-area" -> {
                 val base = p.getValue("base"); val height = p.getValue("height"); val shear = p.getValue("shear")
                 val rectangleArea = base * height
-                val transformedDeterminant = base * height - 0.0 * shear
-                measurements.putAll(mapOf("area before" to rectangleArea, "area after shear" to abs(transformedDeterminant), "horizontal shift" to shear))
-                residual = abs(rectangleArea - abs(transformedDeterminant)); invariant = "shear determinant is 1, so base×height stays constant"
+                val shearedArea = polygonArea(listOf(Vec2(0.0, 0.0), Vec2(base, 0.0), Vec2(base + shear, height), Vec2(shear, height)))
+                measurements.putAll(mapOf("rectangle area" to rectangleArea, "coordinate area after shear" to shearedArea, "horizontal shift" to shear))
+                residual = abs(rectangleArea - shearedArea); invariant = "coordinate area remains base×height under horizontal shear"
             }
             "triangle-area" -> {
-                val base = p.getValue("base"); val height = p.getValue("height"); val triangle = base * height / 2; val doubled = 2 * triangle
-                measurements.putAll(mapOf("triangle area" to triangle, "two copies" to doubled, "parallelogram" to base * height)); residual = abs(doubled - base * height); invariant = "two equal triangles = bh"
+                val base = p.getValue("base"); val height = p.getValue("height"); val apex = p.getValue("apex")
+                val coordinateArea = polygonArea(listOf(Vec2(0.0, 0.0), Vec2(base, 0.0), Vec2(apex, height)))
+                val formulaArea = base * height / 2
+                measurements.putAll(mapOf("coordinate triangle area" to coordinateArea, "bh/2" to formulaArea, "apex position" to apex))
+                residual = abs(coordinateArea - formulaArea); invariant = "horizontal apex motion preserves coordinate area bh/2"
             }
             "parallelogram-area" -> {
-                val base = p.getValue("base"); val height = p.getValue("height"); val area = base * height
-                measurements.putAll(mapOf("slanted area" to area, "rectangle area" to area, "shear" to p.getValue("shear"))); residual = 0.0; invariant = "cut-and-slide preserves bh"
+                val base = p.getValue("base"); val height = p.getValue("height"); val shear = p.getValue("shear")
+                val coordinateArea = polygonArea(listOf(Vec2(0.0, 0.0), Vec2(base, 0.0), Vec2(base + shear, height), Vec2(shear, height)))
+                val rectangleArea = base * height
+                measurements.putAll(mapOf("coordinate slanted area" to coordinateArea, "rectangle area" to rectangleArea, "shear" to shear))
+                residual = abs(coordinateArea - rectangleArea); invariant = "cut-and-slide preserves coordinate area bh"
             }
             "trapezoid-area" -> {
-                val a = p.getValue("a"); val b = p.getValue("b"); val h = p.getValue("height"); val trapezoid = (a + b) * h / 2
-                measurements.putAll(mapOf("one trapezoid" to trapezoid, "two copies" to 2 * trapezoid, "parallelogram" to (a + b) * h)); residual = abs(2 * trapezoid - (a + b) * h); invariant = "two copies form base a+b"
+                val a = p.getValue("a"); val b = p.getValue("b"); val h = p.getValue("height")
+                val inset = (a - b) / 2
+                val coordinateArea = polygonArea(listOf(Vec2(0.0, 0.0), Vec2(a, 0.0), Vec2(a - inset, h), Vec2(inset, h)))
+                val formulaArea = (a + b) * h / 2
+                measurements.putAll(mapOf("coordinate trapezoid area" to coordinateArea, "(a+b)h/2" to formulaArea, "doubled area" to 2 * coordinateArea))
+                residual = abs(coordinateArea - formulaArea); invariant = "coordinate area doubles to a parallelogram of base a+b"
             }
             "circle-area" -> {
-                val r = p.getValue("r"); val n = p.getValue("n").toInt().coerceAtLeast(6); val exact = PI * r * r
-                measurements.putAll(mapOf("radius" to r, "sectors" to n.toDouble(), "base pi r" to PI * r, "area" to exact)); residual = 0.0; invariant = "sector rearrangement tends to pi r by r"
+                val r = p.getValue("r"); val n = p.getValue("n").toInt().coerceAtLeast(6)
+                val approximateArea = n * r * r * kotlin.math.sin(2 * PI / n) / 2
+                val exact = PI * r * r
+                val convergenceBound = 2 * PI.pow(3) * r * r / (3 * n * n)
+                measurements.putAll(
+                    mapOf(
+                        "radius" to r,
+                        "sectors" to n.toDouble(),
+                        "inscribed-sector area" to approximateArea,
+                        "πr² limit" to exact,
+                        "area gap" to exact - approximateArea,
+                        "certified area error bound" to convergenceBound,
+                    ),
+                )
+                residual = abs(exact - approximateArea); invariant = "sector approximation converges upward to πr²"
             }
             "polygon-angle-sum" -> {
-                val n = p.getValue("n").toInt().coerceAtLeast(3); val triangles = n - 2; val sum = triangles * 180.0
-                measurements.putAll(mapOf("sides" to n.toDouble(), "triangles" to triangles.toDouble(), "angle sum" to sum)); residual = abs(sum - (n - 2) * 180.0); invariant = "n-gon splits into n-2 triangles"
+                val n = p.getValue("n").toInt().coerceAtLeast(3)
+                val radius = p.getValue("radius")
+                val vertices = (0 until n).map { index ->
+                    val theta = 2 * PI * index / n
+                    Vec2(radius * kotlin.math.cos(theta), radius * kotlin.math.sin(theta))
+                }
+                val measuredSum = vertices.indices.sumOf { index ->
+                    val current = vertices[index]
+                    angle(vertices[(index - 1 + n) % n] - current, vertices[(index + 1) % n] - current)
+                }
+                val expected = (n - 2) * 180.0
+                measurements.putAll(mapOf("sides" to n.toDouble(), "triangles" to (n - 2).toDouble(), "measured vertex-angle sum" to measuredSum, "(n-2)×180" to expected))
+                residual = abs(measuredSum - expected); invariant = "measured vertex angles equal the sum of n-2 triangle angle sums"
             }
             "similar-triangles" -> {
-                val a = p.getValue("a"); val b = p.getValue("b"); val k = p.getValue("k"); val c = sqrt(a * a + b * b)
-                measurements.putAll(mapOf("a'/a" to (k * a) / a, "b'/b" to (k * b) / b, "c'/c" to (k * c) / c)); residual = abs((k * a) / a - k) + abs((k * b) / b - k); invariant = "all corresponding side ratios equal k"
+                val a = p.getValue("a"); val b = p.getValue("b"); val k = p.getValue("k")
+                val original = listOf(Vec2(0.0, 0.0), Vec2(a, 0.0), Vec2(0.0, b))
+                val scaled = original.map { Vec2(it.x * k, it.y * k) }
+                val originalSides = listOf(original[0].distanceTo(original[1]), original[0].distanceTo(original[2]), original[1].distanceTo(original[2]))
+                val scaledSides = listOf(scaled[0].distanceTo(scaled[1]), scaled[0].distanceTo(scaled[2]), scaled[1].distanceTo(scaled[2]))
+                val ratios = originalSides.indices.map { scaledSides[it] / originalSides[it] }
+                measurements.putAll(mapOf("a'/a" to ratios[0], "b'/b" to ratios[1], "c'/c" to ratios[2], "scale k" to k))
+                residual = ratios.maxOf { abs(it - k) }; invariant = "three independently measured corresponding side ratios equal k"
             }
             "intersecting-chords" -> {
                 val r = p.getValue("r"); val px = p.getValue("p") * r; val angle = Math.toRadians(p.getValue("angle")); val dot = px * kotlin.math.cos(angle); val root = sqrt((dot * dot + r * r - px * px).coerceAtLeast(0.0))
@@ -551,12 +737,27 @@ class VisualProofEngine {
                 measurements.putAll(mapOf("PA×PB" to pa * pb, "PC×PD" to pc * pd, "circle power" to r * r - px * px)); residual = abs(pa * pb - pc * pd); invariant = "both products equal r²-OP²"
             }
             "circle-angle" -> {
-                val center = p.getValue("arc"); val inscribed = center / 2
-                measurements.putAll(mapOf("center angle" to center, "circumference angle" to inscribed, "ratio" to center / inscribed)); residual = abs(center - 2 * inscribed); invariant = "central angle = twice inscribed angle"
+                val arc = Math.toRadians(p.getValue("arc"))
+                val cAngle = Math.toRadians(p.getValue("c"))
+                val r = p.getValue("r")
+                val center = Vec2(0.0, 0.0)
+                val a = Vec2(r * kotlin.math.cos(-arc / 2), r * kotlin.math.sin(-arc / 2))
+                val b = Vec2(r * kotlin.math.cos(arc / 2), r * kotlin.math.sin(arc / 2))
+                val c = Vec2(r * kotlin.math.cos(cAngle), r * kotlin.math.sin(cAngle))
+                val central = angle(a - center, b - center)
+                val inscribed = angle(a - c, b - c)
+                measurements.putAll(mapOf("measured center angle" to central, "measured circumference angle" to inscribed, "twice circumference angle" to 2 * inscribed))
+                residual = abs(central - 2 * inscribed); invariant = "independently measured central angle = twice the inscribed angle"
             }
             "unit-circle-identity" -> {
-                val theta = Math.toRadians(p.getValue("theta")); val cosine = kotlin.math.cos(theta); val sine = kotlin.math.sin(theta); val sum = cosine * cosine + sine * sine
-                measurements.putAll(mapOf("cos theta" to cosine, "sin theta" to sine, "squared sum" to sum)); residual = abs(sum - 1.0); invariant = "horizontal² + vertical² = radius²"
+                val theta = Math.toRadians(p.getValue("theta"))
+                val point = Vec2(kotlin.math.cos(theta), kotlin.math.sin(theta))
+                val projection = Vec2(point.x, 0.0)
+                val horizontalSquared = Vec2(0.0, 0.0).distanceTo(projection).pow(2)
+                val verticalSquared = projection.distanceTo(point).pow(2)
+                val radiusSquared = Vec2(0.0, 0.0).distanceTo(point).pow(2)
+                measurements.putAll(mapOf("horizontal²" to horizontalSquared, "vertical²" to verticalSquared, "radius²" to radiusSquared, "leg squared sum" to horizontalSquared + verticalSquared))
+                residual = abs(horizontalSquared + verticalSquared - radiusSquared); invariant = "coordinate projection legs satisfy Pythagoras on the unit radius"
             }
             "odd-sum-square" -> {
                 val n = p.getValue("n").toInt().coerceAtLeast(1); val sum = (1..n).sumOf { 2 * it - 1 }.toDouble(); val square = (n * n).toDouble()
@@ -564,8 +765,19 @@ class VisualProofEngine {
             }
             "absolute-inequality" -> {
                 val x = p.getValue("x"); val r = p.getValue("r")
-                measurements.putAll(mapOf("|x|" to abs(x), "radius r" to r, "inside interval" to if (abs(x) <= r) 1.0 else 0.0))
-                residual = 0.0; invariant = "reflection changes sign but preserves distance from zero"
+                val distancePredicate = abs(x) <= r
+                val intervalPredicate = x >= -r && x <= r
+                measurements.putAll(
+                    mapOf(
+                        "|x|" to abs(x),
+                        "radius r" to r,
+                        "|x|≤r" to distancePredicate.asDouble(),
+                        "−r≤x≤r" to intervalPredicate.asDouble(),
+                        "inside interval" to intervalPredicate.asDouble(),
+                    ),
+                )
+                residual = abs(distancePredicate.asDouble() - intervalPredicate.asDouble())
+                invariant = "distance and interval predicates agree at both boundaries and every tested x"
             }
             "equation-balance" -> {
                 val a = p.getValue("a"); val b = p.getValue("b"); val c = p.getValue("c"); val solution = (c - b) / a
@@ -573,8 +785,24 @@ class VisualProofEngine {
                 residual = abs((a * solution + b) - c); invariant = "equal operations preserve equal pan weights"
             }
             "set-de-morgan" -> {
-                measurements.putAll(mapOf("matching truth rows" to 4.0, "total truth rows" to 4.0))
-                residual = 0.0; invariant = "both expressions shade the outside-of-both region"
+                val inA = p.getValue("inA") >= .5
+                val inB = p.getValue("inB") >= .5
+                fun left(a: Boolean, b: Boolean) = !(a || b)
+                fun right(a: Boolean, b: Boolean) = !a && !b
+                val rows = listOf(false to false, false to true, true to false, true to true)
+                val matchingRows = rows.count { (a, b) -> left(a, b) == right(a, b) }
+                val selectedLeft = left(inA, inB)
+                val selectedRight = right(inA, inB)
+                measurements.putAll(
+                    mapOf(
+                        "selected left expression" to selectedLeft.asDouble(),
+                        "selected right expression" to selectedRight.asDouble(),
+                        "matching truth rows" to matchingRows.toDouble(),
+                        "total truth rows" to rows.size.toDouble(),
+                    ),
+                )
+                residual = abs(selectedLeft.asDouble() - selectedRight.asDouble()) + (rows.size - matchingRows)
+                invariant = "independently generated region predicates agree in every truth row"
             }
             "epsilon-delta" -> {
                 val epsilon = p.getValue("epsilon"); val delta = p.getValue("delta"); val maximumOutputError = 2.0 * delta
@@ -583,13 +811,22 @@ class VisualProofEngine {
             }
             "slope-triangle" -> {
                 val m = p.getValue("m"); val run = p.getValue("run"); val rise = m * run
-                measurements.putAll(mapOf("rise" to rise, "run" to run, "rise/run" to rise / run, "larger triangle ratio" to (2 * rise) / (2 * run)))
-                residual = abs(rise / run - (2 * rise) / (2 * run)); invariant = "similar slope triangles keep rise/run fixed"
+                val firstStart = Vec2(0.0, 0.0); val firstEnd = Vec2(run, rise)
+                val secondStart = Vec2(-run, -rise); val secondEnd = Vec2(2 * run, 2 * rise)
+                val firstRatio = (firstEnd.y - firstStart.y) / (firstEnd.x - firstStart.x)
+                val secondRatio = (secondEnd.y - secondStart.y) / (secondEnd.x - secondStart.x)
+                measurements.putAll(mapOf("first rise/run" to firstRatio, "second rise/run" to secondRatio, "line parameter m" to m))
+                residual = maxOf(abs(firstRatio - secondRatio), abs(firstRatio - m)); invariant = "coordinate differences on two independently sized triangles give the same slope"
             }
             "eigenvector-direction" -> {
-                val lambda = p.getValue("lambda"); val other = p.getValue("other")
-                measurements.putAll(mapOf("eigenvalue λ" to lambda, "other axis scale" to other, "cross(v,Av)" to 0.0))
-                residual = 0.0; invariant = "v and Av are collinear even when λ reverses orientation"
+                val lambda = p.getValue("lambda"); val other = p.getValue("other"); val vy = p.getValue("vy")
+                val v = Vec2(1.0, vy)
+                val transformed = Vec2(lambda, other * vy)
+                val cross = v.x * transformed.y - v.y * transformed.x
+                val scale = sqrt((v.x * v.x + v.y * v.y) * (transformed.x * transformed.x + transformed.y * transformed.y)).coerceAtLeast(1e-12)
+                val normalizedTurn = abs(cross) / scale
+                measurements.putAll(mapOf("x-axis eigenvalue λ" to lambda, "other axis scale" to other, "cross(v,Av)" to cross, "normalized turn" to normalizedTurn))
+                residual = normalizedTurn; invariant = "cross(v,Av)=0 exactly on preserved eigenvector directions"
             }
             "counting-paths" -> {
                 val right = p.getValue("right").toInt().coerceAtLeast(1); val up = p.getValue("up").toInt().coerceAtLeast(1)
@@ -598,9 +835,21 @@ class VisualProofEngine {
                 residual = abs(total - fromLeft - fromBelow); invariant = "two disjoint final-step branches exhaust all paths"
             }
             "modular-clock" -> {
-                val a = p.getValue("a").toInt(); val n = p.getValue("n").toInt().coerceAtLeast(2); val remainder = ((a % n) + n) % n; val equivalent = a - n
-                measurements.putAll(mapOf("a" to a.toDouble(), "modulus n" to n.toDouble(), "remainder" to remainder.toDouble(), "equivalent a−n" to equivalent.toDouble()))
-                residual = abs((((equivalent % n) + n) % n) - remainder).toDouble(); invariant = "whole turns preserve the remainder position"
+                val a = p.getValue("a").toInt(); val b = p.getValue("b").toInt(); val n = p.getValue("n").toInt().coerceAtLeast(2)
+                val remainderA = ((a % n) + n) % n
+                val remainderB = ((b % n) + n) % n
+                val samePosition = remainderA == remainderB
+                val divisibleDifference = (a - b) % n == 0
+                measurements.putAll(
+                    mapOf(
+                        "a remainder" to remainderA.toDouble(),
+                        "b remainder" to remainderB.toDouble(),
+                        "same clock position" to samePosition.asDouble(),
+                        "n divides a−b" to divisibleDifference.asDouble(),
+                    ),
+                )
+                residual = abs(samePosition.asDouble() - divisibleDifference.asDouble())
+                invariant = "same normalized remainder iff the difference is a whole number of turns"
             }
             "anscombe-quartet" -> {
                 val selectedSeries = p.getValue("series").toInt().coerceIn(1, 4)
@@ -640,6 +889,9 @@ class VisualProofEngine {
         val tolerance = when (lab.id) {
             "derivative-slope" -> p.getValue("h") + 1e-9
             "integral-area" -> measurements.getValue("certified error bound") + 1e-9
+            "normal-area" -> 1e-5
+            "circle-ratio" -> measurements.getValue("certified ratio error bound") + 1e-9
+            "circle-area" -> measurements.getValue("certified area error bound") + 1e-9
             "anscombe-quartet" -> .02
             else -> 1e-7
         }
@@ -655,6 +907,23 @@ class VisualProofEngine {
         val tail = density * t * (.319381530 + t * (-.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))))
         return if (value >= 0) 1 - tail else tail
     }
+    private fun simpsonIntegral(start: Double, end: Double, intervals: Int, function: (Double) -> Double): Double {
+        val n = if (intervals % 2 == 0) intervals else intervals + 1
+        val width = (end - start) / n
+        var weighted = function(start) + function(end)
+        for (index in 1 until n) weighted += (if (index % 2 == 0) 2 else 4) * function(start + index * width)
+        return weighted * width / 3
+    }
+    private fun polygonArea(vertices: List<Vec2>): Double {
+        if (vertices.size < 3) return 0.0
+        val twiceSignedArea = vertices.indices.sumOf { index ->
+            val current = vertices[index]
+            val next = vertices[(index + 1) % vertices.size]
+            current.x * next.y - current.y * next.x
+        }
+        return abs(twiceSignedArea) / 2
+    }
+    private fun Boolean.asDouble(): Double = if (this) 1.0 else 0.0
     private fun binomial(n: Int, k: Int): Double {
         if (k !in 0..n) return 0.0
         val smaller = minOf(k, n - k)

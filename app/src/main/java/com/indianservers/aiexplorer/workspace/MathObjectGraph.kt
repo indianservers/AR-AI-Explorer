@@ -3,6 +3,7 @@ package com.indianservers.aiexplorer.workspace
 import com.indianservers.aiexplorer.core.CurveSample
 import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.core.GraphAnalysis
+import com.indianservers.aiexplorer.core.InteractiveParameterEngine
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.stripEquation
 import com.indianservers.aiexplorer.core.trim
@@ -148,19 +149,18 @@ class MathObjectGraph(
     }
 
     private fun detectParameters(rows: List<MathExpressionRow>, parameterValues: Map<String, Double>): List<MathParameterRow> {
-        val names = rows.flatMap { identifiers(stripEquation(it.expression)) }
-            .filterNot { it in reservedIdentifiers }
-            .distinct()
-            .sorted()
-        return names.map { name ->
-            val default = parameterValues[name] ?: defaultParameterValue(name)
+        return InteractiveParameterEngine.discover(
+            expressions = rows.map { stripEquation(it.expression) },
+            values = parameterValues,
+            independentVariables = setOf("x", "y", "t", "r", "theta"),
+        ).map { parameter ->
             MathParameterRow(
-                id = "param-$name",
-                name = name,
-                value = default,
-                min = if (name == "a") -8.0 else -10.0,
-                max = if (name == "a") 8.0 else 10.0,
-                step = if (abs(default) >= 10.0) 1.0 else 0.1,
+                id = "param-${parameter.name}",
+                name = parameter.name,
+                value = parameter.value,
+                min = parameter.minimum,
+                max = parameter.maximum,
+                step = parameter.step,
             )
         }
     }
@@ -171,13 +171,11 @@ class MathObjectGraph(
             ?.message
 
     private fun substituteParameters(expression: String, parameterValues: Map<String, Double>): String {
-        var resolved = expression
-        parameterValues.forEach { (name, value) ->
-            if (name !in reservedIdentifiers) {
-                resolved = resolved.replace(Regex("\\b${Regex.escape(name)}\\b"), "(${trim(value)})")
-            }
-        }
-        return resolved
+        return InteractiveParameterEngine.resolve(
+            expression,
+            parameterValues,
+            independentVariables = setOf("x", "y", "t", "r", "theta"),
+        )
     }
 
     private fun algebra(resolved: String, source: String, parameterValues: Map<String, Double>): MathObjectAlgebra {
@@ -217,16 +215,6 @@ class MathObjectGraph(
         return if (abs(check - predicted) < 1e-7 && abs(a) > 1e-12) Triple(a, b, c) else null
     }
 
-    private fun identifiers(expression: String): List<String> =
-        Regex("[A-Za-z][A-Za-z0-9_]*").findAll(expression).map { it.value }.toList()
-
-    private fun defaultParameterValue(name: String): Double = when (name) {
-        "a" -> 1.0
-        "b" -> 0.0
-        "c" -> 1.0
-        else -> 1.0
-    }
-
     private fun exactNumber(value: Double, provenance: String): ExactNumericValue {
         val clean = if (abs(value) < 1e-12) 0.0 else value
         val whole = round(clean)
@@ -237,13 +225,4 @@ class MathObjectGraph(
     private fun Map<String, Double>.describe(): String =
         entries.sortedBy { it.key }.joinToString { "${it.key}=${trim(it.value)}" }.ifBlank { "no parameters" }
 
-    private companion object {
-        val reservedIdentifiers = setOf(
-            "x", "y", "t", "pi", "e",
-            "sin", "cos", "tan", "sec", "csc", "cot",
-            "sinh", "cosh", "tanh", "asin", "acos", "atan",
-            "sqrt", "abs", "exp", "ln", "log", "floor", "ceil",
-            "sign", "min", "max", "if", "r",
-        )
-    }
 }

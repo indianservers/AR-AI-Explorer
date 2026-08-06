@@ -605,7 +605,7 @@ class CommandHistory(private val limit: Int = 80) {
     /** Records a gesture command after its live preview has already reached [WorkspaceState]. */
     fun recordApplied(command: WorkspaceCommand) {
         undoStack.addLast(command)
-        while (undoStack.size > limit) undoStack.removeFirst()
+        while (undoStack.size > limit) undoStack.removeAt(0)
         redoStack.clear()
     }
 

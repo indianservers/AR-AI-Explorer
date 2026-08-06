@@ -162,7 +162,7 @@ object InteractiveActivityAuthoring {
         if (document.startBlockId !in ids) errors += "Start block does not exist."
         document.blocks.forEach { block -> listOf(block.nextOnPass, block.nextOnFail).filterNotNull().forEach { if (it !in ids) errors += "${block.id} points to missing block $it." } }
         val byId = document.blocks.associateBy { it.id }; val reached = mutableSetOf<String>(); val queue = ArrayDeque<String>(); if (document.startBlockId in byId) queue += document.startBlockId
-        while (queue.isNotEmpty()) { val id = queue.removeFirst(); if (!reached.add(id)) continue; val block = byId[id] ?: continue; listOf(block.nextOnPass, block.nextOnFail).filterNotNull().filter { it !in reached }.forEach(queue::addLast) }
+        while (queue.isNotEmpty()) { val id = queue.removeAt(0); if (!reached.add(id)) continue; val block = byId[id] ?: continue; listOf(block.nextOnPass, block.nextOnFail).filterNotNull().filter { it !in reached }.forEach(queue::addLast) }
         val unreachable = ids.toSet() - reached; if (unreachable.isNotEmpty()) errors += "Unreachable blocks: ${unreachable.sorted().joinToString()}."
         if (document.blocks.none { it.nextOnPass == null }) errors += "Activity has no successful terminal block."
         return ActivityDocumentValidation(errors.isEmpty(), errors, reached)

@@ -36,6 +36,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AIExplorer"
+            android:windowSoftInputMode="adjustResize"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

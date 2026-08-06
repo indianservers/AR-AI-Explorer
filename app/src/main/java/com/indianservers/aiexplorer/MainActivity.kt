@@ -13,6 +13,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -157,6 +158,7 @@ import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.persistence.DurableMathStore
 import com.indianservers.aiexplorer.persistence.LocalReliabilityMonitor
 import com.indianservers.aiexplorer.persistence.MathFileExchange
+import com.indianservers.aiexplorer.solver.presentation.SolverScreen
 import com.indianservers.aiexplorer.phase2.mathstudio.UnifiedMathStudioScreen
 import com.indianservers.aiexplorer.phase3.mathlearning.AdaptiveMathLearningScreen
 import com.indianservers.aiexplorer.probabilitystats.ProbabilityStatisticsPhase1Screen
@@ -196,6 +198,7 @@ import com.indianservers.aiexplorer.core.TransformGizmoEngine
 import com.indianservers.aiexplorer.core.TransformGizmoHandle
 import com.indianservers.aiexplorer.core.TransformGizmoKind
 import com.indianservers.aiexplorer.core.Graph3D
+import com.indianservers.aiexplorer.core.InteractiveParameterEngine
 import com.indianservers.aiexplorer.core.GraphAnalysis
 import com.indianservers.aiexplorer.core.GraphDefinitionKind
 import com.indianservers.aiexplorer.core.StatisticsEngine
@@ -230,6 +233,9 @@ import com.indianservers.aiexplorer.core.AxisNumberFormat
 import com.indianservers.aiexplorer.core.DistributionEngine
 import com.indianservers.aiexplorer.core.DistributionKind
 import com.indianservers.aiexplorer.core.ProbabilityDistribution
+import com.indianservers.aiexplorer.core.CompareModeEngine
+import com.indianservers.aiexplorer.core.ComparisonAttribute
+import com.indianservers.aiexplorer.core.ComparisonItem
 import com.indianservers.aiexplorer.core.SurfaceCalculus
 import com.indianservers.aiexplorer.core.SurfaceInputInterpreter
 import com.indianservers.aiexplorer.core.AnalyticGeometry3D
@@ -262,6 +268,7 @@ import com.indianservers.aiexplorer.core.StatisticsStudyLevel
 import com.indianservers.aiexplorer.core.MathProblemSolver
 import com.indianservers.aiexplorer.core.MathSolverTutor
 import com.indianservers.aiexplorer.core.GuidedSolution
+import com.indianservers.aiexplorer.core.LearnerStepStatus
 import com.indianservers.aiexplorer.core.SolverMethod
 import com.indianservers.aiexplorer.core.SolverReveal
 import com.indianservers.aiexplorer.core.SolverDestination
@@ -539,6 +546,7 @@ private data class AppIntentSnapshot(
     val showShapesExplorer: Boolean,
     val shapeExplorerScene: Boolean,
     val showProblemSolver: Boolean,
+    val showSolver: Boolean,
     val showScientificCalculator: Boolean,
     val showSetLogicVisualizer: Boolean,
     val showMathNotebook: Boolean,
@@ -561,7 +569,9 @@ internal val MathCreationTools = listOf(
     MathWorkspaceOption("Explore Workspaces", "2D, 3D, graphing, trigonometry and spatial AR", "W"),
     MathWorkspaceOption("Scientific Calculator", "Scientific keypad, constants and conversions", "Sci"),
     MathWorkspaceOption("Math Notebook", "Named values, linked functions and reusable exact results", "#"),
+    MathWorkspaceOption("Solver", "Offline arithmetic and algebra with verified, traceable steps", "Solve"),
     MathWorkspaceOption("Problem Solver", "Explainable, step-by-step answers with verification", "Fx"),
+    MathWorkspaceOption("Math Camera", "Scan printed or handwritten maths into the verified solver", "Scan"),
     MathWorkspaceOption("2D Geometry", "Construct points, lines, circles, polygons and constraints", "2D"),
     MathWorkspaceOption("3D Geometry", "Explore solids, vectors, sections and measurements", "3D"),
     MathWorkspaceOption("Graphs Explorer", "Plot and investigate 2D functions, curves and inequalities", "Graph"),
@@ -607,7 +617,7 @@ private data class MathHomeCategory(
 
 private val MathHomeCategories = listOf(
     MathHomeCategory("GamifyMaths", "Games, speed challenges and mastery worlds", "PLAY", listOf("GamifyMaths")),
-    MathHomeCategory("Solve & Calculate", "Calculator, solver, notebook and linked studio", "Fx", listOf("Unified Math Studio", "Scientific Calculator", "Problem Solver", "Math Notebook")),
+    MathHomeCategory("Solve & Calculate", "Calculator, solver, notebook and linked studio", "Fx", listOf("Unified Math Studio", "Scientific Calculator", "Solver", "Problem Solver", "Math Camera", "Math Notebook")),
     MathHomeCategory(
         "Visual Workspaces",
         "Geometry, graphs, tiles and spatial exploration",
@@ -660,6 +670,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         reliabilityMonitor = LocalReliabilityMonitor(this)
         setContent { AIExplorerApp() }
     }
@@ -731,6 +742,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     var shapeExplorerScene by mutableStateOf(false)
         private set
     var showProblemSolver by mutableStateOf(false)
+        private set
+    var showSolver by mutableStateOf(false)
+        private set
+    var solverCameraRequested by mutableStateOf(false)
         private set
     var showScientificCalculator by mutableStateOf(false)
         private set
@@ -829,7 +844,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         get() = linkedMathKernel.snapshot(state)
     val mathObjectGraphSnapshot
         get() = mathObjectGraph.snapshot(state)
-    fun mathObjectGraphSnapshot(parameterValues: Map<String, Double>) = mathObjectGraph.snapshot(state, parameterValues)
+    fun mathObjectGraphSnapshot(
+        parameterValues: Map<String, Double>,
+        tableInputs: List<Double> = (-4..4).map { it.toDouble() },
+    ) = mathObjectGraph.snapshot(state, parameterValues, tableInputs)
     val universalMathDocument: UniversalMathDocument
         get() {
             val base = UniversalWorkspaceBridge.fromWorkspace(state)
@@ -855,6 +873,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = showShapesExplorer,
         shapeExplorerScene = shapeExplorerScene,
         showProblemSolver = showProblemSolver,
+        showSolver = showSolver,
         showScientificCalculator = showScientificCalculator,
         showSetLogicVisualizer = showSetLogicVisualizer,
         showMathNotebook = showMathNotebook,
@@ -892,6 +911,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = snapshot.showShapesExplorer
         shapeExplorerScene = snapshot.shapeExplorerScene
         showProblemSolver = snapshot.showProblemSolver
+        showSolver = snapshot.showSolver
         showScientificCalculator = snapshot.showScientificCalculator
         showSetLogicVisualizer = snapshot.showSetLogicVisualizer
         showMathNotebook = snapshot.showMathNotebook
@@ -940,6 +960,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
@@ -969,6 +990,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showBiologyHub = false
         showMathLanding = true
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
@@ -1200,6 +1222,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = true
+        showSolver = false
         showScientificCalculator = false
         showMathNotebook = false
         showUnifiedMathStudio = false
@@ -1211,6 +1234,39 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Explainable Problem Solver"
     }
 
+    fun openSolver() {
+        rememberCurrentIntent()
+        showSubjectHub = false
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showSolver = true
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showGamifyMaths = false
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showConceptLibrary = false
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = "Offline Solver"
+    }
+
+    fun openMathCamera() {
+        openProblemSolver()
+        solverCameraRequested = true
+        status = "Math Camera"
+    }
+
+    fun consumeMathCameraRequest() {
+        solverCameraRequested = false
+    }
+
 	    fun openProbabilityLab() {
         rememberCurrentIntent()
 	        showSubjectHub = false
@@ -1218,6 +1274,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showMathNotebook = false
         showProbabilityLab = true
@@ -1259,6 +1316,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showMathNotebook = true
         showUnifiedMathStudio = false
@@ -1277,6 +1335,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
@@ -1289,13 +1348,14 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Unified Math Studio"
     }
 
-	    fun openAdaptiveMathLearning() {
+    fun openAdaptiveMathLearning() {
         rememberCurrentIntent()
 	        showSubjectHub = false
         showMathLanding = false
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
@@ -1320,6 +1380,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
@@ -1347,6 +1408,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showMathNotebook = false
         showProbabilityLab = false
@@ -1372,6 +1434,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = false
         showMathNotebook = false
@@ -1434,6 +1497,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = true
         showMathNotebook = false
         showProbabilityLab = false
@@ -1444,7 +1508,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Scientific Calculator"
     }
 
-	    fun openSetLogicVisualizer() {
+    fun openSetLogicVisualizer() {
         rememberCurrentIntent()
 	        showSubjectHub = false
         showMathLanding = false
@@ -1455,6 +1519,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showShapesExplorer = false
         shapeExplorerScene = false
         showProblemSolver = false
+        showSolver = false
         showScientificCalculator = false
         showSetLogicVisualizer = true
         showMathNotebook = false
@@ -2457,6 +2522,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     val mathsBreadcrumb: List<String>
         get() = when {
+            showSolver -> listOf("Maths", "Tools", "Solver")
             showProblemSolver -> listOf("Maths", "Algebra", "Quadratics")
             showKnowledgeHub && activeKnowledgeSection == KnowledgeSection.Dictionary -> listOf("Maths", "Reference", "Visual Dictionary")
             showKnowledgeHub -> listOf("Maths", "Knowledge", activeKnowledgeSection.title)
@@ -2661,26 +2727,27 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
         }
     }
     val activePalette = vm.settings.colorScheme.palette
-    MaterialTheme(
-        colorScheme = darkColorScheme(
-            background = activePalette.background,
-            surface = activePalette.surface,
-            surfaceVariant = activePalette.surfaceAlt,
-            primary = activePalette.primary,
-            secondary = activePalette.secondary,
-            tertiary = activePalette.success,
-            onBackground = activePalette.ink,
-            onSurface = activePalette.ink,
-            onPrimary = activePalette.background,
-            onSecondary = activePalette.background,
-        ),
-    ) {
+    ProvideAppVisualEffects(vm.settings.colorScheme) {
+        MaterialTheme(
+            colorScheme = darkColorScheme(
+                background = activePalette.background,
+                surface = activePalette.surface,
+                surfaceVariant = activePalette.surfaceAlt,
+                primary = activePalette.primary,
+                secondary = activePalette.secondary,
+                tertiary = activePalette.success,
+                onBackground = activePalette.ink,
+                onSurface = activePalette.ink,
+                onPrimary = activePalette.background,
+                onSecondary = activePalette.background,
+            ),
+        ) {
         Surface(Modifier.fillMaxSize(), color = activePalette.background) {
             Box(Modifier.fillMaxSize()) {
                 BoxWithConstraints(
                     Modifier
                         .fillMaxSize()
-                        .background(appBackdrop(activePalette))
+                        .background(appBackdrop(vm.settings.colorScheme))
                         .windowInsetsPadding(WindowInsets.safeDrawing)
                         .padding(8.dp),
                 ) {
@@ -2709,6 +2776,8 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         GamifyMathsRoot(onExit = vm::navigateBackIntent)
                     } else if (vm.showMathNotebook) {
                         MathNotebookScreen(vm, wide = wide)
+                    } else if (vm.showSolver) {
+                        SolverScreen(onExit = vm::navigateBackIntent, wide = wide)
                     } else if (vm.showProblemSolver) {
                         ProblemSolverScreen(vm, wide = wide)
                     } else if (vm.showScientificCalculator) {
@@ -2735,7 +2804,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
                         TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
                     }
-                    if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
+                    if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
                     if (vm.showActionDock) MiniDock(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -2854,6 +2923,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
         }
     }
     }
+    }
 }
 
 @Composable
@@ -2881,7 +2951,9 @@ private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
         "GamifyMaths", "Math Games" -> vm.openGamifyMaths()
         "Scientific Calculator" -> vm.openScientificCalculator()
         "Math Notebook" -> vm.openMathNotebook()
+        "Solver" -> vm.openSolver()
         "Problem Solver" -> vm.openProblemSolver()
+        "Math Camera" -> vm.openMathCamera()
         "Formulas" -> vm.openKnowledgeHub(KnowledgeSection.Formulas)
         "MCQs" -> vm.openKnowledgeHub(KnowledgeSection.Mcqs)
         "Formula Visualizer" -> vm.openKnowledgeHub(KnowledgeSection.Visualize)
@@ -4935,6 +5007,13 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
     var selectedResultForm by remember { mutableStateOf(SolverResultKind.Exact) }
     var showMathKeyboard by remember { mutableStateOf(true) }
     var showHandwriting by rememberSaveable { mutableStateOf(false) }
+    var showMathCamera by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(vm.solverCameraRequested) {
+        if (vm.solverCameraRequested) {
+            showMathCamera = true
+            vm.consumeMathCameraRequest()
+        }
+    }
     val syntax = remember(question.text) { MathInputIntelligence.analyze(question.text) }
     val examples = listOf(
         "Linear" to "Solve 2x + 3 = 11",
@@ -5014,9 +5093,23 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(syntax.message, color = if (syntax.validBrackets) Green else Amber, fontSize = 11.sp, modifier = Modifier.weight(1f))
                 Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    GlowButton(if (showMathCamera) "Hide camera" else "Scan") { showMathCamera = !showMathCamera }
                     GlowButton(if (showMathKeyboard) "Hide editor" else "Smart editor") { showMathKeyboard = !showMathKeyboard }
                     GlowButton(if (showHandwriting) "Hide ink" else "Handwrite") { showHandwriting = !showHandwriting }
                 }
+            }
+            AnimatedVisibility(showMathCamera) {
+                MathCameraPanel(
+                    onUseText = { recognizedText ->
+                        question = TextFieldValue(recognizedText, TextRange(recognizedText.length))
+                        showMathCamera = false
+                        guided = tutor.solve(recognizedText, selectedMethod)
+                        reveal = SolverReveal.FirstHint
+                        revealedSteps = 1
+                        whyStep = -1
+                    },
+                    onDismiss = { showMathCamera = false },
+                )
             }
             AnimatedVisibility(showHandwriting) { HandwritingMathInput(onInsert = ::insertMath) }
             AnimatedVisibility(showMathKeyboard) {
@@ -5105,14 +5198,37 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     model.ambiguity.forEach { Text("Clarify · $it", color = Amber, fontSize = 12.sp) }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    GlowButton("Next step", enabled = solution.steps.isNotEmpty() && revealedSteps < solution.steps.size) {
-                        reveal = SolverReveal.Steps
-                        revealedSteps++
+                    GlowButton(
+                        if (reveal == SolverReveal.FirstHint) "Reveal first step" else "Next step",
+                        enabled = solution.steps.isNotEmpty() && (reveal == SolverReveal.FirstHint || revealedSteps < solution.steps.size),
+                    ) {
+                        if (reveal == SolverReveal.FirstHint) {
+                            reveal = SolverReveal.Steps
+                            revealedSteps = 1
+                        } else if (revealedSteps < solution.steps.size) {
+                            revealedSteps++
+                        }
                     }
                     GlowButton("Reveal method") { reveal = SolverReveal.Method }
                     GlowButton("Reveal answer") { reveal = SolverReveal.Answer }
                 }
-                result.visibleSteps(reveal, revealedSteps).forEachIndexed { index, item ->
+                if (reveal == SolverReveal.FirstHint) {
+                    solution.steps.firstOrNull()?.let { first ->
+                        Column(
+                            Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+                                .background(Violet.copy(.09f))
+                                .border(1.dp, Violet.copy(.48f), RoundedCornerShape(14.dp))
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text("Hint 1", color = Violet, fontWeight = FontWeight.Bold)
+                            Text(first.explanation, color = Ink, fontSize = 13.sp)
+                            Text("Try that transformation yourself before revealing the worked step.", color = Muted, fontSize = 11.sp)
+                        }
+                    }
+                }
+                val displayedSteps = if (reveal == SolverReveal.FirstHint) emptyList() else result.visibleSteps(reveal, revealedSteps)
+                displayedSteps.forEachIndexed { index, item ->
                     val accent = when (item.role) {
                         SolutionStepRole.Interpret -> Cyan
                         SolutionStepRole.Transform -> Violet
@@ -5164,14 +5280,42 @@ private fun ProblemSolverScreen(vm: ExplorerViewModel, wide: Boolean) {
                     value = learnerWork,
                     onValueChange = { learnerWork = it },
                     modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Learner working for mistake diagnosis" },
-                    label = { Text("Paste or type your steps") },
-                    minLines = 2,
+                    label = { Text("One transformation per line") },
+                    minLines = 3,
                 )
-                tutor.diagnose(solution.question, learnerWork).forEach { diagnosis ->
-                    Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Amber.copy(.1f)).padding(9.dp)) {
-                        Text(diagnosis.kind.label, color = Amber, fontWeight = FontWeight.Bold)
-                        Text(diagnosis.message, color = Ink, fontSize = 12.sp)
-                        Text(diagnosis.correction, color = Muted, fontSize = 11.sp)
+                val workReport = remember(solution.question, learnerWork) {
+                    tutor.analyzeLearnerWork(solution.question, learnerWork)
+                }
+                if (learnerWork.isNotBlank()) {
+                    Text(
+                        workReport.summary,
+                        color = if (workReport.allCorrect) Green else if (workReport.firstIncorrect != null) Amber else Muted,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                    )
+                }
+                workReport.steps.forEach { feedback ->
+                    val accent = when (feedback.status) {
+                        LearnerStepStatus.Correct -> Green
+                        LearnerStepStatus.Incorrect -> Amber
+                        LearnerStepStatus.NeedsReview -> Violet
+                    }
+                    Column(
+                        Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
+                            .background(accent.copy(.09f))
+                            .border(1.dp, accent.copy(.42f), RoundedCornerShape(10.dp))
+                            .padding(9.dp),
+                        verticalArrangement = Arrangement.spacedBy(3.dp),
+                    ) {
+                        Text(
+                            "Line ${feedback.lineNumber} · ${feedback.mistakeKind?.label ?: feedback.status.name}",
+                            color = accent,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(feedback.source, color = Ink, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+                        Text(feedback.message, color = Ink, fontSize = 12.sp)
+                        Text("Hint · ${feedback.hint}", color = Muted, fontSize = 11.sp)
+                        feedback.evidence?.let { Text(it, color = accent, fontSize = 10.sp) }
                     }
                 }
             }
@@ -5297,7 +5441,11 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
         else -> "Advanced"
     }
     fun selectKey(key: String, open: () -> Unit) {
-        if (compareMode) compareKeys = (compareKeys + key).distinct().takeLast(2) else open()
+        if (compareMode) {
+            compareKeys = if (key in compareKeys) compareKeys - key else (compareKeys + key).takeLast(2)
+        } else {
+            open()
+        }
     }
     fun dismissTopLayerOrNavigateBack() {
         when {
@@ -5329,8 +5477,16 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                 GlowButton("Back", icon = "←", onClick = ::dismissTopLayerOrNavigateBack)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                GlowButton(if (dimension == 2) "2D · ${ShapeExplorer2DShapes.size}" else "2D", icon = "2D") { dimension = 2; category = "All"; compareKeys = emptyList() }
-                GlowButton(if (dimension == 3) "3D · ${SolidType.entries.size}" else "3D", icon = "3D") { dimension = 3; category = "All"; compareKeys = emptyList() }
+                GlowButton(if (dimension == 2) "2D · ${ShapeExplorer2DShapes.size}" else "2D", icon = "2D") {
+                    dimension = 2
+                    category = "All"
+                    if (!compareMode) compareKeys = emptyList()
+                }
+                GlowButton(if (dimension == 3) "3D · ${SolidType.entries.size}" else "3D", icon = "3D") {
+                    dimension = 3
+                    category = "All"
+                    if (!compareMode) compareKeys = emptyList()
+                }
                 GlowButton(if (multiAdd) "Add: ON" else "Add many", icon = "+") { multiAdd = !multiAdd; compareMode = false }
                 GlowButton(if (compareMode) "Compare: ON" else "Compare", icon = "=") { compareMode = !compareMode; multiAdd = false; compareKeys = emptyList() }
             }
@@ -5388,11 +5544,35 @@ private fun ShapesExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             if (compareKeys.isNotEmpty()) {
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Violet.copy(.08f)).border(1.dp, Violet.copy(.35f), RoundedCornerShape(14.dp)).padding(9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    Text("Shape comparison · choose ${2 - compareKeys.size} more", color = Violet, fontWeight = FontWeight.Bold)
-                    compareKeys.forEach { key ->
-                        val formulas = if (key.startsWith("2d:")) ShapeExplorer2DShapes.firstOrNull { it.id == key.substringAfter(':') }?.let { shape2DFormulaLibrary(it.label) }.orEmpty()
-                        else runCatching { SolidType.valueOf(key.substringAfter(':')) }.getOrNull()?.let(::solidFormulaLibrary).orEmpty()
-                        Text("${key.substringAfter(':')} · ${formulas.size} formulas · ${formulas.take(2).joinToString { it.expression }}", color = Ink, fontSize = 11.sp)
+                    Text(
+                        if (compareKeys.size < 2) "Shape comparison · choose ${2 - compareKeys.size} more" else "Shape comparison",
+                        color = Violet,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    val items = compareKeys.mapNotNull { key ->
+                        val is2D = key.startsWith("2d:")
+                        val preset = if (is2D) ShapeExplorer2DShapes.firstOrNull { it.id == key.substringAfter(':') } else null
+                        val solid = if (!is2D) runCatching { SolidType.valueOf(key.substringAfter(':')) }.getOrNull() else null
+                        val title = preset?.label ?: solid?.name?.replace(Regex("([a-z])([A-Z])"), "$1 $2") ?: return@mapNotNull null
+                        val formulas = preset?.let { shape2DFormulaLibrary(it.label) } ?: solid?.let(::solidFormulaLibrary).orEmpty()
+                        ComparisonItem(
+                            id = key,
+                            title = title,
+                            primary = formulas.firstOrNull()?.expression ?: "Interactive construction",
+                            attributes = listOf(
+                                ComparisonAttribute("Dimension", if (is2D) "2D" else "3D"),
+                                ComparisonAttribute("Category", preset?.category() ?: solid?.let(::solidCategory).orEmpty()),
+                                ComparisonAttribute("Formula count", formulas.size.toString()),
+                                ComparisonAttribute("Measurements", formulas.take(4).joinToString { it.name }),
+                            ),
+                        )
+                    }
+                    if (items.size == 2) {
+                        SideBySideComparePanel(CompareModeEngine.compare(items[0], items[1]))
+                    } else {
+                        items.firstOrNull()?.let { item ->
+                            MathFormulaText(item.primary, color = Cyan, fontSize = 13.sp)
+                        }
                     }
                 }
             }
@@ -5490,6 +5670,7 @@ private fun MathematicsMenuPanel(
             "Adaptive Math Coach" -> vm.openAdaptiveMathLearning()
             "Scientific Calculator" -> vm.openScientificCalculator()
             "Math Notebook" -> vm.openMathNotebook()
+            "Solver" -> vm.openSolver()
             "Problem Solver" -> vm.openProblemSolver()
             "Formulas" -> vm.openKnowledgeHub(KnowledgeSection.Formulas)
             "MCQs" -> vm.openKnowledgeHub(KnowledgeSection.Mcqs)
@@ -6410,7 +6591,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     }
     Box(Modifier.fillMaxSize()) {
         CoordinateCanvas(
-            modifier = Modifier.fillMaxSize().semantics {
+            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp).semantics {
                 contentDescription = "Interactive coordinate geometry canvas. ${contextInspector.title}. Parents ${contextInspector.parentIds.joinToString().ifBlank { "none" }}. Dependents ${contextInspector.dependentIds.joinToString().ifBlank { "none" }}. Use Tab to change objects and arrow keys to move the selection."
             },
             shapes = replayShapes,
@@ -7205,7 +7386,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     }
     Box(Modifier.fillMaxSize()) {
         Projected3DCanvas(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp),
             solids = renderedSolids,
             vectors = vm.state.vectors3D,
             selectedIndex = selectedIndex,
@@ -9361,7 +9542,9 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var graph3DEquationExpanded by remember { mutableStateOf(false) }
     var graph3DHintExpanded by remember { mutableStateOf(false) }
     var graph3DViewExpanded by remember { mutableStateOf(false) }
+    var graph3DParametersExpanded by remember { mutableStateOf(true) }
     var graph3DPresentationMode by remember { mutableStateOf(false) }
+    var surfaceParameterValues by remember { mutableStateOf<Map<String, Double>>(emptyMap()) }
     var surfaceLayerQuery by rememberSaveable { mutableStateOf("") }
     var contourMinimum by remember { mutableFloatStateOf(-2f) }
     var contourMaximum by remember { mutableFloatStateOf(6f) }
@@ -9380,6 +9563,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             showBox = false
             showOrientationCube = false
             gradientPlayback = com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())
+            surfaceParameterValues = emptyMap()
+            graph3DParametersExpanded = true
             clearEpochSeen = vm.workspaceClearEpoch
         }
     }
@@ -9393,9 +9578,31 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         }
         cameraPan = Offset.Zero
     }
-    val insight = remember(vm.state.surfaceExpression) { graph3D.insight(vm.state.surfaceExpression) }
-    val mesh = remember(vm.state.surfaceExpression, density) {
-        runCatching { graph3D.mesh(vm.state.surfaceExpression, density = density.toInt()) }.getOrNull()
+    val surfaceParameters = remember(surfaceLayers, surfaceParameterValues) {
+        InteractiveParameterEngine.discover(
+            expressions = surfaceLayers.map { it.expression },
+            values = surfaceParameterValues,
+            independentVariables = setOf("x", "y", "z"),
+        )
+    }
+    LaunchedEffect(surfaceParameters.map { it.name }) {
+        val activeNames = surfaceParameters.mapTo(linkedSetOf()) { it.name }
+        surfaceParameterValues = surfaceParameterValues
+            .filterKeys { it in activeNames }
+            .toMutableMap()
+            .apply { surfaceParameters.forEach { putIfAbsent(it.name, it.value) } }
+    }
+    val primarySurfaceExpression = surfaceLayers.firstOrNull()?.expression ?: vm.state.surfaceExpression
+    val resolvedPrimaryExpression = remember(primarySurfaceExpression, surfaceParameterValues) {
+        InteractiveParameterEngine.resolve(
+            primarySurfaceExpression,
+            surfaceParameterValues,
+            independentVariables = setOf("x", "y", "z"),
+        )
+    }
+    val insight = remember(resolvedPrimaryExpression) { graph3D.insight(resolvedPrimaryExpression) }
+    val mesh = remember(resolvedPrimaryExpression, density) {
+        runCatching { graph3D.mesh(resolvedPrimaryExpression, density = density.toInt()) }.getOrNull()
     }
     LaunchedEffect(vm.state.surfaceExpression) {
         if (!addingSurfaceEquation && selectedSurfaceLayerIndex == 0) surfaceDraft = vm.state.surfaceExpression
@@ -9407,12 +9614,17 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         }
     }
     val primaryMesh = surfaceLayers.firstOrNull()?.takeIf { it.visible }?.let { mesh }
-    val additionalSurfaceMeshEntries = remember(surfaceLayers, density, selectedSurfaceLayerIndices) {
+    val additionalSurfaceMeshEntries = remember(surfaceLayers, density, selectedSurfaceLayerIndices, surfaceParameterValues) {
         surfaceLayers.drop(1).mapIndexedNotNull { index, layer ->
             if (!layer.visible) return@mapIndexedNotNull null
             val actualIndex = index + 1
             val qualityDensity = when (layer.quality) { com.indianservers.aiexplorer.core.SpatialQuality.Battery -> 12; com.indianservers.aiexplorer.core.SpatialQuality.Balanced -> 24; com.indianservers.aiexplorer.core.SpatialQuality.High -> 36; com.indianservers.aiexplorer.core.SpatialQuality.Ultra -> 52 }
-            runCatching { graph3D.mesh(layer.expression, density = qualityDensity) }.getOrNull()?.let {
+            val resolvedLayer = InteractiveParameterEngine.resolve(
+                layer.expression,
+                surfaceParameterValues,
+                independentVariables = setOf("x", "y", "z"),
+            )
+            runCatching { graph3D.mesh(resolvedLayer, density = qualityDensity) }.getOrNull()?.let {
                 val selectionAlpha = when {
                     selectedSurfaceLayerIndices.isEmpty() -> .45f
                     actualIndex in selectedSurfaceLayerIndices -> 1f
@@ -9432,11 +9644,11 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         primaryMesh?.let { add(0 to it) }
         additionalSurfaceMeshEntries.forEach { (index, surfaceMesh, _) -> add(index to surfaceMesh) }
     }
-    val differential = remember(vm.state.surfaceExpression, traceX, traceY) {
-        runCatching { surfaceCalculus.analyze(vm.state.surfaceExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+    val differential = remember(resolvedPrimaryExpression, traceX, traceY) {
+        runCatching { surfaceCalculus.analyze(resolvedPrimaryExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
     }
-    val curvature = remember(vm.state.surfaceExpression, traceX, traceY) {
-        runCatching { surfaceCalculus.curvature(vm.state.surfaceExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+    val curvature = remember(resolvedPrimaryExpression, traceX, traceY) {
+        runCatching { surfaceCalculus.curvature(resolvedPrimaryExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
     }
     LaunchedEffect(graph3DPresentationMode) {
         if (graph3DPresentationMode) {
@@ -9456,7 +9668,18 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             surfaceInputMessage = it.message ?: "Enter z as a function of x and y."
             return
         }
-        val preview = runCatching { graph3D.mesh(interpretation.canonicalEquation, density = 8) }
+        val draftParameters = InteractiveParameterEngine.discover(
+            expressions = listOf(interpretation.canonicalEquation),
+            values = surfaceParameterValues,
+            independentVariables = setOf("x", "y", "z"),
+        )
+        val draftValues = surfaceParameterValues + InteractiveParameterEngine.values(draftParameters)
+        val resolvedDraft = InteractiveParameterEngine.resolve(
+            interpretation.canonicalEquation,
+            draftValues,
+            independentVariables = setOf("x", "y", "z"),
+        )
+        val preview = runCatching { graph3D.mesh(resolvedDraft, density = 8) }
             .getOrElse {
                 surfaceInputMessage = it.message ?: "The equation could not be parsed."
                 return
@@ -9465,6 +9688,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             surfaceInputMessage = "The equation produced no finite surface points. Check variables and domain."
             return
         }
+        surfaceParameterValues = draftValues
+        if (draftParameters.isNotEmpty()) graph3DParametersExpanded = true
         surfaceDraft = interpretation.canonicalEquation
         if (addingSurfaceEquation || selectedSurfaceLayerIndex !in surfaceLayers.indices) {
             val nextLayer = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
@@ -9517,14 +9742,16 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         addingSurfaceEquation = false
         surfaceInputMessage = "3D graph cleared"
         gradientPlayback = com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())
+        surfaceParameterValues = emptyMap()
+        graph3DParametersExpanded = true
         showBox = false
         showOrientationCube = false
         vm.clearCurrentWorkspace()
     }
     Box(Modifier.fillMaxSize()) {
         SurfaceCanvas3D(
-            modifier = Modifier.fillMaxSize(),
-            expression = vm.state.surfaceExpression,
+            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp),
+            expression = resolvedPrimaryExpression,
             mesh = primaryMesh,
             additionalMeshes = additionalSurfaceMeshes,
             surfaceOpacity = (surfaceLayers.firstOrNull()?.opacity ?: 1.0).toFloat() *
@@ -9663,6 +9890,52 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                         },
                         onPlot = ::plotSurfaceDraft,
                     )
+                }
+            }
+            if (surfaceParameters.isNotEmpty()) {
+                Row(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
+                        .clickable { graph3DParametersExpanded = !graph3DParametersExpanded }
+                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        "Parameters (${surfaceParameters.size})",
+                        color = Violet,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(if (graph3DParametersExpanded) "Hide" else "Show", color = Cyan, fontSize = 10.sp)
+                }
+                AnimatedVisibility(graph3DParametersExpanded) {
+                    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        surfaceParameters.forEach { parameter ->
+                            AxisSlider(
+                                "${parameter.name} = ${trim(parameter.value)}",
+                                parameter.value.toFloat(),
+                                parameter.minimum.toFloat()..parameter.maximum.toFloat(),
+                            ) { raw ->
+                                surfaceParameterValues = surfaceParameterValues +
+                                    (parameter.name to parameter.snap(raw.toDouble()))
+                            }
+                        }
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text("Updates every linked surface live", color = Muted, fontSize = 9.sp)
+                            GlowButton("Reset") {
+                                surfaceParameterValues = InteractiveParameterEngine.values(
+                                    InteractiveParameterEngine.discover(
+                                        expressions = surfaceLayers.map { it.expression },
+                                        independentVariables = setOf("x", "y", "z"),
+                                    ),
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -11521,12 +11794,37 @@ internal fun GraphEquationEditor(
 
 @Composable
 internal fun GlassPanel(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    val effects = LocalAppVisualEffects.current
+    val panelShape = RoundedCornerShape(18.dp)
+    val panelBrush = if (effects.enhanced) {
+        val accent = if (effects.treatment == AppVisualTreatment.SpectralWireframe) Violet else Cyan
+        Brush.linearGradient(
+            listOf(
+                SurfaceA,
+                accent.copy(alpha = effects.surfaceTintAlpha),
+                SurfaceB,
+            ),
+        )
+    } else {
+        Brush.linearGradient(listOf(SurfaceA, SurfaceB))
+    }
+    val panelBorder = if (effects.enhanced) {
+        Brush.linearGradient(
+            listOf(
+                Cyan.copy(alpha = effects.borderGlowAlpha),
+                Violet.copy(alpha = effects.borderGlowAlpha),
+                Cyan.copy(alpha = effects.borderGlowAlpha * .72f),
+            ),
+        )
+    } else {
+        Brush.linearGradient(listOf(Color(0x6645CFFF), Color(0x6645CFFF)))
+    }
     Column(
         modifier
             .padding(8.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .background(Brush.linearGradient(listOf(SurfaceA, SurfaceB)))
-            .border(1.dp, Color(0x6645CFFF), RoundedCornerShape(18.dp))
+            .clip(panelShape)
+            .background(panelBrush)
+            .border(1.dp, panelBorder, panelShape)
             .heightIn(max = 560.dp)
             .verticalScroll(rememberScrollState())
             .animateContentSize()
@@ -11574,12 +11872,37 @@ internal fun PanelHeader(
 @Composable
 internal fun GlowButton(label: String, enabled: Boolean = true, icon: String = menuIcon(label), iconOnly: Boolean = false, onClick: () -> Unit) {
     val symbolOnly = label in setOf("↶", "↷", "⋮")
+    val effects = LocalAppVisualEffects.current
+    val visuallyActive = enabled && effects.enhanced && isVisuallyActiveLabel(label)
+    val buttonShape = RoundedCornerShape(14.dp)
+    val visualFrame = if (effects.enhanced) {
+        val frameAlpha = (effects.borderGlowAlpha + if (visuallyActive) effects.activeGlowAlpha else 0f).coerceAtMost(1f)
+        Modifier.border(
+            1.dp,
+            Brush.linearGradient(
+                listOf(
+                    Cyan.copy(alpha = frameAlpha),
+                    Violet.copy(alpha = frameAlpha * .82f),
+                ),
+            ),
+            buttonShape,
+        )
+    } else {
+        Modifier
+    }
     Button(
         onClick = onClick,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0x99101824), contentColor = Ink),
-        shape = RoundedCornerShape(14.dp),
-        modifier = Modifier.heightIn(min = 42.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = when {
+                visuallyActive -> androidx.compose.ui.graphics.lerp(SurfaceB, Cyan, effects.activeGlowAlpha * .32f)
+                effects.enhanced -> SurfaceB.copy(alpha = .92f)
+                else -> Color(0x99101824)
+            },
+            contentColor = Ink,
+        ),
+        shape = buttonShape,
+        modifier = Modifier.heightIn(min = 42.dp).then(visualFrame),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 9.dp, vertical = 5.dp),
     ) {
         TransparentIcon(smartIconKey(icon, label), if (enabled) Cyan else Muted)
@@ -11712,12 +12035,30 @@ fun Draw(category: String, accent: Color, modifier: Modifier = Modifier) {
 
 @Composable
 internal fun TransparentIcon(symbol: String, tint: Color) {
+    val effects = LocalAppVisualEffects.current
+    val iconShape = RoundedCornerShape(10.dp)
+    val iconChrome = if (effects.enhanced) {
+        Modifier
+            .background(
+                Brush.linearGradient(
+                    listOf(
+                        tint.copy(alpha = effects.surfaceTintAlpha + .08f),
+                        SurfaceB.copy(alpha = .72f),
+                    ),
+                ),
+                iconShape,
+            )
+            .border(1.dp, tint.copy(alpha = effects.borderGlowAlpha), iconShape)
+    } else {
+        Modifier
+            .background(tint.copy(alpha = .10f))
+            .border(1.dp, tint.copy(alpha = .32f), iconShape)
+    }
     Box(
         Modifier
             .size(28.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(tint.copy(alpha = .10f))
-            .border(1.dp, tint.copy(alpha = .32f), RoundedCornerShape(10.dp)),
+            .clip(iconShape)
+            .then(iconChrome),
         contentAlignment = Alignment.Center,
     ) {
         val key = smartIconKey(symbol, symbol).lowercase()

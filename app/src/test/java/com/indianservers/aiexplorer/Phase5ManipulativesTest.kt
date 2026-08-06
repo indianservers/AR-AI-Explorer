@@ -99,8 +99,8 @@ class Phase5ManipulativesTest {
 
     @Test
     fun visualProofCatalogHasTenCategoriesAndTenGeometryFormulaProofs() {
-        assertEquals(10, VisualProofCatalog.categories.size)
-        assertEquals(10, VisualProofCatalog.categories.distinct().size)
+        assertEquals(11, VisualProofCatalog.categories.size)
+        assertEquals(11, VisualProofCatalog.categories.distinct().size)
         assertEquals(10, VisualProofCatalog.labsFor("Geometry").size)
         VisualProofCatalog.categories.forEach { category ->
             assertTrue("$category has a formula submenu", VisualProofCatalog.labsFor(category).isNotEmpty())
@@ -152,7 +152,7 @@ class Phase5ManipulativesTest {
         val initial = engine.start("pythagorean")
         val changed = engine.setParameter(initial, "a", 5.0)
 
-        assertNotEquals(initial.frame.measurements["a²"], changed.frame.measurements["a²"])
+        assertNotEquals(initial.frame.measurements["a²+b² from legs"], changed.frame.measurements["a²+b² from legs"])
         assertEquals(0.0, changed.frame.residual, 1e-12)
         assertTrue(changed.frame.holds)
     }

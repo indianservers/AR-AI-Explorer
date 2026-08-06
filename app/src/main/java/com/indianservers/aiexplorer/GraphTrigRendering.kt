@@ -545,6 +545,7 @@ internal fun GraphCanvas(
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
     val typedGraphEngine = remember { TypedGraphEngine() }
     val engine = remember { ExpressionEngine() }
+    val visualEffects = LocalAppVisualEffects.current
     var cameraCenter by remember { mutableStateOf(Vec2(0.0, 0.0)) }
     var cameraZoom by remember { mutableFloatStateOf(1f) }
     var lastTapAt by remember { mutableStateOf(0L) }
@@ -773,7 +774,7 @@ internal fun GraphCanvas(
             val displayY = if (axisSettings.yLogarithmic && it.y > 0) log10(it.y) else if (axisSettings.yLogarithmic) Double.NaN else it.y
             Offset(origin.x + displayX.toFloat() * scale, origin.y - displayY.toFloat() * scale)
         }
-        drawGrid(origin, scale, axisSettings)
+        drawGrid(origin, scale, axisSettings, visualEffects)
         if (parameterHandleEnabled) parameterValues.entries.forEachIndexed { index, entry ->
             val columns = maxOf(1, ((size.width - 80f) / 92f).toInt())
             val anchor = Offset(80f + (index % columns) * 92f, 120f + (index / columns) * 54f)
@@ -811,7 +812,12 @@ internal fun GraphCanvas(
             if (typedDefinition is TypedGraphExpression.Implicit) {
                 val segments = runCatching { typedGraphEngine.sample(typedDefinition, GraphDomain(minX, maxX), GraphDomain(minY, maxY, "y"), parameterValues, 520).implicitSegments }.getOrDefault(emptyList())
                 val curveColor = color.copy(alpha = if (selected || selectedFunctionId == null) 1f else .28f)
-                segments.forEach { drawLine(curveColor, tx(it.start), tx(it.end), if (selected) 5.2f else 3.2f, cap = StrokeCap.Round, pathEffect = styleEffect) }
+                segments.forEach {
+                    if (selected && visualEffects.enhanced) {
+                        drawLine(curveColor.copy(alpha = visualEffects.graphGlowAlpha), tx(it.start), tx(it.end), 11f, cap = StrokeCap.Round, pathEffect = styleEffect)
+                    }
+                    drawLine(curveColor, tx(it.start), tx(it.end), if (selected) 5.2f else 3.2f, cap = StrokeCap.Round, pathEffect = styleEffect)
+                }
             } else {
                 val domain = domains[fn.id]
                 val sampleMinimum = max(minX, domain?.minimum ?: minX)
@@ -822,7 +828,13 @@ internal fun GraphCanvas(
                 sample?.curves?.forEach { segment ->
                     segment.points.zipWithNext().forEach { pair ->
                         val logValid = (!axisSettings.xLogarithmic || pair.first.x > 0 && pair.second.x > 0) && (!axisSettings.yLogarithmic || pair.first.y > 0 && pair.second.y > 0)
-                        if (logValid) drawLine(color.copy(alpha = if (selected || selectedFunctionId == null) 1f else .28f), tx(pair.first), tx(pair.second), strokeWidth, cap = StrokeCap.Round, pathEffect = styleEffect)
+                        if (logValid) {
+                            val curveColor = color.copy(alpha = if (selected || selectedFunctionId == null) 1f else .28f)
+                            if (selected && visualEffects.enhanced) {
+                                drawLine(curveColor.copy(alpha = visualEffects.graphGlowAlpha), tx(pair.first), tx(pair.second), strokeWidth + 7f, cap = StrokeCap.Round, pathEffect = styleEffect)
+                            }
+                            drawLine(curveColor, tx(pair.first), tx(pair.second), strokeWidth, cap = StrokeCap.Round, pathEffect = styleEffect)
+                        }
                     }
                 }
                 if (domain != null && selected) {

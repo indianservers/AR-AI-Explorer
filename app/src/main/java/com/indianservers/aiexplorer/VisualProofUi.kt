@@ -548,6 +548,7 @@ internal fun InteractiveVisualProofCanvas(
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color(0xEE030A12))
                 .border(1.dp, Cyan.copy(.45f), RoundedCornerShape(16.dp))
+                .appWorkspaceTreatment(cornerRadius = 16.dp, accent = Cyan, secondary = Violet)
                 .pointerInput(frame.lab.id, frame.parameters) {
                     if (primary != null) detectDragGestures { change, _ ->
                         val ratio = (change.position.x / size.width).coerceIn(0f, 1f)
@@ -648,12 +649,17 @@ internal fun InteractiveVisualProofCanvas(
                     label("a² + b² = c²", Offset(w * .35f, h * .14f), Green, 29f)
                 }
                 "circle-ratio" -> {
-                    val r = frame.parameters.getValue("r"); val radius = (r * scale * .55).toFloat().coerceIn(28f, h * .27f)
+                    val r = frame.parameters.getValue("r"); val n = frame.parameters.getValue("n").toInt().coerceIn(6, 240)
+                    val radius = (r * scale * .55).toFloat().coerceIn(28f, h * .27f)
                     val center = Offset(w * .28f, h * .53f)
-                    drawCircle(Cyan.copy(.13f), radius, center); drawCircle(Cyan, radius, center, style = Stroke(4f)); drawLine(Amber, center, center + Offset(radius, 0f), 5f)
-                    val length = (2 * PI * radius).toFloat().coerceAtMost(w * .58f)
+                    val vertices = (0 until n).map { index ->
+                        val theta = 2 * PI * index / n
+                        center + Offset(cos(theta).toFloat() * radius, sin(theta).toFloat() * radius)
+                    }
+                    polygon(vertices, Cyan); drawCircle(Cyan.copy(.35f), radius, center, style = Stroke(2f)); drawLine(Amber, center, center + Offset(radius, 0f), 5f)
+                    val length = (evidence("measured perimeter") / (2 * PI * r) * 2 * PI * radius).toFloat().coerceAtMost(w * .58f)
                     drawLine(Violet, Offset(w * .38f, h * .73f), Offset(w * .38f + length, h * .73f), 7f, cap = StrokeCap.Round)
-                    label("C = 2πr", Offset(w * .52f, h * .68f), Violet); label("d = 2r", Offset(w * .17f, h * .88f), Amber)
+                    label("$n-gon perimeter", Offset(w * .49f, h * .68f), Violet); label("d = 2r", Offset(w * .17f, h * .88f), Amber)
                 }
                 "triangle-area" -> {
                     val base = frame.parameters.getValue("base"); val height = frame.parameters.getValue("height"); val apex = frame.parameters.getValue("apex")
@@ -823,10 +829,13 @@ internal fun InteractiveVisualProofCanvas(
                     drawCircle(Color(0xFF07101B), radius, ca); drawCircle(Color(0xFF07101B), radius, cb)
                     drawRect(Ink, universe.topLeft, universe.size, style = Stroke(4f)); drawCircle(Cyan, radius, ca, style = Stroke(5f)); drawCircle(Amber, radius, cb, style = Stroke(5f))
                     label("A", ca + Offset(-radius * .62f, -radius * .55f), Cyan); label("B", cb + Offset(radius * .42f, -radius * .55f), Amber)
-                    label("same shaded region", Offset(w * .36f, h * .12f), Green, 25f)
+                    val inA = frame.parameters.getValue("inA") >= .5; val inB = frame.parameters.getValue("inB") >= .5
+                    label("test point: A=${if (inA) 1 else 0}, B=${if (inB) 1 else 0}", Offset(w * .25f, h * .12f), Green, 22f)
                     label("A B | ¬(A∨B) | ¬A∧¬B", Offset(w * .23f, h * .82f), Ink, 20f)
-                    label("0 0 |     1      |     1", Offset(w * .3f, h * .89f), Green, 19f)
-                    label("other rows: 0 = 0", Offset(w * .38f, h * .95f), Muted, 18f)
+                    listOf(false to false, false to true, true to false, true to true).forEachIndexed { index, (a, b) ->
+                        val left = !(a || b); val right = !a && !b
+                        label("${if (a) 1 else 0} ${if (b) 1 else 0} |     ${if (left) 1 else 0}      |     ${if (right) 1 else 0}", Offset(w * .3f, h * (.87f + index * .035f)), if (a == inA && b == inB) Green else Muted, 16f)
+                    }
                 }
                 "epsilon-delta" -> {
                     val epsilon = frame.parameters.getValue("epsilon"); val delta = frame.parameters.getValue("delta")
@@ -858,7 +867,8 @@ internal fun InteractiveVisualProofCanvas(
                     label("same rise/run = ${trim(slope)}", Offset(w * .55f, h * .15f), Green, 25f)
                 }
                 "eigenvector-direction" -> {
-                    val lambda = frame.parameters.getValue("lambda"); val other = frame.parameters.getValue("other"); val origin = Offset(w * .5f, h * .56f); val unit = minOf(w, h) * .12f
+                    val lambda = frame.parameters.getValue("lambda"); val other = frame.parameters.getValue("other"); val vy = frame.parameters.getValue("vy")
+                    val origin = Offset(w * .5f, h * .56f); val unit = minOf(w, h) * .12f
                     (-4..4).forEach { i ->
                         drawLine(Grid.copy(.45f), Offset(origin.x + i * unit, 20f), Offset(origin.x + i * unit, h - 30f), 1.5f)
                         drawLine(Grid.copy(.45f), Offset(20f, origin.y + i * unit), Offset(w - 20f, origin.y + i * unit), 1.5f)
@@ -868,10 +878,12 @@ internal fun InteractiveVisualProofCanvas(
                         drawLine(color, origin, end, 7f, cap = StrokeCap.Round); val delta = end - origin; val direction = delta / delta.getDistance().coerceAtLeast(1f); val normal = Offset(-direction.y, direction.x)
                         polygon(listOf(end, end - direction * 24f + normal * 11f, end - direction * 24f - normal * 11f), color, color); label(name, end + Offset(8f, -8f), color)
                     }
-                    vectorArrow(origin + Offset(unit * 1.35f, 0f), Cyan, "v")
-                    vectorArrow(origin + Offset((unit * 1.35f * lambda).toFloat(), 0f), Green, "Av=λv")
+                    vectorArrow(origin + Offset(unit * 1.35f, (-unit * 1.35f * vy).toFloat()), Cyan, "v")
+                    vectorArrow(origin + Offset((unit * 1.35f * lambda).toFloat(), (-unit * 1.35f * other * vy).toFloat()), Green, "Av")
                     drawLine(Amber.copy(.55f), origin, origin + Offset(0f, (-unit * other).toFloat()), 4f)
-                    label("direction line preserved", Offset(w * .57f, h * .18f), Green, 24f); label("other axis ×${trim(other)}", Offset(w * .58f, h * .3f), Amber, 19f)
+                    val isEigenvector = frame.residual <= 1e-7
+                    label(if (isEigenvector) "direction preserved" else "general vector turns", Offset(w * .57f, h * .18f), if (isEigenvector) Green else Amber, 24f)
+                    label("cross(v,Av)=${trim(evidence("cross(v,Av)"))}", Offset(w * .57f, h * .3f), Amber, 19f)
                 }
                 "counting-paths" -> {
                     val rightSteps = frame.parameters.getValue("right").toInt().coerceIn(1, 6); val upSteps = frame.parameters.getValue("up").toInt().coerceIn(1, 6)
@@ -885,16 +897,23 @@ internal fun InteractiveVisualProofCanvas(
                     label("C = left parent + below parent", Offset(w * .52f, h * .86f), Ink, 19f)
                 }
                 "modular-clock" -> {
-                    val a = frame.parameters.getValue("a").toInt(); val modulus = frame.parameters.getValue("n").toInt().coerceIn(2, 16); val remainder = ((a % modulus) + modulus) % modulus
+                    val a = frame.parameters.getValue("a").toInt(); val b = frame.parameters.getValue("b").toInt()
+                    val modulus = frame.parameters.getValue("n").toInt().coerceIn(2, 16)
+                    val remainderA = ((a % modulus) + modulus) % modulus; val remainderB = ((b % modulus) + modulus) % modulus
                     val center = Offset(w * .45f, h * .52f); val radius = minOf(w, h) * .29f
                     drawCircle(Cyan.copy(.08f), radius, center); drawCircle(Cyan, radius, center, style = Stroke(5f))
                     repeat(modulus) { index ->
                         val angle = -PI / 2 + 2 * PI * index / modulus; val point = center + Offset(cos(angle).toFloat() * radius, sin(angle).toFloat() * radius)
-                        drawCircle(if (index == remainder) Green else Muted, if (index == remainder) 12f else 5f, point); label(index.toString(), point + Offset(-7f, -13f), if (index == remainder) Green else Ink, 18f)
+                        val selected = index == remainderA || index == remainderB
+                        drawCircle(if (selected) Green else Muted, if (selected) 12f else 5f, point); label(index.toString(), point + Offset(-7f, -13f), if (selected) Green else Ink, 18f)
                     }
-                    val angle = -PI / 2 + 2 * PI * remainder / modulus; val end = center + Offset(cos(angle).toFloat() * radius * .78f, sin(angle).toFloat() * radius * .78f)
-                    drawLine(Amber, center, end, 7f, cap = StrokeCap.Round); drawArc(Violet.copy(.55f), -90f, 300f, false, Offset(center.x - radius * .55f, center.y - radius * .55f), Size(radius * 1.1f, radius * 1.1f), style = Stroke(4f))
-                    label("$a ≡ ${a - modulus} (mod $modulus)", Offset(w * .6f, h * .18f), Green, 25f); label("same remainder $remainder", Offset(w * .62f, h * .3f), Amber, 22f)
+                    fun hand(remainder: Int, color: Color) {
+                        val angle = -PI / 2 + 2 * PI * remainder / modulus
+                        drawLine(color, center, center + Offset(cos(angle).toFloat() * radius * .78f, sin(angle).toFloat() * radius * .78f), 7f, cap = StrokeCap.Round)
+                    }
+                    hand(remainderA, Amber); hand(remainderB, Violet)
+                    label("a→$remainderA  b→$remainderB", Offset(w * .58f, h * .18f), if (remainderA == remainderB) Green else Amber, 24f)
+                    label(if (remainderA == remainderB) "congruent" else "not congruent", Offset(w * .62f, h * .3f), if (remainderA == remainderB) Green else Muted, 22f)
                 }
                 "anscombe-quartet" -> {
                     drawAnscombeProof(frame, w, h)
@@ -951,6 +970,8 @@ internal fun ProofLearningCycle(frame: com.indianservers.aiexplorer.core.ProofFr
 private fun ProofLiveEvidence(frame: com.indianservers.aiexplorer.core.ProofFrame) {
     fun displayValue(name: String, value: Double): String = when {
         name == "inside interval" -> if (value >= .5) "YES" else "NO"
+        name in setOf("|x|≤r", "−r≤x≤r", "selected left expression", "selected right expression", "same clock position", "n divides a−b") ->
+            if (value >= .5) "TRUE" else "FALSE"
         name.startsWith("∠") || "angle" in name.lowercase() -> "${proofValue(value)}°"
         else -> proofValue(value)
     }
@@ -980,12 +1001,15 @@ private fun ProofLiveEvidence(frame: com.indianservers.aiexplorer.core.ProofFram
                 Text("LIVE VALUES", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
                 Text("Drag the diagram or sliders—every value updates immediately.", color = Muted, fontSize = 10.sp)
             }
-            Text(
-                if (frame.holds) "✓ VERIFIED" else "ADJUST TO VERIFY",
-                color = if (frame.holds) Green else Amber,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.ExtraBold,
-            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(frame.lab.evidenceType.label, color = Cyan, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
+                Text(
+                    if (frame.holds) "✓ VERIFIED" else "ADJUST TO VERIFY",
+                    color = if (frame.holds) Green else Amber,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                )
+            }
         }
         if (frame.parameters.isNotEmpty()) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -1080,7 +1104,9 @@ private fun ProofReasoningLens(
     profile: com.indianservers.aiexplorer.core.ProofVisualProfile,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        BeforeAfterProofDiagram(frame, profile)
+        if (com.indianservers.aiexplorer.core.ProofEnhancement.BeforeAfter in profile.features) {
+            BeforeAfterProofDiagram(frame, profile)
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Column(Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).background(Cyan.copy(.09f)).border(1.dp, Cyan.copy(.4f), RoundedCornerShape(12.dp)).padding(9.dp)) {
                 Text("${frame.step + 1}. SYMBOLIC", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
@@ -1109,7 +1135,9 @@ private fun ProofReasoningLens(
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ProofMiniPanel("TEST A SIMPLE CASE", profile.simpleCase, Violet, Modifier.weight(1f))
-            ProofMiniPanel("CONTRADICTION PATH", "Assume the conclusion is false → the two highlighted representations would measure differently → this conflicts with ${frame.invariant}.", Amber, Modifier.weight(1f))
+            if (com.indianservers.aiexplorer.core.ProofEnhancement.ContradictionPanel in profile.features) {
+                ProofMiniPanel("CONTRADICTION PATH", "Assume the conclusion is false → the independently evaluated representations would differ → this conflicts with ${frame.invariant}.", Amber, Modifier.weight(1f))
+            }
         }
         profile.analogy?.let { ProofMiniPanel("REAL-WORLD ANALOGY", it, Cyan, Modifier.fillMaxWidth()) }
         ProofLegend()

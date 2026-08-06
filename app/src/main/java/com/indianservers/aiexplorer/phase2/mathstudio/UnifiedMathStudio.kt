@@ -602,7 +602,7 @@ class UnifiedMathStudioEngine(
 class UnifiedStudioHistory(initial: UnifiedStudioSession, private val limit: Int = 60) {
     private val undo = ArrayDeque<UnifiedStudioSession>(); private val redo = ArrayDeque<UnifiedStudioSession>()
     var current: UnifiedStudioSession = initial; private set
-    fun apply(next: UnifiedStudioSession): UnifiedStudioSession { if (next != current) { undo.addLast(current); while (undo.size > limit) undo.removeFirst(); redo.clear(); current = next }; return current }
+    fun apply(next: UnifiedStudioSession): UnifiedStudioSession { if (next != current) { undo.addLast(current); while (undo.size > limit) undo.removeAt(0); redo.clear(); current = next }; return current }
     fun undo(): UnifiedStudioSession { undo.removeLastOrNull()?.let { redo.addLast(current); current = it }; return current }
     fun redo(): UnifiedStudioSession { redo.removeLastOrNull()?.let { undo.addLast(current); current = it }; return current }
     val canUndo get() = undo.isNotEmpty(); val canRedo get() = redo.isNotEmpty()

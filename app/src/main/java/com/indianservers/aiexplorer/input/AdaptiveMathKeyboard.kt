@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -51,6 +53,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
+import com.indianservers.aiexplorer.AppVisualTreatment
+import com.indianservers.aiexplorer.LocalAppVisualEffects
 
 enum class MathKeyboardContext {
     GENERAL,
@@ -524,16 +528,49 @@ fun AdaptiveMathKeyboard(
     val visibleKeys = keys
     val beginnerPages = listOf(MathKeyboardPage.BASIC, MathKeyboardPage.FUNCTIONS, MathKeyboardPage.LETTERS, MathKeyboardPage.COMMANDS)
     val visiblePages = beginnerPages
+    val visualEffects = LocalAppVisualEffects.current
+    val keyboardShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+    val keyboardShell = modifier.fillMaxWidth().navigationBarsPadding()
+    val decoratedKeyboardShell = when {
+        MathKeyboardPreferences.highContrast -> keyboardShell
+            .background(Color.Black, keyboardShape)
+            .border(2.dp, Color.White, keyboardShape)
+        !visualEffects.enhanced -> keyboardShell
+            .background(Color(0xFF07131F), keyboardShape)
+            .border(1.dp, IntentMathPalette.Command.copy(alpha = .62f), keyboardShape)
+        else -> {
+            val surface = MaterialTheme.colorScheme.surface
+            val primary = MaterialTheme.colorScheme.primary
+            val secondary = MaterialTheme.colorScheme.secondary
+            val colors = when (visualEffects.treatment) {
+                AppVisualTreatment.NeonGlass -> listOf(
+                    primary.copy(alpha = .16f),
+                    surface,
+                    secondary.copy(alpha = .10f),
+                )
+                AppVisualTreatment.SpectralWireframe -> listOf(
+                    secondary.copy(alpha = .15f),
+                    surface,
+                    primary.copy(alpha = .12f),
+                )
+                AppVisualTreatment.Standard -> listOf(surface, surface)
+            }
+            keyboardShell
+                .background(Brush.verticalGradient(colors), keyboardShape)
+                .border(
+                    1.dp,
+                    Brush.linearGradient(
+                        listOf(
+                            primary.copy(alpha = visualEffects.borderGlowAlpha),
+                            secondary.copy(alpha = visualEffects.borderGlowAlpha),
+                        ),
+                    ),
+                    keyboardShape,
+                )
+        }
+    }
     Column(
-        modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .background(if (MathKeyboardPreferences.highContrast) Color.Black else Color(0xFF07131F), RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            .border(
-                if (MathKeyboardPreferences.highContrast) 2.dp else 1.dp,
-                if (MathKeyboardPreferences.highContrast) Color.White else IntentMathPalette.Command.copy(alpha = .62f),
-                RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-            )
+        decoratedKeyboardShell
             .padding(horizontal = 8.dp, vertical = 7.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {

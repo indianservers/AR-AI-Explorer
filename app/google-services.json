@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "93339227102",
+    "project_id": "ai-maths-explorer",
+    "storage_bucket": "ai-maths-explorer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93339227102:android:2fb638f0da4f5cbb11c34f",
+        "android_client_info": {
+          "package_name": "com.indianservers.aiexplorer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEUc6CFZVeq4y5Qi02Sg_IvAPHNXD2weA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

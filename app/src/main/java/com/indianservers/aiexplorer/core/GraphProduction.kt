@@ -198,6 +198,28 @@ data class ProfessionalGraphTable(val columns: List<GraphDataColumn>, val rowCou
 }
 
 class ProfessionalGraphTableEngine(private val expressions: ExpressionEngine = ExpressionEngine()) {
+    fun functionInputs(start: Double, end: Double, step: Double, maximumRows: Int = 501): List<Double> {
+        require(start.isFinite() && end.isFinite() && step.isFinite() && step != 0.0) {
+            "Table range values must be finite and step cannot be zero."
+        }
+        require(maximumRows in 1..100_000) { "Table row limit must be from 1 to 100,000." }
+        require((end - start) * step >= 0.0) { "Step must move from the start value toward the end value." }
+        val tolerance = abs(step) * 1e-9
+        val values = mutableListOf<Double>()
+        var current = start
+        while (
+            values.size < maximumRows &&
+            if (step > 0.0) current <= end + tolerance else current >= end - tolerance
+        ) {
+            values += if (abs(current) < 1e-12) 0.0 else current
+            current = start + values.size * step
+        }
+        require(
+            if (step > 0.0) current > end + tolerance else current < end - tolerance,
+        ) { "This range exceeds the $maximumRows-row table limit." }
+        return values
+    }
+
     fun paste(source: String, hasHeader: Boolean = true): ProfessionalGraphTable {
         val lines = source.lineSequence().filter { it.isNotBlank() }.toList()
         if (lines.isEmpty()) return ProfessionalGraphTable(emptyList(), 0)

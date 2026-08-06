@@ -100,7 +100,7 @@ object MathInputIntelligence {
                 character in ")] }”".replace(" ", "") -> {
                     val expected = when (character) { ')' -> '('; ']' -> '['; '}' -> '{'; '”' -> '“'; else -> character }
                     val matches = brackets.lastOrNull()?.first == expected; val depth = brackets.size.coerceAtLeast(1)
-                    if (matches) brackets.removeLast() else bracketError = true
+                    if (matches) brackets.removeAt(brackets.lastIndex) else bracketError = true
                     index++; tokens += MathInputToken(start, index, character.toString(), if (matches) MathInputTokenKind.Bracket else MathInputTokenKind.Error, depth)
                 }
                 source.startsWith("<=", index) || source.startsWith(">=", index) || source.startsWith("!=", index) || source.startsWith("==", index) || source.startsWith("->", index) -> {
