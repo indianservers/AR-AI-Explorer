@@ -214,11 +214,19 @@ private data class FunctionNode(val name: String, val args: List<Node>) : Node {
             return if (args[0].eval(v) != 0.0) args[1].eval(v) else args[2].eval(v)
         }
         if (normalized == "derivative" || normalized == "partial") {
-            require(args.size == 2) { "$name requires an expression and variable" }
+            require(args.size == 2 || args.size == 3) { "$name requires an expression, variable, and optional order" }
             val variable = (args[1] as? VariableNode)?.name ?: error("$name requires a variable")
-            val center = v[variable] ?: 0.0
-            val h = max(1e-6, abs(center) * 1e-5)
-            return (args[0].eval(v + (variable to center + h)) - args[0].eval(v + (variable to center - h))) / (2.0 * h)
+            val order = if (args.size == 3) args[2].eval(v).toInt() else 1
+            require(order in 1..6) { "$name order must be between 1 and 6" }
+            fun evaluateDerivative(level: Int, center: Double): Double {
+                if (level == 0) return args[0].eval(v + (variable to center))
+                val h = max(1e-4, abs(center) * 1e-4)
+                return (
+                    evaluateDerivative(level - 1, center + h) -
+                        evaluateDerivative(level - 1, center - h)
+                    ) / (2.0 * h)
+            }
+            return evaluateDerivative(order, v[variable] ?: 0.0)
         }
         if (normalized == "limit") {
             require(args.size == 3) { "limit requires an expression, variable, and target" }

@@ -252,6 +252,8 @@ internal val functionKeys = listOf(
     MathKey("log", "log()", 1, description = "Base ten logarithm"),
     MathKey("|x|", "abs(%s)", 1, description = "Absolute value"),
     MathKey("eˣ", "exp()", 1, description = "Exponential"),
+    MathKey("n!", "!", description = "Factorial"),
+    MathKey("i", "i", description = "Imaginary unit", tone = MathKeyTone.CONSTANT),
     MathKey("floor", "floor()", 1, description = "Floor"),
     MathKey("ceil", "ceil()", 1, description = "Ceiling"),
     MathKey("min", "min(,)", 2, description = "Minimum"),
@@ -300,24 +302,40 @@ internal fun trigonometryKeys(inverse: Boolean): List<MathKey> =
         directTrigonometryKeys + directHyperbolicKeys + trigonometryUtilityKeys
     }
 
+private fun structuredTemplate(
+    label: String,
+    insertion: String,
+    description: String,
+): MathKey {
+    val expressionSlot = insertion.indexOf("%s")
+    val inserted = insertion.replace("%s", "")
+    return MathKey(
+        label = label,
+        insertion = insertion,
+        cursorBack = if (expressionSlot >= 0) inserted.length - expressionSlot else 0,
+        description = description,
+        tone = MathKeyTone.CALCULUS,
+    )
+}
+
 internal val calculusKeys = listOf(
-    MathKey("d/dx", "derivative(%s,x)", 2, description = "Derivative"),
-    MathKey("d²/dx²", "derivative(derivative(%s,x),x)", 4, description = "Second derivative"),
-    MathKey("∂/∂x", "partial(%s,x)", 2, description = "Partial derivative"),
-    MathKey("∂/∂y", "partial(%s,y)", 2, description = "Partial derivative with respect to y"),
-    MathKey("∂²/∂x²", "partial(partial(%s,x),x)", 4, description = "Second partial derivative"),
-    MathKey("∂²/∂x∂y", "partial(partial(%s,x),y)", 4, description = "Mixed partial derivative"),
-    MathKey("∫", "integral(%s,x)", 2, description = "Indefinite integral"),
-    MathKey("∬", "integral(integral(%s,x),y)", 4, description = "Double integral"),
-    MathKey("∭", "integral(integral(integral(%s,x),y),z)", 6, description = "Triple integral"),
-    MathKey("∫ᵃᵇ", "integral(%s,x,,)", 3, description = "Definite integral"),
-    MathKey("lim", "limit(%s,x,)", 1, description = "Limit"),
-    MathKey("Σ", "sum(%s,n,,)", 3, description = "Summation"),
-    MathKey("Π", "product(%s,n,,)", 3, description = "Product"),
-    MathKey("∮", "contour(%s,z)", 2, description = "Contour integral"),
-    MathKey("∇", "gradient(%s)", 1, description = "Gradient"),
-    MathKey("θ", "theta()", 1, description = "Heaviside theta"),
-    MathKey("δ", "delta()", 1, description = "Dirac delta"),
+    structuredTemplate("d/dx", "derivative(%s,x)", "Derivative"),
+    structuredTemplate("d²/dx²", "derivative(%s,x,2)", "Second derivative"),
+    structuredTemplate("d³/dx³", "derivative(%s,x,3)", "Third derivative"),
+    structuredTemplate("d⁴/dx⁴", "derivative(%s,x,4)", "Fourth derivative"),
+    structuredTemplate("∂/∂x", "partial(%s,x)", "Partial derivative"),
+    structuredTemplate("∂/∂y", "partial(%s,y)", "Partial derivative with respect to y"),
+    structuredTemplate("∂²/∂x²", "partial(partial(%s,x),x)", "Second partial derivative"),
+    structuredTemplate("∂²/∂x∂y", "partial(partial(%s,x),y)", "Mixed partial derivative"),
+    structuredTemplate("∫", "integral(%s,x)", "Indefinite integral"),
+    structuredTemplate("∬", "integral(integral(%s,x),y)", "Double integral"),
+    structuredTemplate("∭", "integral(integral(integral(%s,x),y),z)", "Triple integral"),
+    structuredTemplate("∫ᵃᵇ", "integral(%s,x,,)", "Definite integral"),
+    structuredTemplate("lim", "limit(%s,x,)", "Limit"),
+    structuredTemplate("Σ", "sum(%s,n,,)", "Summation"),
+    structuredTemplate("Π", "product(%s,n,,)", "Product"),
+    structuredTemplate("∮", "contour(%s,z)", "Contour integral"),
+    structuredTemplate("∇", "gradient(%s)", "Gradient"),
     MathKey("dx"), MathKey("dy"), MathKey("dt"), MathKey("∞", "infinity"),
 )
 
@@ -357,8 +375,8 @@ internal val matrixStructureKeys = listOf(
     matrixTemplate(3, 3),
     matrixTemplate(4, 4),
     MathKey("det", "det()", 1, description = "Determinant"),
-    MathKey("A⁻¹", "inverse()", 1, description = "Inverse matrix"),
-    MathKey("Aᵀ", "transpose()", 1, description = "Matrix transpose"),
+    MathKey("A⁻¹", "(%s)^(-1)", description = "Inverse matrix"),
+    MathKey("Aᵀ", "(%s)^(T)", description = "Matrix transpose"),
 )
 
 private val symbolKeys = listOf(
@@ -484,8 +502,8 @@ internal val mathKeyboardCommands = listOf(
     MathCommand("Matrix 2×2", "Matrices", MathKey("[2×2]", "[[,],[,]]", 7, description = "Two by two matrix"), "Insert a 2 by 2 matrix.", setOf(MathKeyboardContext.MATRIX)),
     MathCommand("Matrix 3×3", "Matrices", MathKey("[3×3]", "[[,,],[,,],[,,]]", 13, description = "Three by three matrix"), "Insert a 3 by 3 matrix."),
     MathCommand("Determinant", "Matrices", MathKey("det", "det()", 1, description = "Determinant"), "Calculate a matrix determinant."),
-    MathCommand("Inverse matrix", "Matrices", MathKey("A⁻¹", "inverse()", 1, description = "Inverse matrix"), "Find a matrix inverse."),
-    MathCommand("Transpose", "Matrices", MathKey("Aᵀ", "transpose()", 1, description = "Matrix transpose"), "Transpose a matrix."),
+    MathCommand("Inverse matrix", "Matrices", MathKey("A⁻¹", "(%s)^(-1)", description = "Inverse matrix"), "Find a matrix inverse."),
+    MathCommand("Transpose", "Matrices", MathKey("Aᵀ", "(%s)^(T)", description = "Matrix transpose"), "Transpose a matrix."),
     MathCommand("Dot product", "Vectors", MathKey("a·b", "dot(,)", 2, description = "Dot product"), "Calculate a scalar product."),
     MathCommand("Cross product", "Vectors", MathKey("a×b", "cross(,)", 2, description = "Cross product"), "Calculate a vector product."),
     MathCommand("Mean", "Statistics", MathKey("mean", "mean()", 1, description = "Mean"), "Calculate the arithmetic mean."),
@@ -526,9 +544,9 @@ internal val mathKeyboardCommands = listOf(
     MathCommand("Minimum", "Optimisation", MathKey("min", "min()", 1, description = "Minimum"), "Find a minimum value."),
     MathCommand("Maximum", "Optimisation", MathKey("max", "max()", 1, description = "Maximum"), "Find a maximum value."),
     MathCommand("Derivative", "Calculus", calculusKeys[0], "Find the rate of change.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
-    MathCommand("Definite integral", "Calculus", calculusKeys[9], "Find accumulated signed area.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
-    MathCommand("Limit", "Calculus", calculusKeys[10], "Find the value approached by a function."),
-    MathCommand("Summation", "Calculus", calculusKeys[11], "Add terms over an index range."),
+    MathCommand("Definite integral", "Calculus", calculusKeys[10], "Find accumulated signed area.", setOf(MathKeyboardContext.CALCULUS, MathKeyboardContext.GRAPH_2D)),
+    MathCommand("Limit", "Calculus", calculusKeys[11], "Find the value approached by a function."),
+    MathCommand("Summation", "Calculus", calculusKeys[12], "Add terms over an index range."),
     MathCommand("Piecewise function", "Functions", functionKeys.last(), "Choose an expression using a condition."),
 )
 

@@ -760,26 +760,32 @@ object StructuredMathVisualLayout {
     ) {
         var index = start
         while (index < end) {
+            val determinantEnd = renderDeterminantAt(source, index, end, output, inheritedStyle)
+            if (determinantEnd != null) {
+                index = determinantEnd
+                continue
+            }
+            val matrixEnd = renderMatrixAt(source, index, end, output, inheritedStyle)
+            if (matrixEnd != null) {
+                index = matrixEnd
+                continue
+            }
             val fraction = simpleFractionAt(source, index, end)
             if (fraction != null) {
                 output.skipTo(fraction.numeratorStart)
-                val numerator = source.substring(fraction.numeratorStart, fraction.numeratorEnd).ifEmpty { "□" }
-                output.appendReplacement(
-                    fraction.numeratorStart,
-                    fraction.numeratorEnd,
-                    numerator,
-                    scriptStyle,
-                )
+                if (fraction.numeratorStart == fraction.numeratorEnd) {
+                    output.appendReplacement(fraction.numeratorStart, fraction.numeratorEnd, "□", scriptStyle.merge(slotStyle))
+                } else {
+                    renderRange(source, fraction.numeratorStart, fraction.numeratorEnd, output, scriptStyle)
+                }
                 output.skipTo(fraction.slash)
                 output.appendReplacement(fraction.slash, fraction.slash + 1, "⁄", inheritedStyle)
                 output.skipTo(fraction.denominatorStart)
-                val denominator = source.substring(fraction.denominatorStart, fraction.denominatorEnd).ifEmpty { "□" }
-                output.appendReplacement(
-                    fraction.denominatorStart,
-                    fraction.denominatorEnd,
-                    denominator,
-                    subscriptStyle,
-                )
+                if (fraction.denominatorStart == fraction.denominatorEnd) {
+                    output.appendReplacement(fraction.denominatorStart, fraction.denominatorEnd, "□", subscriptStyle.merge(slotStyle))
+                } else {
+                    renderRange(source, fraction.denominatorStart, fraction.denominatorEnd, output, subscriptStyle)
+                }
                 output.skipTo(fraction.sourceEnd)
                 index = fraction.sourceEnd
                 continue
@@ -892,6 +898,21 @@ object StructuredMathVisualLayout {
                     continue
                 }
             }
+            if (source.startsWith("exp(", index)) {
+                val open = index + 3
+                val close = matchingParen(source, open)
+                if (close in (open + 1)..end) {
+                    output.appendReplacement(index, open + 1, "e", inheritedStyle)
+                    if (close == open + 1) {
+                        output.appendReplacement(open + 1, close, "□", scriptStyle.merge(slotStyle))
+                    } else {
+                        renderRange(source, open + 1, close, output, scriptStyle)
+                    }
+                    output.skipTo(close + 1)
+                    index = close + 1
+                    continue
+                }
+            }
             val calculusEnd = renderCalculusCall(source, index, end, output, inheritedStyle)
             if (calculusEnd != null) {
                 index = calculusEnd
@@ -925,6 +946,11 @@ object StructuredMathVisualLayout {
                 index += 2
                 continue
             }
+            if (source[index] == '*') {
+                output.appendReplacement(index, index + 1, "\u2009", inheritedStyle)
+                index++
+                continue
+            }
             output.appendReplacement(index, index + 1, source[index].toString(), inheritedStyle)
             index++
         }
@@ -953,13 +979,26 @@ object StructuredMathVisualLayout {
         }
 
         when {
-            name in setOf("derivative", "partial") && arguments.size == 2 -> {
+            name in setOf("derivative", "partial") && arguments.size in setOf(2, 3) -> {
                 val symbol = if (name == "derivative") "d" else "∂"
-                output.appendReplacement(index, arguments[0].first, "$symbol(", inheritedStyle)
+                val order = arguments.getOrNull(2)
+                    ?.let { source.substring(it.first, it.second).ifBlank { "□" } }
+                    ?: "1"
+                output.appendReplacement(index, arguments[0].first, symbol, inheritedStyle)
+                if (order != "1") {
+                    output.appendReplacement(arguments[0].first, arguments[0].first, order, scriptStyle)
+                }
+                output.appendReplacement(arguments[0].first, arguments[0].first, "(", inheritedStyle)
                 renderArgument(0)
-                output.appendReplacement(arguments[0].second, arguments[1].first, ")/$symbol(", inheritedStyle)
-                renderArgument(1, subscriptStyle)
-                output.appendReplacement(arguments[1].second, close + 1, ")", inheritedStyle)
+                output.appendReplacement(arguments[0].second, arguments[1].first, ")/$symbol", inheritedStyle)
+                renderArgument(1)
+                if (arguments.size == 3) {
+                    output.appendReplacement(arguments[1].second, arguments[2].first, "", inheritedStyle)
+                    renderArgument(2, scriptStyle)
+                    output.appendReplacement(arguments[2].second, close + 1, "", inheritedStyle)
+                } else {
+                    output.appendReplacement(arguments[1].second, close + 1, "", inheritedStyle)
+                }
             }
             name == "integral" && arguments.size in setOf(2, 4) -> {
                 output.appendReplacement(index, arguments[0].first, "∫(", inheritedStyle)
@@ -1017,6 +1056,134 @@ object StructuredMathVisualLayout {
         }
         output.skipTo(close + 1)
         return close + 1
+    }
+
+    private data class MatrixRowMatch(
+        val open: Int,
+        val close: Int,
+        val cells: List<Pair<Int, Int>>,
+    )
+
+    private data class MatrixMatch(
+        val close: Int,
+        val rows: List<MatrixRowMatch>,
+    )
+
+    private fun renderDeterminantAt(
+        source: String,
+        index: Int,
+        end: Int,
+        output: VisualBuilder,
+        inheritedStyle: SpanStyle?,
+    ): Int? {
+        if (!source.startsWith("det(", index)) return null
+        val open = index + 3
+        val close = matchingParen(source, open)
+        if (close !in (open + 1)..end) return null
+        val matrixStart = open + 1
+        val matrix = matrixAt(source, matrixStart, close) ?: return null
+        if (matrix.close != close - 1) return null
+        output.appendReplacement(index, matrixStart, "", inheritedStyle)
+        renderMatrix(source, matrixStart, matrix, output, inheritedStyle, determinant = true)
+        output.appendReplacement(matrix.close + 1, close + 1, "", inheritedStyle)
+        output.skipTo(close + 1)
+        return close + 1
+    }
+
+    private fun renderMatrixAt(
+        source: String,
+        index: Int,
+        end: Int,
+        output: VisualBuilder,
+        inheritedStyle: SpanStyle?,
+    ): Int? {
+        val matrix = matrixAt(source, index, end) ?: return null
+        renderMatrix(source, index, matrix, output, inheritedStyle, determinant = false)
+        output.skipTo(matrix.close + 1)
+        return matrix.close + 1
+    }
+
+    private fun renderMatrix(
+        source: String,
+        start: Int,
+        matrix: MatrixMatch,
+        output: VisualBuilder,
+        inheritedStyle: SpanStyle?,
+        determinant: Boolean,
+    ) {
+        output.appendReplacement(start, start + 1, "", inheritedStyle)
+        matrix.rows.forEachIndexed { rowIndex, row ->
+            val left = when {
+                determinant -> "│"
+                matrix.rows.size == 1 -> "["
+                rowIndex == 0 -> "⎡"
+                rowIndex == matrix.rows.lastIndex -> "⎣"
+                else -> "⎢"
+            }
+            val right = when {
+                determinant -> "│"
+                matrix.rows.size == 1 -> "]"
+                rowIndex == 0 -> "⎤"
+                rowIndex == matrix.rows.lastIndex -> "⎦"
+                else -> "⎥"
+            }
+            output.appendReplacement(row.open, row.open + 1, left, inheritedStyle)
+            row.cells.forEachIndexed { cellIndex, cell ->
+                if (cell.first == cell.second) {
+                    output.appendReplacement(cell.first, cell.second, "□", slotStyle)
+                } else {
+                    renderRange(source, cell.first, cell.second, output, inheritedStyle)
+                }
+                val separatorEnd = row.cells.getOrNull(cellIndex + 1)?.first ?: row.close
+                if (cell.second < separatorEnd) {
+                    output.appendReplacement(cell.second, separatorEnd, "  ", inheritedStyle)
+                }
+            }
+            output.appendReplacement(row.close, row.close + 1, right, inheritedStyle)
+            val nextOpen = matrix.rows.getOrNull(rowIndex + 1)?.open
+            if (nextOpen != null) {
+                output.appendReplacement(row.close + 1, nextOpen, "\n", inheritedStyle)
+            }
+        }
+        output.appendReplacement(matrix.close, matrix.close + 1, "", inheritedStyle)
+    }
+
+    private fun matrixAt(source: String, start: Int, end: Int): MatrixMatch? {
+        if (source.getOrNull(start) != '[' || source.getOrNull(start + 1) != '[') return null
+        val close = matchingSquareBracket(source, start)
+        if (close !in (start + 2) until end) return null
+        val rows = mutableListOf<MatrixRowMatch>()
+        var cursor = start + 1
+        while (cursor < close) {
+            while (source.getOrNull(cursor)?.isWhitespace() == true || source.getOrNull(cursor) == ',') cursor++
+            if (source.getOrNull(cursor) != '[') return null
+            val rowClose = matchingSquareBracket(source, cursor)
+            if (rowClose !in (cursor + 1) until close) return null
+            rows += MatrixRowMatch(cursor, rowClose, matrixCellRanges(source, cursor + 1, rowClose))
+            cursor = rowClose + 1
+        }
+        return rows.takeIf { it.isNotEmpty() }?.let { MatrixMatch(close, it) }
+    }
+
+    private fun matrixCellRanges(source: String, start: Int, end: Int): List<Pair<Int, Int>> {
+        val ranges = mutableListOf<Pair<Int, Int>>()
+        var cellStart = start
+        var roundDepth = 0
+        var squareDepth = 0
+        for (index in start until end) {
+            when (source[index]) {
+                '(' -> roundDepth++
+                ')' -> roundDepth--
+                '[' -> squareDepth++
+                ']' -> squareDepth--
+                ',' -> if (roundDepth == 0 && squareDepth == 0) {
+                    ranges += cellStart to index
+                    cellStart = index + 1
+                }
+            }
+        }
+        ranges += cellStart to end
+        return ranges
     }
 
     private data class FractionMatch(
@@ -1119,7 +1286,9 @@ object StructuredMathVisualLayout {
 private val structuredFunctions = listOf(
     "derivative", "partial", "integral", "limit", "product", "contour", "gradient",
     "nthroot", "theta", "delta", "sum",
-    "asin", "acos", "atan", "sinh", "cosh", "tanh",
+    "asech", "acsch", "acoth", "asinh", "acosh", "atanh",
+    "asec", "acsc", "acot", "asin", "acos", "atan",
+    "sech", "csch", "coth", "sinh", "cosh", "tanh",
     "sin", "cos", "tan", "exp", "abs", "sqrt", "cbrt", "log", "ln",
 )
 

@@ -169,8 +169,17 @@ class StructuredMathEditorTest {
 
     @Test
     fun calculusTemplatesRenderAsReadableMathematicsWithIndependentArguments() {
-        assertEquals("d(x²)/d(x)", render("derivative(x²,x)").text)
-        assertEquals("∂(x*y)/∂(x)", render("partial(x*y,x)").text)
+        assertEquals("d(x²)/dx", render("derivative(x²,x)").text)
+        assertEquals("∂(x y)/∂x", render("partial(x*y,x)").text)
+        val secondDerivative = render("derivative(y,x,2)")
+        val thirdDerivative = render("derivative(y,x,3)")
+        val fourthDerivative = render("derivative(y,x,4)")
+        assertEquals("d2(y)/dx2", secondDerivative.text)
+        assertEquals("d3(y)/dx3", thirdDerivative.text)
+        assertEquals("d4(y)/dx4", fourthDerivative.text)
+        assertTrue(secondDerivative.spanStyles.count { it.item.baselineShift == BaselineShift.Superscript } >= 2)
+        assertTrue(thirdDerivative.spanStyles.count { it.item.baselineShift == BaselineShift.Superscript } >= 2)
+        assertTrue(fourthDerivative.spanStyles.count { it.item.baselineShift == BaselineShift.Superscript } >= 2)
         assertEquals("∫(x²) dx", render("integral(x²,x)").text)
         assertEquals("∫(x) dx [0,1]", render("integral(x,x,0,1)").text)
         assertEquals("lim(sin(x)/x; x→0)", render("limit(sin(x)/x,x,0)").text)
@@ -180,6 +189,41 @@ class StructuredMathEditorTest {
             .filter { it.mode == MathInputMode.FUNCTION_ARGUMENT }
         assertEquals(4, slots.size)
         assertEquals(4, slots.map { it.owner }.distinct().size)
+    }
+
+    @Test
+    fun exponentialAndMultiplicationUseConventionalVisualNotation() {
+        val rendered = render("exp(600*x)*sin(x)")
+
+        assertEquals("e600 x sin(x)", rendered.text)
+        assertTrue(
+            rendered.spanStyles.any {
+                it.item.baselineShift == BaselineShift.Superscript
+            },
+        )
+        assertFalse(rendered.text.contains("exp("))
+        assertFalse(rendered.text.contains("*"))
+    }
+
+    @Test
+    fun matricesAndDeterminantsRenderAsMathematicalLayouts() {
+        val matrix = render("[[1,2,3],[0,-1,4],[2,1,0]]").text
+        val determinant = render("det([[2,-1,3],[0,4,5],[1,2,-2]])").text
+
+        assertEquals("⎡1  2  3⎤\n⎢0  -1  4⎥\n⎣2  1  0⎦", matrix)
+        assertEquals("│2  -1  3│\n│0  4  5│\n│1  2  -2│", determinant)
+        assertFalse(matrix.contains("["))
+        assertFalse(determinant.contains("det"))
+    }
+
+    @Test
+    fun nestedFractionsRetainNestedMathStyling() {
+        val source = "(600+(a)/(b))/(1-(a)/(b))"
+        val rendered = render(source)
+
+        assertEquals(3, rendered.text.count { it == '⁄' })
+        assertFalse(rendered.text.contains("/"))
+        assertTrue(rendered.spanStyles.count { it.item.baselineShift != null } >= 4)
     }
 
     @Test

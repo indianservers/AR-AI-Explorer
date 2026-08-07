@@ -114,6 +114,19 @@ class AdaptiveMathKeyboardTest {
     }
 
     @Test
+    fun calculusTemplatesPlaceCaretInTheirPrimaryExpressionSlot() {
+        calculusKeys.filter { "%s" in it.insertion }.forEach { key ->
+            val result = MathTextEditing.insert(TextFieldValue(""), key)
+
+            assertEquals(
+                "${key.description} caret",
+                key.insertion.indexOf("%s"),
+                result.selection.start,
+            )
+        }
+    }
+
+    @Test
     fun extendedTrigKeysEvaluateInsteadOfActingAsDecorativeTemplates() {
         val engine = ExpressionEngine()
 
@@ -220,11 +233,17 @@ class AdaptiveMathKeyboardTest {
     @Test
     fun mathPlusExposesNotationCalculusAndMatrixStructures() {
         assertTrue(advancedNotationKeys.any { it.action.name == "TOGGLE_NTH_ROOT" })
+        assertTrue(functionKeys.any { it.insertion == "!" })
+        assertTrue(functionKeys.any { it.insertion == "i" })
         assertTrue(calculusKeys.any { it.label == "∬" })
         assertTrue(calculusKeys.any { it.label == "∭" })
+        assertTrue(calculusKeys.any { it.insertion == "derivative(%s,x,3)" })
+        assertTrue(calculusKeys.any { it.insertion == "derivative(%s,x,4)" })
         assertTrue(calculusKeys.any { it.label == "∮" })
         assertTrue(matrixStructureKeys.any { it.label == "1×4" })
         assertTrue(matrixStructureKeys.any { it.label == "4×4" })
+        assertTrue(matrixStructureKeys.any { it.insertion == "(%s)^(-1)" })
+        assertTrue(matrixStructureKeys.any { it.insertion == "(%s)^(T)" })
     }
 
     @Test
