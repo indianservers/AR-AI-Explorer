@@ -1,5 +1,6 @@
 package com.indianservers.aiexplorer
 
+import com.indianservers.aiexplorer.adaptive.LocalAdaptiveDeviceProfile
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
@@ -499,6 +500,7 @@ import kotlin.math.pow
 
 @Composable
 internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
     var query by remember { mutableStateOf("") }
     var topic by remember { mutableStateOf<KnowledgeTopic?>(null) }
 	    var level by remember { mutableStateOf<KnowledgeLevel?>(null) }
@@ -886,8 +888,14 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
         Modifier
             .fillMaxSize()
             .padding(
-                top = if (wide) 74.dp else 70.dp,
-                bottom = if (wide) 72.dp else 70.dp,
+                top = if (adaptiveProfile.isTelevision) {
+                    adaptiveProfile.workspacePolicy.topChromeClearance
+                } else if (wide) {
+                    74.dp
+                } else {
+                    70.dp
+                },
+                bottom = if (adaptiveProfile.isTelevision) 8.dp else if (wide) 72.dp else 70.dp,
                 start = if (wide) 12.dp else 0.dp,
                 end = if (wide) 12.dp else 0.dp,
             ),

@@ -12,7 +12,9 @@ import com.indianservers.aiexplorer.workspace.WorkspaceProjectRecovery
 import com.indianservers.aiexplorer.workspace.WorkspaceState
 import com.indianservers.aiexplorer.workspace.GeoGebraImport
 import com.indianservers.aiexplorer.workspace.GeoGebraPackageExchange
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -58,7 +60,7 @@ object MathFileExchange {
 
     suspend fun readGeoGebra(activity: Activity, uri: Uri, base: WorkspaceState): GeoGebraImport = withContext(Dispatchers.IO) {
         val bytes = activity.contentResolver.openInputStream(uri)?.use { input ->
-            val result = input.readNBytes(GeoGebraPackageExchange.maximumPackageBytes + 1)
+            val result = input.readUpTo(GeoGebraPackageExchange.maximumPackageBytes + 1)
             require(result.size <= GeoGebraPackageExchange.maximumPackageBytes) { "GeoGebra package exceeds the 8 MB safety limit." }
             result
         } ?: error("The selected GeoGebra file could not be opened.")
@@ -80,6 +82,19 @@ object MathFileExchange {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         activity.startActivity(Intent.createChooser(intent, title))
+    }
+
+    private fun InputStream.readUpTo(limit: Int): ByteArray {
+        val output = ByteArrayOutputStream(minOf(limit, 16 * 1024))
+        val buffer = ByteArray(8 * 1024)
+        var remaining = limit
+        while (remaining > 0) {
+            val read = read(buffer, 0, minOf(buffer.size, remaining))
+            if (read < 0) break
+            output.write(buffer, 0, read)
+            remaining -= read
+        }
+        return output.toByteArray()
     }
 
     private fun shareDirectory(activity: Activity) = File(activity.cacheDir, "shared-maths").apply { mkdirs() }

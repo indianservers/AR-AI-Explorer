@@ -1,5 +1,6 @@
 package com.indianservers.aiexplorer
 
+import com.indianservers.aiexplorer.adaptive.LocalAdaptiveDeviceProfile
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
@@ -504,6 +505,17 @@ import kotlin.math.pow
 
 @Composable
 internal fun Graph2DScreen(vm: ExplorerViewModel) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceToolTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        72.dp
+    }
+    val workspacePanelWidth = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.sidePanelWidth
+    } else {
+        300.dp
+    }
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val graphScope = rememberCoroutineScope()
@@ -807,7 +819,11 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
         }
         if (!presentationMode && showPointsOfInterest && pointsOfInterest.isNotEmpty() && !graphTypingMode) {
             Row(
-                Modifier.align(Alignment.TopCenter).padding(top = 142.dp, start = 10.dp, end = 10.dp)
+                Modifier.align(Alignment.TopCenter).padding(
+                    top = if (adaptiveProfile.isTelevision) workspaceToolTop + 54.dp else 142.dp,
+                    start = 10.dp,
+                    end = 10.dp,
+                )
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
@@ -956,7 +972,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
         if (!graphTypingMode && !presentationMode) Column(
             Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 72.dp, end = 10.dp)
+                .padding(top = workspaceToolTop, end = 10.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(SurfaceA.copy(.82f))
                 .animateContentSize()
@@ -1088,7 +1104,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 }) }
             }
         }
-        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(300.dp)) {
+        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(workspacePanelWidth)) {
             PanelHeader("Equations & Definitions", vm::hidePanels, Cyan)
             Text("Desmos-style rows · expressions, sliders and generated tables share one object graph.", color = Muted, fontSize = 11.sp)
             OutlinedTextField(
@@ -1167,7 +1183,11 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             GeneratedTablePreview(objectGraphSnapshot.generatedTable)
             Text("Use the + button above the graph for every new user equation.", color = Muted, fontSize = 11.sp)
         }
-        if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(270.dp)) {
+        if (vm.showRightPanel) GlassPanel(
+            Modifier.align(Alignment.TopEnd).width(
+                if (adaptiveProfile.isTelevision) adaptiveProfile.workspacePolicy.sidePanelWidth else 270.dp,
+            ),
+        ) {
             PanelHeader("Graph Insights", vm::hidePanels, Violet)
             Insight("Selected row", selectedFunction?.name ?: "Tap a row", Amber)
             Insight("Object graph", "${objectGraphSnapshot.expressionRows.size} rows · ${objectGraphSnapshot.parameterRows.size} sliders", Cyan)

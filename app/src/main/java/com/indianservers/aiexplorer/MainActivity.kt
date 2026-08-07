@@ -114,6 +114,8 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -149,6 +151,14 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.core.content.ContextCompat
+import com.indianservers.aiexplorer.adaptive.AdaptiveAppScaffold
+import com.indianservers.aiexplorer.adaptive.AdaptiveOverlayEdge
+import com.indianservers.aiexplorer.adaptive.LocalAdaptiveDeviceProfile
+import com.indianservers.aiexplorer.adaptive.adaptiveFocusGroup
+import com.indianservers.aiexplorer.adaptive.adaptiveFocusRing
+import com.indianservers.aiexplorer.adaptive.adaptiveDialogWidth
+import com.indianservers.aiexplorer.adaptive.rememberAdaptiveDeviceProfile
+import com.indianservers.aiexplorer.adaptive.tvRemoteScrollable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.conflate
@@ -2744,19 +2754,30 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
         ) {
         Surface(Modifier.fillMaxSize(), color = activePalette.background) {
             Box(Modifier.fillMaxSize()) {
-                BoxWithConstraints(
-                    Modifier
-                        .fillMaxSize()
-                        .background(appBackdrop(vm.settings.colorScheme))
-                        .windowInsetsPadding(WindowInsets.safeDrawing)
-                        .padding(8.dp),
+                val adaptiveProfile = rememberAdaptiveDeviceProfile()
+                AdaptiveAppScaffold(
+                    profile = adaptiveProfile,
+                    modifier = Modifier.fillMaxSize(),
+                    backdrop = appBackdrop(vm.settings.colorScheme),
                 ) {
-                    val compact = maxWidth < 520.dp
-                    val wide = maxWidth >= 760.dp
+                    BoxWithConstraints(Modifier.fillMaxSize()) {
+                        val compact = if (adaptiveProfile.isTelevision) false else maxWidth < 520.dp
+                        val wide = if (adaptiveProfile.isTelevision) true else maxWidth >= 760.dp
                     LaunchedEffect(compact, wide) {
                         menuOffset = Offset.Zero
                         dockOffset = Offset.Zero
                     }
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(
+                                start = if (vm.showChrome) {
+                                    adaptiveProfile.workspacePolicy.reservedNavigationWidth
+                                } else {
+                                    0.dp
+                                },
+                            ),
+                    ) {
                     if (!vm.showSubjectHub) {
 	                    if (vm.showLearningIntelligence) {
 	                        LearningIntelligenceFeatureRoot(onExit = vm::navigateBackIntent)
@@ -2801,15 +2822,20 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             MathModule.SpatialAR -> SpatialARScreen(vm)
                         }
                     }
-                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
-                        TopShell(vm, compact, Modifier.align(Alignment.TopCenter))
-                    }
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
+                    }
+                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
+                        TopShell(
+                            vm,
+                            compact,
+                            Modifier.align(if (adaptiveProfile.isTelevision) Alignment.CenterStart else Alignment.TopCenter),
+                        )
+                    }
                     if (vm.showActionDock) MiniDock(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
+                            .align(if (adaptiveProfile.isTelevision) Alignment.CenterEnd else Alignment.TopEnd)
                             .offset { IntOffset(dockOffset.x.roundToInt(), dockOffset.y.roundToInt()) }
-                            .padding(top = if (compact) 64.dp else 76.dp),
+                            .padding(top = if (adaptiveProfile.isTelevision) 0.dp else if (compact) 64.dp else 76.dp),
                         items = listOf("Tools", "Learn", "Export", "Clear all", "Close"),
                         onMove = { delta ->
                             dockOffset = Offset(
@@ -2836,9 +2862,16 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     if (vm.showMathMenu && !vm.showMathLanding) MathematicsMenuPanel(
                         vm = vm,
                         modifier = Modifier
-                            .align(if (wide) Alignment.CenterStart else Alignment.Center)
+                            .align(
+                                when (adaptiveProfile.navigationPolicy.overlayEdge) {
+                                    AdaptiveOverlayEdge.Start -> Alignment.CenterStart
+                                    AdaptiveOverlayEdge.End -> Alignment.CenterEnd
+                                    AdaptiveOverlayEdge.Center -> Alignment.Center
+                                },
+                            )
                             .offset { IntOffset(menuOffset.x.roundToInt(), menuOffset.y.roundToInt()) }
-                            .widthIn(max = if (wide) 460.dp else 390.dp)
+                            .padding(start = if (adaptiveProfile.isTelevision) 220.dp else 0.dp)
+                            .widthIn(max = adaptiveProfile.navigationPolicy.launcherWidth)
                             .fillMaxWidth(if (wide) .46f else .94f),
                         compact = compact,
                         onMove = { delta ->
@@ -2848,6 +2881,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             )
                         },
                     )
+                    }
                 }
                 if (!showSplash && !vm.showGamifyMaths && !vm.showMathLanding) {
                     Box(
@@ -2888,7 +2922,12 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                 }
                 if (showExitConfirmation) {
                     Dialog(onDismissRequest = { showExitConfirmation = false }) {
-                        GlassPanel(Modifier.fillMaxWidth().widthIn(max = 360.dp)) {
+                        GlassPanel(
+                            Modifier
+                                .adaptiveDialogWidth()
+                                .widthIn(max = if (adaptiveProfile.isTelevision) 560.dp else 360.dp)
+                                .adaptiveFocusGroup(),
+                        ) {
                             Text("Exit Mathematics Explorer?", color = Ink, fontSize = 19.sp, fontWeight = FontWeight.Bold)
                             Text("Your current work is autosaved. Do you want to close the app?", color = Muted, fontSize = 12.sp)
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -2904,7 +2943,12 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                 }
                 if (showClearConfirmation) {
                     Dialog(onDismissRequest = { showClearConfirmation = false }) {
-                        GlassPanel(Modifier.fillMaxWidth().widthIn(max = 380.dp)) {
+                        GlassPanel(
+                            Modifier
+                                .adaptiveDialogWidth()
+                                .widthIn(max = if (adaptiveProfile.isTelevision) 560.dp else 380.dp)
+                                .adaptiveFocusGroup(),
+                        ) {
                             Text("Clear ${vm.state.module.label} workspace?", color = Ink, fontSize = 19.sp, fontWeight = FontWeight.Bold)
                             Text("Only objects in the current workspace will be removed. You can restore them with Undo.", color = Muted, fontSize = 12.sp)
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -2983,6 +3027,8 @@ fun Screen(
     wide: Boolean,
     onAppearanceClick: () -> Unit,
 ) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val navigationPolicy = adaptiveProfile.navigationPolicy
     var query by rememberSaveable { mutableStateOf("") }
     var showWorkspaces by rememberSaveable { mutableStateOf(false) }
     var showConcepts by rememberSaveable { mutableStateOf(false) }
@@ -3063,6 +3109,7 @@ fun Screen(
                     if (selectedPreview == option.title) accent else accent.copy(alpha = .38f),
                     RoundedCornerShape(18.dp),
                 )
+                .adaptiveFocusRing(shape = RoundedCornerShape(18.dp), focusColor = accent)
                 .clickable { openOption(option) }
                 .focusable()
                 .semantics { contentDescription = "Open Maths tool ${option.title}. ${option.description}" }
@@ -3105,6 +3152,10 @@ fun Screen(
     Column(
         Modifier
             .fillMaxSize()
+            .widthIn(max = navigationPolicy.maximumContentWidth)
+            .align(Alignment.TopCenter)
+            .adaptiveFocusGroup()
+            .tvRemoteScrollable(hubScrollState)
             .verticalScroll(hubScrollState)
             .padding(horizontal = if (wide) 34.dp else 8.dp, vertical = 12.dp)
             .padding(bottom = 104.dp)
@@ -3179,6 +3230,7 @@ fun Screen(
                         ),
                     )
                     .border(1.dp, Violet.copy(.78f), RoundedCornerShape(24.dp))
+                    .adaptiveFocusRing(shape = RoundedCornerShape(24.dp), focusColor = Violet)
                     .clickable { openOption(MathLearningTools.first { it.title == "GamifyMaths" }) }
                     .focusable()
                     .semantics { contentDescription = "Play GamifyMaths games and speed challenges" }
@@ -3231,6 +3283,7 @@ fun Screen(
                         ),
                     )
                     .border(1.dp, conceptsAccent.copy(if (showConcepts) .92f else .58f), RoundedCornerShape(18.dp))
+                    .adaptiveFocusRing(shape = RoundedCornerShape(18.dp), focusColor = conceptsAccent)
                     .clickable {
                         showConcepts = !showConcepts
                         selectedHomeCategory = null
@@ -3278,6 +3331,7 @@ fun Screen(
                     }
                     BoxWithConstraints(Modifier.fillMaxWidth()) {
                         val conceptColumns = when {
+                            adaptiveProfile.isTelevision -> navigationPolicy.hubColumnCount
                             maxWidth >= 900.dp -> 5
                             maxWidth >= 720.dp -> 4
                             maxWidth >= 520.dp -> 3
@@ -3326,6 +3380,7 @@ fun Screen(
                                             conceptAccent.copy(if (isTrig) .95f else .58f),
                                             RoundedCornerShape(19.dp),
                                         )
+                                        .adaptiveFocusRing(shape = RoundedCornerShape(19.dp), focusColor = conceptAccent)
                                         .clickable { vm.openConceptLibrary(concept.title) }
                                         .focusable()
                                         .semantics {
@@ -3430,6 +3485,7 @@ fun Screen(
             Text("EXPLORE MATHEMATICS", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
             BoxWithConstraints(Modifier.fillMaxWidth()) {
                 val columns = when {
+                    adaptiveProfile.isTelevision -> navigationPolicy.hubColumnCount
                     maxWidth >= 900.dp -> 5
                     maxWidth >= 720.dp -> 4
                     maxWidth >= 520.dp -> 3
@@ -3465,6 +3521,7 @@ fun Screen(
                                     ),
                                 )
                                 .border(1.dp, accent.copy(if (selected) .95f else .52f), RoundedCornerShape(19.dp))
+                                .adaptiveFocusRing(shape = RoundedCornerShape(19.dp), focusColor = accent)
                                 .clickable {
                                     showConcepts = false
                                     showWorkspaces = false
@@ -5662,6 +5719,7 @@ private fun MathematicsMenuPanel(
     onMove: (Offset) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val launcherScrollState = rememberScrollState()
     var launcherQuery by rememberSaveable { mutableStateOf("") }
     var showWorkspaces by remember { mutableStateOf(false) }
     var showConcepts by remember { mutableStateOf(false) }
@@ -5713,7 +5771,12 @@ private fun MathematicsMenuPanel(
         }
     }
 
-    GlassPanel(modifier) {
+    GlassPanel(
+        modifier
+            .adaptiveFocusGroup()
+            .tvRemoteScrollable(launcherScrollState)
+            .verticalScroll(launcherScrollState),
+    ) {
         PanelHeader("Maths Tool Launcher", vm::toggleMathMenu, Cyan, icon = "⌕", onMove = onMove)
         Text(vm.mathsBreadcrumb.joinToString(" → "), color = Green, fontSize = 11.sp, modifier = Modifier.semantics { contentDescription = "Maths breadcrumb" })
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -5853,6 +5916,8 @@ private fun TopShell(
     compact: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val initialTvFocus = remember { FocusRequester() }
     var expanded by remember { mutableStateOf(!compact) }
     val activity = LocalActivity.current
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -5867,6 +5932,42 @@ private fun TopShell(
                 }
                 .onFailure { vm.reportStatus("Import failed: ${it.message ?: "invalid project"}") }
         }
+    }
+    if (adaptiveProfile.isTelevision) {
+        LaunchedEffect(Unit) {
+            if (adaptiveProfile.interactionPolicy.requestInitialNavigationFocus) {
+                initialTvFocus.requestFocus()
+            }
+        }
+        Column(
+            modifier
+                .width(208.dp)
+                .fillMaxHeight()
+                .adaptiveFocusGroup()
+                .clip(RoundedCornerShape(18.dp))
+                .background(SurfaceA.copy(alpha = .9f))
+                .border(1.dp, Cyan.copy(alpha = .38f), RoundedCornerShape(18.dp))
+                .padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Column(Modifier.padding(horizontal = 6.dp, vertical = 4.dp)) {
+                Text("AI Maths Explorer", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+                Text(vm.mathsBreadcrumb.joinToString(" → "), color = Cyan, fontSize = 11.sp, maxLines = 2)
+            }
+            GlowButton("Back", icon = "←", modifier = Modifier.focusRequester(initialTvFocus)) {
+                backDispatcher?.onBackPressed() ?: vm.navigateBackIntent()
+            }
+            GlowButton("Maths menu", icon = "≡", onClick = vm::toggleMathMenu)
+            Box(Modifier.fillMaxWidth().height(1.dp).background(Cyan.copy(alpha = .2f)))
+            GlowButton("Undo", enabled = vm.canUndo, onClick = vm::undo)
+            GlowButton("Redo", enabled = vm.canRedo, onClick = vm::redo)
+            GlowButton("Save", onClick = vm::saveWorkspace)
+            GlowButton("Import") { importProject.launch(arrayOf("application/*", "text/plain")) }
+            GlowButton("More", onClick = vm::toggleActionDock)
+            Spacer(Modifier.weight(1f))
+            Text("Use ↑ ↓ ← → and OK", color = Muted, fontSize = 10.sp, modifier = Modifier.padding(6.dp))
+        }
+        return
     }
     Row(
         modifier
@@ -6539,6 +6640,17 @@ private fun shapeExplorer2DDetails(shape: Shape2D, allPoints: List<Vec2>): Shape
 private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        if (compact) 70.dp else 78.dp
+    }
+    val workspaceToolTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        72.dp
+    }
     var lassoEnabled by remember { mutableStateOf(false) }
     var boxSelectEnabled by remember { mutableStateOf(false) }
     var contextMenuShapeIndex by remember { mutableStateOf<Int?>(null) }
@@ -6692,7 +6804,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             Column(
                 Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = if (compact) 70.dp else 78.dp)
+                    .padding(top = workspaceTop)
                     .fillMaxWidth(
                         if (shapeSummaryExpanded) {
                             if (compact) .94f else .55f
@@ -6780,7 +6892,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             DestructiveGlowButton("Delete", icon = "×", onClick = vm::deleteSelectedShape)
         }
         if (!vm.shapeExplorerScene) Column(
-            Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(.82f)).animateContentSize().padding(4.dp),
+            Modifier.align(Alignment.TopStart).padding(top = workspaceToolTop, start = 10.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(.82f)).animateContentSize().padding(4.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             Row(
@@ -6820,7 +6932,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 expanded = layersExpanded,
                 onExpandedChange = { layersExpanded = it },
                 onSelect = vm::selectShape,
-                modifier = Modifier.align(Alignment.TopEnd).padding(top = 72.dp, end = 10.dp),
+                modifier = Modifier.align(Alignment.TopEnd).padding(top = workspaceToolTop, end = 10.dp),
             )
         }
         contextMenuShapeIndex?.let { shapeIndex ->
@@ -7323,6 +7435,17 @@ private fun ManipulativesScreen(vm: ExplorerViewModel, wide: Boolean) {
 private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        if (compact) 70.dp else 78.dp
+    }
+    val workspaceToolTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        72.dp
+    }
     var rotateX by remember { mutableFloatStateOf(25f) }
     var rotateY by remember { mutableFloatStateOf(-35f) }
     var rotateZ by remember { mutableFloatStateOf(15f) }
@@ -7582,7 +7705,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                     } else setOf(index)
                 },
                 onSelectVector = vm::selectVector3D,
-                modifier = Modifier.align(Alignment.TopEnd).padding(top = 72.dp, end = 10.dp),
+                modifier = Modifier.align(Alignment.TopEnd).padding(top = workspaceToolTop, end = 10.dp),
             )
         }
         if (!vm.shapeExplorerScene && showSceneNavigator) SpatialSceneNavigator(
@@ -7613,7 +7736,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             Column(
                 Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = if (compact) 70.dp else 78.dp)
+                    .padding(top = workspaceTop)
                     .fillMaxWidth(if (compact) .94f else .55f)
                     .widthIn(max = 540.dp)
                     .clip(RoundedCornerShape(16.dp))
@@ -7792,7 +7915,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
         if (!vm.shapeExplorerScene) Row(
             Modifier
                 .align(Alignment.TopStart)
-                .padding(top = 72.dp, start = 10.dp)
+                .padding(top = workspaceToolTop, start = 10.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(SurfaceA.copy(.82f))
                 .clickable { spatialViewToolsExpanded = !spatialViewToolsExpanded }
@@ -9582,6 +9705,12 @@ private fun parseSpatialTriple(value: String): Vec3? {
 @Composable
 private fun Graph3DScreen(vm: ExplorerViewModel) {
     val context = LocalContext.current
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        76.dp
+    }
     val graph3D = remember { Graph3D() }
     val surfaceCalculus = remember { SurfaceCalculus() }
     var density by remember { mutableFloatStateOf(26f) }
@@ -9613,13 +9742,17 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var graph3DExamplesExpanded by remember { mutableStateOf(false) }
     var graph3DHintExpanded by remember { mutableStateOf(false) }
     var graph3DViewExpanded by remember { mutableStateOf(false) }
-    var graph3DParametersExpanded by remember { mutableStateOf(true) }
+    var graph3DParametersExpanded by remember(adaptiveProfile.isTelevision) {
+        mutableStateOf(!adaptiveProfile.isTelevision)
+    }
     var graph3DPresentationMode by remember { mutableStateOf(false) }
     var surfaceParameterValues by remember { mutableStateOf<Map<String, Double>>(emptyMap()) }
     var surfaceLayerQuery by rememberSaveable { mutableStateOf("") }
     var contourMinimum by remember { mutableFloatStateOf(-2f) }
     var contourMaximum by remember { mutableFloatStateOf(6f) }
-    var showOrientationCube by remember { mutableStateOf(true) }
+    var showOrientationCube by remember(adaptiveProfile.isTelevision) {
+        mutableStateOf(!adaptiveProfile.isTelevision)
+    }
     var clearEpochSeen by remember { mutableIntStateOf(vm.workspaceClearEpoch) }
     BackHandler(enabled = graph3DPresentationMode) {
         graph3DPresentationMode = false
@@ -9635,7 +9768,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             showOrientationCube = false
             gradientPlayback = com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())
             surfaceParameterValues = emptyMap()
-            graph3DParametersExpanded = true
+            graph3DParametersExpanded = !adaptiveProfile.isTelevision
             clearEpochSeen = vm.workspaceClearEpoch
         }
     }
@@ -9772,7 +9905,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             return
         }
         surfaceParameterValues = draftValues
-        if (draftParameters.isNotEmpty()) graph3DParametersExpanded = true
+        if (draftParameters.isNotEmpty() && !adaptiveProfile.isTelevision) graph3DParametersExpanded = true
         surfaceDraft = interpretation.canonicalEquation
         if (addingSurfaceEquation || selectedSurfaceLayerIndex !in surfaceLayers.indices) {
             val nextLayer = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
@@ -9841,7 +9974,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         surfaceInputMessage = "3D graph cleared"
         gradientPlayback = com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())
         surfaceParameterValues = emptyMap()
-        graph3DParametersExpanded = true
+        graph3DParametersExpanded = !adaptiveProfile.isTelevision
         showBox = false
         showOrientationCube = false
         vm.clearCurrentWorkspace()
@@ -9918,7 +10051,10 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         }
         if (!graph3DPresentationMode && !graph3DEquationExpanded && showOrientationCube) {
             OrientationCube(
-                modifier = Modifier.align(Alignment.TopEnd).padding(top = 154.dp, end = 12.dp),
+                modifier = Modifier.align(Alignment.TopEnd).padding(
+                    top = if (adaptiveProfile.isTelevision) workspaceTop + 52.dp else 154.dp,
+                    end = 12.dp,
+                ),
                 onPreset = { preset ->
                     applyView(
                         when (preset) {
@@ -9945,7 +10081,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         if (!graph3DPresentationMode) Column(
             Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 76.dp, start = 10.dp, end = 10.dp)
+                .padding(top = workspaceTop, start = 10.dp, end = 10.dp)
                 .widthIn(max = 360.dp)
                 .clip(RoundedCornerShape(14.dp))
                 .background(SurfaceA.copy(.86f))
@@ -10407,6 +10543,12 @@ internal enum class TrigLineStyle { Solid, Dashed, Dotted }
 
 @Composable
 private fun TrigonometryScreen(vm: ExplorerViewModel) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceToolTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        72.dp
+    }
     var angle by remember { mutableFloatStateOf(45f) }
     var amplitude by remember { mutableFloatStateOf(1f) }
     var period by remember { mutableFloatStateOf((2 * Math.PI).toFloat()) }
@@ -10501,7 +10643,7 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
             onTransformChange = { a, p, h, k -> amplitude = a; period = p; phase = h; verticalShift = k },
         )
         InteractionHint("Drag circle/wave handles - pinch to zoom - two fingers pan - double tap fits", Modifier.align(Alignment.BottomEnd))
-        Row(Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(Modifier.align(Alignment.TopStart).padding(top = workspaceToolTop, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton("Home") { homeRequest++ }; Text("${trim(zoom.toDouble())}x", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
         }
         if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(220.dp)) {
@@ -10558,6 +10700,12 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
 
 @Composable
 private fun LegacyTrigonometryScreen(vm: ExplorerViewModel) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceToolTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        72.dp
+    }
     var angle by remember { mutableFloatStateOf(45f) }
     var amplitude by remember { mutableFloatStateOf(1f) }
     var period by remember { mutableFloatStateOf((2 * Math.PI).toFloat()) }
@@ -10593,7 +10741,7 @@ private fun LegacyTrigonometryScreen(vm: ExplorerViewModel) {
             "One finger moves the circle point or wave cursor · two fingers pan and pinch zoom · double-tap resets",
             Modifier.align(Alignment.BottomEnd),
         )
-        Row(Modifier.align(Alignment.TopStart).padding(top = 72.dp, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(Modifier.align(Alignment.TopStart).padding(top = workspaceToolTop, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton("⌂ Home") { trigHomeRequest++ }
             Text("${trim(trigZoom.toDouble())}×", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
         }
@@ -11731,7 +11879,10 @@ private fun MiniDock(modifier: Modifier = Modifier, items: List<String>, onMove:
                 color = Cyan,
                 fontSize = 20.sp,
                 modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .adaptiveFocusRing(shape = RoundedCornerShape(10.dp))
                     .clickable { expanded = !expanded }
+                    .focusable()
                     .padding(7.dp)
                     .semantics { contentDescription = if (expanded) "Collapse quick actions" else "Expand quick actions" },
             )
@@ -11766,6 +11917,12 @@ internal fun GraphEquationEditor(
     onTool: (GraphTool) -> Unit,
     onTypingChange: (Boolean) -> Unit,
 ) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        70.dp
+    }
     val selected = functions.firstOrNull { it.id == selectedId }
     val focusManager = LocalFocusManager.current
     val expressionEngine = remember { ExpressionEngine() }
@@ -11773,7 +11930,7 @@ internal fun GraphEquationEditor(
     var recentExpressions by remember { mutableStateOf<List<String>>(emptyList()) }
     Column(
         modifier
-            .padding(top = 70.dp, start = 8.dp, end = 8.dp)
+            .padding(top = workspaceTop, start = 8.dp, end = 8.dp)
             .widthIn(max = 560.dp)
             .clip(RoundedCornerShape(18.dp))
             .background(SurfaceA.copy(.94f))
@@ -12020,7 +12177,9 @@ internal fun PanelHeader(
                 .clip(RoundedCornerShape(10.dp))
                 .background(SurfaceB.copy(alpha = .72f))
                 .border(1.dp, accent.copy(alpha = .45f), RoundedCornerShape(10.dp))
+                .adaptiveFocusRing(shape = RoundedCornerShape(10.dp), focusColor = accent)
                 .clickable(onClick = onClose)
+                .focusable()
                 .padding(horizontal = 12.dp, vertical = 7.dp)
                 .semantics { contentDescription = "Close $title" },
         )
@@ -12028,9 +12187,17 @@ internal fun PanelHeader(
 }
 
 @Composable
-internal fun GlowButton(label: String, enabled: Boolean = true, icon: String = menuIcon(label), iconOnly: Boolean = false, onClick: () -> Unit) {
-    val symbolOnly = label in setOf("↶", "↷", "⋮")
+internal fun GlowButton(
+    label: String,
+    enabled: Boolean = true,
+    icon: String = menuIcon(label),
+    iconOnly: Boolean = false,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     val effects = LocalAppVisualEffects.current
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val symbolOnly = label in setOf("↶", "↷", "⋮")
     val visuallyActive = enabled && effects.enhanced && isVisuallyActiveLabel(label)
     val buttonShape = RoundedCornerShape(14.dp)
     val visualFrame = if (effects.enhanced) {
@@ -12060,7 +12227,10 @@ internal fun GlowButton(label: String, enabled: Boolean = true, icon: String = m
             contentColor = Ink,
         ),
         shape = buttonShape,
-        modifier = Modifier.heightIn(min = 42.dp).then(visualFrame),
+        modifier = modifier
+            .heightIn(min = if (adaptiveProfile.isTelevision) adaptiveProfile.minimumTargetSize else 42.dp)
+            .then(visualFrame)
+            .adaptiveFocusRing(enabled = enabled, shape = buttonShape),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 9.dp, vertical = 5.dp),
     ) {
         TransparentIcon(smartIconKey(icon, label), if (enabled) Cyan else Muted)
@@ -12075,14 +12245,16 @@ internal fun GlowButton(label: String, enabled: Boolean = true, icon: String = m
 internal fun DestructiveGlowButton(label: String, enabled: Boolean = true, icon: String = "×", iconOnly: Boolean = false, onClick: () -> Unit) {
     val red = Color(0xFFFF6688)
     val symbolOnly = label in setOf("×", "-")
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
     Button(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xAA351521), contentColor = red),
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier
-            .heightIn(min = 42.dp)
-            .border(1.dp, if (enabled) red.copy(alpha = .72f) else Muted.copy(alpha = .35f), RoundedCornerShape(14.dp)),
+            .heightIn(min = if (adaptiveProfile.isTelevision) adaptiveProfile.minimumTargetSize else 42.dp)
+            .border(1.dp, if (enabled) red.copy(alpha = .72f) else Muted.copy(alpha = .35f), RoundedCornerShape(14.dp))
+            .adaptiveFocusRing(enabled = enabled, shape = RoundedCornerShape(14.dp), focusColor = red),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 9.dp, vertical = 5.dp),
     ) {
         TransparentIcon(smartIconKey(icon, label), if (enabled) red else Muted)

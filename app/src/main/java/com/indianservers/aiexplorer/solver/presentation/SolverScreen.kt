@@ -42,6 +42,7 @@ import com.indianservers.aiexplorer.Muted
 import com.indianservers.aiexplorer.SurfaceA
 import com.indianservers.aiexplorer.SurfaceB
 import com.indianservers.aiexplorer.Violet
+import com.indianservers.aiexplorer.adaptive.LocalAdaptiveDeviceProfile
 import com.indianservers.aiexplorer.input.IntentAwareMathValueField
 import com.indianservers.aiexplorer.input.MathKeyboardContext
 import com.indianservers.aiexplorer.solver.domain.model.SolverExpressionRenderer
@@ -59,6 +60,13 @@ fun SolverScreen(
     wide: Boolean,
     model: SolverViewModel = viewModel(),
 ) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val workspaceTop = if (adaptiveProfile.isTelevision) {
+        adaptiveProfile.workspacePolicy.topChromeClearance
+    } else {
+        78.dp
+    }
+    val workspaceBottom = if (adaptiveProfile.isTelevision) 8.dp else 78.dp
     BackHandler(onBack = onExit)
     val state = model.state
     val listState = rememberLazyListState()
@@ -80,7 +88,7 @@ fun SolverScreen(
                 .align(Alignment.TopCenter)
                 .widthIn(max = if (wide) 920.dp else 620.dp)
                 .fillMaxSize()
-                .padding(top = 78.dp, bottom = 78.dp, start = 8.dp, end = 8.dp)
+                .padding(top = workspaceTop, bottom = workspaceBottom, start = 8.dp, end = 8.dp)
                 .semantics { contentDescription = "Offline Solver with editor-first input and direct answers" },
             state = listState,
             verticalArrangement = Arrangement.spacedBy(9.dp),

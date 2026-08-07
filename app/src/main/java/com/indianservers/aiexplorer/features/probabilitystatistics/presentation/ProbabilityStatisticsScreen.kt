@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.indianservers.aiexplorer.features.probabilitystatistics.data.ProbabilityStatisticsCatalog
+import com.indianservers.aiexplorer.adaptive.LocalAdaptiveDeviceProfile
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.MasteryState
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.StatisticsCategory
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.StatisticsLearningLevel
@@ -71,6 +73,7 @@ internal fun ProbabilityStatisticsScreen(
     onOpenClassicLabs: () -> Unit,
     model: ProbabilityStatisticsViewModel = viewModel(),
 ) {
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
     val state by model.state.collectAsState()
     BackHandler {
         if (state.route == ProbabilityStatisticsRoute.Home) onExit() else model.back()
@@ -84,14 +87,21 @@ internal fun ProbabilityStatisticsScreen(
                 ),
             ),
     ) {
-        when (state.route) {
-            ProbabilityStatisticsRoute.Home -> StatisticsHome(state, model, onExit, onOpenClassicLabs)
-            ProbabilityStatisticsRoute.Category -> StatisticsCategoryScreen(state, model)
-            ProbabilityStatisticsRoute.Topic -> StatisticsTopicScreen(state, model)
-            ProbabilityStatisticsRoute.DistributionExplorer -> DistributionExplorerScreen(model)
-            ProbabilityStatisticsRoute.DatasetLab -> DatasetLabScreen(model)
-            ProbabilityStatisticsRoute.TestGuide -> TestGuideScreen(model)
-            ProbabilityStatisticsRoute.FormulaLibrary -> FormulaLibraryScreen(model)
+        Box(
+            Modifier
+                .align(Alignment.TopCenter)
+                .widthIn(max = adaptiveProfile.navigationPolicy.maximumContentWidth)
+                .fillMaxSize(),
+        ) {
+            when (state.route) {
+                ProbabilityStatisticsRoute.Home -> StatisticsHome(state, model, onExit, onOpenClassicLabs)
+                ProbabilityStatisticsRoute.Category -> StatisticsCategoryScreen(state, model)
+                ProbabilityStatisticsRoute.Topic -> StatisticsTopicScreen(state, model)
+                ProbabilityStatisticsRoute.DistributionExplorer -> DistributionExplorerScreen(model)
+                ProbabilityStatisticsRoute.DatasetLab -> DatasetLabScreen(model)
+                ProbabilityStatisticsRoute.TestGuide -> TestGuideScreen(model)
+                ProbabilityStatisticsRoute.FormulaLibrary -> FormulaLibraryScreen(model)
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.indianservers.aiexplorer
 
+import com.indianservers.aiexplorer.adaptive.adaptiveDialogBounds
+import com.indianservers.aiexplorer.adaptive.adaptiveFocusGroup
+import com.indianservers.aiexplorer.adaptive.tvRemoteScrollable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -200,11 +203,11 @@ internal fun AppAppearanceDialog(
     onSelect: (AppColorScheme) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth()
-                .widthIn(max = 480.dp)
+                .adaptiveDialogBounds()
                 .border(1.dp, selected.palette.primary.copy(alpha = 0.65f), RoundedCornerShape(8.dp)),
             color = selected.palette.surface.copy(alpha = 0.98f),
             shape = RoundedCornerShape(8.dp),
@@ -212,7 +215,9 @@ internal fun AppAppearanceDialog(
             Column(
                 Modifier
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .adaptiveFocusGroup()
+                    .tvRemoteScrollable(scrollState)
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {

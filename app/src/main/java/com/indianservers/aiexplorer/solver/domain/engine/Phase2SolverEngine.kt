@@ -229,7 +229,7 @@ class Phase2SolverEngine(
         val prime = Regex("""(?i)^primefactors?\((-?\d+)\)$""").matchEntire(source)
         if (prime != null) {
             val n = BigInteger(prime.groupValues[1])
-            if (n.abs() < BigInteger.TWO) return unsupportedAdvanced(problem, profile, "Prime factorisation requires |n| >= 2.")
+            if (n.abs() < BigInteger.valueOf(2)) return unsupportedAdvanced(problem, profile, "Prime factorisation requires |n| >= 2.")
             val factors = primeFactors(n)
             return directSolution(problem, profile, factors.joinToString("*"), SolverRuleRegistry.EUCLIDEAN_ALGORITHM, "Divide by each prime while it remains an exact factor.")
         }
@@ -543,15 +543,16 @@ class Phase2SolverEngine(
     }
 
     private fun primeFactors(value: BigInteger): List<BigInteger> {
+        val two = BigInteger.valueOf(2)
         var n = value.abs()
         val factors = mutableListOf<BigInteger>()
-        var divisor = BigInteger.TWO
+        var divisor = two
         while (divisor * divisor <= n) {
             while (n % divisor == BigInteger.ZERO) {
                 factors += divisor
                 n /= divisor
             }
-            divisor = if (divisor == BigInteger.TWO) BigInteger.valueOf(3) else divisor + BigInteger.TWO
+            divisor = if (divisor == two) BigInteger.valueOf(3) else divisor + two
         }
         if (n > BigInteger.ONE) factors += n
         return factors

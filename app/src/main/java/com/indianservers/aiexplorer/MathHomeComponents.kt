@@ -2,6 +2,7 @@ package com.indianservers.aiexplorer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.indianservers.aiexplorer.adaptive.adaptiveFocusRing
 
 private val NavInk = Color(0xFFF4F7FF)
 private val NavMuted = Color(0xFFAAB3CE)
@@ -36,7 +38,9 @@ internal fun MathQuickLaunchButton(
             .height(68.dp)
             .clip(RoundedCornerShape(14.dp))
             .background(accent.copy(.11f))
+            .adaptiveFocusRing(shape = RoundedCornerShape(14.dp), focusColor = accent)
             .clickable(onClick = onClick)
+            .focusable()
             .padding(horizontal = 3.dp, vertical = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
@@ -68,7 +72,9 @@ internal fun MathHomeNavItem(
             .width(62.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(if (selected) accent.copy(.17f) else Color.Transparent)
+            .adaptiveFocusRing(shape = RoundedCornerShape(15.dp), focusColor = accent)
             .clickable(onClick = onClick)
+            .focusable()
             .padding(vertical = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(1.dp),

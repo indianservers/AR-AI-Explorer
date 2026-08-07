@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
+import com.indianservers.aiexplorer.adaptive.adaptiveFocusRing
 
 @Composable
 internal fun SolverHomeLaunch(
@@ -64,6 +65,7 @@ internal fun SolverHomeLaunch(
                 ),
             )
             .border(1.dp, accent.copy(alpha = .78f), RoundedCornerShape(22.dp))
+            .adaptiveFocusRing(shape = RoundedCornerShape(22.dp), focusColor = accent)
             .clickable(role = Role.Button, onClick = onClick)
             .focusable()
             .semantics {
