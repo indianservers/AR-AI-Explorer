@@ -730,7 +730,9 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     }
     Box(Modifier.fillMaxSize()) {
         GraphCanvas(
-            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp),
+            modifier = Modifier.fillMaxSize()
+                .background(WorkspaceVisualStyles.ReferenceNavy)
+                .appWorkspaceTreatment(0.dp, WorkspaceVisualStyles.ReferenceCyan, WorkspaceVisualStyles.ReferenceMagenta),
             functions = liveFunctions,
             dataPoints = if (graphTool == GraphTool.Data) dataPoints else emptyList(),
             traceX = traceX.toDouble(),
@@ -1498,10 +1500,13 @@ private fun GeneratedTablePreview(rows: List<com.indianservers.aiexplorer.worksp
 }
 
 internal fun graphColor(key: String): Color = when (key) {
-    "violet" -> Violet
-    "green" -> Green
-    "amber" -> Amber
-    else -> Cyan
+    "violet" -> WorkspaceVisualStyles.ReferenceViolet
+    "green" -> WorkspaceVisualStyles.ReferenceBlue
+    "amber" -> WorkspaceVisualStyles.ReferenceYellow
+    "magenta" -> WorkspaceVisualStyles.ReferenceMagenta
+    "coral" -> WorkspaceVisualStyles.ReferenceCoral
+    "orange" -> WorkspaceVisualStyles.ReferenceOrange
+    else -> WorkspaceVisualStyles.ReferenceCyan
 }
 
 private fun parseDataPoints(source: String): List<Vec2> = source

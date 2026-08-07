@@ -16,10 +16,13 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-private val RenderCyan = Color(0xFF20D9FF)
-private val RenderViolet = Color(0xFF9B6CFF)
-private val RenderGreen = Color(0xFF48E0A4)
-private val RenderAmber = Color(0xFFFFC857)
+private val RenderCyan = WorkspaceVisualStyles.ReferenceCyan
+private val RenderViolet = WorkspaceVisualStyles.ReferenceViolet
+private val RenderBlue = WorkspaceVisualStyles.ReferenceBlue
+private val RenderMagenta = WorkspaceVisualStyles.ReferenceMagenta
+private val RenderCoral = WorkspaceVisualStyles.ReferenceCoral
+private val RenderOrange = WorkspaceVisualStyles.ReferenceOrange
+private val RenderYellow = WorkspaceVisualStyles.ReferenceYellow
 
 fun DrawScope.drawStoredShapes(
     points: List<Vec2>,
@@ -29,14 +32,13 @@ fun DrawScope.drawStoredShapes(
     tx: (Vec2) -> Offset,
 ) {
     val objectPalette = listOf(
-        RenderCyan, RenderViolet, RenderGreen, RenderAmber, Color(0xFFFF7396),
-        Color(0xFF5B8CFF), Color(0xFFFF8A5B), Color(0xFF68E5D1),
+        RenderCyan, RenderBlue, RenderViolet, RenderMagenta, RenderCoral, RenderOrange, RenderYellow,
     )
     fun objectColor(shape: Shape2D): Color = when (shape.styleKey) {
         "cyan" -> RenderCyan
         "violet" -> RenderViolet
-        "green" -> RenderGreen
-        "accent" -> RenderAmber
+        "green" -> RenderBlue
+        "accent" -> RenderYellow
         else -> objectPalette[shape.id.hashCode().ushr(1) % objectPalette.size]
     }
     shapes.forEachIndexed { index, shape ->

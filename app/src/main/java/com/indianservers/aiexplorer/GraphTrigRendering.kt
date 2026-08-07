@@ -1099,9 +1099,15 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphAnalysisOv
     }
 }
 
-internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphLabel(text: String, position: Offset, color: Color) {
-    drawRoundRect(SurfaceA, topLeft = position, size = Size(190f, 42f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(12f, 12f))
-    drawRoundRect(color.copy(.75f), topLeft = position, size = Size(190f, 42f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(12f, 12f), style = Stroke(1.4f))
+internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphLabel(
+    text: String,
+    position: Offset,
+    color: Color,
+    plateColor: Color = SurfaceA,
+    borderColor: Color = color,
+) {
+    drawRoundRect(plateColor, topLeft = position, size = Size(190f, 42f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(12f, 12f))
+    drawRoundRect(borderColor.copy(.75f), topLeft = position, size = Size(190f, 42f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(12f, 12f), style = Stroke(1.4f))
     drawTrigText(text, position.x + 12f, position.y + 27f, color)
 }
 

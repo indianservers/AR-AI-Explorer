@@ -6596,7 +6596,10 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     }
     Box(Modifier.fillMaxSize()) {
         CoordinateCanvas(
-            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp).semantics {
+            modifier = Modifier.fillMaxSize()
+                .background(WorkspaceVisualStyles.ReferenceNavy)
+                .appWorkspaceTreatment(0.dp, WorkspaceVisualStyles.ReferenceCyan, WorkspaceVisualStyles.ReferenceMagenta)
+                .semantics {
                 contentDescription = "Interactive coordinate geometry canvas. ${contextInspector.title}. Parents ${contextInspector.parentIds.joinToString().ifBlank { "none" }}. Dependents ${contextInspector.dependentIds.joinToString().ifBlank { "none" }}. Use Tab to change objects and arrow keys to move the selection."
             },
             shapes = replayShapes,
@@ -6685,28 +6688,56 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
         }
         if (vm.shapeExplorerScene && selectedShape != null) {
             val details = shapeExplorer2DDetails(selectedShape, vm.state.points)
+            var shapeSummaryExpanded by remember(selectedShape.id) { mutableStateOf(false) }
             Column(
                 Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = if (compact) 70.dp else 78.dp)
-                    .fillMaxWidth(if (compact) .94f else .55f)
+                    .fillMaxWidth(
+                        if (shapeSummaryExpanded) {
+                            if (compact) .94f else .55f
+                        } else {
+                            if (compact) .72f else .38f
+                        },
+                    )
                     .widthIn(max = 520.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(Brush.linearGradient(listOf(SurfaceA.copy(.96f), SurfaceB.copy(.94f))))
                     .border(1.dp, Cyan.copy(alpha = .45f), RoundedCornerShape(16.dp))
+                    .animateContentSize()
                     .padding(horizontal = 12.dp, vertical = 9.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(selectedShape.name, color = Cyan, fontSize = 17.sp, fontWeight = FontWeight.Bold)
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        GlowButton("All formulas", icon = "ƒ", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
-                        GlowButton("Shapes", icon = "SE", iconOnly = compact, onClick = vm::openShapesExplorer)
+                    Text(
+                        selectedShape.name,
+                        color = Cyan,
+                        fontSize = if (shapeSummaryExpanded) 17.sp else 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                    )
+                    Text(
+                        if (shapeSummaryExpanded) "Hide ▲" else "Details ▼",
+                        color = Green,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(9.dp))
+                            .clickable { shapeSummaryExpanded = !shapeSummaryExpanded }
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
+                    )
+                }
+                AnimatedVisibility(shapeSummaryExpanded) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                            GlowButton("All formulas", icon = "ƒ", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
+                            GlowButton("Shapes", icon = "SE", iconOnly = compact, onClick = vm::openShapesExplorer)
+                        }
+                        Text(details.formula, color = Ink, fontSize = if (compact) 11.sp else 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 2)
+                        Text("Area ${trim(details.area)}  ·  Perimeter ${trim(details.perimeter)}", color = Green, fontSize = 12.sp, maxLines = 1)
+                        Text("Drag a glowing point to resize.", color = Muted, fontSize = 10.sp, maxLines = 1)
                     }
                 }
-                Text(details.formula, color = Ink, fontSize = if (compact) 11.sp else 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 2)
-                Text("Area ${trim(details.area)}  ·  Perimeter ${trim(details.perimeter)}", color = Green, fontSize = 12.sp, maxLines = 1)
-                Text("Drag a glowing point to resize.", color = Muted, fontSize = 10.sp, maxLines = 1)
             }
         }
         if (!vm.shapeExplorerScene) InteractionHint(
@@ -6733,7 +6764,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             title = selectedShape.name,
             instruction = if (selectedShape.locked) "Locked · unlock to drag or resize" else "Drag body to move · junctions resize · top handle rotates",
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 206.dp),
-            initiallyExpanded = true,
+            initiallyExpanded = false,
             selectionKey = selectedShape.id,
         ) {
             GeometryManipulationBar(
@@ -7313,6 +7344,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var transformSpace by remember { mutableStateOf(SpatialTransformSpace.World) }
     var dragPlane by remember { mutableStateOf(SpatialDragPlane.Free) }
     var visualMode by remember { mutableStateOf(SpatialVisualMode.Solid) }
+    var sceneAppearance by remember { mutableStateOf(WorkspaceAppearance()) }
+    var sceneAxisStyle by remember { mutableStateOf(WorkspaceVisualStyles.Spectral.axes) }
+    var solidAppearances by remember { mutableStateOf<Map<Int, WorkspaceAppearance>>(emptyMap()) }
     var explodeAmount by remember { mutableFloatStateOf(0f) }
     var multiSelectEnabled by remember { mutableStateOf(false) }
     var editMode by remember(vm.shapeExplorerScene) {
@@ -7391,7 +7425,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
     }
     Box(Modifier.fillMaxSize()) {
         Projected3DCanvas(
-            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp),
+            modifier = Modifier.fillMaxSize()
+                .background(sceneAppearance.palette.background)
+                .appWorkspaceTreatment(0.dp, sceneAppearance.palette.axes.z, sceneAppearance.palette.axes.y),
             solids = renderedSolids,
             vectors = vm.state.vectors3D,
             selectedIndex = selectedIndex,
@@ -7406,6 +7442,9 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             showGrid = showWorkspaceGrid,
             gridSize = workspaceGridSize,
             visualMode = visualMode,
+            solidAppearances = solidAppearances,
+            defaultAppearance = sceneAppearance,
+            axisStyle = sceneAxisStyle,
             perspective = projection == CameraProjection.Perspective,
             selectionMode = selectionMode,
             subSelection = subSelection,
@@ -7487,6 +7526,17 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             },
             onEmptyTap = vm::dismissAllMenusAndPanels,
             onGestureModeChange = { gestureMode = it },
+        )
+        WorkspaceThemeButton(
+            appearance = sceneAppearance,
+            onSelect = { palette ->
+                sceneAppearance = sceneAppearance.switchPalette(palette)
+                sceneAxisStyle = palette.axes
+                solidAppearances = solidAppearances.mapValues { (_, appearance) ->
+                    appearance.switchPalette(palette)
+                }
+            },
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 10.dp),
         )
         if (vm.state.solids.isEmpty() && vm.state.vectors3D.isEmpty()) {
             Column(
@@ -7634,6 +7684,20 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
             instruction = if (subSelection != null) "Sub-object selected · use coloured gizmo handles · empty space orbits" else "Drag a coloured gizmo handle to ${transformMode.name.lowercase()} on one axis",
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 206.dp),
         ) {
+            WorkspaceAppearancePicker(
+                appearance = solidAppearances[selectedIndex] ?: sceneAppearance.copy(colorIndex = selectedIndex),
+                onChange = { updated ->
+                    solidAppearances = solidAppearances + (selectedIndex to updated)
+                    if (updated.paletteId != sceneAppearance.paletteId) sceneAxisStyle = updated.palette.axes
+                    sceneAppearance = updated
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            WorkspaceAxisPicker(
+                axes = sceneAxisStyle,
+                palette = sceneAppearance.palette,
+                onChange = { sceneAxisStyle = it },
+            )
             SolidObjectCombo(
                 solids = vm.state.solids,
                 selectedIndex = selectedIndex,
@@ -9530,11 +9594,13 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var traceX by remember { mutableFloatStateOf(1f) }
     var traceY by remember { mutableFloatStateOf(1f) }
     var showWireframe by remember { mutableStateOf(true) }
-    var showContours by remember { mutableStateOf(true) }
-    var showSlice by remember { mutableStateOf(true) }
-    var showGradient by remember { mutableStateOf(true) }
+    var showContours by remember { mutableStateOf(false) }
+    var showSlice by remember { mutableStateOf(false) }
+    var showGradient by remember { mutableStateOf(false) }
     var showBox by remember { mutableStateOf(false) }
     var activeTool by remember { mutableStateOf(SurfaceTool.Surface) }
+    var graphSceneAppearance by remember { mutableStateOf(WorkspaceAppearance()) }
+    var graphAxisStyle by remember { mutableStateOf(WorkspaceVisualStyles.Spectral.axes) }
     var surfaceLayers by remember { mutableStateOf(emptyList<com.indianservers.aiexplorer.core.SpatialSurfaceLayer>()) }
     var selectedSurfaceLayerIndex by remember { mutableIntStateOf(-1) }
     var selectedSurfaceLayerIndices by remember { mutableStateOf(emptySet<Int>()) }
@@ -9638,13 +9704,16 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 Triple(
                     actualIndex,
                     it,
-                    listOf(Violet, Green, Amber, Color(0xFFFF6FAE))[index % 4]
-                        .copy(alpha = layer.opacity.toFloat() * selectionAlpha),
+                    StyledSurfaceMesh(
+                        mesh = it,
+                        appearance = layer.workspaceAppearance().copy(colorIndex = layer.colorIndex + actualIndex),
+                        opacity = layer.opacity.toFloat() * selectionAlpha,
+                    ),
                 )
             }
         }
     }
-    val additionalSurfaceMeshes = additionalSurfaceMeshEntries.map { (_, surfaceMesh, color) -> surfaceMesh to color }
+    val additionalSurfaceMeshes = additionalSurfaceMeshEntries.map { it.third }
     val selectableSurfaceMeshes = buildList {
         primaryMesh?.let { add(0 to it) }
         additionalSurfaceMeshEntries.forEach { (index, surfaceMesh, _) -> add(index to surfaceMesh) }
@@ -9700,8 +9769,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             val nextLayer = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
                 "surface-${System.currentTimeMillis()}",
                 interpretation.canonicalEquation,
-                material = com.indianservers.aiexplorer.core.SpatialMaterial.Gloss,
-            )
+            ).withWorkspaceAppearance(graphSceneAppearance.copy(colorIndex = surfaceLayers.size))
             val newIndex = surfaceLayers.size
             surfaceLayers = surfaceLayers + nextLayer
             selectedSurfaceLayerIndex = newIndex
@@ -9755,10 +9823,18 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
     Box(Modifier.fillMaxSize()) {
         SurfaceCanvas3D(
-            modifier = Modifier.fillMaxSize().appWorkspaceTreatment(cornerRadius = 0.dp),
+            modifier = Modifier.fillMaxSize()
+                .background((surfaceLayers.firstOrNull()?.workspaceAppearance() ?: graphSceneAppearance).palette.background)
+                .appWorkspaceTreatment(
+                    0.dp,
+                    (surfaceLayers.firstOrNull()?.workspaceAppearance() ?: graphSceneAppearance).palette.axes.z,
+                    (surfaceLayers.firstOrNull()?.workspaceAppearance() ?: graphSceneAppearance).palette.axes.y,
+                ),
             expression = resolvedPrimaryExpression,
             mesh = primaryMesh,
+            appearance = surfaceLayers.firstOrNull()?.workspaceAppearance() ?: graphSceneAppearance,
             additionalMeshes = additionalSurfaceMeshes,
+            axisStyle = graphAxisStyle,
             surfaceOpacity = (surfaceLayers.firstOrNull()?.opacity ?: 1.0).toFloat() *
                 when {
                     selectedSurfaceLayerIndices.isEmpty() -> .45f
@@ -9799,6 +9875,17 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 traceY = point.y.toFloat().coerceIn(-3f, 3f)
             },
             onSelectSurface = { index -> selectSurfaceLayer(index) },
+        )
+        if (!graph3DPresentationMode) WorkspaceThemeButton(
+            appearance = graphSceneAppearance,
+            onSelect = { palette ->
+                graphSceneAppearance = graphSceneAppearance.switchPalette(palette)
+                graphAxisStyle = palette.axes
+                surfaceLayers = surfaceLayers.map { layer ->
+                    layer.withWorkspaceAppearance(layer.workspaceAppearance().switchPalette(palette))
+                }
+            },
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 10.dp),
         )
         if (graph3DPresentationMode) {
             GlowButton("Exit presentation") { graph3DPresentationMode = false }
@@ -10041,6 +10128,28 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 instruction = "Drag to orbit · pinch to resize the view · use controls for exact rotation and zoom",
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 68.dp),
             ) {
+                WorkspaceAppearancePicker(
+                    appearance = selectedLayer.workspaceAppearance(),
+                    onChange = { updated ->
+                        if (updated.paletteId != selectedLayer.workspaceAppearance().paletteId) {
+                            graphAxisStyle = updated.palette.axes
+                        }
+                        graphSceneAppearance = updated
+                        surfaceLayers = surfaceLayers.mapIndexed { index, layer ->
+                            if (index in selectedSurfaceLayerIndices || index == selectedSurfaceLayerIndex) {
+                                layer.withWorkspaceAppearance(updated)
+                            } else {
+                                layer
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                WorkspaceAxisPicker(
+                    axes = graphAxisStyle,
+                    palette = selectedLayer.workspaceAppearance().palette,
+                    onChange = { graphAxisStyle = it },
+                )
                 GlowButton("Rotate −") { rotation = (rotation - 15f).wrapDegrees() }
                 GlowButton("Rotate +") { rotation = (rotation + 15f).wrapDegrees() }
                 GlowButton("Zoom −") { zoom = (zoom - .1f).coerceAtLeast(.35f) }

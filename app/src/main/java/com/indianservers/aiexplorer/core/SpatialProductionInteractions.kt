@@ -13,10 +13,14 @@ data class SpatialSurfaceLayer(
     val id: String,
     val expression: String,
     val visible: Boolean = true,
-    val material: SpatialMaterial = SpatialMaterial.Matte,
+    val material: SpatialMaterial = SpatialMaterial.Gloss,
     val domain: SurfaceDomain3D = SurfaceDomain3D(),
     val quality: SpatialQuality = SpatialQuality.Balanced,
     val opacity: Double = 1.0,
+    val paletteKey: String = "spectral",
+    val colorIndex: Int = 0,
+    val textureKey: String = "mesh",
+    val glow: Boolean = true,
 )
 
 data class SpatialObjectGroup(val id: String, val name: String, val solidIndices: Set<Int>) { init { require(solidIndices.isNotEmpty()) } }

@@ -514,6 +514,9 @@ internal fun Projected3DCanvas(
     showGrid: Boolean,
     gridSize: Float,
     visualMode: SpatialVisualMode,
+    solidAppearances: Map<Int, WorkspaceAppearance> = emptyMap(),
+    defaultAppearance: WorkspaceAppearance = WorkspaceAppearance(),
+    axisStyle: WorkspaceAxisStyle = WorkspaceVisualStyles.Spectral.axes,
     perspective: Boolean,
     selectionMode: Selection3DMode,
     subSelection: SubObjectSelection?,
@@ -826,17 +829,23 @@ internal fun Projected3DCanvas(
             .semantics { contentDescription = "Interactive 3D workspace with object, vertex, edge and face selection. $structuredDescription" },
     ) {
         val center = Offset(size.width * .52f, size.height * .45f) + cameraPan
-        if (showGrid) drawPerspectiveGrid(center, gridSize, visualEffects)
+        if (showGrid) drawPerspectiveGrid(center, gridSize, visualEffects, axisStyle)
         vectors.forEachIndexed { index, vector ->
-            drawVector3D(vector, rx, ry, rz, center, 74f * zoom, if (index == selectedVectorIndex) Amber else Green, index == selectedVectorIndex, perspective)
+            val vectorColor = if (index == selectedVectorIndex) {
+                WorkspaceVisualStyles.ReferenceYellow
+            } else {
+                WorkspaceVisualStyles.spectralColor(index)
+            }
+            drawVector3D(vector, rx, ry, rz, center, 74f * zoom, vectorColor, index == selectedVectorIndex, perspective)
         }
         solids.forEachIndexed { index, solid ->
             if (index !in visibleSolidIndices) return@forEachIndexed
-            val color = if (index == selectedIndex) Cyan else if (index == stylusHoverSolid) Amber else if (index % 2 == 0) Violet else Green
+            val appearance = solidAppearances[index] ?: defaultAppearance.copy(colorIndex = index)
+            val color = if (index == stylusHoverSolid) WorkspaceVisualStyles.ReferenceYellow else appearance.color
             drawSolidProjection(
                 solid, solid.position, rx, ry, rz, center, 74f * zoom, color, visualMode, index == selectedIndex,
                 perspective, subSelection?.takeIf { it.solidIndex == index }, sectionEnabled && index == selectedIndex,
-                sectionPlane, clipSection && index == selectedIndex,
+                sectionPlane, clipSection && index == selectedIndex, appearance,
             )
             if (index == stylusHoverSolid) {
                 val hover = project(rotate(solid.position, rx, ry, rz), center, 74f * zoom, perspective)
@@ -860,7 +869,9 @@ internal fun SurfaceCanvas3D(
     modifier: Modifier,
     expression: String,
     mesh: com.indianservers.aiexplorer.core.SurfaceMesh?,
-    additionalMeshes: List<Pair<com.indianservers.aiexplorer.core.SurfaceMesh, Color>>,
+    appearance: WorkspaceAppearance = WorkspaceAppearance(),
+    additionalMeshes: List<StyledSurfaceMesh>,
+    axisStyle: WorkspaceAxisStyle = appearance.palette.axes,
     surfaceOpacity: Float,
     selectableMeshes: List<Pair<Int, com.indianservers.aiexplorer.core.SurfaceMesh>>,
     gradientPath: List<Vec3>,
@@ -906,8 +917,8 @@ internal fun SurfaceCanvas3D(
             .pointerInput(activeTool) {
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
-                    val center = Offset(size.width * .5f, size.height * .5f) + currentPan
-                    val scale = 54f * currentZoom
+                    val center = Offset(size.width * .5f, size.height * .52f) + currentPan
+                    val scale = 82f * currentZoom
                     fun screen(value: Vec3) = project(rotate(value, currentTilt, currentRotation, currentRoll), center, scale)
                     val projected = currentMesh?.vertices?.map { value -> screen(value).let { Vec2(it.x.toDouble(), it.y.toDouble()) } }.orEmpty()
                     fun surfaceAt(position: Offset, tolerance: Double = 52.0): Vec2? = currentMesh?.let { surfaceMesh ->
@@ -970,39 +981,42 @@ internal fun SurfaceCanvas3D(
             }
             .semantics { contentDescription = "Interactive 3D graph: tap a surface to select it, drag to orbit, two fingers pan, pinch zoom, and twist roll" },
     ) {
-        val center = Offset(size.width * .5f, size.height * .5f) + cameraPan
-        val scale = 54f * zoom
+        val center = Offset(size.width * .5f, size.height * .52f) + cameraPan
+        val scale = 82f * zoom
         fun map(v: Vec3) = project(rotate(v, tilt, rotation, roll), center, scale)
-        drawPerspectiveGrid(center, effects = visualEffects)
-        drawCoordinatePlanes3D(::map)
-        if (showBox) drawSurfaceBox(::map)
+        drawPerspectiveGrid(center, effects = visualEffects, axisStyle = axisStyle)
+        drawCoordinatePlanes3D(::map, axisStyle)
+        if (showBox) drawSurfaceBox(::map, axisStyle)
         val meshRows = mesh?.vertices?.chunked(mesh.columns).orEmpty()
+        drawStyledSurface(meshRows, ::map, appearance, surfaceOpacity)
         meshRows.forEachIndexed { rowIndex, row ->
-            val rowColor = if (visualEffects.treatment == AppVisualTreatment.SpectralWireframe) {
-                androidx.compose.ui.graphics.lerp(Cyan, Violet, rowIndex.toFloat() / meshRows.lastIndex.coerceAtLeast(1))
-            } else {
-                Cyan
-            }
+            val rowColor = appearance.palette.sample(rowIndex.toFloat() / meshRows.lastIndex.coerceAtLeast(1))
             row.zipWithNext().forEachIndexed { columnIndex, (a, b) ->
-                val alpha = (if (showWireframe || rowIndex % 3 == 0 || columnIndex % 3 == 0) .78f else .28f) * surfaceOpacity
-                drawLine(rowColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.8f else 1.1f)
+                val textureVisible = appearance.texture == WorkspaceTexture.Mesh ||
+                    (appearance.texture == WorkspaceTexture.Contour && rowIndex % 3 == 0) ||
+                    (appearance.texture == WorkspaceTexture.Faceted && (rowIndex + columnIndex) % 2 == 0)
+                val alpha = (if (showWireframe || textureVisible) .78f else .18f) * surfaceOpacity
+                if (appearance.glow && (showWireframe || textureVisible)) {
+                    drawLine(rowColor.copy(alpha = alpha * .16f), map(a), map(b), 7f)
+                }
+                drawLine(rowColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.8f else 1.05f)
             }
         }
         val meshColumns = mesh?.vertices?.groupBy { it.y }?.values.orEmpty()
         meshColumns.forEachIndexed { index, col ->
-            val columnColor = if (visualEffects.treatment == AppVisualTreatment.SpectralWireframe) {
-                androidx.compose.ui.graphics.lerp(Violet, Cyan, index.toFloat() / (meshColumns.size - 1).coerceAtLeast(1))
-            } else {
-                Violet
-            }
+            val columnColor = appearance.palette.sample(1f - index.toFloat() / (meshColumns.size - 1).coerceAtLeast(1))
             col.zipWithNext().forEach { (a, b) ->
                 val alpha = (if (showWireframe || index % 3 == 0) .58f else .22f) * surfaceOpacity
                 drawLine(columnColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.3f else .9f)
             }
         }
-        additionalMeshes.forEach { (surface, color) ->
-            surface.vertices.chunked(surface.columns).forEach { row -> row.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = color.alpha * .72f), map(a), map(b), 1.5f) } }
-            surface.vertices.groupBy { it.y }.values.forEach { column -> column.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = color.alpha * .42f), map(a), map(b), 1.1f) } }
+        additionalMeshes.forEach { styled ->
+            val rows = styled.mesh.vertices.chunked(styled.mesh.columns)
+            drawStyledSurface(rows, ::map, styled.appearance, styled.opacity)
+            rows.forEachIndexed { rowIndex, row ->
+                val color = styled.appearance.palette.sample(rowIndex.toFloat() / rows.lastIndex.coerceAtLeast(1))
+                row.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = styled.opacity * .68f), map(a), map(b), 1.35f) }
+            }
         }
         if (gradientPath.size >= 2) {
             val visiblePath = gradientPath.take((gradientPathIndex + 1).coerceAtLeast(2))
@@ -1012,7 +1026,7 @@ internal fun SurfaceCanvas3D(
         if (showContours) drawSurfaceContours(mesh, ::map)
         if (showSlice) drawSurfaceSlice(mesh, sliceZ, ::map)
         val compiled = runCatching { engine.compile(stripEquation(expression).replace("y", "yy")) }.getOrNull()
-        compiled?.let {
+        compiled?.takeIf { activeTool in setOf(SurfaceTool.Trace, SurfaceTool.Gradient) || showGradient }?.let {
             val z = runCatching { it.eval(mapOf("x" to trace.x, "yy" to trace.y)) }.getOrDefault(Double.NaN)
             if (z.isFinite()) {
                 val point = Vec3(trace.x, trace.y, z.coerceIn(-8.0, 8.0))
@@ -1024,7 +1038,73 @@ internal fun SurfaceCanvas3D(
     }
 }
 
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawCoordinatePlanes3D(map: (Vec3) -> Offset) {
+private fun WorkspacePalette.sample(fraction: Float): Color {
+    if (colors.size == 1) return colors.first()
+    val position = fraction.coerceIn(0f, 1f) * colors.lastIndex
+    val lower = position.toInt().coerceIn(0, colors.lastIndex)
+    val upper = (lower + 1).coerceAtMost(colors.lastIndex)
+    return androidx.compose.ui.graphics.lerp(colors[lower], colors[upper], position - lower)
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStyledSurface(
+    rows: List<List<Vec3>>,
+    map: (Vec3) -> Offset,
+    appearance: WorkspaceAppearance,
+    opacity: Float,
+) {
+    if (rows.size < 2) return
+    val zValues = rows.flatten().map(Vec3::z)
+    val zMin = zValues.minOrNull() ?: return
+    val zRange = ((zValues.maxOrNull() ?: zMin) - zMin).coerceAtLeast(1e-9)
+    val materialAlpha = when (appearance.material) {
+        com.indianservers.aiexplorer.core.SpatialMaterial.Matte -> .46f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> .62f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> .72f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Glass -> .24f
+        com.indianservers.aiexplorer.core.SpatialMaterial.XRay -> .12f
+    } * opacity
+    rows.zipWithNext().forEachIndexed { rowIndex, (top, bottom) ->
+        val width = min(top.size, bottom.size)
+        for (column in 0 until width - 1) {
+            val values = listOf(top[column], top[column + 1], bottom[column + 1], bottom[column])
+            val points = values.map(map)
+            val normalizedHeight = (((values.sumOf(Vec3::z) / values.size) - zMin) / zRange).toFloat()
+            val sweep = (
+                normalizedHeight * .62f +
+                    rowIndex.toFloat() / rows.lastIndex.coerceAtLeast(1) * .23f +
+                    column.toFloat() / (width - 1).coerceAtLeast(1) * .15f
+                ).mod(1f)
+            val color = appearance.palette.sample(sweep)
+            val path = Path().apply {
+                moveTo(points.first().x, points.first().y)
+                points.drop(1).forEach { lineTo(it.x, it.y) }
+                close()
+            }
+            if (appearance.glow) drawPath(path, color.copy(alpha = materialAlpha * .12f))
+            val highlight = when (appearance.material) {
+                com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> Color.White.copy(alpha = .22f * opacity)
+                com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> Color.White.copy(alpha = .15f * opacity)
+                else -> color.copy(alpha = materialAlpha * .45f)
+            }
+            drawPath(
+                path,
+                Brush.linearGradient(
+                    listOf(color.copy(alpha = materialAlpha), highlight),
+                    start = points.first(),
+                    end = points[2],
+                ),
+            )
+            if (appearance.texture == WorkspaceTexture.Faceted) {
+                drawPath(path, color.copy(alpha = .42f * opacity), style = Stroke(.8f))
+            }
+        }
+    }
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawCoordinatePlanes3D(
+    map: (Vec3) -> Offset,
+    axes: WorkspaceAxisStyle,
+) {
     fun plane(points: List<Vec3>, color: Color) {
         val projected = points.map(map)
         val path = Path().apply {
@@ -1032,33 +1112,44 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawCoordinatePlane
             projected.drop(1).forEach { lineTo(it.x, it.y) }
             close()
         }
-        drawPath(path, color.copy(alpha = .045f))
-        drawPath(path, color.copy(alpha = .22f), style = Stroke(1.2f))
+        drawPath(path, color.copy(alpha = .018f))
+        drawPath(path, color.copy(alpha = .10f), style = Stroke(1f))
     }
-    plane(listOf(Vec3(-3.0, -3.0, 0.0), Vec3(3.0, -3.0, 0.0), Vec3(3.0, 3.0, 0.0), Vec3(-3.0, 3.0, 0.0)), Cyan)
-    plane(listOf(Vec3(-3.0, 0.0, -1.0), Vec3(3.0, 0.0, -1.0), Vec3(3.0, 0.0, 6.0), Vec3(-3.0, 0.0, 6.0)), Green)
-    plane(listOf(Vec3(0.0, -3.0, -1.0), Vec3(0.0, 3.0, -1.0), Vec3(0.0, 3.0, 6.0), Vec3(0.0, -3.0, 6.0)), Violet)
+    plane(listOf(Vec3(-3.0, -3.0, 0.0), Vec3(3.0, -3.0, 0.0), Vec3(3.0, 3.0, 0.0), Vec3(-3.0, 3.0, 0.0)), axes.z)
+    plane(listOf(Vec3(-3.0, 0.0, -1.0), Vec3(3.0, 0.0, -1.0), Vec3(3.0, 0.0, 6.0), Vec3(-3.0, 0.0, 6.0)), axes.y)
+    plane(listOf(Vec3(0.0, -3.0, -1.0), Vec3(0.0, 3.0, -1.0), Vec3(0.0, 3.0, 6.0), Vec3(0.0, -3.0, 6.0)), axes.x)
 
     val origin = map(Vec3(0.0, 0.0, 0.0))
     val x = map(Vec3(3.7, 0.0, 0.0))
     val y = map(Vec3(0.0, 3.7, 0.0))
     val z = map(Vec3(0.0, 0.0, 4.8))
-    drawLine(Color(0xFFFF5B68), origin, x, 4f, cap = StrokeCap.Round)
-    drawLine(Green, origin, y, 4f, cap = StrokeCap.Round)
-    drawLine(Cyan, origin, z, 4f, cap = StrokeCap.Round)
+    drawLine(axes.x.copy(alpha = .18f), origin, x, 12f, cap = StrokeCap.Round)
+    drawLine(axes.y.copy(alpha = .18f), origin, y, 12f, cap = StrokeCap.Round)
+    drawLine(axes.z.copy(alpha = .18f), origin, z, 12f, cap = StrokeCap.Round)
+    drawLine(axes.x, origin, x, 4f, cap = StrokeCap.Round)
+    drawLine(axes.y, origin, y, 4f, cap = StrokeCap.Round)
+    drawLine(axes.z, origin, z, 4f, cap = StrokeCap.Round)
     drawCircle(Color.White, 5f, origin)
-    drawGraphLabel("X", x + Offset(8f, 0f), Color(0xFFFF5B68))
-    drawGraphLabel("Y", y + Offset(8f, 0f), Green)
-    drawGraphLabel("Z", z + Offset(8f, 0f), Cyan)
+    val plateColor = if (axes.label.red + axes.label.green + axes.label.blue < 1.5f) {
+        Color.White.copy(alpha = .88f)
+    } else {
+        SurfaceA
+    }
+    drawGraphLabel("X", x + Offset(8f, 0f), axes.label, plateColor, axes.x)
+    drawGraphLabel("Y", y + Offset(8f, 0f), axes.label, plateColor, axes.y)
+    drawGraphLabel("Z", z + Offset(8f, 0f), axes.label, plateColor, axes.z)
 }
 
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSurfaceBox(map: (Vec3) -> Offset) {
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSurfaceBox(
+    map: (Vec3) -> Offset,
+    axes: WorkspaceAxisStyle,
+) {
     val corners = listOf(
         Vec3(-3.0, -3.0, -1.0), Vec3(3.0, -3.0, -1.0), Vec3(3.0, 3.0, -1.0), Vec3(-3.0, 3.0, -1.0),
         Vec3(-3.0, -3.0, 7.0), Vec3(3.0, -3.0, 7.0), Vec3(3.0, 3.0, 7.0), Vec3(-3.0, 3.0, 7.0),
     )
     listOf(0 to 1, 1 to 2, 2 to 3, 3 to 0, 4 to 5, 5 to 6, 6 to 7, 7 to 4, 0 to 4, 1 to 5, 2 to 6, 3 to 7).forEach { (a, b) ->
-        drawLine(Cyan.copy(.33f), map(corners[a]), map(corners[b]), 1.6f)
+        drawLine(axes.grid.copy(alpha = .45f), map(corners[a]), map(corners[b]), 1.6f)
     }
 }
 
@@ -1137,6 +1228,7 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(
     scale: Float,
     settings: GraphAxisSettings = GraphAxisSettings(),
     effects: AppVisualEffects = AppVisualEffects.Standard,
+    axisStyle: WorkspaceAxisStyle = WorkspaceVisualStyles.Spectral.axes,
 ) {
     if (!scale.isFinite() || scale <= 0f) return
     val minX = (-origin.x / scale).toDouble()
@@ -1148,16 +1240,16 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(
     xTicks.forEach { value ->
         val x = origin.x + value.toFloat() * scale
         if (settings.gridVisible || value == 0.0) {
-            if (value == 0.0 && effects.enhanced) drawLine(Cyan.copy(alpha = effects.gridGlowAlpha), Offset(x, 0f), Offset(x, size.height), 7f)
-            val gridColor = if (value == 0.0) Color.White.copy(.85f) else if (effects.enhanced) Cyan.copy(alpha = effects.gridGlowAlpha * .42f) else Grid
+            if (value == 0.0 && effects.enhanced) drawLine(axisStyle.y.copy(alpha = effects.gridGlowAlpha), Offset(x, 0f), Offset(x, size.height), 7f)
+            val gridColor = if (value == 0.0) axisStyle.y.copy(.9f) else axisStyle.grid
             drawLine(gridColor, Offset(x, 0f), Offset(x, size.height), if (value == 0.0) 2f else 1f)
         }
     }
     yTicks.forEach { value ->
         val y = origin.y - value.toFloat() * scale
         if (settings.gridVisible || value == 0.0) {
-            if (value == 0.0 && effects.enhanced) drawLine(Violet.copy(alpha = effects.gridGlowAlpha), Offset(0f, y), Offset(size.width, y), 7f)
-            val gridColor = if (value == 0.0) Color.White.copy(.85f) else if (effects.enhanced) Violet.copy(alpha = effects.gridGlowAlpha * .42f) else Grid
+            if (value == 0.0 && effects.enhanced) drawLine(axisStyle.x.copy(alpha = effects.gridGlowAlpha), Offset(0f, y), Offset(size.width, y), 7f)
+            val gridColor = if (value == 0.0) axisStyle.x.copy(.9f) else axisStyle.grid
             drawLine(gridColor, Offset(0f, y), Offset(size.width, y), if (value == 0.0) 2f else 1f)
         }
     }
@@ -1190,21 +1282,22 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPerspectiveGrid
     center: Offset,
     spacingScale: Float = 1f,
     effects: AppVisualEffects = AppVisualEffects.Standard,
+    axisStyle: WorkspaceAxisStyle = WorkspaceVisualStyles.Spectral.axes,
 ) {
     val safeScale = spacingScale.coerceIn(.5f, 3f)
-    val gridColor = if (effects.enhanced) Cyan.copy(alpha = effects.gridGlowAlpha * .45f) else Grid
+    val gridColor = if (effects.enhanced) axisStyle.grid.copy(alpha = effects.gridGlowAlpha * .8f) else axisStyle.grid
     for (i in -8..8) {
         drawLine(gridColor, Offset(center.x + i * 48f * safeScale, center.y - 330f), Offset(center.x + i * 78f * safeScale, center.y + 330f), 1f)
         drawLine(gridColor, Offset(center.x - 420f, center.y + i * 34f * safeScale), Offset(center.x + 420f, center.y + i * 34f * safeScale), 1f)
     }
     if (effects.enhanced) {
-        drawLine(Cyan.copy(alpha = effects.gridGlowAlpha), center, center + Offset(260f, 110f), 8f)
-        drawLine(Violet.copy(alpha = effects.gridGlowAlpha), center, center + Offset(-220f, 140f), 8f)
-        drawLine(Cyan.copy(alpha = effects.gridGlowAlpha), center, center + Offset(0f, -260f), 8f)
+        drawLine(axisStyle.x.copy(alpha = effects.gridGlowAlpha), center, center + Offset(260f, 110f), 8f)
+        drawLine(axisStyle.y.copy(alpha = effects.gridGlowAlpha), center, center + Offset(-220f, 140f), 8f)
+        drawLine(axisStyle.z.copy(alpha = effects.gridGlowAlpha), center, center + Offset(0f, -260f), 8f)
     }
-    drawLine(Cyan, center, center + Offset(260f, 110f), 3f)
-    drawLine(Cyan, center, center + Offset(-220f, 140f), 3f)
-    drawLine(Cyan, center, center + Offset(0f, -260f), 3f)
+    drawLine(axisStyle.x, center, center + Offset(260f, 110f), 3f)
+    drawLine(axisStyle.y, center, center + Offset(-220f, 140f), 3f)
+    drawLine(axisStyle.z, center, center + Offset(0f, -260f), 3f)
 }
 
 internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawRadiantPoint(position: Offset, color: Color, label: String) {
@@ -1354,6 +1447,7 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjectio
     sectionEnabled: Boolean,
     sectionPlane: EditableSectionPlane,
     clipSection: Boolean,
+    appearance: WorkspaceAppearance = WorkspaceAppearance(),
 ) {
     fun p(v: Vec3): Offset {
         return project(rotate(solidLocalToWorld(solid.copy(position = offset), v), rx, ry, rz), center, scale, perspective)
@@ -1364,7 +1458,7 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjectio
         SpatialVisualMode.Solid -> if (selected) 1.8f else 1.1f
     }
     val anchor = project(rotate(offset, rx, ry, rz), center, scale, perspective)
-    if (selected) {
+    if (selected && appearance.glow) {
         drawCircle(Brush.radialGradient(listOf(color.copy(.28f), Color.Transparent), anchor, 112f), radius = 112f, center = anchor)
         drawCircle(color.copy(.80f), radius = 64f, center = anchor, style = Stroke(2.4f))
     }
@@ -1394,21 +1488,35 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjectio
                     alpha = 1f,
                 )
                 val selectedFace = subSelection?.mode == Selection3DMode.Face && subSelection.index == index
+                val materialAlpha = when (appearance.material) {
+                    com.indianservers.aiexplorer.core.SpatialMaterial.Matte -> .72f
+                    com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> .86f
+                    com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> .92f
+                    com.indianservers.aiexplorer.core.SpatialMaterial.Glass -> .24f
+                    com.indianservers.aiexplorer.core.SpatialMaterial.XRay -> .12f
+                }
                 val faceAlpha = when {
                     selectedFace -> .88f
                     visualMode == SpatialVisualMode.XRay -> .13f
-                    selected -> .80f
-                    else -> .30f
+                    selected -> materialAlpha
+                    else -> materialAlpha * .72f
                 }
                 drawPath(
                     path,
                     Brush.linearGradient(
                         listOf(
                             (if (selectedFace) Amber else litColor).copy(alpha = faceAlpha),
-                            Color.White.copy(alpha = if (visualMode == SpatialVisualMode.XRay) .025f else .10f),
+                            Color.White.copy(
+                                alpha = if (visualMode == SpatialVisualMode.XRay) .025f
+                                else if (appearance.material == com.indianservers.aiexplorer.core.SpatialMaterial.Gloss) .22f
+                                else .10f,
+                            ),
                         ),
                     ),
                 )
+                if (appearance.texture == WorkspaceTexture.Faceted) {
+                    drawPath(path, color.copy(alpha = .5f), style = Stroke(.8f))
+                }
             }
     }
     mesh.edges.forEachIndexed { index, (a, b) ->
@@ -1542,7 +1650,12 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawTransformGizmo(
     if (handles.isEmpty()) return
     fun p(value: Vec2) = Offset(value.x.toFloat(), value.y.toFloat())
     val anchor = p(handles.first().start)
-    fun color(axis: TransformGizmoAxis) = when (axis) { TransformGizmoAxis.X -> Color(0xFFFF5B68); TransformGizmoAxis.Y -> Green; TransformGizmoAxis.Z -> Cyan; TransformGizmoAxis.Uniform -> Color.White }
+    fun color(axis: TransformGizmoAxis) = when (axis) {
+        TransformGizmoAxis.X -> WorkspaceVisualStyles.ReferenceBlue
+        TransformGizmoAxis.Y -> WorkspaceVisualStyles.ReferenceMagenta
+        TransformGizmoAxis.Z -> WorkspaceVisualStyles.ReferenceCyan
+        TransformGizmoAxis.Uniform -> Color.White
+    }
     when (mode) {
         Transform3DMode.Move -> {
             handles.filter { it.axis != TransformGizmoAxis.Uniform }.forEach { handle ->
