@@ -27,6 +27,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.core.SpatialMaterial
+import com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode
 import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
 import com.indianservers.aiexplorer.core.SurfaceMesh
 
@@ -77,6 +78,7 @@ internal data class StyledSurfaceMesh(
     val mesh: SurfaceMesh,
     val appearance: WorkspaceAppearance,
     val opacity: Float = 1f,
+    val renderMode: SpatialSurfaceRenderMode = SpatialSurfaceRenderMode.SurfaceMesh,
 )
 
 internal object WorkspaceVisualStyles {

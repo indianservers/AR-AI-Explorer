@@ -6,6 +6,7 @@ import kotlin.math.max
 
 enum class SpatialMaterial { Matte, Gloss, Metal, Glass, XRay }
 enum class SpatialQuality { Battery, Balanced, High, Ultra }
+enum class SpatialSurfaceRenderMode { Surface, SurfaceMesh, Wireframe }
 data class SurfaceDomain3D(val uMin: Double = -3.0, val uMax: Double = 3.0, val vMin: Double = -3.0, val vMax: Double = 3.0) {
     init { require(uMin < uMax && vMin < vMax) }
 }
@@ -21,6 +22,7 @@ data class SpatialSurfaceLayer(
     val colorIndex: Int = 0,
     val textureKey: String = "mesh",
     val glow: Boolean = true,
+    val renderMode: SpatialSurfaceRenderMode = SpatialSurfaceRenderMode.SurfaceMesh,
 )
 
 data class SpatialObjectGroup(val id: String, val name: String, val solidIndices: Set<Int>) { init { require(solidIndices.isNotEmpty()) } }

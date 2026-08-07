@@ -1057,12 +1057,28 @@ class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {
     fun mesh(expression: String, min: Double = -3.0, max: Double = 3.0, density: Int = 32): SurfaceMesh {
         val compiled = engine.compile(stripEquation(expression).replace("y", "yy"))
         val vertices = mutableListOf<Vec3>()
+        val step = (max - min) / density
+        fun sample(x: Double, y: Double): Double {
+            val direct = runCatching { compiled.eval(mapOf("x" to x, "yy" to y)) }.getOrDefault(Double.NaN)
+            if (direct.isFinite()) return direct
+            val epsilon = step * .125
+            return listOf(
+                x + epsilon to y,
+                x - epsilon to y,
+                x to y + epsilon,
+                x to y - epsilon,
+            ).mapNotNull { (sx, sy) ->
+                runCatching { compiled.eval(mapOf("x" to sx, "yy" to sy)) }
+                    .getOrNull()
+                    ?.takeIf(Double::isFinite)
+            }.average().takeIf(Double::isFinite) ?: Double.NaN
+        }
         for (i in 0..density) {
             val x = min + (max - min) * i / density
             for (j in 0..density) {
                 val y = min + (max - min) * j / density
-                val z = runCatching { compiled.eval(mapOf("x" to x, "yy" to y)) }.getOrDefault(Double.NaN)
-                if (z.isFinite()) vertices += Vec3(x, y, z.coerceIn(-8.0, 8.0))
+                val z = sample(x, y)
+                vertices += Vec3(x, y, z.coerceIn(-8.0, 8.0))
             }
         }
         return SurfaceMesh(vertices, density + 1, density + 1)

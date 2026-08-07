@@ -9593,7 +9593,6 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var sliceZ by remember { mutableFloatStateOf(2f) }
     var traceX by remember { mutableFloatStateOf(1f) }
     var traceY by remember { mutableFloatStateOf(1f) }
-    var showWireframe by remember { mutableStateOf(true) }
     var showContours by remember { mutableStateOf(false) }
     var showSlice by remember { mutableStateOf(false) }
     var showGradient by remember { mutableStateOf(false) }
@@ -9697,7 +9696,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             )
             runCatching { graph3D.mesh(resolvedLayer, density = qualityDensity) }.getOrNull()?.let {
                 val selectionAlpha = when {
-                    selectedSurfaceLayerIndices.isEmpty() -> .45f
+                    selectedSurfaceLayerIndices.isEmpty() -> 1f
                     actualIndex in selectedSurfaceLayerIndices -> 1f
                     else -> .25f
                 }
@@ -9708,6 +9707,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                         mesh = it,
                         appearance = layer.workspaceAppearance().copy(colorIndex = layer.colorIndex + actualIndex),
                         opacity = layer.opacity.toFloat() * selectionAlpha,
+                        renderMode = layer.renderMode,
                     ),
                 )
             }
@@ -9758,7 +9758,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 surfaceInputMessage = it.message ?: "The equation could not be parsed."
                 return
             }
-        if (preview.vertices.isEmpty()) {
+        if (preview.vertices.none { it.z.isFinite() }) {
             surfaceInputMessage = "The equation produced no finite surface points. Check variables and domain."
             return
         }
@@ -9807,6 +9807,20 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         remaining.firstOrNull()?.let { vm.setSurfaceExpression(it.expression) }
     }
     fun deleteSelectedSurfaceLayers() = deleteSurfaceLayers(selectedSurfaceLayerIndices)
+    fun updateSelectedSurfaceRenderMode(mode: com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode) {
+        val targets = selectedSurfaceLayerIndices.ifEmpty {
+            selectedSurfaceLayerIndex.takeIf { it in surfaceLayers.indices }?.let(::setOf).orEmpty()
+        }
+        if (targets.isEmpty()) return
+        surfaceLayers = surfaceLayers.mapIndexed { index, layer ->
+            if (index in targets) layer.copy(renderMode = mode) else layer
+        }
+    }
+    fun renderModeLabel(mode: com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode) = when (mode) {
+        com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.Surface -> "Surface"
+        com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.SurfaceMesh -> "Surface + Mesh"
+        com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.Wireframe -> "Wireframe"
+    }
     fun clearGraph3DWorkspace() {
         surfaceLayers = emptyList()
         selectedSurfaceLayerIndices = emptySet()
@@ -9837,7 +9851,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             axisStyle = graphAxisStyle,
             surfaceOpacity = (surfaceLayers.firstOrNull()?.opacity ?: 1.0).toFloat() *
                 when {
-                    selectedSurfaceLayerIndices.isEmpty() -> .45f
+                    selectedSurfaceLayerIndices.isEmpty() -> 1f
                     0 in selectedSurfaceLayerIndices -> 1f
                     else -> .25f
                 },
@@ -9851,7 +9865,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             cameraPan = cameraPan,
             sliceZ = sliceZ.toDouble(),
             trace = Vec2(traceX.toDouble(), traceY.toDouble()),
-            showWireframe = showWireframe,
+            renderMode = surfaceLayers.firstOrNull()?.renderMode
+                ?: com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.SurfaceMesh,
             showContours = showContours,
             showSlice = showSlice,
             showGradient = showGradient,
@@ -10128,6 +10143,17 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 instruction = "Drag to orbit · pinch to resize the view · use controls for exact rotation and zoom",
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 68.dp),
             ) {
+                FlowRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.entries.forEach { mode ->
+                        TogglePill(renderModeLabel(mode), selectedLayer.renderMode == mode) {
+                            updateSelectedSurfaceRenderMode(mode)
+                        }
+                    }
+                }
                 WorkspaceAppearancePicker(
                     appearance = selectedLayer.workspaceAppearance(),
                     onChange = { updated ->
@@ -10208,6 +10234,15 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                         GlowButton(layer.quality.name) { surfaceLayers = surfaceLayers.mapIndexed { i, old -> if (i == index) old.copy(quality = com.indianservers.aiexplorer.core.SpatialQuality.entries[(old.quality.ordinal + 1) % com.indianservers.aiexplorer.core.SpatialQuality.entries.size]) else old } }
                         DestructiveGlowButton("Delete") { deleteSurfaceLayers(setOf(index)) }
                     }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.entries.forEach { mode ->
+                            TogglePill(renderModeLabel(mode), layer.renderMode == mode) {
+                                surfaceLayers = surfaceLayers.mapIndexed { i, old ->
+                                    if (i == index) old.copy(renderMode = mode) else old
+                                }
+                            }
+                        }
+                    }
                     AxisSlider("Domain radius", maxOf(abs(layer.domain.uMin), abs(layer.domain.uMax)).toFloat(), 1f..10f) { radius ->
                         surfaceLayers = surfaceLayers.mapIndexed { i, old -> if (i == index) old.copy(domain = com.indianservers.aiexplorer.core.SurfaceDomain3D(-radius.toDouble(), radius.toDouble(), -radius.toDouble(), radius.toDouble())) else old }
                     }
@@ -10264,7 +10299,12 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 SurfaceTool.entries.forEach { tool ->
                     GlowButton(if (activeTool == tool) "• ${tool.name}" else tool.name, onClick = {
                         activeTool = tool
-                        if (tool == SurfaceTool.Wireframe) showWireframe = !showWireframe
+                        if (tool == SurfaceTool.Surface) {
+                            updateSelectedSurfaceRenderMode(com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.SurfaceMesh)
+                        }
+                        if (tool == SurfaceTool.Wireframe) {
+                            updateSelectedSurfaceRenderMode(com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode.Wireframe)
+                        }
                         if (tool == SurfaceTool.Contours) showContours = !showContours
                         if (tool == SurfaceTool.Slice) showSlice = !showSlice
                         if (tool == SurfaceTool.Gradient) showGradient = !showGradient

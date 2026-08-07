@@ -233,6 +233,7 @@ import com.indianservers.aiexplorer.core.ProbabilityDistribution
 import com.indianservers.aiexplorer.core.SurfaceCalculus
 import com.indianservers.aiexplorer.core.SurfaceInputInterpreter
 import com.indianservers.aiexplorer.core.AnalyticGeometry3D
+import com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode
 import com.indianservers.aiexplorer.core.AdvancedStatisticsEngine
 import com.indianservers.aiexplorer.core.MathSpreadsheetEngine
 import com.indianservers.aiexplorer.core.MissingDataPolicy
@@ -883,7 +884,7 @@ internal fun SurfaceCanvas3D(
     cameraPan: Offset,
     sliceZ: Double,
     trace: Vec2,
-    showWireframe: Boolean,
+    renderMode: SpatialSurfaceRenderMode,
     showContours: Boolean,
     showSlice: Boolean,
     showGradient: Boolean,
@@ -982,41 +983,17 @@ internal fun SurfaceCanvas3D(
             .semantics { contentDescription = "Interactive 3D graph: tap a surface to select it, drag to orbit, two fingers pan, pinch zoom, and twist roll" },
     ) {
         val center = Offset(size.width * .5f, size.height * .52f) + cameraPan
-        val scale = 82f * zoom
-        fun map(v: Vec3) = project(rotate(v, tilt, rotation, roll), center, scale)
+        val scale = 104f * zoom
+        fun camera(v: Vec3) = rotate(v, tilt, rotation, roll)
+        fun map(v: Vec3) = project(camera(v), center, scale)
         drawPerspectiveGrid(center, effects = visualEffects, axisStyle = axisStyle)
         drawCoordinatePlanes3D(::map, axisStyle)
         if (showBox) drawSurfaceBox(::map, axisStyle)
         val meshRows = mesh?.vertices?.chunked(mesh.columns).orEmpty()
-        drawStyledSurface(meshRows, ::map, appearance, surfaceOpacity)
-        meshRows.forEachIndexed { rowIndex, row ->
-            val rowColor = appearance.palette.sample(rowIndex.toFloat() / meshRows.lastIndex.coerceAtLeast(1))
-            row.zipWithNext().forEachIndexed { columnIndex, (a, b) ->
-                val textureVisible = appearance.texture == WorkspaceTexture.Mesh ||
-                    (appearance.texture == WorkspaceTexture.Contour && rowIndex % 3 == 0) ||
-                    (appearance.texture == WorkspaceTexture.Faceted && (rowIndex + columnIndex) % 2 == 0)
-                val alpha = (if (showWireframe || textureVisible) .78f else .18f) * surfaceOpacity
-                if (appearance.glow && (showWireframe || textureVisible)) {
-                    drawLine(rowColor.copy(alpha = alpha * .16f), map(a), map(b), 7f)
-                }
-                drawLine(rowColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.8f else 1.05f)
-            }
-        }
-        val meshColumns = mesh?.vertices?.groupBy { it.y }?.values.orEmpty()
-        meshColumns.forEachIndexed { index, col ->
-            val columnColor = appearance.palette.sample(1f - index.toFloat() / (meshColumns.size - 1).coerceAtLeast(1))
-            col.zipWithNext().forEach { (a, b) ->
-                val alpha = (if (showWireframe || index % 3 == 0) .58f else .22f) * surfaceOpacity
-                drawLine(columnColor.copy(alpha = alpha), map(a), map(b), if (showWireframe) 1.3f else .9f)
-            }
-        }
+        drawStyledSurface(meshRows, ::map, ::camera, appearance, surfaceOpacity, renderMode)
         additionalMeshes.forEach { styled ->
             val rows = styled.mesh.vertices.chunked(styled.mesh.columns)
-            drawStyledSurface(rows, ::map, styled.appearance, styled.opacity)
-            rows.forEachIndexed { rowIndex, row ->
-                val color = styled.appearance.palette.sample(rowIndex.toFloat() / rows.lastIndex.coerceAtLeast(1))
-                row.zipWithNext().forEach { (a, b) -> drawLine(color.copy(alpha = styled.opacity * .68f), map(a), map(b), 1.35f) }
-            }
+            drawStyledSurface(rows, ::map, ::camera, styled.appearance, styled.opacity, styled.renderMode)
         }
         if (gradientPath.size >= 2) {
             val visiblePath = gradientPath.take((gradientPathIndex + 1).coerceAtLeast(2))
@@ -1049,53 +1026,149 @@ private fun WorkspacePalette.sample(fraction: Float): Color {
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStyledSurface(
     rows: List<List<Vec3>>,
     map: (Vec3) -> Offset,
+    camera: (Vec3) -> Vec3,
     appearance: WorkspaceAppearance,
     opacity: Float,
+    renderMode: SpatialSurfaceRenderMode,
 ) {
     if (rows.size < 2) return
-    val zValues = rows.flatten().map(Vec3::z)
+    fun Vec3.isFinite() = x.isFinite() && y.isFinite() && z.isFinite()
+    val zValues = rows.flatten().filter(Vec3::isFinite).map(Vec3::z)
     val zMin = zValues.minOrNull() ?: return
     val zRange = ((zValues.maxOrNull() ?: zMin) - zMin).coerceAtLeast(1e-9)
     val materialAlpha = when (appearance.material) {
-        com.indianservers.aiexplorer.core.SpatialMaterial.Matte -> .46f
-        com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> .62f
-        com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> .72f
-        com.indianservers.aiexplorer.core.SpatialMaterial.Glass -> .24f
-        com.indianservers.aiexplorer.core.SpatialMaterial.XRay -> .12f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Matte -> .96f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> .98f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> .94f
+        com.indianservers.aiexplorer.core.SpatialMaterial.Glass -> .34f
+        com.indianservers.aiexplorer.core.SpatialMaterial.XRay -> .16f
     } * opacity
-    rows.zipWithNext().forEachIndexed { rowIndex, (top, bottom) ->
-        val width = min(top.size, bottom.size)
-        for (column in 0 until width - 1) {
-            val values = listOf(top[column], top[column + 1], bottom[column + 1], bottom[column])
-            val points = values.map(map)
-            val normalizedHeight = (((values.sumOf(Vec3::z) / values.size) - zMin) / zRange).toFloat()
+
+    val rowCount = rows.size
+    val columnCount = rows.minOfOrNull(List<Vec3>::size) ?: return
+    if (columnCount < 2) return
+    val normals = List(rowCount) { row ->
+        List(columnCount) { column ->
+            val center = rows[row][column]
+            val beforeRow = rows[(row - 1).coerceAtLeast(0)][column].takeIf(Vec3::isFinite) ?: center
+            val afterRow = rows[(row + 1).coerceAtMost(rowCount - 1)][column].takeIf(Vec3::isFinite) ?: center
+            val beforeColumn = rows[row][(column - 1).coerceAtLeast(0)].takeIf(Vec3::isFinite) ?: center
+            val afterColumn = rows[row][(column + 1).coerceAtMost(columnCount - 1)].takeIf(Vec3::isFinite) ?: center
+            AnalyticGeometry3D.cross(afterRow - beforeRow, afterColumn - beforeColumn)
+                .takeIf(Vec3::isFinite)
+                ?.takeIf { it.magnitude() > 1e-12 }
+                ?.normalized()
+                ?: Vec3(0.0, 0.0, 1.0)
+        }
+    }
+    data class Cell(
+        val row: Int,
+        val column: Int,
+        val values: List<Vec3>,
+        val depth: Double,
+    )
+    val cells = buildList {
+        for (row in 0 until rowCount - 1) {
+            for (column in 0 until columnCount - 1) {
+                val values = listOf(
+                    rows[row][column],
+                    rows[row][column + 1],
+                    rows[row + 1][column + 1],
+                    rows[row + 1][column],
+                )
+                if (values.all(Vec3::isFinite)) {
+                    add(Cell(row, column, values, values.map(camera).map(Vec3::z).average()))
+                }
+            }
+        }
+    }.sortedByDescending(Cell::depth)
+
+    if (renderMode != SpatialSurfaceRenderMode.Wireframe) {
+        val light = Vec3(-.35, -.45, .82).normalized()
+        fun litColor(value: Vec3, row: Int, column: Int, normal: Vec3): Color {
+            val normalizedHeight = ((value.z - zMin) / zRange).toFloat()
             val sweep = (
-                normalizedHeight * .62f +
-                    rowIndex.toFloat() / rows.lastIndex.coerceAtLeast(1) * .23f +
-                    column.toFloat() / (width - 1).coerceAtLeast(1) * .15f
-                ).mod(1f)
-            val color = appearance.palette.sample(sweep)
+                normalizedHeight * .72f +
+                    row.toFloat() / (rowCount - 1).coerceAtLeast(1) * .17f +
+                    column.toFloat() / (columnCount - 1).coerceAtLeast(1) * .11f
+                ).coerceIn(0f, 1f)
+            val paletteColor = appearance.palette.sample(sweep)
+            val cameraNormal = camera(normal).normalized()
+            val diffuse = kotlin.math.max(0.0, cameraNormal.dot(light)).toFloat()
+            val facing = kotlin.math.abs(cameraNormal.z).toFloat()
+            val illumination = (.52f + diffuse * .38f).coerceIn(.48f, .94f)
+            val shaded = androidx.compose.ui.graphics.lerp(Color.Black, paletteColor, illumination)
+            val specular = when (appearance.material) {
+                com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> (.03f + facing * diffuse * .10f)
+                com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> (.02f + facing * diffuse * .07f)
+                else -> 0f
+            }
+            return androidx.compose.ui.graphics.lerp(shaded, Color.White, specular.coerceIn(0f, .14f))
+                .copy(alpha = materialAlpha)
+        }
+        cells.forEach { cell ->
+            val points = cell.values.map(map)
+            val startColor = litColor(
+                cell.values[0],
+                cell.row,
+                cell.column,
+                normals[cell.row][cell.column],
+            )
+            val endColor = litColor(
+                cell.values[2],
+                cell.row + 1,
+                cell.column + 1,
+                normals[cell.row + 1][cell.column + 1],
+            )
             val path = Path().apply {
                 moveTo(points.first().x, points.first().y)
                 points.drop(1).forEach { lineTo(it.x, it.y) }
                 close()
             }
-            if (appearance.glow) drawPath(path, color.copy(alpha = materialAlpha * .12f))
-            val highlight = when (appearance.material) {
-                com.indianservers.aiexplorer.core.SpatialMaterial.Gloss -> Color.White.copy(alpha = .22f * opacity)
-                com.indianservers.aiexplorer.core.SpatialMaterial.Metal -> Color.White.copy(alpha = .15f * opacity)
-                else -> color.copy(alpha = materialAlpha * .45f)
-            }
             drawPath(
                 path,
                 Brush.linearGradient(
-                    listOf(color.copy(alpha = materialAlpha), highlight),
-                    start = points.first(),
+                    colors = listOf(startColor, endColor),
+                    start = points[0],
                     end = points[2],
                 ),
             )
-            if (appearance.texture == WorkspaceTexture.Faceted) {
-                drawPath(path, color.copy(alpha = .42f * opacity), style = Stroke(.8f))
+        }
+    }
+
+    val showMesh = renderMode != SpatialSurfaceRenderMode.Surface
+    if (!showMesh) return
+    val wireframe = renderMode == SpatialSurfaceRenderMode.Wireframe
+    val stride = if (wireframe || maxOf(rowCount, columnCount) <= 34) 1 else 2
+    val meshAlpha = (if (wireframe) .78f else .18f) * opacity
+    val meshWidth = if (wireframe) 1.45f else .62f
+    rows.forEachIndexed { row, values ->
+        if (row % stride == 0 || row == rows.lastIndex) {
+            val meshColor = if (wireframe) {
+                appearance.palette.sample(row.toFloat() / rows.lastIndex.coerceAtLeast(1))
+            } else {
+                appearance.palette.axes.label
+            }
+            values.zipWithNext().forEach { (a, b) ->
+                if (a.isFinite() && b.isFinite()) {
+                    drawLine(meshColor.copy(alpha = meshAlpha), map(a), map(b), meshWidth)
+                }
+            }
+        }
+    }
+    for (column in 0 until columnCount) {
+        if (column % stride == 0 || column == columnCount - 1) {
+            val meshColor = if (wireframe) {
+                appearance.palette.sample(1f - column.toFloat() / (columnCount - 1).coerceAtLeast(1))
+            } else {
+                appearance.palette.axes.label
+            }
+            for (row in 0 until rowCount - 1) {
+                val a = rows[row][column]
+                val b = rows[row + 1][column]
+                if (a.isFinite() && b.isFinite()) {
+                    drawLine(meshColor.copy(alpha = meshAlpha), map(a), map(b), meshWidth)
+                }
             }
         }
     }
