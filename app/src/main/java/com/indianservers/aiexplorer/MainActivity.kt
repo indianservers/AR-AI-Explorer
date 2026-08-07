@@ -9610,6 +9610,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var surfaceInputMessage by remember { mutableStateOf<String?>(null) }
     var addingSurfaceEquation by remember { mutableStateOf(false) }
     var graph3DEquationExpanded by remember { mutableStateOf(false) }
+    var graph3DExamplesExpanded by remember { mutableStateOf(false) }
     var graph3DHintExpanded by remember { mutableStateOf(false) }
     var graph3DViewExpanded by remember { mutableStateOf(false) }
     var graph3DParametersExpanded by remember { mutableStateOf(true) }
@@ -9727,6 +9728,14 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     LaunchedEffect(graph3DPresentationMode) {
         if (graph3DPresentationMode) {
             graph3DEquationExpanded = false
+            graph3DExamplesExpanded = false
+            graph3DHintExpanded = false
+            graph3DViewExpanded = false
+            vm.hidePanels()
+        }
+    }
+    LaunchedEffect(graph3DEquationExpanded) {
+        if (graph3DEquationExpanded) {
             graph3DHintExpanded = false
             graph3DViewExpanded = false
             vm.hidePanels()
@@ -9784,6 +9793,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             if (selectedSurfaceLayerIndex == 0) vm.setSurfaceExpression(interpretation.canonicalEquation)
             surfaceInputMessage = "Updated ${interpretation.canonicalEquation}"
         }
+        graph3DEquationExpanded = false
+        graph3DExamplesExpanded = false
     }
     fun selectSurfaceLayer(index: Int, additive: Boolean = false) {
         if (index !in surfaceLayers.indices) return
@@ -9891,7 +9902,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             },
             onSelectSurface = { index -> selectSurfaceLayer(index) },
         )
-        if (!graph3DPresentationMode) WorkspaceThemeButton(
+        if (!graph3DPresentationMode && !graph3DEquationExpanded) WorkspaceThemeButton(
             appearance = graphSceneAppearance,
             onSelect = { palette ->
                 graphSceneAppearance = graphSceneAppearance.switchPalette(palette)
@@ -9905,7 +9916,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         if (graph3DPresentationMode) {
             GlowButton("Exit presentation") { graph3DPresentationMode = false }
         }
-        if (!graph3DPresentationMode && showOrientationCube) {
+        if (!graph3DPresentationMode && !graph3DEquationExpanded && showOrientationCube) {
             OrientationCube(
                 modifier = Modifier.align(Alignment.TopEnd).padding(top = 154.dp, end = 12.dp),
                 onPreset = { preset ->
@@ -9919,25 +9930,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 },
             )
         }
-        if (!graph3DPresentationMode) {
-            Column(
-                Modifier.align(Alignment.TopStart).padding(top = 82.dp, start = 12.dp)
-                    .clip(RoundedCornerShape(12.dp)).background(SurfaceA.copy(.86f))
-                    .border(1.dp, Cyan.copy(.4f), RoundedCornerShape(12.dp)).padding(horizontal = 9.dp, vertical = 6.dp),
-            ) {
-                Text("Mode: ${activeTool.name}", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                Text(
-                    when (activeTool) {
-                        SurfaceTool.Trace, SurfaceTool.Gradient -> "Drag the probe across the mesh"
-                        SurfaceTool.Slice -> "Use the slice plane scrubber"
-                        else -> "Drag orbit · two fingers pan · pinch zoom · twist roll"
-                    },
-                    color = Muted,
-                    fontSize = 9.sp,
-                )
-            }
-        }
-        if (!graph3DPresentationMode && showContours) {
+        if (!graph3DPresentationMode && !graph3DEquationExpanded && showContours) {
             Column(
                 Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 80.dp)
                     .width(180.dp).clip(RoundedCornerShape(12.dp)).background(SurfaceA.copy(.86f)).padding(8.dp),
@@ -9952,42 +9945,104 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         if (!graph3DPresentationMode) Column(
             Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 84.dp, start = 10.dp, end = 10.dp)
+                .padding(top = 76.dp, start = 10.dp, end = 10.dp)
                 .widthIn(max = 360.dp)
-                .clip(RoundedCornerShape(18.dp))
+                .clip(RoundedCornerShape(14.dp))
                 .background(SurfaceA.copy(.86f))
-                .border(1.dp, Cyan.copy(.42f), RoundedCornerShape(18.dp))
+                .border(1.dp, Cyan.copy(.42f), RoundedCornerShape(14.dp))
                 .animateContentSize()
-                .padding(8.dp),
+                .padding(horizontal = 8.dp, vertical = 6.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(7.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable {
+                            graph3DEquationExpanded = !graph3DEquationExpanded
+                            if (!graph3DEquationExpanded) graph3DExamplesExpanded = false
+                        }
+                        .padding(horizontal = 3.dp, vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(7.dp),
+                ) {
                     TransparentIcon("Σ", Cyan)
                     Column {
-                        Text(if (addingSurfaceEquation) "Add 3D Equation" else "3D Equation", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                         Text(
-                            if (addingSurfaceEquation) "Enter z=f(x,y)" else surfaceLayers.getOrNull(selectedSurfaceLayerIndex)?.expression ?: "No equation selected",
+                            if (addingSurfaceEquation) "New 3D equation" else "3D equation",
+                            color = Ink,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            if (addingSurfaceEquation) {
+                                "Enter z=f(x,y)"
+                            } else {
+                                surfaceLayers.getOrNull(selectedSurfaceLayerIndex)?.expression ?: "Tap to add a surface"
+                            },
                             color = Green,
-                            fontSize = 10.sp,
+                            fontSize = 9.sp,
                             maxLines = 1,
                         )
                     }
                 }
-                GlowButton(
-                    if (graph3DEquationExpanded) "Collapse ▲" else "Expand ▼",
-                    onClick = { graph3DEquationExpanded = !graph3DEquationExpanded },
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (graph3DEquationExpanded) {
+                        Text(
+                            "Plot",
+                            color = if (surfaceDraft.isNotBlank()) Green else Muted,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable(enabled = surfaceDraft.isNotBlank(), onClick = ::plotSurfaceDraft)
+                                .padding(horizontal = 7.dp, vertical = 5.dp),
+                        )
+                    }
+                    Text(
+                        if (graph3DEquationExpanded) "Done" else "Edit",
+                        color = Cyan,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable {
+                                graph3DEquationExpanded = !graph3DEquationExpanded
+                                if (!graph3DEquationExpanded) graph3DExamplesExpanded = false
+                            }
+                            .padding(horizontal = 7.dp, vertical = 5.dp),
+                    )
+                }
             }
             AnimatedVisibility(graph3DEquationExpanded) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                    SurfaceExampleChips(
-                        onSelect = { expression ->
-                            surfaceDraft = expression
-                            surfaceInputMessage = null
-                        },
-                    )
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        Text(
+                            if (graph3DExamplesExpanded) "Hide examples" else "Examples",
+                            color = Violet,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { graph3DExamplesExpanded = !graph3DExamplesExpanded }
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                        )
+                    }
+                    AnimatedVisibility(graph3DExamplesExpanded) {
+                        SurfaceExampleChips(
+                            onSelect = { expression ->
+                                surfaceDraft = expression
+                                surfaceInputMessage = null
+                                graph3DExamplesExpanded = false
+                            },
+                        )
+                    }
                     SurfaceEquationInput(
                         value = surfaceDraft,
                         message = surfaceInputMessage,
@@ -9999,7 +10054,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                     )
                 }
             }
-            if (surfaceParameters.isNotEmpty()) {
+            if (graph3DEquationExpanded && surfaceParameters.isNotEmpty()) {
                 Row(
                     Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))
                         .clickable { graph3DParametersExpanded = !graph3DParametersExpanded }
@@ -10046,7 +10101,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 }
             }
         }
-        if (!graph3DPresentationMode) Column(
+        if (!graph3DPresentationMode && !graph3DEquationExpanded) Column(
             Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 120.dp)
@@ -10083,7 +10138,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 GlowButton("Present") { graph3DPresentationMode = true }
             }
         }
-        if (!graph3DPresentationMode) Column(
+        if (!graph3DPresentationMode && !graph3DEquationExpanded) Column(
             Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 12.dp, bottom = 64.dp)
@@ -10107,7 +10162,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 )
             }
         }
-        if (!graph3DPresentationMode) AddShapeTarget(
+        if (!graph3DPresentationMode && !graph3DEquationExpanded) AddShapeTarget(
             onAdd = {
                 addingSurfaceEquation = true
                 selectedSurfaceLayerIndex = -1
@@ -10115,12 +10170,13 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 surfaceDraft = ""
                 surfaceInputMessage = "Enter an equation, then tap Plot."
                 graph3DEquationExpanded = true
+                graph3DExamplesExpanded = false
             },
             label = "+ Equation",
             contentDescription = "Add a 3D graph equation to the workspace",
             modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 14.dp),
         )
-        if (!graph3DPresentationMode) Row(
+        if (!graph3DPresentationMode && !graph3DEquationExpanded) Row(
             Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -10136,7 +10192,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 onClick = ::clearGraph3DWorkspace,
             )
         }
-        if (!graph3DPresentationMode && !vm.hasDismissibleOverlay()) {
+        if (!graph3DPresentationMode && !graph3DEquationExpanded && !vm.hasDismissibleOverlay()) {
             val selectedLayer = surfaceLayers.getOrNull(selectedSurfaceLayerIndex)
             if (selectedLayer != null) SmartSelectionHud(
                 title = if (selectedSurfaceLayerIndices.size > 1) "${selectedSurfaceLayerIndices.size} surfaces" else "Surface ${selectedSurfaceLayerIndex + 1}",
@@ -10631,11 +10687,7 @@ private fun SurfaceEquationInput(
     var editorValue by remember {
         mutableStateOf(TextFieldValue(value, selection = TextRange(value.length)))
     }
-    var recentSurfaces by remember { mutableStateOf<List<String>>(emptyList()) }
     fun commitSurface() {
-        editorValue.text.takeIf(String::isNotBlank)?.let { expression ->
-            recentSurfaces = (listOf(expression) + recentSurfaces.filterNot { it == expression }).take(6)
-        }
         onPlot()
     }
     LaunchedEffect(value) {
@@ -10652,21 +10704,9 @@ private fun SurfaceEquationInput(
     Column(
         Modifier
             .widthIn(max = 760.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
-            .background(Color(0xE60A1521))
-            .border(1.dp, Cyan.copy(alpha = .62f), RoundedCornerShape(18.dp))
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text("Enter your 3D equation", color = Ink, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            Text("Explicit surface · z = f(x,y)", color = Cyan, fontSize = 10.sp)
-        }
         IntentAwareMathValueField(
             value = editorValue,
             onValueChange = {
@@ -10680,51 +10720,15 @@ private fun SurfaceEquationInput(
             showLegend = false,
             imeAction = ImeAction.Done,
             onDone = ::commitSurface,
+            compactChrome = true,
         )
-        val normalized = remember(editorValue.text) {
-            com.indianservers.aiexplorer.core.MathExpressionNormalizer.normalize(editorValue.text)
-        }
-        val validation = remember(editorValue.text) {
-            com.indianservers.aiexplorer.core.SurfaceInputInterpreter.explicit(editorValue.text)
-                .mapCatching { ExpressionEngine().compile(it.expression); "Valid explicit surface" }
-                .getOrElse { "Incomplete or invalid · ${it.message?.take(72) ?: "check notation"}" }
-        }
-        Text(
-            "$validation · recognized as $normalized",
-            color = if (validation.startsWith("Valid")) Green else Amber,
-            fontSize = 10.sp,
-            maxLines = 2,
-        )
-        Text(
-            "Your normal keyboard works: pi or π · x² + y² · √(x²+y²) · × · ÷",
-            color = Muted,
-            fontSize = 10.sp,
-        )
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            message?.let {
-                Text(
-                    it,
-                    color = if (it.startsWith("Plotted")) Green else Color(0xFFFF8E9E),
-                    fontSize = 10.sp,
-                    modifier = Modifier.weight(1f),
-                    maxLines = 2,
-                )
-            } ?: Spacer(Modifier.weight(1f))
-            GlowButton("Plot surface", enabled = value.isNotBlank(), onClick = ::commitSurface)
-        }
-        if (recentSurfaces.isNotEmpty()) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                recentSurfaces.take(3).forEach { expression ->
-                    GlowButton(expression.take(24)) {
-                        editorValue = TextFieldValue(expression, selection = TextRange(expression.length))
-                        onValueChange(expression)
-                    }
-                }
-            }
+        message?.let {
+            Text(
+                it,
+                color = if (it.startsWith("Plotted") || it.startsWith("Added") || it.startsWith("Updated")) Green else Color(0xFFFF8E9E),
+                fontSize = 10.sp,
+                maxLines = 1,
+            )
         }
     }
 }

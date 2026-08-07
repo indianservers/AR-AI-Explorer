@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -106,34 +107,86 @@ internal fun FormulaCategoryLibrary(formulas: List<FormulaCard>) {
 @OptIn(ExperimentalLayoutApi::class)
 internal fun FormulaCategoryGallery(
     formulas: List<FormulaCard>,
+    query: String,
+    onQueryChange: (String) -> Unit,
     onOpenCategory: (FormulaCategory) -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(Color(0xFF10112D), Color(0xFF071A31), Color(0xFF170A2D)),
+                    ),
+                )
+                .border(1.dp, Violet.copy(alpha = .42f), RoundedCornerShape(8.dp))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Text("Formulas", color = Cyan, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    Text("${FormulaCategory.entries.size} categories", color = Muted, fontSize = 11.sp)
+                    Text("${formulas.size} formulas", color = Muted, fontSize = 11.sp)
+                }
+                Box(
+                    Modifier
+                        .size(88.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(
+                            Brush.radialGradient(
+                                listOf(Violet.copy(alpha = .42f), Cyan.copy(alpha = .12f), Color.Transparent),
+                            ),
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("π", color = Violet, fontSize = 54.sp)
+                }
+            }
+            KnowledgeSearchField(query, "Search formulas or tags", onQueryChange)
+        }
         Text("Choose a formula category", color = Ink, fontSize = 16.sp, fontWeight = FontWeight.Bold)
         Text("Open a main category to see its formulas directly.", color = Muted, fontSize = 11.sp)
         FlowRow(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = 3,
         ) {
             FormulaCategory.entries.forEach { category ->
                 val count = formulas.count { it.category == category }
+                val accent = formulaCategoryAccent(category)
                 Column(
                     Modifier
                         .weight(1f)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(SurfaceB.copy(alpha = 0.38f))
-                        .border(1.dp, Cyan.copy(alpha = .28f), RoundedCornerShape(8.dp))
+                        .background(Brush.verticalGradient(listOf(accent.copy(alpha = .14f), SurfaceB.copy(alpha = .52f))))
+                        .border(1.dp, accent.copy(alpha = .50f), RoundedCornerShape(8.dp))
                         .clickable(enabled = count > 0) { onOpenCategory(category) }
                         .padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        TransparentIcon(category.icon(), if (count > 0) Cyan else Muted)
-                        Text("$count", color = Muted, fontSize = 10.sp)
+                        Box(
+                            Modifier
+                                .size(38.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(accent.copy(alpha = .18f))
+                                .border(1.dp, accent.copy(alpha = .46f), RoundedCornerShape(8.dp)),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(category.icon(), color = accent, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        }
+                        Text("$count", color = Ink, fontSize = 9.sp)
                     }
                     Text(category.label, color = if (count > 0) Ink else Muted, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                    Text("Tap to browse formulas", color = Violet, fontSize = 10.sp)
+                    Text("Explore →", color = accent, fontSize = 10.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }
@@ -392,32 +445,64 @@ private fun FormulaItemCard(
     onFavorite: (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
+    val accent = formulaCategoryAccent(formula.category)
     Column(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(SurfaceB.copy(alpha = 0.28f))
-            .border(1.dp, Cyan.copy(alpha = .22f), RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .background(Brush.verticalGradient(listOf(accent.copy(alpha = .08f), SurfaceB.copy(alpha = .34f))))
+            .border(1.dp, accent.copy(alpha = .34f), RoundedCornerShape(8.dp))
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-            .padding(9.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+            .padding(11.dp),
+        verticalArrangement = Arrangement.spacedBy(7.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                formula.title,
-                color = Ink,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = scaledSp(13, scale),
-                modifier = Modifier.weight(1f),
-            )
+            Row(
+                Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
+                    Modifier
+                        .size(30.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(accent.copy(alpha = .16f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(formula.category.icon(), color = accent, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                }
+                Text(
+                    formula.title,
+                    color = Ink,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = scaledSp(14, scale),
+                )
+            }
             onFavorite?.let {
                 FormulaCategoryChip(if (favorite) "Saved" else "Save", if (favorite) "★" else "☆", favorite, it)
             }
         }
-        Text(displayLatexFormula(formula.expression), color = Cyan, fontSize = scaledSp(18, scale), fontWeight = FontWeight.Bold)
+        FormulaLatexText(
+            formula = formula.expression,
+            color = accent,
+            fontSize = scaledSp(21, scale),
+            fontWeight = FontWeight.SemiBold,
+        )
         Text("${formula.category.label} · ${formula.subcategory} · ${formula.level.label}", color = Violet, fontSize = scaledSp(10, scale))
         Text(formula.introduction, color = Ink.copy(alpha = .86f), fontSize = scaledSp(10, scale), lineHeight = scaledSp(13, scale))
-        Text(formula.useCase, color = Muted, fontSize = scaledSp(11, scale))
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(7.dp))
+                .background(Amber.copy(alpha = .07f))
+                .border(1.dp, Amber.copy(alpha = .22f), RoundedCornerShape(7.dp))
+                .padding(horizontal = 8.dp, vertical = 7.dp),
+            horizontalArrangement = Arrangement.spacedBy(7.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("!", color = Amber, fontSize = scaledSp(10, scale), fontWeight = FontWeight.Bold)
+            Text(formula.useCase, color = Ink, fontSize = scaledSp(10, scale))
+        }
         if (formula.tags.isNotEmpty()) {
             Text(formula.tags.joinToString("  ") { "#$it" }, color = Green, fontSize = scaledSp(10, scale))
         }
@@ -425,7 +510,11 @@ private fun FormulaItemCard(
             Text("Variables: ${formula.variables.joinToString()}", color = Muted, fontSize = scaledSp(11, scale))
         }
         if (onClick != null) {
-            Text("Open details, calculator, derivation, examples and practice", color = Violet, fontSize = scaledSp(9, scale))
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                FormulaCategoryChip("Details", "≡", false, onClick)
+                FormulaCategoryChip("Examples", "E", false, onClick)
+                FormulaCategoryChip("Practice", "P", false, onClick)
+            }
         }
     }
 }
@@ -441,6 +530,21 @@ private fun FormulaFontControls(scale: Float, onScale: (Float) -> Unit) {
 }
 
 private fun scaledSp(base: Int, scale: Float) = (base * scale).sp
+
+private fun formulaCategoryAccent(category: FormulaCategory): Color = when (category) {
+    FormulaCategory.AlgebraFunctions -> Violet
+    FormulaCategory.GeometryMensuration -> Cyan
+    FormulaCategory.Trigonometry -> Color(0xFFFF4BAE)
+    FormulaCategory.CalculusAnalysis -> Green
+    FormulaCategory.DifferentialEquations -> Color(0xFFFF8A3D)
+    FormulaCategory.LinearAlgebraVectors -> Color(0xFF46A6FF)
+    FormulaCategory.CoordinateGeometry3D -> Color(0xFF35D6B4)
+    FormulaCategory.ProbabilityCombinatorics -> Color(0xFFFFD166)
+    FormulaCategory.StatisticsDistributions -> Color(0xFF7BE495)
+    FormulaCategory.NumberTheory -> Color(0xFFFF6B6B)
+    FormulaCategory.ComplexNumbers -> Color(0xFFA78BFA)
+    FormulaCategory.NumericalMethods -> Color(0xFF38BDF8)
+}
 
 private fun List<String>.sortedByFormulaFilter(): List<String> {
     val priority = listOf(

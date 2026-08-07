@@ -14,18 +14,18 @@ enum class DictionaryDifficulty(val label: String) { FOUNDATION("Foundation"), S
 enum class QuizSubject(val label: String) { Maths("Maths"), Physics("Physics"), Chemistry("Chemistry"), Biology("Biology"), AstroPhysics("Astro Physics"), IQLabs("IQ Labs") }
 enum class QuizLevel(val label: String, val difficulty: Int) { Basic("Basic", 1), Intermediate("Intermediate", 2), Advanced("Advanced", 3) }
 enum class FormulaCategory(val label: String, val topic: KnowledgeTopic, val subcategories: List<String>) {
-    AlgebraFunctions("Algebra and Functions", KnowledgeTopic.Algebra, listOf("Quadratics", "Identities", "Sequences", "Logarithms", "Polynomials")),
-    GeometryMensuration("Geometry", KnowledgeTopic.Geometry, listOf("Plane Geometry", "Mensuration", "Circles", "Polygons", "Coordinate Shapes")),
-    Trigonometry("Trigonometry", KnowledgeTopic.Geometry, listOf("Right Triangles", "Trigonometric Identities", "Angle Formulas", "Triangle Laws", "Radians")),
-    CalculusAnalysis("Calculus and Analysis", KnowledgeTopic.Calculus, listOf("Limits", "Derivatives", "Integrals", "Series", "Multivariable Calculus")),
-    DifferentialEquations("Differential Equations", KnowledgeTopic.Calculus, listOf("First-order ODEs", "Second-order ODEs", "Growth Models", "Laplace Methods", "Numerical ODEs")),
-    LinearAlgebraVectors("Linear Algebra and Vectors", KnowledgeTopic.Algebra, listOf("Matrices", "Determinants", "Eigenvalues", "Dot Products", "Projections")),
-    CoordinateGeometry3D("Coordinate Geometry and 3D", KnowledgeTopic.Geometry, listOf("Lines", "Conics", "Coordinate Solids", "Planes", "3D Distance")),
-    ProbabilityCombinatorics("Probability and Combinatorics", KnowledgeTopic.Probability, listOf("Probability Rules", "Bayes", "Random Variables", "Counting", "Graph Counting")),
-    StatisticsDistributions("Statistics and Distributions", KnowledgeTopic.Statistics, listOf("Descriptive Statistics", "Inference", "Regression", "Discrete Distributions", "Continuous Distributions")),
-    NumberTheory("Number Theory", KnowledgeTopic.Algebra, listOf("Divisibility", "Modular Arithmetic", "Primes", "Arithmetic Functions", "Sequences")),
-    ComplexNumbers("Complex Numbers", KnowledgeTopic.Algebra, listOf("Algebraic Form", "Polar Form", "Euler Form", "Roots", "Complex Analysis Basics")),
-    NumericalMethods("Numerical Methods", KnowledgeTopic.Calculus, listOf("Root Finding", "Finite Differences", "Numerical Integration", "Interpolation", "Optimization")),
+    AlgebraFunctions("Algebra and Functions", KnowledgeTopic.Algebra, listOf("Quadratics", "Identities", "Sequences", "Logarithms", "Polynomials", "Functions and Transformations", "Exponents and Radicals", "Inequalities")),
+    GeometryMensuration("Geometry", KnowledgeTopic.Geometry, listOf("Plane Geometry", "Triangles", "Quadrilaterals", "Mensuration", "Solid Geometry", "Circles", "Polygons", "Coordinate Shapes")),
+    Trigonometry("Trigonometry", KnowledgeTopic.Geometry, listOf("Right Triangles", "Reciprocal and Quotient Identities", "Trigonometric Identities", "Angle Formulas", "Product and Sum Identities", "Triangle Laws", "Inverse and Hyperbolic", "Applications", "Radians")),
+    CalculusAnalysis("Calculus and Analysis", KnowledgeTopic.Calculus, listOf("Limits", "Derivatives", "Standard Derivatives", "Integrals", "Standard Integrals", "Series", "Multivariable Calculus", "Vector Calculus")),
+    DifferentialEquations("Differential Equations", KnowledgeTopic.Calculus, listOf("First-order ODEs", "Second-order ODEs", "Growth Models", "Laplace Methods", "Systems and PDEs", "Boundary Problems", "Numerical ODEs")),
+    LinearAlgebraVectors("Linear Algebra and Vectors", KnowledgeTopic.Algebra, listOf("Matrices", "Determinants", "Systems", "Eigenvalues", "Decompositions", "Dot Products", "Vector Products", "Projections")),
+    CoordinateGeometry3D("Coordinate Geometry and 3D", KnowledgeTopic.Geometry, listOf("Lines", "Conics", "Polar Coordinates", "Coordinate Solids", "Planes", "3D Distance")),
+    ProbabilityCombinatorics("Probability and Combinatorics", KnowledgeTopic.Probability, listOf("Probability Rules", "Bayes", "Random Variables", "Counting", "Generating Functions", "Stochastic Processes", "Graph Counting")),
+    StatisticsDistributions("Statistics and Distributions", KnowledgeTopic.Statistics, listOf("Descriptive Statistics", "Sampling", "Inference", "Regression", "Nonparametric Methods", "Time Series", "Discrete Distributions", "Continuous Distributions")),
+    NumberTheory("Number Theory", KnowledgeTopic.Algebra, listOf("Divisibility", "Modular Arithmetic", "Primes", "Arithmetic Functions", "Diophantine Equations", "Continued Fractions", "Cryptography", "Sequences")),
+    ComplexNumbers("Complex Numbers", KnowledgeTopic.Algebra, listOf("Algebraic Form", "Polar Form", "Euler Form", "Roots", "Complex Functions", "Residues and Contours", "Complex Analysis Basics")),
+    NumericalMethods("Numerical Methods", KnowledgeTopic.Calculus, listOf("Root Finding", "Finite Differences", "Error Analysis", "Linear Systems", "Numerical Integration", "ODE Solvers", "Interpolation", "Optimization")),
     ;
 
     companion object {
@@ -63,16 +63,21 @@ fun FormulaCategory.subcategoryFor(title: String): String {
             listOf("circle", "sector", "arc").any { it in name } -> "Circles"
             listOf("polygon", "interior angle", "regular").any { it in name } -> "Polygons"
             listOf("coordinate", "diagonal", "distance", "midpoint").any { it in name } -> "Coordinate Shapes"
-            listOf("volume", "surface", "sphere", "cylinder", "cone", "frustum").any { it in name } -> "Mensuration"
+            listOf("triangle", "heron", "pythagorean", "semiperimeter").any { it in name } -> "Triangles"
+            listOf("rectangle", "parallelogram", "rhombus", "trapezium", "quadrilateral").any { it in name } -> "Quadrilaterals"
+            listOf("volume", "surface", "sphere", "cylinder", "cone", "frustum", "cuboid", "prism", "pyramid").any { it in name } -> "Solid Geometry"
             else -> "Plane Geometry"
         }
         FormulaCategory.Trigonometry -> when {
-            listOf("sine", "cosine", "tangent", "secant", "cosecant", "angle", "radians").any { it in name } -> "Trigonometric Identities"
             "law of" in name -> "Triangle Laws"
-            listOf("ratio", "right").any { it in name } -> "Right Triangles"
-            listOf("double", "half", "addition", "product", "sum").any { it in name } -> "Angle Formulas"
+            listOf("product to sum", "sum to product").any { it in name } -> "Product and Sum Identities"
+            listOf("double", "half", "addition", "subtraction").any { it in name } -> "Angle Formulas"
             listOf("radian", "degree").any { it in name } -> "Radians"
-            else -> "Right Triangles"
+            listOf("ratio", "right").any { it in name } -> "Right Triangles"
+            listOf("reciprocal", "quotient", "secant", "cosecant", "cotangent").any { it in name } -> "Reciprocal and Quotient Identities"
+            listOf("inverse", "hyperbolic", "sinh", "cosh", "tanh").any { it in name } -> "Inverse and Hyperbolic"
+            listOf("height", "elevation", "navigation").any { it in name } -> "Applications"
+            else -> "Trigonometric Identities"
         }
         FormulaCategory.CalculusAnalysis -> when {
             listOf("limit", "l'hopital", "mean value").any { it in name } -> "Limits"
@@ -89,7 +94,10 @@ fun FormulaCategory.subcategoryFor(title: String): String {
             else -> "Numerical ODEs"
         }
         FormulaCategory.LinearAlgebraVectors -> when {
-            listOf("matrix", "inverse", "rank", "trace", "gram", "qr", "singular").any { it in name } -> "Matrices"
+            listOf("qr", "singular", "decomposition", "factorization", "cholesky").any { it in name } -> "Decompositions"
+            listOf("system", "least squares", "normal equation").any { it in name } -> "Systems"
+            listOf("cross product").any { it in name } -> "Vector Products"
+            listOf("matrix", "inverse", "rank", "trace", "gram", "pseudoinverse").any { it in name } -> "Matrices"
             listOf("determinant", "cramer").any { it in name } -> "Determinants"
             listOf("eigen", "characteristic").any { it in name } -> "Eigenvalues"
             listOf("dot", "orthogonality", "cauchy").any { it in name } -> "Dot Products"
@@ -97,6 +105,7 @@ fun FormulaCategory.subcategoryFor(title: String): String {
         }
         FormulaCategory.CoordinateGeometry3D -> when {
             listOf("line", "slope", "midpoint", "distance formula").any { it in name } -> "Lines"
+            "polar" in name -> "Polar Coordinates"
             listOf("circle", "parabola", "ellipse", "hyperbola", "conic", "eccentricity").any { it in name } -> "Conics"
             listOf("sphere", "cylinder", "cone", "torus").any { it in name } -> "Coordinate Solids"
             "plane" in name -> "Planes"
@@ -111,8 +120,11 @@ fun FormulaCategory.subcategoryFor(title: String): String {
         }
         FormulaCategory.StatisticsDistributions -> when {
             listOf("mean", "variance", "standard score", "standard error").any { it in name } -> "Descriptive Statistics"
+            listOf("sample proportion", "sampling").any { it in name } -> "Sampling"
             listOf("confidence", "chi-square", "pooled", "welch", "anova").any { it in name } -> "Inference"
             listOf("correlation", "regression", "aic").any { it in name } -> "Regression"
+            listOf("spearman", "mann", "wilcoxon").any { it in name } -> "Nonparametric Methods"
+            listOf("moving average", "autocorrelation", "time series").any { it in name } -> "Time Series"
             listOf("binomial", "poisson", "geometric", "negative").any { it in name } -> "Discrete Distributions"
             else -> "Continuous Distributions"
         }
@@ -128,11 +140,16 @@ fun FormulaCategory.subcategoryFor(title: String): String {
             listOf("argument", "polar").any { it in name } -> "Polar Form"
             listOf("euler", "moivre").any { it in name } -> "Euler Form"
             listOf("root").any { it in name } -> "Roots"
+            listOf("residue", "cauchy integral", "contour", "pole").any { it in name } -> "Residues and Contours"
+            listOf("complex exponential", "complex sine", "complex cosine").any { it in name } -> "Complex Functions"
             else -> "Complex Analysis Basics"
         }
         FormulaCategory.NumericalMethods -> when {
             listOf("newton", "bisection", "secant", "fixed point").any { it in name } -> "Root Finding"
-            listOf("difference", "error", "condition").any { it in name } -> "Finite Differences"
+            listOf("jacobi", "gauss seidel", "linear system").any { it in name } -> "Linear Systems"
+            listOf("euler", "heun", "runge", "ode").any { it in name } -> "ODE Solvers"
+            listOf("error", "condition", "richardson").any { it in name } -> "Error Analysis"
+            listOf("difference").any { it in name } -> "Finite Differences"
             listOf("trapezoidal", "simpson", "midpoint").any { it in name } -> "Numerical Integration"
             listOf("interpolation", "lagrange").any { it in name } -> "Interpolation"
             else -> "Optimization"
@@ -393,25 +410,58 @@ object MathKnowledgeCatalog {
         return (categoryTags + candidates.filterValues { needles -> needles.any(text::contains) }.keys).distinct().take(7)
     }
 
+    private fun formulaCard(
+        category: FormulaCategory,
+        subcategory: String,
+        title: String,
+        expression: String,
+        variables: List<String>,
+        useCase: String,
+        level: KnowledgeLevel,
+        relatedTerms: List<String>,
+    ): FormulaCard {
+        val tags = formulaTags(title, useCase, expression, category, subcategory, relatedTerms)
+        return FormulaCard(
+            id = "${category.name}-$title".slug(),
+            title = title,
+            topic = category.topic,
+            category = category,
+            subcategory = subcategory,
+            level = level,
+            expression = expression,
+            variables = variables,
+            useCase = useCase,
+            introduction = formulaIntroduction(title, category, subcategory, useCase, tags),
+            relatedTerms = relatedTerms + category.label + category.subcategories,
+            tags = tags,
+        )
+    }
+
     val formulas = (formulaGroups() + additionalFormulaGroups()).flatMap { group ->
         group.items.mapIndexed { index, item ->
             val subcategory = group.category.subcategoryFor(item.title)
-            val tags = formulaTags(item.title, item.useCase, item.expression, group.category, subcategory, item.relatedTerms)
-            FormulaCard(
-                id = "${group.category.name}-${item.title}".slug(),
-                title = item.title,
-                topic = group.category.topic,
+            formulaCard(
                 category = group.category,
                 subcategory = subcategory,
-                level = item.level,
+                title = item.title,
                 expression = item.expression,
                 variables = item.variables,
                 useCase = item.useCase,
-                introduction = formulaIntroduction(item.title, group.category, subcategory, item.useCase, tags),
-                relatedTerms = item.relatedTerms + group.category.label + group.category.subcategories,
-                tags = tags,
+                level = item.level,
+                relatedTerms = item.relatedTerms,
             )
         }
+    } + expandedFormulaCatalog().map { item ->
+        formulaCard(
+            category = item.category,
+            subcategory = item.subcategory,
+            title = item.title,
+            expression = item.expression,
+            variables = item.variables,
+            useCase = item.useCase,
+            level = item.level,
+            relatedTerms = item.relatedTerms,
+        )
     }
 
     val theorems = expandedTheoremCatalog()

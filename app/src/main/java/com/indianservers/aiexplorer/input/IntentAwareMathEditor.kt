@@ -268,6 +268,7 @@ fun IntentAwareMathValueField(
     keyboardContext: MathKeyboardContext = inferMathKeyboardContext(label),
     useMathKeyboard: Boolean = isMathematicalInputLabel(label),
     onFocusChange: (Boolean) -> Unit = {},
+    compactChrome: Boolean = false,
 ) {
     var keyboardVisible by remember { mutableStateOf(false) }
     var structuredValue by remember { mutableStateOf(StructuredMathCodec.fromParser(value)) }
@@ -292,16 +293,19 @@ fun IntentAwareMathValueField(
     Column(
         modifier.fillMaxWidth()
             .background(Brush.linearGradient(listOf(Color(0xEE091522), Color(0xF20D1020), accent.copy(.10f))), RoundedCornerShape(18.dp))
-            .border(1.dp, accent.copy(.62f), RoundedCornerShape(18.dp)).padding(8.dp)
+            .border(1.dp, accent.copy(.62f), RoundedCornerShape(18.dp))
+            .padding(if (compactChrome) 4.dp else 8.dp)
             .semantics { contentDescription = "$label. ${analysis.accessibleSummary}" },
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compactChrome) 3.dp else 6.dp),
     ) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(8.dp).background(accent, RoundedCornerShape(8.dp)))
-                Text(analysis.intent.label.uppercase(), color = accent, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = .7.sp)
+        if (!compactChrome) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(8.dp).background(accent, RoundedCornerShape(8.dp)))
+                    Text(analysis.intent.label.uppercase(), color = accent, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = .7.sp)
+                }
+                Text("${(analysis.confidence * 100).toInt()}% understood", color = IntentMathPalette.Muted, fontSize = 9.sp)
             }
-            Text("${(analysis.confidence * 100).toInt()}% understood", color = IntentMathPalette.Muted, fontSize = 9.sp)
         }
         if (useMathKeyboard) {
             MathKeyboardOnlyTextField(
@@ -342,12 +346,14 @@ fun IntentAwareMathValueField(
                 ),
             )
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(analysis.message, color = if (healthy) IntentMathPalette.Muted else IntentMathPalette.Error, fontSize = 10.sp, modifier = Modifier.weight(1f))
-            if (analysis.variables.isNotEmpty()) Text("vars ${analysis.variables.joinToString()}", color = IntentMathPalette.Variable, fontSize = 10.sp)
+        if (!compactChrome) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(analysis.message, color = if (healthy) IntentMathPalette.Muted else IntentMathPalette.Error, fontSize = 10.sp, modifier = Modifier.weight(1f))
+                if (analysis.variables.isNotEmpty()) Text("vars ${analysis.variables.joinToString()}", color = IntentMathPalette.Variable, fontSize = 10.sp)
+            }
+            if (showLegend) TokenLegend(analysis)
+            analysis.suggestions.firstOrNull()?.let { Text("TIP  $it", color = IntentMathPalette.Constant, fontSize = 9.sp) }
         }
-        if (showLegend) TokenLegend(analysis)
-        analysis.suggestions.firstOrNull()?.let { Text("TIP  $it", color = IntentMathPalette.Constant, fontSize = 9.sp) }
     }
     if (keyboardVisible) {
         AdaptiveMathKeyboardPopup(

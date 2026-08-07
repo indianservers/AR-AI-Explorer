@@ -98,10 +98,26 @@ class MathKnowledgeTest {
     @Test
     fun formulaLibraryHasMainCategoriesWithTaggedLatexFormulas() {
         assertTrue(FormulaCategory.entries.size in 10..14)
+        assertTrue("Expanded formula catalog should contain at least 399 formulas", MathKnowledgeCatalog.formulas.size >= 399)
+        assertEquals(
+            "Formula identifiers must remain unique",
+            MathKnowledgeCatalog.formulas.size,
+            MathKnowledgeCatalog.formulas.map { it.id }.distinct().size,
+        )
         FormulaCategory.entries.forEach { category ->
             val formulas = MathKnowledgeCatalog.formulas.filter { it.category == category }
-            assertTrue("${category.label} should have at least 17 formulas", formulas.size >= 17)
+            assertTrue("${category.label} should have at least 29 formulas", formulas.size >= 29)
+            category.subcategories.forEach { subcategory ->
+                assertTrue(
+                    "${category.label} / $subcategory should contain formulas",
+                    formulas.any { it.subcategory == subcategory },
+                )
+            }
             formulas.forEach { formula ->
+                assertTrue(
+                    "${formula.title} has an undeclared subcategory ${formula.subcategory}",
+                    formula.subcategory in category.subcategories,
+                )
                 assertFalse("${formula.title} should not use plain slash division", "/" in formula.expression)
                 assertFalse("${formula.title} should not use unbraced power notation", Regex("\\^[A-Za-z0-9]").containsMatchIn(formula.expression))
                 assertTrue("${formula.title} should use KaTeX-style notation", "\\" in formula.expression || "_{" in formula.expression || "^{" in formula.expression)

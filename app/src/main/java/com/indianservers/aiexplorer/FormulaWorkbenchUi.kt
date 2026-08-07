@@ -80,7 +80,7 @@ internal fun FormulaWorkbench(
                 onLibraryState(store.toggleFavorite(libraryState, formula.id))
             }
         }
-        MathFormulaText(formula.expression, color = Cyan, fontSize = 23.sp, fontWeight = FontWeight.Bold)
+        FormulaLatexText(formula.expression, color = Cyan, fontSize = 25.sp, fontWeight = FontWeight.SemiBold)
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             FormulaWorkbenchTab.entries.forEach { item ->
                 FormulaCategoryChip(item.label, tabIcon(item), tab == item) { tab = item }
@@ -203,7 +203,9 @@ private fun FormulaLearning(detail: FormulaExperience) {
             }
         }
         FormulaPanel("Rearrange and equivalent forms", Cyan) {
-            detail.rearrangements.forEach { MathFormulaText(it, color = Cyan, fontSize = 14.sp) }
+            detail.rearrangements.forEach {
+                FormulaLatexText(it, color = Cyan, fontSize = 14.sp)
+            }
             detail.equivalentForms.forEach { (label, value) ->
                 Text(label, color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 Text(value, color = Ink, fontSize = 11.sp)
@@ -269,7 +271,7 @@ private fun FormulaComparison(
 @Composable
 private fun FormulaCompareCard(detail: FormulaExperience, modifier: Modifier = Modifier) {
     FormulaPanel(detail.formula.title, Cyan, modifier) {
-        MathFormulaText(detail.formula.expression, color = Cyan, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        FormulaLatexText(detail.formula.expression, color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
         Text(detail.whenToUse, color = Ink, fontSize = 10.sp, maxLines = 4, overflow = TextOverflow.Ellipsis)
         Text("Variables: ${detail.formula.variables.joinToString()}", color = Muted, fontSize = 10.sp)
         Text("Output: ${detail.outputDimension.label}", color = Green, fontSize = 10.sp)

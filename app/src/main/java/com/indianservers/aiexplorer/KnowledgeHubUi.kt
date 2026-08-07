@@ -615,35 +615,33 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     @Composable
     fun Content(modifier: Modifier = Modifier) {
         GlassPanel(modifier.fillMaxSize().semantics { contentDescription = "Maths knowledge content" }) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Column {
-                    Text(vm.activeKnowledgeSection.title, color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    if (vm.activeKnowledgeSection == KnowledgeSection.Formulas) {
-                        Text(
-                            when {
-                                formulaCategory == null -> "${FormulaCategory.entries.size} categories"
-                                else -> formulaCategory?.label.orEmpty()
-                            },
-                            color = Muted,
-                            fontSize = 10.sp,
-                        )
-                    }
-                }
-                Text(
-                    when (vm.activeKnowledgeSection) {
-                        KnowledgeSection.Formulas -> "${formulaResults.size} formulas"
-                        KnowledgeSection.Theorems -> "${theoremResults.size} theorems"
-                        KnowledgeSection.Proofs -> {
-                            val count = VisualProofCatalog.labs.count { it.matchesProofQuery(query) }
-                            "$count Visual Proofs"
+            if (vm.activeKnowledgeSection != KnowledgeSection.Formulas || formulaCategory != null) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Column {
+                        Text(vm.activeKnowledgeSection.title, color = Violet, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                        if (vm.activeKnowledgeSection == KnowledgeSection.Formulas) {
+                            Text(formulaCategory?.label.orEmpty(), color = Muted, fontSize = 10.sp)
                         }
-                        else -> "${result.total} found"
-                    },
-                    color = Muted,
-                    fontSize = 11.sp,
-                )
+                    }
+                    Text(
+                        when (vm.activeKnowledgeSection) {
+                            KnowledgeSection.Formulas -> "${formulaResults.size} formulas"
+                            KnowledgeSection.Theorems -> "${theoremResults.size} theorems"
+                            KnowledgeSection.Proofs -> {
+                                val count = VisualProofCatalog.labs.count { it.matchesProofQuery(query) }
+                                "$count Visual Proofs"
+                            }
+                            else -> "${result.total} found"
+                        },
+                        color = Muted,
+                        fontSize = 11.sp,
+                    )
+                }
             }
-            if (vm.activeKnowledgeSection in setOf(KnowledgeSection.Formulas, KnowledgeSection.Theorems, KnowledgeSection.Proofs)) {
+            if (
+                vm.activeKnowledgeSection in setOf(KnowledgeSection.Formulas, KnowledgeSection.Theorems, KnowledgeSection.Proofs) &&
+                !(vm.activeKnowledgeSection == KnowledgeSection.Formulas && formulaCategory == null)
+            ) {
                 KnowledgeSearchField(
                     value = query,
                     label = when (vm.activeKnowledgeSection) {
@@ -660,6 +658,8 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
 	                KnowledgeSection.Formulas -> when {
                         formulaCategory == null -> FormulaCategoryGallery(
                             formulas = result.formulas,
+                            query = query,
+                            onQueryChange = { query = it },
                             onOpenCategory = {
                                 formulaCategory = it
                                 formulaTag = null
