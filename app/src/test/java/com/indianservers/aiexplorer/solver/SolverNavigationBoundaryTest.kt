@@ -18,4 +18,16 @@ class SolverNavigationBoundaryTest {
             "MathModule.Graph3D -> Graph3DScreen",
         ).forEach { route -> assertTrue("Missing non-regression route: $route", route in source) }
     }
+
+    @Test
+    fun homeCategoriesOpenPrimaryDestinationsWithoutIntermediateToolPanels() {
+        val source = File("src/main/java/com/indianservers/aiexplorer/MainActivity.kt").readText()
+        listOf(
+            "\"Solve & Calculate\" -> \"Solver\"",
+            "\"Data & Probability\" -> \"Probability & Statistics\"",
+            "\"Formulas & Proofs\" -> \"Formulas\"",
+            "\"Reference & Logic\" -> \"Visual Dictionary\"",
+            "allTools.firstOrNull { it.title == primaryToolTitle }?.let(::openOption)",
+        ).forEach { route -> assertTrue("Missing direct home category route: $route", route in source) }
+    }
 }

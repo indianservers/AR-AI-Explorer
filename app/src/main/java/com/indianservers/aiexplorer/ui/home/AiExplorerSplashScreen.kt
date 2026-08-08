@@ -125,15 +125,15 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
 
     LaunchedEffect(Unit) {
         launch { playSplashWhoosh() }
-        timeline.animateTo(1f, tween(durationMillis = 800, easing = LinearEasing))
+        timeline.animateTo(1f, tween(durationMillis = 2_000, easing = LinearEasing))
     }
 
     val progress = timeline.value
-    val logoAlpha = phase(progress, .69f, .88f) * (1f - phase(progress, .97f, 1f) * .18f)
-    val titleAlpha = phase(progress, .72f, .89f)
-    val quoteAlpha = phase(progress, .40f, .58f) * (1f - phase(progress, .84f, .94f))
-    val calculationAlpha = phase(progress, .78f, .84f)
-    val legalAlpha = phase(progress, .93f, .98f)
+    val logoAlpha = phase(progress, .48f, .67f) * (1f - phase(progress, .96f, 1f) * .10f)
+    val titleAlpha = phase(progress, .58f, .76f)
+    val quoteAlpha = phase(progress, .22f, .38f) * (1f - phase(progress, .82f, .94f))
+    val calculationAlpha = phase(progress, .72f, .82f)
+    val legalAlpha = phase(progress, .88f, .96f)
 
     Box(
         modifier
@@ -155,10 +155,11 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
                 .size(88.dp)
                 .graphicsLayer {
                     alpha = logoAlpha
-                    val scale = .58f + phase(progress, .62f, .78f) * .42f
+                    val scale = .42f + phase(progress, .43f, .66f) * .58f + phase(progress, .66f, .72f) * .06f
                     scaleX = scale
                     scaleY = scale
-                    shadowElevation = 22f * logoAlpha
+                    rotationZ = (1f - phase(progress, .42f, .66f)) * -8f
+                    shadowElevation = 32f * logoAlpha
                 },
         )
 
@@ -254,9 +255,9 @@ private fun MathematicalUniverse(progress: Float, modifier: Modifier = Modifier)
     }
     Canvas(modifier) {
         val center = Offset(size.width / 2f, size.height / 2f - size.minDimension * .04f)
-        val gather = phase(progress, 0f, .3125f)
-        val network = phase(progress, .3125f, .6875f) * (1f - phase(progress, .6875f, .9375f))
-        val collapse = phase(progress, .6875f, .9375f)
+        val gather = phase(progress, 0f, .42f)
+        val network = phase(progress, .28f, .68f) * (1f - phase(progress, .76f, .96f))
+        val collapse = phase(progress, .70f, .94f)
         val radius = size.minDimension * (.21f * (1f - collapse) + .055f * collapse)
         val points = symbols.indices.map { index ->
             val angle = (index.toFloat() / symbols.size) * (PI * 2.0) - PI / 2.0
@@ -277,9 +278,16 @@ private fun MathematicalUniverse(progress: Float, modifier: Modifier = Modifier)
         repeat(46) { index ->
             val x = ((index * 83) % 101) / 101f * size.width
             val y = ((index * 47 + 11) % 103) / 103f * size.height
-            val pulse = .18f + .35f * ((sin(progress * 13f + index) + 1f) / 2f)
-            drawCircle(Color(0xFF2C9DFF).copy(alpha = pulse), 1f + index % 3, Offset(x, y))
+            val warp = phase(progress, .05f, .45f) * (1f - phase(progress, .80f, 1f))
+            val pulse = .18f + .35f * ((sin(progress * 22f + index) + 1f) / 2f)
+            val drift = 26f * warp
+            val star = Offset((x + drift * ((index % 5) - 2)).coerceIn(0f, size.width), (y + drift * ((index % 7) - 3)).coerceIn(0f, size.height))
+            drawCircle(Color(0xFF2C9DFF).copy(alpha = pulse), 1f + index % 3, star)
         }
+
+        val letterbox = phase(progress, 0f, .22f) * (1f - phase(progress, .88f, 1f))
+        drawRect(Color.Black.copy(alpha = .46f * letterbox), topLeft = Offset.Zero, size = androidx.compose.ui.geometry.Size(size.width, size.height * .11f))
+        drawRect(Color.Black.copy(alpha = .46f * letterbox), topLeft = Offset(0f, size.height * .89f), size = androidx.compose.ui.geometry.Size(size.width, size.height * .11f))
 
         // Equation particles stream inward before resolving into the neural sphere.
         repeat(34) { index ->
@@ -384,17 +392,35 @@ private fun MathematicalUniverse(progress: Float, modifier: Modifier = Modifier)
             }
         }
 
-        val sweep = phase(progress, .67f, .91f)
+        val sweep = phase(progress, .57f, .86f)
         if (sweep in .001f..0.999f) {
             val x = center.x - size.minDimension * .28f + size.minDimension * .56f * sweep
             drawLine(
                 brush = Brush.verticalGradient(listOf(Color.Transparent, Color.White, Color.Transparent)),
                 start = Offset(x - 24f, center.y - size.minDimension * .17f),
                 end = Offset(x + 24f, center.y + size.minDimension * .25f),
-                strokeWidth = 7f,
+                strokeWidth = 10f,
                 cap = StrokeCap.Round,
-                alpha = .72f,
+                alpha = .86f,
             )
+        }
+
+        val lock = phase(progress, .62f, .82f) * (1f - phase(progress, .94f, 1f))
+        if (lock > 0f) {
+            repeat(4) { index ->
+                val r = radius * (1.28f + index * .20f + .05f * sin(progress * 18f + index))
+                drawCircle(
+                    color = Color(0xFF79F8FF).copy(alpha = lock * (.22f - index * .035f)),
+                    radius = r,
+                    center = center,
+                    style = Stroke(width = 1.5f + index),
+                )
+            }
+            val bar = radius * 1.95f
+            drawLine(Color(0xFFBDFBFF).copy(alpha = lock * .80f), Offset(center.x - bar, center.y), Offset(center.x - bar * .56f, center.y), 2.2f, StrokeCap.Round)
+            drawLine(Color(0xFFBDFBFF).copy(alpha = lock * .80f), Offset(center.x + bar * .56f, center.y), Offset(center.x + bar, center.y), 2.2f, StrokeCap.Round)
+            drawLine(Color(0xFFBDFBFF).copy(alpha = lock * .80f), Offset(center.x, center.y - bar), Offset(center.x, center.y - bar * .56f), 2.2f, StrokeCap.Round)
+            drawLine(Color(0xFFBDFBFF).copy(alpha = lock * .80f), Offset(center.x, center.y + bar * .56f), Offset(center.x, center.y + bar), 2.2f, StrokeCap.Round)
         }
     }
 }
@@ -411,7 +437,7 @@ private fun lerp(start: Offset, end: Offset, amount: Float): Offset =
 private suspend fun playSplashWhoosh() = withContext(Dispatchers.Default) {
     runCatching {
         val sampleRate = 24_000
-        val durationSeconds = .22f
+        val durationSeconds = .45f
         val sampleCount = (sampleRate * durationSeconds).roundToInt()
         val samples = ShortArray(sampleCount)
         var filteredNoise = 0f
@@ -445,7 +471,7 @@ private suspend fun playSplashWhoosh() = withContext(Dispatchers.Default) {
         track.write(samples, 0, samples.size)
         track.setVolume(.16f)
         track.play()
-        delay(260)
+        delay(500)
         track.release()
     }
 }

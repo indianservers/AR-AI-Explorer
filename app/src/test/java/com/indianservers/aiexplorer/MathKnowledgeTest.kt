@@ -139,6 +139,44 @@ class MathKnowledgeTest {
     }
 
     @Test
+    fun formulaLibraryCoversEssentialSchoolToPgFormulaGaps() {
+        val required = listOf(
+            "Percentage change",
+            "Simple interest",
+            "Compound amount annual",
+            "Quadratic formula",
+            "Arithmetic progression sum",
+            "Triangle area base height",
+            "Heron formula",
+            "Circle circumference",
+            "Sector area",
+            "Slope formula",
+            "Section formula",
+            "Coordinate triangle area",
+            "Pythagorean identity sine cosine",
+            "Law of sines",
+            "Law of cosines",
+            "Product rule",
+            "Chain rule",
+            "Integration by parts",
+            "Two by two inverse",
+            "Eigenvalue equation",
+            "Singular value decomposition",
+            "Conditional probability",
+            "Binomial probability",
+            "Normal density",
+            "Arithmetic mean",
+            "One sample t statistic",
+            "HCF LCM product",
+            "Fermat little theorem",
+            "Gradient descent update",
+            "KKT stationarity",
+        )
+        val titles = MathKnowledgeCatalog.formulas.map { it.title }.toSet()
+        required.forEach { title -> assertTrue("Missing essential formula: $title", title in titles) }
+    }
+
+    @Test
     fun theoremLibraryCoversClassSixThroughPgAcrossExpandedCategories() {
         assertEquals(20, com.indianservers.aiexplorer.learning.theoremCategories.size)
         assertTrue(MathKnowledgeCatalog.theorems.size >= 100)

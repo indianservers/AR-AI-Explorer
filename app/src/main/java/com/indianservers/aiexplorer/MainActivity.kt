@@ -346,6 +346,7 @@ import com.indianservers.aiexplorer.core.CalculatorRecognitionAdapters
 import com.indianservers.aiexplorer.core.ProfessionalCalculatorMode
 import com.indianservers.aiexplorer.core.ProfessionalScientificCalculator
 import com.indianservers.aiexplorer.learningintelligence.ui.LearningIntelligenceFeatureRoot
+import com.indianservers.aiexplorer.learnall.MathsLearnAllScreen
 import com.indianservers.aiexplorer.core.SolutionStepRole
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
 import com.indianservers.aiexplorer.core.Solid
@@ -563,6 +564,7 @@ private data class AppIntentSnapshot(
     val showMathNotebook: Boolean,
     val showUnifiedMathStudio: Boolean,
     val showAdaptiveMathLearning: Boolean,
+    val showMathsLearnAll: Boolean,
     val showGamifyMaths: Boolean,
     val showProbabilityLab: Boolean,
     val requestedProbabilitySection: Int,
@@ -592,12 +594,13 @@ internal val MathCreationTools = listOf(
 )
 
 internal val MathLearningTools = listOf(
+    MathWorkspaceOption("Learn All", "SQLite-backed Class 1 to PG Maths lessons and examples", "All"),
     MathWorkspaceOption("Adaptive Math Coach", "Workspace-aware Socratic practice, proof checks and misconception repair", "AI"),
     MathWorkspaceOption("GamifyMaths", "Interactive maths worlds with drag-and-drop missions, reasoning and mastery", "PLAY"),
     MathWorkspaceOption("Formulas", "Searchable formula reference", "F"),
     MathWorkspaceOption("Visual Proofs", "Manipulable visual demonstrations", "Proof"),
     MathWorkspaceOption("Theorems", "Statements, conditions and applications", "Thm"),
-    MathWorkspaceOption("Math Concepts", "A subject library spanning 27 branches of mathematics", "27"),
+    MathWorkspaceOption("Math Concepts", "Browse the same SQLite Maths lessons by category, topic and subtopic", "All"),
     MathWorkspaceOption("Visual Dictionary", "Terms, notation, diagrams and examples", "A-Z"),
     MathWorkspaceOption("MCQs", "Practice questions with explanations", "?"),
     MathWorkspaceOption("Formula Visualizer", "Turn formulas into interactive scenes", "View"),
@@ -612,10 +615,10 @@ private data class MathLearningCategory(
 )
 
 private val MathLearningCategories = listOf(
-    MathLearningCategory("Guided Practice", "Coaching, quizzes and practice", "GO", listOf("Adaptive Math Coach", "MCQs")),
+    MathLearningCategory("Guided Practice", "Coaching, quizzes and practice", "GO", listOf("Learn All", "Adaptive Math Coach", "MCQs")),
     MathLearningCategory("Formula Lab", "Reference and visual formulas", "Fx", listOf("Formulas", "Formula Visualizer")),
     MathLearningCategory("Proofs & Theorems", "See why mathematics works", "QED", listOf("Visual Proofs", "Theorems")),
-    MathLearningCategory("Concept Library", "Explore 27 branches of maths", "27", listOf("Math Concepts", "Visual Dictionary")),
+    MathLearningCategory("Concept Library", "Browse lesson categories and maths terms", "All", listOf("Math Concepts", "Visual Dictionary")),
     MathLearningCategory("Logic & Sets", "Venn diagrams and reasoning", "AND", listOf("Set Theory & Logic")),
 )
 
@@ -636,7 +639,7 @@ private val MathHomeCategories = listOf(
         listOf("2D Geometry", "3D Geometry", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
     ),
     MathHomeCategory("Data & Probability", "Statistics, distributions and probability labs", "STAT", listOf("Probability & Statistics")),
-    MathHomeCategory("Learn & Practise", "Coaching, concepts and explained questions", "GO", listOf("Adaptive Math Coach", "Math Concepts", "MCQs")),
+    MathHomeCategory("Learn & Practise", "Coaching, concepts and explained questions", "GO", listOf("Learn All", "Adaptive Math Coach", "Math Concepts", "MCQs")),
     MathHomeCategory("Formulas & Proofs", "Formula tools, theorems and visual proofs", "QED", listOf("Formulas", "Formula Visualizer", "Visual Proofs", "Theorems")),
     MathHomeCategory("Reference & Logic", "Dictionary, notation, sets and logical reasoning", "A-Z", listOf("Visual Dictionary", "Set Theory & Logic")),
     MathHomeCategory(
@@ -768,6 +771,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         private set
     var showAdaptiveMathLearning by mutableStateOf(false)
         private set
+    var showMathsLearnAll by mutableStateOf(false)
+        private set
     var showGamifyMaths by mutableStateOf(false)
         private set
     var showProbabilityLab by mutableStateOf(false)
@@ -890,6 +895,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = showMathNotebook,
         showUnifiedMathStudio = showUnifiedMathStudio,
         showAdaptiveMathLearning = showAdaptiveMathLearning,
+        showMathsLearnAll = showMathsLearnAll,
         showGamifyMaths = showGamifyMaths,
         showProbabilityLab = showProbabilityLab,
         requestedProbabilitySection = requestedProbabilitySection,
@@ -928,6 +934,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = snapshot.showMathNotebook
         showUnifiedMathStudio = snapshot.showUnifiedMathStudio
         showAdaptiveMathLearning = snapshot.showAdaptiveMathLearning
+        showMathsLearnAll = snapshot.showMathsLearnAll
         showGamifyMaths = snapshot.showGamifyMaths
         showProbabilityLab = snapshot.showProbabilityLab
         requestedProbabilitySection = snapshot.requestedProbabilitySection
@@ -1237,6 +1244,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showScientificCalculator = false
         showMathNotebook = false
         showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -1258,10 +1268,13 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = false
         showUnifiedMathStudio = false
         showAdaptiveMathLearning = false
+        showMathsLearnAll = false
         showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showConceptLibrary = false
+        selectedMathConcept = null
+        selectedMathSubConcept = null
         showMathMenu = false
         showActionDock = false
         hidePanels()
@@ -1288,6 +1301,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showSolver = false
         showScientificCalculator = false
         showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showProbabilityLab = true
         showKnowledgeHub = false
         showMathMenu = false
@@ -1314,6 +1331,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showBiologyHub = false
         showLearningIntelligence = true
         showMathLanding = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showMathMenu = false
         showActionDock = false
         hidePanels()
@@ -1331,6 +1351,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showScientificCalculator = false
         showMathNotebook = true
         showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -1353,6 +1376,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showProbabilityLab = false
         showKnowledgeHub = false
         showUnifiedMathStudio = true
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showMathMenu = false
         showActionDock = false
         hidePanels()
@@ -1374,10 +1400,36 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showKnowledgeHub = false
         showUnifiedMathStudio = false
         showAdaptiveMathLearning = true
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showMathMenu = false
         showActionDock = false
         hidePanels()
         status = "Adaptive Math Coach"
+    }
+
+    fun openMathsLearnAll() {
+        rememberCurrentIntent()
+        showSubjectHub = false
+        showMathLanding = false
+        showShapesExplorer = false
+        shapeExplorerScene = false
+        showProblemSolver = false
+        showSolver = false
+        showScientificCalculator = false
+        showSetLogicVisualizer = false
+        showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = true
+        showGamifyMaths = false
+        showProbabilityLab = false
+        showKnowledgeHub = false
+        showConceptLibrary = false
+        showMathMenu = false
+        showActionDock = false
+        hidePanels()
+        status = "Learn All Maths"
     }
 
     fun openGamifyMaths() {
@@ -1397,6 +1449,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = false
         showUnifiedMathStudio = false
         showAdaptiveMathLearning = false
+        showMathsLearnAll = false
         showGamifyMaths = true
         showProbabilityLab = false
         showKnowledgeHub = false
@@ -1422,6 +1475,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showSolver = false
         showScientificCalculator = false
         showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = true
         showConceptLibrary = false
@@ -1451,16 +1508,17 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showMathNotebook = false
         showUnifiedMathStudio = false
         showAdaptiveMathLearning = false
+        showMathsLearnAll = true
         showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
-        showConceptLibrary = true
+        showConceptLibrary = false
         selectedMathConcept = concept
         selectedMathSubConcept = subConcept
         showMathMenu = false
         showActionDock = false
         hidePanels()
-        status = concept?.let { "$it concepts" } ?: "Math Concepts"
+        status = subConcept ?: concept?.let { "$it lessons" } ?: "Math Concepts"
     }
 
     fun selectMathConcept(concept: String?) {
@@ -1511,6 +1569,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showSolver = false
         showScientificCalculator = true
         showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -1534,6 +1596,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         showScientificCalculator = false
         showSetLogicVisualizer = true
         showMathNotebook = false
+        showUnifiedMathStudio = false
+        showAdaptiveMathLearning = false
+        showMathsLearnAll = false
+        showGamifyMaths = false
         showProbabilityLab = false
         showKnowledgeHub = false
         showMathMenu = false
@@ -2561,6 +2627,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             showMathNotebook -> listOf("Maths", "Workspace", "Notebook")
             showUnifiedMathStudio -> listOf("Maths", "Studio", "Linked Views")
             showAdaptiveMathLearning -> listOf("Maths", "Learn", "Adaptive Coach")
+            showMathsLearnAll -> listOf("Maths", "Learn", "Learn All")
             showProbabilityLab -> listOf("Maths", "Data", "Probability & Statistics")
             showShapesExplorer -> listOf("Maths", "Geometry", "Shapes Explorer")
             showSetLogicVisualizer -> listOf("Maths", "Foundations", "Set Theory & Logic")
@@ -2810,6 +2877,11 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         UnifiedMathStudioScreen(vm.state, vm::commitUnifiedStudio, vm::returnToMathMenu)
                     } else if (vm.showAdaptiveMathLearning) {
                         AdaptiveMathLearningScreen(vm.state, vm::returnToMathMenu)
+                    } else if (vm.showMathsLearnAll) {
+                        MathsLearnAllScreen(
+                            onBack = vm::returnToMathMenu,
+                            initialQuery = listOfNotNull(vm.selectedMathSubConcept, vm.selectedMathConcept).firstOrNull().orEmpty(),
+                        )
                     } else if (vm.showGamifyMaths) {
                         GamifyMathsRoot(onExit = vm::navigateBackIntent)
                     } else if (vm.showMathNotebook) {
@@ -2825,7 +2897,10 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     } else if (vm.showProbabilityLab) {
                         ProbabilityLabScreen(vm, wide = wide)
                     } else if (vm.showConceptLibrary) {
-                        MathConceptExplorerScreen(vm, wide = wide)
+                        MathsLearnAllScreen(
+                            onBack = vm::returnToMathMenu,
+                            initialQuery = listOfNotNull(vm.selectedMathSubConcept, vm.selectedMathConcept).firstOrNull().orEmpty(),
+                        )
                     } else if (vm.showKnowledgeHub) {
                         MathKnowledgeScreen(vm, wide = wide)
                     } else {
@@ -2839,9 +2914,9 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             MathModule.SpatialAR -> SpatialARScreen(vm)
                         }
                     }
-                    if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
+                    if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub && !vm.showMathsLearnAll) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
                     }
-                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
+                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
                         TopShell(
                             vm,
                             compact,
@@ -3007,6 +3082,7 @@ private fun AppCopyrightFooter(modifier: Modifier = Modifier) {
 private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
     vm.recordMathToolOpen(title)
     when (title) {
+        "Learn All" -> vm.openMathsLearnAll()
         "Unified Math Studio" -> vm.openUnifiedMathStudio()
         "Adaptive Math Coach" -> vm.openAdaptiveMathLearning()
         "GamifyMaths", "Math Games" -> vm.openGamifyMaths()
@@ -3035,6 +3111,16 @@ private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
         else -> return false
     }
     return true
+}
+
+private fun primaryHomeCategoryToolTitle(category: MathHomeCategory): String = when (category.title) {
+    "Solve & Calculate" -> "Solver"
+    "Visual Workspaces" -> "Explore Workspaces"
+    "Data & Probability" -> "Probability & Statistics"
+    "Formulas & Proofs" -> "Formulas"
+    "Reference & Logic" -> "Visual Dictionary"
+    "Discover More" -> "Daily Challenge"
+    else -> category.toolTitles.firstOrNull().orEmpty()
 }
 
 private object MathHubUi {
@@ -3527,6 +3613,7 @@ fun Screen(
                             else -> Color(0xFFFFA65C)
                         }
                         val selected = selectedHomeCategory == category.title
+                        val primaryToolTitle = primaryHomeCategoryToolTitle(category)
                         Column(
                             Modifier
                                 .weight(1f)
@@ -3541,8 +3628,8 @@ fun Screen(
                                 .adaptiveFocusRing(shape = RoundedCornerShape(19.dp), focusColor = accent)
                                 .clickable {
                                     showConcepts = false
-                                    showWorkspaces = false
-                                    selectedHomeCategory = if (selected) null else category.title
+                                    selectedHomeCategory = null
+                                    allTools.firstOrNull { it.title == primaryToolTitle }?.let(::openOption)
                                 }
                                 .focusable()
                                 .semantics { contentDescription = "Open ${category.title}. ${category.description}" }
@@ -3557,7 +3644,7 @@ fun Screen(
                                     modifier = Modifier.align(Alignment.CenterEnd),
                                 )
                                 Text(
-                                    if (selected) "CLOSE" else "VIEW",
+                                    if (primaryToolTitle == "Explore Workspaces") "CHOOSE" else "OPEN",
                                     color = accent,
                                     fontSize = 8.sp,
                                     fontWeight = FontWeight.ExtraBold,
@@ -5746,6 +5833,7 @@ private fun MathematicsMenuPanel(
     fun openWorkspaceOption(title: String) {
         vm.recordMathToolOpen(title)
         when (title) {
+            "Learn All" -> vm.openMathsLearnAll()
             "Unified Math Studio" -> vm.openUnifiedMathStudio()
             "Adaptive Math Coach" -> vm.openAdaptiveMathLearning()
             "Scientific Calculator" -> vm.openScientificCalculator()

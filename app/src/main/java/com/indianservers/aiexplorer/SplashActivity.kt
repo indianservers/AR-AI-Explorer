@@ -27,6 +27,6 @@ class SplashActivity : ComponentActivity() {
     }
 
     private companion object {
-        const val SPLASH_DURATION_MILLIS = 800L
+        const val SPLASH_DURATION_MILLIS = 2_000L
     }
 }
