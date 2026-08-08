@@ -37,6 +37,30 @@ class StructuredMathEditorTest {
     }
 
     @Test
+    fun editorViewportSupportsFingerZoomOutAndClearsPanBelowOriginalScale() {
+        val zoomedOut = transformMathEditorViewport(
+            viewport = MathEditorViewport(scale = 2f, pan = Offset(80f, -30f)),
+            editorSize = IntSize(400, 200),
+            centroid = Offset(200f, 100f),
+            panChange = Offset(20f, 10f),
+            zoomChange = .4f,
+        )
+
+        assertEquals(.8f, zoomedOut.scale)
+        assertEquals(Offset.Zero, zoomedOut.pan)
+
+        val clamped = transformMathEditorViewport(
+            viewport = zoomedOut,
+            editorSize = IntSize(400, 200),
+            centroid = Offset(200f, 100f),
+            panChange = Offset.Zero,
+            zoomChange = .1f,
+        )
+        assertEquals(.75f, clamped.scale)
+        assertEquals(Offset.Zero, clamped.pan)
+    }
+
+    @Test
     fun superscriptToggleKeepsParserSyntaxAndLeavesTheSlot() {
         var value = TextFieldValue("x", TextRange(1))
 

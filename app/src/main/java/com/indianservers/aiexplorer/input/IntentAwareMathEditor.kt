@@ -87,10 +87,11 @@ internal fun transformMathEditorViewport(
     zoomChange: Float,
 ): MathEditorViewport {
     if (editorSize.width <= 0 || editorSize.height <= 0) return viewport
-    val nextScale = (viewport.scale * zoomChange).coerceIn(1f, 4.5f)
-    if (nextScale == 1f) return MathEditorViewport()
+    val nextScale = (viewport.scale * zoomChange).coerceIn(.75f, 4.5f)
+    if (nextScale <= 1f) return MathEditorViewport(scale = nextScale)
     val center = Offset(editorSize.width / 2f, editorSize.height / 2f)
-    val anchoredPan = viewport.pan + panChange + (centroid - center) * (1f - zoomChange)
+    val effectiveZoom = nextScale / viewport.scale.coerceAtLeast(.01f)
+    val anchoredPan = viewport.pan + panChange + (centroid - center) * (1f - effectiveZoom)
     val maxX = editorSize.width * (nextScale - 1f) / 2f
     val maxY = editorSize.height * (nextScale - 1f) / 2f
     return MathEditorViewport(
@@ -162,6 +163,7 @@ fun IntentAwareMathField(
     }
     var keyboardVisible by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val systemKeyboard = LocalSoftwareKeyboardController.current
     LaunchedEffect(value) {
         if (StructuredMathCodec.toParser(editorValue).text != value) {
             editorValue = StructuredMathCodec.fromParser(TextFieldValue(value, TextRange(value.length)))
@@ -198,35 +200,51 @@ fun IntentAwareMathField(
             }
             Text("${(analysis.confidence * 100).toInt()}% understood", color = IntentMathPalette.Muted, fontSize = 9.sp)
         }
-        OutlinedTextField(
-            value = editorValue,
-            onValueChange = emitStructured,
-            modifier = Modifier.fillMaxWidth().onFocusChanged {
-                keyboardVisible = useMathKeyboard && it.isFocused
-                onFocusChange(it.isFocused)
-            },
-            label = { Text(label) },
-            placeholder = { Text(placeholder, color = IntentMathPalette.Muted) },
-            visualTransformation = transformation,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Medium),
-            singleLine = singleLine,
-            minLines = minLines,
-            keyboardOptions = KeyboardOptions(imeAction = imeAction, showKeyboardOnFocus = !useMathKeyboard),
-            keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
-            isError = !healthy,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = IntentMathPalette.Ink,
-                unfocusedTextColor = IntentMathPalette.Ink,
-                focusedBorderColor = accent,
-                unfocusedBorderColor = accent.copy(alpha = .35f),
-                cursorColor = IntentMathPalette.Number,
-                errorCursorColor = IntentMathPalette.Error,
-                focusedLabelColor = accent,
-                unfocusedLabelColor = IntentMathPalette.Muted,
-                focusedContainerColor = Color(0x77101B2A),
-                unfocusedContainerColor = Color(0x44101B2A),
-            ),
-        )
+        if (useMathKeyboard) {
+            MathKeyboardOnlyTextField(
+                value = editorValue,
+                onValueChange = emitStructured,
+                label = label,
+                placeholder = placeholder,
+                singleLine = singleLine,
+                minLines = minLines,
+                accent = accent,
+                healthy = healthy,
+                transformation = transformation,
+                onFocusChange = {
+                    keyboardVisible = it
+                    if (it) systemKeyboard?.hide()
+                    onFocusChange(it)
+                },
+            )
+        } else {
+            OutlinedTextField(
+                value = editorValue,
+                onValueChange = emitStructured,
+                modifier = Modifier.fillMaxWidth().onFocusChanged { onFocusChange(it.isFocused) },
+                label = { Text(label) },
+                placeholder = { Text(placeholder, color = IntentMathPalette.Muted) },
+                visualTransformation = transformation,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Medium),
+                singleLine = singleLine,
+                minLines = minLines,
+                keyboardOptions = KeyboardOptions(imeAction = imeAction),
+                keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
+                isError = !healthy,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = IntentMathPalette.Ink,
+                    unfocusedTextColor = IntentMathPalette.Ink,
+                    focusedBorderColor = accent,
+                    unfocusedBorderColor = accent.copy(alpha = .35f),
+                    cursorColor = IntentMathPalette.Number,
+                    errorCursorColor = IntentMathPalette.Error,
+                    focusedLabelColor = accent,
+                    unfocusedLabelColor = IntentMathPalette.Muted,
+                    focusedContainerColor = Color(0x77101B2A),
+                    unfocusedContainerColor = Color(0x44101B2A),
+                ),
+            )
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(analysis.message, color = if (healthy) IntentMathPalette.Muted else IntentMathPalette.Error, fontSize = 10.sp, modifier = Modifier.weight(1f))
             if (analysis.variables.isNotEmpty()) Text("vars ${analysis.variables.joinToString()}", color = IntentMathPalette.Variable, fontSize = 10.sp)
@@ -385,6 +403,7 @@ private fun MathKeyboardOnlyTextField(
     healthy: Boolean,
     transformation: VisualTransformation,
     onFocusChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var focused by remember { mutableStateOf(false) }
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -393,7 +412,7 @@ private fun MathKeyboardOnlyTextField(
     var editorSize by remember { mutableStateOf(IntSize.Zero) }
     val minimumHeight = if (singleLine) 52.dp else (52 + (minLines.coerceAtLeast(1) - 1) * 22).dp
     Column(
-        Modifier
+        modifier
             .fillMaxWidth()
             .background(Color(0x77101B2A), RoundedCornerShape(8.dp))
             .border(
@@ -430,7 +449,27 @@ private fun MathKeyboardOnlyTextField(
                 .fillMaxWidth()
                 .heightIn(min = minimumHeight)
                 .clipToBounds()
-                .onSizeChanged { editorSize = it },
+                .onSizeChanged { editorSize = it }
+                .pointerInput(editorSize) {
+                    awaitEachGesture {
+                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                        do {
+                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                            if (event.changes.count { it.pressed } >= 2) {
+                                val next = transformMathEditorViewport(
+                                    viewport = MathEditorViewport(editorScale, editorPan),
+                                    editorSize = editorSize,
+                                    centroid = event.calculateCentroid(useCurrent = true),
+                                    panChange = event.calculatePan(),
+                                    zoomChange = event.calculateZoom(),
+                                )
+                                editorScale = next.scale
+                                editorPan = next.pan
+                                event.changes.forEach { it.consume() }
+                            }
+                        } while (event.changes.any { it.pressed })
+                    }
+                },
         ) {
             BasicTextField(
                 value = value,
@@ -438,29 +477,6 @@ private fun MathKeyboardOnlyTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = minimumHeight)
-                    .pointerInput(editorSize) {
-                        awaitEachGesture {
-                            awaitFirstDown(
-                                requireUnconsumed = false,
-                                pass = PointerEventPass.Initial,
-                            )
-                            do {
-                                val event = awaitPointerEvent(PointerEventPass.Initial)
-                                if (event.changes.count { it.pressed } >= 2) {
-                                    val next = transformMathEditorViewport(
-                                        viewport = MathEditorViewport(editorScale, editorPan),
-                                        editorSize = editorSize,
-                                        centroid = event.calculateCentroid(useCurrent = true),
-                                        panChange = event.calculatePan(),
-                                        zoomChange = event.calculateZoom(),
-                                    )
-                                    editorScale = next.scale
-                                    editorPan = next.pan
-                                    event.changes.forEach { it.consume() }
-                                }
-                            } while (event.changes.any { it.pressed })
-                        }
-                    }
                     .graphicsLayer {
                         scaleX = editorScale
                         scaleY = editorScale
@@ -604,6 +620,7 @@ fun CompactMathField(
     }
     var keyboardVisible by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val systemKeyboard = LocalSoftwareKeyboardController.current
     LaunchedEffect(value) {
         if (value != StructuredMathCodec.toParser(editorValue).text) {
             editorValue = StructuredMathCodec.fromParser(TextFieldValue(value, TextRange(value.length)))
@@ -613,21 +630,21 @@ fun CompactMathField(
         editorValue = it
         onValueChange(StructuredMathCodec.toParser(it).text)
     }
-    OutlinedTextField(
+    MathKeyboardOnlyTextField(
         value = editorValue,
         onValueChange = emitStructured,
-        label = { Text(label) },
+        label = label,
+        placeholder = "Enter mathematics",
         singleLine = true,
-        keyboardOptions = KeyboardOptions(showKeyboardOnFocus = false),
-        visualTransformation = remember { IntentAwareMathVisualTransformation() },
-        modifier = modifier.onFocusChanged { keyboardVisible = it.isFocused },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = IntentMathPalette.Ink,
-            unfocusedTextColor = IntentMathPalette.Ink,
-            focusedBorderColor = IntentMathPalette.Number,
-            unfocusedBorderColor = IntentMathPalette.Number.copy(alpha = .35f),
-            cursorColor = IntentMathPalette.Number,
-        ),
+        minLines = 1,
+        accent = IntentMathPalette.Number,
+        healthy = true,
+        transformation = remember { IntentAwareMathVisualTransformation() },
+        onFocusChange = {
+            keyboardVisible = it
+            if (it) systemKeyboard?.hide()
+        },
+        modifier = modifier,
     )
     if (keyboardVisible) {
         AdaptiveMathKeyboardPopup(

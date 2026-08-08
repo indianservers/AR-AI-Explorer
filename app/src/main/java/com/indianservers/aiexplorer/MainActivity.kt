@@ -79,6 +79,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -1964,6 +1965,26 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         state = state.copy(points = state.points.mapIndexed { index, old -> replacements[index] ?: old }, modifiedAt = System.currentTimeMillis()).recomputed()
     }
 
+    fun previewShapeScale(factor: Double) {
+        val gesture = pointGesture ?: return
+        val center = InteractionGeometry.bounds(gesture.from)?.center ?: return
+        val safeFactor = factor.coerceIn(.08, 12.0)
+        val replacements = gesture.indices.zip(gesture.from.map { point -> center + (point - center) * safeFactor }).toMap()
+        state = state.copy(
+            points = state.points.mapIndexed { index, old -> replacements[index] ?: old },
+            modifiedAt = System.currentTimeMillis(),
+        ).recomputed()
+    }
+
+    fun rotateSelectedShapeBy(deltaDegrees: Double) {
+        val index = selectedShape.takeIf { it in state.shapes.indices } ?: return
+        beginShapeDrag(index)
+        if (pointGesture == null) return
+        previewShapeRotation(deltaDegrees)
+        endPointDrag()
+        status = "Rotated ${state.shapes.getOrNull(index)?.name ?: "object"} by ${trim(deltaDegrees)} degrees"
+    }
+
     fun endPointDrag() {
         val gesture = pointGesture ?: return
         val final = gesture.indices.mapNotNull(state.points::getOrNull)
@@ -2684,7 +2705,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     var menuOffset by remember { mutableStateOf(Offset.Zero) }
     var dockOffset by remember { mutableStateOf(Offset.Zero) }
-    var showSplash by rememberSaveable { mutableStateOf(true) }
+    val showSplash = false
     var showAppearanceSettings by rememberSaveable { mutableStateOf(false) }
     var showExitConfirmation by rememberSaveable { mutableStateOf(false) }
     var showClearConfirmation by rememberSaveable { mutableStateOf(false) }
@@ -2692,10 +2713,6 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     val applicationContext = LocalContext.current.applicationContext
     val durableStore = remember(applicationContext) { DurableMathStore(applicationContext) }
     var persistenceReady by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        delay(800)
-        showSplash = false
-    }
     LaunchedEffect(durableStore) {
         val recovered = runCatching { durableStore.loadRecovery() }.getOrNull()
         val projects = runCatching { durableStore.loadProjects() }.getOrDefault(emptyList())
@@ -3478,7 +3495,7 @@ fun Screen(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 MathQuickLaunchButton("Formulas", "Fx", Violet, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Formulas) }
-                MathQuickLaunchButton("Proofs", "QED", Green, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Proofs) }
+                MathQuickLaunchButton("Visual Proofs", "QED", Green, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Proofs) }
                 MathQuickLaunchButton("Theorems", "Thm", Amber, Modifier.weight(1f)) { vm.openKnowledgeHub(KnowledgeSection.Theorems) }
             }
 
@@ -6664,8 +6681,18 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     var viewToolsExpanded by remember { mutableStateOf(false) }
     var layersExpanded by remember { mutableStateOf(false) }
     var manipulationMode by remember { mutableStateOf(Transform2DMode.Select) }
+    var resizePolicy by remember { mutableStateOf(Geometry2DResizePolicy.Free) }
+    var rotationAngle by remember { mutableDoubleStateOf(0.0) }
+    var lastRotationHaptic by remember { mutableStateOf<Double?>(null) }
+    var objectDetailsExpanded by remember { mutableStateOf(false) }
     BackHandler(enabled = addShapeOpen) { addShapeOpen = false }
     val selectedShape = vm.state.shapes.getOrNull(vm.selectedShape)
+    LaunchedEffect(selectedShape?.id) {
+        rotationAngle = 0.0
+        lastRotationHaptic = null
+        objectDetailsExpanded = false
+        manipulationMode = Transform2DMode.Select
+    }
     val dependenciesByOutput = vm.state.pointDependencies.associateBy { it.outputIndex }
     val invalidDependencyOutputs = vm.state.pointDependencies.filter {
         resolvePointDependency(vm.state.points, it.inputIndices, it.type, it.parameters) == null
@@ -6701,7 +6728,6 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     }
     val constraintFeedback = remember(vm.state) { Geometry2DInteractionEngine.evaluateConstraints(vm.state) }
     val constraintGlyphs = remember(vm.state) { Geometry2DDirectManipulation.constraintGlyphs(vm.state) }
-    val selectionHandles = remember(vm.state, vm.selectedShape) { vm.selectedShape.takeIf { it in vm.state.shapes.indices }?.let { Geometry2DDirectManipulation.handles(vm.state, it) }.orEmpty() }
     val replayingProtocol = protocolStep.roundToInt() < protocolSize
     val replayShapes = remember(vm.state.shapes, protocolTimeline.visibleIds) {
         vm.state.shapes.map { shape -> shape.copy(visible = shape.visible && shape.id in protocolTimeline.visibleIds) }
@@ -6717,6 +6743,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             shapes = replayShapes,
             interactionEnabled = vm.geometryTool == GeometryTool.Select && !replayingProtocol,
             manipulationMode = manipulationMode,
+            resizePolicy = resizePolicy,
             selectedShapes = vm.selectedShapes,
             snapEnabled = vm.settings.snap,
             axisConstraint = axisConstraint,
@@ -6735,7 +6762,16 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 vm.beginShapeDrag(it)
             },
             onShapeDrag = vm::previewShapeDrag,
-            onShapeRotate = vm::previewShapeRotation,
+            onShapeRotate = { angle ->
+                rotationAngle = angle
+                val snap = snapGeometryRotation(angle)
+                if (snap.snapped && snap.angle != lastRotationHaptic && vm.settings.haptics) {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    lastRotationHaptic = snap.angle
+                }
+                vm.previewShapeRotation(angle)
+            },
+            onShapeScale = vm::previewShapeScale,
             onDragEnd = vm::endPointDrag,
             onDragCancel = vm::cancelPointDrag,
             onDropDelete = vm::deleteSelectedShape,
@@ -6757,11 +6793,6 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             constraintGlyphs.forEach { glyph ->
                 val color = when (glyph.feedback.level) { ConstraintFeedbackLevel.Satisfied -> Green; ConstraintFeedbackLevel.NearlySatisfied -> Cyan; ConstraintFeedbackLevel.Violated -> Amber; ConstraintFeedbackLevel.Invalid -> Color.Red }
                 drawGraphLabel(glyph.symbol, tx(glyph.position) + Offset(8f, -8f), color)
-            }
-            selectionHandles.forEach { handle ->
-                val center = tx(handle.position)
-                drawCircle(if (handle.kind.name in setOf("Rotate", "Reflect")) Violet else Amber, 7f, center)
-                drawCircle(Color.White.copy(.8f), 13f, center, style = Stroke(1.5f))
             }
             geometryTrace?.samples?.takeIf { it.size >= 2 }?.let { samples ->
                 val path = Path().apply { val first = tx(samples.first()); moveTo(first.x, first.y); samples.drop(1).forEach { val p = tx(it); lineTo(p.x, p.y) } }
@@ -6798,9 +6829,9 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 GlowButton("+ Add shape", icon = "+") { addShapeOpen = true }
             }
         }
-        if (vm.shapeExplorerScene && selectedShape != null) {
+        if (selectedShape != null) {
             val details = shapeExplorer2DDetails(selectedShape, vm.state.points)
-            var shapeSummaryExpanded by remember(selectedShape.id) { mutableStateOf(false) }
+            val shapeSummaryExpanded = objectDetailsExpanded
             Column(
                 Modifier
                     .align(Alignment.TopCenter)
@@ -6813,34 +6844,27 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                         },
                     )
                     .widthIn(max = 520.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Brush.linearGradient(listOf(SurfaceA.copy(.96f), SurfaceB.copy(.94f))))
-                    .border(1.dp, Cyan.copy(alpha = .45f), RoundedCornerShape(16.dp))
                     .animateContentSize()
-                    .padding(horizontal = 12.dp, vertical = 9.dp),
+                    .padding(horizontal = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        selectedShape.name,
-                        color = Cyan,
-                        fontSize = if (shapeSummaryExpanded) 17.sp else 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                    )
-                    Text(
-                        if (shapeSummaryExpanded) "Hide ▲" else "Details ▼",
-                        color = Green,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(9.dp))
-                            .clickable { shapeSummaryExpanded = !shapeSummaryExpanded }
-                            .padding(horizontal = 8.dp, vertical = 6.dp),
-                    )
-                }
+                Geometry2DObjectBar(
+                    name = selectedShape.name,
+                    objectCount = vm.state.shapes.count { it.visible },
+                    detailsExpanded = shapeSummaryExpanded,
+                    onDetailsToggle = { objectDetailsExpanded = !objectDetailsExpanded },
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 AnimatedVisibility(shapeSummaryExpanded) {
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(SurfaceA.copy(.94f))
+                            .border(1.dp, Cyan.copy(alpha = .35f), RoundedCornerShape(14.dp))
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                             GlowButton("All formulas", icon = "ƒ", iconOnly = compact) { vm.togglePanel(PanelSlot.Right) }
                             GlowButton("Shapes", icon = "SE", iconOnly = compact, onClick = vm::openShapesExplorer)
@@ -6854,43 +6878,8 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
         }
         if (!vm.shapeExplorerScene) InteractionHint(
             "Drag a junction to resize · drag shape to move · empty canvas pans · empty two-finger pinch zooms",
-            Modifier.align(Alignment.BottomEnd),
+            Modifier.align(Alignment.BottomEnd).padding(bottom = 128.dp),
         )
-        Row(
-            Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 88.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            DeleteDropTarget(
-                enabled = vm.selectedShape in vm.state.shapes.indices,
-                onDelete = vm::deleteSelectedShape,
-            )
-            DestructiveGlowButton(
-                "Clear all",
-                enabled = vm.state.shapes.isNotEmpty() || vm.state.points.isNotEmpty() || vm.state.geometryConstraints.isNotEmpty(),
-                icon = "Ã—",
-                onClick = vm::clearCurrentWorkspace,
-            )
-        }
-        if (selectedShape != null) SmartSelectionHud(
-            title = selectedShape.name,
-            instruction = if (selectedShape.locked) "Locked · unlock to drag or resize" else "Drag body to move · junctions resize · top handle rotates",
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 206.dp),
-            initiallyExpanded = false,
-            selectionKey = selectedShape.id,
-        ) {
-            GeometryManipulationBar(
-                current = manipulationMode,
-                selectedAvailable = true,
-                onSelect = { mode ->
-                    manipulationMode = mode
-                    vm.selectGeometryTool(GeometryTool.Select)
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            GlowButton(if (selectedShape.locked) "Unlock" else "Lock") { vm.updateSelectedShape { it.copy(locked = !it.locked) } }
-            DestructiveGlowButton("Delete", icon = "×", onClick = vm::deleteSelectedShape)
-        }
         if (!vm.shapeExplorerScene) Column(
             Modifier.align(Alignment.TopStart).padding(top = workspaceToolTop, start = 10.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(.82f)).animateContentSize().padding(4.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp),
@@ -6919,22 +6908,35 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 }
             }
         }
-        AddShapeTarget(
+        Geometry2DBottomDock(
+            mode = manipulationMode,
+            selected = selectedShape != null,
+            locked = selectedShape?.locked == true,
+            canClear = vm.state.shapes.isNotEmpty() || vm.state.points.isNotEmpty() || vm.state.geometryConstraints.isNotEmpty(),
+            rotationAngle = rotationAngle,
+            resizePolicy = resizePolicy,
+            onMode = { mode ->
+                manipulationMode = mode
+                vm.selectGeometryTool(GeometryTool.Select)
+            },
             onAdd = { addShapeOpen = true },
-            label = "+ Add",
-            contentDescription = "Add a 2D shape to the canvas",
-            modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 88.dp),
+            onLock = { vm.updateSelectedShape { it.copy(locked = !it.locked) } },
+            onDuplicate = vm::duplicateSelectedShape,
+            onDelete = vm::deleteSelectedShape,
+            onClearAll = vm::clearCurrentWorkspace,
+            onRotateBy = { delta ->
+                vm.rotateSelectedShapeBy(delta)
+                rotationAngle += delta
+                if (vm.settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            },
+            onResetRotation = {
+                vm.rotateSelectedShapeBy(-rotationAngle)
+                rotationAngle = 0.0
+            },
+            onResizePolicy = { resizePolicy = it },
+            onFit = { homeRequest++ },
+            modifier = Modifier.align(Alignment.BottomCenter),
         )
-        if (!vm.shapeExplorerScene) {
-            GeometryLayerPanel(
-                shapes = vm.state.shapes,
-                selected = vm.selectedShapes,
-                expanded = layersExpanded,
-                onExpandedChange = { layersExpanded = it },
-                onSelect = vm::selectShape,
-                modifier = Modifier.align(Alignment.TopEnd).padding(top = workspaceToolTop, end = 10.dp),
-            )
-        }
         contextMenuShapeIndex?.let { shapeIndex ->
             vm.state.shapes.getOrNull(shapeIndex)?.let { shape ->
                 Column(
@@ -10920,6 +10922,7 @@ private fun CoordinateCanvas(
     shapes: List<Shape2D>,
     interactionEnabled: Boolean,
     manipulationMode: Transform2DMode,
+    resizePolicy: Geometry2DResizePolicy,
     selectedShapes: Set<Int>,
     snapEnabled: Boolean,
     axisConstraint: AxisConstraint,
@@ -10933,6 +10936,7 @@ private fun CoordinateCanvas(
     onShapeDragStart: (Int) -> Unit,
     onShapeDrag: (Vec2) -> Unit,
     onShapeRotate: (Double) -> Unit,
+    onShapeScale: (Double) -> Unit,
     onDragEnd: () -> Unit,
     onDragCancel: () -> Unit,
     onDropDelete: () -> Unit,
@@ -10955,11 +10959,13 @@ private fun CoordinateCanvas(
     var boxCurrentWorld by remember { mutableStateOf<Vec2?>(null) }
     var snapGuides by remember { mutableStateOf<List<com.indianservers.aiexplorer.core.SnapGuide>>(emptyList()) }
     var coordinateTooltip by remember { mutableStateOf<Vec2?>(null) }
+    var rotationFeedback by remember { mutableStateOf<GeometryRotationSnap?>(null) }
     var viewportUndo by remember { mutableStateOf<List<com.indianservers.aiexplorer.core.Viewport2D>>(emptyList()) }
     val currentPoints by rememberUpdatedState(points)
     val currentShapes by rememberUpdatedState(shapes)
     val currentInteractionEnabled by rememberUpdatedState(interactionEnabled)
     val currentManipulationMode by rememberUpdatedState(manipulationMode)
+    val currentResizePolicy by rememberUpdatedState(resizePolicy)
     val currentSelectedShapes by rememberUpdatedState(selectedShapes)
     val currentSnapEnabled by rememberUpdatedState(snapEnabled)
     val currentAxisConstraint by rememberUpdatedState(axisConstraint)
@@ -11030,38 +11036,43 @@ private fun CoordinateCanvas(
                     val selectionPoints = gestureSelectedShapes.flatMap { index -> gestureShapes.getOrNull(index)?.pointIndices.orEmpty() }.distinct().mapNotNull(gesturePoints::getOrNull)
                     val selectionBounds = InteractionGeometry.bounds(selectionPoints)
                     val rotationHandle = selectionBounds?.let { bounds -> screen(Vec2(bounds.center.x, bounds.maximum.y + 1.0)) }
+                    val scaleHandle = selectionBounds?.let { bounds -> screen(Vec2(bounds.maximum.x + .55, bounds.minimum.y - .55)) }
                     val selectingRegion = lassoDuringGesture || boxSelectDuringGesture
-                    val rotating = canManipulate && manipulationDuringGesture == Transform2DMode.Rotate &&
-                        !selectingRegion && rotationHandle != null && (rotationHandle - down.position).getDistance() <= 34f
+                    val rotating = canManipulate && gestureSelectedShapes.isNotEmpty() &&
+                        !selectingRegion && rotationHandle != null &&
+                        (rotationHandle - down.position).getDistance() <= 24.dp.toPx()
+                    val proportionalScaling = canManipulate && gestureSelectedShapes.isNotEmpty() &&
+                        currentResizePolicy == Geometry2DResizePolicy.Proportional && !selectingRegion &&
+                        scaleHandle != null && (scaleHandle - down.position).getDistance() <= 24.dp.toPx()
                     val eligiblePointIndices = Geometry2DDragPlanner.eligibleHandleIndices(
                         WorkspaceState(points = gesturePoints, shapes = gestureShapes, functions = emptyList(), solids = emptyList(), vectors3D = emptyList()),
                         gestureSelectedShapes,
                     )
                     val tappedPointIndex = eligiblePointIndices
                         .minByOrNull { (screen(gesturePoints[it]) - down.position).getDistance() }
-                        ?.takeIf { (screen(gesturePoints[it]) - down.position).getDistance() <= 24f }
+                        ?.takeIf { (screen(gesturePoints[it]) - down.position).getDistance() <= 22.dp.toPx() }
                     var pointIndex: Int? = null
                     var shapeIndex: Int? = null
                     if (canManipulate && !selectingRegion) {
-                        pointIndex = tappedPointIndex.takeIf { manipulationDuringGesture == Transform2DMode.Resize }
-                        if (pointIndex == null && !rotating) {
+                        pointIndex = tappedPointIndex
+                        if (pointIndex == null && !rotating && !proportionalScaling) {
                             shapeIndex = gestureShapes.indices.reversed().filter { gestureShapes[it].visible }
                                 .minByOrNull { shapeScreenDistance(gestureShapes[it], gesturePoints, down.position, ::screen) }
                                 ?.takeIf { shapeScreenDistance(gestureShapes[it], gesturePoints, down.position, ::screen) <= 42f }
-                                ?.takeIf { manipulationDuringGesture in setOf(Transform2DMode.Select, Transform2DMode.Move) }
                         }
                         pointIndex?.let(onPointDragStart)
                         shapeIndex?.let(onShapeDragStart)
                         if (rotating) gestureSelectedShapes.lastOrNull()?.let(onShapeDragStart)
+                        if (proportionalScaling) gestureSelectedShapes.lastOrNull()?.let(onShapeDragStart)
                     }
                     val gestureTarget = when {
                         pointIndex != null -> GeometryGestureTarget.JunctionHandle
-                        shapeIndex != null || rotating -> GeometryGestureTarget.ShapeBody
+                        shapeIndex != null || rotating || proportionalScaling -> GeometryGestureTarget.ShapeBody
                         else -> GeometryGestureTarget.EmptyCanvas
                     }
                     if (lassoDuringGesture) { lassoWorld = listOf(startWorld); gestureMode = GestureMode.Lasso }
                     else if (boxSelectDuringGesture) { boxStartWorld = startWorld; boxCurrentWorld = startWorld; gestureMode = GestureMode.Lasso }
-                    else gestureMode = when { rotating -> GestureMode.Rotating; pointIndex != null -> GestureMode.Resizing; shapeIndex != null -> GestureMode.Moving; else -> GestureMode.Selecting }
+                    else gestureMode = when { rotating -> GestureMode.Rotating; proportionalScaling || pointIndex != null -> GestureMode.Resizing; shapeIndex != null -> GestureMode.Moving; else -> GestureMode.Selecting }
 
                     var moved = false
                     var transformed = false
@@ -11094,7 +11105,15 @@ private fun CoordinateCanvas(
                                 when {
                                     lassoDuringGesture -> lassoWorld = lassoWorld + currentWorld
                                     boxSelectDuringGesture -> boxCurrentWorld = currentWorld
-                                    rotating && selectionBounds != null -> onShapeRotate(InteractionGeometry.rotationDegrees(selectionBounds.center, startWorld, currentWorld))
+                                    rotating && selectionBounds != null -> {
+                                        val snap = snapGeometryRotation(InteractionGeometry.rotationDegrees(selectionBounds.center, startWorld, currentWorld))
+                                        rotationFeedback = snap
+                                        onShapeRotate(snap.angle)
+                                    }
+                                    proportionalScaling && selectionBounds != null -> {
+                                        val initialDistance = selectionBounds.center.distanceTo(startWorld).coerceAtLeast(1e-6)
+                                        onShapeScale(selectionBounds.center.distanceTo(currentWorld) / initialDistance)
+                                    }
                                     pointIndex != null -> {
                                         val original = gesturePoints[pointIndex]
                                         val handleHeld = change.uptimeMillis - down.uptimeMillis >= 450L
@@ -11128,7 +11147,7 @@ private fun CoordinateCanvas(
                                         coordinateTooltip = snapped.point
                                         onPointDrag(pointIndex, snapped.point)
                                     }
-                                    shapeIndex != null && manipulationDuringGesture == Transform2DMode.Move -> {
+                                    shapeIndex != null -> {
                                         val constrained = PrecisionInteraction.apply(SmartSnapEngine.constrain(currentWorld - startWorld, axisDuringGesture), precisionDuringGesture)
                                         snapGuides = emptyList()
                                         coordinateTooltip = selectionBounds?.center?.plus(constrained)
@@ -11166,12 +11185,13 @@ private fun CoordinateCanvas(
                                 end,
                             ))
                         }
-                        pointIndex != null || shapeIndex != null || rotating -> {
+                        pointIndex != null || shapeIndex != null || rotating || proportionalScaling -> {
                             val overDelete = latestPosition.x in (size.width * .32f)..(size.width * .68f) && latestPosition.y >= size.height * .78f
                             if (overDelete && manipulationDuringGesture != Transform2DMode.Select && (pointIndex != null || shapeIndex != null)) {
                                 onDragCancel()
                                 onDropDelete()
                             } else onDragEnd()
+                            rotationFeedback = null
                         }
                         !moved && !transformed -> {
                             val now = System.currentTimeMillis()
@@ -11238,7 +11258,23 @@ private fun CoordinateCanvas(
             val rotateHandle = tx(Vec2(bounds.center.x, bounds.maximum.y + 1.0))
             drawLine(Amber, Offset(center.x, boxTopLeft.y), rotateHandle, 2f)
             drawCircle(Amber.copy(.22f), 20f, rotateHandle)
-            drawCircle(Amber, 7f, rotateHandle)
+            drawArc(
+                color = Violet,
+                startAngle = -65f,
+                sweepAngle = 285f,
+                useCenter = false,
+                topLeft = rotateHandle - Offset(13f, 13f),
+                size = Size(26f, 26f),
+                style = Stroke(3f, cap = StrokeCap.Round),
+            )
+            drawLine(Violet, rotateHandle + Offset(9f, -9f), rotateHandle + Offset(14f, -8f), 3f, cap = StrokeCap.Round)
+            drawLine(Violet, rotateHandle + Offset(9f, -9f), rotateHandle + Offset(11f, -14f), 3f, cap = StrokeCap.Round)
+            if (resizePolicy == Geometry2DResizePolicy.Proportional) {
+                val scaleHandle = tx(Vec2(bounds.maximum.x + .55, bounds.minimum.y - .55))
+                drawLine(Cyan.copy(.75f), bottomRight, scaleHandle, 2f)
+                drawRect(Cyan.copy(.2f), scaleHandle - Offset(10f, 10f), Size(20f, 20f))
+                drawRect(Cyan, scaleHandle - Offset(7f, 7f), Size(14f, 14f), style = Stroke(2.5f))
+            }
             drawCircle(Green.copy(.25f), 18f, center)
             drawLine(Green, center - Offset(10f, 0f), center + Offset(10f, 0f), 2f)
             drawLine(Green, center - Offset(0f, 10f), center + Offset(0f, 10f), 2f)
@@ -11247,6 +11283,13 @@ private fun CoordinateCanvas(
                 "Δx ${trim(bounds.width)} · Δy ${trim(bounds.height)} · length ${trim(segment.distance)} · slope ${segment.slope?.let(::trim) ?: "∞"}"
             } else "(${trim(bounds.center.x)}, ${trim(bounds.center.y)})"
             drawGraphLabel(measure, boxTopLeft + Offset(8f, -48f), Amber)
+        }
+        rotationFeedback?.let { feedback ->
+            drawGraphLabel(
+                "Angle ${"%.1f".format(java.util.Locale.US, feedback.angle)} deg${if (feedback.snapped) " · snap" else ""}",
+                Offset(size.width / 2f - 88f, 128f),
+                if (feedback.snapped) Green else Violet,
+            )
         }
         coordinateTooltip?.let { point -> drawGraphLabel("(${trim(point.x)}, ${trim(point.y)})", tx(point) + Offset(18f, -54f), Green) }
         if (gestureMode != GestureMode.Idle) drawGraphLabel(gestureMode.label, Offset(size.width / 2f - 95f, 92f), Cyan)
