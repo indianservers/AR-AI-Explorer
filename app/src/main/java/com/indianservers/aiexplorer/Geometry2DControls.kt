@@ -130,6 +130,12 @@ internal fun Geometry2DBottomDock(
             Geometry2DToolButton("...", "More", Violet, enabled = true, selected = overflowOpen, modifier = Modifier.weight(1f)) { overflowOpen = !overflowOpen }
         }
 
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            Geometry2DContextButton("Add", Modifier.weight(1f), onClick = onAdd)
+            Geometry2DContextButton("Delete", Modifier.weight(1f), destructive = true, enabled = selected, onClick = onDelete)
+            Geometry2DContextButton("Clear all", Modifier.weight(1f), destructive = true, enabled = canClear, onClick = onClearAll)
+        }
+
         AnimatedVisibility(selected && mode == Transform2DMode.Rotate) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
                 Geometry2DContextButton("-15 deg", Modifier.weight(1f)) { onRotateBy(-15.0) }

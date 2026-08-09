@@ -578,6 +578,21 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     var snapshotOpacity by remember { mutableFloatStateOf(.45f) }
     var accessibilityMode by remember { mutableStateOf(false) }
     var clearEpochSeen by remember { mutableIntStateOf(vm.workspaceClearEpoch) }
+    BackHandler(
+        enabled = equationEditorExpanded || graphAddMenuExpanded || graphViewToolsExpanded || showAxisSheet || contextMenuPosition != null || vm.showBottomPanel,
+    ) {
+        when {
+            graphAddMenuExpanded -> graphAddMenuExpanded = false
+            equationEditorExpanded -> {
+                equationEditorExpanded = false
+                graphTypingMode = false
+            }
+            showAxisSheet -> showAxisSheet = false
+            contextMenuPosition != null -> contextMenuPosition = null
+            vm.showBottomPanel -> vm.hidePanels()
+            graphViewToolsExpanded -> graphViewToolsExpanded = false
+        }
+    }
     LaunchedEffect(vm.workspaceClearEpoch) {
         if (vm.workspaceClearEpoch != clearEpochSeen) {
             playingParameters = emptySet()
@@ -899,11 +914,11 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 }
             }
         }
-        if (!graphTypingMode && !presentationMode) InteractionHint(
-            "Drag to pan · pinch to zoom · tap a graph to edit",
-            Modifier.align(Alignment.BottomEnd),
-        )
-        if (!graphTypingMode && !presentationMode && !vm.hasDismissibleOverlay()) {
+        if (!graphTypingMode && !presentationMode && !vm.hasDismissibleOverlay()) Row(
+            Modifier.align(Alignment.BottomCenter).padding(horizontal = 12.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             AddShapeTarget(
                 onAdd = {
                     vm.addFunction("x")
@@ -913,14 +928,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 },
                 label = "+ Graph",
                 contentDescription = "Add a graph equation to the workspace",
-                modifier = Modifier.align(Alignment.BottomStart).padding(start = 12.dp, bottom = 14.dp),
             )
-        }
-        if (!graphTypingMode && !presentationMode && !vm.hasDismissibleOverlay()) Row(
-            Modifier.align(Alignment.BottomEnd).padding(end = 12.dp, bottom = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
             DeleteDropTarget(
                 enabled = selectedFunction != null,
                 onDelete = {
@@ -1007,6 +1015,13 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 }
             }
         }
+        if (!presentationMode && (equationEditorExpanded || graphAddMenuExpanded)) {
+            DimmedWorkspaceScrim {
+                equationEditorExpanded = false
+                graphAddMenuExpanded = false
+                graphTypingMode = false
+            }
+        }
         if (!presentationMode) GraphEquationEditor(
             Modifier.align(Alignment.TopCenter),
             functions = liveFunctions,
@@ -1067,6 +1082,9 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 }
             },
         )
+        if (showAxisSheet) {
+            DimmedWorkspaceScrim { showAxisSheet = false }
+        }
         if (showAxisSheet) GlassPanel(Modifier.align(Alignment.Center).widthIn(max = 420.dp)) {
             PanelHeader("Axis Configuration", { showAxisSheet = false }, Cyan)
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
@@ -1083,6 +1101,9 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 TogglePill("Log X", graphAxisSettings.xLogarithmic) { graphAxisSettings = graphAxisSettings.copy(xLogarithmic = it) }
                 TogglePill("Log Y", graphAxisSettings.yLogarithmic) { graphAxisSettings = graphAxisSettings.copy(yLogarithmic = it) }
             }
+        }
+        if (contextMenuPosition != null) {
+            DimmedWorkspaceScrim { contextMenuPosition = null }
         }
         if (contextMenuPosition != null) GlassPanel(Modifier.align(Alignment.Center).width(245.dp)) {
             PanelHeader("Graph Radial Actions", { contextMenuPosition = null }, Amber)

@@ -483,6 +483,7 @@ import com.indianservers.aiexplorer.spatial.SpatialLessonCatalog
 import com.indianservers.aiexplorer.spatial.SpatialPerformanceManager
 import com.indianservers.aiexplorer.spatial.ThermalLevel
 import com.indianservers.aiexplorer.gamifymaths.GamifyMathsRoot
+import com.indianservers.aiexplorer.mathdictionary.MathDictionaryScreen
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -530,6 +531,20 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
     var knowledgeLoading by remember { mutableStateOf(true) }
     if (vm.activeKnowledgeSection == KnowledgeSection.Visualize) {
         VisualFormulaDiscoveryModule(vm, wide)
+        return
+    }
+    if (vm.activeKnowledgeSection == KnowledgeSection.Dictionary) {
+        MathDictionaryScreen(
+            wide = wide,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = if (adaptiveProfile.isTelevision) adaptiveProfile.workspacePolicy.topChromeClearance else if (wide) 74.dp else 70.dp,
+                    bottom = if (adaptiveProfile.isTelevision) 8.dp else if (wide) 72.dp else 70.dp,
+                    start = if (wide) 12.dp else 0.dp,
+                    end = if (wide) 12.dp else 0.dp,
+                ),
+        )
         return
     }
     val knowledgeDetailOpen =

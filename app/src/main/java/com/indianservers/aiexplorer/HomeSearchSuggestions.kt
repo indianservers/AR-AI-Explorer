@@ -21,6 +21,10 @@ data class HomeSearchSuggestion(
     val label: String,
     val supportingText: String,
     val concept: Boolean,
+    val lessonId: String? = null,
+    val conceptTitle: String? = null,
+    val query: String = label,
+    val kindLabel: String = if (concept) "Concept" else "Tool",
 )
 
 @Composable
@@ -39,7 +43,7 @@ fun HomeSearchSuggestions(
         Column(modifier.fillMaxWidth()) {
             Text("TRY A SEARCH", color = muted, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             FlowRow {
-                listOf("quadratic equations", "3D geometry", "probability").forEach { sample ->
+                listOf("quadratic equations", "circle area", "matrix", "probability").forEach { sample ->
                     Text(
                         sample,
                         color = cyan,
@@ -59,15 +63,24 @@ fun HomeSearchSuggestions(
                 .border(1.dp, violet.copy(.38f), RoundedCornerShape(14.dp)).padding(6.dp),
         ) {
             Text("SUGGESTIONS", color = violet, fontSize = 9.sp, fontWeight = FontWeight.Bold)
-            suggestions.take(5).forEach { suggestion ->
+            suggestions.take(8).forEach { suggestion ->
                 Row(
                     Modifier.fillMaxWidth().clickable { onSuggestion(suggestion) }
                         .padding(horizontal = 6.dp, vertical = 7.dp),
                 ) {
-                    Text(if (suggestion.concept) "Fx" else "⌕", color = if (suggestion.concept) violet else cyan, fontSize = 11.sp)
+                    Text(
+                        when {
+                            suggestion.lessonId != null -> "L"
+                            suggestion.concept -> "Fx"
+                            else -> "S"
+                        },
+                        color = if (suggestion.concept) violet else cyan,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
                     Column(Modifier.padding(start = 8.dp)) {
                         Text(suggestion.label, color = ink, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-                        Text(suggestion.supportingText, color = muted, fontSize = 9.sp, maxLines = 1)
+                        Text("${suggestion.kindLabel} · ${suggestion.supportingText}", color = muted, fontSize = 9.sp, maxLines = 1)
                     }
                 }
             }

@@ -49,71 +49,41 @@ import kotlin.math.sqrt
 import kotlin.random.Random
 
 internal val standardSplashQuotes = listOf(
-    "Discovering Patterns of Creation...",
-    "Beyond Numbers. Beyond Limits.",
-    "The Language of the Cosmos...",
-    "Mathematics is the language in which the universe is written.",
-    "Every star follows a law. Every law follows a number.",
-    "From atoms to galaxies, mathematics connects everything.",
-    "The universe speaks in patterns. Mathematics helps us listen.",
-    "Infinity is not a destination. It is a journey of discovery.",
-    "Behind every mystery lies an equation waiting to be understood.",
-    "Numbers reveal what words cannot explain.",
-    "The cosmos is a grand equation still being solved.",
-    "Where imagination meets logic, mathematics begins.",
-    "To understand the universe, first understand its language.",
-    "Every pattern hides a mathematical story.",
-    "Logic is the bridge between curiosity and truth.",
-    "Mathematics transforms wonder into understanding.",
-    "Every solution begins with a question.",
-    "Great discoveries start with simple observations.",
-    "The universe runs on principles, not coincidences.",
-    "In every number lies a possibility.",
-    "Every theorem was once an unanswered question.",
-    "The beauty of mathematics is its endless depth.",
-    "Nature counts. Mathematics explains.",
-    "Equations are the fingerprints of reality.",
-    "Mathematics illuminates the unseen.",
-    "Every curve tells a story.",
-    "Patterns are the poetry of science.",
-    "The journey to knowledge begins with a single idea.",
-    "Infinity starts with one.",
-    "Numbers build worlds.",
-    "Mathematics is the architecture of existence.",
-    "Every formula captures a piece of reality.",
-    "Understanding begins with observation.",
-    "Explore. Discover. Prove.",
-    "Curiosity is the first equation.",
-    "The future belongs to those who understand patterns.",
-    "Great minds see connections where others see chaos.",
-    "Mathematics is the science of possibilities.",
-    "Every discovery expands the horizon of knowledge.",
-    "Truth leaves mathematical footprints.",
-    "Logic reveals hidden paths.",
-    "Every answer unlocks new questions.",
-    "Mathematics turns complexity into clarity.",
-    "Knowledge grows where curiosity persists.",
-    "Every dimension begins with a point.",
-    "The universe rewards those who seek understanding.",
-    "Think deeper. See further.",
-    "Explore the finite. Imagine the infinite.",
-    "The next breakthrough begins here.",
-    "Reaching Infinity...",
+    "The Universe Speaks Mathematics",
+    "Decode the Patterns of the Universe",
+    "Math is the Universal Language",
+    "Numbers. Patterns. Possibilities.",
+    "The Universe is Written in Mathematics",
+    "Discover the Mathematics of the Universe",
+    "Unlock the Patterns of the Universe",
+    "Where Numbers Explain the Universe",
+    "Mathematics Reveals the Universe",
+    "The Language Behind the Universe",
+    "Numbers Tell the Story of the Universe",
+    "Discover the Patterns Behind Everything",
+    "Decode the Mathematics of Everything",
+    "Where Patterns Become Understanding",
+    "Numbers. Logic. Infinity.",
+    "Patterns. Logic. Discovery.",
+    "Numbers. Patterns. Infinity.",
+    "Think. Discover. Understand.",
+    "Explore. Decode. Discover.",
+    "Observe. Calculate. Discover.",
+    "Discover the Logic of the Universe",
+    "Explore the Patterns of Everything",
+    "Mathematics Behind Everything",
+    "Every Pattern Has a Story",
+    "Every Number Reveals a Pattern",
+    "Where Mathematics Meets Infinity",
+    "From Numbers to the Universe",
+    "From Patterns to Possibilities",
+    "Infinity Begins with Mathematics",
+    "See the Universe Through Mathematics",
 )
 
-internal val featuredSplashQuotes = listOf(
-    "The universe is not made of things. It is made of relationships.",
-    "Reality leaves clues. Mathematics deciphers them.",
-    "Every galaxy, every atom, every thought follows a pattern.",
-    "The search for truth begins with a single number.",
-    "Between zero and infinity lies everything we know.",
-)
-
-internal fun weightedSplashQuotes(): List<String> =
-    standardSplashQuotes + List(4) { featuredSplashQuotes }.flatten()
+internal fun weightedSplashQuotes(): List<String> = standardSplashQuotes
 
 internal fun randomSplashQuote(random: Random = Random.Default): String {
-    // Featured lines receive four times the probability of a regular line.
     val weighted = weightedSplashQuotes()
     return weighted[random.nextInt(weighted.size)]
 }
@@ -131,7 +101,6 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
     val progress = timeline.value
     val logoAlpha = phase(progress, .48f, .67f) * (1f - phase(progress, .96f, 1f) * .10f)
     val titleAlpha = phase(progress, .58f, .76f)
-    val quoteAlpha = phase(progress, .22f, .38f) * (1f - phase(progress, .82f, .94f))
     val calculationAlpha = phase(progress, .72f, .82f)
     val legalAlpha = phase(progress, .88f, .96f)
 
@@ -143,7 +112,7 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
                     radius = 1_350f,
                 ),
             )
-            .semantics { contentDescription = "Total Math animated splash screen" },
+            .semantics { contentDescription = "AI Explorer mathematics splash screen" },
     ) {
         MathematicalUniverse(progress, Modifier.fillMaxSize())
 
@@ -166,17 +135,19 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
+                .fillMaxWidth()
                 .padding(top = 174.dp, start = 22.dp, end = 22.dp)
                 .graphicsLayer { alpha = titleAlpha },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "TOTAL MATH",
+                text = quote,
                 color = Color.White,
-                fontSize = 25.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Black,
-                letterSpacing = 2.sp,
-                maxLines = 1,
+                textAlign = TextAlign.Center,
+                lineHeight = 28.sp,
+                maxLines = 2,
             )
             Text(
                 text = "Visual Proofs  •  Interactive Learning",
@@ -187,21 +158,6 @@ internal fun AiExplorerSplashScreen(modifier: Modifier = Modifier) {
                 maxLines = 1,
             )
         }
-
-        Text(
-            text = quote,
-            color = Color(0xFFDCEAFF),
-            fontSize = 11.sp,
-            lineHeight = 15.sp,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(start = 28.dp, end = 28.dp, bottom = 102.dp)
-                .graphicsLayer { alpha = quoteAlpha },
-        )
 
         Text(
             text = "Calculating Infinity...",

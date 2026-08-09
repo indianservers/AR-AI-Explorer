@@ -3,6 +3,7 @@ package com.indianservers.aiexplorer.input
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -33,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -40,6 +44,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
@@ -74,9 +79,9 @@ enum class MathKeyboardPage(val label: String) {
     LETTERS("abc"),
     TRIG("trig"),
     ADVANCED("Math+"),
-    SYMBOLS("αβ"),
+    SYMBOLS("sym"),
     UNITS("units"),
-    COMMANDS("…"),
+    COMMANDS("..."),
 }
 
 private enum class AdvancedMathGroup(val label: String) {
@@ -126,6 +131,7 @@ data class MathKey(
     val description: String = label,
     val tone: MathKeyTone? = null,
     val action: MathKeyAction = MathKeyAction.INSERT,
+    val variants: List<MathKey> = emptyList(),
 )
 
 enum class MathKeyTone { NUMBER, VARIABLE, OPERATOR, FUNCTION, CONSTANT, BRACKET, RELATION, CALCULUS, UNIT, GENERAL }
@@ -223,7 +229,7 @@ object MathKeyboardHistory {
 
 internal val basicNumberPadRows = listOf(
     listOf(MathKey("7", tone = MathKeyTone.NUMBER), MathKey("8", tone = MathKeyTone.NUMBER), MathKey("9", tone = MathKeyTone.NUMBER), MathKey("÷", "/", description = "Divide operator", tone = MathKeyTone.OPERATOR)),
-    listOf(MathKey("4", tone = MathKeyTone.NUMBER), MathKey("5", tone = MathKeyTone.NUMBER), MathKey("6", tone = MathKeyTone.NUMBER), MathKey("×", "*", description = "Multiply operator", tone = MathKeyTone.OPERATOR)),
+    listOf(MathKey("4", tone = MathKeyTone.NUMBER), MathKey("5", tone = MathKeyTone.NUMBER), MathKey("6", tone = MathKeyTone.NUMBER), MathKey("*", "*", description = "Multiply operator", tone = MathKeyTone.OPERATOR)),
     listOf(MathKey("1", tone = MathKeyTone.NUMBER), MathKey("2", tone = MathKeyTone.NUMBER), MathKey("3", tone = MathKeyTone.NUMBER), MathKey("−", "-", description = "Subtract operator", tone = MathKeyTone.OPERATOR)),
     listOf(MathKey("0", tone = MathKeyTone.NUMBER), MathKey(".", tone = MathKeyTone.NUMBER), MathKey("=", description = "Equals", tone = MathKeyTone.RELATION), MathKey("+", description = "Add operator", tone = MathKeyTone.OPERATOR)),
     listOf(
@@ -340,7 +346,17 @@ internal val calculusKeys = listOf(
 )
 
 internal val advancedNotationKeys = listOf(
-    MathKey("x²", "(%s)^2", description = "Square"),
+    MathKey(
+        "x²",
+        "(%s)^2",
+        description = "Square. Long press for more powers and roots.",
+        variants = listOf(
+            MathKey("x³", "(%s)^3", description = "Cube"),
+            MathKey("xⁿ", "(%s)^()", 1, description = "Power with editable exponent"),
+            MathKey("√x", "sqrt(%s)", 1, description = "Square root"),
+            MathKey("∛x", "cbrt(%s)", 1, description = "Cube root"),
+        ),
+    ),
     MathKey("1/x", "1/(%s)", 1, description = "Reciprocal"),
     MathKey(
         "ⁿ√",
@@ -383,7 +399,21 @@ private val symbolKeys = listOf(
     MathKey("α"), MathKey("β"), MathKey("γ"), MathKey("δ"),
     MathKey("θ", "theta"), MathKey("λ", "lambda"), MathKey("μ", "mu"), MathKey("σ", "sigma"),
     MathKey("φ", "phi"), MathKey("ω", "omega"), MathKey("Δ", "delta"), MathKey("π", "pi"),
-    MathKey("<"), MathKey(">"), MathKey("≤", "<="), MathKey("≥", ">="),
+    MathKey("<"),
+    MathKey(">"),
+    MathKey(
+        "≤",
+        "<=",
+        description = "Less than or equal. Long press for related comparisons.",
+        tone = MathKeyTone.RELATION,
+        variants = listOf(
+            MathKey("<", "<", description = "Less than", tone = MathKeyTone.RELATION),
+            MathKey("≥", ">=", description = "Greater than or equal", tone = MathKeyTone.RELATION),
+            MathKey(">", ">", description = "Greater than", tone = MathKeyTone.RELATION),
+            MathKey("≠", "!=", description = "Not equal", tone = MathKeyTone.RELATION),
+        ),
+    ),
+    MathKey("≥", ">="),
     MathKey("≠", "!="), MathKey("≈"), MathKey("∈"), MathKey("∉"),
     MathKey("∪"), MathKey("∩"), MathKey("⊂"), MathKey("∅", "{}"),
 )
@@ -474,7 +504,7 @@ internal val commonMathKeys = listOf(
     MathKey("=", description = "Equals"),
     MathKey("+", description = "Add"),
     MathKey("−", "-", description = "Subtract"),
-    MathKey("×", "*", description = "Multiply"),
+    MathKey("*", "*", description = "Multiply"),
     MathKey("÷", "/", description = "Divide"),
     MathKey("(", description = "Open parenthesis"),
     MathKey(")", description = "Close parenthesis"),
@@ -606,7 +636,7 @@ private fun commandSearchText(command: MathCommand): String = listOf(
 
 private fun contextualKeys(context: MathKeyboardContext): List<MathKey> = when (context) {
     MathKeyboardContext.GRAPH_2D -> listOf(
-        MathKey("y=", "y="), MathKey("x"), MathKey("x²", "x^2"), MathKey("sin(x)", "sin(x)"),
+        MathKey("y=", "y="), MathKey("x"), advancedNotationKeys.first().copy(insertion = "x^2", cursorBack = 0), MathKey("sin(x)", "sin(x)"),
         MathKey("r=", "r="), MathKey("(x,y)", "(,)", 2), MathKey("if", "if(,,)", 3),
     )
     MathKeyboardContext.GRAPH_3D -> listOf(
@@ -623,7 +653,7 @@ private fun contextualKeys(context: MathKeyboardContext): List<MathKey> = when (
         MathKey("x"),
         MathKey("y"),
         MathKey("π", "pi"),
-        MathKey("x²", "(%s)^2"),
+        advancedNotationKeys.first(),
         MathKey("√", "sqrt(%s)", 1, description = "Toggle square-root radicand", action = MathKeyAction.TOGGLE_ROOT),
     )
 }
@@ -1137,6 +1167,46 @@ private fun MatrixDimensionPicker(
 
 private enum class MoreKeyboardTool { MATRIX, STATISTICS, SETS, UNITS }
 
+private enum class SmartKeyboardMode(val label: String) {
+    BASIC("Basic"),
+    ALGEBRA("Algebra"),
+    GEOMETRY("Geometry"),
+    CALCULUS("Calculus"),
+    SYMBOLS("Symbols"),
+    RECENT("Recent"),
+}
+
+private val algebraSmartKeys = listOf(
+    MathKey("x", "x", description = "Variable x", tone = MathKeyTone.VARIABLE),
+    MathKey("y", "y", description = "Variable y", tone = MathKeyTone.VARIABLE),
+    advancedNotationKeys.first(),
+    MathKey("xⁿ", "(%s)^()", 1, description = "Power with editable exponent"),
+    MathKey("solve", "solve(,x)", 3, description = "Solve for x"),
+    MathKey("factor", "factor()", 1, description = "Factor expression"),
+    MathKey("expand", "expand()", 1, description = "Expand expression"),
+    MathKey("simplify", "simplify()", 1, description = "Simplify expression"),
+    MathKey("≤", "<=", description = "Less than or equal", tone = MathKeyTone.RELATION, variants = symbolKeys.first { it.insertion == "<=" }.variants),
+)
+
+private val geometrySmartKeys = listOf(
+    MathKey("(x,y)", "(,)", 2, description = "Point"),
+    MathKey("(x,y,z)", "(,,)", 3, description = "3D point"),
+    MathKey("dist", "distance((,),(,))", 8, description = "Distance between points"),
+    MathKey("mid", "midpoint((,),(,))", 8, description = "Midpoint"),
+    MathKey("circle", "(x-)^2+(y-)^2=^2", 14, description = "Circle equation"),
+    MathKey("line", "y=()*x+", 6, description = "Line equation"),
+    MathKey("angle", "angle(,,)", 3, description = "Angle"),
+)
+
+private fun smartModeKeys(mode: SmartKeyboardMode): List<MathKey> = when (mode) {
+    SmartKeyboardMode.BASIC -> commonMathKeys + contextualKeys(MathKeyboardContext.GENERAL)
+    SmartKeyboardMode.ALGEBRA -> algebraSmartKeys
+    SmartKeyboardMode.GEOMETRY -> geometrySmartKeys
+    SmartKeyboardMode.CALCULUS -> calculusKeys
+    SmartKeyboardMode.SYMBOLS -> symbolKeys + setAndLogicKeys
+    SmartKeyboardMode.RECENT -> MathKeyboardHistory.recentSymbols.toList()
+}
+
 @Composable
 private fun CommandBrowser(
     query: String,
@@ -1150,11 +1220,45 @@ private fun CommandBrowser(
     currentCursor: Int,
 ) {
     var activeTool by remember { mutableStateOf<MoreKeyboardTool?>(null) }
+    var smartMode by remember { mutableStateOf(SmartKeyboardMode.BASIC) }
     var matrixRows by remember { mutableStateOf(2) }
     var matrixColumns by remember { mutableStateOf(2) }
     val visible = filterMathCommands(query, category, context)
     val categories = mathKeyboardCommands.map(MathCommand::category).distinct().sorted()
     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            SmartKeyboardMode.entries.forEach { mode ->
+                KeyboardTab(mode.label, smartMode == mode) {
+                    smartMode = mode
+                    activeTool = null
+                }
+            }
+        }
+        if (smartMode != SmartKeyboardMode.BASIC) {
+            if (smartMode == SmartKeyboardMode.RECENT) {
+                val recentExpressions = (MathKeyboardHistory.favourites + MathKeyboardHistory.recent).distinct().take(6)
+                if (recentExpressions.isEmpty() && MathKeyboardHistory.recentSymbols.isEmpty()) {
+                    Text("Recent keys appear here after you use the keyboard.", color = IntentMathPalette.Muted, fontSize = 10.sp)
+                }
+                if (recentExpressions.isNotEmpty()) {
+                    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        recentExpressions.forEach { expression ->
+                            KeyboardActionKey(expression.take(18), "Insert recent expression $expression") {
+                                onInsert(MathKey(expression.take(18), expression, description = "Recent expression $expression"))
+                            }
+                        }
+                    }
+                }
+            }
+            MoreKeyGrid(
+                keys = smartModeKeys(smartMode),
+                onInsert = onInsert,
+                heading = smartMode.label,
+                currentSource = currentSource,
+                currentCursor = currentCursor,
+            )
+            return@Column
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
             KeyboardActionKey("▦", "Open matrix dimension picker", Modifier.weight(1f)) {
                 activeTool = MoreKeyboardTool.MATRIX.takeUnless { activeTool == it }
@@ -1319,10 +1423,18 @@ private fun MathKeyboardKey(
     val isMultiply = key.insertion == "*"
     val isVariable = tone == MathKeyTone.VARIABLE
     val accent = mathKeyToneColor(tone)
+    var variantsExpanded by remember { mutableStateOf(false) }
     Box(
         modifier
             .height(appearance.mainHeight)
-            .clickable(role = Role.Button) { onClick(key) }
+            .pointerInput(key) {
+                detectTapGestures(
+                    onTap = { onClick(key) },
+                    onLongPress = {
+                        if (key.variants.isNotEmpty()) variantsExpanded = true else onClick(key)
+                    },
+                )
+            }
             .background(
                 when {
                     MathKeyboardPreferences.highContrast -> Color.Black
@@ -1339,6 +1451,7 @@ private fun MathKeyboardKey(
             .semantics {
                 contentDescription = key.description
                 this.selected = selected
+                role = Role.Button
             },
         contentAlignment = Alignment.Center,
     ) {
@@ -1353,6 +1466,20 @@ private fun MathKeyboardKey(
             )
             if (isMultiply && appearance != MathKeyboardKeySize.COMPACT) {
                 Text("multiply", color = IntentMathPalette.Muted, fontSize = (6.5f * appearance.fontScale).sp, maxLines = 1)
+            }
+        }
+        DropdownMenu(
+            expanded = variantsExpanded,
+            onDismissRequest = { variantsExpanded = false },
+        ) {
+            key.variants.forEach { variant ->
+                DropdownMenuItem(
+                    text = { Text(variant.label, color = IntentMathPalette.Ink, fontWeight = FontWeight.SemiBold) },
+                    onClick = {
+                        variantsExpanded = false
+                        onClick(variant)
+                    },
+                )
             }
         }
     }

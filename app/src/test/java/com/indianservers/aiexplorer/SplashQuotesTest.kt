@@ -8,24 +8,23 @@ import org.junit.Test
 class SplashQuotesTest {
     @Test
     fun quoteCatalogContainsAllUniqueRequestedLines() {
-        val allQuotes = standardSplashQuotes + featuredSplashQuotes
-
-        assertEquals(55, allQuotes.size)
-        assertEquals(55, allQuotes.distinct().size)
+        assertEquals(30, standardSplashQuotes.size)
+        assertEquals(30, standardSplashQuotes.distinct().size)
+        assertTrue("The Universe Speaks Mathematics" in standardSplashQuotes)
+        assertTrue("See the Universe Through Mathematics" in standardSplashQuotes)
     }
 
     @Test
-    fun featuredQuotesReceiveFourEntriesInWeightedPool() {
+    fun requestedQuotesReceiveEqualEntriesInWeightedPool() {
         val weighted = weightedSplashQuotes()
 
-        assertEquals(70, weighted.size)
+        assertEquals(30, weighted.size)
         standardSplashQuotes.forEach { assertEquals(1, weighted.count { candidate -> candidate == it }) }
-        featuredSplashQuotes.forEach { assertEquals(4, weighted.count { candidate -> candidate == it }) }
     }
 
     @Test
     fun randomQuoteAlwaysComesFromCatalog() {
-        val catalog = (standardSplashQuotes + featuredSplashQuotes).toSet()
+        val catalog = standardSplashQuotes.toSet()
 
         repeat(500) { seed ->
             assertTrue(randomSplashQuote(Random(seed)) in catalog)
