@@ -1,0 +1,556 @@
+[
+  {
+    "title": "Abstract and Advanced Algebra",
+    "icon": "AAA",
+    "summary": "Abstract and Advanced Algebra lessons covering Rings and Fields, Groups, Advanced Algebraic Geometry.",
+    "subtopics": [
+      "Rings and Fields",
+      "Groups",
+      "Advanced Algebraic Geometry",
+      "Classical Algebraic Geometry",
+      "Field and Galois Theory",
+      "Category Theory"
+    ],
+    "levels": [
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 116
+  },
+  {
+    "title": "Algebra",
+    "icon": "A",
+    "summary": "Algebra lessons covering Complex Numbers, Expressions Identities Factorisation, Sequences and Series.",
+    "subtopics": [
+      "Complex Numbers",
+      "Expressions Identities Factorisation",
+      "Sequences and Series",
+      "Introduction to Algebra",
+      "Polynomials",
+      "Determinants"
+    ],
+    "levels": [
+      "Class4",
+      "Class5",
+      "Class6",
+      "Class7",
+      "Class8",
+      "Class9",
+      "Class10",
+      "Class11",
+      "Class12"
+    ],
+    "lessonCount": 150
+  },
+  {
+    "title": "Applied and Interdisciplinary Mathematics",
+    "icon": "AAI",
+    "summary": "Applied and Interdisciplinary Mathematics lessons covering Research Design and Communication, Mathematical Research, Models.",
+    "subtopics": [
+      "Research Design and Communication",
+      "Mathematical Research",
+      "Models",
+      "Strategies",
+      "Information",
+      "Machine Learning Mathematics"
+    ],
+    "levels": [
+      "Class12",
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 107
+  },
+  {
+    "title": "Arithmetic",
+    "icon": "A",
+    "summary": "Arithmetic lessons covering Four Operations, Factors and Operations, Multiplication.",
+    "subtopics": [
+      "Four Operations",
+      "Factors and Operations",
+      "Multiplication",
+      "Addition",
+      "Division",
+      "Subtraction"
+    ],
+    "levels": [
+      "Class2",
+      "Class3",
+      "Class4",
+      "Class5"
+    ],
+    "lessonCount": 56
+  },
+  {
+    "title": "Calculus",
+    "icon": "C",
+    "summary": "Calculus lessons covering Continuity and Differentiability, Limits and Derivatives, Applications of Derivatives.",
+    "subtopics": [
+      "Continuity and Differentiability",
+      "Limits and Derivatives",
+      "Applications of Derivatives",
+      "Differentiation",
+      "Integrals",
+      "Limits and Continuity"
+    ],
+    "levels": [
+      "Class11",
+      "Class12",
+      "UG"
+    ],
+    "lessonCount": 86
+  },
+  {
+    "title": "Complex Analysis",
+    "icon": "CA",
+    "summary": "Complex Analysis lessons covering Complex Integration, Advanced Complex Analysis, Complex Functions.",
+    "subtopics": [
+      "Complex Integration",
+      "Advanced Complex Analysis",
+      "Complex Functions"
+    ],
+    "levels": [
+      "UG",
+      "PG"
+    ],
+    "lessonCount": 23
+  },
+  {
+    "title": "Coordinate Geometry",
+    "icon": "CG",
+    "summary": "Coordinate Geometry lessons covering Vectors, Conic Sections, Three-Dimensional Geometry.",
+    "subtopics": [
+      "Vectors",
+      "Conic Sections",
+      "Three-Dimensional Geometry",
+      "Graphs",
+      "Straight Lines",
+      "Cartesian System"
+    ],
+    "levels": [
+      "Class8",
+      "Class9",
+      "Class10",
+      "Class11",
+      "Class12"
+    ],
+    "lessonCount": 52
+  },
+  {
+    "title": "Data Handling and Patterns",
+    "icon": "DHA",
+    "summary": "Data Handling and Patterns lessons covering Statistics and Probability, Data Handling, Patterns.",
+    "subtopics": [
+      "Statistics and Probability",
+      "Data Handling",
+      "Patterns",
+      "Statistics",
+      "Measurement"
+    ],
+    "levels": [
+      "Class1",
+      "Class2",
+      "Class3",
+      "Class5",
+      "Class6",
+      "Class7",
+      "Class8"
+    ],
+    "lessonCount": 65
+  },
+  {
+    "title": "Differential Equations and PDE",
+    "icon": "DEA",
+    "summary": "Differential Equations and PDE lessons covering Ordinary Differential Equations, Advanced PDE, PDE Foundations.",
+    "subtopics": [
+      "Ordinary Differential Equations",
+      "Advanced PDE",
+      "PDE Foundations",
+      "Nonlinear PDE",
+      "Computational Mathematics",
+      "Finite Element Analysis"
+    ],
+    "levels": [
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 56
+  },
+  {
+    "title": "Differential Geometry",
+    "icon": "DG",
+    "summary": "Differential Geometry lessons covering Curves and Surfaces, Smooth Manifolds, Riemannian Geometry.",
+    "subtopics": [
+      "Curves and Surfaces",
+      "Smooth Manifolds",
+      "Riemannian Geometry"
+    ],
+    "levels": [
+      "UG",
+      "PG"
+    ],
+    "lessonCount": 30
+  },
+  {
+    "title": "Discrete Mathematics",
+    "icon": "DM",
+    "summary": "Discrete Mathematics lessons covering Advanced Combinatorics, Graph Theory, Advanced Graph Theory.",
+    "subtopics": [
+      "Advanced Combinatorics",
+      "Graph Theory",
+      "Advanced Graph Theory",
+      "Counting Methods",
+      "Theoretical Computer Science",
+      "Combinatorics"
+    ],
+    "levels": [
+      "Class12",
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 60
+  },
+  {
+    "title": "Dynamical Systems and Control",
+    "icon": "DSA",
+    "summary": "Dynamical Systems and Control lessons covering Nonlinear Dynamics, Systems and Control, Advanced Control.",
+    "subtopics": [
+      "Nonlinear Dynamics",
+      "Systems and Control",
+      "Advanced Control",
+      "Advanced Dynamical Systems"
+    ],
+    "levels": [
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 34
+  },
+  {
+    "title": "Financial and Commercial Mathematics",
+    "icon": "FAC",
+    "summary": "Financial and Commercial Mathematics lessons covering Comparing Quantities, Quantitative Finance, Percent Applications.",
+    "subtopics": [
+      "Comparing Quantities",
+      "Quantitative Finance",
+      "Percent Applications"
+    ],
+    "levels": [
+      "Class7",
+      "Class8",
+      "PG"
+    ],
+    "lessonCount": 26
+  },
+  {
+    "title": "Fractions Decimals Ratio and Percent",
+    "icon": "FDR",
+    "summary": "Fractions Decimals Ratio and Percent lessons covering Fractions, Decimals, Basic Fractions.",
+    "subtopics": [
+      "Fractions",
+      "Decimals",
+      "Basic Fractions",
+      "Ratio and Proportion",
+      "Percent"
+    ],
+    "levels": [
+      "Class2",
+      "Class3",
+      "Class4",
+      "Class5",
+      "Class6"
+    ],
+    "lessonCount": 68
+  },
+  {
+    "title": "Geometry",
+    "icon": "G",
+    "summary": "Geometry lessons covering Basic Geometry, Angles and Shapes, Olympiad Geometry.",
+    "subtopics": [
+      "Basic Geometry",
+      "Angles and Shapes",
+      "Olympiad Geometry",
+      "Lines and Angles",
+      "Triangles",
+      "Quadrilaterals"
+    ],
+    "levels": [
+      "Class1",
+      "Class2",
+      "Class3",
+      "Class4",
+      "Class5",
+      "Class6",
+      "Class7",
+      "Class8",
+      "Class9",
+      "Class10",
+      "Class12"
+    ],
+    "lessonCount": 172
+  },
+  {
+    "title": "Linear Algebra",
+    "icon": "LA",
+    "summary": "Linear Algebra lessons covering Advanced Linear Algebra, Vector Spaces, Systems and Matrices.",
+    "subtopics": [
+      "Advanced Linear Algebra",
+      "Vector Spaces",
+      "Systems and Matrices"
+    ],
+    "levels": [
+      "UG"
+    ],
+    "lessonCount": 31
+  },
+  {
+    "title": "Logic and Foundations",
+    "icon": "LAF",
+    "summary": "Logic and Foundations lessons covering Set Theory, Logic, Logic and Proof.",
+    "subtopics": [
+      "Set Theory",
+      "Logic",
+      "Logic and Proof",
+      "Advanced Set Theory",
+      "Computability",
+      "Model Theory"
+    ],
+    "levels": [
+      "Class11",
+      "UG",
+      "PhD"
+    ],
+    "lessonCount": 58
+  },
+  {
+    "title": "Measurement",
+    "icon": "M",
+    "summary": "Measurement lessons covering Length Mass Capacity, Money, Metric Awareness.",
+    "subtopics": [
+      "Length Mass Capacity",
+      "Money",
+      "Metric Awareness",
+      "Time and Money",
+      "Mass and Capacity",
+      "Metric Measures"
+    ],
+    "levels": [
+      "Class1",
+      "Class2",
+      "Class3",
+      "Class4"
+    ],
+    "lessonCount": 59
+  },
+  {
+    "title": "Mensuration",
+    "icon": "M",
+    "summary": "Mensuration lessons covering Perimeter and Area, Circles and Solids, Heron and Solids.",
+    "subtopics": [
+      "Perimeter and Area",
+      "Circles and Solids",
+      "Heron and Solids",
+      "Area Surface Area Volume",
+      "Area and Volume"
+    ],
+    "levels": [
+      "Class4",
+      "Class5",
+      "Class6",
+      "Class7",
+      "Class8",
+      "Class9",
+      "Class10"
+    ],
+    "lessonCount": 51
+  },
+  {
+    "title": "Multivariable and Vector Calculus",
+    "icon": "MAV",
+    "summary": "Multivariable and Vector Calculus lessons covering Several Variables, Vector Fields, Multiple Integrals.",
+    "subtopics": [
+      "Several Variables",
+      "Vector Fields",
+      "Multiple Integrals"
+    ],
+    "levels": [
+      "UG"
+    ],
+    "lessonCount": 31
+  },
+  {
+    "title": "Number Theory",
+    "icon": "NT",
+    "summary": "Number Theory lessons covering Elementary and Algebraic Number Theory, Divisibility and Congruences, Mathematical Cryptography.",
+    "subtopics": [
+      "Elementary and Algebraic Number Theory",
+      "Divisibility and Congruences",
+      "Mathematical Cryptography",
+      "Number Fields",
+      "Advanced Algebraic Number Theory",
+      "Advanced Analytic Number Theory"
+    ],
+    "levels": [
+      "Class12",
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 75
+  },
+  {
+    "title": "Numbers and Number Systems",
+    "icon": "NAN",
+    "summary": "Numbers and Number Systems lessons covering Large Numbers, Whole Numbers and Integers, Counting and Number Sense.",
+    "subtopics": [
+      "Large Numbers",
+      "Whole Numbers and Integers",
+      "Counting and Number Sense",
+      "Real Numbers",
+      "Numbers to 1000",
+      "Addition"
+    ],
+    "levels": [
+      "Class1",
+      "Class2",
+      "Class3",
+      "Class4",
+      "Class5",
+      "Class6",
+      "Class7",
+      "Class8",
+      "Class9",
+      "Class10"
+    ],
+    "lessonCount": 137
+  },
+  {
+    "title": "Numerical Analysis",
+    "icon": "NA",
+    "summary": "Numerical Analysis lessons covering Numerical Computation, Advanced Numerical Methods.",
+    "subtopics": [
+      "Numerical Computation",
+      "Advanced Numerical Methods"
+    ],
+    "levels": [
+      "UG",
+      "PG"
+    ],
+    "lessonCount": 27
+  },
+  {
+    "title": "Optimization and Operations Research",
+    "icon": "OAO",
+    "summary": "Optimization and Operations Research lessons covering Optimization, Nonlinear Optimization, Advanced Convex Optimization.",
+    "subtopics": [
+      "Optimization",
+      "Nonlinear Optimization",
+      "Advanced Convex Optimization",
+      "Discrete Optimization",
+      "Stochastic Optimization"
+    ],
+    "levels": [
+      "Class12",
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 47
+  },
+  {
+    "title": "Probability and Statistics",
+    "icon": "PAS",
+    "summary": "Probability and Statistics lessons covering Statistics, Advanced Probability, Probability.",
+    "subtopics": [
+      "Statistics",
+      "Advanced Probability",
+      "Probability",
+      "Mathematical Statistics",
+      "Probability Foundations",
+      "Probability Distributions"
+    ],
+    "levels": [
+      "Class4",
+      "Class9",
+      "Class10",
+      "Class11",
+      "Class12",
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 152
+  },
+  {
+    "title": "Real and Functional Analysis",
+    "icon": "RAF",
+    "summary": "Real and Functional Analysis lessons covering Measure and Integration, Measure Theory, Metric Spaces.",
+    "subtopics": [
+      "Measure and Integration",
+      "Measure Theory",
+      "Metric Spaces",
+      "Harmonic Analysis",
+      "Continuity Differentiation Integration",
+      "Functional and Operator Analysis"
+    ],
+    "levels": [
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 107
+  },
+  {
+    "title": "Sets Relations and Functions",
+    "icon": "SRA",
+    "summary": "Sets Relations and Functions lessons covering Sets, Relations and Functions, Functions.",
+    "subtopics": [
+      "Sets",
+      "Relations and Functions",
+      "Functions",
+      "Inverse Trigonometric Functions",
+      "Relations"
+    ],
+    "levels": [
+      "Class11",
+      "Class12"
+    ],
+    "lessonCount": 48
+  },
+  {
+    "title": "Topology and Geometry",
+    "icon": "TAG",
+    "summary": "Topology and Geometry lessons covering General Topology, Advanced Algebraic Topology, Algebraic Topology I.",
+    "subtopics": [
+      "General Topology",
+      "Advanced Algebraic Topology",
+      "Algebraic Topology I",
+      "General Topology II",
+      "Advanced Riemannian Geometry",
+      "Differential Topology"
+    ],
+    "levels": [
+      "UG",
+      "PG",
+      "PhD"
+    ],
+    "lessonCount": 51
+  },
+  {
+    "title": "Trigonometry",
+    "icon": "T",
+    "summary": "Trigonometry lessons covering Trigonometric Ratios, Applications.",
+    "subtopics": [
+      "Trigonometric Ratios",
+      "Applications"
+    ],
+    "levels": [
+      "Class10"
+    ],
+    "lessonCount": 12
+  }
+]

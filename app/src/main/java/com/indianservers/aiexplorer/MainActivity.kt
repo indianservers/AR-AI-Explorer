@@ -543,7 +543,17 @@ data class AppSettings(
     val largeTouchTargets: Boolean = false,
     val decimalPrecision: Int = 2,
     val colorScheme: AppColorScheme = AppColorScheme.Modern,
+    val learnerName: String = "",
+    val learnerClass: String = "",
+    val learnerStandard: String = "",
+    val learningComfort: LearningComfort = LearningComfort.Balanced,
 )
+
+enum class LearningComfort(val label: String, val description: String) {
+    Gentle("Gentle", "More examples, slower pace and simpler words"),
+    Balanced("Balanced", "Normal pace with clear examples"),
+    Advanced("Advanced", "Deeper ideas, proofs and challenge prompts"),
+}
 
 internal data class MathWorkspaceOption(val title: String, val description: String, val icon: String)
 
@@ -2773,7 +2783,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     var menuOffset by remember { mutableStateOf(Offset.Zero) }
     var dockOffset by remember { mutableStateOf(Offset.Zero) }
     val showSplash = false
-    var showAppearanceSettings by rememberSaveable { mutableStateOf(false) }
+    var showSettings by rememberSaveable { mutableStateOf(false) }
     var showExitConfirmation by rememberSaveable { mutableStateOf(false) }
     var showClearConfirmation by rememberSaveable { mutableStateOf(false) }
     val hostActivity = LocalActivity.current
@@ -2813,7 +2823,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
     }
     BackHandler {
         when {
-            showAppearanceSettings -> showAppearanceSettings = false
+            showSettings -> showSettings = false
             showClearConfirmation -> showClearConfirmation = false
             showExitConfirmation -> showExitConfirmation = false
             vm.showMathLanding && !vm.hasDismissibleOverlay() -> showExitConfirmation = true
@@ -2869,7 +2879,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         MathHubUi.Screen(
                             vm = vm,
                             wide = wide,
-                            onAppearanceClick = { showAppearanceSettings = true },
+                            onSettingsClick = { showSettings = true },
                         )
                     } else if (vm.showShapesExplorer) {
                         ShapesExplorerScreen(vm, wide = wide)
@@ -2986,7 +2996,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             label = "Settings",
                             icon = "settings",
                             iconOnly = true,
-                            onClick = { showAppearanceSettings = true },
+                            onClick = { showSettings = true },
                         )
                     }
                 }
@@ -3002,14 +3012,14 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             ),
                     )
                 }
-                if (showAppearanceSettings) {
-                    AppAppearanceDialog(
-                        selected = vm.settings.colorScheme,
-                        onSelect = { scheme ->
-                            applyAppPalette(scheme.palette)
-                            vm.updateSettings { it.copy(colorScheme = scheme) }
+                if (showSettings) {
+                    AppSettingsDialog(
+                        settings = vm.settings,
+                        onSettingsChange = { next ->
+                            applyAppPalette(next.colorScheme.palette)
+                            vm.updateSettings { next }
                         },
-                        onDismiss = { showAppearanceSettings = false },
+                        onDismiss = { showSettings = false },
                     )
                 }
                 if (showExitConfirmation) {
@@ -3123,12 +3133,182 @@ private fun primaryHomeCategoryToolTitle(category: MathHomeCategory): String = w
     else -> category.toolTitles.firstOrNull().orEmpty()
 }
 
+private fun learnerDisplayName(settings: AppSettings): String = settings.learnerName.trim().ifBlank { "Learner" }
+
+private fun personalizedHomeMessage(settings: AppSettings, recentTools: List<String>): String {
+    val name = learnerDisplayName(settings)
+    val classText = settings.learnerClass.trim().ifBlank { settings.learnerStandard.trim() }
+    val classTopic = when {
+        classText.contains("11") || classText.contains("12") -> "calculus"
+        classText.contains("10") || classText.contains("9") -> "coordinate geometry"
+        classText.contains("1") || classText.contains("2") -> "number bonds"
+        classText.contains("3") || classText.contains("4") -> "multiplication patterns"
+        classText.contains("5") || classText.contains("6") -> "fractions"
+        classText.contains("7") || classText.contains("8") -> "linear equations"
+        classText.contains("pg", ignoreCase = true) || classText.contains("degree", ignoreCase = true) -> "real analysis"
+        else -> "fractions"
+    }
+    val recent = recentTools.firstOrNull()?.takeIf { it.isNotBlank() }
+    val topic = recent ?: classTopic
+    val thought = when ((name.length + classText.length + java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR)) % 5) {
+        0 -> "Did you know a graph is just a picture of changing numbers?"
+        1 -> "Did you know mistakes often show exactly what to practise next?"
+        2 -> "Did you know one good example can unlock a whole formula?"
+        3 -> "Did you know drawing a problem can make it much easier?"
+        else -> "Did you know maths becomes calmer when we solve one small step first?"
+    }
+    val tone = when (settings.learningComfort) {
+        LearningComfort.Gentle -> "We can go slowly and use friendly examples."
+        LearningComfort.Balanced -> "We can learn with clear steps and quick practice."
+        LearningComfort.Advanced -> "We can add deeper ideas when you are ready."
+    }
+    return "Namaste $name, happy to see you again. Shall we explore $topic now? $thought $tone"
+}
+
+@Composable
+@OptIn(ExperimentalLayoutApi::class)
+private fun AppSettingsDialog(
+    settings: AppSettings,
+    onSettingsChange: (AppSettings) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var draft by remember(settings) { mutableStateOf(settings) }
+    val scrollState = rememberScrollState()
+    Dialog(onDismissRequest = onDismiss) {
+        GlassPanel(
+            Modifier
+                .adaptiveDialogWidth()
+                .widthIn(max = 620.dp)
+                .adaptiveFocusGroup()
+                .tvRemoteScrollable(scrollState)
+                .verticalScroll(scrollState),
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text("Settings", color = Ink, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                    Text("Profile, comfort and themes stay 100% offline on this device.", color = Muted, fontSize = 11.sp)
+                }
+                GlowButton("Close", icon = "close", iconOnly = true, onClick = onDismiss)
+            }
+
+            Text("Learner Profile", color = Cyan, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold)
+            OutlinedTextField(
+                value = draft.learnerName,
+                onValueChange = { draft = draft.copy(learnerName = it.take(32)); onSettingsChange(draft) },
+                label = { Text("Name") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = draft.learnerClass,
+                    onValueChange = { draft = draft.copy(learnerClass = it.take(20)); onSettingsChange(draft) },
+                    label = { Text("Class") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f),
+                )
+                OutlinedTextField(
+                    value = draft.learnerStandard,
+                    onValueChange = { draft = draft.copy(learnerStandard = it.take(20)); onSettingsChange(draft) },
+                    label = { Text("Standard") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            Text("Learning Comfort", color = Violet, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LearningComfort.entries.forEach { comfort ->
+                    val selected = draft.learningComfort == comfort
+                    Column(
+                        Modifier
+                            .widthIn(min = 142.dp, max = 190.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (selected) Violet.copy(.20f) else SurfaceB.copy(.62f))
+                            .border(1.dp, if (selected) Violet else Muted.copy(.25f), RoundedCornerShape(8.dp))
+                            .clickable {
+                                draft = draft.copy(learningComfort = comfort)
+                                onSettingsChange(draft)
+                            }
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(if (selected) "${comfort.label} selected" else comfort.label, color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(comfort.description, color = Muted, fontSize = 9.sp, lineHeight = 12.sp)
+                    }
+                }
+            }
+
+            Text("Comfort Controls", color = Green, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold)
+            SettingsSwitchRow("Large touch targets", "More room for small hands and relaxed tapping.", draft.largeTouchTargets) {
+                draft = draft.copy(largeTouchTargets = it); onSettingsChange(draft)
+            }
+            SettingsSwitchRow("Reduced motion", "Calmer screens for students who prefer less animation.", draft.reducedMotion) {
+                draft = draft.copy(reducedMotion = it); onSettingsChange(draft)
+            }
+            SettingsSwitchRow("Spoken maths", "Prepare explanations for read-aloud support.", draft.spokenMath) {
+                draft = draft.copy(spokenMath = it); onSettingsChange(draft)
+            }
+            SettingsSwitchRow("Haptics", "Gentle touch feedback where supported.", draft.haptics) {
+                draft = draft.copy(haptics = it); onSettingsChange(draft)
+            }
+
+            Text("Theme", color = Amber, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AppColorScheme.entries.forEach { scheme ->
+                    val active = scheme == draft.colorScheme
+                    Column(
+                        Modifier
+                            .widthIn(min = 132.dp, max = 190.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(scheme.palette.surfaceAlt)
+                            .border(if (active) 2.dp else 1.dp, if (active) scheme.palette.primary else scheme.palette.muted.copy(.28f), RoundedCornerShape(8.dp))
+                            .clickable {
+                                draft = draft.copy(colorScheme = scheme)
+                                onSettingsChange(draft)
+                            }
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(7.dp),
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                            listOf(scheme.palette.primary, scheme.palette.secondary, scheme.palette.success, scheme.palette.warning).forEach { color ->
+                                Box(Modifier.size(15.dp).clip(RoundedCornerShape(3.dp)).background(color))
+                            }
+                        }
+                        Text(if (active) "${scheme.displayName} selected" else scheme.displayName, color = scheme.palette.ink, fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
+                        Text(scheme.description, color = scheme.palette.muted, fontSize = 9.sp, lineHeight = 12.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsSwitchRow(label: String, description: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(SurfaceB.copy(.45f))
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(label, color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text(description, color = Muted, fontSize = 9.sp, lineHeight = 12.sp)
+        }
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
+    }
+}
+
 private object MathHubUi {
 @Composable
 fun Screen(
     vm: ExplorerViewModel,
     wide: Boolean,
-    onAppearanceClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     val adaptiveProfile = LocalAdaptiveDeviceProfile.current
     val navigationPolicy = adaptiveProfile.navigationPolicy
@@ -3138,10 +3318,12 @@ fun Screen(
     var selectedLearningCategory by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedHomeCategory by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPreview by rememberSaveable { mutableStateOf<String?>(null) }
+    var showHomeMenu by rememberSaveable { mutableStateOf(false) }
     var workspaceOpenRequest by remember { mutableIntStateOf(0) }
     val hubScrollState = rememberScrollState()
     val workspacesRequester = remember { BringIntoViewRequester() }
     val allTools = remember { (MathCreationTools + MathLearningTools + SuggestedMathTools).distinctBy { it.title } }
+    val personalMessage = remember(vm.settings, vm.recentMathTools) { personalizedHomeMessage(vm.settings, vm.recentMathTools) }
     val visibleTools = remember(query) {
         val normalized = query.trim().lowercase()
         if (normalized.isBlank()) allTools
@@ -3277,6 +3459,7 @@ fun Screen(
             ) {
                 TransparentIcon("SUM", Cyan)
                 Column(Modifier.weight(1f)) {
+                    Text("Namaskar ${learnerDisplayName(vm.settings)},", color = Muted, fontSize = 8.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
                     Text("Mathematics", color = Ink, fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
                     Text("Explorer", color = Cyan, fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
                     Text("Explore  ·  Learn  ·  Master", color = Muted, fontSize = 9.sp, maxLines = 1)
@@ -3293,12 +3476,56 @@ fun Screen(
                     onClick = vm::openSubjectHub,
                 )
                 GlowButton(
-                    label = "Appearance",
+                    label = "Menu",
                     icon = "settings",
                     iconOnly = true,
-                    onClick = onAppearanceClick,
+                    onClick = { showHomeMenu = !showHomeMenu },
                 )
             }
+        }
+
+        AnimatedVisibility(showHomeMenu) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(SurfaceA.copy(.90f))
+                    .border(1.dp, Cyan.copy(.30f), RoundedCornerShape(12.dp))
+                    .padding(7.dp),
+                horizontalArrangement = Arrangement.spacedBy(7.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                GlowButton("Settings", icon = "settings") {
+                    showHomeMenu = false
+                    onSettingsClick()
+                }
+                GlowButton("Adaptive", icon = "AI") {
+                    showHomeMenu = false
+                    vm.openAdaptiveMathLearning()
+                }
+                GlowButton("Learn All", icon = "All") {
+                    showHomeMenu = false
+                    vm.openMathsLearnAll()
+                }
+            }
+        }
+
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(Brush.horizontalGradient(listOf(Cyan.copy(.12f), Violet.copy(.08f), Color.Transparent)))
+                .border(1.dp, Cyan.copy(.20f), RoundedCornerShape(14.dp))
+                .padding(horizontal = 11.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp),
+        ) {
+            Text(personalMessage, color = Ink.copy(.92f), fontSize = 10.sp, lineHeight = 13.sp)
+            Text(
+                "Local profile: ${vm.settings.learningComfort.label}${vm.settings.learnerClass.trim().takeIf { it.isNotBlank() }?.let { " | Class $it" }.orEmpty()}",
+                color = Muted,
+                fontSize = 8.sp,
+                maxLines = 1,
+            )
         }
 
         OutlinedTextField(
@@ -3410,7 +3637,7 @@ fun Screen(
                 }
                 Column(Modifier.weight(1f)) {
                     Text("MATH CONCEPTS", color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
-                    Text("${MathConceptCatalog.concepts.size} subjects · Class 6 to PG", color = Muted, fontSize = 9.sp)
+                    Text("${MathConceptCatalog.concepts.size} subjects · Class 1 to PhD", color = Muted, fontSize = 9.sp)
                 }
                 Text(if (showConcepts) "COLLAPSE  ▲" else "EXPAND  ▼", color = conceptsAccent, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
             }
@@ -3497,25 +3724,7 @@ fun Screen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(9.dp),
                                     ) {
-                                        Box(
-                                            Modifier
-                                                .size(44.dp)
-                                                .clip(RoundedCornerShape(14.dp))
-                                                .background(
-                                                    Brush.radialGradient(
-                                                        listOf(conceptAccent.copy(.38f), conceptAccent.copy(.12f)),
-                                                    ),
-                                                )
-                                                .border(1.dp, conceptAccent.copy(.82f), RoundedCornerShape(14.dp)),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            Text(
-                                                concept.icon,
-                                                color = conceptAccent,
-                                                fontSize = if (concept.icon.length > 3) 9.sp else 15.sp,
-                                                fontWeight = FontWeight.Black,
-                                            )
-                                        }
+                                        MathConceptIconImage(concept.title, Modifier.size(44.dp), 14.dp)
                                         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                             if (isTrig) {
                                                 Text("★ FEATURED", color = conceptAccent, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
@@ -3933,7 +4142,7 @@ fun Screen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(9.dp),
                     ) {
-                        TransparentIcon(concept.icon, Violet)
+                        MathConceptIconImage(concept.title, Modifier.size(32.dp), 10.dp)
                         Column(Modifier.weight(1f)) {
                             Text(concept.title, color = Ink, fontWeight = FontWeight.Bold)
                             Text(concept.subtopics.joinToString(" · "), color = Muted, fontSize = 9.sp, maxLines = 2)
@@ -5957,8 +6166,17 @@ private fun MathematicsMenuPanel(
                                     .padding(7.dp),
                                 verticalArrangement = Arrangement.spacedBy(5.dp),
                             ) {
-                                GlowButton("${concept.title} · All", icon = concept.icon) {
-                                    vm.openConceptLibrary(concept.title)
+                                Row(
+                                    Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                                        .background(Violet.copy(alpha = .10f))
+                                        .border(1.dp, Violet.copy(alpha = .35f), RoundedCornerShape(12.dp))
+                                        .clickable { vm.openConceptLibrary(concept.title) }
+                                        .padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(9.dp),
+                                ) {
+                                    MathConceptIconImage(concept.title, Modifier.size(34.dp), 10.dp)
+                                    Text("${concept.title} · All", color = Ink, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 }
                                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                                     concept.subtopics.forEach { subConcept ->

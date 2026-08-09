@@ -6,9 +6,9 @@ import org.junit.Test
 
 class MathConceptCatalogTest {
     @Test
-    fun catalogContainsAllTwentySevenConceptAreas() {
-        assertEquals(27, MathConceptCatalog.concepts.size)
-        assertEquals(27, MathConceptCatalog.concepts.map { it.title }.distinct().size)
+    fun catalogContainsCuratedWorkbookConceptAreasUnderForty() {
+        assertEquals(29, MathConceptCatalog.concepts.size)
+        assertEquals(29, MathConceptCatalog.concepts.map { it.title }.distinct().size)
     }
 
     @Test
@@ -16,13 +16,22 @@ class MathConceptCatalogTest {
         val coordinateGeometry = MathConceptCatalog.find("Coordinate Geometry")
 
         assertEquals(
-            listOf("Cartesian plane", "Distance & midpoint", "Straight lines", "Circles & conics"),
+            listOf("Vectors", "Conic Sections", "Three-Dimensional Geometry", "Graphs", "Straight Lines", "Cartesian System"),
             coordinateGeometry?.subtopics,
         )
     }
 
     @Test
-    fun classWiseCoverageRunsFromSixToPostgraduate() {
+    fun probabilityAndStatisticsAppearsAsOneClearConcept() {
+        val probabilityConcepts = MathConceptCatalog.concepts.filter {
+            "probability" in it.title.lowercase() || "statistics" in it.title.lowercase()
+        }
+
+        assertEquals(listOf("Probability and Statistics"), probabilityConcepts.map { it.title })
+    }
+
+    @Test
+    fun classWiseCoverageRunsFromOneToPhd() {
         MathClassBand.entries.forEach { band ->
             assertTrue("${band.label} should have concept coverage", MathConceptCatalog.search("", band).isNotEmpty())
         }
@@ -30,7 +39,7 @@ class MathConceptCatalogTest {
 
     @Test
     fun searchFindsSubConceptsNotOnlySubjectTitles() {
-        val matches = MathConceptCatalog.search("midpoint", null)
+        val matches = MathConceptCatalog.search("conic", null)
 
         assertTrue(matches.any { it.title == "Coordinate Geometry" })
     }

@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.indianservers.aiexplorer.AppColorScheme
 import androidx.datastore.preferences.preferencesDataStore
 import com.indianservers.aiexplorer.AppSettings
+import com.indianservers.aiexplorer.LearningComfort
 import com.indianservers.aiexplorer.SavedWorkspace
 import com.indianservers.aiexplorer.workspace.MathModule
 import com.indianservers.aiexplorer.workspace.WorkspaceProjectCodec
@@ -73,6 +74,10 @@ class DurableMathStore(context: Context) {
             preferences[spokenMath] = value.spokenMath; preferences[graphSonification] = value.graphSonification
             preferences[largeTouchTargets] = value.largeTouchTargets; preferences[decimalPrecision] = value.decimalPrecision
             preferences[colorScheme] = value.colorScheme.name
+            preferences[learnerName] = value.learnerName
+            preferences[learnerClass] = value.learnerClass
+            preferences[learnerStandard] = value.learnerStandard
+            preferences[learningComfort] = value.learningComfort.name
         }
     }
 
@@ -87,6 +92,12 @@ class DurableMathStore(context: Context) {
             colorScheme = runCatching {
                 AppColorScheme.valueOf(preferences[colorScheme] ?: AppColorScheme.Modern.name)
             }.getOrDefault(AppColorScheme.Modern),
+            learnerName = preferences[learnerName].orEmpty(),
+            learnerClass = preferences[learnerClass].orEmpty(),
+            learnerStandard = preferences[learnerStandard].orEmpty(),
+            learningComfort = runCatching {
+                LearningComfort.valueOf(preferences[learningComfort] ?: LearningComfort.Balanced.name)
+            }.getOrDefault(LearningComfort.Balanced),
         )
     }
 
@@ -122,5 +133,9 @@ class DurableMathStore(context: Context) {
         val largeTouchTargets = booleanPreferencesKey("large_touch_targets")
         val decimalPrecision = intPreferencesKey("decimal_precision")
         val colorScheme = stringPreferencesKey("color_scheme")
+        val learnerName = stringPreferencesKey("learner_name")
+        val learnerClass = stringPreferencesKey("learner_class")
+        val learnerStandard = stringPreferencesKey("learner_standard")
+        val learningComfort = stringPreferencesKey("learning_comfort")
     }
 }

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import java.security.MessageDigest
 
 data class MathsLesson(
     val id: String,
@@ -38,7 +39,16 @@ data class MathsLearnAllStats(
     val classCount: Int,
 )
 
-private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "maths-learn-all.db", null, 2) {
+private data class BundledConcept(
+    val title: String,
+    val icon: String,
+    val summary: String,
+    val subtopics: String,
+    val levels: String,
+    val lessonCount: Int,
+)
+
+private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "maths-learn-all.db", null, 3) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             """
@@ -61,6 +71,7 @@ private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "mat
         )
         db.execSQL("CREATE INDEX idx_lessons_class_chapter_topic ON lessons(class_level, chapter, topic)")
         db.execSQL("CREATE INDEX idx_lessons_search ON lessons(search_text)")
+        db.createSeedTables()
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -68,6 +79,30 @@ private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "mat
             db.execSQL("ALTER TABLE lessons ADD COLUMN topic TEXT NOT NULL DEFAULT ''")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_lessons_class_chapter_topic ON lessons(class_level, chapter, topic)")
         }
+        if (oldVersion < 3) db.createSeedTables()
+    }
+
+    private fun SQLiteDatabase.createSeedTables() {
+        execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS metadata(
+                key TEXT PRIMARY KEY NOT NULL,
+                value TEXT NOT NULL
+            )
+            """.trimIndent(),
+        )
+        execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS concepts(
+                title TEXT PRIMARY KEY NOT NULL,
+                icon TEXT NOT NULL,
+                summary TEXT NOT NULL,
+                subtopics TEXT NOT NULL,
+                levels TEXT NOT NULL,
+                lesson_count INTEGER NOT NULL
+            )
+            """.trimIndent(),
+        )
     }
 }
 
@@ -76,8 +111,17 @@ class MathsLearnAllRepository(context: Context) {
     private val appContext = context.applicationContext
 
     suspend fun seedBundledLessons(): Int = withContext(Dispatchers.IO) {
-        val lessons = appContext.assets.open("maths_learn_all_lessons.json").bufferedReader().use { reader ->
-            val array = JSONArray(reader.readText())
+        val lessonsJson = appContext.assets.open("maths_learn_all_lessons.json").bufferedReader().use { it.readText() }
+        val conceptsJson = appContext.assets.open("maths_concepts.json").bufferedReader().use { it.readText() }
+        val seedHash = sha256("$lessonsJson\n$conceptsJson")
+
+        database.readableDatabase.useReadable { db ->
+            if (db.metadataValue("seed_hash") == seedHash && db.count("lessons") > 0) {
+                return@withContext db.count("lessons")
+            }
+        }
+
+        val lessons = JSONArray(lessonsJson).let { array ->
             buildList {
                 for (index in 0 until array.length()) {
                     val item = array.getJSONObject(index)
@@ -100,7 +144,24 @@ class MathsLearnAllRepository(context: Context) {
                 }
             }
         }
-        upsertLessons(lessons)
+        val concepts = JSONArray(conceptsJson).let { array ->
+            buildList {
+                for (index in 0 until array.length()) {
+                    val item = array.getJSONObject(index)
+                    add(
+                        BundledConcept(
+                            title = item.getString("title"),
+                            icon = item.getString("icon"),
+                            summary = item.getString("summary"),
+                            subtopics = item.getJSONArray("subtopics").toString(),
+                            levels = item.getJSONArray("levels").toString(),
+                            lessonCount = item.getInt("lessonCount"),
+                        ),
+                    )
+                }
+            }
+        }
+        replaceBundledContent(lessons, concepts, seedHash)
         lessons.size
     }
 
@@ -198,6 +259,22 @@ class MathsLearnAllRepository(context: Context) {
         }
     }
 
+    private fun replaceBundledContent(lessons: List<MathsLesson>, concepts: List<BundledConcept>, seedHash: String) {
+        database.writableDatabase.transaction {
+            delete("lessons", null, null)
+            delete("concepts", null, null)
+            lessons.forEach { lesson ->
+                insertWithOnConflict("lessons", null, lesson.values(), SQLiteDatabase.CONFLICT_REPLACE)
+            }
+            concepts.forEach { concept ->
+                insertWithOnConflict("concepts", null, concept.values(), SQLiteDatabase.CONFLICT_REPLACE)
+            }
+            putMetadata("seed_hash", seedHash)
+            putMetadata("lesson_count", lessons.size.toString())
+            putMetadata("concept_count", concepts.size.toString())
+        }
+    }
+
     private fun MathsLesson.values() = ContentValues().apply {
         put("id", id)
         put("class_level", classLevel)
@@ -212,6 +289,15 @@ class MathsLearnAllRepository(context: Context) {
         put("practice_prompt", practicePrompt)
         put("search_text", listOf(classLevel, chapter, topic, subtopic, introduction, detailedExplanation, realtimeExamples, simplifiedExplanation, advancedExplanation, practicePrompt).joinToString(" ").lowercase())
         put("updated_at", updatedAt)
+    }
+
+    private fun BundledConcept.values() = ContentValues().apply {
+        put("title", title)
+        put("icon", icon)
+        put("summary", summary)
+        put("subtopics", subtopics)
+        put("levels", levels)
+        put("lesson_count", lessonCount)
     }
 
     private fun Cursor.summary() = MathsLessonSummary(
@@ -245,6 +331,17 @@ class MathsLearnAllRepository(context: Context) {
         if (it.moveToFirst()) it.getInt(0) else 0
     }
 
+    private fun SQLiteDatabase.metadataValue(key: String): String? = query("metadata", arrayOf("value"), "key=?", arrayOf(key), null, null, null, "1").use {
+        if (it.moveToFirst()) it.getString(0) else null
+    }
+
+    private fun SQLiteDatabase.putMetadata(key: String, value: String) {
+        insertWithOnConflict("metadata", null, ContentValues().apply {
+            put("key", key)
+            put("value", value)
+        }, SQLiteDatabase.CONFLICT_REPLACE)
+    }
+
     private inline fun <T> SQLiteDatabase.useReadable(block: (SQLiteDatabase) -> T): T = block(this)
 
     private inline fun SQLiteDatabase.transaction(block: SQLiteDatabase.() -> Unit) {
@@ -272,5 +369,10 @@ class MathsLearnAllRepository(context: Context) {
             "practice_prompt",
             "updated_at",
         )
+
+        fun sha256(text: String): String {
+            val bytes = MessageDigest.getInstance("SHA-256").digest(text.toByteArray(Charsets.UTF_8))
+            return bytes.joinToString("") { "%02x".format(it) }
+        }
     }
 }

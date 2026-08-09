@@ -57,8 +57,9 @@ private val ConceptAmber = Color(0xFFFFB63E)
 private val ConceptPink = Color(0xFFFF68A6)
 
 internal enum class MathClassBand(val label: String) {
+    Class1("Class 1"), Class2("Class 2"), Class3("Class 3"), Class4("Class 4"), Class5("Class 5"),
     Class6("Class 6"), Class7("Class 7"), Class8("Class 8"), Class9("Class 9"), Class10("Class 10"),
-    Class11("Class 11"), Class12("Class 12"), UG("UG"), PG("PG"),
+    Class11("Class 11"), Class12("Class 12"), UG("UG"), PG("PG"), PhD("PhD"),
 }
 
 internal data class MathConceptDefinition(
@@ -70,38 +71,36 @@ internal data class MathConceptDefinition(
 )
 
 internal object MathConceptCatalog {
-    private val school = MathClassBand.entries.take(7).toSet()
-    private val senior = MathClassBand.entries.drop(5).toSet()
-    private val university = setOf(MathClassBand.UG, MathClassBand.PG)
-
     val concepts = listOf(
-        concept("Arithmetic", "+-", "Numbers and operations", "Whole numbers", "Fractions & decimals", "Ratio & proportion", "Percentages", levels = school),
-        concept("Pre-Algebra", "x?", "Patterns before symbolic algebra", "Number patterns", "Variables", "Simple equations", "Coordinates", levels = MathClassBand.entries.take(5).toSet()),
-        concept("Algebra", "x", "Expressions, equations and functions", "Expressions", "Linear equations", "Quadratics", "Polynomials", levels = MathClassBand.entries.drop(2).toSet()),
-        concept("Linear Algebra", "Ax", "Vectors, matrices and transformations", "Matrices", "Determinants", "Vector spaces", "Eigenvalues", levels = senior),
-        concept("Geometry", "tri", "Shape, measurement and reasoning", "Lines & angles", "Triangles", "Circles", "Mensuration", levels = school + university),
-        concept("Coordinate Geometry", "xy", "Geometry placed on coordinate axes", "Cartesian plane", "Distance & midpoint", "Straight lines", "Circles & conics", levels = MathClassBand.entries.drop(2).toSet()),
-        concept("Trigonometry", "sin", "Angles, triangles and periodic functions", "Right triangles", "Unit circle", "Identities", "Graphs", levels = MathClassBand.entries.drop(3).toSet()),
-        concept("Precalculus", "f", "Functions leading into calculus", "Functions", "Transformations", "Sequences", "Limits preview", levels = senior),
-        concept("Calculus", "int", "Change, accumulation and limits", "Limits", "Derivatives", "Integrals", "Series", levels = senior),
-        concept("Multivariable Calculus", "dz", "Calculus with several variables", "Partial derivatives", "Multiple integrals", "Vector fields", "Optimization", levels = university),
-        concept("Differential Equations", "dy", "Equations involving rates of change", "First-order ODEs", "Second-order ODEs", "Systems", "Numerical solutions", levels = university),
-        concept("Discrete Mathematics", "nodes", "Finite structures and algorithms", "Relations", "Recurrences", "Trees", "Discrete probability", levels = senior),
-        concept("Number Theory", "123", "Patterns and properties of integers", "Divisibility", "Primes", "Congruences", "Diophantine equations", levels = MathClassBand.entries.toSet()),
-        concept("Set Theory", "sets", "Collections, relations and operations", "Set notation", "Venn operations", "Relations", "Cardinality", levels = MathClassBand.entries.toSet()),
-        concept("Logic", "logic", "Valid reasoning and symbolic statements", "Propositions", "Truth tables", "Implication", "Proof methods", levels = MathClassBand.entries.drop(1).toSet()),
-        concept("Combinatorics", "nCr", "Systematic counting of possibilities", "Counting principles", "Permutations", "Combinations", "Generating functions", levels = MathClassBand.entries.drop(4).toSet()),
-        concept("Probability", "dice", "Quantifying uncertainty", "Sample spaces", "Probability rules", "Conditional probability", "Random variables", levels = MathClassBand.entries.drop(1).toSet()),
-        concept("Statistics", "bar", "Learning from data", "Descriptive statistics", "Charts", "Sampling", "Statistical inference", levels = MathClassBand.entries.drop(1).toSet()),
-        concept("Numerical Methods", "grid", "Approximate mathematical computation", "Root finding", "Interpolation", "Numerical integration", "Error analysis", levels = university),
-        concept("Optimization", "target", "Finding best feasible solutions", "Linear programming", "Gradient methods", "Constraints", "Convexity", levels = senior),
-        concept("Graph Theory", "graph", "Networks of vertices and edges", "Graphs & degree", "Paths & cycles", "Trees", "Network algorithms", levels = senior),
-        concept("Topology", "torus", "Properties preserved by continuous change", "Open sets", "Continuity", "Compactness", "Surfaces", levels = university),
-        concept("Complex Analysis", "i", "Functions of complex variables", "Complex plane", "Analytic functions", "Contour integration", "Residues", levels = university),
-        concept("Real Analysis", "R", "Rigorous foundations of calculus", "Sequences", "Continuity", "Differentiation", "Measure", levels = university),
-        concept("Abstract Algebra", "G", "Groups, rings and algebraic structure", "Groups", "Rings", "Fields", "Homomorphisms", levels = university),
-        concept("Financial Mathematics", "fin", "Mathematics of money and risk", "Simple interest", "Compound interest", "Annuities", "Risk models", levels = MathClassBand.entries.drop(3).toSet()),
-        concept("Mathematical Modelling", "model", "Representing real systems mathematically", "Model design", "Parameter fitting", "Simulation", "Validation", levels = MathClassBand.entries.drop(4).toSet()),
+        concept("Abstract and Advanced Algebra", "AAA", "Abstract and Advanced Algebra lessons covering Rings and Fields, Groups, Advanced Algebraic Geometry.", "Rings and Fields", "Groups", "Advanced Algebraic Geometry", "Classical Algebraic Geometry", "Field and Galois Theory", "Category Theory", levels = setOf(MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Algebra", "A", "Algebra lessons covering Complex Numbers, Expressions Identities Factorisation, Sequences and Series.", "Complex Numbers", "Expressions Identities Factorisation", "Sequences and Series", "Introduction to Algebra", "Polynomials", "Determinants", levels = setOf(MathClassBand.Class4, MathClassBand.Class5, MathClassBand.Class6, MathClassBand.Class7, MathClassBand.Class8, MathClassBand.Class9, MathClassBand.Class10, MathClassBand.Class11, MathClassBand.Class12)),
+        concept("Applied and Interdisciplinary Mathematics", "AAI", "Applied and Interdisciplinary Mathematics lessons covering Research Design and Communication, Mathematical Research, Models.", "Research Design and Communication", "Mathematical Research", "Models", "Strategies", "Information", "Machine Learning Mathematics", levels = setOf(MathClassBand.Class12, MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Arithmetic", "A", "Arithmetic lessons covering Four Operations, Factors and Operations, Multiplication.", "Four Operations", "Factors and Operations", "Multiplication", "Addition", "Division", "Subtraction", levels = setOf(MathClassBand.Class2, MathClassBand.Class3, MathClassBand.Class4, MathClassBand.Class5)),
+        concept("Calculus", "C", "Calculus lessons covering Continuity and Differentiability, Limits and Derivatives, Applications of Derivatives.", "Continuity and Differentiability", "Limits and Derivatives", "Applications of Derivatives", "Differentiation", "Integrals", "Limits and Continuity", levels = setOf(MathClassBand.Class11, MathClassBand.Class12, MathClassBand.UG)),
+        concept("Complex Analysis", "CA", "Complex Analysis lessons covering Complex Integration, Advanced Complex Analysis, Complex Functions.", "Complex Integration", "Advanced Complex Analysis", "Complex Functions", levels = setOf(MathClassBand.UG, MathClassBand.PG)),
+        concept("Coordinate Geometry", "CG", "Coordinate Geometry lessons covering Vectors, Conic Sections, Three-Dimensional Geometry.", "Vectors", "Conic Sections", "Three-Dimensional Geometry", "Graphs", "Straight Lines", "Cartesian System", levels = setOf(MathClassBand.Class8, MathClassBand.Class9, MathClassBand.Class10, MathClassBand.Class11, MathClassBand.Class12)),
+        concept("Data Handling and Patterns", "DHA", "Data Handling and Patterns lessons covering Statistics and Probability, Data Handling, Patterns.", "Statistics and Probability", "Data Handling", "Patterns", "Statistics", "Measurement", levels = setOf(MathClassBand.Class1, MathClassBand.Class2, MathClassBand.Class3, MathClassBand.Class5, MathClassBand.Class6, MathClassBand.Class7, MathClassBand.Class8)),
+        concept("Differential Equations and PDE", "DEA", "Differential Equations and PDE lessons covering Ordinary Differential Equations, Advanced PDE, PDE Foundations.", "Ordinary Differential Equations", "Advanced PDE", "PDE Foundations", "Nonlinear PDE", "Computational Mathematics", "Finite Element Analysis", levels = setOf(MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Differential Geometry", "DG", "Differential Geometry lessons covering Curves and Surfaces, Smooth Manifolds, Riemannian Geometry.", "Curves and Surfaces", "Smooth Manifolds", "Riemannian Geometry", levels = setOf(MathClassBand.UG, MathClassBand.PG)),
+        concept("Discrete Mathematics", "DM", "Discrete Mathematics lessons covering Advanced Combinatorics, Graph Theory, Advanced Graph Theory.", "Advanced Combinatorics", "Graph Theory", "Advanced Graph Theory", "Counting Methods", "Theoretical Computer Science", "Combinatorics", levels = setOf(MathClassBand.Class12, MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Dynamical Systems and Control", "DSA", "Dynamical Systems and Control lessons covering Nonlinear Dynamics, Systems and Control, Advanced Control.", "Nonlinear Dynamics", "Systems and Control", "Advanced Control", "Advanced Dynamical Systems", levels = setOf(MathClassBand.PG, MathClassBand.PhD)),
+        concept("Financial and Commercial Mathematics", "FAC", "Financial and Commercial Mathematics lessons covering Comparing Quantities, Quantitative Finance, Percent Applications.", "Comparing Quantities", "Quantitative Finance", "Percent Applications", levels = setOf(MathClassBand.Class7, MathClassBand.Class8, MathClassBand.PG)),
+        concept("Fractions Decimals Ratio and Percent", "FDR", "Fractions Decimals Ratio and Percent lessons covering Fractions, Decimals, Basic Fractions.", "Fractions", "Decimals", "Basic Fractions", "Ratio and Proportion", "Percent", levels = setOf(MathClassBand.Class2, MathClassBand.Class3, MathClassBand.Class4, MathClassBand.Class5, MathClassBand.Class6)),
+        concept("Geometry", "G", "Geometry lessons covering Basic Geometry, Angles and Shapes, Olympiad Geometry.", "Basic Geometry", "Angles and Shapes", "Olympiad Geometry", "Lines and Angles", "Triangles", "Quadrilaterals", levels = setOf(MathClassBand.Class1, MathClassBand.Class2, MathClassBand.Class3, MathClassBand.Class4, MathClassBand.Class5, MathClassBand.Class6, MathClassBand.Class7, MathClassBand.Class8, MathClassBand.Class9, MathClassBand.Class10, MathClassBand.Class12)),
+        concept("Linear Algebra", "LA", "Linear Algebra lessons covering Advanced Linear Algebra, Vector Spaces, Systems and Matrices.", "Advanced Linear Algebra", "Vector Spaces", "Systems and Matrices", levels = setOf(MathClassBand.UG)),
+        concept("Logic and Foundations", "LAF", "Logic and Foundations lessons covering Set Theory, Logic, Logic and Proof.", "Set Theory", "Logic", "Logic and Proof", "Advanced Set Theory", "Computability", "Model Theory", levels = setOf(MathClassBand.Class11, MathClassBand.UG, MathClassBand.PhD)),
+        concept("Measurement", "M", "Measurement lessons covering Length Mass Capacity, Money, Metric Awareness.", "Length Mass Capacity", "Money", "Metric Awareness", "Time and Money", "Mass and Capacity", "Metric Measures", levels = setOf(MathClassBand.Class1, MathClassBand.Class2, MathClassBand.Class3, MathClassBand.Class4)),
+        concept("Mensuration", "M", "Mensuration lessons covering Perimeter and Area, Circles and Solids, Heron and Solids.", "Perimeter and Area", "Circles and Solids", "Heron and Solids", "Area Surface Area Volume", "Area and Volume", levels = setOf(MathClassBand.Class4, MathClassBand.Class5, MathClassBand.Class6, MathClassBand.Class7, MathClassBand.Class8, MathClassBand.Class9, MathClassBand.Class10)),
+        concept("Multivariable and Vector Calculus", "MAV", "Multivariable and Vector Calculus lessons covering Several Variables, Vector Fields, Multiple Integrals.", "Several Variables", "Vector Fields", "Multiple Integrals", levels = setOf(MathClassBand.UG)),
+        concept("Number Theory", "NT", "Number Theory lessons covering Elementary and Algebraic Number Theory, Divisibility and Congruences, Mathematical Cryptography.", "Elementary and Algebraic Number Theory", "Divisibility and Congruences", "Mathematical Cryptography", "Number Fields", "Advanced Algebraic Number Theory", "Advanced Analytic Number Theory", levels = setOf(MathClassBand.Class12, MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Numbers and Number Systems", "NAN", "Numbers and Number Systems lessons covering Large Numbers, Whole Numbers and Integers, Counting and Number Sense.", "Large Numbers", "Whole Numbers and Integers", "Counting and Number Sense", "Real Numbers", "Numbers to 1000", "Addition", levels = setOf(MathClassBand.Class1, MathClassBand.Class2, MathClassBand.Class3, MathClassBand.Class4, MathClassBand.Class5, MathClassBand.Class6, MathClassBand.Class7, MathClassBand.Class8, MathClassBand.Class9, MathClassBand.Class10)),
+        concept("Numerical Analysis", "NA", "Numerical Analysis lessons covering Numerical Computation, Advanced Numerical Methods.", "Numerical Computation", "Advanced Numerical Methods", levels = setOf(MathClassBand.UG, MathClassBand.PG)),
+        concept("Optimization and Operations Research", "OAO", "Optimization and Operations Research lessons covering Optimization, Nonlinear Optimization, Advanced Convex Optimization.", "Optimization", "Nonlinear Optimization", "Advanced Convex Optimization", "Discrete Optimization", "Stochastic Optimization", levels = setOf(MathClassBand.Class12, MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Probability and Statistics", "PAS", "Probability and Statistics lessons covering Statistics, Advanced Probability, Probability.", "Statistics", "Advanced Probability", "Probability", "Mathematical Statistics", "Probability Foundations", "Probability Distributions", levels = setOf(MathClassBand.Class4, MathClassBand.Class9, MathClassBand.Class10, MathClassBand.Class11, MathClassBand.Class12, MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Real and Functional Analysis", "RAF", "Real and Functional Analysis lessons covering Measure and Integration, Measure Theory, Metric Spaces.", "Measure and Integration", "Measure Theory", "Metric Spaces", "Harmonic Analysis", "Continuity Differentiation Integration", "Functional and Operator Analysis", levels = setOf(MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Sets Relations and Functions", "SRA", "Sets Relations and Functions lessons covering Sets, Relations and Functions, Functions.", "Sets", "Relations and Functions", "Functions", "Inverse Trigonometric Functions", "Relations", levels = setOf(MathClassBand.Class11, MathClassBand.Class12)),
+        concept("Topology and Geometry", "TAG", "Topology and Geometry lessons covering General Topology, Advanced Algebraic Topology, Algebraic Topology I.", "General Topology", "Advanced Algebraic Topology", "Algebraic Topology I", "General Topology II", "Advanced Riemannian Geometry", "Differential Topology", levels = setOf(MathClassBand.UG, MathClassBand.PG, MathClassBand.PhD)),
+        concept("Trigonometry", "T", "Trigonometry lessons covering Trigonometric Ratios, Applications.", "Trigonometric Ratios", "Applications", levels = setOf(MathClassBand.Class10))
     )
 
     fun search(query: String, band: MathClassBand?): List<MathConceptDefinition> {
@@ -162,7 +161,7 @@ internal fun MathConceptExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(selected?.title ?: "Math Concepts", color = ConceptInk, fontSize = 20.sp, fontWeight = FontWeight.Black)
-                Text(if (selected == null) "CLASS 6 TO POSTGRADUATE" else "DIRECT CONCEPT LESSONS", color = ConceptPurple, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                Text(if (selected == null) "CLASS 1 TO PHD" else "DIRECT CONCEPT LESSONS", color = ConceptPurple, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             }
             ConceptButton("HOME", ConceptPurple, vm::returnToMathMenu)
         }
@@ -203,8 +202,9 @@ internal fun MathConceptExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                                 .semantics { contentDescription = "Open ${concept.title} sub concepts" }.padding(11.dp),
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                ConceptIcon(concept.icon, accent); Text("OPEN >", color = accent, fontSize = 8.sp, fontWeight = FontWeight.Black)
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                MathConceptIconImage(concept.title, Modifier.width(44.dp).height(44.dp), 12.dp)
+                                Text("OPEN >", color = accent, fontSize = 8.sp, fontWeight = FontWeight.Black)
                             }
                             Text(concept.title, color = ConceptInk, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                             Text(concept.summary, color = ConceptMuted, fontSize = 9.sp, maxLines = 2)
@@ -261,7 +261,7 @@ internal fun MathConceptExplorerScreen(vm: ExplorerViewModel, wide: Boolean) {
                     }
                 }
             } else {
-                ConceptLesson(selected, selectedSubtopic!!, vm)
+                ConceptLesson(selected, selectedSubtopic, vm)
             }
         }
         Spacer(Modifier.height(16.dp))
@@ -275,7 +275,7 @@ private fun ConceptHero(concept: MathConceptDefinition) {
             .border(1.dp, ConceptPurple.copy(.6f), RoundedCornerShape(20.dp)).padding(14.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(13.dp),
     ) {
-        ConceptIcon(concept.icon, ConceptPurple, 58)
+        MathConceptIconImage(concept.title, Modifier.width(58.dp).height(58.dp), 16.dp)
         Column(Modifier.weight(1f)) {
             Text(concept.title, color = ConceptInk, fontSize = 21.sp, fontWeight = FontWeight.Black)
             Text(concept.summary, color = ConceptMuted, fontSize = 11.sp)
