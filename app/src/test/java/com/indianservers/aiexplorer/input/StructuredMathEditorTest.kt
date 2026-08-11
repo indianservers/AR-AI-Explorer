@@ -194,7 +194,7 @@ class StructuredMathEditorTest {
     @Test
     fun calculusTemplatesRenderAsReadableMathematicsWithIndependentArguments() {
         assertEquals("d(x²)/dx", render("derivative(x²,x)").text)
-        assertEquals("∂(x y)/∂x", render("partial(x*y,x)").text)
+        assertEquals("\u2202(x \u00d7 y)/\u2202x", render("partial(x*y,x)").text)
         val secondDerivative = render("derivative(y,x,2)")
         val thirdDerivative = render("derivative(y,x,3)")
         val fourthDerivative = render("derivative(y,x,4)")
@@ -219,7 +219,7 @@ class StructuredMathEditorTest {
     fun exponentialAndMultiplicationUseConventionalVisualNotation() {
         val rendered = render("exp(600*x)*sin(x)")
 
-        assertEquals("e600 x sin(x)", rendered.text)
+        assertEquals("e600 \u00d7 x \u00d7 sin(x)", rendered.text)
         assertTrue(
             rendered.spanStyles.any {
                 it.item.baselineShift == BaselineShift.Superscript
@@ -227,6 +227,7 @@ class StructuredMathEditorTest {
         )
         assertFalse(rendered.text.contains("exp("))
         assertFalse(rendered.text.contains("*"))
+        assertTrue(rendered.text.contains("\u00d7"))
     }
 
     @Test

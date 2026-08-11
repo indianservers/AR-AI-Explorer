@@ -3,11 +3,7 @@ package com.indianservers.aiexplorer.input
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.calculateCentroid
-import androidx.compose.foundation.gestures.calculatePan
-import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +43,6 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -411,6 +406,17 @@ private fun MathKeyboardOnlyTextField(
     var editorPan by remember { mutableStateOf(Offset.Zero) }
     var editorSize by remember { mutableStateOf(IntSize.Zero) }
     val minimumHeight = if (singleLine) 52.dp else (52 + (minLines.coerceAtLeast(1) - 1) * 22).dp
+    val updateViewport: (Offset, Offset, Float) -> Unit = { centroid, pan, zoom ->
+        val next = transformMathEditorViewport(
+            viewport = MathEditorViewport(editorScale, editorPan),
+            editorSize = editorSize,
+            centroid = centroid,
+            panChange = pan,
+            zoomChange = zoom,
+        )
+        editorScale = next.scale
+        editorPan = next.pan
+    }
     Column(
         modifier
             .fillMaxWidth()
@@ -428,8 +434,23 @@ private fun MathKeyboardOnlyTextField(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(label, color = if (focused) accent else IntentMathPalette.Muted, fontSize = 10.sp)
+            Text(
+                label,
+                color = if (focused) accent else IntentMathPalette.Muted,
+                fontSize = 10.sp,
+                modifier = Modifier.weight(1f),
+            )
             if (value.text.isNotEmpty()) {
+                EditorZoomControl("−", "Zoom out") {
+                    updateViewport(Offset(editorSize.width / 2f, editorSize.height / 2f), Offset.Zero, .8f)
+                }
+                EditorZoomControl("${(editorScale * 100).toInt()}%", "Reset zoom", wide = true) {
+                    editorScale = 1f
+                    editorPan = Offset.Zero
+                }
+                EditorZoomControl("+", "Zoom in") {
+                    updateViewport(Offset(editorSize.width / 2f, editorSize.height / 2f), Offset.Zero, 1.25f)
+                }
                 Box(
                     Modifier
                         .size(22.dp)
@@ -451,23 +472,8 @@ private fun MathKeyboardOnlyTextField(
                 .clipToBounds()
                 .onSizeChanged { editorSize = it }
                 .pointerInput(editorSize) {
-                    awaitEachGesture {
-                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-                        do {
-                            val event = awaitPointerEvent(PointerEventPass.Initial)
-                            if (event.changes.count { it.pressed } >= 2) {
-                                val next = transformMathEditorViewport(
-                                    viewport = MathEditorViewport(editorScale, editorPan),
-                                    editorSize = editorSize,
-                                    centroid = event.calculateCentroid(useCurrent = true),
-                                    panChange = event.calculatePan(),
-                                    zoomChange = event.calculateZoom(),
-                                )
-                                editorScale = next.scale
-                                editorPan = next.pan
-                                event.changes.forEach { it.consume() }
-                            }
-                        } while (event.changes.any { it.pressed })
+                    detectTransformGestures(panZoomLock = false) { centroid, pan, zoom, _ ->
+                        updateViewport(centroid, pan, zoom)
                     }
                 },
         ) {
@@ -584,6 +590,34 @@ private fun MathKeyboardOnlyTextField(
                 fontSize = 8.sp,
             )
         }
+    }
+}
+
+@Composable
+private fun EditorZoomControl(
+    label: String,
+    description: String,
+    wide: Boolean = false,
+    onClick: () -> Unit,
+) {
+    Box(
+        Modifier
+            .size(width = if (wide) 42.dp else 26.dp, height = 26.dp)
+            .background(IntentMathPalette.Command.copy(alpha = .13f), RoundedCornerShape(6.dp))
+            .border(1.dp, IntentMathPalette.Command.copy(alpha = .38f), RoundedCornerShape(6.dp))
+            .semantics {
+                contentDescription = description
+                role = Role.Button
+            }
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            label,
+            color = IntentMathPalette.Ink,
+            fontSize = if (wide) 8.sp else 15.sp,
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 

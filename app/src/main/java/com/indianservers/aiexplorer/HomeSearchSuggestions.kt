@@ -23,6 +23,7 @@ data class HomeSearchSuggestion(
     val concept: Boolean,
     val lessonId: String? = null,
     val conceptTitle: String? = null,
+    val dictionaryTermKey: String? = null,
     val query: String = label,
     val kindLabel: String = if (concept) "Concept" else "Tool",
 )
@@ -70,6 +71,7 @@ fun HomeSearchSuggestions(
                 ) {
                     Text(
                         when {
+                            suggestion.dictionaryTermKey != null -> "A-Z"
                             suggestion.lessonId != null -> "L"
                             suggestion.concept -> "Fx"
                             else -> "S"

@@ -744,6 +744,11 @@ object StructuredMathVisualLayout {
         fontSize = 0.72.em,
         fontWeight = FontWeight.Bold,
     )
+    private val multiplicationStyle = SpanStyle(
+        color = IntentMathPalette.Operator,
+        fontSize = 1.18.em,
+        fontWeight = FontWeight.Bold,
+    )
 
     fun render(source: String): TransformedText {
         val builder = VisualBuilder(source)
@@ -946,8 +951,13 @@ object StructuredMathVisualLayout {
                 index += 2
                 continue
             }
-            if (source[index] == '*') {
-                output.appendReplacement(index, index + 1, "\u2009", inheritedStyle)
+            if (source[index] == '*' || source[index] == '\u00d7') {
+                output.appendReplacement(
+                    index,
+                    index + 1,
+                    " \u00d7 ",
+                    inheritedStyle?.merge(multiplicationStyle) ?: multiplicationStyle,
+                )
                 index++
                 continue
             }

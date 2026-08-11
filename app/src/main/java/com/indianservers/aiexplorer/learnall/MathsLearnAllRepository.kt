@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayInputStream
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 
@@ -130,7 +131,7 @@ private data class BundledConcept(
     val lessonCount: Int,
 )
 
-private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "maths-learn-all.db", null, 6) {
+private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "maths-learn-all.db", null, 7) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
             """
@@ -168,6 +169,7 @@ private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "mat
         if (oldVersion < 4) db.createLearnerStateTables()
         if (oldVersion < 5) db.ensureColumn("lessons", "content_json", "ALTER TABLE lessons ADD COLUMN content_json TEXT NOT NULL DEFAULT ''")
         if (oldVersion < 6) db.createPersonalizedLearningTables()
+        if (oldVersion < 7) db.clearLessonContent()
     }
 
     override fun onOpen(db: SQLiteDatabase) {
@@ -232,6 +234,13 @@ private class MathsLearnAllDb(context: Context) : SQLiteOpenHelper(context, "mat
         execSQL("CREATE INDEX IF NOT EXISTS idx_lesson_progress_saved ON lesson_progress(saved, updated_at)")
         execSQL("CREATE INDEX IF NOT EXISTS idx_lesson_progress_recent ON lesson_progress(last_viewed_at)")
         execSQL("CREATE INDEX IF NOT EXISTS idx_lesson_progress_completed ON lesson_progress(completed, updated_at)")
+    }
+
+    private fun SQLiteDatabase.clearLessonContent() {
+        delete("lessons", null, null)
+        delete("learning_search_index", "item_type IN (?, ?, ?)", arrayOf("lesson", "topic", "chapter"))
+        execSQL("UPDATE concepts SET lesson_count=0")
+        delete("metadata", "key IN (?, ?)", arrayOf("seed_hash", "lesson_count"))
     }
 
     private fun SQLiteDatabase.createPersonalizedLearningTables() {
@@ -378,8 +387,14 @@ class MathsLearnAllRepository(context: Context) {
         val seedHash = sha256("$lessonsJson\n$conceptsJson")
 
         database.readableDatabase.useReadable { db ->
-            if (db.metadataValue("seed_hash") == seedHash && db.count("lessons") > 0 && db.count("learning_search_index") > 0) {
-                return@withContext db.count("lessons")
+            val storedLessonCount = db.metadataValue("lesson_count")?.toIntOrNull()
+            if (db.metadataValue("seed_hash") == seedHash &&
+                storedLessonCount != null &&
+                db.count("lessons") == storedLessonCount &&
+                db.count("concepts") > 0 &&
+                db.count("learning_search_index") > 0
+            ) {
+                return@withContext storedLessonCount
             }
         }
 
@@ -419,7 +434,7 @@ class MathsLearnAllRepository(context: Context) {
                             summary = item.getString("summary"),
                             subtopics = item.getJSONArray("subtopics").toString(),
                             levels = item.getJSONArray("levels").toString(),
-                            lessonCount = item.getInt("lessonCount"),
+                            lessonCount = if (lessons.isEmpty()) 0 else item.getInt("lessonCount"),
                         ),
                     )
                 }
@@ -1090,12 +1105,23 @@ class MathsLearnAllRepository(context: Context) {
 }
 
 private fun Context.readBundledLessonsText(): String {
-    val gzName = "maths_learn_all_lessons.v2.json.gz"
-    val hasStructuredAsset = assets.list("")?.contains(gzName) == true
-    return if (hasStructuredAsset) {
-        GZIPInputStream(assets.open(gzName)).bufferedReader(Charsets.UTF_8).use { it.readText() }
+    // AAPT may transparently unpack .gz assets and expose them without the .gz suffix.
+    val candidates = listOf(
+        "maths_learn_all_lessons.v3.json",
+        "maths_learn_all_lessons.v3.json.gz",
+        "maths_learn_all_lessons.v2.json",
+        "maths_learn_all_lessons.v2.json.gz",
+        "maths_learn_all_lessons.json",
+    )
+    val packagedAssets = assets.list("").orEmpty().toSet()
+    val assetName = candidates.firstOrNull(packagedAssets::contains)
+        ?: return "[]"
+    val bytes = assets.open(assetName).use { it.readBytes() }
+    val isGzip = bytes.size >= 2 && bytes[0] == 0x1f.toByte() && bytes[1] == 0x8b.toByte()
+    return if (isGzip) {
+        GZIPInputStream(ByteArrayInputStream(bytes)).bufferedReader(Charsets.UTF_8).use { it.readText() }
     } else {
-        assets.open("maths_learn_all_lessons.json").bufferedReader().use { it.readText() }
+        bytes.toString(Charsets.UTF_8)
     }
 }
 

@@ -119,7 +119,9 @@ fun MathsLearnAllScreen(
     var savedSummaries by remember { mutableStateOf<List<MathsLessonSummary>>(emptyList()) }
     var recentSummaries by remember { mutableStateOf<List<MathsLessonSummary>>(emptyList()) }
     var loadError by remember { mutableStateOf<String?>(null) }
-    val browsingChapters = query.isBlank() && selectedChapter == null
+    var reloadRequest by remember { mutableStateOf(0) }
+    val browsingClasses = mode == MathsLearnAllMode.ClassExplore && query.isBlank() && selectedClass == null && selectedChapter == null
+    val browsingChapters = query.isBlank() && selectedClass != null && selectedChapter == null
     val browsingTopics = query.isBlank() && selectedChapter != null && selectedTopic == null
     val activeSummaries = if (mode == MathsLearnAllMode.Concepts) conceptSummaries else summaries
     val completedIds = progress.filter { it.completed }.map { it.lessonId }.toSet()
@@ -143,7 +145,7 @@ fun MathsLearnAllScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(reloadRequest) {
         runCatching {
             repository.seedBundledLessons()
             stats = repository.stats()
@@ -153,7 +155,7 @@ fun MathsLearnAllScreen(
             refreshLearnerState()
             loadError = null
         }.onFailure { error ->
-            loadError = "Lessons could not load. Please reopen Learn."
+            loadError = "Bundled lessons could not load. Tap retry."
             stats = MathsLearnAllStats(0, 0, 0)
             concepts = emptyList()
             classes = emptyList()
@@ -272,7 +274,10 @@ fun MathsLearnAllScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(message, color = MaterialTheme.colorScheme.onErrorContainer, modifier = Modifier.weight(1f))
-                            TextButton(onClick = { loadError = null }) { Text("Dismiss") }
+                            TextButton(onClick = {
+                                loadError = null
+                                reloadRequest++
+                            }) { Text("Retry") }
                         }
                     }
                 }
@@ -297,13 +302,24 @@ fun MathsLearnAllScreen(
                     item {
                         LessonBrowseHeader(
                             title = "29 Math concepts",
-                            subtitle = "Tap a concept to see only the sub-lessons connected to it.",
+                            subtitle = "Compact grid. Tap a concept to reveal grouped lessons.",
                             count = concepts.size,
                         )
                     }
-                    itemsIndexed(concepts, key = { _, concept -> concept.title }) { index, concept ->
-                        ConceptListCard(concept = concept, accent = domainAccent(index)) {
-                            selectedConcept = concept
+                    concepts.chunked(2).forEachIndexed { rowIndex, row ->
+                        item(key = "concept-grid-row:$rowIndex") {
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                row.forEachIndexed { offset, concept ->
+                                    ConceptGridCard(
+                                        concept = concept,
+                                        accent = domainAccent(rowIndex * 2 + offset),
+                                        modifier = Modifier.weight(1f),
+                                    ) {
+                                        selectedConcept = concept
+                                    }
+                                }
+                                if (row.size == 1) Spacer(Modifier.weight(1f))
+                            }
                         }
                     }
                 } else {
@@ -357,56 +373,21 @@ fun MathsLearnAllScreen(
                 }
             } else {
             item {
-                LearningDashboardCard(
-                    stats = stats,
-                    progressPercent = progressPercent,
-                    nextLesson = nextLesson,
-                    onContinue = { nextLesson?.let { selectedLessonId = it.id } },
-                )
-            }
-            item {
-                CategoryDashboard(
-                    summaries = summaries,
-                    onSelect = { topic ->
-                        selectedTopic = topic
+                ExploreCompactControls(
+                    selectedClass = selectedClass,
+                    selectedChapter = selectedChapter,
+                    selectedTopic = selectedTopic,
+                    difficulty = difficulty,
+                    learnerPath = learnerPath,
+                    onClear = {
+                        selectedClass = null
+                        selectedChapter = null
+                        selectedTopic = null
                         query = ""
                     },
+                    onDifficulty = { difficulty = it },
+                    onLearnerPath = { learnerPath = it },
                 )
-            }
-            if (recentSummaries.isNotEmpty() || savedSummaries.isNotEmpty()) {
-                item {
-                    QuickLessonShelves(
-                        recent = recentSummaries,
-                        saved = savedSummaries,
-                        completedIds = completedIds,
-                        onOpen = { selectedLessonId = it },
-                    )
-                }
-            }
-            item {
-                Text("Learning style", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LearnerPath.entries.forEach { path ->
-                        FilterChip(
-                            selected = learnerPath == path,
-                            onClick = { learnerPath = path },
-                            label = { Text(path.label) },
-                        )
-                    }
-                }
-                Text(learnerPath.note, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-            item {
-                Text("Difficulty", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LessonDifficulty.entries.forEach { level ->
-                        FilterChip(
-                            selected = difficulty == level,
-                            onClick = { difficulty = level },
-                            label = { Text(level.label) },
-                        )
-                    }
-                }
             }
             item {
                 OutlinedTextField(
@@ -417,43 +398,38 @@ fun MathsLearnAllScreen(
                     singleLine = true,
                 )
             }
-            item {
-                Text("Class", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilterChip(selected = selectedClass == null, onClick = { selectedClass = null }, label = { Text("All") })
-                    classes.forEach { value ->
-                        FilterChip(selected = selectedClass == value, onClick = { selectedClass = value }, label = { Text(value) })
-                    }
-                }
-            }
-            if (chapters.isNotEmpty()) {
+            if (stats.lessonCount == 0 && loadError == null) {
+                item { EmptyContentCard(onRetry = { reloadRequest++ }) }
+            } else if (browsingClasses) {
                 item {
-                    Text("Chapter", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilterChip(selected = selectedChapter == null, onClick = { selectedChapter = null }, label = { Text("All") })
-                        chapters.forEach { value ->
-                            FilterChip(selected = selectedChapter == value, onClick = { selectedChapter = value }, label = { Text(value) })
+                    LessonBrowseHeader(
+                        title = "Choose class level",
+                        subtitle = "Explore is class-wise. Pick one level first, then chapters, topics and lessons.",
+                        count = classes.size,
+                    )
+                }
+                classes.chunked(2).forEachIndexed { rowIndex, row ->
+                    item(key = "class-grid-row:$rowIndex") {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            row.forEach { classLevel ->
+                                ClassLevelGridCard(
+                                    classLevel = classLevel,
+                                    accent = domainAccent(rowIndex),
+                                    modifier = Modifier.weight(1f),
+                                ) {
+                                    selectedClass = classLevel
+                                    selectedChapter = null
+                                    selectedTopic = null
+                                }
+                            }
+                            if (row.size == 1) Spacer(Modifier.weight(1f))
                         }
                     }
                 }
-            }
-            if (topics.isNotEmpty() && !browsingChapters) {
-                item {
-                    Text("Topic", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilterChip(selected = selectedTopic == null, onClick = { selectedTopic = null }, label = { Text("All") })
-                        topics.forEach { value ->
-                            FilterChip(selected = selectedTopic == value, onClick = { selectedTopic = value }, label = { Text(value) })
-                        }
-                    }
-                }
-            }
-            if (stats.lessonCount == 0) {
-                item { EmptyContentCard() }
             } else if (browsingChapters) {
                 item {
                     LessonBrowseHeader(
-                        title = "Browse by chapter",
+                        title = selectedClass ?: "Browse by chapter",
                         subtitle = "Choose a chapter first. Topics and subtopics open on the next screen.",
                         count = chapters.size,
                     )
@@ -564,6 +540,106 @@ private fun ConceptListCard(concept: MathsConcept, accent: Color, onClick: () ->
                 Text("lessons", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
             }
         }
+    }
+}
+
+@Composable
+private fun ConceptGridCard(
+    concept: MathsConcept,
+    accent: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = modifier.heightIn(min = 118.dp).clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(.68f)),
+    ) {
+        Column(
+            Modifier.fillMaxWidth().padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp),
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(accent.copy(.18f)), contentAlignment = Alignment.Center) {
+                    Text(concept.icon, color = accent, fontWeight = FontWeight.Black, fontSize = if (concept.icon.length > 2) 11.sp else 17.sp)
+                }
+                Text("${concept.lessonCount}", color = accent, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleMedium)
+            }
+            Text(concept.title, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleSmall, maxLines = 2)
+            Text(concept.summary, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall, maxLines = 2)
+        }
+    }
+}
+
+@Composable
+private fun ClassLevelGridCard(
+    classLevel: String,
+    accent: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val band = classBandLabel(classLevel)
+    Card(
+        modifier = modifier.heightIn(min = 92.dp).clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(.62f)),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+            Text(band, color = accent, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, maxLines = 1)
+            Text(classLevel, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, maxLines = 2)
+            Text("Open chapters", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
+        }
+    }
+}
+
+@Composable
+private fun ExploreCompactControls(
+    selectedClass: String?,
+    selectedChapter: String?,
+    selectedTopic: String?,
+    difficulty: LessonDifficulty,
+    learnerPath: LearnerPath,
+    onClear: () -> Unit,
+    onDifficulty: (LessonDifficulty) -> Unit,
+    onLearnerPath: (LearnerPath) -> Unit,
+) {
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(.24f))) {
+        Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        listOfNotNull(selectedClass, selectedChapter, selectedTopic).joinToString(" > ").ifBlank { "Explore by class" },
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Black,
+                        maxLines = 1,
+                    )
+                    Text("Class -> Chapter -> Topic -> Lesson", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
+                }
+                TextButton(onClick = onClear) { Text("Reset") }
+            }
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                LessonDifficulty.entries.forEach { level ->
+                    FilterChip(selected = difficulty == level, onClick = { onDifficulty(level) }, label = { Text(level.label) })
+                }
+            }
+            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                LearnerPath.entries.forEach { path ->
+                    FilterChip(selected = learnerPath == path, onClick = { onLearnerPath(path) }, label = { Text(path.label) })
+                }
+            }
+        }
+    }
+}
+
+private fun classBandLabel(classLevel: String): String {
+    val number = Regex("""\d+""").find(classLevel)?.value?.toIntOrNull()
+    return when {
+        number == null -> "Advanced"
+        number <= 2 -> "Foundation"
+        number <= 5 -> "Primary"
+        number <= 8 -> "Middle"
+        number <= 10 -> "Secondary"
+        number <= 12 -> "Senior"
+        else -> "Higher"
     }
 }
 
@@ -802,13 +878,12 @@ private fun LessonNavigationCard(title: String, subtitle: String, meta: String, 
 }
 
 @Composable
-private fun EmptyContentCard() {
+private fun EmptyContentCard(onRetry: () -> Unit) {
     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = .45f))) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Ready for real Maths content", fontWeight = FontWeight.Bold)
-            Text("The SQLite database is created, but no lessons have been imported yet.")
-            Text("Excel columns expected: Class, Chapter, Subtopic, Introduction, Detailed Explanation, Realtime examples.")
-            Text("Optional personalization columns: Simplified Explanation, Advanced Explanation, Practice Prompt.")
+            Text("Bundled lessons are being prepared", fontWeight = FontWeight.Bold)
+            Text("This app includes the compressed Class 1 to advanced maths lesson pack. If this appears after opening Learn, retry loading the bundled content.")
+            Button(onClick = onRetry) { Text("Retry lessons") }
         }
     }
 }

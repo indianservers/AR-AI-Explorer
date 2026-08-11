@@ -352,6 +352,7 @@ import com.indianservers.aiexplorer.learnall.MathsLearnAllMode
 import com.indianservers.aiexplorer.learnall.MathsLearnAllRepository
 import com.indianservers.aiexplorer.learnall.OfflineLearningCoachResponse
 import com.indianservers.aiexplorer.learnall.MathsLearnAllScreen
+import com.indianservers.aiexplorer.mathdictionary.MathDictionaryRepository
 import com.indianservers.aiexplorer.mathdictionary.MathDictionaryScreen
 import com.indianservers.aiexplorer.core.SolutionStepRole
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
@@ -3144,7 +3145,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                         }
                     }
                 }
-                if (!showSplash) {
+                if (!showSplash && !vm.showMathDictionary) {
                     GlobalAiAssistantOverlay(
                         vm = vm,
                         expanded = showAiAssistant,
@@ -3687,7 +3688,9 @@ fun Screen(
     val adaptiveProfile = LocalAdaptiveDeviceProfile.current
     val navigationPolicy = adaptiveProfile.navigationPolicy
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val learningRepository = remember { MathsLearnAllRepository(context) }
+    val dictionaryRepository = remember { MathDictionaryRepository(context) }
     var query by rememberSaveable { mutableStateOf("") }
     var showWorkspaces by rememberSaveable { mutableStateOf(false) }
     var showConcepts by rememberSaveable { mutableStateOf(false) }
@@ -3698,6 +3701,7 @@ fun Screen(
     var workspaceOpenRequest by remember { mutableIntStateOf(0) }
     val hubScrollState = rememberScrollState()
     val workspacesRequester = remember { BringIntoViewRequester() }
+    val searchRequester = remember { BringIntoViewRequester() }
     val allTools = remember { (MathCreationTools + MathLearningTools + SuggestedMathTools).distinctBy { it.title } }
     val personalMessage = remember(vm.settings, vm.recentMathTools) { personalizedHomeMessage(vm.settings, vm.recentMathTools) }
     val visibleTools = remember(query) {
@@ -3721,14 +3725,30 @@ fun Screen(
         }
     }
     var learningSearchResults by remember { mutableStateOf(emptyList<com.indianservers.aiexplorer.learnall.MathsHomeSearchResult>()) }
+    var dictionarySearchResults by remember { mutableStateOf(emptyList<com.indianservers.aiexplorer.mathdictionary.MathDictionaryTermSummary>()) }
     LaunchedEffect(query) {
-        learningSearchResults = if (query.isBlank()) {
-            emptyList()
+        if (query.isBlank()) {
+            learningSearchResults = emptyList()
+            dictionarySearchResults = emptyList()
         } else {
-            runCatching { learningRepository.homeSearch(query, limit = 10) }.getOrDefault(emptyList())
+            learningSearchResults = runCatching { learningRepository.homeSearch(query, limit = 10) }.getOrDefault(emptyList())
+            dictionarySearchResults = runCatching {
+                dictionaryRepository.seedIfNeeded()
+                dictionaryRepository.searchSummaries(query, firstLetter = null, category = null, difficulty = null, bookmarksOnly = false).take(6)
+            }.getOrDefault(emptyList())
         }
     }
-    val enhancedSearchSuggestions = remember(searchSuggestions, learningSearchResults) {
+    val enhancedSearchSuggestions = remember(searchSuggestions, learningSearchResults, dictionarySearchResults) {
+        val dictionaryMatches = dictionarySearchResults.map { term ->
+            HomeSearchSuggestion(
+                label = term.word,
+                supportingText = term.shortDefinition,
+                concept = false,
+                dictionaryTermKey = term.termKey,
+                query = term.word,
+                kindLabel = "Dictionary",
+            )
+        }
         val learningMatches = learningSearchResults.map { result ->
             HomeSearchSuggestion(
                 label = result.title,
@@ -3740,8 +3760,8 @@ fun Screen(
                 kindLabel = result.kind.name,
             )
         }
-        (searchSuggestions + learningMatches)
-            .distinctBy { "${it.kindLabel}:${it.label}:${it.lessonId.orEmpty()}" }
+        (searchSuggestions + learningMatches + dictionaryMatches)
+            .distinctBy { "${it.kindLabel}:${it.label}:${it.lessonId.orEmpty()}:${it.dictionaryTermKey.orEmpty()}" }
             .take(10)
     }
 
@@ -3935,7 +3955,9 @@ fun Screen(
             leadingIcon = { Text("⌕", color = Violet, fontSize = 25.sp, fontWeight = FontWeight.Bold) },
             trailingIcon = { Text("≋", color = Cyan, fontSize = 20.sp, fontWeight = FontWeight.Bold) },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search Mathematics tools" },
+            modifier = Modifier.fillMaxWidth()
+                .bringIntoViewRequester(searchRequester)
+                .semantics { contentDescription = "Global mathematics search for lessons, concepts, dictionary and tools" },
         )
         HomeSearchSuggestions(
             query = query,
@@ -3943,6 +3965,7 @@ fun Screen(
             onSample = { query = it },
             onSuggestion = { suggestion ->
                 when {
+                    suggestion.dictionaryTermKey != null -> vm.openMathDictionary()
                     suggestion.lessonId != null -> vm.openMathLesson(suggestion.lessonId, suggestion.label)
                     suggestion.concept -> vm.openConceptLibrary(suggestion.conceptTitle ?: suggestion.label)
                     suggestion.kindLabel == MathsHomeSearchKind.Topic.name || suggestion.kindLabel == MathsHomeSearchKind.Chapter.name -> vm.openConceptLibrary(suggestion.conceptTitle, suggestion.query)
@@ -4598,6 +4621,13 @@ fun Screen(
             }
             MathHomeNavItem("◇", "Explore", false, Violet) {
                 vm.openConceptLibrary()
+            }
+            MathHomeNavItem("S", "Search", false, Cyan) {
+                selectedHomeCategory = null
+                showWorkspaces = false
+                showConcepts = false
+                query = ""
+                scope.launch { searchRequester.bringIntoView() }
             }
         }
     }
