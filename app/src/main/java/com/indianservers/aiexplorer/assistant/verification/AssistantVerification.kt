@@ -18,10 +18,23 @@ object AssistantVerificationPipeline {
             response.groundingReferences.isNotEmpty() -> AssistantVerificationStatus.VERIFIED
             else -> AssistantVerificationStatus.PARTIALLY_VERIFIED
         }
-        return response.copy(verificationStatus = status, validationIssues = issues.distinct())
+        return response.copy(
+            verificationStatus = status,
+            verificationBadge = AssistantVerificationBadge.from(status),
+            validationIssues = issues.distinct(),
+        )
     }
     fun safeFallback(request: GroundedAssistantRequest, issues: List<String>): AssistantResponse {
         val content = request.verifiedContent.firstOrNull { it.reviewed }
-        return AssistantResponse(content?.text ?: "I cannot verify that response. Open the reviewed lesson and try one smaller step.", AssistantResponseType.FALLBACK, listOfNotNull(content?.id), emptyList(), AssistantVerificationStatus.FALLBACK_USED, issues, null)
+        return AssistantResponse(
+            content?.text ?: "I cannot verify that response. Open the reviewed lesson and try one smaller step.",
+            AssistantResponseType.FALLBACK,
+            listOfNotNull(content?.id),
+            emptyList(),
+            AssistantVerificationStatus.FALLBACK_USED,
+            issues,
+            null,
+            verificationBadge = AssistantVerificationBadge.from(AssistantVerificationStatus.FALLBACK_USED),
+        )
     }
 }

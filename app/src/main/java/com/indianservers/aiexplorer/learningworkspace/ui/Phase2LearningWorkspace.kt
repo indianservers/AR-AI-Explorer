@@ -22,12 +22,19 @@ import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import androidx.core.content.ContextCompat
 import com.indianservers.aiexplorer.assistant.contracts.*
+import com.indianservers.aiexplorer.assistant.continuity.AssistantContinuityPlanner
 import com.indianservers.aiexplorer.assistant.grounding.GroundedRequestFactory
 import com.indianservers.aiexplorer.assistant.local.LocalLearningAssistantProvider
+import com.indianservers.aiexplorer.assistant.operations.AssistantOfflineFeatureStatus
+import com.indianservers.aiexplorer.assistant.operations.AssistantOfflineHealthEngine
+import com.indianservers.aiexplorer.assistant.operations.AssistantPrivacyPayloadBuilder
+import com.indianservers.aiexplorer.assistant.operations.AssistantRouteDecisionEngine
+import com.indianservers.aiexplorer.assistant.operations.AssistantRouteTarget
 import com.indianservers.aiexplorer.assistant.privacy.*
 import com.indianservers.aiexplorer.assistant.routing.AssistantRouter
 import com.indianservers.aiexplorer.assistant.routing.AssistanceNeed
 import com.indianservers.aiexplorer.assistant.providers.RemoteProviderFactory
+import com.indianservers.aiexplorer.assistant.tutoring.AssistantHintLadderBuilder
 import com.indianservers.aiexplorer.curriculum.SchoolSubject
 import com.indianservers.aiexplorer.learningintelligence.learner.LocalLearningIntelligenceService
 import com.indianservers.aiexplorer.learningintelligence.model.*
@@ -62,19 +69,36 @@ private enum class WorkspaceTab { TUTOR, INPUT, EXPERIMENT, ANALYSE, JOURNEYS, S
 @Composable private fun TutorWorkspace(service:LocalLearningIntelligenceService,conceptId:String,settings:ProviderSettings,secrets:SecureSecretStore,onConcept:(String)->Unit){
     val scope=rememberCoroutineScope();val provider=remember{LocalLearningAssistantProvider()};val router=remember(secrets){AssistantRouter(provider,RemoteProviderFactory.providers(secrets))};var question by remember{mutableStateOf("")};var response by remember{mutableStateOf<AssistantResponse?>(null)};var style by remember{mutableStateOf(ExplanationStyle.INTUITIVE)};var hintOrdinal by remember{mutableIntStateOf(0)}
     val concepts=com.indianservers.aiexplorer.learningintelligence.reference.LearningIntelligenceCatalog.concepts
+    val state=service.state(conceptId)
+    val previewQuestion=question.ifBlank{"Help me choose the next step"}
+    val previewRequest=GroundedRequestFactory.local(conceptId,previewQuestion,state.masteryState,HintLevel.entries[hintOrdinal.coerceIn(HintLevel.entries.indices)],style)
+    val previewNeed=if(previewQuestion.contains("in another way",true)||previewQuestion.startsWith("why",true))AssistanceNeed.OPEN_ENDED else AssistanceNeed.ROUTINE
+    val remoteProviders=RemoteProviderFactory.providers(secrets)
+    val routePreview=AssistantRouteDecisionEngine.decide(previewNeed,settings.selectedProvider.takeIf{it!=ProviderKind.NONE}?.name?.lowercase(),settings.consent,remoteProviders,requestHasSteps=previewRequest.learnerSteps.isNotEmpty())
+    val health=AssistantOfflineHealthEngine.assess(provider,service,settings.consent,remoteProviders)
+    val recap=AssistantContinuityPlanner.recap(service)
+    val ladder=AssistantHintLadderBuilder.from(previewRequest)
+    val privacyPayload=AssistantPrivacyPayloadBuilder.build(previewRequest,settings.consent)
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val wide=maxWidth>=840.dp
         val content: @Composable () -> Unit = { LazyColumn(Modifier.fillMaxSize().padding(12.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
         item{Text("Grounded Socratic tutor",style=MaterialTheme.typography.headlineSmall);Text("Local reviewed guidance · ${service.state(conceptId).masteryState.name.replace('_',' ')}");Text("The tutor asks one focused question and never changes verified formulas or simulation results.")}
+        item{AssistantStatusStrip(health.summary,routePreview.target.name.lowercase().replaceFirstChar(Char::uppercase),privacyPayload.redactedFields.size,recap.nextAction?.title)}
+        recap.nextAction?.let{action->item{ElevatedCard(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){Text("Next offline action",style=MaterialTheme.typography.titleSmall);Text(action.title,style=MaterialTheme.typography.titleMedium);Text(action.reason,style=MaterialTheme.typography.bodySmall);Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){AssistantMiniChip("${action.minutes} min");AssistantMiniChip(action.priority.name.lowercase().replaceFirstChar(Char::uppercase));action.activityId?.let{AssistantMiniChip("Activity")}}}}}}
         item{Text("Active concept");Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){concepts.take(8).forEach{c->FilterChip(conceptId==c.conceptId,{onConcept(c.conceptId)},label={Text(c.conceptId.substringAfter('-').take(12))})}}}
         item{Text("Explanation style");Row(horizontalArrangement=Arrangement.spacedBy(4.dp)){ExplanationStyle.entries.take(4).forEach{s->FilterChip(style==s,{style=s},label={Text(s.name.substringBefore('_').lowercase())})}}}
         item{OutlinedTextField(question,{question=it},Modifier.fillMaxWidth().semantics{contentDescription="Ask the local Socratic tutor"},label={Text("Ask a question or enter your step")},minLines=2);Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){Button(onClick={scope.launch{val state=service.state(conceptId);val text=question.ifBlank{"Help me choose the next step"};val request=GroundedRequestFactory.local(conceptId,text,state.masteryState,HintLevel.entries[hintOrdinal.coerceIn(HintLevel.entries.indices)],style);val need=if(text.contains("in another way",true)||text.startsWith("why",true))AssistanceNeed.OPEN_ENDED else AssistanceNeed.ROUTINE;response=runCatching{router.respond(request,need,settings.selectedProvider.takeIf{it!=ProviderKind.NONE}?.name?.lowercase(),settings.consent)}.getOrElse{router.respond(request)} }}){Text(if(settings.consent.cloudEnabled)"Ask (local first)" else "Ask locally")};OutlinedButton({hintOrdinal=(hintOrdinal+1).coerceAtMost(HintLevel.entries.lastIndex);question="Give me the next bounded hint"}){Text("Deeper hint")}}}
         response?.let{r->item{ElevatedCard(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp)){Text(r.text);Text("${r.verificationStatus.name.replace('_',' ')} · ${r.providerId?:"fallback"}",style=MaterialTheme.typography.labelMedium);Text("Sources: ${r.groundingReferences.joinToString()}")}}}}
+        item{ElevatedCard(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){Text("Bounded hint preview",style=MaterialTheme.typography.titleSmall);Text(ladder.nextHint?.text?:"No local hint is available for this level yet.",style=MaterialTheme.typography.bodySmall);Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){AssistantMiniChip("Max ${ladder.allowedMaximum.name.lowercase().replaceFirstChar(Char::uppercase)}");AssistantMiniChip("${ladder.hints.size} hint(s)");AssistantMiniChip(if(routePreview.target==AssistantRouteTarget.CLOUD)"Cloud gated" else "Offline")}}}}
         item{VerifiedPracticePanel(conceptId)}
         } }
         if(wide) Row { Box(Modifier.weight(1f)){content()};Surface(Modifier.width(300.dp).fillMaxHeight(),tonalElevation=2.dp){Column(Modifier.padding(16.dp)){Text("Supporting pane",style=MaterialTheme.typography.titleMedium);Text("Tutor, notebook and active visual can remain visible together on tablets and landscape screens.")}} } else content()
     }
 }
+
+@Composable private fun AssistantStatusStrip(health:String,route:String,redacted:Int,nextAction:String?){ElevatedCard(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){Text("Assistant readiness",style=MaterialTheme.typography.titleSmall);Text(health,style=MaterialTheme.typography.bodySmall);Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){AssistantMiniChip(route);AssistantMiniChip("$redacted redacted");nextAction?.let{AssistantMiniChip("Next ready")}}}}}
+
+@Composable private fun AssistantMiniChip(label:String){Surface(shape=MaterialTheme.shapes.small,tonalElevation=2.dp,color=MaterialTheme.colorScheme.secondaryContainer){Text(label,Modifier.padding(horizontal=8.dp,vertical=4.dp),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSecondaryContainer)}}
 
 @Composable private fun VerifiedPracticePanel(conceptId:String){val generator=remember{VerifiedPracticeGenerator()};var prompt by remember{mutableStateOf<String?>(null)};val template=VerifiedPracticeCatalog.templates.firstOrNull{it.conceptId==conceptId};Card(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp)){Text("Verified practice",style=MaterialTheme.typography.titleMedium);Text(prompt?:"Numbers and answers come from deterministic local solvers.");Button({template?.let{prompt=generator.generate(it,(System.currentTimeMillis()%10000).toInt()).task?.prompt}},enabled=template!=null){Text("Generate validated variant")}}}}
 

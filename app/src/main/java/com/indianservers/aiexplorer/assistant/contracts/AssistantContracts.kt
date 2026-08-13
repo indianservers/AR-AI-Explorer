@@ -12,8 +12,51 @@ enum class AssistantResponseType { SOCRATIC_QUESTION, EXPLANATION, STEP_FEEDBACK
 enum class AssistantVerificationStatus { LOCALLY_AUTHORED, VERIFIED, PARTIALLY_VERIFIED, REJECTED, FALLBACK_USED }
 enum class GroundedContentKind { DEFINITION, EXPLANATION, FORMULA, HINT, SAFETY, LIMITATION, VISUAL_STATE }
 enum class VisualActionType { FOCUS, HIGHLIGHT, SHOW_LAYER, ANIMATE, COMPARE, RESTORE_STATE }
+enum class AssistantIntent { SOLVE, HINT, EXPLAIN, QUIZ, DEFINITION, DIAGRAM_HELP, FORMULA, WORKSPACE_ACTION, OCR_REPAIR, VIVA, SEARCH, UNKNOWN }
+enum class AssistantKnowledgeKind { CONCEPT, DIAGNOSTIC_QUESTION, HINT, MISCONCEPTION, WORKED_EXAMPLE, WORKED_STEP, FORMULA, THEOREM, DICTIONARY, LESSON }
+enum class AssistantMemoryEventType { QUESTION_ASKED, RESPONSE_GIVEN, CONCEPT_OPENED, OBJECT_SELECTED, MISTAKE_DETECTED, HINT_USED, LEVEL_CHANGED }
+enum class AssistantVerificationBadgeTone { TRUSTED, CAUTION, BLOCKED }
 
 data class GroundedContentBlock(val id: String, val kind: GroundedContentKind, val text: String, val reviewed: Boolean = true)
+data class AssistantVerificationBadge(
+    val label: String,
+    val tone: AssistantVerificationBadgeTone,
+    val explanation: String,
+) {
+    companion object {
+        fun from(status: AssistantVerificationStatus): AssistantVerificationBadge = when (status) {
+            AssistantVerificationStatus.LOCALLY_AUTHORED -> AssistantVerificationBadge("Offline reviewed", AssistantVerificationBadgeTone.TRUSTED, "Built from reviewed local content.")
+            AssistantVerificationStatus.VERIFIED -> AssistantVerificationBadge("Verified", AssistantVerificationBadgeTone.TRUSTED, "Grounding and citations passed local checks.")
+            AssistantVerificationStatus.PARTIALLY_VERIFIED -> AssistantVerificationBadge("Partly verified", AssistantVerificationBadgeTone.CAUTION, "Uses local grounding but needs extra checking.")
+            AssistantVerificationStatus.REJECTED -> AssistantVerificationBadge("Blocked", AssistantVerificationBadgeTone.BLOCKED, "Rejected by local safety or grounding checks.")
+            AssistantVerificationStatus.FALLBACK_USED -> AssistantVerificationBadge("Offline fallback", AssistantVerificationBadgeTone.CAUTION, "Replaced an unverifiable response with local reviewed content.")
+        }
+    }
+}
+data class AssistantKnowledgeSearchResult(
+    val id: String,
+    val kind: AssistantKnowledgeKind,
+    val title: String,
+    val snippet: String,
+    val conceptId: String?,
+    val subject: SchoolSubject?,
+    val score: Double,
+)
+data class AssistantMemoryEvent(
+    val type: AssistantMemoryEventType,
+    val conceptId: String? = null,
+    val selectedObjectId: String? = null,
+    val text: String = "",
+    val timestampMs: Long = 0L,
+)
+data class AssistantConversationMemory(
+    val currentConceptId: String? = null,
+    val currentTopic: String? = null,
+    val selectedObjectId: String? = null,
+    val recentMistakeIds: List<String> = emptyList(),
+    val preferredLevel: SchoolClassLevel? = null,
+    val recentQuestions: List<String> = emptyList(),
+)
 data class SimulationStateSnapshot(
     val id: String,
     val simulationId: String,
@@ -50,6 +93,9 @@ data class AssistantResponse(
     val verificationStatus: AssistantVerificationStatus,
     val validationIssues: List<String>,
     val providerId: String?,
+    val detectedIntent: AssistantIntent = AssistantIntent.UNKNOWN,
+    val verificationBadge: AssistantVerificationBadge = AssistantVerificationBadge.from(verificationStatus),
+    val localSearchResults: List<AssistantKnowledgeSearchResult> = emptyList(),
 )
 
 interface LearningAssistantProvider {

@@ -129,6 +129,17 @@ internal fun Geometry2DBottomDock(
             Text(if (expanded) "  ^" else "  v", color = Cyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
 
+        AnimatedVisibility(selected) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Geometry2DCompactActionButton("Move", mode == Transform2DMode.Move, Cyan, Modifier.weight(1f)) { onMode(Transform2DMode.Move) }
+                Geometry2DCompactActionButton("Size", mode == Transform2DMode.Resize, Cyan, Modifier.weight(1f)) { onMode(Transform2DMode.Resize) }
+                Geometry2DCompactActionButton("Rot", mode == Transform2DMode.Rotate, Violet, Modifier.weight(1f)) { onMode(Transform2DMode.Rotate) }
+                Geometry2DCompactActionButton("Copy", false, Violet, Modifier.weight(1f), onClick = onDuplicate)
+                Geometry2DCompactActionButton(if (locked) "Unlock" else "Lock", locked, Amber, Modifier.weight(1f), onClick = onLock)
+                Geometry2DCompactActionButton("Del", false, Color(0xFFFF6688), Modifier.weight(1f), onClick = onDelete)
+            }
+        }
+
         AnimatedVisibility(expanded) {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -176,6 +187,29 @@ internal fun Geometry2DBottomDock(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Geometry2DCompactActionButton(
+    label: String,
+    selected: Boolean,
+    accent: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier
+            .heightIn(min = 32.dp)
+            .clip(RoundedCornerShape(9.dp))
+            .background(accent.copy(if (selected) .20f else .09f))
+            .border(1.dp, accent.copy(if (selected) .66f else .28f), RoundedCornerShape(9.dp))
+            .clickable(onClick = onClick)
+            .semantics { contentDescription = "$label selected 2D object" }
+            .padding(horizontal = 3.dp, vertical = 3.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(label, color = accent, fontSize = 8.sp, fontWeight = FontWeight.Bold, maxLines = 1)
     }
 }
 
