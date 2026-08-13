@@ -3789,8 +3789,8 @@ fun Screen(
         }
     }
 
-    LaunchedEffect(selectedHomeCategory, showConcepts) {
-        if (selectedHomeCategory != null || showConcepts) {
+    LaunchedEffect(selectedHomeCategory) {
+        if (selectedHomeCategory != null) {
             hubScrollState.scrollTo(0)
         }
     }
@@ -7394,11 +7394,6 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
     val adaptiveProfile = LocalAdaptiveDeviceProfile.current
-    val workspaceTop = if (adaptiveProfile.isTelevision) {
-        adaptiveProfile.workspacePolicy.topChromeClearance
-    } else {
-        if (compact) 70.dp else 78.dp
-    }
     val workspaceToolTop = if (adaptiveProfile.isTelevision) {
         adaptiveProfile.workspacePolicy.topChromeClearance
     } else {
@@ -7574,8 +7569,8 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean) {
             }
             Column(
                 Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = workspaceTop)
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 86.dp)
                     .fillMaxWidth(
                         if (shapeSummaryExpanded) {
                             if (compact) .94f else .55f
@@ -8286,6 +8281,32 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
         selectedSolidIndices = emptySet()
         subSelection = null; extrusionPreview = null; hiddenSolidIndices = emptySet(); isolatedSolidIndices = null; lockedSolidIndices = emptySet(); solidGroups = emptyList()
     }
+    fun transformSelected3DSolids(label: String, transform: (Solid) -> Solid) {
+        val targets = selectedSolidIndices.filterTo(linkedSetOf()) { it in vm.state.solids.indices }
+            .ifEmpty { selectedSolid?.let { setOf(selectedIndex) } ?: emptySet() }
+        if (targets.isEmpty()) return
+        vm.replaceSolids(label) { solids ->
+            solids.mapIndexed { index, solid ->
+                if (index in targets && index !in lockedSolidIndices) transform(solid) else solid
+            }
+        }
+    }
+    fun resizeSelected3D(factor: Double) {
+        selectTransformMode(Transform3DMode.Scale)
+        transformSelected3DSolids("Resized 3D selection") { solid ->
+            solid.copy(
+                width = (solid.width * factor).coerceIn(.2, 12.0),
+                height = (solid.height * factor).coerceIn(.2, 12.0),
+                depth = (solid.depth * factor).coerceIn(.2, 12.0),
+                radius = (solid.radius * factor).coerceIn(.1, 6.0),
+                topRadius = (solid.topRadius * factor).coerceIn(.05, 6.0),
+            )
+        }
+    }
+    fun rotateSelected3D(delta: Vec3) {
+        selectTransformMode(Transform3DMode.Rotate)
+        transformSelected3DSolids("Rotated 3D selection") { solid -> solid.copy(rotation = solid.rotation + delta) }
+    }
     Box(Modifier.fillMaxSize()) {
         Projected3DCanvas(
             modifier = Modifier.fillMaxSize()
@@ -8516,11 +8537,33 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 subSelection = null
             },
         )
-        Row(
+        Column(
             Modifier.align(Alignment.BottomCenter).padding(horizontal = 12.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(7.dp),
         ) {
+            if (selectedSolid != null) {
+                Row(
+                    Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(SurfaceA.copy(.90f))
+                        .border(1.dp, Cyan.copy(.38f), RoundedCornerShape(16.dp))
+                        .padding(horizontal = 7.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val controlsEnabled = selectedIndex !in lockedSolidIndices
+                    GlowButton("Size -", icon = "-", iconOnly = compact, enabled = controlsEnabled) { resizeSelected3D(.9) }
+                    GlowButton("Size +", icon = "+", iconOnly = compact, enabled = controlsEnabled) { resizeSelected3D(1.1) }
+                    GlowButton("Rot X", icon = "RX", iconOnly = compact, enabled = controlsEnabled) { rotateSelected3D(Vec3(15.0, 0.0, 0.0)) }
+                    GlowButton("Rot Y", icon = "RY", iconOnly = compact, enabled = controlsEnabled) { rotateSelected3D(Vec3(0.0, 15.0, 0.0)) }
+                    GlowButton("Rot Z", icon = "RZ", iconOnly = compact, enabled = controlsEnabled) { rotateSelected3D(Vec3(0.0, 0.0, 15.0)) }
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
             AddShapeTarget(
                 onAdd = { addShapeOpen = true },
                 label = "+ Add",
@@ -8536,6 +8579,7 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean) {
                 icon = "×",
                 onClick = vm::clearCurrentWorkspace,
             )
+            }
         }
         if (!vm.shapeExplorerScene && selectedSolid != null) SmartSelectionHud(
             title = subSelection?.let { "${selectedSolid.type.name} - ${it.mode.name} ${it.index + 1}" } ?: selectedSolid.type.name,
@@ -10550,7 +10594,12 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
     val insight = remember(resolvedPrimaryExpression) { graph3D.insight(resolvedPrimaryExpression) }
     val mesh = remember(resolvedPrimaryExpression, density) {
-        runCatching { graph3D.mesh(resolvedPrimaryExpression, density = density.toInt()) }.getOrNull()
+        runCatching { graph3D.mesh(resolvedPrimaryExpression, density = density.toInt()) }
+            .getOrNull()
+            ?.takeIf { candidate ->
+                candidate.vertices.size == candidate.rows * candidate.columns &&
+                    candidate.vertices.all { point -> point.x.isFinite() && point.y.isFinite() && point.z.isFinite() }
+            }
     }
     LaunchedEffect(vm.state.surfaceExpression) {
         if (!addingSurfaceEquation && selectedSurfaceLayerIndex == 0) surfaceDraft = vm.state.surfaceExpression
@@ -10572,7 +10621,9 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 surfaceParameterValues,
                 independentVariables = setOf("x", "y", "z"),
             )
-            runCatching { graph3D.mesh(resolvedLayer, density = qualityDensity) }.getOrNull()?.let {
+            runCatching { graph3D.mesh(resolvedLayer, density = qualityDensity) }.getOrNull()
+                ?.takeIf { candidate -> candidate.vertices.all { point -> point.x.isFinite() && point.y.isFinite() && point.z.isFinite() } }
+                ?.let {
                 val selectionAlpha = when {
                     selectedSurfaceLayerIndices.isEmpty() -> 1f
                     actualIndex in selectedSurfaceLayerIndices -> 1f

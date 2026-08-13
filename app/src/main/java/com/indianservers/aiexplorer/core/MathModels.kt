@@ -1071,7 +1071,7 @@ class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {
                 runCatching { compiled.eval(mapOf("x" to sx, "yy" to sy)) }
                     .getOrNull()
                     ?.takeIf(Double::isFinite)
-            }.average().takeIf(Double::isFinite) ?: Double.NaN
+            }.average().takeIf(Double::isFinite) ?: 0.0
         }
         for (i in 0..density) {
             val x = min + (max - min) * i / density

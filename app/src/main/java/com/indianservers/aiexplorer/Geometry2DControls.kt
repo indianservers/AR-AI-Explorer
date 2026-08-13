@@ -96,6 +96,7 @@ internal fun Geometry2DBottomDock(
     onFit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var expanded by remember { mutableStateOf(false) }
     var overflowOpen by remember { mutableStateOf(false) }
     Column(
         modifier
@@ -108,54 +109,71 @@ internal fun Geometry2DBottomDock(
             .padding(6.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-            Geometry2DToolButton("+", "Add", Green, enabled = true, selected = false, modifier = Modifier.weight(1f), onClick = onAdd)
-            Transform2DMode.entries.forEach { tool ->
-                Geometry2DToolButton(
-                    icon = when (tool) {
-                        Transform2DMode.Select -> "S"
-                        Transform2DMode.Move -> "MOVE"
-                        Transform2DMode.Resize -> "SIZE"
-                        Transform2DMode.Rotate -> "ROT"
-                    },
-                    label = tool.name,
-                    accent = if (tool == Transform2DMode.Rotate) Violet else Cyan,
-                    enabled = selected || tool == Transform2DMode.Select,
-                    selected = mode == tool,
-                    modifier = Modifier.weight(1f),
-                ) { onMode(tool); overflowOpen = false }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = 44.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .clickable { expanded = !expanded }
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .semantics { contentDescription = if (expanded) "Collapse 2D geometry tools" else "Expand 2D geometry tools" },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text(if (selected) "${mode.name} tool" else "2D geometry tools", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Text(if (expanded) "Tap to collapse" else "Tap to open controls", color = Muted, fontSize = 8.sp)
             }
-            Geometry2DToolButton(if (locked) "U" else "L", if (locked) "Unlock" else "Lock", Amber, selected = locked, enabled = selected, modifier = Modifier.weight(1f), onClick = onLock)
-            Geometry2DToolButton("DEL", "Delete", Color(0xFFFF6688), enabled = selected, selected = false, modifier = Modifier.weight(1f), onClick = onDelete)
-            Geometry2DToolButton("...", "More", Violet, enabled = true, selected = overflowOpen, modifier = Modifier.weight(1f)) { overflowOpen = !overflowOpen }
+            Geometry2DContextButton("+ Add", Modifier.width(76.dp)) { onAdd() }
+            Geometry2DContextButton("Clear all", Modifier.width(86.dp), destructive = true, enabled = canClear) { onClearAll() }
+            Text(if (expanded) "  ^" else "  v", color = Cyan, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
 
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            Geometry2DContextButton("Add", Modifier.weight(1f), onClick = onAdd)
-            Geometry2DContextButton("Delete", Modifier.weight(1f), destructive = true, enabled = selected, onClick = onDelete)
-            Geometry2DContextButton("Clear all", Modifier.weight(1f), destructive = true, enabled = canClear, onClick = onClearAll)
-        }
+        AnimatedVisibility(expanded) {
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Transform2DMode.entries.forEach { tool ->
+                        Geometry2DToolButton(
+                            icon = when (tool) {
+                                Transform2DMode.Select -> "S"
+                                Transform2DMode.Move -> "MOVE"
+                                Transform2DMode.Resize -> "SIZE"
+                                Transform2DMode.Rotate -> "ROT"
+                            },
+                            label = tool.name,
+                            accent = if (tool == Transform2DMode.Rotate) Violet else Cyan,
+                            enabled = selected || tool == Transform2DMode.Select,
+                            selected = mode == tool,
+                            modifier = Modifier.weight(1f),
+                        ) { onMode(tool); overflowOpen = false }
+                    }
+                    Geometry2DToolButton(if (locked) "U" else "L", if (locked) "Unlock" else "Lock", Amber, selected = locked, enabled = selected, modifier = Modifier.weight(1f), onClick = onLock)
+                    Geometry2DToolButton("DEL", "Delete", Color(0xFFFF6688), enabled = selected, selected = false, modifier = Modifier.weight(1f), onClick = onDelete)
+                    Geometry2DToolButton("...", "More", Violet, enabled = true, selected = overflowOpen, modifier = Modifier.weight(1f)) { overflowOpen = !overflowOpen }
+                }
 
-        AnimatedVisibility(selected && mode == Transform2DMode.Rotate) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
-                Geometry2DContextButton("-15 deg", Modifier.weight(1f)) { onRotateBy(-15.0) }
-                Text("Angle ${formatGeometryAngle(rotationAngle)}", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.2f))
-                Geometry2DContextButton("+15 deg", Modifier.weight(1f)) { onRotateBy(15.0) }
-                Geometry2DContextButton("Reset", Modifier.weight(1f), onClick = onResetRotation)
-            }
-        }
-        AnimatedVisibility(selected && mode == Transform2DMode.Resize) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("Resize", color = Cyan, fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                Geometry2DContextButton(if (resizePolicy == Geometry2DResizePolicy.Free) "Free selected" else "Free", Modifier.weight(1f)) { onResizePolicy(Geometry2DResizePolicy.Free) }
-                Geometry2DContextButton(if (resizePolicy == Geometry2DResizePolicy.Proportional) "Proportional selected" else "Proportional", Modifier.weight(1.4f)) { onResizePolicy(Geometry2DResizePolicy.Proportional) }
-            }
-        }
-        AnimatedVisibility(overflowOpen) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                Geometry2DContextButton("Fit view", Modifier.weight(1f)) { onFit(); overflowOpen = false }
-                Geometry2DContextButton("Duplicate", Modifier.weight(1f), enabled = selected) { onDuplicate(); overflowOpen = false }
-                Geometry2DContextButton("Clear all", Modifier.weight(1f), destructive = true, enabled = canClear) { onClearAll(); overflowOpen = false }
+                AnimatedVisibility(selected && mode == Transform2DMode.Rotate) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Geometry2DContextButton("-15 deg", Modifier.weight(1f)) { onRotateBy(-15.0) }
+                        Text("Angle ${formatGeometryAngle(rotationAngle)}", color = Violet, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.2f))
+                        Geometry2DContextButton("+15 deg", Modifier.weight(1f)) { onRotateBy(15.0) }
+                        Geometry2DContextButton("Reset", Modifier.weight(1f), onClick = onResetRotation)
+                    }
+                }
+                AnimatedVisibility(selected && mode == Transform2DMode.Resize) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text("Resize", color = Cyan, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                        Geometry2DContextButton(if (resizePolicy == Geometry2DResizePolicy.Free) "Free selected" else "Free", Modifier.weight(1f)) { onResizePolicy(Geometry2DResizePolicy.Free) }
+                        Geometry2DContextButton(if (resizePolicy == Geometry2DResizePolicy.Proportional) "Proportional selected" else "Proportional", Modifier.weight(1.4f)) { onResizePolicy(Geometry2DResizePolicy.Proportional) }
+                    }
+                }
+                AnimatedVisibility(overflowOpen) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Geometry2DContextButton("Fit view", Modifier.weight(1f)) { onFit(); overflowOpen = false }
+                        Geometry2DContextButton("Duplicate", Modifier.weight(1f), enabled = selected) { onDuplicate(); overflowOpen = false }
+                        Geometry2DContextButton("Clear all", Modifier.weight(1f), destructive = true, enabled = canClear) { onClearAll(); overflowOpen = false }
+                    }
+                }
             }
         }
     }
