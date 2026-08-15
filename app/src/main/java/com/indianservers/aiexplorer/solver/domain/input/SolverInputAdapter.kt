@@ -10,7 +10,18 @@ sealed interface ExternalMathInput {
         override val sourceId: String,
         override val payload: String,
     ) : ExternalMathInput
+
+    data class ConfirmedCapture(
+        override val sourceId: String,
+        override val payload: String,
+        val kind: CaptureKind,
+        val learnerConfirmed: Boolean,
+        val confidence: Double? = null,
+        val lineCount: Int = 1,
+    ) : ExternalMathInput
 }
+
+enum class CaptureKind { CameraOcr, SelectedImageOcr, Handwriting }
 
 interface SolverInputAdapter {
     fun convert(input: ExternalMathInput): SolverInputResult
@@ -21,7 +32,10 @@ interface SolverInputAdapter {
  * this adapter in Phase 4.
  */
 class NormalizedTextSolverInputAdapter : SolverInputAdapter {
-    override fun convert(input: ExternalMathInput): SolverInputResult =
-        KeyboardSolverInputSource(input.payload).getExpression()
+    override fun convert(input: ExternalMathInput): SolverInputResult {
+        if (input is ExternalMathInput.ConfirmedCapture && !input.learnerConfirmed) {
+            return SolverInputResult.Error("Review and confirm the recognized mathematics before inserting it into Solver.")
+        }
+        return KeyboardSolverInputSource(input.payload).getExpression()
+    }
 }
-

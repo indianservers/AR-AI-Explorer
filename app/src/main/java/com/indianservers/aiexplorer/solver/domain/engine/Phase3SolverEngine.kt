@@ -28,12 +28,16 @@ import com.indianservers.aiexplorer.solver.domain.steps.SolverExplanationEngine
 import com.indianservers.aiexplorer.solver.domain.steps.SolverRuleRegistry
 import com.indianservers.aiexplorer.solver.domain.visualisation.SolverFormulaUnderstanding
 import com.indianservers.aiexplorer.solver.domain.visualisation.SolverVisualisationGenerator
+import com.indianservers.aiexplorer.solver.domain.verification.SolverAdvancedVerifier
 
 class Phase3SolverEngine(
     private val phase2: Phase2SolverEngine = Phase2SolverEngine(),
     private val calculator: AdvancedScientificCalculator = AdvancedScientificCalculator(),
     private val visualisations: SolverVisualisationGenerator = SolverVisualisationGenerator(),
     private val schoolQuestions: SolverSchoolQuestionEngine = SolverSchoolQuestionEngine(phase2),
+    private val advancedVerifier: SolverAdvancedVerifier = SolverAdvancedVerifier(),
+    private val probabilityStatistics: SolverProbabilityStatisticsEngine = SolverProbabilityStatisticsEngine(),
+    private val typedWordProblems: SolverTypedWordProblemEngine = SolverTypedWordProblemEngine(),
 ) {
     fun solve(
         text: String,
@@ -41,11 +45,25 @@ class Phase3SolverEngine(
         profile: ExplanationProfile = ExplanationProfile.SchoolExamination,
         requestedMethodId: String? = null,
     ): SolverSolution {
-        schoolQuestions.solve(text, profile)?.let { return it }
-        SolverInputIntentGuard.rejectionReason(text)?.let { reason ->
-            return unsupported(text, profile, reason, ProblemType.UnsupportedOrAmbiguous)
+        if (text.trim().startsWith("normal probability", true)) {
+            return unsupported(text, profile, "Use the verified structured form 'normal pdf x mean m sd s'; interval probability is not implemented yet.", ProblemType.Probability)
         }
-        val base = if (isPhase3Request(text)) {
+        val advancedRequest = isPhase3Request(text)
+        if (!advancedRequest) {
+            schoolQuestions.solve(text, profile)?.let { return it }
+            typedWordProblems.solve(text, profile)?.let { return it }
+            probabilityStatistics.solve(text, profile)?.let { solution ->
+                if (!solution.supported) return solution
+                val specs = runCatching { visualisations.generate(solution) }.getOrDefault(emptyList())
+                return solution.copy(visualisations = specs, visualVerification = runCatching { visualisations.verification(solution, specs) }.getOrNull())
+            }
+        }
+        if (!advancedRequest) {
+            SolverInputIntentGuard.rejectionReason(text)?.let { reason ->
+                return unsupported(text, profile, reason, ProblemType.UnsupportedOrAmbiguous)
+            }
+        }
+        val base = if (advancedRequest) {
             solveAdvanced(text, profile) ?: unsupported(
                 text,
                 profile,
@@ -94,7 +112,8 @@ class Phase3SolverEngine(
                 explanationKey = rule,
                 explanation = SolverExplanationEngine.explanation(rule, profile, description),
                 affectedTerms = listOf(ExpressionPath(emptyList())),
-                optionalDetails = listOf(StepDetail("Phase 3 local kernel", description)),
+                optionalDetails = listOf(StepDetail("Phase 3 local kernel", description)) +
+                    if (index == result.steps.lastIndex) result.alternatives.map { StepDetail(it.first, it.second) } else emptyList(),
                 reversible = !text.contains("square both", true),
             ).also { before = after }
         }.ifEmpty {
@@ -125,12 +144,7 @@ class Phase3SolverEngine(
             }
         }
         val method = methodFor(text)
-        val verification = VerificationResult(
-            VerificationStatus.Verified,
-            if (complex) VerificationMethod.ExactEvaluation else VerificationMethod.SampledEquivalence,
-            listOf(VerificationCheck("Independent deterministic kernel", true, exact, exact)),
-            result.verification,
-        )
+        val evidence = advancedVerifier.verify(text, exact, result.verification)
         return SolverSolution(
             input = SolverInput(text, text.trim()),
             expression = node(text),
@@ -141,7 +155,7 @@ class Phase3SolverEngine(
             steps = steps,
             finalExpression = node(exact),
             finalAnswer = exact,
-            verification = verification,
+            verification = evidence.result,
             supported = true,
             message = "Solved and visualised fully offline.",
             methods = listOf(SolutionMethodOption(method.first, method.second, true, true, method.third)),
@@ -153,7 +167,7 @@ class Phase3SolverEngine(
             exactAnswer = exact,
             approximateAnswer = approximate,
             ruleCitations = listOf(rule),
-            verificationStrength = if (approximate == null) VerificationStrength.SymbolicallyVerified else VerificationStrength.NumericallyVerified,
+            verificationStrength = evidence.strength,
         )
     }
 
@@ -189,7 +203,15 @@ class Phase3SolverEngine(
     private fun isPhase3Request(text: String): Boolean {
         val lower = text.trim().lowercase()
         return lower.startsWith("complex") ||
-            listOf("differentiate", "derivative", "integrate", "integral", "limit ", "continuity", "tangent", "normal ", "ode ").any(lower::contains)
+            listOf(
+                "differentiate", "derivative", "partial derivative", "gradient ",
+                "directional derivative", "divergence ", "curl ", "tangent plane",
+                "jacobian ", "hessian ", "integrate", "integral", "improper integrate",
+                "double integrate", "triple integrate", "parameter integral", "limit ", "continuity", "tangent", "normal ", "derivative analysis",
+                "ode ", "ode series ", "linear ivp ", "logistic ", "second order ivp ", "system rk4 ", "rk4 ", "laplace ",
+                "lagrange ", "line integral ", "work integral ", "surface flux ",
+                "green ", "gauss ", "stokes ",
+            ).any(lower::contains)
     }
 
     private fun ruleFor(text: String, complex: Boolean): String {
@@ -199,6 +221,8 @@ class Phase3SolverEngine(
             complex && ("polar" in lower || !lower.contains("multiply")) -> SolverRuleRegistry.COMPLEX_POLAR
             complex -> SolverRuleRegistry.COMPLEX_RECTANGULAR
             "limit" in lower || "continuity" in lower -> SolverRuleRegistry.LIMIT_LAW
+            "gradient" in lower || "jacobian" in lower || "hessian" in lower || "partial derivative" in lower || "directional derivative" in lower || "divergence" in lower || "curl" in lower || "tangent plane" in lower -> SolverRuleRegistry.DERIVATIVE_POWER
+            lower.startsWith("green ") || lower.startsWith("gauss ") || lower.startsWith("stokes ") -> SolverRuleRegistry.INTEGRATION_POWER
             "integr" in lower && ("parts" in lower || Regex("""\bx\s*\*?\s*(?:sin|cos|ln|exp)""").containsMatchIn(lower)) -> SolverRuleRegistry.INTEGRATION_PARTS
             "integr" in lower && Regex("""(?:sin|cos|exp|sqrt)\([^)]*[+\-*/][^)]*\)""").containsMatchIn(lower) -> SolverRuleRegistry.INTEGRATION_SUBSTITUTION
             "integr" in lower -> SolverRuleRegistry.INTEGRATION_POWER
@@ -217,6 +241,29 @@ class Phase3SolverEngine(
             lower.startsWith("complex") ->
                 Triple("rectangular-polar", "Rectangular and polar", "Separates exact components and fixes the principal argument.")
             "limit" in lower -> Triple("limit-laws", "Limit laws", "Transforms only on a punctured neighbourhood and checks the approach.")
+            "jacobian" in lower -> Triple("jacobian", "Jacobian matrix", "Computes every first partial and evaluates the complete derivative map at the requested point.")
+            "hessian" in lower -> Triple("hessian", "Hessian matrix", "Computes all second partials and checks mixed-partial symmetry numerically.")
+            lower.startsWith("lagrange ") -> Triple("lagrange", "Lagrange multipliers", "Solves stationarity and constraint equations together and reports both residuals.")
+            lower.startsWith("line integral") -> Triple("scalar-line-integral", "Scalar line integral", "Includes arc-length scaling and preserves the declared parameter interval.")
+            lower.startsWith("work integral") -> Triple("work-line-integral", "Oriented work integral", "Uses F(r(t)) dot r'(t), so reversing the curve reverses the result.")
+            lower.startsWith("surface flux") -> Triple("surface-flux", "Oriented surface flux", "Uses r_u cross r_v to make the normal orientation explicit.")
+            lower.startsWith("green ") -> Triple("green-certificate", "Green theorem certificate", "Compares closed-boundary circulation with the double integral of planar curl.")
+            lower.startsWith("gauss ") -> Triple("gauss-certificate", "Gauss theorem certificate", "Compares outward surface flux with the volume integral of divergence.")
+            lower.startsWith("stokes ") -> Triple("stokes-certificate", "Stokes theorem certificate", "Compares oriented boundary circulation with surface curl flux.")
+            lower.startsWith("derivative analysis") -> Triple("derivative-analysis", "Derivative sign analysis", "Combines stationary points, monotonic intervals and endpoint comparison on a closed interval.")
+            lower.startsWith("tangent ") -> Triple("tangent-line", "Tangent line", "Evaluates the derivative at the requested point and uses point-slope form.")
+            lower.startsWith("normal ") -> Triple("normal-line", "Normal line", "Uses the negative reciprocal of the tangent slope.")
+            lower.startsWith("linear ivp") -> Triple("linear-ivp", "Linear IVP", "Uses the closed-form constant-coefficient solution and reports its residual.")
+            lower.startsWith("rk4") -> Triple("rk4", "Adaptive RK4", "Compares refined numerical trajectories to expose an integration error estimate.")
+            lower.startsWith("ode series") -> Triple("power-series", "Power series", "Matches coefficients and reports the first un-cancelled residual order.")
+            lower.startsWith("logistic ") -> Triple("logistic", "Logistic closed form", "Separates the nonlinear growth equation and verifies the differentiated result.")
+            lower.startsWith("second order ivp") -> Triple("characteristic-equation", "Characteristic equation", "Selects the root family and applies both initial conditions.")
+            lower.startsWith("system rk4") -> Triple("coupled-rk4", "Coupled RK4", "Advances every component from the same Runge-Kutta stage state.")
+            lower.startsWith("laplace ") -> Triple("laplace-transform", "Laplace transform", "Uses the verified local transform table and preserves convergence conditions.")
+            lower.startsWith("improper integrate") -> Triple("improper-integral", "Improper integral", "Classifies convergence before reporting a finite value.")
+            lower.startsWith("double integrate") -> Triple("iterated-integral", "Double integral", "Integrates over both declared bounds and checks refinement error.")
+            lower.startsWith("triple integrate") -> Triple("triple-integral", "Triple integral", "Propagates a certified error envelope through three nested bounds.")
+            lower.startsWith("parameter integral") -> Triple("parameter-integral", "Parameterized integral", "Certifies each parameter sample independently.")
             "integr" in lower && " from " in lower -> Triple("adaptive-definite", "Adaptive definite integration", "Refines curved regions and checks reversed orientation.")
             "integr" in lower -> Triple("symbolic-antiderivative", "Symbolic antiderivative", "Uses a reversible rule and differentiates back.")
             else -> Triple("symbolic-derivative", "Symbolic differentiation", "Applies rules to the expression tree and verifies with finite differences.")

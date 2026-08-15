@@ -41,7 +41,8 @@ class SolverVisualisationGenerator(
             ProblemType.MatrixOperation -> matrix(solution, linked)
             ProblemType.Calculus -> calculus(solution, linked)
             ProblemType.ComplexNumbers -> complex(solution, linked)
-            ProblemType.NumberTheory, ProblemType.RationalOrRadicalEquation, ProblemType.UnsupportedOrAmbiguous -> null
+            ProblemType.NumberTheory, ProblemType.RationalOrRadicalEquation,
+            ProblemType.Probability, ProblemType.Statistics, ProblemType.UnsupportedOrAmbiguous -> null
         }
         val transformations = solution.steps.mapIndexed { index, step ->
             VisualisationSpec(

@@ -7,6 +7,13 @@ import com.indianservers.aiexplorer.core.MathNumberDomain
 import com.indianservers.aiexplorer.core.TrustedMathKernel
 import com.indianservers.aiexplorer.core.VariableAssumption
 import com.indianservers.aiexplorer.core.FunctionDefinition
+import com.indianservers.aiexplorer.core.Solid
+import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.Vec2
+import com.indianservers.aiexplorer.core.Vec3
+import com.indianservers.aiexplorer.core.Vector3D
+import com.indianservers.aiexplorer.workspace.Shape2D
+import com.indianservers.aiexplorer.workspace.Shape2DType
 import com.indianservers.aiexplorer.workspace.UniversalDocumentRecovery
 import com.indianservers.aiexplorer.workspace.UniversalMathDocument
 import com.indianservers.aiexplorer.workspace.UniversalMathDocumentCodec
@@ -29,7 +36,12 @@ class Phase1TrustedKernelTest {
     private val kernel = TrustedMathKernel()
 
     @Test fun workspaceBecomesOneTypedDocumentAcrossAllCurrentViews() {
-        val document = UniversalWorkspaceBridge.fromWorkspace(WorkspaceState())
+        val document = UniversalWorkspaceBridge.fromWorkspace(WorkspaceState(
+            points = listOf(Vec2(0.0, 0.0), Vec2(1.0, 0.0)),
+            shapes = listOf(Shape2D("segment", Shape2DType.Segment, listOf(0, 1), "AB")),
+            solids = listOf(Solid(SolidType.Cube, 2.0)),
+            vectors3D = listOf(Vector3D("v", Vec3(0.0, 0.0, 0.0), Vec3(1.0, 1.0, 1.0))),
+        ))
         val kinds = document.objects.values.map { it.kind }.toSet()
         assertTrue(kinds.containsAll(setOf(
             UniversalMathKind.Function, UniversalMathKind.Point2D, UniversalMathKind.Segment,
@@ -131,7 +143,7 @@ class Phase1TrustedKernelTest {
     @Test fun schemaOneDocumentsMigrateAndWorkspaceExportEmbedsAuthority() {
         val document = UniversalWorkspaceBridge.fromWorkspace(WorkspaceState())
         val legacy = UniversalMathDocumentCodec.encode(document)
-            .replaceFirst("\"schemaVersion\":2", "\"schemaVersion\":1")
+            .replaceFirst(Regex("\"schemaVersion\":\\d+"), "\"schemaVersion\":1")
             .replace(Regex("\\s*\\\"checksum\\\":\\\"[a-f0-9]+\\\",?"), "")
         val migrated: UniversalDocumentRecovery = UniversalMathDocumentCodec.decode(legacy)
         assertTrue(migrated.recovered)

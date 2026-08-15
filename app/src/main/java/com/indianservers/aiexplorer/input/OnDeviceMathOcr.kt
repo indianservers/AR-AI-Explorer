@@ -2,6 +2,7 @@ package com.indianservers.aiexplorer.input
 
 import android.content.Context
 import android.net.Uri
+import android.graphics.Bitmap
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -40,6 +41,26 @@ class OnDeviceMathOcr : Closeable {
                     }
                     .addOnFailureListener(onFailure)
             }
+    }
+
+    fun recognize(
+        bitmap: Bitmap,
+        onSuccess: (MathOcrResult) -> Unit,
+        onFailure: (Throwable) -> Unit,
+    ) = process(InputImage.fromBitmap(bitmap, 0), onSuccess, onFailure)
+
+    private fun process(
+        image: InputImage,
+        onSuccess: (MathOcrResult) -> Unit,
+        onFailure: (Throwable) -> Unit,
+    ) {
+        recognizer.process(image)
+            .addOnSuccessListener { text ->
+                val lines = text.textBlocks.flatMap { it.lines }
+                val confidenceValues = lines.flatMap { it.elements }.mapNotNull { element -> element.confidence.takeIf { it >= 0f }?.toDouble() }
+                onSuccess(MathOcrResult(MathOcrNormalizer.normalize(text.text), confidenceValues.takeIf { it.isNotEmpty() }?.average(), lines.size))
+            }
+            .addOnFailureListener(onFailure)
     }
 
     override fun close() {

@@ -440,6 +440,7 @@ import com.indianservers.aiexplorer.workspace.ProjectSectionKind
 import com.indianservers.aiexplorer.workspace.MovePointCommand
 import com.indianservers.aiexplorer.workspace.MovePointsCommand
 import com.indianservers.aiexplorer.workspace.ReplaceGeometry2DCommand
+import com.indianservers.aiexplorer.workspace.ReplaceWorkspaceCommand
 import com.indianservers.aiexplorer.workspace.MoveSolidCommand
 import com.indianservers.aiexplorer.workspace.MoveVector3DCommand
 import com.indianservers.aiexplorer.workspace.Shape2D
@@ -464,6 +465,10 @@ import com.indianservers.aiexplorer.workspace.UniversalMathDocument
 import com.indianservers.aiexplorer.workspace.UniversalMathDocumentEngine
 import com.indianservers.aiexplorer.workspace.UniversalWorkspaceBridge
 import com.indianservers.aiexplorer.workspace.UniversalMathObjectFactory
+import com.indianservers.aiexplorer.workspace.Unified2DMathController
+import com.indianservers.aiexplorer.workspace.Unified2DMutation
+import com.indianservers.aiexplorer.workspace.UnifiedSpatialMathController
+import com.indianservers.aiexplorer.workspace.UnifiedSpatialMutation
 import com.indianservers.aiexplorer.workspace.recomputed
 import com.indianservers.aiexplorer.workspace.resolvePointDependency
 import com.indianservers.aiexplorer.spatial.ARScaleMode
@@ -726,6 +731,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     private val linkedMathKernel = LinkedMathKernel()
     private val mathObjectGraph = MathObjectGraph()
     private val universalDocumentEngine = UniversalMathDocumentEngine()
+    private val unified2DController = Unified2DMathController()
+    private val unifiedSpatialController = UnifiedSpatialMathController()
     private val trustedMathKernel = TrustedMathKernel()
     private val learningQueue = OfflineLearningQueue()
     private var pointGesture: PointGesture? = null
@@ -886,6 +893,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         get() = linkedMathKernel.snapshot(state)
     val mathObjectGraphSnapshot
         get() = mathObjectGraph.snapshot(state)
+    val unifiedSpatialSnapshot
+        get() = unifiedSpatialController.snapshot(state)
     fun mathObjectGraphSnapshot(
         parameterValues: Map<String, Double>,
         tableInputs: List<Double> = (-4..4).map { it.toDouble() },
@@ -2048,10 +2057,16 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun movePoint(index: Int, point: Vec2) {
-        val from = state.points.getOrNull(index) ?: return
-        state = history.execute(state, MovePointCommand(index, from, point))
-        selectedPoint = index
-        status = "Moved point ${index + 1}"
+        state.points.getOrNull(index) ?: return
+        val before = state
+        when (val mutation = unified2DController.editCoordinates(unified2DController.snapshot(state), "point-$index", point)) {
+            is Unified2DMutation.Applied -> {
+                state = history.execute(before, ReplaceWorkspaceCommand(before, mutation.snapshot.state, "Move point ${index + 1}"))
+                selectedPoint = index
+                status = "Moved point ${index + 1}; ${mutation.affectedObjects.size} linked object${if (mutation.affectedObjects.size == 1) "" else "s"} updated"
+            }
+            is Unified2DMutation.Rejected -> status = mutation.message
+        }
     }
 
     fun beginPointDrag(index: Int) {
@@ -2330,11 +2345,16 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun editExpression(index: Int, expression: String) {
-        state.functions.getOrNull(index) ?: return
-        val from = state.functions[index].expression
-        state = history.execute(state, EditExpressionCommand(index, from, expression))
-        val validation = universalDocumentEngine.validate(universalMathDocument)
-        status = if (validation.valid) "Expression updated through the universal maths document" else validation.diagnostics.first()
+        val function = state.functions.getOrNull(index) ?: return
+        val before = state
+        when (val mutation = unified2DController.stageExpression(unified2DController.snapshot(state), function.id, expression)) {
+            is Unified2DMutation.Applied -> {
+                state = history.execute(before, ReplaceWorkspaceCommand(before, mutation.snapshot.state, "Edit ${function.name}"))
+                val staged = mutation.snapshot.document.objects[function.id]?.valueState?.status == com.indianservers.aiexplorer.workspace.UniversalMathValueStatus.ParseError
+                status = if (staged) "Expression draft saved; complete it to resume verified computation" else "Expression updated; ${mutation.affectedObjects.size} linked object${if (mutation.affectedObjects.size == 1) "" else "s"} recomputed"
+            }
+            is Unified2DMutation.Rejected -> status = mutation.message
+        }
     }
 
     fun addFunction(expression: String = "sin(x)") {
@@ -2444,9 +2464,15 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun moveSolid(index: Int, to: Vec3) {
         val solid = state.solids.getOrNull(index) ?: return
-        state = history.execute(state, MoveSolidCommand(index, solid.position, to))
-        selectedSolid = index
-        status = "Moved ${solid.type.name}"
+        val before = state
+        when (val mutation = unifiedSpatialController.updateSolid(unifiedSpatialController.snapshot(state), index) { it.copy(position = to) }) {
+            is UnifiedSpatialMutation.Applied -> {
+                state = history.execute(before, ReplaceWorkspaceCommand(before, mutation.snapshot.state, "Move ${solid.type.name}"))
+                selectedSolid = index
+                status = "Moved ${solid.type.name}; linked 3D views updated"
+            }
+            is UnifiedSpatialMutation.Rejected -> status = mutation.message
+        }
     }
 
     fun beginSolidDrag(index: Int) {
@@ -2611,10 +2637,17 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun moveVector3D(index: Int, delta: Vec3) {
         val from = state.vectors3D.getOrNull(index) ?: return
-        val to = from.copy(start = from.start + delta, end = from.end + delta)
-        state = history.execute(state, MoveVector3DCommand(index, from, to))
-        selectedVector3D = index
-        status = "Moved vector ${from.name}"
+        val before = state
+        when (val mutation = unifiedSpatialController.updateVector(unifiedSpatialController.snapshot(state), from.id) {
+            it.copy(start = it.start + delta, end = it.end + delta)
+        }) {
+            is UnifiedSpatialMutation.Applied -> {
+                state = history.execute(before, ReplaceWorkspaceCommand(before, mutation.snapshot.state, "Move vector ${from.name}"))
+                selectedVector3D = index
+                status = "Moved vector ${from.name}; linked 3D views updated"
+            }
+            is UnifiedSpatialMutation.Rejected -> status = mutation.message
+        }
     }
 
     fun beginVectorDrag(index: Int) {
@@ -2656,9 +2689,15 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun setSurfaceExpression(value: String) {
-        state = state.copy(surfaceExpression = value, modifiedAt = System.currentTimeMillis())
-        val validation = universalDocumentEngine.validate(universalMathDocument)
-        status = if (validation.valid) "Surface updated through the universal maths document" else validation.diagnostics.first()
+        val before = state
+        when (val mutation = unifiedSpatialController.stageSurface(unifiedSpatialController.snapshot(state), value)) {
+            is UnifiedSpatialMutation.Applied -> {
+                state = history.execute(before, ReplaceWorkspaceCommand(before, mutation.snapshot.state, "Edit 3D surface"))
+                val staged = mutation.snapshot.document.objects["surface-main"]?.valueState?.status == com.indianservers.aiexplorer.workspace.UniversalMathValueStatus.ParseError
+                status = if (staged) "Surface draft saved; complete it to resume mesh analysis" else "Surface, parameter table and linked 3D views updated"
+            }
+            is UnifiedSpatialMutation.Rejected -> status = mutation.message
+        }
     }
 
     fun transformSpatialPlacement(label: String = "Transform spatial scene", transform: (com.indianservers.aiexplorer.spatial.SpatialScenePlacement) -> com.indianservers.aiexplorer.spatial.SpatialScenePlacement) {
@@ -2769,7 +2808,13 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
                 graphSliderMetadata = emptyMap(),
             )
             MathModule.Graph3D -> state.copy(surfaceExpression = "0")
-            MathModule.Trigonometry, MathModule.Manipulatives -> state
+            MathModule.Trigonometry,
+            MathModule.Manipulatives,
+            MathModule.ProbabilityStatistics,
+            MathModule.MatricesLinearTransformations,
+            MathModule.DataSpreadsheet,
+            MathModule.DiscreteMathematics,
+            MathModule.NumberTheory -> state
         }
         state = history.execute(
             state,
@@ -2999,7 +3044,14 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                     } else if (vm.showMathNotebook) {
                         MathNotebookScreen(vm, wide = wide)
                     } else if (vm.showSolver) {
-                        SolverScreen(onExit = vm::navigateBackIntent, wide = wide)
+                        SolverScreen(
+                            onExit = vm::navigateBackIntent,
+                            wide = wide,
+                            onOpenGraph = { expression -> vm.addFunction(expression); vm.open(MathModule.Graph2D) },
+                            onOpenMatrices = { vm.open(MathModule.MatricesLinearTransformations) },
+                            onOpenStatistics = { vm.open(MathModule.ProbabilityStatistics) },
+                            onOpenGeometry = { vm.open(MathModule.Geometry2D) },
+                        )
                     } else if (vm.showProblemSolver) {
                         ProblemSolverScreen(vm, wide = wide)
                     } else if (vm.showScientificCalculator) {
@@ -3030,6 +3082,11 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel()) {
                             MathModule.Graph3D -> Graph3DScreen(vm)
                             MathModule.Trigonometry -> TrigonometryScreen(vm)
                             MathModule.Manipulatives -> ManipulativesScreen(vm, wide)
+                            MathModule.ProbabilityStatistics -> ProbabilityLabScreen(vm, wide = wide)
+                            MathModule.MatricesLinearTransformations -> MatricesLinearTransformationsWorkspace(vm)
+                            MathModule.DataSpreadsheet -> DataSpreadsheetWorkspace(vm)
+                            MathModule.DiscreteMathematics -> SetTheoryLogicVisualizerScreen(vm, wide = wide)
+                            MathModule.NumberTheory -> NumberTheoryWorkspace(vm)
                             MathModule.SpatialAR -> SpatialARScreen(vm)
                         }
                     }
@@ -3503,7 +3560,7 @@ private fun primaryHomeCategoryToolTitle(category: MathHomeCategory): String = w
     "Visual Workspaces" -> "Explore Workspaces"
     "Data & Probability" -> "Probability & Statistics"
     "Formulas & Proofs" -> "Formulas"
-    "Reference & Logic" -> "Dictionary"
+    "Reference & Logic" -> "Visual Dictionary"
     "Discover More" -> "Daily Challenge"
     else -> category.toolTitles.firstOrNull().orEmpty()
 }
@@ -4028,6 +4085,10 @@ fun Screen(
                 MathQuickLaunchButton("Graphs", "↗", Amber, Modifier.weight(1f)) { vm.open(MathModule.Graph2D) }
                 MathQuickLaunchButton("3D Graph", "xyz", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Graph3D) }
             }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                MathQuickLaunchButton("Trigonometry", "θ", Green, Modifier.weight(1f)) { vm.open(MathModule.Trigonometry) }
+                MathQuickLaunchButton("Solver", "Fx", Violet, Modifier.weight(1f)) { vm.openSolver() }
+            }
             val conceptsAccent = Color(0xFFFF67A6)
             Row(
                 Modifier
@@ -4412,6 +4473,11 @@ fun Screen(
                     Triple(MathModule.Graph3D, "3D Graph", "Explore explicit, implicit and parametric surfaces"),
                     Triple(MathModule.Trigonometry, "Trigonometry", "Use unit circles, identities, triangles and transformations"),
                     Triple(MathModule.Manipulatives, "Math Tiles", "Learn with algebra tiles, fractions, balances and tactile models"),
+                    Triple(MathModule.ProbabilityStatistics, "Probability & Statistics Lab", "Simulate experiments, explore distributions and analyse samples"),
+                    Triple(MathModule.MatricesLinearTransformations, "Matrices & Linear Transformations", "Edit matrices and see their geometric action on vectors and shapes"),
+                    Triple(MathModule.DataSpreadsheet, "Data Table & Spreadsheet", "Calculate with linked cells, tables, summaries and graph-ready series"),
+                    Triple(MathModule.DiscreteMathematics, "Discrete Mathematics Lab", "Explore sets, logic, relations, graphs and combinatorics"),
+                    Triple(MathModule.NumberTheory, "Number Theory Lab", "Investigate primes, factors, divisibility, gcd and modular arithmetic"),
                     Triple(MathModule.SpatialAR, "Spatial AR", "Place existing mathematical constructions into augmented reality"),
                 )
                 FlowRow(
@@ -10489,6 +10555,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
     val graph3D = remember { Graph3D() }
     val surfaceCalculus = remember { SurfaceCalculus() }
+    val sharedSpatialMath = remember { com.indianservers.aiexplorer.workspace.SharedSpatialMathEngine() }
     var density by remember { mutableFloatStateOf(26f) }
     var rotation by remember { mutableFloatStateOf(35f) }
     var roll by remember { mutableFloatStateOf(0f) }
@@ -10649,6 +10716,21 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
     val differential = remember(resolvedPrimaryExpression, traceX, traceY) {
         runCatching { surfaceCalculus.analyze(resolvedPrimaryExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+    }
+    val sharedSurfaceDefinition = remember(resolvedPrimaryExpression) {
+        com.indianservers.aiexplorer.spatial.SurfaceDefinition3D.Explicit("surface-main", resolvedPrimaryExpression)
+    }
+    val sharedDifferential = remember(sharedSurfaceDefinition, traceX, traceY) {
+        runCatching { sharedSpatialMath.differential(sharedSurfaceDefinition, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+    }
+    val sharedCrossSection = remember(sharedSurfaceDefinition, sliceZ, density, showSlice) {
+        if (!showSlice) null else runCatching {
+            sharedSpatialMath.crossSection(
+                sharedSurfaceDefinition,
+                com.indianservers.aiexplorer.core.Plane3D(Vec3(0.0, 0.0, sliceZ.toDouble()), Vec3(0.0, 0.0, 1.0)),
+                density.toInt().coerceIn(8, 48),
+            )
+        }.getOrNull()
     }
     val curvature = remember(resolvedPrimaryExpression, traceX, traceY) {
         runCatching { surfaceCalculus.curvature(resolvedPrimaryExpression, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
@@ -11264,18 +11346,24 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             Insight("Range", insight.range, Cyan)
             Insight("Symmetry", insight.symmetry, Violet)
             Insight("Trace", "(${trim(traceX.toDouble())}, ${trim(traceY.toDouble())})", Green)
-            differential?.let { value ->
-                Insight("Gradient", "(${trim(value.gradient.x)}, ${trim(value.gradient.y)})", Green)
+            Insight("Shared equation", sharedSpatialMath.equation(sharedSurfaceDefinition).equations.joinToString(), Cyan)
+            sharedDifferential?.let { value ->
+                Insight("Gradient", "(${trim(value.gradient.x)}, ${trim(value.gradient.y)}, ${trim(value.gradient.z)})", Green)
                 Insight("Unit normal", "(${trim(value.unitNormal.x)}, ${trim(value.unitNormal.y)}, ${trim(value.unitNormal.z)})", Amber)
                 Insight("Surface point", "(${trim(value.point.x)}, ${trim(value.point.y)}, ${trim(value.point.z)})", Cyan)
                 Text("Tangent plane", color = Ink, fontWeight = FontWeight.SemiBold)
-                MathFormulaText(SurfaceAnalysisHandleEngine.tangentPlaneEquation(value), color = Violet, fontSize = 11.sp)
+                MathFormulaText(value.tangentPlaneEquation, color = Violet, fontSize = 11.sp)
             }
             curvature?.let {
                 Insight("Gaussian curvature", trim(it.gaussian), Amber)
                 Insight("Mean curvature", trim(it.mean), Violet)
             }
             Insight("Slice", "z = ${trim(sliceZ.toDouble())}", Violet)
+            sharedCrossSection?.let { section ->
+                Insight("Cross-section", "${section.loops.size} component(s) · ${section.projectedLoops.sumOf { it.size }} projected points", Green)
+                Insight("Section area", trim(section.loops.sumOf { it.area }), Amber)
+                Insight("Section perimeter", trim(section.loops.sumOf { it.perimeter }), Violet)
+            }
             Insight("Checks", "z(0,0)=0 - z(1,1)=2", Green)
         }
         if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
@@ -13321,6 +13409,11 @@ private fun visualModuleIcon(module: MathModule): String = when (module) {
     MathModule.Graph3D -> "graph"
     MathModule.Trigonometry -> "T"
     MathModule.Manipulatives -> "M"
+    MathModule.ProbabilityStatistics -> "P"
+    MathModule.MatricesLinearTransformations -> "matrix"
+    MathModule.DataSpreadsheet -> "table"
+    MathModule.DiscreteMathematics -> "sets"
+    MathModule.NumberTheory -> "N"
     MathModule.SpatialAR -> "ar"
 }
 
@@ -13331,6 +13424,11 @@ private fun moduleIcon(module: MathModule): String = when (module) {
     MathModule.Graph3D -> "⌁"
     MathModule.Trigonometry -> "θ"
     MathModule.Manipulatives -> "▦"
+    MathModule.ProbabilityStatistics -> "P"
+    MathModule.MatricesLinearTransformations -> "M×"
+    MathModule.DataSpreadsheet -> "▤"
+    MathModule.DiscreteMathematics -> "∪"
+    MathModule.NumberTheory -> "ℕ"
     MathModule.SpatialAR -> "AR"
 }
 

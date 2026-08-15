@@ -32,6 +32,46 @@ sealed interface UniversalMathPayload {
     data class Properties(val entries: Map<String, String>) : UniversalMathPayload
 }
 
+/** The view-independent mathematical recipe used to recreate an object. */
+sealed interface UniversalMathDefinition {
+    data class Symbolic(val source: String) : UniversalMathDefinition
+    data class Coordinates(val dimensions: Int, val construction: String? = null) : UniversalMathDefinition
+    data class Construction(val command: String, val arguments: List<String> = emptyList()) : UniversalMathDefinition
+    data class Properties(val type: String) : UniversalMathDefinition
+}
+
+enum class UniversalMathValueStatus {
+    Valid, Undefined, DomainRestricted, MissingDependency, CyclicDependency, ParseError, NumericallyUnstable,
+}
+
+enum class UniversalVerificationStatus { Verified, Exact, Numerical, Measured, Unverified }
+
+data class UniversalExactApproxValue(
+    val exact: String? = null,
+    val decimal: Double? = null,
+    val precisionDigits: Int? = null,
+    val provenance: String = "",
+    val verification: UniversalVerificationStatus = UniversalVerificationStatus.Unverified,
+)
+
+data class UniversalMathValueState(
+    val status: UniversalMathValueStatus = UniversalMathValueStatus.Valid,
+    val values: Map<String, UniversalExactApproxValue> = emptyMap(),
+    val diagnostic: String? = null,
+) {
+    val usable: Boolean get() = status in setOf(UniversalMathValueStatus.Valid, UniversalMathValueStatus.DomainRestricted)
+}
+
+data class UniversalMathPresentation(
+    val visible: Boolean = true,
+    val colorKey: String = "cyan",
+    val styleKey: String = "default",
+    val locked: Boolean = false,
+    val layer: Int = 0,
+    val folderId: String? = null,
+    val showLabel: Boolean = true,
+)
+
 data class UniversalMathObject(
     val id: String,
     val kind: UniversalMathKind,
@@ -41,10 +81,29 @@ data class UniversalMathObject(
     val assumptions: MathAssumptionSet = MathAssumptionSet(),
     val objectRevision: Long = 0,
     val sourceView: String = "workspace",
+    val definition: UniversalMathDefinition = definitionFrom(payload),
+    val valueState: UniversalMathValueState = valueStateFrom(payload),
+    val presentation: UniversalMathPresentation = UniversalMathPresentation(),
 ) {
     init {
         require(id.isNotBlank() && name.isNotBlank())
         require(id !in dependencies) { "Object $id cannot depend on itself" }
+        require(presentation.layer >= 0) { "Object layer cannot be negative" }
+    }
+
+    companion object {
+        private fun definitionFrom(payload: UniversalMathPayload): UniversalMathDefinition = when (payload) {
+            is UniversalMathPayload.Symbolic -> UniversalMathDefinition.Symbolic(payload.source)
+            is UniversalMathPayload.Coordinates -> UniversalMathDefinition.Coordinates(payload.values.size, payload.definition)
+            is UniversalMathPayload.Dataset -> UniversalMathDefinition.Properties("dataset")
+            is UniversalMathPayload.Properties -> UniversalMathDefinition.Properties(payload.entries["type"] ?: "properties")
+        }
+
+        private fun valueStateFrom(payload: UniversalMathPayload): UniversalMathValueState = when (payload) {
+            is UniversalMathPayload.Symbolic -> if (payload.ast == null) UniversalMathValueState(UniversalMathValueStatus.ParseError, diagnostic = payload.parseError ?: "Expression could not be parsed") else UniversalMathValueState()
+            is UniversalMathPayload.Coordinates -> if (payload.values.all(Double::isFinite)) UniversalMathValueState() else UniversalMathValueState(UniversalMathValueStatus.NumericallyUnstable, diagnostic = "Coordinates must be finite")
+            is UniversalMathPayload.Dataset, is UniversalMathPayload.Properties -> UniversalMathValueState()
+        }
     }
 }
 
@@ -112,7 +171,7 @@ data class UniversalMathDocument(
         return result
     }
 
-    companion object { const val CURRENT_SCHEMA = 2 }
+    companion object { const val CURRENT_SCHEMA = 3 }
 }
 
 data class UniversalDocumentValidation(
@@ -148,20 +207,75 @@ class UniversalMathDocumentEngine(private val cas: SymbolicCasEngine = SymbolicC
         return UniversalMutationResult.Applied(candidate, setOf(value.id) + candidate.dependentsOf(value.id))
     }
 
+    /** Applies a gesture or transform as one validated revision; no partial object update can escape. */
+    fun upsertBatch(
+        document: UniversalMathDocument,
+        values: Collection<UniversalMathObject>,
+        expectedRevision: Long = document.revision,
+        now: Long = System.currentTimeMillis(),
+    ): UniversalMutationResult {
+        if (expectedRevision != document.revision) return UniversalMutationResult.Conflict(expectedRevision, document.revision, "The document changed; recompute the batch from revision ${document.revision}.")
+        if (values.isEmpty()) return UniversalMutationResult.Rejected("A batch must update at least one maths object")
+        if (values.map { it.id }.distinct().size != values.size) return UniversalMutationResult.Rejected("A batch cannot update the same maths object twice")
+        val missing = values.map { it.id }.filterNot(document.objects::containsKey)
+        if (missing.isNotEmpty()) return UniversalMutationResult.Rejected("Unknown maths objects: ${missing.joinToString()}")
+        val changedIds = values.mapTo(linkedSetOf()) { it.id }
+        val revised = values.associate { value ->
+            val current = document.objects.getValue(value.id)
+            value.id to value.copy(objectRevision = current.objectRevision + 1)
+        }
+        val candidate = document.copy(
+            revision = document.revision + 1,
+            objects = document.objects + revised,
+            modifiedAt = now,
+        )
+        val validation = validate(candidate)
+        if (!validation.valid) return UniversalMutationResult.Rejected("The batch would make the maths dependency graph invalid.", validation.diagnostics)
+        val affected = changedIds + changedIds.flatMap { candidate.dependentsOf(it) }
+        return UniversalMutationResult.Applied(candidate, affected)
+    }
+
     fun editSymbolic(document: UniversalMathDocument, id: String, source: String, expectedRevision: Long = document.revision, now: Long = System.currentTimeMillis()): UniversalMutationResult {
         val current = document.objects[id] ?: return UniversalMutationResult.Rejected("Unknown maths object $id")
         if (current.payload !is UniversalMathPayload.Symbolic) return UniversalMutationResult.Rejected("$id is not a symbolic object")
         val parsed = runCatching { cas.parse(source) }.getOrElse { return UniversalMutationResult.Rejected(it.message ?: "Invalid mathematical expression") }
         val referencedNames = identifiers(parsed)
         val dependencies = document.objects.values.filter { it.id != id && (it.id in referencedNames || it.name.substringBefore('(') in referencedNames) }.map { it.id }.toSet()
-        return upsert(document, current.copy(payload = UniversalMathPayload.Symbolic(source, parsed), dependencies = dependencies), expectedRevision, now)
+        return upsert(document, current.copy(
+            payload = UniversalMathPayload.Symbolic(source, parsed),
+            dependencies = dependencies,
+            definition = UniversalMathDefinition.Symbolic(source),
+            valueState = UniversalMathValueState(),
+        ), expectedRevision, now)
+    }
+
+    /** Keeps partially typed maths in the document while excluding it from verified computation. */
+    fun stageSymbolicEdit(document: UniversalMathDocument, id: String, source: String, expectedRevision: Long = document.revision, now: Long = System.currentTimeMillis()): UniversalMutationResult {
+        if (expectedRevision != document.revision) return UniversalMutationResult.Conflict(expectedRevision, document.revision, "The document changed before the staged edit.")
+        val current = document.objects[id] ?: return UniversalMutationResult.Rejected("Unknown maths object $id")
+        if (current.payload !is UniversalMathPayload.Symbolic) return UniversalMutationResult.Rejected("$id is not a symbolic object")
+        val parsed = runCatching { cas.parse(source) }
+        if (parsed.isSuccess) return editSymbolic(document, id, source, expectedRevision, now)
+        val diagnostic = parsed.exceptionOrNull()?.message ?: "Expression is incomplete"
+        val staged = current.copy(
+            payload = UniversalMathPayload.Symbolic(source, null, diagnostic),
+            definition = UniversalMathDefinition.Symbolic(source),
+            valueState = UniversalMathValueState(UniversalMathValueStatus.ParseError, diagnostic = diagnostic),
+            objectRevision = current.objectRevision + 1,
+        )
+        val candidate = document.copy(revision = document.revision + 1, objects = document.objects + (id to staged), modifiedAt = now)
+        return UniversalMutationResult.Applied(candidate, setOf(id) + candidate.dependentsOf(id))
     }
 
     fun editCoordinates(document: UniversalMathDocument, id: String, values: List<Double>, expectedRevision: Long = document.revision, now: Long = System.currentTimeMillis()): UniversalMutationResult {
         val current = document.objects[id] ?: return UniversalMutationResult.Rejected("Unknown maths object $id")
         val payload = current.payload as? UniversalMathPayload.Coordinates ?: return UniversalMutationResult.Rejected("$id does not contain coordinates")
         if (values.any { !it.isFinite() }) return UniversalMutationResult.Rejected("Coordinates must be finite")
-        return upsert(document, current.copy(payload = payload.copy(values = values)), expectedRevision, now)
+        return upsert(document, current.copy(
+            payload = payload.copy(values = values),
+            definition = UniversalMathDefinition.Coordinates(values.size, payload.definition),
+            valueState = UniversalMathValueState(),
+        ), expectedRevision, now)
     }
 
     fun remove(document: UniversalMathDocument, id: String, expectedRevision: Long = document.revision, cascade: Boolean = false, now: Long = System.currentTimeMillis()): UniversalMutationResult {
@@ -193,10 +307,15 @@ class UniversalMathDocumentEngine(private val cas: SymbolicCasEngine = SymbolicC
             document.objects.values.forEach { value ->
                 val symbolic = value.payload as? UniversalMathPayload.Symbolic
                 if (symbolic != null && symbolic.ast == null) add("${value.id} has staged invalid input: ${symbolic.parseError ?: "parse failed"}")
+                if (value.valueState.status == UniversalMathValueStatus.MissingDependency && value.id !in missing) add("${value.id} is marked missing-dependency but all dependencies are present")
+                if (value.valueState.status == UniversalMathValueStatus.CyclicDependency && cycles.none { value.id in it }) add("${value.id} is marked cyclic but no dependency cycle contains it")
             }
             if (document.schemaVersion > UniversalMathDocument.CURRENT_SCHEMA) add("Document schema ${document.schemaVersion} is newer than supported schema ${UniversalMathDocument.CURRENT_SCHEMA}.")
         }
-        return UniversalDocumentValidation(diagnostics.isEmpty(), order, missing, cycles, diagnostics)
+        // A staged parse error is an editor state, not structural document corruption. It remains
+        // diagnostic and unusable, while missing references, cycles and schema/invariant failures block commits.
+        val structuralDiagnostics = diagnostics.filterNot { " has staged invalid input:" in it }
+        return UniversalDocumentValidation(structuralDiagnostics.isEmpty(), order, missing, cycles, diagnostics)
     }
 
     private fun identifiers(expression: SymbolicExpression): Set<String> = buildSet {
@@ -228,6 +347,11 @@ object UniversalWorkspaceBridge {
                 id = "point-$index", kind = UniversalMathKind.Point2D, name = dependency?.name ?: "P$index",
                 payload = UniversalMathPayload.Coordinates(listOf(point.x, point.y), listOf("x", "y"), dependency?.let { pointDefinition(it, state) }),
                 dependencies = dependency?.inputIndices?.map { "point-$it" }?.toSet().orEmpty(), sourceView = "geometry",
+                definition = UniversalMathDefinition.Coordinates(2, dependency?.let { pointDefinition(it, state) }),
+                valueState = UniversalMathValueState(values = mapOf(
+                    "x" to UniversalExactApproxValue(decimal = point.x, provenance = "geometry coordinate", verification = UniversalVerificationStatus.Measured),
+                    "y" to UniversalExactApproxValue(decimal = point.y, provenance = "geometry coordinate", verification = UniversalVerificationStatus.Measured),
+                )),
             )
         }
         val functionNames = state.functions.associate { it.name.substringBefore('(') to it.id }
@@ -235,12 +359,22 @@ object UniversalWorkspaceBridge {
             val parsed = runCatching { cas.parse(function.expression) }
             val ast = parsed.getOrNull()
             val dependencies = ast?.let(::symbolicIdentifiers).orEmpty().mapNotNull(functionNames::get).filterNot { it == function.id }.toSet()
-            objects += UniversalMathObject(function.id, UniversalMathKind.Function, function.name, UniversalMathPayload.Symbolic(function.expression, ast, parsed.exceptionOrNull()?.message), dependencies, sourceView = "graph/CAS/table")
+            objects += UniversalMathObject(
+                function.id, UniversalMathKind.Function, function.name,
+                UniversalMathPayload.Symbolic(function.expression, ast, parsed.exceptionOrNull()?.message), dependencies,
+                sourceView = "graph/CAS/table",
+                definition = UniversalMathDefinition.Symbolic(function.expression),
+                valueState = if (ast == null) UniversalMathValueState(UniversalMathValueStatus.ParseError, diagnostic = parsed.exceptionOrNull()?.message) else UniversalMathValueState(),
+                presentation = UniversalMathPresentation(visible = function.visible, colorKey = function.colorKey),
+            )
         }
         state.shapes.forEach { shape ->
             objects += UniversalMathObject(shape.id, shape.type.algebraKind(), shape.name,
                 UniversalMathPayload.Properties(mapOf("definition" to shapeDefinition(shape, state), "type" to shape.type.name, "visible" to shape.visible.toString(), "locked" to shape.locked.toString(), "style" to shape.styleKey)),
-                shape.pointIndices.map { "point-$it" }.toSet(), sourceView = "geometry")
+                shape.pointIndices.map { "point-$it" }.toSet(), sourceView = "geometry",
+                definition = UniversalMathDefinition.Construction(shape.type.name, shape.pointIndices.map { "point-$it" }),
+                presentation = UniversalMathPresentation(visible = shape.visible, styleKey = shape.styleKey, locked = shape.locked),
+            )
         }
         state.geometryConstraints.forEach { constraint ->
             val kind = when (constraint.type) {
@@ -262,26 +396,57 @@ object UniversalWorkspaceBridge {
         )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + "surface-main").toSet(), sourceView = "AR")
         val generated = UniversalMathDocument(id = "math-${state.id}", revision = state.modifiedAt.coerceAtLeast(0), objects = objects.associateBy { it.id }, modifiedAt = state.modifiedAt)
         val stored = state.universalMathDocument ?: return generated
-        return stored.copy(revision = maxOf(stored.revision, generated.revision), objects = stored.objects + generated.objects, modifiedAt = maxOf(stored.modifiedAt, generated.modifiedAt))
+        // Stored authoritative objects win over projections rebuilt from legacy WorkspaceState fields.
+        // UI adapters must mutate the document first and then project it back to those fields.
+        return stored.copy(revision = maxOf(stored.revision, generated.revision), objects = generated.objects + stored.objects, modifiedAt = maxOf(stored.modifiedAt, generated.modifiedAt))
     }
 
     fun applyToWorkspace(document: UniversalMathDocument, state: WorkspaceState): WorkspaceState {
         val validation = UniversalMathDocumentEngine().validate(document)
         require(validation.valid) { validation.diagnostics.joinToString("; ") }
         val functions = state.functions.map { function ->
-            val payload = document.objects[function.id]?.payload as? UniversalMathPayload.Symbolic
-            if (payload == null) function else function.copy(expression = payload.source)
+            val objectValue = document.objects[function.id]
+            val payload = objectValue?.payload as? UniversalMathPayload.Symbolic
+            if (payload == null) function else function.copy(
+                expression = payload.source,
+                colorKey = objectValue.presentation.colorKey,
+                visible = objectValue.presentation.visible,
+            )
         }
         val points = state.points.mapIndexed { index, point ->
             val coordinates = document.objects["point-$index"]?.payload as? UniversalMathPayload.Coordinates
             coordinates?.values?.takeIf { it.size >= 2 }?.let { Vec2(it[0], it[1]) } ?: point
         }
         val surface = (document.objects["surface-main"]?.payload as? UniversalMathPayload.Symbolic)?.source ?: state.surfaceExpression
-        return state.copy(functions = functions, points = points, surfaceExpression = surface, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
+        val solids = state.solids.mapIndexed { index, solid ->
+            val properties = (document.objects["solid-$index"]?.payload as? UniversalMathPayload.Properties)?.entries ?: return@mapIndexed solid
+            solid.copy(
+                width = properties["width"]?.toDoubleOrNull() ?: solid.width,
+                height = properties["height"]?.toDoubleOrNull() ?: solid.height,
+                depth = properties["depth"]?.toDoubleOrNull() ?: solid.depth,
+                radius = properties["radius"]?.toDoubleOrNull() ?: solid.radius,
+                topRadius = properties["topRadius"]?.toDoubleOrNull() ?: solid.topRadius,
+                position = properties["position"]?.toVec3OrNull() ?: solid.position,
+                rotation = properties["rotation"]?.toVec3OrNull() ?: solid.rotation,
+            )
+        }
+        val vectors = state.vectors3D.map { vector ->
+            val values = (document.objects["vector-${vector.id}"]?.payload as? UniversalMathPayload.Coordinates)?.values
+            if (values == null || values.size < 6) vector else vector.copy(
+                start = Vec3(values[0], values[1], values[2]),
+                end = Vec3(values[3], values[4], values[5]),
+            )
+        }
+        val shapes = state.shapes.map { shape ->
+            document.objects[shape.id]?.presentation?.let { presentation ->
+                shape.copy(visible = presentation.visible, locked = presentation.locked, styleKey = presentation.styleKey)
+            } ?: shape
+        }
+        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, surfaceExpression = surface, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
     }
 
     private fun solidObject(index: Int, solid: Solid) = UniversalMathObject("solid-$index", UniversalMathKind.Solid, solid.type.name,
-        UniversalMathPayload.Properties(mapOf("type" to solid.type.name, "width" to solid.width.toString(), "height" to solid.height.toString(), "depth" to solid.depth.toString(), "radius" to solid.radius.toString(), "position" to solid.position.csv(), "rotation" to solid.rotation.csv())), sourceView = "3D geometry")
+        UniversalMathPayload.Properties(mapOf("type" to solid.type.name, "width" to solid.width.toString(), "height" to solid.height.toString(), "depth" to solid.depth.toString(), "radius" to solid.radius.toString(), "topRadius" to solid.topRadius.toString(), "position" to solid.position.csv(), "rotation" to solid.rotation.csv())), sourceView = "3D geometry")
 
     private fun vectorObject(vector: Vector3D) = UniversalMathObject("vector-${vector.id}", UniversalMathKind.Vector, vector.name,
         UniversalMathPayload.Coordinates(listOf(vector.start.x, vector.start.y, vector.start.z, vector.end.x, vector.end.y, vector.end.z), listOf("x1", "y1", "z1", "x2", "y2", "z2")), sourceView = "3D/vector")
@@ -300,6 +465,7 @@ object UniversalWorkspaceBridge {
     }
 
     private fun Vec3.csv() = "$x,$y,$z"
+    private fun String.toVec3OrNull(): Vec3? = split(',').mapNotNull(String::toDoubleOrNull).takeIf { it.size == 3 }?.let { Vec3(it[0], it[1], it[2]) }
 
     private fun Shape2DType.algebraKind() = when (this) {
         Shape2DType.Line, Shape2DType.Parallel, Shape2DType.Perpendicular, Shape2DType.AngleBisector -> UniversalMathKind.Line
@@ -390,7 +556,8 @@ object UniversalMathDocumentCodec {
     private fun encodeObject(value: UniversalMathObject): String = listOf(
         pack(value.id), value.kind.name, pack(value.name), pack(encodePayload(value.payload)),
         pack(value.dependencies.sorted().joinToString(",")), pack(encodeAssumptions(value.assumptions)),
-        value.objectRevision.toString(), pack(value.sourceView), "2",
+        value.objectRevision.toString(), pack(value.sourceView), "3",
+        pack(encodeDefinition(value.definition)), pack(encodeValueState(value.valueState)), pack(encodePresentation(value.presentation)),
     ).joinToString(".")
 
     private fun decodeObject(record: String): UniversalMathObject {
@@ -399,7 +566,59 @@ object UniversalMathDocumentCodec {
         val id = unpack(fields[0]); val kind = UniversalMathKind.valueOf(fields[1]); val name = unpack(fields[2])
         val payload = decodePayload(unpack(fields[3])); val dependencies = unpack(fields[4]).split(',').filter(String::isNotBlank).toSet()
         val assumptions = decodeAssumptions(unpack(fields[5])); val revision = fields[6].toLong(); val sourceView = unpack(fields[7])
-        return UniversalMathObject(id, kind, name, payload, dependencies, assumptions, revision, sourceView)
+        val definition = fields.getOrNull(9)?.let(::unpack)?.let(::decodeDefinition)
+        val valueState = fields.getOrNull(10)?.let(::unpack)?.let(::decodeValueState)
+        val presentation = fields.getOrNull(11)?.let(::unpack)?.let(::decodePresentation)
+        val migrated = UniversalMathObject(id, kind, name, payload, dependencies, assumptions, revision, sourceView)
+        return migrated.copy(
+            definition = definition ?: migrated.definition,
+            valueState = valueState ?: migrated.valueState,
+            presentation = presentation ?: migrated.presentation,
+        )
+    }
+
+    private fun encodeDefinition(definition: UniversalMathDefinition): String = when (definition) {
+        is UniversalMathDefinition.Symbolic -> "S|${pack(definition.source)}"
+        is UniversalMathDefinition.Coordinates -> "C|${definition.dimensions}|${pack(definition.construction.orEmpty())}"
+        is UniversalMathDefinition.Construction -> "G|${pack(definition.command)}|${pack(definition.arguments.joinToString(","))}"
+        is UniversalMathDefinition.Properties -> "P|${pack(definition.type)}"
+    }
+
+    private fun decodeDefinition(source: String): UniversalMathDefinition {
+        val parts = source.split('|')
+        return when (parts.firstOrNull()) {
+            "S" -> UniversalMathDefinition.Symbolic(unpack(parts.getOrElse(1) { "" }))
+            "C" -> UniversalMathDefinition.Coordinates(parts.getOrElse(1) { "0" }.toInt(), unpack(parts.getOrElse(2) { "" }).takeIf(String::isNotBlank))
+            "G" -> UniversalMathDefinition.Construction(unpack(parts.getOrElse(1) { "" }), unpack(parts.getOrElse(2) { "" }).split(',').filter(String::isNotBlank))
+            "P" -> UniversalMathDefinition.Properties(unpack(parts.getOrElse(1) { "" }))
+            else -> error("unknown definition type")
+        }
+    }
+
+    private fun encodeValueState(state: UniversalMathValueState): String = listOf(
+        state.status.name,
+        pack(state.diagnostic.orEmpty()),
+        pack(state.values.toSortedMap().entries.joinToString(";") { (key, value) ->
+            listOf(pack(key), pack(value.exact.orEmpty()), value.decimal?.toString().orEmpty(), value.precisionDigits?.toString().orEmpty(), pack(value.provenance), value.verification.name).joinToString(",")
+        }),
+    ).joinToString("|")
+
+    private fun decodeValueState(source: String): UniversalMathValueState {
+        val parts = source.split('|', limit = 3)
+        val values = unpack(parts.getOrElse(2) { "" }).split(';').filter(String::isNotBlank).associate { row ->
+            val fields = row.split(','); val key = unpack(fields[0])
+            key to UniversalExactApproxValue(unpack(fields[1]).takeIf(String::isNotBlank), fields[2].toDoubleOrNull(), fields[3].toIntOrNull(), unpack(fields[4]), UniversalVerificationStatus.valueOf(fields[5]))
+        }
+        return UniversalMathValueState(UniversalMathValueStatus.valueOf(parts[0]), values, unpack(parts.getOrElse(1) { "" }).takeIf(String::isNotBlank))
+    }
+
+    private fun encodePresentation(value: UniversalMathPresentation): String = listOf(
+        value.visible, pack(value.colorKey), pack(value.styleKey), value.locked, value.layer, pack(value.folderId.orEmpty()), value.showLabel,
+    ).joinToString(",")
+
+    private fun decodePresentation(source: String): UniversalMathPresentation {
+        val fields = source.split(',')
+        return UniversalMathPresentation(fields[0].toBoolean(), unpack(fields[1]), unpack(fields[2]), fields[3].toBoolean(), fields[4].toInt(), unpack(fields[5]).takeIf(String::isNotBlank), fields[6].toBoolean())
     }
 
     private fun encodePayload(payload: UniversalMathPayload): String = when (payload) {

@@ -10,6 +10,8 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import org.junit.Rule
 import org.junit.Test
 
@@ -72,6 +74,24 @@ class SolverPhase1UiTest {
         composeRule.waitForIdle()
         composeRule.onNodeWithText("Solve").performClick()
         composeRule.onNodeWithText("x = 3").assertIsDisplayed()
+    }
+
+    @Test
+    fun answerAndStepExposeSpokenStateBeyondColour() {
+        openSolver()
+        composeRule.onNodeWithContentDescription("Editable Solver expression", substring = true)
+            .performTextReplacement("3x + 5 = 20")
+        composeRule.onNodeWithText("Solve").performClick()
+        composeRule.onNode(
+            SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, "Verified answer x = 5"),
+        ).assertIsDisplayed()
+        composeRule.onNodeWithText("Show steps").performClick()
+        composeRule.onNode(
+            SemanticsMatcher("Step has spoken position and mathematical transformation") { node ->
+                runCatching { node.config[SemanticsProperties.StateDescription] }.getOrNull()?.startsWith("Step 1 of") == true &&
+                    runCatching { node.config[SemanticsProperties.ContentDescription] }.getOrNull()?.joinToString()?.contains("Before") == true
+            },
+        ).assertIsDisplayed()
     }
 
     private fun openSolver() {

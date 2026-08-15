@@ -91,6 +91,11 @@ enum class MathModule(val label: String) {
     Graph3D("3D Graph"),
     Trigonometry("Trig"),
     Manipulatives("Tiles"),
+    ProbabilityStatistics("Probability"),
+    MatricesLinearTransformations("Matrices"),
+    DataSpreadsheet("Data"),
+    DiscreteMathematics("Discrete"),
+    NumberTheory("Numbers"),
     SpatialAR("AR"),
 }
 

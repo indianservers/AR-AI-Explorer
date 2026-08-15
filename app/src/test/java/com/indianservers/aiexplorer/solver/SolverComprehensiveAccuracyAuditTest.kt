@@ -195,13 +195,17 @@ class SolverComprehensiveAccuracyAuditTest {
             "Find the distance between (0,0) and (3,4).",
             "A shop gives 15 percent discount on 200. Find the discount.",
             "The sum of two consecutive integers is 31. Find them.",
-            "A train travels 120 km in 2 hours. What is its average speed?",
             "Find the derivative of x cubed.",
             "Integrate x squared with respect to x.",
             "What is the sine of thirty degrees?",
             "If f of x is x squared plus one, find f of three.",
             "Two coins are tossed. What is the probability of two heads?",
         ).forEach { unsupported("Grade 10-UG", "Natural-language reasoning", it, InputForm.NaturalLanguage) }
+        answer(
+            "Grade 10-UG", "Natural-language reasoning",
+            "A train travels 120 km in 2 hours. What is its average speed?",
+            "60 km/h", InputForm.NaturalLanguage,
+        )
         answer(
             "Grade 10",
             "Natural-language reasoning",

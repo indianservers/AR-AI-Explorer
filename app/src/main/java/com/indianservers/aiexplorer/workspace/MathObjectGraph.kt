@@ -3,6 +3,8 @@ package com.indianservers.aiexplorer.workspace
 import com.indianservers.aiexplorer.core.CurveSample
 import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.core.GraphAnalysis
+import com.indianservers.aiexplorer.core.AdvancedGraphFeatureEngine
+import com.indianservers.aiexplorer.core.AdvancedGraphFeatures
 import com.indianservers.aiexplorer.core.InteractiveParameterEngine
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.stripEquation
@@ -62,6 +64,7 @@ data class MathGraphObject(
     val roots: List<Double>,
     val extrema: List<Vec2>,
     val table: List<LinkedTableRow>,
+    val advancedFeatures: AdvancedGraphFeatures? = null,
 )
 
 data class MathObjectGraphSnapshot(
@@ -80,6 +83,7 @@ class MathObjectGraph(
     private val expressionEngine: ExpressionEngine = ExpressionEngine(),
     private val graphAnalysis: GraphAnalysis = GraphAnalysis(expressionEngine),
 ) {
+    private val advancedFeatures = AdvancedGraphFeatureEngine(expressionEngine)
     fun snapshot(
         state: WorkspaceState,
         parameterValues: Map<String, Double> = emptyMap(),
@@ -145,6 +149,7 @@ class MathObjectGraph(
             roots = graphAnalysis.roots(resolved, -10.0, 10.0),
             extrema = graphAnalysis.extrema(resolved, -6.0, 6.0),
             table = table,
+            advancedFeatures = runCatching { advancedFeatures.analyze(resolved, -10.0, 10.0) }.getOrNull(),
         )
     }
 

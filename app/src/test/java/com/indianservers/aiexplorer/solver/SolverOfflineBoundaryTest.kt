@@ -7,7 +7,7 @@ import org.junit.Test
 
 class SolverOfflineBoundaryTest {
     @Test
-    fun solverProductionSourcesContainNoNetworkOrImageIntegration() {
+    fun solverProductionSourcesContainNoNetworkIntegration() {
         val root = File("src/main/java/com/indianservers/aiexplorer/solver")
         assertTrue("Solver source package must exist", root.isDirectory)
         val forbidden = listOf(
@@ -18,10 +18,6 @@ class SolverOfflineBoundaryTest {
             "openai",
             "gemini",
             "wolfram",
-            "camera",
-            "ocr",
-            "bitmap",
-            "imageinput",
         )
         root.walkTopDown().filter(File::isFile).forEach { file ->
             val source = file.readText().lowercase()
@@ -32,7 +28,7 @@ class SolverOfflineBoundaryTest {
     }
 
     @Test
-    fun onlyKeyboardInputSourceIsImplementedInPhase1() {
+    fun keyboardRemainsTheOnlyDirectSolverInputSource() {
         val root = File("src/main/java/com/indianservers/aiexplorer/solver")
         val sourceNames = root.walkTopDown()
             .filter { it.isFile && it.extension == "kt" }

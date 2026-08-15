@@ -54,11 +54,11 @@ fun SolverHintPanel(
     LearningPanel(Green) {
         Text("Give me only a hint", color = Green, fontWeight = FontWeight.Bold)
         if (hint == null) {
-            Text("Request a progressive hint without revealing the complete solution.", color = Muted, fontSize = 10.sp)
+            Text("Request a progressive hint without revealing the complete solution.", color = Muted, fontSize = 11.sp)
         } else {
-            Text("Hint ${hintNumber + 1} of $totalHints | ${hint.level.name}", color = Muted, fontSize = 9.sp)
+            Text("Hint ${hintNumber + 1} of $totalHints | ${hint.level.name}", color = Muted, fontSize = 11.sp)
             Text(hint.text, color = Ink, fontSize = 12.sp)
-            if (hint.revealsAnswer) Text("This hint reveals the verified next step, not the entire solution.", color = Amber, fontSize = 9.sp)
+            if (hint.revealsAnswer) Text("This hint reveals the verified next step, not the entire solution.", color = Amber, fontSize = 11.sp)
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             GlowButton("Another hint", enabled = hintNumber < totalHints - 1, onClick = onAnotherHint)
@@ -83,7 +83,7 @@ fun SolverTutorPanel(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
                 Text("Ask me the next step", color = Cyan, fontWeight = FontWeight.Bold)
-                Text("Step ${(stepIndex + 1).coerceAtMost(totalSteps)} of $totalSteps", color = Muted, fontSize = 9.sp)
+                Text("Step ${(stepIndex + 1).coerceAtMost(totalSteps)} of $totalSteps", color = Muted, fontSize = 11.sp)
             }
             GlowButton("Close", onClick = onClose)
         }
@@ -102,7 +102,7 @@ fun SolverTutorPanel(
                 "Session summary: $accepted accepted step${if (accepted == 1) "" else "s"} | " +
                     "$revisions revision${if (revisions == 1) "" else "s"}",
                 color = Muted,
-                fontSize = 10.sp,
+                fontSize = 11.sp,
             )
         } else {
             IntentAwareMathValueField(
@@ -130,9 +130,9 @@ fun SolverTutorPanel(
                 verticalArrangement = Arrangement.spacedBy(3.dp),
             ) {
                 Text(evaluation.feedback.headline, color = if (positive) Green else Amber, fontWeight = FontWeight.Bold, fontSize = 11.sp)
-                Text(evaluation.feedback.explanation, color = Ink, fontSize = 10.sp)
-                Text("Small clue: ${evaluation.feedback.smallestUsefulClue}", color = Muted, fontSize = 9.sp)
-                evaluation.misconception?.let { Text("Pattern: ${it.category} | ${it.mathematicalReason}", color = Amber, fontSize = 9.sp) }
+                Text(evaluation.feedback.explanation, color = Ink, fontSize = 11.sp)
+                Text("Small clue: ${evaluation.feedback.smallestUsefulClue}", color = Muted, fontSize = 11.sp)
+                evaluation.misconception?.let { Text("Pattern: ${it.category} | ${it.mathematicalReason}", color = Amber, fontSize = 11.sp) }
             }
         }
     }
@@ -159,12 +159,12 @@ fun SolverPracticePanel(
             PracticeMode.entries.forEach { item -> GlowButton(if (item == mode) "* ${item.label}" else item.label) { onMode(item) } }
         }
         if (problem == null) {
-            Text("No verified practice template is available for this problem yet.", color = Amber, fontSize = 10.sp)
+            Text("No verified practice template is available for this problem yet.", color = Amber, fontSize = 11.sp)
         } else {
             Text(problem.prompt, color = Ink, fontSize = 12.sp)
-            Text("${problem.skill} | ${problem.difficulty.level} | estimate ${problem.difficulty.score}", color = Muted, fontSize = 9.sp)
+            Text("${problem.skill} | ${problem.difficulty.level} | estimate ${problem.difficulty.score}", color = Muted, fontSize = 11.sp)
             if (problem.choices.isNotEmpty()) {
-                problem.choices.forEach { Text("- $it", color = Cyan, fontSize = 10.sp) }
+                problem.choices.forEach { Text("- $it", color = Cyan, fontSize = 11.sp) }
             }
             IntentAwareMathValueField(
                 value = input,
@@ -181,8 +181,8 @@ fun SolverPracticePanel(
                 GlowButton("Check answer", enabled = input.text.isNotBlank(), onClick = onCheck)
                 GlowButton("New problem", onClick = onNew)
             }
-            feedback?.let { Text(it, color = if (it.startsWith("Correct")) Green else Amber, fontSize = 10.sp) }
-            Text("Local validation: ${problem.validationMessage}", color = Muted, fontSize = 8.sp)
+            feedback?.let { Text(it, color = if (it.startsWith("Correct")) Green else Amber, fontSize = 11.sp) }
+            Text("Local validation: ${problem.validationMessage}", color = Muted, fontSize = 11.sp)
         }
     }
 }
@@ -197,19 +197,19 @@ fun SolverMasteryPanel(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
                 Text("Learning estimate", color = Amber, fontWeight = FontWeight.Bold)
-                Text("Private, local and approximate", color = Muted, fontSize = 9.sp)
+                Text("Private, local and approximate", color = Muted, fontSize = 11.sp)
             }
             GlowButton("Close", onClick = onClose)
         }
-        Text("Only aggregate skill counts are stored. Raw tutor entries are not retained or shared.", color = Ink, fontSize = 10.sp)
-        if (summary.skills.isEmpty()) Text("No Solver learning activity recorded.", color = Muted, fontSize = 10.sp)
+        Text("Only aggregate skill counts are stored. Raw tutor entries are not retained or shared.", color = Ink, fontSize = 11.sp)
+        if (summary.skills.isEmpty()) Text("No Solver learning activity recorded.", color = Muted, fontSize = 11.sp)
         summary.skills.forEach { skill ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(skill.skill.replace(Regex("([a-z])([A-Z])"), "$1 $2"), color = Ink, fontSize = 10.sp)
-                Text("${skill.estimatePercent}% | ${skill.trend}", color = if (skill.trend == "needs review") Amber else Green, fontSize = 10.sp)
+                Text(skill.skill.replace(Regex("([a-z])([A-Z])"), "$1 $2"), color = Ink, fontSize = 11.sp)
+                Text("${skill.estimatePercent}% | ${skill.trend}", color = if (skill.trend == "needs review") Amber else Green, fontSize = 11.sp)
             }
         }
-        if (summary.needsReview.isNotEmpty()) Text("Review: ${summary.needsReview.joinToString()}", color = Amber, fontSize = 9.sp)
+        if (summary.needsReview.isNotEmpty()) Text("Review: ${summary.needsReview.joinToString()}", color = Amber, fontSize = 11.sp)
         GlowButton("Clear Solver learning data", enabled = summary.skills.isNotEmpty(), onClick = onClear)
     }
 }
@@ -234,7 +234,7 @@ fun SolverCataloguePanel(
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search shared Solver calculators" },
         )
         SolverCalculatorCatalogue.search(query).filter { it.supported }.groupBy { it.group }.forEach { (group, presets) ->
-            Text(group.label, color = Muted, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+            Text(group.label, color = Muted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 presets.forEach { preset -> GlowButton(preset.title) { onChoose(preset) } }
             }

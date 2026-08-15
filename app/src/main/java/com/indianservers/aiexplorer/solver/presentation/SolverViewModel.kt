@@ -12,14 +12,17 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.indianservers.aiexplorer.solver.data.history.LocalSolverHistoryRepository
 import com.indianservers.aiexplorer.solver.data.local.SolverPhase2Preferences
 import com.indianservers.aiexplorer.solver.data.local.SolverLearningRepository
 import com.indianservers.aiexplorer.solver.domain.engine.Phase3SolverEngine
+import com.indianservers.aiexplorer.solver.domain.input.SchoolMathInputRecognizer
 import com.indianservers.aiexplorer.solver.domain.catalogue.SolverCalculatorPreset
 import com.indianservers.aiexplorer.solver.domain.model.ExplanationProfile
 import com.indianservers.aiexplorer.solver.domain.model.SolverExpressionRenderer
 import com.indianservers.aiexplorer.solver.domain.model.SolverOperation
+import com.indianservers.aiexplorer.solver.domain.model.SolverSolution
 import com.indianservers.aiexplorer.solver.domain.model.VerificationStatus
 import com.indianservers.aiexplorer.solver.domain.repository.SolverHistoryEntry
 import com.indianservers.aiexplorer.solver.domain.practice.SolverPracticeGenerator
@@ -28,6 +31,11 @@ import com.indianservers.aiexplorer.solver.domain.tutor.PracticeMode
 import com.indianservers.aiexplorer.solver.domain.tutor.SolverHintEngine
 import com.indianservers.aiexplorer.solver.domain.tutor.SolverStepEvaluationEngine
 import java.util.UUID
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SolverViewModel(
     application: Application,
@@ -40,6 +48,10 @@ class SolverViewModel(
     private val stepEvaluator = SolverStepEvaluationEngine()
     private val practiceGenerator = SolverPracticeGenerator(engine)
     private var interactionStartedAt = System.currentTimeMillis()
+    private var solveJob: Job? = null
+    private val solutionCache = object : LinkedHashMap<String, SolverSolution>(SolverReleasePolicy.maximumCachedSolutions, .75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, SolverSolution>?) = size > SolverReleasePolicy.maximumCachedSolutions
+    }
 
     var state by mutableStateOf(
         SolverUiState(
@@ -55,11 +67,19 @@ class SolverViewModel(
     )
         private set
 
+    init {
+        if (savedStateHandle.get<Boolean>(KEY_HAS_ACTIVE_SOLUTION) == true && state.input.text.isNotBlank()) {
+            launchSolve(state.operation, hintOnly = false, requestedMethodId = savedStateHandle.get<String>(KEY_METHOD), recordInteraction = false)
+        }
+    }
+
     fun updateInput(value: TextFieldValue) {
-        state = state.copy(input = value, solution = null)
+        solveJob?.cancel()
+        state = state.copy(input = value, solution = null, isSolving = false, solveStatus = null)
         savedStateHandle[KEY_INPUT] = value.text
         savedStateHandle[KEY_SELECTION_START] = value.selection.start
         savedStateHandle[KEY_SELECTION_END] = value.selection.end
+        savedStateHandle[KEY_HAS_ACTIVE_SOLUTION] = false
     }
 
     fun selectOperation(operation: SolverOperation) {
@@ -69,27 +89,29 @@ class SolverViewModel(
 
     fun run(operation: SolverOperation = state.operation) {
         selectOperation(operation)
-        val solution = engine.solve(state.input.text, operation, state.explanationProfile)
-        storeSolution(solution, hintOnly = false)
+        launchSolve(operation, hintOnly = false)
     }
 
     fun runHintOnly() {
-        val solution = engine.solve(state.input.text, state.operation, state.explanationProfile)
-        storeSolution(solution, hintOnly = solution.supported)
-        if (solution.supported) requestNextHint()
+        launchSolve(state.operation, hintOnly = true)
     }
 
     fun tryMethod(methodId: String) {
-        val solution = engine.solve(state.input.text, state.operation, state.explanationProfile, methodId)
-        storeSolution(solution, hintOnly = false)
+        launchSolve(state.operation, hintOnly = false, requestedMethodId = methodId)
     }
 
     fun setExplanationProfile(profile: ExplanationProfile) {
         phase2Preferences.setExplanationProfile(profile)
-        state = state.copy(
-            explanationProfile = profile,
-            solution = state.solution?.let { engine.solve(state.input.text, state.operation, profile, it.selectedMethodId) },
-        )
+        val method = state.solution?.selectedMethodId
+        val shouldResolve = state.solution != null
+        state = state.copy(explanationProfile = profile)
+        if (shouldResolve) launchSolve(state.operation, hintOnly = state.hintOnlyMode, requestedMethodId = method, recordInteraction = false)
+    }
+
+    fun cancelSolve() {
+        solveJob?.cancel()
+        solveJob = null
+        state = state.copy(isSolving = false, solveStatus = "Calculation cancelled. Your input is unchanged.")
     }
 
     fun setHistoryQuery(query: String) {
@@ -283,6 +305,7 @@ class SolverViewModel(
     private fun storeSolution(
         solution: com.indianservers.aiexplorer.solver.domain.model.SolverSolution,
         hintOnly: Boolean,
+        recordInteraction: Boolean = true,
     ) {
         val elapsed = System.currentTimeMillis() - interactionStartedAt
         state = state.copy(
@@ -301,8 +324,12 @@ class SolverViewModel(
             practiceVisible = false,
             practiceProblem = null,
             practiceFeedback = null,
+            isSolving = false,
+            solveStatus = if (solution.supported) "Completed with ${solution.verificationStrength.name.replace(Regex("([a-z])([A-Z])"), "$1 $2").lowercase()}." else "No verified strategy matched.",
         )
-        if (solution.supported && solution.finalAnswer != null && solution.verification.status != VerificationStatus.Failed) {
+        savedStateHandle[KEY_HAS_ACTIVE_SOLUTION] = true
+        savedStateHandle[KEY_METHOD] = solution.selectedMethodId
+        if (recordInteraction && solution.supported && solution.finalAnswer != null && solution.verification.status != VerificationStatus.Failed) {
             learningRepository.recordProblem(
                 skill(solution),
                 independentlySolved = !hintOnly,
@@ -326,6 +353,49 @@ class SolverViewModel(
             state = state.copy(learningSummary = learningRepository.summary())
         }
         interactionStartedAt = System.currentTimeMillis()
+    }
+
+    private fun launchSolve(
+        operation: SolverOperation,
+        hintOnly: Boolean,
+        requestedMethodId: String? = null,
+        recordInteraction: Boolean = true,
+    ) {
+        val rawInput = state.input.text
+        val input = SchoolMathInputRecognizer.canonicalize(rawInput)
+        val profile = state.explanationProfile
+        if (input.isBlank()) return
+        if (input != rawInput) {
+            state = state.copy(input = TextFieldValue(input, TextRange(input.length)))
+            savedStateHandle[KEY_INPUT] = input
+            savedStateHandle[KEY_SELECTION_START] = input.length
+            savedStateHandle[KEY_SELECTION_END] = input.length
+        }
+        solveJob?.cancel()
+        val cacheKey = listOf(input.trim(), operation.name, profile.name, requestedMethodId.orEmpty()).joinToString("\u0000")
+        solutionCache[cacheKey]?.let { cached ->
+            storeSolution(cached, hintOnly = hintOnly && cached.supported, recordInteraction = recordInteraction)
+            if (hintOnly && cached.supported) requestNextHint()
+            return
+        }
+        state = state.copy(isSolving = true, solveStatus = "Checking notation and selecting a verified strategy…")
+        solveJob = viewModelScope.launch {
+            val startedAt = System.currentTimeMillis()
+            val warningJob = launch {
+                delay(SolverReleasePolicy.solveWarningMillis)
+                if (state.isSolving) state = state.copy(solveStatus = SolverReleasePolicy.longRunningMessage(System.currentTimeMillis() - startedAt))
+                delay(SolverReleasePolicy.solveWarningMillis)
+                if (state.isSolving) state = state.copy(solveStatus = SolverReleasePolicy.longRunningMessage(System.currentTimeMillis() - startedAt))
+            }
+            val solution = withContext(Dispatchers.Default) {
+                engine.solve(input, operation, profile, requestedMethodId)
+            }
+            warningJob.cancel()
+            solutionCache[cacheKey] = solution
+            storeSolution(solution, hintOnly = hintOnly && solution.supported, recordInteraction = recordInteraction)
+            if (hintOnly && solution.supported) requestNextHint()
+            solveJob = null
+        }
     }
 
     fun clearInput() {
@@ -377,6 +447,8 @@ class SolverViewModel(
         const val KEY_SELECTION_START = "solver.selection.start"
         const val KEY_SELECTION_END = "solver.selection.end"
         const val KEY_OPERATION = "solver.operation"
+        const val KEY_HAS_ACTIVE_SOLUTION = "solver.active.solution"
+        const val KEY_METHOD = "solver.active.method"
 
         fun animatorScale(context: Context): Float = runCatching {
             Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)

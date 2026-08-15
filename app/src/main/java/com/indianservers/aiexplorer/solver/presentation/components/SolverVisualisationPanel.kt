@@ -26,6 +26,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,21 +74,21 @@ fun SolverVisualisationPanel(
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text(specification.title, color = Cyan, fontSize = 14.sp)
-                Text("${position + 1} of $count | ${specification.type.name}", color = Muted, fontSize = 9.sp)
+                Text(specification.title, color = Cyan, fontSize = 14.sp, modifier = Modifier.semantics { heading() })
+                Text("${position + 1} of $count | ${specification.type.name}", color = Muted, fontSize = 11.sp)
             }
             GlowButton("Full screen", onClick = onExpand)
         }
         SolverVisualisationCanvas(specification, Modifier.fillMaxWidth().height(210.dp))
-        specification.domainStatement?.let { Text("Domain: $it", color = Muted, fontSize = 9.sp) }
-        Text(specification.accessibilityDescription, color = Ink, fontSize = 10.sp)
+        specification.domainStatement?.let { Text("Domain: $it", color = Muted, fontSize = 11.sp) }
+        Text(specification.accessibilityDescription, color = Ink, fontSize = 11.sp)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             GlowButton("Previous", icon = "back", iconOnly = true, onClick = onPrevious)
             GlowButton(if (playing) "Pause" else if (reducedMotion) "Next state" else "Play", onClick = onPlayPause)
             GlowButton("Next", onClick = onNext)
             GlowButton("Reset", onClick = onReset)
         }
-        if (reducedMotion) Text("Reduced motion is active; Play advances one state at a time.", color = Green, fontSize = 9.sp)
+        if (reducedMotion) Text("Reduced motion is active; Play advances one state at a time.", color = Green, fontSize = 11.sp)
     }
     if (expanded) {
         Dialog(onDismissRequest = onExpand) {
@@ -112,7 +116,11 @@ fun SolverVisualisationCanvas(specification: VisualisationSpec, modifier: Modifi
     Canvas(
         modifier
             .background(Color(0xFF06131B), RoundedCornerShape(5.dp))
-            .semantics { contentDescription = specification.accessibilityDescription },
+            .semantics {
+                contentDescription = specification.accessibilityDescription
+                stateDescription = "Mathematical visualisation with a complete text alternative"
+                liveRegion = LiveRegionMode.Polite
+            },
     ) {
         drawRect(Color(0xFF06131B))
         when (val data = specification.mathematicalData) {

@@ -67,6 +67,8 @@ enum class ProblemType {
     NumberTheory,
     Calculus,
     ComplexNumbers,
+    Probability,
+    Statistics,
     UnsupportedOrAmbiguous,
 }
 

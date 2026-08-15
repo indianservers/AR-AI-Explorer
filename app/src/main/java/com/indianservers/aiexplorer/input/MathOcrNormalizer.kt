@@ -38,7 +38,7 @@ object MathOcrNormalizer {
             .map { line ->
                 line.trim()
                     .replace(Regex("""[ \t]+"""), " ")
-                    .replace(Regex("""\s*([=+\-*/^(),<>])\s*"""), " $1 ")
+                    .replace(Regex("""\s*(<=|>=|[=+\-*/^(),<>])\s*"""), " $1 ")
                     .replace(Regex("""\s+"""), " ")
                     .trim()
             }

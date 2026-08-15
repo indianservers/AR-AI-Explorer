@@ -88,6 +88,8 @@ class Phase1SolverEngine(
         ProblemType.NumberTheory,
         ProblemType.Calculus,
         ProblemType.ComplexNumbers,
+        ProblemType.Probability,
+        ProblemType.Statistics,
         ProblemType.UnsupportedOrAmbiguous -> unsupported(input, expression, classification, classification.evidence.lastOrNull() ?: "This problem is outside Phase 1.")
     }
 

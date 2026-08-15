@@ -44,6 +44,8 @@ data class SolverUiState(
     val learningSummary: SolverLearningSummary = SolverLearningSummary(emptyList()),
     val catalogueVisible: Boolean = false,
     val catalogueQuery: String = "",
+    val isSolving: Boolean = false,
+    val solveStatus: String? = null,
 ) {
     fun withInput(text: String): SolverUiState = copy(input = TextFieldValue(text, TextRange(text.length)))
 }

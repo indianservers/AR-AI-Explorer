@@ -198,6 +198,7 @@ import com.indianservers.aiexplorer.core.TransformGizmoHandle
 import com.indianservers.aiexplorer.core.TransformGizmoKind
 import com.indianservers.aiexplorer.core.Graph3D
 import com.indianservers.aiexplorer.core.GraphAnalysis
+import com.indianservers.aiexplorer.core.AdvancedGraphFeatureEngine
 import com.indianservers.aiexplorer.core.GraphDefinitionKind
 import com.indianservers.aiexplorer.core.CompareModeEngine
 import com.indianservers.aiexplorer.core.ComparisonAttribute
@@ -520,6 +521,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     val haptic = LocalHapticFeedback.current
     val graphScope = rememberCoroutineScope()
     val graph = remember { GraphAnalysis() }
+    val sharedGraphFeatures = remember { AdvancedGraphFeatureEngine() }
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
     val advancedGraph = remember { AdvancedGraphEngine() }
     val engine = remember { ExpressionEngine() }
@@ -707,8 +709,12 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     val explicitFunctions = visibleFunctions.filter { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }
     val selectedFunction = liveFunctions.firstOrNull { it.id == selectedGraphRowId }
     val analysisFunction = selectedFunction?.takeIf { it.visible } ?: visibleFunctions.firstOrNull()
+    val sharedAnalysis = analysisFunction?.let { function -> objectGraphSnapshot.graphObjects.firstOrNull { it.rowId == function.id }?.advancedFeatures }
     val primaryExpression = analysisFunction?.takeIf { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }?.expression
         ?: explicitFunctions.firstOrNull()?.expression
+    val sharedLines = remember(primaryExpression, traceX) {
+        primaryExpression?.let { runCatching { sharedGraphFeatures.tangentAndNormal(it, traceX.toDouble()) }.getOrNull() }
+    }
     val roots = remember(primaryExpression) {
         primaryExpression?.let { runCatching { graph.roots(it, -10.0, 10.0) }.getOrDefault(emptyList()) }.orEmpty()
     }
@@ -1219,6 +1225,19 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             Insight("Kinds", visibleFunctions.map { graph.definitionKind(it.expression).name }.distinct().joinToString(), Violet)
             Insight("Roots", roots.joinToString { trim(it) }.ifBlank { "none detected" }, Cyan)
             Insight("Extrema", extrema.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }.ifBlank { "none detected" }, Green)
+            sharedAnalysis?.let { features ->
+                Insight("Domain", features.domain.joinToString { "[${trim(it.from)}, ${trim(it.to)}]" }.ifBlank { "no real interval" }, Cyan)
+                Insight("Discontinuities", features.discontinuities.joinToString { "${it.kind.name} at x=${trim(it.x)}" }.ifBlank { "continuous in view" }, Amber)
+                Insight("Asymptotes", features.asymptotes.joinToString { it.equation }.ifBlank { "none detected" }, Violet)
+                Insight("Increasing", features.increasing.joinToString { "(${trim(it.from)}, ${trim(it.to)})" }.ifBlank { "none" }, Green)
+                Insight("Decreasing", features.decreasing.joinToString { "(${trim(it.from)}, ${trim(it.to)})" }.ifBlank { "none" }, Amber)
+                Insight("Concavity", "up ${features.concaveUp.size} · down ${features.concaveDown.size}", Cyan)
+                Insight("Inflections", features.inflectionPoints.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }.ifBlank { "none" }, Violet)
+            }
+            sharedLines?.let { lines ->
+                Insight("Tangent", lines.tangentEquation, Green)
+                Insight("Normal", lines.normalEquation, Cyan)
+            }
             adaptiveSample?.let { sample ->
                 Insight("Adaptive sample", "${sample.points.size} points · ${sample.segments.size} segments", Cyan)
                 Insight("Arc length", trim(advancedGraph.arcLength(sample)), Violet)
