@@ -20,7 +20,8 @@ class SplashActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 delay(SPLASH_DURATION_MILLIS)
                 val transition = ActivityOptions.makeCustomAnimation(this@SplashActivity, 0, 0)
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java), transition.toBundle())
+                val mainIntent = Intent(this@SplashActivity, MainActivity::class.java).putExtras(intent)
+                startActivity(mainIntent, transition.toBundle())
                 finish()
             }
         }

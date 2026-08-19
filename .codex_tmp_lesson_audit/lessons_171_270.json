@@ -1,0 +1,702 @@
+[
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Rounding to nearest ten",
+    "lessonId": "MATH-CLASS-3-0007"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Rounding to nearest hundred",
+    "lessonId": "MATH-CLASS-3-0008"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Roman numerals I V X",
+    "lessonId": "MATH-CLASS-3-0009"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Four-digit addition",
+    "lessonId": "MATH-CLASS-3-0010"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Four-digit subtraction",
+    "lessonId": "MATH-CLASS-3-0011"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Regrouping",
+    "lessonId": "MATH-CLASS-3-0012"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Multiplication by one digit",
+    "lessonId": "MATH-CLASS-3-0013"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Two-digit by one-digit multiplication",
+    "lessonId": "MATH-CLASS-3-0014"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Division by one digit",
+    "lessonId": "MATH-CLASS-3-0015"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Remainders",
+    "lessonId": "MATH-CLASS-3-0016"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Mixed-operation word problems",
+    "lessonId": "MATH-CLASS-3-0017"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication Tables",
+    "subtopic": "Tables 2-10",
+    "lessonId": "MATH-CLASS-3-0018"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication Tables",
+    "subtopic": "Tables 11-12",
+    "lessonId": "MATH-CLASS-3-0019"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication Tables",
+    "subtopic": "Patterns in multiplication tables",
+    "lessonId": "MATH-CLASS-3-0020"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Unit fractions",
+    "lessonId": "MATH-CLASS-3-0021"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Non-unit fractions",
+    "lessonId": "MATH-CLASS-3-0022"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Numerator",
+    "lessonId": "MATH-CLASS-3-0023"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Denominator",
+    "lessonId": "MATH-CLASS-3-0024"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Equivalent visual fractions",
+    "lessonId": "MATH-CLASS-3-0025"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Comparing simple fractions",
+    "lessonId": "MATH-CLASS-3-0026"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Fractions on number line",
+    "lessonId": "MATH-CLASS-3-0027"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Fractions",
+    "topic": "Fractions",
+    "subtopic": "Fraction of a quantity",
+    "lessonId": "MATH-CLASS-3-0028"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Point",
+    "lessonId": "MATH-CLASS-3-0029"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Line",
+    "lessonId": "MATH-CLASS-3-0030"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Line segment",
+    "lessonId": "MATH-CLASS-3-0031"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Ray introduction",
+    "lessonId": "MATH-CLASS-3-0032"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Horizontal vertical slanting lines",
+    "lessonId": "MATH-CLASS-3-0033"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Polygons",
+    "lessonId": "MATH-CLASS-3-0034"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Triangles",
+    "lessonId": "MATH-CLASS-3-0035"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Quadrilaterals",
+    "lessonId": "MATH-CLASS-3-0036"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Circle centre radius",
+    "lessonId": "MATH-CLASS-3-0037"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Symmetry",
+    "lessonId": "MATH-CLASS-3-0038"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Tessellation introduction",
+    "lessonId": "MATH-CLASS-3-0039"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "3D Geometry",
+    "subtopic": "Faces",
+    "lessonId": "MATH-CLASS-3-0040"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "3D Geometry",
+    "subtopic": "Edges",
+    "lessonId": "MATH-CLASS-3-0041"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "3D Geometry",
+    "subtopic": "Vertices",
+    "lessonId": "MATH-CLASS-3-0042"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "3D Geometry",
+    "subtopic": "Nets informal",
+    "lessonId": "MATH-CLASS-3-0043"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Geometry",
+    "topic": "3D Geometry",
+    "subtopic": "Top front side views",
+    "lessonId": "MATH-CLASS-3-0044"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Millimetre",
+    "lessonId": "MATH-CLASS-3-0045"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Centimetre",
+    "lessonId": "MATH-CLASS-3-0046"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Metre",
+    "lessonId": "MATH-CLASS-3-0047"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Kilometre",
+    "lessonId": "MATH-CLASS-3-0048"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Gram",
+    "lessonId": "MATH-CLASS-3-0049"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Kilogram",
+    "lessonId": "MATH-CLASS-3-0050"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Millilitre",
+    "lessonId": "MATH-CLASS-3-0051"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Litre",
+    "lessonId": "MATH-CLASS-3-0052"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Simple conversions",
+    "lessonId": "MATH-CLASS-3-0053"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Length Mass Capacity",
+    "subtopic": "Perimeter introduction",
+    "lessonId": "MATH-CLASS-3-0054"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "Clock to 5 minutes",
+    "lessonId": "MATH-CLASS-3-0055"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "24-hour time introduction",
+    "lessonId": "MATH-CLASS-3-0056"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "Elapsed time",
+    "lessonId": "MATH-CLASS-3-0057"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "Calendar calculations",
+    "lessonId": "MATH-CLASS-3-0058"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "Decimal money notation",
+    "lessonId": "MATH-CLASS-3-0059"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "Making change",
+    "lessonId": "MATH-CLASS-3-0060"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Measurement",
+    "topic": "Time and Money",
+    "subtopic": "Bills and receipts",
+    "lessonId": "MATH-CLASS-3-0061"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Data Handling",
+    "subtopic": "Bar graphs",
+    "lessonId": "MATH-CLASS-3-0062"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Data Handling",
+    "subtopic": "Scaled pictographs",
+    "lessonId": "MATH-CLASS-3-0063"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Data Handling",
+    "subtopic": "Tally tables",
+    "lessonId": "MATH-CLASS-3-0064"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Data Handling",
+    "subtopic": "Frequency tables",
+    "lessonId": "MATH-CLASS-3-0065"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Data Handling",
+    "subtopic": "Interpreting data",
+    "lessonId": "MATH-CLASS-3-0066"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Patterns",
+    "subtopic": "Arithmetic patterns",
+    "lessonId": "MATH-CLASS-3-0067"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Patterns",
+    "subtopic": "Geometric patterns",
+    "lessonId": "MATH-CLASS-3-0068"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Data and Patterns",
+    "topic": "Patterns",
+    "subtopic": "Input-output patterns introduction",
+    "lessonId": "MATH-CLASS-3-0069"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Numbers to 100000",
+    "lessonId": "MATH-CLASS-4-0001"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Indian place value system",
+    "lessonId": "MATH-CLASS-4-0002"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "International place value introduction",
+    "lessonId": "MATH-CLASS-4-0003"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Expanded form",
+    "lessonId": "MATH-CLASS-4-0004"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Comparing large numbers",
+    "lessonId": "MATH-CLASS-4-0005"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Rounding to nearest 10",
+    "lessonId": "MATH-CLASS-4-0006"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Rounding to nearest 100",
+    "lessonId": "MATH-CLASS-4-0007"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Rounding to nearest 1000",
+    "lessonId": "MATH-CLASS-4-0008"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Roman numerals to 100",
+    "lessonId": "MATH-CLASS-4-0009"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Multi-digit addition",
+    "lessonId": "MATH-CLASS-4-0010"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Multi-digit subtraction",
+    "lessonId": "MATH-CLASS-4-0011"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Two-digit multiplication",
+    "lessonId": "MATH-CLASS-4-0012"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Long multiplication introduction",
+    "lessonId": "MATH-CLASS-4-0013"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Long division by one digit",
+    "lessonId": "MATH-CLASS-4-0014"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Division by two digits introduction",
+    "lessonId": "MATH-CLASS-4-0015"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Factors introduction",
+    "lessonId": "MATH-CLASS-4-0016"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Multiples introduction",
+    "lessonId": "MATH-CLASS-4-0017"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Arithmetic",
+    "topic": "Four Operations",
+    "subtopic": "Estimation and checking",
+    "lessonId": "MATH-CLASS-4-0018"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Proper fractions",
+    "lessonId": "MATH-CLASS-4-0019"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Improper fractions introduction",
+    "lessonId": "MATH-CLASS-4-0020"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Mixed numbers introduction",
+    "lessonId": "MATH-CLASS-4-0021"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Equivalent fractions",
+    "lessonId": "MATH-CLASS-4-0022"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Simplest form",
+    "lessonId": "MATH-CLASS-4-0023"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Comparing like fractions",
+    "lessonId": "MATH-CLASS-4-0024"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Adding like fractions",
+    "lessonId": "MATH-CLASS-4-0025"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Subtracting like fractions",
+    "lessonId": "MATH-CLASS-4-0026"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Fractions",
+    "subtopic": "Fraction of quantity",
+    "lessonId": "MATH-CLASS-4-0027"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Decimals",
+    "subtopic": "Tenths",
+    "lessonId": "MATH-CLASS-4-0028"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Decimals",
+    "subtopic": "Hundredths",
+    "lessonId": "MATH-CLASS-4-0029"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Decimals",
+    "subtopic": "Decimal notation",
+    "lessonId": "MATH-CLASS-4-0030"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Decimals",
+    "subtopic": "Fractions to decimals",
+    "lessonId": "MATH-CLASS-4-0031"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Decimals",
+    "subtopic": "Comparing decimals",
+    "lessonId": "MATH-CLASS-4-0032"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Fractions and Decimals",
+    "topic": "Decimals",
+    "subtopic": "Money and decimals",
+    "lessonId": "MATH-CLASS-4-0033"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Angle as turn",
+    "lessonId": "MATH-CLASS-4-0034"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Right angle",
+    "lessonId": "MATH-CLASS-4-0035"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Acute angle",
+    "lessonId": "MATH-CLASS-4-0036"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Obtuse angle",
+    "lessonId": "MATH-CLASS-4-0037"
+  }
+]

@@ -39,7 +39,52 @@ object MathExpressionNormalizer {
         value = Regex("""√\s*([A-Za-z_][A-Za-z0-9_]*|\d+(?:\.\d+)?)""")
             .replace(value) { match -> "sqrt(${match.groupValues[1]})" }
         value = Regex("""(?i)\bpie\b""").replace(value, "pi")
-        return expandSuperscripts(value).trim()
+        return normalizeFunctionPowers(expandSuperscripts(value)).trim()
+    }
+
+    private fun normalizeFunctionPowers(source: String): String {
+        var value = source
+        val functionNames = "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|sech|csch|coth"
+        val parenthesizedPowerCall = Regex("""(?i)\b($functionNames)\s*\^\s*\(\s*([+]?\d+)\s*\)\s*\(""")
+        val plainPowerCall = Regex("""(?i)\b($functionNames)\s*\^\s*([+]?\d+)\s*\(""")
+
+        var changed: Boolean
+        do {
+            changed = false
+            val afterParenthesized = replaceFunctionPowerCall(value, parenthesizedPowerCall)
+            if (afterParenthesized != value) changed = true
+            value = afterParenthesized
+
+            val afterPlain = replaceFunctionPowerCall(value, plainPowerCall)
+            if (afterPlain != value) changed = true
+            value = afterPlain
+        } while (changed)
+        return value
+    }
+
+    private fun replaceFunctionPowerCall(source: String, pattern: Regex): String {
+        val match = pattern.find(source) ?: return source
+        val functionName = match.groupValues[1]
+        val exponent = match.groupValues[2].trimStart('+')
+        val argumentStart = match.range.last
+        val argumentEnd = findClosingParenthesis(source, argumentStart) ?: return source
+        val argument = source.substring(argumentStart + 1, argumentEnd)
+        val replacement = "($functionName($argument))^$exponent"
+        return source.substring(0, match.range.first) + replacement + source.substring(argumentEnd + 1)
+    }
+
+    private fun findClosingParenthesis(source: String, openIndex: Int): Int? {
+        var depth = 0
+        for (index in openIndex until source.length) {
+            when (source[index]) {
+                '(' -> depth++
+                ')' -> {
+                    depth--
+                    if (depth == 0) return index
+                }
+            }
+        }
+        return null
     }
 
     private fun expandSuperscripts(source: String): String {

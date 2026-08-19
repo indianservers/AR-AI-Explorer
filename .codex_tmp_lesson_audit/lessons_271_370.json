@@ -1,0 +1,702 @@
+[
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Parallel lines",
+    "lessonId": "MATH-CLASS-4-0038"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Perpendicular lines",
+    "lessonId": "MATH-CLASS-4-0039"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Triangle types informal",
+    "lessonId": "MATH-CLASS-4-0040"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Quadrilaterals",
+    "lessonId": "MATH-CLASS-4-0041"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Rectangle properties",
+    "lessonId": "MATH-CLASS-4-0042"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Square properties",
+    "lessonId": "MATH-CLASS-4-0043"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Rhombus introduction",
+    "lessonId": "MATH-CLASS-4-0044"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Circle parts",
+    "lessonId": "MATH-CLASS-4-0045"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Transformations",
+    "subtopic": "Line symmetry",
+    "lessonId": "MATH-CLASS-4-0046"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Transformations",
+    "subtopic": "Mirror images",
+    "lessonId": "MATH-CLASS-4-0047"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Transformations",
+    "subtopic": "Rotations as turns",
+    "lessonId": "MATH-CLASS-4-0048"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Transformations",
+    "subtopic": "Tessellations",
+    "lessonId": "MATH-CLASS-4-0049"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Perimeter of rectangle",
+    "lessonId": "MATH-CLASS-4-0050"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Perimeter of square",
+    "lessonId": "MATH-CLASS-4-0051"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area by counting squares",
+    "lessonId": "MATH-CLASS-4-0052"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area of rectangle introduction",
+    "lessonId": "MATH-CLASS-4-0053"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area of square introduction",
+    "lessonId": "MATH-CLASS-4-0054"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Measurement",
+    "topic": "Metric Measures",
+    "subtopic": "Length conversions",
+    "lessonId": "MATH-CLASS-4-0055"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Measurement",
+    "topic": "Metric Measures",
+    "subtopic": "Mass conversions",
+    "lessonId": "MATH-CLASS-4-0056"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Measurement",
+    "topic": "Metric Measures",
+    "subtopic": "Capacity conversions",
+    "lessonId": "MATH-CLASS-4-0057"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Measurement",
+    "topic": "Metric Measures",
+    "subtopic": "Time intervals",
+    "lessonId": "MATH-CLASS-4-0058"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Measurement",
+    "topic": "Metric Measures",
+    "subtopic": "Temperature introduction",
+    "lessonId": "MATH-CLASS-4-0059"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Data and Probability",
+    "topic": "Data Handling",
+    "subtopic": "Bar graph with scale",
+    "lessonId": "MATH-CLASS-4-0060"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Data and Probability",
+    "topic": "Data Handling",
+    "subtopic": "Line plot introduction",
+    "lessonId": "MATH-CLASS-4-0061"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Data and Probability",
+    "topic": "Data Handling",
+    "subtopic": "Tables",
+    "lessonId": "MATH-CLASS-4-0062"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Data and Probability",
+    "topic": "Data Handling",
+    "subtopic": "Average as fair share",
+    "lessonId": "MATH-CLASS-4-0063"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Data and Probability",
+    "topic": "Data Handling",
+    "subtopic": "Impossible unlikely likely certain",
+    "lessonId": "MATH-CLASS-4-0064"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Patterns and Algebra",
+    "topic": "Patterns",
+    "subtopic": "Number sequences",
+    "lessonId": "MATH-CLASS-4-0065"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Patterns and Algebra",
+    "topic": "Patterns",
+    "subtopic": "Rules for patterns",
+    "lessonId": "MATH-CLASS-4-0066"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Patterns and Algebra",
+    "topic": "Patterns",
+    "subtopic": "Square numbers introduction",
+    "lessonId": "MATH-CLASS-4-0067"
+  },
+  {
+    "className": "Class 4",
+    "chapter": "Patterns and Algebra",
+    "topic": "Patterns",
+    "subtopic": "Triangular patterns",
+    "lessonId": "MATH-CLASS-4-0068"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Numbers to millions",
+    "lessonId": "MATH-CLASS-5-0001"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Indian numeration",
+    "lessonId": "MATH-CLASS-5-0002"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "International numeration",
+    "lessonId": "MATH-CLASS-5-0003"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Place value comparison",
+    "lessonId": "MATH-CLASS-5-0004"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Rounding large numbers",
+    "lessonId": "MATH-CLASS-5-0005"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Number System",
+    "topic": "Large Numbers",
+    "subtopic": "Roman numerals extended",
+    "lessonId": "MATH-CLASS-5-0006"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Multi-digit multiplication",
+    "lessonId": "MATH-CLASS-5-0007"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Long division",
+    "lessonId": "MATH-CLASS-5-0008"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Order of operations introduction",
+    "lessonId": "MATH-CLASS-5-0009"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Brackets introduction",
+    "lessonId": "MATH-CLASS-5-0010"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Factors",
+    "lessonId": "MATH-CLASS-5-0011"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Multiples",
+    "lessonId": "MATH-CLASS-5-0012"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Prime numbers",
+    "lessonId": "MATH-CLASS-5-0013"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Composite numbers",
+    "lessonId": "MATH-CLASS-5-0014"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Divisibility tests 2 3 5 9 10",
+    "lessonId": "MATH-CLASS-5-0015"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "HCF by listing",
+    "lessonId": "MATH-CLASS-5-0016"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "LCM by listing",
+    "lessonId": "MATH-CLASS-5-0017"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Arithmetic",
+    "topic": "Factors and Operations",
+    "subtopic": "Mixed-operation word problems",
+    "lessonId": "MATH-CLASS-5-0018"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Proper improper mixed fractions",
+    "lessonId": "MATH-CLASS-5-0019"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Convert improper and mixed fractions",
+    "lessonId": "MATH-CLASS-5-0020"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Equivalent fractions",
+    "lessonId": "MATH-CLASS-5-0021"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Compare unlike fractions",
+    "lessonId": "MATH-CLASS-5-0022"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Add unlike fractions",
+    "lessonId": "MATH-CLASS-5-0023"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Subtract unlike fractions",
+    "lessonId": "MATH-CLASS-5-0024"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Multiply fraction by whole number",
+    "lessonId": "MATH-CLASS-5-0025"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Fractions",
+    "subtopic": "Fraction word problems",
+    "lessonId": "MATH-CLASS-5-0026"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Place value to thousandths",
+    "lessonId": "MATH-CLASS-5-0027"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Compare decimals",
+    "lessonId": "MATH-CLASS-5-0028"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Add decimals",
+    "lessonId": "MATH-CLASS-5-0029"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Subtract decimals",
+    "lessonId": "MATH-CLASS-5-0030"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Multiply by 10 100 1000",
+    "lessonId": "MATH-CLASS-5-0031"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Divide by 10 100 1000",
+    "lessonId": "MATH-CLASS-5-0032"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Decimals",
+    "subtopic": "Fraction-decimal conversion",
+    "lessonId": "MATH-CLASS-5-0033"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Percent",
+    "subtopic": "Percent as per hundred",
+    "lessonId": "MATH-CLASS-5-0034"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Percent",
+    "subtopic": "Simple fraction-percent relations",
+    "lessonId": "MATH-CLASS-5-0035"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Fractions Decimals Percent",
+    "topic": "Percent",
+    "subtopic": "Simple percentage of quantity",
+    "lessonId": "MATH-CLASS-5-0036"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Angle measurement",
+    "lessonId": "MATH-CLASS-5-0037"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Acute right obtuse straight reflex angles",
+    "lessonId": "MATH-CLASS-5-0038"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Triangles by sides",
+    "lessonId": "MATH-CLASS-5-0039"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Triangles by angles",
+    "lessonId": "MATH-CLASS-5-0040"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Quadrilateral properties",
+    "lessonId": "MATH-CLASS-5-0041"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Circle centre radius diameter chord",
+    "lessonId": "MATH-CLASS-5-0042"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Symmetry",
+    "lessonId": "MATH-CLASS-5-0043"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Geometry",
+    "topic": "Angles and Shapes",
+    "subtopic": "Coordinate grid first quadrant",
+    "lessonId": "MATH-CLASS-5-0044"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Mensuration",
+    "topic": "Area and Volume",
+    "subtopic": "Perimeter",
+    "lessonId": "MATH-CLASS-5-0045"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Mensuration",
+    "topic": "Area and Volume",
+    "subtopic": "Area rectangle",
+    "lessonId": "MATH-CLASS-5-0046"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Mensuration",
+    "topic": "Area and Volume",
+    "subtopic": "Area square",
+    "lessonId": "MATH-CLASS-5-0047"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Mensuration",
+    "topic": "Area and Volume",
+    "subtopic": "Composite rectangles",
+    "lessonId": "MATH-CLASS-5-0048"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Mensuration",
+    "topic": "Area and Volume",
+    "subtopic": "Volume by unit cubes",
+    "lessonId": "MATH-CLASS-5-0049"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Mensuration",
+    "topic": "Area and Volume",
+    "subtopic": "Volume of cuboids introduction",
+    "lessonId": "MATH-CLASS-5-0050"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Measurement",
+    "subtopic": "Metric conversions",
+    "lessonId": "MATH-CLASS-5-0051"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Measurement",
+    "subtopic": "Time calculations",
+    "lessonId": "MATH-CLASS-5-0052"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Measurement",
+    "subtopic": "Temperature",
+    "lessonId": "MATH-CLASS-5-0053"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Measurement",
+    "subtopic": "Average speed informal",
+    "lessonId": "MATH-CLASS-5-0054"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Measurement",
+    "subtopic": "Scale drawings introduction",
+    "lessonId": "MATH-CLASS-5-0055"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Statistics",
+    "subtopic": "Bar graphs",
+    "lessonId": "MATH-CLASS-5-0056"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Statistics",
+    "subtopic": "Double bar graphs",
+    "lessonId": "MATH-CLASS-5-0057"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Statistics",
+    "subtopic": "Line graphs introduction",
+    "lessonId": "MATH-CLASS-5-0058"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Statistics",
+    "subtopic": "Mean",
+    "lessonId": "MATH-CLASS-5-0059"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Statistics",
+    "subtopic": "Mode introduction",
+    "lessonId": "MATH-CLASS-5-0060"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Measurement and Data",
+    "topic": "Statistics",
+    "subtopic": "Simple probability experiments",
+    "lessonId": "MATH-CLASS-5-0061"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Patterns and Early Algebra",
+    "topic": "Variables and Rules",
+    "subtopic": "Number rules",
+    "lessonId": "MATH-CLASS-5-0062"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Patterns and Early Algebra",
+    "topic": "Variables and Rules",
+    "subtopic": "Function machines",
+    "lessonId": "MATH-CLASS-5-0063"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Patterns and Early Algebra",
+    "topic": "Variables and Rules",
+    "subtopic": "Unknowns in number sentences",
+    "lessonId": "MATH-CLASS-5-0064"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Patterns and Early Algebra",
+    "topic": "Variables and Rules",
+    "subtopic": "Simple equations by inspection",
+    "lessonId": "MATH-CLASS-5-0065"
+  },
+  {
+    "className": "Class 5",
+    "chapter": "Patterns and Early Algebra",
+    "topic": "Variables and Rules",
+    "subtopic": "Coordinate patterns",
+    "lessonId": "MATH-CLASS-5-0066"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Natural numbers",
+    "lessonId": "MATH-CLASS-6-0001"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Whole numbers",
+    "lessonId": "MATH-CLASS-6-0002"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Integers",
+    "lessonId": "MATH-CLASS-6-0003"
+  }
+]

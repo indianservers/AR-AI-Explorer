@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name=".GraphVerificationActivity"
+            android:exported="true"
+            android:resizeableActivity="true"
+            android:theme="@style/Theme.AIExplorer"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize" />
+    </application>
+</manifest>

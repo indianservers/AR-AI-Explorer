@@ -1,0 +1,702 @@
+[
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Number line with integers",
+    "lessonId": "MATH-CLASS-6-0004"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Ordering integers",
+    "lessonId": "MATH-CLASS-6-0005"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Integer addition",
+    "lessonId": "MATH-CLASS-6-0006"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Integer subtraction",
+    "lessonId": "MATH-CLASS-6-0007"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Integer multiplication",
+    "lessonId": "MATH-CLASS-6-0008"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Integer division",
+    "lessonId": "MATH-CLASS-6-0009"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Closure",
+    "lessonId": "MATH-CLASS-6-0010"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Commutativity",
+    "lessonId": "MATH-CLASS-6-0011"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Associativity",
+    "lessonId": "MATH-CLASS-6-0012"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Distributivity",
+    "lessonId": "MATH-CLASS-6-0013"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Whole Numbers and Integers",
+    "subtopic": "Identity elements",
+    "lessonId": "MATH-CLASS-6-0014"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "Prime numbers",
+    "lessonId": "MATH-CLASS-6-0015"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "Composite numbers",
+    "lessonId": "MATH-CLASS-6-0016"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "Prime factorisation",
+    "lessonId": "MATH-CLASS-6-0017"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "Divisibility tests",
+    "lessonId": "MATH-CLASS-6-0018"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "Common factors",
+    "lessonId": "MATH-CLASS-6-0019"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "Common multiples",
+    "lessonId": "MATH-CLASS-6-0020"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "HCF",
+    "lessonId": "MATH-CLASS-6-0021"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "LCM",
+    "lessonId": "MATH-CLASS-6-0022"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Number Systems",
+    "topic": "Factors and Multiples",
+    "subtopic": "HCF-LCM applications",
+    "lessonId": "MATH-CLASS-6-0023"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Equivalent fractions",
+    "lessonId": "MATH-CLASS-6-0024"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Simplest form",
+    "lessonId": "MATH-CLASS-6-0025"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Compare fractions",
+    "lessonId": "MATH-CLASS-6-0026"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Add fractions",
+    "lessonId": "MATH-CLASS-6-0027"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Subtract fractions",
+    "lessonId": "MATH-CLASS-6-0028"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Multiply fractions",
+    "lessonId": "MATH-CLASS-6-0029"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Division of fractions introduction",
+    "lessonId": "MATH-CLASS-6-0030"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Fractions",
+    "subtopic": "Fraction number line",
+    "lessonId": "MATH-CLASS-6-0031"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Decimal place value",
+    "lessonId": "MATH-CLASS-6-0032"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Compare decimals",
+    "lessonId": "MATH-CLASS-6-0033"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Add decimals",
+    "lessonId": "MATH-CLASS-6-0034"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Subtract decimals",
+    "lessonId": "MATH-CLASS-6-0035"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Multiply decimals",
+    "lessonId": "MATH-CLASS-6-0036"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Divide decimals introduction",
+    "lessonId": "MATH-CLASS-6-0037"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Decimals",
+    "subtopic": "Metric applications",
+    "lessonId": "MATH-CLASS-6-0038"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Ratio and Proportion",
+    "subtopic": "Ratio",
+    "lessonId": "MATH-CLASS-6-0039"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Ratio and Proportion",
+    "subtopic": "Equivalent ratios",
+    "lessonId": "MATH-CLASS-6-0040"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Ratio and Proportion",
+    "subtopic": "Unitary method",
+    "lessonId": "MATH-CLASS-6-0041"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Ratio and Proportion",
+    "subtopic": "Proportion",
+    "lessonId": "MATH-CLASS-6-0042"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Fractions Decimals Ratio",
+    "topic": "Ratio and Proportion",
+    "subtopic": "Direct comparison of quantities",
+    "lessonId": "MATH-CLASS-6-0043"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Variables",
+    "lessonId": "MATH-CLASS-6-0044"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Constants",
+    "lessonId": "MATH-CLASS-6-0045"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Algebraic expressions",
+    "lessonId": "MATH-CLASS-6-0046"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Terms",
+    "lessonId": "MATH-CLASS-6-0047"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Coefficients",
+    "lessonId": "MATH-CLASS-6-0048"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Like terms",
+    "lessonId": "MATH-CLASS-6-0049"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Evaluate expressions",
+    "lessonId": "MATH-CLASS-6-0050"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Simple formulae",
+    "lessonId": "MATH-CLASS-6-0051"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Simple equations by trial",
+    "lessonId": "MATH-CLASS-6-0052"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Algebra",
+    "topic": "Introduction to Algebra",
+    "subtopic": "Patterns to algebra",
+    "lessonId": "MATH-CLASS-6-0053"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Point",
+    "lessonId": "MATH-CLASS-6-0054"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Line",
+    "lessonId": "MATH-CLASS-6-0055"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Segment",
+    "lessonId": "MATH-CLASS-6-0056"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Ray",
+    "lessonId": "MATH-CLASS-6-0057"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Intersecting lines",
+    "lessonId": "MATH-CLASS-6-0058"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Parallel lines",
+    "lessonId": "MATH-CLASS-6-0059"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Curves",
+    "lessonId": "MATH-CLASS-6-0060"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Polygons",
+    "lessonId": "MATH-CLASS-6-0061"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Angles",
+    "lessonId": "MATH-CLASS-6-0062"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Measuring angles",
+    "lessonId": "MATH-CLASS-6-0063"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Angle types",
+    "lessonId": "MATH-CLASS-6-0064"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Triangles",
+    "lessonId": "MATH-CLASS-6-0065"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Quadrilaterals",
+    "lessonId": "MATH-CLASS-6-0066"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Regular polygons",
+    "lessonId": "MATH-CLASS-6-0067"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Basic Geometry",
+    "subtopic": "Circle parts",
+    "lessonId": "MATH-CLASS-6-0068"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Practical Geometry",
+    "subtopic": "Construct line segments",
+    "lessonId": "MATH-CLASS-6-0069"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Practical Geometry",
+    "subtopic": "Construct angles",
+    "lessonId": "MATH-CLASS-6-0070"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Practical Geometry",
+    "subtopic": "Angle bisectors",
+    "lessonId": "MATH-CLASS-6-0071"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Practical Geometry",
+    "subtopic": "Perpendicular bisectors",
+    "lessonId": "MATH-CLASS-6-0072"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Geometry",
+    "topic": "Practical Geometry",
+    "subtopic": "Construct simple triangles",
+    "lessonId": "MATH-CLASS-6-0073"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Perimeter polygons",
+    "lessonId": "MATH-CLASS-6-0074"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Perimeter rectangle",
+    "lessonId": "MATH-CLASS-6-0075"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Perimeter square",
+    "lessonId": "MATH-CLASS-6-0076"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area rectangle",
+    "lessonId": "MATH-CLASS-6-0077"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area square",
+    "lessonId": "MATH-CLASS-6-0078"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area by grids",
+    "lessonId": "MATH-CLASS-6-0079"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Data collection",
+    "lessonId": "MATH-CLASS-6-0080"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Frequency tables",
+    "lessonId": "MATH-CLASS-6-0081"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Tally marks",
+    "lessonId": "MATH-CLASS-6-0082"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Pictographs",
+    "lessonId": "MATH-CLASS-6-0083"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Bar graphs",
+    "lessonId": "MATH-CLASS-6-0084"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Mean",
+    "lessonId": "MATH-CLASS-6-0085"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Median introduction",
+    "lessonId": "MATH-CLASS-6-0086"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Mode",
+    "lessonId": "MATH-CLASS-6-0087"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Chance language",
+    "lessonId": "MATH-CLASS-6-0088"
+  },
+  {
+    "className": "Class 6",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Experimental probability introduction",
+    "lessonId": "MATH-CLASS-6-0089"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Integer operations",
+    "lessonId": "MATH-CLASS-7-0001"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Rational numbers",
+    "lessonId": "MATH-CLASS-7-0002"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Standard form",
+    "lessonId": "MATH-CLASS-7-0003"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Equivalent rational numbers",
+    "lessonId": "MATH-CLASS-7-0004"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Compare rational numbers",
+    "lessonId": "MATH-CLASS-7-0005"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Number line",
+    "lessonId": "MATH-CLASS-7-0006"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Integers and Rational Numbers",
+    "subtopic": "Operations on rational numbers",
+    "lessonId": "MATH-CLASS-7-0007"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Powers and Exponents",
+    "subtopic": "Exponents",
+    "lessonId": "MATH-CLASS-7-0008"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Powers and Exponents",
+    "subtopic": "Laws of exponents",
+    "lessonId": "MATH-CLASS-7-0009"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Powers and Exponents",
+    "subtopic": "Powers of ten",
+    "lessonId": "MATH-CLASS-7-0010"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Number Systems",
+    "topic": "Powers and Exponents",
+    "subtopic": "Scientific notation introduction",
+    "lessonId": "MATH-CLASS-7-0011"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Expressions",
+    "subtopic": "Terms and coefficients",
+    "lessonId": "MATH-CLASS-7-0012"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Expressions",
+    "subtopic": "Like and unlike terms",
+    "lessonId": "MATH-CLASS-7-0013"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Expressions",
+    "subtopic": "Add expressions",
+    "lessonId": "MATH-CLASS-7-0014"
+  }
+]

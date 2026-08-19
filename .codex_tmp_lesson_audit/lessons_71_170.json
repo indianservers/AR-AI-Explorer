@@ -1,0 +1,702 @@
+[
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Time",
+    "subtopic": "Calendar awareness",
+    "lessonId": "MATH-CLASS-1-0071"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Time",
+    "subtopic": "Clock to the hour",
+    "lessonId": "MATH-CLASS-1-0072"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Recognising coins",
+    "lessonId": "MATH-CLASS-1-0073"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Recognising notes",
+    "lessonId": "MATH-CLASS-1-0074"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Comparing money values",
+    "lessonId": "MATH-CLASS-1-0075"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Simple purchases",
+    "lessonId": "MATH-CLASS-1-0076"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Adding very small money amounts",
+    "lessonId": "MATH-CLASS-1-0077"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Repeating colour patterns",
+    "lessonId": "MATH-CLASS-1-0078"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Repeating shape patterns",
+    "lessonId": "MATH-CLASS-1-0079"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Number patterns by 1",
+    "lessonId": "MATH-CLASS-1-0080"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Extending patterns",
+    "lessonId": "MATH-CLASS-1-0081"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Missing pattern element",
+    "lessonId": "MATH-CLASS-1-0082"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Sorting objects",
+    "lessonId": "MATH-CLASS-1-0083"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Classifying objects",
+    "lessonId": "MATH-CLASS-1-0084"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Tally marks introduction",
+    "lessonId": "MATH-CLASS-1-0085"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Picture graphs introduction",
+    "lessonId": "MATH-CLASS-1-0086"
+  },
+  {
+    "className": "Class 1",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Comparing categories",
+    "lessonId": "MATH-CLASS-1-0087"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Counting to 1000",
+    "lessonId": "MATH-CLASS-2-0001"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Number names to 1000",
+    "lessonId": "MATH-CLASS-2-0002"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Hundreds tens ones",
+    "lessonId": "MATH-CLASS-2-0003"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Expanded form",
+    "lessonId": "MATH-CLASS-2-0004"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Standard form",
+    "lessonId": "MATH-CLASS-2-0005"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Comparing three-digit numbers",
+    "lessonId": "MATH-CLASS-2-0006"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Ordering three-digit numbers",
+    "lessonId": "MATH-CLASS-2-0007"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Odd and even numbers",
+    "lessonId": "MATH-CLASS-2-0008"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Skip counting by 2",
+    "lessonId": "MATH-CLASS-2-0009"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Skip counting by 5",
+    "lessonId": "MATH-CLASS-2-0010"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Skip counting by 10",
+    "lessonId": "MATH-CLASS-2-0011"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Number System",
+    "topic": "Numbers to 1000",
+    "subtopic": "Number line to 1000",
+    "lessonId": "MATH-CLASS-2-0012"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Addition",
+    "subtopic": "Two-digit addition without regrouping",
+    "lessonId": "MATH-CLASS-2-0013"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Addition",
+    "subtopic": "Two-digit addition with regrouping",
+    "lessonId": "MATH-CLASS-2-0014"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Addition",
+    "subtopic": "Three-digit addition introduction",
+    "lessonId": "MATH-CLASS-2-0015"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Addition",
+    "subtopic": "Mental addition strategies",
+    "lessonId": "MATH-CLASS-2-0016"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Addition",
+    "subtopic": "Addition word problems",
+    "lessonId": "MATH-CLASS-2-0017"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Subtraction",
+    "subtopic": "Two-digit subtraction without regrouping",
+    "lessonId": "MATH-CLASS-2-0018"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Subtraction",
+    "subtopic": "Two-digit subtraction with regrouping",
+    "lessonId": "MATH-CLASS-2-0019"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Subtraction",
+    "subtopic": "Three-digit subtraction introduction",
+    "lessonId": "MATH-CLASS-2-0020"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Subtraction",
+    "subtopic": "Mental subtraction strategies",
+    "lessonId": "MATH-CLASS-2-0021"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Subtraction",
+    "subtopic": "Subtraction word problems",
+    "lessonId": "MATH-CLASS-2-0022"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Repeated addition",
+    "lessonId": "MATH-CLASS-2-0023"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Equal groups",
+    "lessonId": "MATH-CLASS-2-0024"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Arrays",
+    "lessonId": "MATH-CLASS-2-0025"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Multiplication symbol",
+    "lessonId": "MATH-CLASS-2-0026"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Tables of 2",
+    "lessonId": "MATH-CLASS-2-0027"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Tables of 3",
+    "lessonId": "MATH-CLASS-2-0028"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Tables of 4",
+    "lessonId": "MATH-CLASS-2-0029"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Tables of 5",
+    "lessonId": "MATH-CLASS-2-0030"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Multiplication",
+    "subtopic": "Tables of 10",
+    "lessonId": "MATH-CLASS-2-0031"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Division",
+    "subtopic": "Sharing equally",
+    "lessonId": "MATH-CLASS-2-0032"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Division",
+    "subtopic": "Grouping equally",
+    "lessonId": "MATH-CLASS-2-0033"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Division",
+    "subtopic": "Division symbol",
+    "lessonId": "MATH-CLASS-2-0034"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Division",
+    "subtopic": "Multiplication-division relationship",
+    "lessonId": "MATH-CLASS-2-0035"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Arithmetic",
+    "topic": "Division",
+    "subtopic": "Simple division facts",
+    "lessonId": "MATH-CLASS-2-0036"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "Whole and parts",
+    "lessonId": "MATH-CLASS-2-0037"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "One-half",
+    "lessonId": "MATH-CLASS-2-0038"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "One-third",
+    "lessonId": "MATH-CLASS-2-0039"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "One-fourth",
+    "lessonId": "MATH-CLASS-2-0040"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "Equal parts",
+    "lessonId": "MATH-CLASS-2-0041"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "Fraction of a shape",
+    "lessonId": "MATH-CLASS-2-0042"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Fractions",
+    "topic": "Basic Fractions",
+    "subtopic": "Fraction of a set",
+    "lessonId": "MATH-CLASS-2-0043"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Geometry",
+    "topic": "Shapes and Lines",
+    "subtopic": "Sides and corners",
+    "lessonId": "MATH-CLASS-2-0044"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Geometry",
+    "topic": "Shapes and Lines",
+    "subtopic": "Open and closed shapes",
+    "lessonId": "MATH-CLASS-2-0045"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Geometry",
+    "topic": "Shapes and Lines",
+    "subtopic": "Straight and curved lines",
+    "lessonId": "MATH-CLASS-2-0046"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Geometry",
+    "topic": "Shapes and Lines",
+    "subtopic": "Line symmetry introduction",
+    "lessonId": "MATH-CLASS-2-0047"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Geometry",
+    "topic": "Shapes and Lines",
+    "subtopic": "2D shape classification",
+    "lessonId": "MATH-CLASS-2-0048"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Geometry",
+    "topic": "Shapes and Lines",
+    "subtopic": "3D solids review",
+    "lessonId": "MATH-CLASS-2-0049"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Centimetre",
+    "lessonId": "MATH-CLASS-2-0050"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Metre",
+    "lessonId": "MATH-CLASS-2-0051"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Kilogram",
+    "lessonId": "MATH-CLASS-2-0052"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Gram introduction",
+    "lessonId": "MATH-CLASS-2-0053"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Litre",
+    "lessonId": "MATH-CLASS-2-0054"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Millilitre introduction",
+    "lessonId": "MATH-CLASS-2-0055"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Comparing measurements",
+    "lessonId": "MATH-CLASS-2-0056"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Metric Awareness",
+    "subtopic": "Estimating length",
+    "lessonId": "MATH-CLASS-2-0057"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Time and Calendar",
+    "subtopic": "Clock to hour",
+    "lessonId": "MATH-CLASS-2-0058"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Time and Calendar",
+    "subtopic": "Clock to half-hour",
+    "lessonId": "MATH-CLASS-2-0059"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Time and Calendar",
+    "subtopic": "Quarter-hour introduction",
+    "lessonId": "MATH-CLASS-2-0060"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Time and Calendar",
+    "subtopic": "Days weeks months",
+    "lessonId": "MATH-CLASS-2-0061"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Time and Calendar",
+    "subtopic": "Calendar dates",
+    "lessonId": "MATH-CLASS-2-0062"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Currency notation",
+    "lessonId": "MATH-CLASS-2-0063"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Adding money",
+    "lessonId": "MATH-CLASS-2-0064"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Subtracting money",
+    "lessonId": "MATH-CLASS-2-0065"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Equivalent amounts",
+    "lessonId": "MATH-CLASS-2-0066"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Measurement",
+    "topic": "Money",
+    "subtopic": "Simple bills",
+    "lessonId": "MATH-CLASS-2-0067"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Patterns by 2",
+    "lessonId": "MATH-CLASS-2-0068"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Patterns by 5",
+    "lessonId": "MATH-CLASS-2-0069"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Patterns by 10",
+    "lessonId": "MATH-CLASS-2-0070"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Growing patterns",
+    "lessonId": "MATH-CLASS-2-0071"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Patterns",
+    "subtopic": "Shape patterns",
+    "lessonId": "MATH-CLASS-2-0072"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Tally charts",
+    "lessonId": "MATH-CLASS-2-0073"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Pictographs",
+    "lessonId": "MATH-CLASS-2-0074"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Simple tables",
+    "lessonId": "MATH-CLASS-2-0075"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Collecting class data",
+    "lessonId": "MATH-CLASS-2-0076"
+  },
+  {
+    "className": "Class 2",
+    "chapter": "Patterns and Data",
+    "topic": "Data Handling",
+    "subtopic": "Most and least frequent",
+    "lessonId": "MATH-CLASS-2-0077"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Place value to thousands",
+    "lessonId": "MATH-CLASS-3-0001"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Number names to 10000",
+    "lessonId": "MATH-CLASS-3-0002"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Expanded notation",
+    "lessonId": "MATH-CLASS-3-0003"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Comparing four-digit numbers",
+    "lessonId": "MATH-CLASS-3-0004"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Ordering four-digit numbers",
+    "lessonId": "MATH-CLASS-3-0005"
+  },
+  {
+    "className": "Class 3",
+    "chapter": "Number System",
+    "topic": "Numbers to 10000",
+    "subtopic": "Successor and predecessor",
+    "lessonId": "MATH-CLASS-3-0006"
+  }
+]

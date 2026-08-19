@@ -1,0 +1,11 @@
+{
+  "requestedRange": {"firstOrdinal": 471, "lastOrdinal": 670, "count": 200},
+  "curriculumFile": "lessons_471_670.json",
+  "generatedCheckpoint": {"firstOrdinal": 471, "lastOrdinal": 550, "count": 80, "mappingFile": "generated_471_550_checkpoint.json"},
+  "nextOrdinal": 551,
+  "lastLessonGenerated": "MATH-CLASS-8-0027",
+  "nextLesson": "MATH-CLASS-8-0028",
+  "libraryCopied": false,
+  "qaApproved": false,
+  "blockingEvent": "image generation connection failure at checkpoint 551-570"
+}

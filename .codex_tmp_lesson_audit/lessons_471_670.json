@@ -1,0 +1,1402 @@
+[
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Expressions",
+    "subtopic": "Subtract expressions",
+    "lessonId": "MATH-CLASS-7-0015"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Expressions",
+    "subtopic": "Multiply monomials",
+    "lessonId": "MATH-CLASS-7-0016"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Expressions",
+    "subtopic": "Simple identities introduction",
+    "lessonId": "MATH-CLASS-7-0017"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Simple Equations",
+    "subtopic": "Linear equations in one variable",
+    "lessonId": "MATH-CLASS-7-0018"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Simple Equations",
+    "subtopic": "Transposition",
+    "lessonId": "MATH-CLASS-7-0019"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Algebra",
+    "topic": "Simple Equations",
+    "subtopic": "Word problems",
+    "lessonId": "MATH-CLASS-7-0020"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Ratio",
+    "lessonId": "MATH-CLASS-7-0021"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Proportion",
+    "lessonId": "MATH-CLASS-7-0022"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Percentage",
+    "lessonId": "MATH-CLASS-7-0023"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Percentage increase",
+    "lessonId": "MATH-CLASS-7-0024"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Percentage decrease",
+    "lessonId": "MATH-CLASS-7-0025"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Profit",
+    "lessonId": "MATH-CLASS-7-0026"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Loss",
+    "lessonId": "MATH-CLASS-7-0027"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Discount",
+    "lessonId": "MATH-CLASS-7-0028"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Simple interest",
+    "lessonId": "MATH-CLASS-7-0029"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Commercial Mathematics",
+    "topic": "Comparing Quantities",
+    "subtopic": "Tax applications",
+    "lessonId": "MATH-CLASS-7-0030"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Complementary angles",
+    "lessonId": "MATH-CLASS-7-0031"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Supplementary angles",
+    "lessonId": "MATH-CLASS-7-0032"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Adjacent angles",
+    "lessonId": "MATH-CLASS-7-0033"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Linear pair",
+    "lessonId": "MATH-CLASS-7-0034"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Vertically opposite angles",
+    "lessonId": "MATH-CLASS-7-0035"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Transversal",
+    "lessonId": "MATH-CLASS-7-0036"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Corresponding angles",
+    "lessonId": "MATH-CLASS-7-0037"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Alternate angles",
+    "lessonId": "MATH-CLASS-7-0038"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Interior angles",
+    "lessonId": "MATH-CLASS-7-0039"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Triangle angle sum",
+    "lessonId": "MATH-CLASS-7-0040"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Exterior angle theorem",
+    "lessonId": "MATH-CLASS-7-0041"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "SSS congruence",
+    "lessonId": "MATH-CLASS-7-0042"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "SAS congruence",
+    "lessonId": "MATH-CLASS-7-0043"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "ASA congruence",
+    "lessonId": "MATH-CLASS-7-0044"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "RHS congruence",
+    "lessonId": "MATH-CLASS-7-0045"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Triangle inequality",
+    "lessonId": "MATH-CLASS-7-0046"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "Line symmetry",
+    "lessonId": "MATH-CLASS-7-0047"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "Rotational symmetry",
+    "lessonId": "MATH-CLASS-7-0048"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "Order of rotational symmetry",
+    "lessonId": "MATH-CLASS-7-0049"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "Triangle construction SSS",
+    "lessonId": "MATH-CLASS-7-0050"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "SAS",
+    "lessonId": "MATH-CLASS-7-0051"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "ASA",
+    "lessonId": "MATH-CLASS-7-0052"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Geometry",
+    "topic": "Symmetry and Construction",
+    "subtopic": "RHS",
+    "lessonId": "MATH-CLASS-7-0053"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area parallelogram",
+    "lessonId": "MATH-CLASS-7-0054"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area triangle",
+    "lessonId": "MATH-CLASS-7-0055"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Circumference",
+    "lessonId": "MATH-CLASS-7-0056"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Area circle introduction",
+    "lessonId": "MATH-CLASS-7-0057"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Mensuration",
+    "topic": "Perimeter and Area",
+    "subtopic": "Composite figures",
+    "lessonId": "MATH-CLASS-7-0058"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Mean",
+    "lessonId": "MATH-CLASS-7-0059"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Median",
+    "lessonId": "MATH-CLASS-7-0060"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Mode",
+    "lessonId": "MATH-CLASS-7-0061"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Range",
+    "lessonId": "MATH-CLASS-7-0062"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Bar graph",
+    "lessonId": "MATH-CLASS-7-0063"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Double bar graph",
+    "lessonId": "MATH-CLASS-7-0064"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Random experiment",
+    "lessonId": "MATH-CLASS-7-0065"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Outcomes",
+    "lessonId": "MATH-CLASS-7-0066"
+  },
+  {
+    "className": "Class 7",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Experimental probability",
+    "lessonId": "MATH-CLASS-7-0067"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Properties of rational numbers",
+    "lessonId": "MATH-CLASS-8-0001"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Closure",
+    "lessonId": "MATH-CLASS-8-0002"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Commutative properties",
+    "lessonId": "MATH-CLASS-8-0003"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Associative properties",
+    "lessonId": "MATH-CLASS-8-0004"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Distributive property",
+    "lessonId": "MATH-CLASS-8-0005"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Reciprocal",
+    "lessonId": "MATH-CLASS-8-0006"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Rational Numbers",
+    "subtopic": "Rationals between rationals",
+    "lessonId": "MATH-CLASS-8-0007"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Squares Cubes Roots",
+    "subtopic": "Perfect squares",
+    "lessonId": "MATH-CLASS-8-0008"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Squares Cubes Roots",
+    "subtopic": "Square root by prime factorisation",
+    "lessonId": "MATH-CLASS-8-0009"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Squares Cubes Roots",
+    "subtopic": "Square root by long division",
+    "lessonId": "MATH-CLASS-8-0010"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Squares Cubes Roots",
+    "subtopic": "Perfect cubes",
+    "lessonId": "MATH-CLASS-8-0011"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Squares Cubes Roots",
+    "subtopic": "Cube roots",
+    "lessonId": "MATH-CLASS-8-0012"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Squares Cubes Roots",
+    "subtopic": "Pythagorean triples",
+    "lessonId": "MATH-CLASS-8-0013"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Exponents",
+    "subtopic": "Integer exponent laws",
+    "lessonId": "MATH-CLASS-8-0014"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Exponents",
+    "subtopic": "Negative exponents",
+    "lessonId": "MATH-CLASS-8-0015"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Number Systems",
+    "topic": "Exponents",
+    "subtopic": "Scientific notation",
+    "lessonId": "MATH-CLASS-8-0016"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Linear Equations",
+    "subtopic": "Equations in one variable",
+    "lessonId": "MATH-CLASS-8-0017"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Linear Equations",
+    "subtopic": "Variables both sides",
+    "lessonId": "MATH-CLASS-8-0018"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Linear Equations",
+    "subtopic": "Brackets",
+    "lessonId": "MATH-CLASS-8-0019"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Linear Equations",
+    "subtopic": "Fractional coefficients",
+    "lessonId": "MATH-CLASS-8-0020"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Linear Equations",
+    "subtopic": "Word problems",
+    "lessonId": "MATH-CLASS-8-0021"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Monomials",
+    "lessonId": "MATH-CLASS-8-0022"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Binomials",
+    "lessonId": "MATH-CLASS-8-0023"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Polynomials",
+    "lessonId": "MATH-CLASS-8-0024"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Multiply expressions",
+    "lessonId": "MATH-CLASS-8-0025"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "(a+b)^2",
+    "lessonId": "MATH-CLASS-8-0026"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "(a-b)^2",
+    "lessonId": "MATH-CLASS-8-0027"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "(a+b)(a-b)",
+    "lessonId": "MATH-CLASS-8-0028"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "(x+a)(x+b)",
+    "lessonId": "MATH-CLASS-8-0029"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Common-factor factorisation",
+    "lessonId": "MATH-CLASS-8-0030"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Identity factorisation",
+    "lessonId": "MATH-CLASS-8-0031"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Algebra",
+    "topic": "Expressions Identities Factorisation",
+    "subtopic": "Division of algebraic expressions",
+    "lessonId": "MATH-CLASS-8-0032"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Variation",
+    "topic": "Direct and Inverse Proportion",
+    "subtopic": "Direct variation",
+    "lessonId": "MATH-CLASS-8-0033"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Variation",
+    "topic": "Direct and Inverse Proportion",
+    "subtopic": "Inverse variation",
+    "lessonId": "MATH-CLASS-8-0034"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Variation",
+    "topic": "Direct and Inverse Proportion",
+    "subtopic": "Applications",
+    "lessonId": "MATH-CLASS-8-0035"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Polygon angle sum",
+    "lessonId": "MATH-CLASS-8-0036"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Exterior angle sum",
+    "lessonId": "MATH-CLASS-8-0037"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Parallelogram properties",
+    "lessonId": "MATH-CLASS-8-0038"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Rectangle",
+    "lessonId": "MATH-CLASS-8-0039"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Rhombus",
+    "lessonId": "MATH-CLASS-8-0040"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Square",
+    "lessonId": "MATH-CLASS-8-0041"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Kite",
+    "lessonId": "MATH-CLASS-8-0042"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Visualising Solids",
+    "subtopic": "2D representations of 3D objects",
+    "lessonId": "MATH-CLASS-8-0043"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Visualising Solids",
+    "subtopic": "Nets",
+    "lessonId": "MATH-CLASS-8-0044"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Visualising Solids",
+    "subtopic": "Euler relation introduction",
+    "lessonId": "MATH-CLASS-8-0045"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Visualising Solids",
+    "subtopic": "Views",
+    "lessonId": "MATH-CLASS-8-0046"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Geometry",
+    "topic": "Visualising Solids",
+    "subtopic": "Maps",
+    "lessonId": "MATH-CLASS-8-0047"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Area trapezium",
+    "lessonId": "MATH-CLASS-8-0048"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Area quadrilateral",
+    "lessonId": "MATH-CLASS-8-0049"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Surface area cube",
+    "lessonId": "MATH-CLASS-8-0050"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Cuboid",
+    "lessonId": "MATH-CLASS-8-0051"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Cylinder",
+    "lessonId": "MATH-CLASS-8-0052"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Volume cube",
+    "lessonId": "MATH-CLASS-8-0053"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Cuboid",
+    "lessonId": "MATH-CLASS-8-0054"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Mensuration",
+    "topic": "Area Surface Area Volume",
+    "subtopic": "Cylinder",
+    "lessonId": "MATH-CLASS-8-0055"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Commercial Mathematics",
+    "topic": "Percent Applications",
+    "subtopic": "Profit and loss",
+    "lessonId": "MATH-CLASS-8-0056"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Commercial Mathematics",
+    "topic": "Percent Applications",
+    "subtopic": "Discount",
+    "lessonId": "MATH-CLASS-8-0057"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Commercial Mathematics",
+    "topic": "Percent Applications",
+    "subtopic": "Tax",
+    "lessonId": "MATH-CLASS-8-0058"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Commercial Mathematics",
+    "topic": "Percent Applications",
+    "subtopic": "Compound interest introduction",
+    "lessonId": "MATH-CLASS-8-0059"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Commercial Mathematics",
+    "topic": "Percent Applications",
+    "subtopic": "Population growth",
+    "lessonId": "MATH-CLASS-8-0060"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Commercial Mathematics",
+    "topic": "Percent Applications",
+    "subtopic": "Depreciation",
+    "lessonId": "MATH-CLASS-8-0061"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Grouped data introduction",
+    "lessonId": "MATH-CLASS-8-0062"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Pie charts",
+    "lessonId": "MATH-CLASS-8-0063"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Histograms introduction",
+    "lessonId": "MATH-CLASS-8-0064"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Mean median mode",
+    "lessonId": "MATH-CLASS-8-0065"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Equally likely outcomes",
+    "lessonId": "MATH-CLASS-8-0066"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Classical probability",
+    "lessonId": "MATH-CLASS-8-0067"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Data Handling",
+    "topic": "Statistics and Probability",
+    "subtopic": "Complement introduction",
+    "lessonId": "MATH-CLASS-8-0068"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Coordinate Graphs",
+    "topic": "Graphs",
+    "subtopic": "Cartesian plane",
+    "lessonId": "MATH-CLASS-8-0069"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Coordinate Graphs",
+    "topic": "Graphs",
+    "subtopic": "Coordinates",
+    "lessonId": "MATH-CLASS-8-0070"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Coordinate Graphs",
+    "topic": "Graphs",
+    "subtopic": "Plot points",
+    "lessonId": "MATH-CLASS-8-0071"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Coordinate Graphs",
+    "topic": "Graphs",
+    "subtopic": "Linear graph from table",
+    "lessonId": "MATH-CLASS-8-0072"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Coordinate Graphs",
+    "topic": "Graphs",
+    "subtopic": "Time-distance graph",
+    "lessonId": "MATH-CLASS-8-0073"
+  },
+  {
+    "className": "Class 8",
+    "chapter": "Coordinate Graphs",
+    "topic": "Graphs",
+    "subtopic": "Read graphs",
+    "lessonId": "MATH-CLASS-8-0074"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Natural whole integer rational irrational real",
+    "lessonId": "MATH-CLASS-9-0001"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Decimal expansions",
+    "lessonId": "MATH-CLASS-9-0002"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Non-terminating non-repeating decimals",
+    "lessonId": "MATH-CLASS-9-0003"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Irrationals on number line",
+    "lessonId": "MATH-CLASS-9-0004"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Real operations",
+    "lessonId": "MATH-CLASS-9-0005"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Rationalise simple surds",
+    "lessonId": "MATH-CLASS-9-0006"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Exponent laws",
+    "lessonId": "MATH-CLASS-9-0007"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Polynomial terminology",
+    "lessonId": "MATH-CLASS-9-0008"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Degree",
+    "lessonId": "MATH-CLASS-9-0009"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Zeros",
+    "lessonId": "MATH-CLASS-9-0010"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Remainder theorem introduction",
+    "lessonId": "MATH-CLASS-9-0011"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Factor theorem introduction",
+    "lessonId": "MATH-CLASS-9-0012"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Algebraic identities",
+    "lessonId": "MATH-CLASS-9-0013"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Factorisation",
+    "lessonId": "MATH-CLASS-9-0014"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Linear Equations in Two Variables",
+    "subtopic": "Solutions of ax+by+c=0",
+    "lessonId": "MATH-CLASS-9-0015"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Linear Equations in Two Variables",
+    "subtopic": "Graph linear equation",
+    "lessonId": "MATH-CLASS-9-0016"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Linear Equations in Two Variables",
+    "subtopic": "Lines parallel axes",
+    "lessonId": "MATH-CLASS-9-0017"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Algebra",
+    "topic": "Linear Equations in Two Variables",
+    "subtopic": "Word problems",
+    "lessonId": "MATH-CLASS-9-0018"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Coordinate Geometry",
+    "topic": "Cartesian System",
+    "subtopic": "Quadrants",
+    "lessonId": "MATH-CLASS-9-0019"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Coordinate Geometry",
+    "topic": "Cartesian System",
+    "subtopic": "Ordered pairs",
+    "lessonId": "MATH-CLASS-9-0020"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Coordinate Geometry",
+    "topic": "Cartesian System",
+    "subtopic": "Plot points",
+    "lessonId": "MATH-CLASS-9-0021"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Coordinate Geometry",
+    "topic": "Cartesian System",
+    "subtopic": "Abscissa",
+    "lessonId": "MATH-CLASS-9-0022"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Coordinate Geometry",
+    "topic": "Cartesian System",
+    "subtopic": "Ordinate",
+    "lessonId": "MATH-CLASS-9-0023"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Euclidean Geometry",
+    "subtopic": "Axioms",
+    "lessonId": "MATH-CLASS-9-0024"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Euclidean Geometry",
+    "subtopic": "Postulates",
+    "lessonId": "MATH-CLASS-9-0025"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Euclidean Geometry",
+    "subtopic": "Theorems",
+    "lessonId": "MATH-CLASS-9-0026"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Euclidean Geometry",
+    "subtopic": "Euclid postulates",
+    "lessonId": "MATH-CLASS-9-0027"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Euclidean Geometry",
+    "subtopic": "Fifth postulate equivalents",
+    "lessonId": "MATH-CLASS-9-0028"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Angle relations",
+    "lessonId": "MATH-CLASS-9-0029"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Parallel line theorems",
+    "lessonId": "MATH-CLASS-9-0030"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Lines and Angles",
+    "subtopic": "Triangle angle properties",
+    "lessonId": "MATH-CLASS-9-0031"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Congruence criteria",
+    "lessonId": "MATH-CLASS-9-0032"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Isosceles theorem",
+    "lessonId": "MATH-CLASS-9-0033"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Triangle inequalities",
+    "lessonId": "MATH-CLASS-9-0034"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Triangles",
+    "subtopic": "Midpoint theorem",
+    "lessonId": "MATH-CLASS-9-0035"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Parallelogram theorems",
+    "lessonId": "MATH-CLASS-9-0036"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Quadrilaterals",
+    "subtopic": "Midpoint theorem applications",
+    "lessonId": "MATH-CLASS-9-0037"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Circles",
+    "subtopic": "Chord properties",
+    "lessonId": "MATH-CLASS-9-0038"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Circles",
+    "subtopic": "Perpendicular centre-to-chord",
+    "lessonId": "MATH-CLASS-9-0039"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Circles",
+    "subtopic": "Equal chords",
+    "lessonId": "MATH-CLASS-9-0040"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Circles",
+    "subtopic": "Angles subtended by chords",
+    "lessonId": "MATH-CLASS-9-0041"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Circles",
+    "subtopic": "Cyclic quadrilateral introduction",
+    "lessonId": "MATH-CLASS-9-0042"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Constructions",
+    "subtopic": "Angle bisector",
+    "lessonId": "MATH-CLASS-9-0043"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Constructions",
+    "subtopic": "Perpendicular bisector",
+    "lessonId": "MATH-CLASS-9-0044"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Geometry",
+    "topic": "Constructions",
+    "subtopic": "Triangle constructions",
+    "lessonId": "MATH-CLASS-9-0045"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Heron formula",
+    "lessonId": "MATH-CLASS-9-0046"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Area triangle",
+    "lessonId": "MATH-CLASS-9-0047"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Area quadrilateral",
+    "lessonId": "MATH-CLASS-9-0048"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Cube",
+    "lessonId": "MATH-CLASS-9-0049"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Cuboid",
+    "lessonId": "MATH-CLASS-9-0050"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Cylinder",
+    "lessonId": "MATH-CLASS-9-0051"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Cone",
+    "lessonId": "MATH-CLASS-9-0052"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Sphere",
+    "lessonId": "MATH-CLASS-9-0053"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Hemisphere",
+    "lessonId": "MATH-CLASS-9-0054"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Mensuration",
+    "topic": "Heron and Solids",
+    "subtopic": "Composite solids introduction",
+    "lessonId": "MATH-CLASS-9-0055"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Data collection",
+    "lessonId": "MATH-CLASS-9-0056"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Grouped frequency distribution",
+    "lessonId": "MATH-CLASS-9-0057"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Histogram",
+    "lessonId": "MATH-CLASS-9-0058"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Frequency polygon",
+    "lessonId": "MATH-CLASS-9-0059"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Mean",
+    "lessonId": "MATH-CLASS-9-0060"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Median",
+    "lessonId": "MATH-CLASS-9-0061"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Mode",
+    "lessonId": "MATH-CLASS-9-0062"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Probability",
+    "subtopic": "Empirical probability",
+    "lessonId": "MATH-CLASS-9-0063"
+  },
+  {
+    "className": "Class 9",
+    "chapter": "Statistics and Probability",
+    "topic": "Probability",
+    "subtopic": "Repeated experiments",
+    "lessonId": "MATH-CLASS-9-0064"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Euclid division lemma",
+    "lessonId": "MATH-CLASS-10-0001"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Fundamental Theorem of Arithmetic",
+    "lessonId": "MATH-CLASS-10-0002"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Prime factorisation",
+    "lessonId": "MATH-CLASS-10-0003"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "HCF and LCM",
+    "lessonId": "MATH-CLASS-10-0004"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Irrationality proofs",
+    "lessonId": "MATH-CLASS-10-0005"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Decimal expansion criteria",
+    "lessonId": "MATH-CLASS-10-0006"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Zeros quadratic polynomial",
+    "lessonId": "MATH-CLASS-10-0007"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Zeros-coefficients relationship",
+    "lessonId": "MATH-CLASS-10-0008"
+  },
+  {
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Polynomial division algorithm",
+    "lessonId": "MATH-CLASS-10-0009"
+  }
+]
