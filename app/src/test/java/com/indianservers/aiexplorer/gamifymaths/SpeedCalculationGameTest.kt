@@ -50,4 +50,14 @@ class SpeedCalculationGameTest {
             assertFalse(rendered.contains("\\circ"))
         }
     }
+
+    @Test
+    fun multipleChoiceAnswersContainCorrectDistinctChoices() {
+        val problem = SpeedProblem("8 \\div 4", "2", "Division")
+        val choices = speedAnswerChoices(problem, Random(11))
+
+        assertEquals(4, choices.size)
+        assertEquals(4, choices.distinct().size)
+        assertTrue(choices.any { it == problem.answer })
+    }
 }

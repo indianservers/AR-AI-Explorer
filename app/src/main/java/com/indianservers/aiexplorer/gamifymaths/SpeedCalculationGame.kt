@@ -15,15 +15,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,11 +42,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +62,10 @@ import kotlin.random.Random
 internal enum class SpeedCalculationMode { Basic, Advanced }
 
 private enum class SpeedScreen { Settings, Playing, Results }
+private enum class SpeedAnswerMode(val label: String) {
+    Typed("Type answer"),
+    MultipleChoice("4 choices"),
+}
 
 internal data class SpeedProblem(
     val prompt: String,
@@ -82,6 +90,7 @@ internal fun SpeedCalculationGame(
     var digits by rememberSaveable { mutableIntStateOf(1) }
     var selectedBasic by rememberSaveable { mutableStateOf(BasicOperations.toSet()) }
     var selectedAdvanced by rememberSaveable { mutableStateOf(AdvancedTopics.toSet()) }
+    var answerModeName by rememberSaveable { mutableStateOf(SpeedAnswerMode.Typed.name) }
     var secondsLeft by rememberSaveable { mutableIntStateOf(duration) }
     var correct by rememberSaveable { mutableIntStateOf(0) }
     var attempted by rememberSaveable { mutableIntStateOf(0) }
@@ -94,6 +103,7 @@ internal fun SpeedCalculationGame(
         mutableStateOf(nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts))
     }
     val screen = SpeedScreen.valueOf(screenName)
+    val answerMode = SpeedAnswerMode.valueOf(answerModeName)
 
     fun startRound() {
         secondsLeft = duration
@@ -128,8 +138,10 @@ internal fun SpeedCalculationGame(
             digits = digits,
             selectedBasic = selectedBasic,
             selectedAdvanced = selectedAdvanced,
+            answerMode = answerMode,
             onDuration = { duration = it },
             onDigits = { digits = it },
+            onAnswerMode = { answerModeName = it.name },
             onToggleBasic = { item ->
                 selectedBasic = toggleChoice(selectedBasic, item)
             },
@@ -140,10 +152,10 @@ internal fun SpeedCalculationGame(
             onStart = ::startRound,
         )
         SpeedScreen.Playing -> {
-            fun submit() {
-                if (answerText.isBlank()) return
+            fun submit(candidate: String = answerText) {
+                if (candidate.isBlank()) return
                 attempted++
-                if (answersMatch(answerText, problem.answer)) {
+                if (answersMatch(candidate, problem.answer)) {
                     correct++
                     streak++
                     bestStreak = maxOf(bestStreak, streak)
@@ -167,8 +179,13 @@ internal fun SpeedCalculationGame(
                 attempted = attempted,
                 streak = streak,
                 feedback = feedback,
+                answerMode = answerMode,
                 onAnswer = { answerText = it.take(18) },
                 onSubmit = ::submit,
+                onSubmitChoice = { choice ->
+                    answerText = choice
+                    submit(choice)
+                },
                 onSettings = { screenName = SpeedScreen.Settings.name },
                 onBack = onBack,
             )
@@ -196,8 +213,10 @@ private fun SpeedSettingsScreen(
     digits: Int,
     selectedBasic: Set<String>,
     selectedAdvanced: Set<String>,
+    answerMode: SpeedAnswerMode,
     onDuration: (Int) -> Unit,
     onDigits: (Int) -> Unit,
+    onAnswerMode: (SpeedAnswerMode) -> Unit,
     onToggleBasic: (String) -> Unit,
     onToggleAdvanced: (String) -> Unit,
     onBack: () -> Unit,
@@ -267,10 +286,23 @@ private fun SpeedSettingsScreen(
             }
         }
 
+        GlossyPanel(accent) {
+            Text("ANSWER STYLE", color = GameInk, fontWeight = FontWeight.Black)
+            Text("Choose typing for recall or 4 choices for fast tap practice", color = GameMuted, fontSize = 11.sp)
+            ChoiceGrid(
+                choices = SpeedAnswerMode.entries,
+                selected = { it == answerMode },
+                label = { it.label },
+                accent = accent,
+                onClick = onAnswerMode,
+            )
+        }
+
         val hasSelection = if (mode == SpeedCalculationMode.Basic) selectedBasic.isNotEmpty() else selectedAdvanced.isNotEmpty()
         PrimaryGameButton("Start ${formatDuration(duration)} Sprint", accent, onStart, enabled = hasSelection)
         Text(
-            "Solve as many as you can. Enter a decimal for fractional answers.",
+            if (answerMode == SpeedAnswerMode.Typed) "Solve as many as you can. Enter a decimal for fractional answers."
+            else "Solve as many as you can. Tap the correct answer from four choices.",
             color = GameMuted,
             fontSize = 10.sp,
             textAlign = TextAlign.Center,
@@ -291,17 +323,24 @@ private fun SpeedPlayScreen(
     attempted: Int,
     streak: Int,
     feedback: String?,
+    answerMode: SpeedAnswerMode,
     onAnswer: (String) -> Unit,
     onSubmit: () -> Unit,
+    onSubmitChoice: (String) -> Unit,
     onSettings: () -> Unit,
     onBack: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val answerChoices = remember(problem, answerMode) {
+        if (answerMode == SpeedAnswerMode.MultipleChoice) speedAnswerChoices(problem) else emptyList()
+    }
     Column(
         Modifier.fillMaxSize()
             .background(Brush.radialGradient(listOf(accent.copy(.28f), GameSpace, Color(0xFF020714))))
             .verticalScroll(rememberScrollState())
+            .imePadding()
+            .navigationBarsPadding()
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -321,7 +360,7 @@ private fun SpeedPlayScreen(
         }
         GameProgress(secondsLeft / duration.toFloat(), if (secondsLeft <= 10) GameRed else accent)
 
-        GlossyPanel(accent, Modifier.heightIn(min = 165.dp)) {
+        GlossyPanel(accent, Modifier.heightIn(min = 300.dp)) {
             Text("SOLVE", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp)
             Spacer(Modifier.height(3.dp))
             Text(
@@ -333,21 +372,39 @@ private fun SpeedPlayScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
+            Text(
+                "Enter the correct answer",
+                color = GameMuted,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(Modifier.height(12.dp))
+            if (answerMode == SpeedAnswerMode.Typed) {
+                Text("YOUR ANSWER", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp)
+                GameAnswerTextField(
+                    value = answer,
+                    onValueChange = onAnswer,
+                    accent = accent,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        onSubmit()
+                        focusManager.clearFocus()
+                    }),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                )
+                PrimaryGameButton("Submit Answer", accent, onSubmit, enabled = answer.isNotBlank())
+            } else {
+                Text("CHOOSE ANSWER", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp)
+                SpeedAnswerChoiceGrid(
+                    choices = answerChoices,
+                    selected = answer,
+                    accent = accent,
+                    onChoose = onSubmitChoice,
+                )
+            }
         }
-
-        OutlinedTextField(
-            value = answer,
-            onValueChange = onAnswer,
-            label = { Text("Your answer") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = {
-                onSubmit()
-                focusManager.clearFocus()
-            }),
-            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-        )
-        PrimaryGameButton("Submit Answer", accent, onSubmit, enabled = answer.isNotBlank())
         feedback?.let {
             Text(
                 it,
@@ -359,7 +416,112 @@ private fun SpeedPlayScreen(
         }
         Text("$attempted attempted", color = GameMuted, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
     }
-    LaunchedEffect(problem) { focusRequester.requestFocus() }
+    LaunchedEffect(problem, answerMode) {
+        if (answerMode == SpeedAnswerMode.Typed) focusRequester.requestFocus()
+        else focusManager.clearFocus()
+    }
+}
+
+@Composable
+private fun SpeedAnswerChoiceGrid(
+    choices: List<String>,
+    selected: String,
+    accent: Color,
+    onChoose: (String) -> Unit,
+) {
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val tileWidth = if (maxWidth < 350.dp) (maxWidth - 9.dp) / 2 else (maxWidth - 27.dp) / 4
+        FlowRow(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(9.dp),
+            verticalArrangement = Arrangement.spacedBy(9.dp),
+        ) {
+            choices.forEachIndexed { index, choice ->
+                val active = choice == selected
+                Box(
+                    Modifier
+                        .width(tileWidth)
+                        .height(54.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    if (active) accent.copy(.34f) else Color.White.copy(.08f),
+                                    GamePanel.copy(.94f),
+                                ),
+                            ),
+                        )
+                        .border(1.dp, if (active) GameGold else accent.copy(.58f), RoundedCornerShape(16.dp))
+                        .clickable { onChoose(choice) }
+                        .focusable()
+                        .semantics { contentDescription = "Answer choice ${index + 1}: $choice" },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        choice,
+                        color = if (active) GameInk else GameMuted,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Black,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GameAnswerTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    accent: Color,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
+    modifier: Modifier = Modifier,
+) {
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        singleLine = true,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        cursorBrush = SolidColor(GameGold),
+        textStyle = TextStyle(
+            color = GameInk,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+        ),
+        modifier = modifier,
+        decorationBox = { innerTextField ->
+            Row(
+                Modifier
+                    .height(58.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Brush.horizontalGradient(listOf(Color.Black.copy(.34f), accent.copy(.12f), GamePanel.copy(.92f))))
+                    .border(2.dp, accent.copy(.85f), RoundedCornerShape(18.dp))
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Box(Modifier.weight(1f)) {
+                    if (value.isBlank()) {
+                        Text("Type your answer here", color = GameMuted.copy(.7f), fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    }
+                    innerTextField()
+                }
+                Box(
+                    Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(accent.copy(.22f))
+                        .border(1.dp, accent.copy(.7f), RoundedCornerShape(10.dp))
+                        .padding(horizontal = 9.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("KB", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black)
+                }
+            }
+        },
+    )
 }
 
 @Composable
@@ -471,6 +633,51 @@ private fun answersMatch(input: String, expected: String): Boolean {
     val expectedNumber = expected.toDoubleOrNull()
     return if (enteredNumber != null && expectedNumber != null) abs(enteredNumber - expectedNumber) < 0.001
     else input.trim().equals(expected, ignoreCase = true)
+}
+
+internal fun speedAnswerChoices(problem: SpeedProblem, random: Random = Random.Default): List<String> {
+    val correct = problem.answer.trim()
+    val expectedNumber = correct.replace(",", ".").toDoubleOrNull()
+    val choices = linkedSetOf(correct)
+
+    if (expectedNumber != null) {
+        val integerAnswer = expectedNumber % 1.0 == 0.0
+        val baseStep = when {
+            abs(expectedNumber) >= 100 -> 10.0
+            integerAnswer -> 1.0
+            else -> 0.5
+        }
+        var offset = 1
+        while (choices.size < 4 && offset < 24) {
+            listOf(-offset, offset, offset + 1, -(offset + 1)).forEach { direction ->
+                if (choices.size < 4) {
+                    val candidate = expectedNumber + direction * baseStep
+                    if (candidate >= 0 || expectedNumber < 0) choices += compactNumber(candidate)
+                }
+            }
+            offset += 2
+        }
+        var fallback = 2
+        while (choices.size < 4) {
+            choices += compactNumber(expectedNumber + fallback * baseStep)
+            fallback++
+        }
+    } else {
+        val variations = listOf(
+            correct.reversed(),
+            "$correct + 1",
+            "$correct - 1",
+            "Not $correct",
+            "0",
+        )
+        choices += variations.filter { it.isNotBlank() && it != correct }
+        var fallback = 1
+        while (choices.size < 4) {
+            choices += "Choice ${fallback++}"
+        }
+    }
+
+    return choices.take(4).shuffled(random)
 }
 
 internal fun nextUniqueSpeedProblem(

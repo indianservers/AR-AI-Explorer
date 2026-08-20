@@ -1,0 +1,704 @@
+[
+  {
+    "ordinal": 662,
+    "excelRow": 663,
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Euclid division lemma",
+    "lessonId": "MATH-CLASS-10-0001"
+  },
+  {
+    "ordinal": 663,
+    "excelRow": 664,
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Fundamental Theorem of Arithmetic",
+    "lessonId": "MATH-CLASS-10-0002"
+  },
+  {
+    "ordinal": 664,
+    "excelRow": 665,
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Prime factorisation",
+    "lessonId": "MATH-CLASS-10-0003"
+  },
+  {
+    "ordinal": 665,
+    "excelRow": 666,
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "HCF and LCM",
+    "lessonId": "MATH-CLASS-10-0004"
+  },
+  {
+    "ordinal": 666,
+    "excelRow": 667,
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Irrationality proofs",
+    "lessonId": "MATH-CLASS-10-0005"
+  },
+  {
+    "ordinal": 667,
+    "excelRow": 668,
+    "className": "Class 10",
+    "chapter": "Number Systems",
+    "topic": "Real Numbers",
+    "subtopic": "Decimal expansion criteria",
+    "lessonId": "MATH-CLASS-10-0006"
+  },
+  {
+    "ordinal": 668,
+    "excelRow": 669,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Zeros quadratic polynomial",
+    "lessonId": "MATH-CLASS-10-0007"
+  },
+  {
+    "ordinal": 669,
+    "excelRow": 670,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Zeros-coefficients relationship",
+    "lessonId": "MATH-CLASS-10-0008"
+  },
+  {
+    "ordinal": 670,
+    "excelRow": 671,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Polynomials",
+    "subtopic": "Polynomial division algorithm",
+    "lessonId": "MATH-CLASS-10-0009"
+  },
+  {
+    "ordinal": 671,
+    "excelRow": 672,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Graphical solution",
+    "lessonId": "MATH-CLASS-10-0010"
+  },
+  {
+    "ordinal": 672,
+    "excelRow": 673,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Consistent systems",
+    "lessonId": "MATH-CLASS-10-0011"
+  },
+  {
+    "ordinal": 673,
+    "excelRow": 674,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Inconsistent systems",
+    "lessonId": "MATH-CLASS-10-0012"
+  },
+  {
+    "ordinal": 674,
+    "excelRow": 675,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Substitution",
+    "lessonId": "MATH-CLASS-10-0013"
+  },
+  {
+    "ordinal": 675,
+    "excelRow": 676,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Elimination",
+    "lessonId": "MATH-CLASS-10-0014"
+  },
+  {
+    "ordinal": 676,
+    "excelRow": 677,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Cross multiplication",
+    "lessonId": "MATH-CLASS-10-0015"
+  },
+  {
+    "ordinal": 677,
+    "excelRow": 678,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Pair of Linear Equations",
+    "subtopic": "Word problems",
+    "lessonId": "MATH-CLASS-10-0016"
+  },
+  {
+    "ordinal": 678,
+    "excelRow": 679,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Standard form",
+    "lessonId": "MATH-CLASS-10-0017"
+  },
+  {
+    "ordinal": 679,
+    "excelRow": 680,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Factorisation",
+    "lessonId": "MATH-CLASS-10-0018"
+  },
+  {
+    "ordinal": 680,
+    "excelRow": 681,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Completing square",
+    "lessonId": "MATH-CLASS-10-0019"
+  },
+  {
+    "ordinal": 681,
+    "excelRow": 682,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Quadratic formula",
+    "lessonId": "MATH-CLASS-10-0020"
+  },
+  {
+    "ordinal": 682,
+    "excelRow": 683,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Discriminant",
+    "lessonId": "MATH-CLASS-10-0021"
+  },
+  {
+    "ordinal": 683,
+    "excelRow": 684,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Nature of roots",
+    "lessonId": "MATH-CLASS-10-0022"
+  },
+  {
+    "ordinal": 684,
+    "excelRow": 685,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Quadratic Equations",
+    "subtopic": "Word problems",
+    "lessonId": "MATH-CLASS-10-0023"
+  },
+  {
+    "ordinal": 685,
+    "excelRow": 686,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Arithmetic Progressions",
+    "subtopic": "Sequence terminology",
+    "lessonId": "MATH-CLASS-10-0024"
+  },
+  {
+    "ordinal": 686,
+    "excelRow": 687,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Arithmetic Progressions",
+    "subtopic": "nth term",
+    "lessonId": "MATH-CLASS-10-0025"
+  },
+  {
+    "ordinal": 687,
+    "excelRow": 688,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Arithmetic Progressions",
+    "subtopic": "Sum first n terms",
+    "lessonId": "MATH-CLASS-10-0026"
+  },
+  {
+    "ordinal": 688,
+    "excelRow": 689,
+    "className": "Class 10",
+    "chapter": "Algebra",
+    "topic": "Arithmetic Progressions",
+    "subtopic": "Applications",
+    "lessonId": "MATH-CLASS-10-0027"
+  },
+  {
+    "ordinal": 689,
+    "excelRow": 690,
+    "className": "Class 10",
+    "chapter": "Coordinate Geometry",
+    "topic": "Analytic Geometry",
+    "subtopic": "Distance formula",
+    "lessonId": "MATH-CLASS-10-0028"
+  },
+  {
+    "ordinal": 690,
+    "excelRow": 691,
+    "className": "Class 10",
+    "chapter": "Coordinate Geometry",
+    "topic": "Analytic Geometry",
+    "subtopic": "Section formula",
+    "lessonId": "MATH-CLASS-10-0029"
+  },
+  {
+    "ordinal": 691,
+    "excelRow": 692,
+    "className": "Class 10",
+    "chapter": "Coordinate Geometry",
+    "topic": "Analytic Geometry",
+    "subtopic": "Midpoint formula",
+    "lessonId": "MATH-CLASS-10-0030"
+  },
+  {
+    "ordinal": 692,
+    "excelRow": 693,
+    "className": "Class 10",
+    "chapter": "Coordinate Geometry",
+    "topic": "Analytic Geometry",
+    "subtopic": "Area triangle coordinates",
+    "lessonId": "MATH-CLASS-10-0031"
+  },
+  {
+    "ordinal": 693,
+    "excelRow": 694,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "Basic proportionality theorem",
+    "lessonId": "MATH-CLASS-10-0032"
+  },
+  {
+    "ordinal": 694,
+    "excelRow": 695,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "Converse BPT",
+    "lessonId": "MATH-CLASS-10-0033"
+  },
+  {
+    "ordinal": 695,
+    "excelRow": 696,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "AAA similarity",
+    "lessonId": "MATH-CLASS-10-0034"
+  },
+  {
+    "ordinal": 696,
+    "excelRow": 697,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "SSS similarity",
+    "lessonId": "MATH-CLASS-10-0035"
+  },
+  {
+    "ordinal": 697,
+    "excelRow": 698,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "SAS similarity",
+    "lessonId": "MATH-CLASS-10-0036"
+  },
+  {
+    "ordinal": 698,
+    "excelRow": 699,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "Areas similar triangles",
+    "lessonId": "MATH-CLASS-10-0037"
+  },
+  {
+    "ordinal": 699,
+    "excelRow": 700,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "Pythagoras theorem",
+    "lessonId": "MATH-CLASS-10-0038"
+  },
+  {
+    "ordinal": 700,
+    "excelRow": 701,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Triangles and Similarity",
+    "subtopic": "Converse Pythagoras",
+    "lessonId": "MATH-CLASS-10-0039"
+  },
+  {
+    "ordinal": 701,
+    "excelRow": 702,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Circles and Constructions",
+    "subtopic": "Tangent",
+    "lessonId": "MATH-CLASS-10-0040"
+  },
+  {
+    "ordinal": 702,
+    "excelRow": 703,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Circles and Constructions",
+    "subtopic": "Radius perpendicular tangent",
+    "lessonId": "MATH-CLASS-10-0041"
+  },
+  {
+    "ordinal": 703,
+    "excelRow": 704,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Circles and Constructions",
+    "subtopic": "Tangents from external point",
+    "lessonId": "MATH-CLASS-10-0042"
+  },
+  {
+    "ordinal": 704,
+    "excelRow": 705,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Circles and Constructions",
+    "subtopic": "Divide segment in ratio",
+    "lessonId": "MATH-CLASS-10-0043"
+  },
+  {
+    "ordinal": 705,
+    "excelRow": 706,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Circles and Constructions",
+    "subtopic": "Construct similar triangle",
+    "lessonId": "MATH-CLASS-10-0044"
+  },
+  {
+    "ordinal": 706,
+    "excelRow": 707,
+    "className": "Class 10",
+    "chapter": "Geometry",
+    "topic": "Circles and Constructions",
+    "subtopic": "Construct tangents",
+    "lessonId": "MATH-CLASS-10-0045"
+  },
+  {
+    "ordinal": 707,
+    "excelRow": 708,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "sin",
+    "lessonId": "MATH-CLASS-10-0046"
+  },
+  {
+    "ordinal": 708,
+    "excelRow": 709,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "cos",
+    "lessonId": "MATH-CLASS-10-0047"
+  },
+  {
+    "ordinal": 709,
+    "excelRow": 710,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "tan",
+    "lessonId": "MATH-CLASS-10-0048"
+  },
+  {
+    "ordinal": 710,
+    "excelRow": 711,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "cosec",
+    "lessonId": "MATH-CLASS-10-0049"
+  },
+  {
+    "ordinal": 711,
+    "excelRow": 712,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "sec",
+    "lessonId": "MATH-CLASS-10-0050"
+  },
+  {
+    "ordinal": 712,
+    "excelRow": 713,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "cot",
+    "lessonId": "MATH-CLASS-10-0051"
+  },
+  {
+    "ordinal": 713,
+    "excelRow": 714,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "Standard-angle values",
+    "lessonId": "MATH-CLASS-10-0052"
+  },
+  {
+    "ordinal": 714,
+    "excelRow": 715,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "Relationships",
+    "lessonId": "MATH-CLASS-10-0053"
+  },
+  {
+    "ordinal": 715,
+    "excelRow": 716,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Trigonometric Ratios",
+    "subtopic": "Identities",
+    "lessonId": "MATH-CLASS-10-0054"
+  },
+  {
+    "ordinal": 716,
+    "excelRow": 717,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Applications",
+    "subtopic": "Heights and distances",
+    "lessonId": "MATH-CLASS-10-0055"
+  },
+  {
+    "ordinal": 717,
+    "excelRow": 718,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Applications",
+    "subtopic": "Angle of elevation",
+    "lessonId": "MATH-CLASS-10-0056"
+  },
+  {
+    "ordinal": 718,
+    "excelRow": 719,
+    "className": "Class 10",
+    "chapter": "Trigonometry",
+    "topic": "Applications",
+    "subtopic": "Angle of depression",
+    "lessonId": "MATH-CLASS-10-0057"
+  },
+  {
+    "ordinal": 719,
+    "excelRow": 720,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Circumference",
+    "lessonId": "MATH-CLASS-10-0058"
+  },
+  {
+    "ordinal": 720,
+    "excelRow": 721,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Circle area",
+    "lessonId": "MATH-CLASS-10-0059"
+  },
+  {
+    "ordinal": 721,
+    "excelRow": 722,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Sector area",
+    "lessonId": "MATH-CLASS-10-0060"
+  },
+  {
+    "ordinal": 722,
+    "excelRow": 723,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Arc length",
+    "lessonId": "MATH-CLASS-10-0061"
+  },
+  {
+    "ordinal": 723,
+    "excelRow": 724,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Segment area",
+    "lessonId": "MATH-CLASS-10-0062"
+  },
+  {
+    "ordinal": 724,
+    "excelRow": 725,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Composite figures",
+    "lessonId": "MATH-CLASS-10-0063"
+  },
+  {
+    "ordinal": 725,
+    "excelRow": 726,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Frustum introduction",
+    "lessonId": "MATH-CLASS-10-0064"
+  },
+  {
+    "ordinal": 726,
+    "excelRow": 727,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Combination of solids",
+    "lessonId": "MATH-CLASS-10-0065"
+  },
+  {
+    "ordinal": 727,
+    "excelRow": 728,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Conversion of solids",
+    "lessonId": "MATH-CLASS-10-0066"
+  },
+  {
+    "ordinal": 728,
+    "excelRow": 729,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Surface areas",
+    "lessonId": "MATH-CLASS-10-0067"
+  },
+  {
+    "ordinal": 729,
+    "excelRow": 730,
+    "className": "Class 10",
+    "chapter": "Mensuration",
+    "topic": "Circles and Solids",
+    "subtopic": "Volumes",
+    "lessonId": "MATH-CLASS-10-0068"
+  },
+  {
+    "ordinal": 730,
+    "excelRow": 731,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Grouped mean direct method",
+    "lessonId": "MATH-CLASS-10-0069"
+  },
+  {
+    "ordinal": 731,
+    "excelRow": 732,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Assumed mean",
+    "lessonId": "MATH-CLASS-10-0070"
+  },
+  {
+    "ordinal": 732,
+    "excelRow": 733,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Step deviation",
+    "lessonId": "MATH-CLASS-10-0071"
+  },
+  {
+    "ordinal": 733,
+    "excelRow": 734,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Grouped median",
+    "lessonId": "MATH-CLASS-10-0072"
+  },
+  {
+    "ordinal": 734,
+    "excelRow": 735,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Grouped mode",
+    "lessonId": "MATH-CLASS-10-0073"
+  },
+  {
+    "ordinal": 735,
+    "excelRow": 736,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Empirical relation",
+    "lessonId": "MATH-CLASS-10-0074"
+  },
+  {
+    "ordinal": 736,
+    "excelRow": 737,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Statistics",
+    "subtopic": "Ogive introduction",
+    "lessonId": "MATH-CLASS-10-0075"
+  },
+  {
+    "ordinal": 737,
+    "excelRow": 738,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Probability",
+    "subtopic": "Classical probability",
+    "lessonId": "MATH-CLASS-10-0076"
+  },
+  {
+    "ordinal": 738,
+    "excelRow": 739,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Probability",
+    "subtopic": "Complement",
+    "lessonId": "MATH-CLASS-10-0077"
+  },
+  {
+    "ordinal": 739,
+    "excelRow": 740,
+    "className": "Class 10",
+    "chapter": "Statistics and Probability",
+    "topic": "Probability",
+    "subtopic": "Compound outcomes",
+    "lessonId": "MATH-CLASS-10-0078"
+  }
+]
