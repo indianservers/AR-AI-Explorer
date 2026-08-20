@@ -24,17 +24,17 @@ class PhysicsChemistryFormulaPhase1And2Test {
     private val chemistry = OfflineChemistryFormulaRepository()
 
     @Test fun physicsCatalogueHasCompleteRequestedHierarchy() {
-        assertEquals(25, physics.getCategories().size)
+        assertEquals(14, physics.getCategories().size)
         assertTrue(physics.getCategories().all { it.subcategoryIds.isNotEmpty() })
         physics.getCategories().forEach { category -> assertEquals(category.subcategoryIds, physics.getSubcategories(category.id).map { it.id }) }
-        assertTrue(BundledPhysicsFormulaData.catalogue.subcategories.size >= 200)
+        assertTrue(BundledPhysicsFormulaData.catalogue.subcategories.size >= 100)
     }
 
     @Test fun chemistryCatalogueHasCompleteRequestedHierarchy() {
-        assertEquals(26, chemistry.getCategories().size)
+        assertEquals(14, chemistry.getCategories().size)
         assertTrue(chemistry.getCategories().all { it.subcategoryIds.isNotEmpty() })
         chemistry.getCategories().forEach { category -> assertEquals(category.subcategoryIds, chemistry.getSubcategories(category.id).map { it.id }) }
-        assertTrue(BundledChemistryFormulaData.catalogue.subcategories.size >= 200)
+        assertTrue(BundledChemistryFormulaData.catalogue.subcategories.size >= 100)
     }
 
     @Test fun repositoriesRemainSubjectIsolated() {

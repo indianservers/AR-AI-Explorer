@@ -23,6 +23,7 @@ class Graph2DStrengthenedEngineTest {
         val fibonacci = TypedGraphExpressionParser.parse("f(0)=0; f(1)=1; f(n)=f(n-1)+f(n-2); n=0..10")
         val list = TypedGraphExpressionParser.parse("[(0,1),(1,3),(2,5)]")
         val regression = TypedGraphExpressionParser.parse("regression(linear; (0,1),(1,3),(2,5),(3,7))")
+        val tildeRegression = TypedGraphExpressionParser.parse("y ~ m*x+b; (0,1),(1,3),(2,5),(3,7)")
 
         assertTrue(sequence is TypedGraphExpression.Sequence)
         assertEquals(listOf(1.0, 4.0, 9.0, 16.0, 25.0), typed.sample(sequence).points.map { it.y })
@@ -34,6 +35,7 @@ class Graph2DStrengthenedEngineTest {
         val regressionSample = typed.sample(regression)
         assertEquals(GraphRegressionKind.Linear, regressionSample.regression?.kind)
         assertTrue(regressionSample.regression!!.rSquared > .999999)
+        assertEquals(GraphRegressionKind.Linear, typed.sample(tildeRegression).regression?.kind)
     }
 
     @Test

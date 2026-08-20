@@ -6,6 +6,12 @@ import com.indianservers.aiexplorer.core.MathNumberDomain
 import com.indianservers.aiexplorer.core.MathNotebookDocument
 import com.indianservers.aiexplorer.core.ManipulativeScene
 import com.indianservers.aiexplorer.core.Solid
+import com.indianservers.aiexplorer.core.SpatialMaterial
+import com.indianservers.aiexplorer.core.SpatialQuality
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
+import com.indianservers.aiexplorer.core.SpatialSurfaceKind
+import com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode
+import com.indianservers.aiexplorer.core.SurfaceDomain3D
 import com.indianservers.aiexplorer.core.SymbolicCasEngine
 import com.indianservers.aiexplorer.core.SymbolicExpression
 import com.indianservers.aiexplorer.core.VariableAssumption
@@ -389,11 +395,13 @@ object UniversalWorkspaceBridge {
         }
         state.solids.forEachIndexed { index, solid -> objects += solidObject(index, solid) }
         state.vectors3D.forEach { vector -> objects += vectorObject(vector) }
-        val parsedSurface = runCatching { cas.parse(state.surfaceExpression) }
-        objects += UniversalMathObject("surface-main", UniversalMathKind.Surface, "z=f(x,y)", UniversalMathPayload.Symbolic(state.surfaceExpression, parsedSurface.getOrNull(), parsedSurface.exceptionOrNull()?.message), sourceView = "3D graph")
+        state.surfaceLayers.forEachIndexed { index, layer ->
+            objects += surfaceObject(layer.copy(id = if (index == 0) "surface-main" else layer.id), index)
+        }
+        val surfaceIds = state.surfaceLayers.indices.map { index -> if (index == 0) "surface-main" else state.surfaceLayers[index].id }
         objects += UniversalMathObject("spatial-scene", UniversalMathKind.SpatialScene, "AR spatial scene", UniversalMathPayload.Properties(mapOf(
             "anchorId" to state.spatialPlacement.anchorId, "scale" to state.spatialPlacement.pose.uniformScale.toString(), "metersPerUnit" to state.spatialPlacement.metersPerMathUnit.toString(),
-        )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + "surface-main").toSet(), sourceView = "AR")
+        )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + surfaceIds).toSet(), sourceView = "AR")
         val generated = UniversalMathDocument(id = "math-${state.id}", revision = state.modifiedAt.coerceAtLeast(0), objects = objects.associateBy { it.id }, modifiedAt = state.modifiedAt)
         val stored = state.universalMathDocument ?: return generated
         // Stored authoritative objects win over projections rebuilt from legacy WorkspaceState fields.
@@ -417,7 +425,22 @@ object UniversalWorkspaceBridge {
             val coordinates = document.objects["point-$index"]?.payload as? UniversalMathPayload.Coordinates
             coordinates?.values?.takeIf { it.size >= 2 }?.let { Vec2(it[0], it[1]) } ?: point
         }
-        val surface = (document.objects["surface-main"]?.payload as? UniversalMathPayload.Symbolic)?.source ?: state.surfaceExpression
+        val surfaceObjects = document.objects.values
+            .filter { it.kind == UniversalMathKind.Surface && it.sourceView == "3D graph" }
+            .sortedBy { it.presentation.layer }
+        val surfaceLayers = surfaceObjects.mapIndexedNotNull { index, value ->
+            val source = (value.payload as? UniversalMathPayload.Symbolic)?.source ?: return@mapIndexedNotNull null
+            val existing = state.surfaceLayers.firstOrNull { it.id == value.id }
+                ?: state.surfaceLayers.getOrNull(index)
+                ?: SpatialSurfaceLayer(value.id, source)
+            existing.copy(
+                id = value.id,
+                expression = source,
+                visible = value.presentation.visible,
+                paletteKey = value.presentation.colorKey,
+            ).withUniversalStyle(value.presentation.styleKey)
+        }
+        val surface = surfaceLayers.firstOrNull()?.expression ?: "0"
         val solids = state.solids.mapIndexed { index, solid ->
             val properties = (document.objects["solid-$index"]?.payload as? UniversalMathPayload.Properties)?.entries ?: return@mapIndexed solid
             solid.copy(
@@ -442,7 +465,46 @@ object UniversalWorkspaceBridge {
                 shape.copy(visible = presentation.visible, locked = presentation.locked, styleKey = presentation.styleKey)
             } ?: shape
         }
-        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, surfaceExpression = surface, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
+        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, surfaceExpression = surface, surfaceLayers = surfaceLayers, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
+    }
+
+    private fun surfaceObject(layer: SpatialSurfaceLayer, index: Int): UniversalMathObject {
+        val parsed = runCatching { cas.parse(layer.expression) }
+        return UniversalMathObject(
+            id = layer.id,
+            kind = UniversalMathKind.Surface,
+            name = if (index == 0) "z=f(x,y)" else "Surface ${index + 1}",
+            payload = UniversalMathPayload.Symbolic(layer.expression, parsed.getOrNull(), parsed.exceptionOrNull()?.message),
+            sourceView = "3D graph",
+            presentation = UniversalMathPresentation(
+                visible = layer.visible,
+                colorKey = layer.paletteKey,
+                styleKey = layer.universalStyle(),
+                layer = index,
+            ),
+        )
+    }
+
+    private fun SpatialSurfaceLayer.universalStyle(): String = listOf(
+        material.name, quality.name, opacity, domain.uMin, domain.uMax, domain.vMin, domain.vMax,
+        colorIndex, textureKey, glow, renderMode.name, kind.name, expressionY, expressionZ,
+    ).joinToString(";")
+
+    private fun SpatialSurfaceLayer.withUniversalStyle(style: String): SpatialSurfaceLayer {
+        val values = style.split(';')
+        if (values.size !in setOf(11, 14)) return this
+        return runCatching {
+            copy(
+                material = SpatialMaterial.valueOf(values[0]),
+                quality = SpatialQuality.valueOf(values[1]),
+                opacity = values[2].toDouble().coerceIn(0.0, 1.0),
+                domain = SurfaceDomain3D(values[3].toDouble(), values[4].toDouble(), values[5].toDouble(), values[6].toDouble()),
+                colorIndex = values[7].toInt(), textureKey = values[8], glow = values[9].toBooleanStrict(),
+                renderMode = SpatialSurfaceRenderMode.valueOf(values[10]),
+                kind = values.getOrNull(11)?.let(SpatialSurfaceKind::valueOf) ?: kind,
+                expressionY = values.getOrNull(12).orEmpty(), expressionZ = values.getOrNull(13).orEmpty(),
+            )
+        }.getOrDefault(this)
     }
 
     private fun solidObject(index: Int, solid: Solid) = UniversalMathObject("solid-$index", UniversalMathKind.Solid, solid.type.name,

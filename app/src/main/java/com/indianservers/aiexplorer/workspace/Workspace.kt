@@ -4,6 +4,7 @@ import com.indianservers.aiexplorer.core.FunctionDefinition
 import com.indianservers.aiexplorer.core.Geometry2D
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.core.Vector3D
@@ -95,6 +96,41 @@ data class GraphSliderMetadataState(
     val value: Double? = null,
 )
 
+/** Durable view projection; mathematical surface definitions remain in [WorkspaceState.surfaceLayers]. */
+data class Graph3DViewState(
+    val density: Float = 26f,
+    val rotation: Float = 35f,
+    val tilt: Float = 55f,
+    val roll: Float = 0f,
+    val zoom: Float = 1f,
+    val panX: Float = 0f,
+    val panY: Float = 0f,
+    val sliceZ: Float = 2f,
+    val traceX: Float = 1f,
+    val traceY: Float = 1f,
+    val showContours: Boolean = false,
+    val showSlice: Boolean = false,
+    val showGradient: Boolean = false,
+    val showBox: Boolean = false,
+    val showOrientationCube: Boolean = true,
+    val activeTool: String = "Surface",
+    val viewPreset: String = "Isometric",
+)
+
+data class Graph2DViewState(
+    val centerX: Double = 0.0,
+    val centerY: Double = 0.0,
+    val zoom: Float = 1f,
+    val xName: String = "x",
+    val yName: String = "y",
+    val xUnit: String = "",
+    val yUnit: String = "",
+    val numberFormat: String = "Adaptive",
+    val gridVisible: Boolean = true,
+    val xLogarithmic: Boolean = false,
+    val yLogarithmic: Boolean = false,
+)
+
 enum class MathModule(val label: String) {
     Geometry2D("2D"),
     Geometry3D("3D"),
@@ -128,7 +164,10 @@ data class WorkspaceState(
     val points3D: List<Point3D> = emptyList(),
     val graphRowMetadata: Map<String, GraphRowMetadataState> = emptyMap(),
     val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
+    val graph2DView: Graph2DViewState = Graph2DViewState(),
     val surfaceExpression: String = "x^2 + y^2",
+    val surfaceLayers: List<SpatialSurfaceLayer> = listOf(SpatialSurfaceLayer("surface-main", surfaceExpression)),
+    val graph3DView: Graph3DViewState = Graph3DViewState(),
     val spatialPlacement: SpatialScenePlacement = SpatialScenePlacement(),
     val universalMathDocument: UniversalMathDocument? = null,
     val modifiedAt: Long = System.currentTimeMillis(),
@@ -661,6 +700,14 @@ class CommandHistory(private val limit: Int = 80) {
     val protocol: List<String> get() = undoStack.map { it.label }
 }
 
+/** Keeps Undo/Redo timelines isolated while a shared workspace state switches modules. */
+class WorkspaceHistoryByModule(private val limit: Int = 80) {
+    private val histories = mutableMapOf<MathModule, CommandHistory>()
+
+    fun forModule(module: MathModule): CommandHistory =
+        histories.getOrPut(module) { CommandHistory(limit) }
+}
+
 object WorkspaceJson {
     fun export(state: WorkspaceState): String = buildString {
         appendLine("{")
@@ -675,9 +722,12 @@ object WorkspaceJson {
         appendLine("  \"functions\": [${state.functions.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"expression\":\"${it.expression.jsonEscaped()}\",\"color\":\"${it.colorKey.jsonEscaped()}\",\"visible\":${it.visible}}" }}],")
         appendLine("  \"graphRowMetadata\": [${state.graphRowMetadata.entries.joinToString { "{\"rowId\":\"${it.key.jsonEscaped()}\",\"collapsed\":${it.value.collapsed},\"folder\":\"${it.value.folder.jsonEscaped()}\",\"note\":\"${it.value.note.jsonEscaped()}\"}" }}],")
         appendLine("  \"graphSliderMetadata\": [${state.graphSliderMetadata.entries.joinToString { "{\"parameter\":\"${it.key.jsonEscaped()}\",\"speed\":${it.value.speed},\"mode\":\"${it.value.mode}\",\"direction\":${it.value.direction},\"value\":${it.value.value ?: "null"}}" }}],")
+        appendLine("  \"graph2DView\": {\"centerX\":${state.graph2DView.centerX},\"centerY\":${state.graph2DView.centerY},\"zoom\":${state.graph2DView.zoom},\"xName\":\"${state.graph2DView.xName.jsonEscaped()}\",\"yName\":\"${state.graph2DView.yName.jsonEscaped()}\",\"xUnit\":\"${state.graph2DView.xUnit.jsonEscaped()}\",\"yUnit\":\"${state.graph2DView.yUnit.jsonEscaped()}\",\"numberFormat\":\"${state.graph2DView.numberFormat.jsonEscaped()}\",\"gridVisible\":${state.graph2DView.gridVisible},\"xLogarithmic\":${state.graph2DView.xLogarithmic},\"yLogarithmic\":${state.graph2DView.yLogarithmic}},")
         appendLine("  \"solids\": [${state.solids.joinToString { "{\"type\":\"${it.type}\",\"width\":${it.width},\"height\":${it.height},\"depth\":${it.depth},\"radius\":${it.radius},\"topRadius\":${it.topRadius},\"position\":{\"x\":${it.position.x},\"y\":${it.position.y},\"z\":${it.position.z}},\"rotation\":{\"x\":${it.rotation.x},\"y\":${it.rotation.y},\"z\":${it.rotation.z}}}" }}],")
         appendLine("  \"vectors3D\": [${state.vectors3D.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"start\":{\"x\":${it.start.x},\"y\":${it.start.y},\"z\":${it.start.z}},\"end\":{\"x\":${it.end.x},\"y\":${it.end.y},\"z\":${it.end.z}}}" }}],")
         appendLine("  \"surfaceExpression\": \"${state.surfaceExpression.jsonEscaped()}\",")
+        appendLine("  \"surfaceLayers\": [${state.surfaceLayers.joinToString { layer -> "{\"id\":\"${layer.id.jsonEscaped()}\",\"kind\":\"${layer.kind}\",\"expression\":\"${layer.expression.jsonEscaped()}\",\"expressionY\":\"${layer.expressionY.jsonEscaped()}\",\"expressionZ\":\"${layer.expressionZ.jsonEscaped()}\",\"visible\":${layer.visible},\"material\":\"${layer.material}\",\"domain\":{\"uMin\":${layer.domain.uMin},\"uMax\":${layer.domain.uMax},\"vMin\":${layer.domain.vMin},\"vMax\":${layer.domain.vMax}},\"quality\":\"${layer.quality}\",\"opacity\":${layer.opacity},\"paletteKey\":\"${layer.paletteKey.jsonEscaped()}\",\"colorIndex\":${layer.colorIndex},\"textureKey\":\"${layer.textureKey.jsonEscaped()}\",\"glow\":${layer.glow},\"renderMode\":\"${layer.renderMode}\"}" }}],")
+        appendLine("  \"graph3DView\": {\"density\":${state.graph3DView.density},\"rotation\":${state.graph3DView.rotation},\"tilt\":${state.graph3DView.tilt},\"roll\":${state.graph3DView.roll},\"zoom\":${state.graph3DView.zoom},\"panX\":${state.graph3DView.panX},\"panY\":${state.graph3DView.panY},\"sliceZ\":${state.graph3DView.sliceZ},\"traceX\":${state.graph3DView.traceX},\"traceY\":${state.graph3DView.traceY},\"showContours\":${state.graph3DView.showContours},\"showSlice\":${state.graph3DView.showSlice},\"showGradient\":${state.graph3DView.showGradient},\"showBox\":${state.graph3DView.showBox},\"showOrientationCube\":${state.graph3DView.showOrientationCube},\"activeTool\":\"${state.graph3DView.activeTool.jsonEscaped()}\",\"viewPreset\":\"${state.graph3DView.viewPreset.jsonEscaped()}\"},")
         appendLine("  \"spatialPlacement\": {\"anchorId\":\"${state.spatialPlacement.anchorId.jsonEscaped()}\",\"positionMeters\":{\"x\":${state.spatialPlacement.pose.positionMeters.x},\"y\":${state.spatialPlacement.pose.positionMeters.y},\"z\":${state.spatialPlacement.pose.positionMeters.z}},\"rotationDegrees\":{\"x\":${state.spatialPlacement.pose.rotationDegrees.x},\"y\":${state.spatialPlacement.pose.rotationDegrees.y},\"z\":${state.spatialPlacement.pose.rotationDegrees.z}},\"uniformScale\":${state.spatialPlacement.pose.uniformScale},\"scaleMode\":\"${state.spatialPlacement.scaleMode}\",\"metersPerMathUnit\":${state.spatialPlacement.metersPerMathUnit},\"estimated\":${state.spatialPlacement.estimated},\"depthOcclusionEnabled\":${state.spatialPlacement.depthOcclusionEnabled}},")
         appendLine("  \"universalMathDocument\": ${UniversalMathDocumentCodec.encode(UniversalWorkspaceBridge.fromWorkspace(state)).prependIndent("  ")},")
         appendLine("  \"modifiedAt\": ${state.modifiedAt}")

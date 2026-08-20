@@ -46,6 +46,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -288,6 +289,7 @@ fun IntentAwareMathValueField(
     useMathKeyboard: Boolean = isMathematicalInputLabel(label),
     onFocusChange: (Boolean) -> Unit = {},
     compactChrome: Boolean = false,
+    editorTestTag: String? = null,
 ) {
     var keyboardVisible by remember { mutableStateOf(false) }
     var structuredValue by remember { mutableStateOf(StructuredMathCodec.fromParser(value)) }
@@ -345,6 +347,7 @@ fun IntentAwareMathValueField(
                     if (it) systemKeyboard?.hide()
                     onFocusChange(it)
                 },
+                editorTestTag = editorTestTag,
             )
         } else {
             OutlinedTextField(
@@ -410,6 +413,7 @@ private fun MathKeyboardOnlyTextField(
     transformation: VisualTransformation,
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    editorTestTag: String? = null,
 ) {
     var focused by remember { mutableStateOf(false) }
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -505,6 +509,8 @@ private fun MathKeyboardOnlyTextField(
                         focused = it.isFocused
                         onFocusChange(it.isFocused)
                     }
+                    .then(if (editorTestTag != null) Modifier.testTag(editorTestTag) else Modifier)
+                    .semantics { contentDescription = "Editable $label" }
                     .drawWithContent {
                         drawContent()
                         val transformed = transformation.filter(AnnotatedString(value.text))
@@ -573,7 +579,7 @@ private fun MathKeyboardOnlyTextField(
                             }
                         }
                     },
-                readOnly = true,
+                readOnly = false,
                 singleLine = singleLine,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     color = IntentMathPalette.Ink,

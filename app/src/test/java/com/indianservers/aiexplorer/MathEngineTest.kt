@@ -171,7 +171,7 @@ class MathEngineTest {
 
     @Test
     fun workspaceJsonContainsMathematicalDefinitions() {
-        val json = WorkspaceJson.export(WorkspaceState())
+        val json = WorkspaceJson.export(WorkspaceState(solids = listOf(Solid(SolidType.Frustum, width = 2.0, topRadius = .5))))
 
         assertTrue(json.contains("\"schemaVersion\": 1"))
         assertTrue(json.contains("\"points\""))
@@ -186,7 +186,7 @@ class MathEngineTest {
     @Test
     fun completedDragIsRecordedAsOneAtomicUndoStep() {
         val history = CommandHistory()
-        val initial = WorkspaceState()
+        val initial = WorkspaceState(points = listOf(Vec2(0.0, 0.0), Vec2(3.0, 2.0)))
         val indices = listOf(0, 1)
         val from = indices.map(initial.points::get)
         val delta = Vec2(2.0, -1.0)

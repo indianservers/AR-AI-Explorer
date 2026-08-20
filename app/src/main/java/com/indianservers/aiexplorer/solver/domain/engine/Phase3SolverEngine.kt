@@ -48,9 +48,12 @@ class Phase3SolverEngine(
         if (text.trim().startsWith("normal probability", true)) {
             return unsupported(text, profile, "Use the verified structured form 'normal pdf x mean m sd s'; interval probability is not implemented yet.", ProblemType.Probability)
         }
+        // Curriculum questions can contain words such as "tangent", "normal", or
+        // "mode" without being Phase 3 commands. Prefer their exact, verified
+        // schemas before considering the explicit advanced-command grammar.
+        schoolQuestions.solve(text, profile)?.let { return it }
         val advancedRequest = isPhase3Request(text)
         if (!advancedRequest) {
-            schoolQuestions.solve(text, profile)?.let { return it }
             typedWordProblems.solve(text, profile)?.let { return it }
             probabilityStatistics.solve(text, profile)?.let { solution ->
                 if (!solution.supported) return solution
@@ -201,17 +204,16 @@ class Phase3SolverEngine(
     }
 
     private fun isPhase3Request(text: String): Boolean {
-        val lower = text.trim().lowercase()
-        return lower.startsWith("complex") ||
-            listOf(
-                "differentiate", "derivative", "partial derivative", "gradient ",
-                "directional derivative", "divergence ", "curl ", "tangent plane",
-                "jacobian ", "hessian ", "integrate", "integral", "improper integrate",
-                "double integrate", "triple integrate", "parameter integral", "limit ", "continuity", "tangent", "normal ", "derivative analysis",
-                "ode ", "ode series ", "linear ivp ", "logistic ", "second order ivp ", "system rk4 ", "rk4 ", "laplace ",
-                "lagrange ", "line integral ", "work integral ", "surface flux ",
-                "green ", "gauss ", "stokes ",
-            ).any(lower::contains)
+        val lower = text.trim().lowercase().replaceFirst(Regex("""^\d+\.\s*"""), "")
+        return Regex(
+            """^(?:complex|differentiate|derivative(?:\s+of)?|partial\s+derivative|gradient\s+|""" +
+                """directional\s+derivative|divergence|curl|tangent\s+plane|jacobian|hessian|""" +
+                """integrate|integral\s+of|improper\s+integrate|double\s+integrate|triple\s+integrate|""" +
+                """parameter\s+integral|limit|continuity|tangent\s+|normal\s+|derivative\s+analysis|""" +
+                """ode|ode\s+series|linear\s+ivp|logistic|second\s+order\s+ivp|system\s+rk4|rk4|laplace|""" +
+                """lagrange|line\s+integral|work\s+integral|surface\s+flux|green|gauss|stokes)\b""",
+            RegexOption.IGNORE_CASE,
+        ).containsMatchIn(lower)
     }
 
     private fun ruleFor(text: String, complex: Boolean): String {

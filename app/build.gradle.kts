@@ -4,6 +4,11 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+val prepareSolverGoldenAndroidTestAssets by tasks.registering(Copy::class) {
+    from(rootProject.file("SOLVER_CAS_GOLDEN_DATASET.jsonl"))
+    into(layout.buildDirectory.dir("generated/solverGoldenAndroidTestAssets"))
+}
+
 android {
     namespace = "com.indianservers.aiexplorer"
     compileSdk {
@@ -44,6 +49,13 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets.getByName("androidTest").assets.srcDir(
+        file("$buildDir/generated/solverGoldenAndroidTestAssets")
+    )
+}
+
+tasks.matching { it.name == "mergeDebugAndroidTestAssets" }.configureEach {
+    dependsOn(prepareSolverGoldenAndroidTestAssets)
 }
 
 dependencies {

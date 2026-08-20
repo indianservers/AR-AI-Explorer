@@ -1124,7 +1124,13 @@ object CrossSection3D {
     }
 }
 
-data class SurfaceMesh(val vertices: List<Vec3>, val rows: Int, val columns: Int)
+data class SurfaceMesh(
+    val vertices: List<Vec3>,
+    val rows: Int,
+    val columns: Int,
+    /** Optional explicit topology used by implicit and parametric production surfaces. */
+    val triangleIndices: List<Int> = emptyList(),
+)
 data class SurfaceInsight(val classification: String, val vertex: Vec3?, val range: String, val symmetry: String)
 
 class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {

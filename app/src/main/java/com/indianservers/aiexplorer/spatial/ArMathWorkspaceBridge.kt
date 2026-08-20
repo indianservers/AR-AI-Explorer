@@ -2,6 +2,8 @@ package com.indianservers.aiexplorer.spatial
 
 import com.indianservers.aiexplorer.core.Graph3D
 import com.indianservers.aiexplorer.core.GraphAnalysis
+import com.indianservers.aiexplorer.core.SpatialSurfaceKind
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.workspace.Shape2D
@@ -137,30 +139,61 @@ object ArMathWorkspaceBridge {
     }
 
     private fun graph3D(workspace: WorkspaceState, density: Int): ArMathWorkspaceScene {
-        val mesh = runCatching { Graph3D().mesh(workspace.surfaceExpression, density.coerceIn(12, 64).toDouble()) }
-        val scene = mesh.getOrNull()?.let {
-            val generated = SharedSpatialSceneBuilder.build(
-                id = "ar-3d-graph",
-                surface = it,
-                annotations = listOf(SpatialAnnotation("surface-label", Vec3(0.0, 2.6, 0.0), workspace.surfaceExpression)),
+        val diagnostics = mutableListOf<String>()
+        val visibleLayers = workspace.surfaceLayers.filter { it.visible }
+        val generatedLayers = visibleLayers.mapNotNull { layer ->
+            runCatching { layerGeometry(layer, density.coerceIn(12, 64)) }
+                .onFailure { diagnostics += "${layer.id}: ${it.message ?: "could not be sampled"}" }
+                .getOrNull()
+                ?.let { layer to it }
+        }
+        val base = SharedSpatialSceneBuilder.build("ar-3d-graph")
+        val surfaces = generatedLayers.flatMapIndexed { index, (layer, geometry) ->
+            val surface = SpatialPrimitive(
+                id = layer.id, kind = SpatialPrimitiveKind.Surface, geometry = geometry,
+                material = palette[index % palette.size].copy(colorRgba = palette[index % palette.size].colorRgba.toMutableList().also { it[3] = layer.opacity.toFloat() }, blendMode = SpatialBlendMode.Transparent),
+                label = layer.expression,
             )
-            generated.copy(
-                primitives = generated.primitives.map { primitive ->
-                    when {
-                        primitive.kind == SpatialPrimitiveKind.Surface -> primitive.copy(material = graphSurface)
-                        primitive.id.startsWith("axis-") -> primitive.copy(material = graphAxis)
-                        else -> primitive
-                    }
-                } + meshWireframe(it),
-            )
-        } ?: SharedSpatialSceneBuilder.build("ar-3d-graph")
+            listOf(surface, geometryWireframe(layer.id, geometry))
+        }
+        val scene = base.copy(
+            primitives = restyleAxes(base.primitives) + surfaces,
+            annotations = generatedLayers.mapIndexed { index, (layer, _) -> SpatialAnnotation("${layer.id}-label", Vec3(0.0, 2.6 - index * .28, 0.0), layer.expression) },
+        )
         return ArMathWorkspaceScene(
             ArMathWorkspaceMode.Graph3D,
             scene,
-            1,
-            if (mesh.isSuccess) 1 else 0,
-            mesh.exceptionOrNull()?.message?.let { listOf(it) }.orEmpty(),
+            visibleLayers.size,
+            generatedLayers.size,
+            diagnostics,
         )
+    }
+
+    private fun layerGeometry(layer: SpatialSurfaceLayer, density: Int): SpatialGeometry {
+        if (layer.kind != SpatialSurfaceKind.Explicit) {
+            val domain = SurfaceDomain(layer.domain.uMin..layer.domain.uMax, layer.domain.vMin..layer.domain.vMax, layer.domain.uMin..layer.domain.uMax)
+            val definition = when (layer.kind) {
+                SpatialSurfaceKind.Implicit -> SurfaceDefinition3D.Implicit(layer.id, layer.expression, domain)
+                SpatialSurfaceKind.Parametric -> SurfaceDefinition3D.Parametric(layer.id, layer.expression, layer.expressionY, layer.expressionZ, domain = domain)
+                SpatialSurfaceKind.Explicit -> error("unreachable")
+            }
+            return TypedSurfaceMesher().mesh(definition, density).geometry
+        }
+        val mesh = Graph3D().mesh(layer.expression, density = density)
+        val triangles = buildList {
+            for (row in 0 until mesh.rows - 1) for (column in 0 until mesh.columns - 1) {
+                val a = row * mesh.columns + column; val b = a + 1; val c = a + mesh.columns; val d = c + 1
+                addAll(listOf(a, c, b, b, c, d))
+            }
+        }
+        return SpatialGeometry(mesh.vertices, triangles)
+    }
+
+    private fun geometryWireframe(id: String, geometry: SpatialGeometry): SpatialPrimitive {
+        val lines = geometry.triangles.chunked(3).flatMap { triangle ->
+            if (triangle.size == 3) listOf(triangle[0] to triangle[1], triangle[1] to triangle[2], triangle[2] to triangle[0]) else emptyList()
+        }.distinct()
+        return SpatialPrimitive("$id-wireframe", SpatialPrimitiveKind.Curve, SpatialGeometry(geometry.vertices, lines = lines), graphWire, "$id wireframe", selectable = false)
     }
 
     private fun cas(document: UniversalMathDocument?, density: Int): ArMathWorkspaceScene {

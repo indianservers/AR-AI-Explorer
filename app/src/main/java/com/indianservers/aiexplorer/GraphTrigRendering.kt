@@ -507,6 +507,7 @@ internal fun GraphCanvas(
     homeRequest: Int,
     backRequest: Int,
     forwardRequest: Int,
+    initialView: GraphViewState = GraphViewState(),
     axisSettings: GraphAxisSettings,
     domains: Map<String, GraphDomainSelection>,
     styles: Map<String, GraphLineStyle>,
@@ -546,11 +547,11 @@ internal fun GraphCanvas(
     val typedGraphEngine = remember { TypedGraphEngine() }
     val engine = remember { ExpressionEngine() }
     val visualEffects = LocalAppVisualEffects.current
-    var cameraCenter by remember { mutableStateOf(Vec2(0.0, 0.0)) }
-    var cameraZoom by remember { mutableFloatStateOf(1f) }
+    var cameraCenter by remember { mutableStateOf(initialView.center) }
+    var cameraZoom by remember { mutableFloatStateOf(initialView.zoom) }
     var lastTapAt by remember { mutableStateOf(0L) }
     var gestureMode by remember { mutableStateOf(GestureMode.Idle) }
-    val viewHistory = remember { com.indianservers.aiexplorer.core.GraphViewHistory() }
+    val viewHistory = remember { com.indianservers.aiexplorer.core.GraphViewHistory(initialView) }
     val currentFunctions by rememberUpdatedState(functions)
     LaunchedEffect(homeRequest) {
         if (homeRequest > 0) {
@@ -568,6 +569,18 @@ internal fun GraphCanvas(
     LaunchedEffect(cameraCenter, cameraZoom) { onViewportChange(GraphViewState(cameraCenter, cameraZoom)) }
     Canvas(
         modifier
+            .onPreviewKeyEvent { event ->
+                if (event.type != KeyEventType.KeyDown) false else when (event.key) {
+                    Key.DirectionLeft -> { cameraCenter = cameraCenter.copy(x = cameraCenter.x - 1.0 / cameraZoom); true }
+                    Key.DirectionRight -> { cameraCenter = cameraCenter.copy(x = cameraCenter.x + 1.0 / cameraZoom); true }
+                    Key.DirectionUp -> { cameraCenter = cameraCenter.copy(y = cameraCenter.y + 1.0 / cameraZoom); true }
+                    Key.DirectionDown -> { cameraCenter = cameraCenter.copy(y = cameraCenter.y - 1.0 / cameraZoom); true }
+                    Key.PageUp -> { cameraZoom = (cameraZoom * 1.15f).coerceAtMost(12f); true }
+                    Key.PageDown -> { cameraZoom = (cameraZoom / 1.15f).coerceAtLeast(.08f); true }
+                    else -> false
+                }
+            }
+            .focusable()
             .pointerInput(graphTool, selectedFunctionId, domains, labelOffsets, parameterA, parameterHandleEnabled, parameterValues) {
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)

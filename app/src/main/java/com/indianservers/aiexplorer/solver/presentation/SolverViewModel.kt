@@ -49,6 +49,8 @@ class SolverViewModel(
     private val practiceGenerator = SolverPracticeGenerator(engine)
     private var interactionStartedAt = System.currentTimeMillis()
     private var solveJob: Job? = null
+    private val undoStack = ArrayDeque<SolverUiState>()
+    private val redoStack = ArrayDeque<SolverUiState>()
     private val solutionCache = object : LinkedHashMap<String, SolverSolution>(SolverReleasePolicy.maximumCachedSolutions, .75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, SolverSolution>?) = size > SolverReleasePolicy.maximumCachedSolutions
     }
@@ -74,6 +76,7 @@ class SolverViewModel(
     }
 
     fun updateInput(value: TextFieldValue) {
+        if (value != state.input) recordSnapshot()
         solveJob?.cancel()
         state = state.copy(input = value, solution = null, isSolving = false, solveStatus = null)
         savedStateHandle[KEY_INPUT] = value.text
@@ -83,12 +86,17 @@ class SolverViewModel(
     }
 
     fun selectOperation(operation: SolverOperation) {
+        if (operation != state.operation) recordSnapshot()
         state = state.copy(operation = operation)
         savedStateHandle[KEY_OPERATION] = operation.name
     }
 
     fun run(operation: SolverOperation = state.operation) {
-        selectOperation(operation)
+        recordSnapshot()
+        if (operation != state.operation) {
+            state = state.copy(operation = operation)
+            savedStateHandle[KEY_OPERATION] = operation.name
+        }
         launchSolve(operation, hintOnly = false)
     }
 
@@ -101,6 +109,7 @@ class SolverViewModel(
     }
 
     fun setExplanationProfile(profile: ExplanationProfile) {
+        if (profile != state.explanationProfile) recordSnapshot()
         phase2Preferences.setExplanationProfile(profile)
         val method = state.solution?.selectedMethodId
         val shouldResolve = state.solution != null
@@ -403,6 +412,47 @@ class SolverViewModel(
         state = state.copy(hintOnlyMode = false, hints = emptyList(), visibleHintIndex = -1)
     }
 
+    fun undo() {
+        if (undoStack.isEmpty()) return
+        solveJob?.cancel()
+        redoStack.addLast(snapshot(state))
+        restoreSnapshot(undoStack.removeLast())
+    }
+
+    fun redo() {
+        if (redoStack.isEmpty()) return
+        solveJob?.cancel()
+        undoStack.addLast(snapshot(state))
+        restoreSnapshot(redoStack.removeLast())
+    }
+
+    fun requestClearAll() {
+        state = state.copy(clearAllConfirmationVisible = true)
+    }
+
+    fun cancelClearAll() {
+        state = state.copy(clearAllConfirmationVisible = false)
+    }
+
+    fun confirmClearAll() {
+        recordSnapshot()
+        solveJob?.cancel()
+        historyRepository.clear()
+        savedStateHandle[KEY_INPUT] = ""
+        savedStateHandle[KEY_SELECTION_START] = 0
+        savedStateHandle[KEY_SELECTION_END] = 0
+        savedStateHandle[KEY_HAS_ACTIVE_SOLUTION] = false
+        savedStateHandle[KEY_METHOD] = null
+        state = SolverUiState(
+            operation = state.operation,
+            explanationProfile = state.explanationProfile,
+            bookmarkedHistoryIds = state.bookmarkedHistoryIds,
+            reducedMotion = state.reducedMotion,
+            learningSummary = state.learningSummary,
+            canUndo = undoStack.isNotEmpty(),
+        )
+    }
+
     fun toggleHistory() {
         state = state.copy(historyVisible = !state.historyVisible)
     }
@@ -427,6 +477,42 @@ class SolverViewModel(
         state = state.copy(history = historyRepository.entries())
     }
 
+    private fun recordSnapshot() {
+        val candidate = snapshot(state)
+        if (undoStack.lastOrNull() != candidate) {
+            undoStack.addLast(candidate)
+            while (undoStack.size > MAX_UNDO) undoStack.removeFirst()
+        }
+        redoStack.clear()
+        state = state.copy(canUndo = undoStack.isNotEmpty(), canRedo = false)
+    }
+
+    private fun snapshot(value: SolverUiState) = value.copy(
+        isSolving = false,
+        solveStatus = null,
+        clearAllConfirmationVisible = false,
+        canUndo = false,
+        canRedo = false,
+    )
+
+    private fun restoreSnapshot(value: SolverUiState) {
+        historyRepository.clear()
+        value.history.sortedBy(SolverHistoryEntry::timestamp).forEach(historyRepository::save)
+        state = value.copy(
+            history = historyRepository.entries(),
+            isSolving = false,
+            clearAllConfirmationVisible = false,
+            canUndo = undoStack.isNotEmpty(),
+            canRedo = redoStack.isNotEmpty(),
+        )
+        savedStateHandle[KEY_INPUT] = state.input.text
+        savedStateHandle[KEY_SELECTION_START] = state.input.selection.start
+        savedStateHandle[KEY_SELECTION_END] = state.input.selection.end
+        savedStateHandle[KEY_OPERATION] = state.operation.name
+        savedStateHandle[KEY_HAS_ACTIVE_SOLUTION] = state.solution != null
+        savedStateHandle[KEY_METHOD] = state.solution?.selectedMethodId
+    }
+
     private fun copyToClipboard(label: String, text: String) {
         val clipboard = getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
@@ -449,6 +535,7 @@ class SolverViewModel(
         const val KEY_OPERATION = "solver.operation"
         const val KEY_HAS_ACTIVE_SOLUTION = "solver.active.solution"
         const val KEY_METHOD = "solver.active.method"
+        const val MAX_UNDO = 100
 
         fun animatorScale(context: Context): Float = runCatching {
             Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)

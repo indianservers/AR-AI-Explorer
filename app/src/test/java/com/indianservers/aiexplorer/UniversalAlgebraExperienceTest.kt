@@ -1,6 +1,9 @@
 package com.indianservers.aiexplorer
 
 import com.indianservers.aiexplorer.core.FunctionDefinition
+import com.indianservers.aiexplorer.core.Solid
+import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.phase2.mathstudio.AlgebraCommandCatalog
 import com.indianservers.aiexplorer.phase2.mathstudio.AlgebraDisplayMode
 import com.indianservers.aiexplorer.phase2.mathstudio.AlgebraFilter
@@ -13,6 +16,8 @@ import com.indianservers.aiexplorer.phase2.mathstudio.UnifiedMathStudioEngine
 import com.indianservers.aiexplorer.phase2.mathstudio.UniversalAlgebraProjection
 import com.indianservers.aiexplorer.workspace.UniversalMathKind
 import com.indianservers.aiexplorer.workspace.WorkspaceProjectCodec
+import com.indianservers.aiexplorer.workspace.Shape2D
+import com.indianservers.aiexplorer.workspace.Shape2DType
 import com.indianservers.aiexplorer.workspace.WorkspaceState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -21,7 +26,12 @@ import org.junit.Test
 
 class UniversalAlgebraExperienceTest {
     private val engine = UnifiedMathStudioEngine()
-    private val base = WorkspaceState(functions = listOf(FunctionDefinition("f", "f(x)", "x^2", "cyan")))
+    private val base = WorkspaceState(
+        points = listOf(Vec2(0.0, 0.0), Vec2(1.0, 0.0)),
+        shapes = listOf(Shape2D("segment-0", Shape2DType.Segment, listOf(0, 1))),
+        functions = listOf(FunctionDefinition("f", "f(x)", "x^2", "cyan")),
+        solids = listOf(Solid(SolidType.Cube, width = 1.0)),
+    )
 
     @Test fun typedInputCreatesFirstClassObjectsInsteadOfFlatteningToFunctions() {
         var session = engine.fromWorkspace(base)

@@ -151,18 +151,32 @@ object TypedGraphExpressionParser {
     }
 
     private fun parseRegression(source: String): TypedGraphExpression.Regression? {
-        val match = Regex("(?i)^regression\\(\\s*(linear|polynomial|quadratic|exponential|logarithmic|logistic)\\s*;(.+)\\)\\s*$").matchEntire(source) ?: return null
+        val functionMatch = Regex("(?i)^regression\\(\\s*(linear|polynomial|quadratic|exponential|logarithmic|logistic)\\s*;(.+)\\)\\s*$").matchEntire(source)
+        val tildeMatch = Regex("(?i)^y(?:_?1)?\\s*~\\s*(.+?)\\s*;\\s*(.+)$").matchEntire(source)
+        if (functionMatch == null && tildeMatch == null) return null
+        val model = tildeMatch?.groupValues?.get(1).orEmpty()
+        val pointSource = functionMatch?.groupValues?.get(2) ?: tildeMatch!!.groupValues[2]
         val points = Regex("\\(\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*\\)")
-            .findAll(match.groupValues[2]).map { Vec2(it.groupValues[1].toDouble(), it.groupValues[2].toDouble()) }.toList()
+            .findAll(pointSource).map { Vec2(it.groupValues[1].toDouble(), it.groupValues[2].toDouble()) }.toList()
         require(points.size >= 3) { "Regression requires at least three points." }
-        val kind = when (match.groupValues[1].lowercase()) {
-            "linear" -> GraphRegressionKind.Linear
-            "polynomial", "quadratic" -> GraphRegressionKind.Polynomial
-            "exponential" -> GraphRegressionKind.Exponential
-            "logarithmic" -> GraphRegressionKind.Logarithmic
-            else -> GraphRegressionKind.Logistic
+        val declared = functionMatch?.groupValues?.get(1)?.lowercase()
+        val kind = when {
+            declared == "linear" -> GraphRegressionKind.Linear
+            declared in setOf("polynomial", "quadratic") -> GraphRegressionKind.Polynomial
+            declared == "exponential" -> GraphRegressionKind.Exponential
+            declared == "logarithmic" -> GraphRegressionKind.Logarithmic
+            declared == "logistic" -> GraphRegressionKind.Logistic
+            Regex("(?i)(exp\\s*\\(|\\^\\s*x|b\\s*\\^)").containsMatchIn(model) -> GraphRegressionKind.Exponential
+            Regex("(?i)(ln|log)\\s*\\(").containsMatchIn(model) -> GraphRegressionKind.Logarithmic
+            Regex("x\\s*\\^\\s*[2-8]").containsMatchIn(model) -> GraphRegressionKind.Polynomial
+            else -> GraphRegressionKind.Linear
         }
-        return TypedGraphExpression.Regression(source, kind, points, if (match.groupValues[1].equals("quadratic", true)) 2 else 3)
+        val degree = when {
+            declared == "quadratic" -> 2
+            kind == GraphRegressionKind.Polynomial -> Regex("x\\s*\\^\\s*([2-8])").find(model)?.groupValues?.get(1)?.toIntOrNull() ?: 2
+            else -> 3
+        }
+        return TypedGraphExpression.Regression(source, kind, points, degree)
     }
 
     internal fun normalizeInequality(source: String): String {
@@ -580,7 +594,7 @@ data class AccessibleGraphTrace(val notes: List<GraphAudioNote>, val summary: St
 
 object AccessibleGraphDescriptionEngine {
     fun build(row: InteractiveGraphRow, sample: TypedGraphSample, points: List<DeterministicGraphPoint>): AccessibleGraphTrace {
-        val all = sample.curves.flatMap { it.points }
+        val all = sample.curves.flatMap { it.points } + sample.implicitSegments.flatMap { listOf(it.start, it.end) } + sample.points
         val minX = all.minOfOrNull { it.x } ?: -1.0; val maxX = all.maxOfOrNull { it.x } ?: 1.0; val minY = all.minOfOrNull { it.y } ?: -1.0; val maxY = all.maxOfOrNull { it.y } ?: 1.0
         val selected = if (all.size <= 500) all else all.filterIndexed { index, _ -> index % max(1, all.size / 500) == 0 }
         val notes = selected.mapIndexed { index, point ->

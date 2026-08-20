@@ -3,6 +3,7 @@ package com.indianservers.aiexplorer.core
 import com.indianservers.aiexplorer.spatial.SpatialConstruction3D
 import com.indianservers.aiexplorer.spatial.SpatialConstructionDocument
 import com.indianservers.aiexplorer.spatial.SpatialConstructionEngine
+import com.indianservers.aiexplorer.spatial.SpatialAnalysisTools3D
 import com.indianservers.aiexplorer.spatial.SurfaceDefinition3D
 import kotlin.math.PI
 import kotlin.math.abs
@@ -55,6 +56,8 @@ sealed interface UnifiedConstructionCommand {
     data class Vector3D(override val id: String, val start: String, val end: String) : UnifiedConstructionCommand
     data class Line3DCommand(override val id: String, val first: String, val second: String) : UnifiedConstructionCommand
     data class Plane3DCommand(override val id: String, val first: String, val second: String, val third: String) : UnifiedConstructionCommand
+    data class LinePlaneIntersection3D(override val id: String, val line: String, val plane: String) : UnifiedConstructionCommand
+    data class PlanePlaneIntersection3D(override val id: String, val firstPlane: String, val secondPlane: String) : UnifiedConstructionCommand
     data class ExplicitSurface(override val id: String, val expression: String) : UnifiedConstructionCommand
     data class ImplicitSurface(override val id: String, val equation: String) : UnifiedConstructionCommand
     data class ParametricSurface(override val id: String, val x: String, val y: String, val z: String) : UnifiedConstructionCommand
@@ -96,6 +99,8 @@ object UnifiedConstructionCommandParser {
             "vector3d" -> UnifiedConstructionCommand.Vector3D(id(), ref(1), ref(2))
             "line3d" -> UnifiedConstructionCommand.Line3DCommand(id(), ref(1), ref(2))
             "plane3d" -> UnifiedConstructionCommand.Plane3DCommand(id(), ref(1), ref(2), ref(3))
+            "intersectlineplane3d" -> UnifiedConstructionCommand.LinePlaneIntersection3D(id(), ref(1), ref(2))
+            "intersectplanes3d" -> UnifiedConstructionCommand.PlanePlaneIntersection3D(id(), ref(1), ref(2))
             "surface" -> UnifiedConstructionCommand.ExplicitSurface(id(), arguments.drop(1).joinToString(",").trim())
             "implicitsurface" -> UnifiedConstructionCommand.ImplicitSurface(id(), arguments.drop(1).joinToString(",").trim())
             "parametricsurface" -> { require(arguments.size == 4); UnifiedConstructionCommand.ParametricSurface(id(), arguments[1], arguments[2], arguments[3]) }
@@ -112,7 +117,11 @@ object UnifiedConstructionCommandParser {
             "translate(id,source,dx,dy)", "rotate(id,source,center,degrees)", "reflect(id,source,A,B)", "dilate(id,source,center,scale)",
             "equal(id,A,B,C,D)", "parallelConstraint(id,A,B,C,D)", "perpendicularConstraint(id,A,B,C,D)", "fixedLength(id,A,B,length)", "fixedAngle(id,A,V,B,degrees)", "concentric(id,c1,c2)", "tangentConstraint(id,line,conic)",
         ),
-        MathStudioView.Spatial3D to listOf("point3d(id,x,y,z)", "vector3d(id,A,B)", "line3d(id,A,B)", "plane3d(id,A,B,C)", "surface(id,z=f(x,y))", "implicitSurface(id,F(x,y,z)=0)", "parametricSurface(id,x(u,v),y(u,v),z(u,v))"),
+        MathStudioView.Spatial3D to listOf(
+            "point3d(id,x,y,z)", "vector3d(id,A,B)", "line3d(id,A,B)", "plane3d(id,A,B,C)",
+            "intersectLinePlane3d(id,line,plane)", "intersectPlanes3d(id,plane1,plane2)",
+            "surface(id,z=f(x,y))", "implicitSurface(id,F(x,y,z)=0)", "parametricSurface(id,x(u,v),y(u,v),z(u,v))",
+        ),
     )
 
     private fun splitArguments(source: String): List<String> {
@@ -176,6 +185,20 @@ class UnifiedConstructionEngine(
             is UnifiedConstructionCommand.Vector3D -> session.copy(spatial = spatialEngine.add(session.spatial, SpatialConstruction3D.Vector(command.id, command.start, command.end)))
             is UnifiedConstructionCommand.Line3DCommand -> session.copy(spatial = spatialEngine.add(session.spatial, SpatialConstruction3D.Line(command.id, command.first, command.second)))
             is UnifiedConstructionCommand.Plane3DCommand -> session.copy(spatial = spatialEngine.add(session.spatial, SpatialConstruction3D.Plane(command.id, command.first, command.second, command.third)))
+            is UnifiedConstructionCommand.LinePlaneIntersection3D -> {
+                val resolved = spatialEngine.resolve(session.spatial)
+                val line = resolved[command.line] as? Line3D ?: error("'${command.line}' is not a 3D line.")
+                val plane = resolved[command.plane] as? Plane3D ?: error("'${command.plane}' is not a 3D plane.")
+                val point = SpatialAnalysisTools3D.linePlane(line, plane) ?: error("The line and plane do not have a unique intersection.")
+                session.copy(spatial = spatialEngine.add(session.spatial, SpatialConstruction3D.Point(command.id, point)))
+            }
+            is UnifiedConstructionCommand.PlanePlaneIntersection3D -> {
+                val resolved = spatialEngine.resolve(session.spatial)
+                val first = resolved[command.firstPlane] as? Plane3D ?: error("'${command.firstPlane}' is not a 3D plane.")
+                val second = resolved[command.secondPlane] as? Plane3D ?: error("'${command.secondPlane}' is not a 3D plane.")
+                val line = SpatialAnalysisTools3D.planePlane(first, second) ?: error("The planes do not have a unique intersection line.")
+                session.copy(spatial = spatialEngine.add(session.spatial, SpatialConstruction3D.DirectLine(command.id, line.point, line.direction)))
+            }
             is UnifiedConstructionCommand.ExplicitSurface -> session.copy(surfaces = session.surfaces + SurfaceDefinition3D.Explicit(command.id, command.expression))
             is UnifiedConstructionCommand.ImplicitSurface -> session.copy(surfaces = session.surfaces + SurfaceDefinition3D.Implicit(command.id, command.equation))
             is UnifiedConstructionCommand.ParametricSurface -> session.copy(surfaces = session.surfaces + SurfaceDefinition3D.Parametric(command.id, command.x, command.y, command.z))

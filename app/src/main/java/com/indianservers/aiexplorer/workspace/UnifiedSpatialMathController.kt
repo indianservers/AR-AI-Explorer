@@ -3,6 +3,7 @@ package com.indianservers.aiexplorer.workspace
 import com.indianservers.aiexplorer.core.ExpressionEngine
 import com.indianservers.aiexplorer.core.InteractiveParameterEngine
 import com.indianservers.aiexplorer.core.Solid
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
 import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.core.Vector3D
 import com.indianservers.aiexplorer.spatial.SurfaceDefinition3D
@@ -53,6 +54,38 @@ class UnifiedSpatialMathController(
 
     fun stageSurface(snapshot: UnifiedSpatialSnapshot, expression: String): UnifiedSpatialMutation =
         apply(snapshot, engine.stageSymbolicEdit(snapshot.document, "surface-main", expression))
+
+    fun replaceSurfaceLayers(snapshot: UnifiedSpatialSnapshot, layers: List<SpatialSurfaceLayer>): UnifiedSpatialMutation {
+        val normalized = layers.mapIndexed { index, layer ->
+            val id = if (index == 0) "surface-main" else layer.id.trim().ifBlank { "surface-layer-$index" }
+            layer.copy(id = id, opacity = layer.opacity.coerceIn(0.0, 1.0))
+        }
+        if (normalized.map { it.id }.distinct().size != normalized.size) {
+            return UnifiedSpatialMutation.Rejected("Every 3D surface layer needs a unique ID")
+        }
+        val now = System.currentTimeMillis()
+        val stagedState = snapshot.state.copy(
+            surfaceExpression = normalized.firstOrNull()?.expression ?: "0",
+            surfaceLayers = normalized,
+            modifiedAt = now,
+            universalMathDocument = null,
+        )
+        val currentProjection = UniversalWorkspaceBridge.fromWorkspace(snapshot.state.copy(universalMathDocument = null))
+        val nextProjection = UniversalWorkspaceBridge.fromWorkspace(stagedState)
+        val customObjects = snapshot.document.objects.filterKeys { it !in currentProjection.objects }
+        val document = nextProjection.copy(
+            revision = maxOf(snapshot.document.revision + 1, now),
+            objects = nextProjection.objects + customObjects,
+            modifiedAt = now,
+        )
+        val validation = engine.validate(document)
+        if (!validation.valid) return UnifiedSpatialMutation.Rejected(validation.diagnostics.joinToString("; "))
+        val report = runtime.recompute(document)
+        val state = UniversalWorkspaceBridge.applyToWorkspace(report.document, stagedState)
+        val changed = (currentProjection.objects.keys + nextProjection.objects.keys)
+            .filterTo(linkedSetOf()) { id -> id.startsWith("surface-") || id == "spatial-scene" }
+        return UnifiedSpatialMutation.Applied(rebuild(state, report.document, report, snapshot.parameterValues), changed)
+    }
 
     fun setParameter(snapshot: UnifiedSpatialSnapshot, name: String, value: Double): UnifiedSpatialMutation {
         val parameter = snapshot.parameters.firstOrNull { it.name == name } ?: return UnifiedSpatialMutation.Rejected("Unknown surface parameter $name")

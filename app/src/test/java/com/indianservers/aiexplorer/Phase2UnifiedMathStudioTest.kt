@@ -1,6 +1,7 @@
 package com.indianservers.aiexplorer
 
 import com.indianservers.aiexplorer.core.FunctionDefinition
+import com.indianservers.aiexplorer.core.SpatialSurfaceKind
 import com.indianservers.aiexplorer.phase2.mathstudio.StudioTransform
 import com.indianservers.aiexplorer.phase2.mathstudio.UnifiedMathStudioEngine
 import com.indianservers.aiexplorer.phase2.mathstudio.UnifiedStudioHistory
@@ -78,5 +79,22 @@ class Phase2UnifiedMathStudioTest {
         assertEquals("f(x)", imported.workspace.functions.single().name)
         assertEquals("x^2", imported.workspace.functions.single().expression)
         assertTrue(imported.coverage.imported >= 1)
+    }
+
+    @Test fun productionWorkspaceReceivesTypedSurfacesAndDependent3dConstructions() {
+        var session = engine.fromWorkspace(base.copy(surfaceLayers = emptyList()))
+        listOf(
+            "point3d(A,0,0,0)", "point3d(B,2,0,0)", "point3d(C,0,2,0)",
+            "line3d(axis,A,B)", "plane3d(base,A,B,C)",
+            "implicitSurface(sphere,x^2+y^2+z^2=4)",
+            "parametricSurface(torus,cos(u)*(3+cos(v)),sin(u)*(3+cos(v)),sin(v))",
+        ).forEach { session = engine.construct(session, it) }
+
+        val workspace = engine.toWorkspace(session)
+
+        assertEquals(setOf("A", "B", "C"), workspace.points3D.map { it.id }.toSet())
+        assertTrue(workspace.vectors3D.any { it.id == "axis" })
+        assertEquals(listOf(SpatialSurfaceKind.Implicit, SpatialSurfaceKind.Parametric), workspace.surfaceLayers.map { it.kind })
+        assertTrue(workspace.universalMathDocument!!.objects.containsKey("base"))
     }
 }

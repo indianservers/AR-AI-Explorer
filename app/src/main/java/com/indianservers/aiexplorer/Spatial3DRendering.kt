@@ -544,6 +544,10 @@ internal fun Projected3DCanvas(
     onVectorMove: (Int, Vec3) -> Unit,
     onVectorDragEnd: () -> Unit,
     onVectorDragCancel: () -> Unit,
+    onPoint3DDragStart: (Int) -> Unit,
+    onPoint3DMove: (Int, Vec3) -> Unit,
+    onPoint3DDragEnd: () -> Unit,
+    onPoint3DDragCancel: () -> Unit,
     onOrbit: (Float, Float) -> Unit,
     onPan: (Offset) -> Unit,
     onZoom: (Float) -> Unit,
@@ -693,7 +697,7 @@ internal fun Projected3DCanvas(
                     var vectorIndex = if (gizmoHit == null && !sectionHit && subHit == null && currentSelectionMode == Selection3DMode.Object) gestureVectors.indices.minByOrNull { vectorDistance(it, down.position) }
                         ?.takeIf { vectorDistance(it, down.position) < 42f }
                     else null
-                    val point3DIndex = if (gizmoHit == null && !sectionHit && subHit == null && vectorIndex == null && currentSelectionMode == Selection3DMode.Object) {
+                    var point3DIndex = if (gizmoHit == null && !sectionHit && subHit == null && vectorIndex == null && currentSelectionMode == Selection3DMode.Object) {
                         gesturePoints3D.indices.minByOrNull { point3DDistance(it, down.position) }
                             ?.takeIf { point3DDistance(it, down.position) < 36f }
                     } else null
@@ -706,7 +710,10 @@ internal fun Projected3DCanvas(
                         onSelectVector(it)
                         onVectorDragStart(it)
                     }
-                    point3DIndex?.let { onSelectPoint3D(it) }
+                    point3DIndex?.let {
+                        onSelectPoint3D(it)
+                        onPoint3DDragStart(it)
+                    }
                     solidIndex?.takeIf { gizmoHit == null }?.let {
                         onSelect(it)
                         onSolidDragStart(it)
@@ -762,7 +769,9 @@ internal fun Projected3DCanvas(
                             } else {
                                 if (!objectCancelled) {
                                     if (vectorIndex != null) onVectorDragCancel()
+                                    if (point3DIndex != null) onPoint3DDragCancel()
                                     vectorIndex = null
+                                    point3DIndex = null
                                     objectCancelled = true
                                 }
                                 onPan(gesturePan)
@@ -787,6 +796,10 @@ internal fun Projected3DCanvas(
                                     }
                                     vectorIndex != null -> onVectorMove(
                                         vectorIndex,
+                                        Vec3((total.x / scale).toDouble(), 0.0, (total.y / scale).toDouble()),
+                                    )
+                                    point3DIndex != null -> onPoint3DMove(
+                                        point3DIndex,
                                         Vec3((total.x / scale).toDouble(), 0.0, (total.y / scale).toDouble()),
                                     )
                                     solidIndex != null && gizmoHit != null -> when (transformMode) {
@@ -835,6 +848,7 @@ internal fun Projected3DCanvas(
                     }
                     activeGizmoAxis = null
                     if (vectorIndex != null) onVectorDragEnd()
+                    if (point3DIndex != null) onPoint3DDragEnd()
                     if (!moved && !transformed && solidIndex == null && vectorIndex == null && point3DIndex == null && subHit == null && !sectionHit && gizmoHit == null) {
                         onEmptyTap()
                         val now = System.currentTimeMillis()
@@ -941,6 +955,19 @@ internal fun SurfaceCanvas3D(
     val currentOnSelectSurface by rememberUpdatedState(onSelectSurface)
     Canvas(
         modifier
+            .onPreviewKeyEvent { event ->
+                if (event.type != KeyEventType.KeyDown) false else when (event.key) {
+                    Key.DirectionLeft -> { onRotate(-8f); true }
+                    Key.DirectionRight -> { onRotate(8f); true }
+                    Key.DirectionUp -> { onTilt(6f); true }
+                    Key.DirectionDown -> { onTilt(-6f); true }
+                    Key.PageUp -> { onZoom(1.12f); true }
+                    Key.PageDown -> { onZoom(1f / 1.12f); true }
+                    Key.MoveHome -> { onResetCamera(); true }
+                    else -> false
+                }
+            }
+            .focusable()
             .pointerInput(activeTool) {
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
@@ -1006,7 +1033,7 @@ internal fun SurfaceCanvas3D(
                     }
                 }
             }
-            .semantics { contentDescription = "Interactive 3D graph: tap a surface to select it, drag to orbit, two fingers pan, pinch zoom, and twist roll" },
+            .semantics { contentDescription = "Interactive 3D graph: tap a surface to select it, drag to orbit, two fingers pan, pinch zoom, twist roll, or use D-pad arrows and channel keys" },
     ) {
         val center = Offset(size.width * .5f, size.height * .52f) + cameraPan
         val scale = 104f * zoom
@@ -1015,11 +1042,9 @@ internal fun SurfaceCanvas3D(
         drawPerspectiveGrid(center, effects = visualEffects, axisStyle = axisStyle)
         drawCoordinatePlanes3D(::map, axisStyle)
         if (showBox) drawSurfaceBox(::map, axisStyle)
-        val meshRows = mesh?.vertices?.chunked(mesh.columns).orEmpty()
-        drawStyledSurface(meshRows, ::map, ::camera, appearance, surfaceOpacity, renderMode)
+        mesh?.let { drawStyledSurface(it, ::map, ::camera, appearance, surfaceOpacity, renderMode) }
         additionalMeshes.forEach { styled ->
-            val rows = styled.mesh.vertices.chunked(styled.mesh.columns)
-            drawStyledSurface(rows, ::map, ::camera, styled.appearance, styled.opacity, styled.renderMode)
+            drawStyledSurface(styled.mesh, ::map, ::camera, styled.appearance, styled.opacity, styled.renderMode)
         }
         if (gradientPath.size >= 2) {
             val visiblePath = gradientPath.take((gradientPathIndex + 1).coerceAtLeast(2))
@@ -1037,6 +1062,34 @@ internal fun SurfaceCanvas3D(
                 drawRadiantPoint(screenPoint, Amber, "(${trim(trace.x)}, ${trim(trace.y)}, ${trim(z)})")
                 if (showGradient) analysis?.let { differential -> drawSurfaceAnalysisHandle(differential, ::map) }
             }
+        }
+    }
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStyledSurface(
+    mesh: com.indianservers.aiexplorer.core.SurfaceMesh,
+    map: (Vec3) -> Offset,
+    camera: (Vec3) -> Vec3,
+    appearance: WorkspaceAppearance,
+    opacity: Float,
+    renderMode: SpatialSurfaceRenderMode,
+) {
+    if (mesh.triangleIndices.isEmpty()) {
+        drawStyledSurface(mesh.vertices.chunked(mesh.columns.coerceAtLeast(1)), map, camera, appearance, opacity, renderMode)
+        return
+    }
+    val triangles = mesh.triangleIndices.chunked(3).mapNotNull { indices ->
+        if (indices.size != 3) null else indices.mapNotNull(mesh.vertices::getOrNull).takeIf { it.size == 3 }
+    }.sortedBy { triangle -> triangle.map(camera).map(Vec3::z).average() }
+    val zValues = mesh.vertices.map(Vec3::z).filter(Double::isFinite)
+    val zMin = zValues.minOrNull() ?: return
+    val zRange = ((zValues.maxOrNull() ?: zMin) - zMin).coerceAtLeast(1e-9)
+    triangles.forEach { triangle ->
+        val color = appearance.palette.sample(((triangle.map(Vec3::z).average() - zMin) / zRange).toFloat())
+        val path = Path().apply { moveTo(map(triangle[0]).x, map(triangle[0]).y); lineTo(map(triangle[1]).x, map(triangle[1]).y); lineTo(map(triangle[2]).x, map(triangle[2]).y); close() }
+        if (renderMode != SpatialSurfaceRenderMode.Wireframe) drawPath(path, color.copy(alpha = (.72f * opacity).coerceIn(0f, 1f)))
+        if (renderMode != SpatialSurfaceRenderMode.Surface) {
+            drawPath(path, appearance.color.copy(alpha = (.88f * opacity).coerceIn(0f, 1f)), style = Stroke(width = 1.15f))
         }
     }
 }

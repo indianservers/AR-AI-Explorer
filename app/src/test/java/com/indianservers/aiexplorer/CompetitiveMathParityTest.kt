@@ -32,6 +32,26 @@ class CompetitiveMathParityTest {
         assertTrue(catalog.getValue(MathStudioView.Spatial3D).any { it.startsWith("implicitSurface") })
         assertTrue(catalog.getValue(MathStudioView.Spatial3D).any { it.startsWith("parametricSurface") })
         assertTrue(catalog.getValue(MathStudioView.Geometry2D).any { it.startsWith("midpoint") })
+        assertTrue(catalog.getValue(MathStudioView.Spatial3D).any { it.startsWith("intersectLinePlane3d") })
+        assertTrue(catalog.getValue(MathStudioView.Spatial3D).any { it.startsWith("intersectPlanes3d") })
+    }
+
+    @Test fun spatialIntersectionCommandsProduceReusablePointAndLineObjects() {
+        val engine = UnifiedConstructionEngine()
+        var session = UnifiedConstructionSession()
+        listOf(
+            "point3d(O,0,0,0)", "point3d(X,1,0,0)", "point3d(Y,0,1,0)",
+            "point3d(Z,0,0,1)", "point3d(N,0,0,-1)",
+            "line3d(vertical,Z,N)", "plane3d(floor,O,X,Y)", "plane3d(wall,O,Y,Z)",
+            "intersectLinePlane3d(hit,vertical,floor)", "intersectPlanes3d(seam,floor,wall)",
+        ).forEach { session = engine.execute(session, it) }
+
+        val resolved = SpatialConstructionEngine().resolve(session.spatial)
+        assertEquals(Vec3(0.0, 0.0, 0.0), resolved.getValue("hit"))
+        val seam = resolved.getValue("seam") as Line3D
+        assertEquals(0.0, seam.point.x, 1e-9)
+        assertEquals(0.0, seam.point.z, 1e-9)
+        assertTrue(kotlin.math.abs(seam.direction.y) > .99)
     }
 
     @Test fun phaseTwoSelectionInspectionAndKeyboardOrderAreDeterministic() {

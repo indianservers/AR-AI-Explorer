@@ -12,8 +12,15 @@ import com.indianservers.aiexplorer.core.DynamicPointRule
 import com.indianservers.aiexplorer.core.StudioTokenKind
 import com.indianservers.aiexplorer.core.StudioObjectToken
 import com.indianservers.aiexplorer.core.Vec2
+import com.indianservers.aiexplorer.core.SpatialSurfaceKind
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
+import com.indianservers.aiexplorer.core.SurfaceDomain3D
+import com.indianservers.aiexplorer.core.Vector3D
 import com.indianservers.aiexplorer.spatial.SpatialConstruction3D
+import com.indianservers.aiexplorer.spatial.SpatialConstructionEngine
+import com.indianservers.aiexplorer.spatial.SurfaceDefinition3D
 import com.indianservers.aiexplorer.workspace.MathGraphObject
+import com.indianservers.aiexplorer.workspace.Point3D
 import com.indianservers.aiexplorer.workspace.GraphSliderMetadataState
 import com.indianservers.aiexplorer.workspace.MathObjectGraph
 import com.indianservers.aiexplorer.workspace.MathObjectGraphSnapshot
@@ -565,6 +572,34 @@ class UnifiedMathStudioEngine(
             val indices = value.dependencies.mapNotNull(pointIndices::get)
             if (indices.isEmpty()) null else Shape2D(value.id, type, indices, value.name, value.id !in session.hiddenIds, session.algebraStyles[value.id]?.locked ?: false, session.colorKeys[value.id] ?: "default")
         }
+        val resolvedSpatial = runCatching { SpatialConstructionEngine().resolve(session.construction.spatial) }.getOrDefault(emptyMap())
+        val constructedPoints = session.construction.spatial.order.mapNotNull { id ->
+            (session.construction.spatial.entities[id] as? SpatialConstruction3D.Point)?.let { point -> Point3D(id, id, point.position) }
+        }
+        val constructedVectors = session.construction.spatial.order.mapNotNull { id ->
+            when (val entity = session.construction.spatial.entities[id]) {
+                is SpatialConstruction3D.Vector -> {
+                    val start = resolvedSpatial[entity.startPoint] as? com.indianservers.aiexplorer.core.Vec3 ?: return@mapNotNull null
+                    val end = resolvedSpatial[entity.endPoint] as? com.indianservers.aiexplorer.core.Vec3 ?: return@mapNotNull null
+                    Vector3D(id, start, end, id)
+                }
+                is SpatialConstruction3D.Line -> {
+                    val line = resolvedSpatial[id] as? com.indianservers.aiexplorer.core.Line3D ?: return@mapNotNull null
+                    Vector3D(id, line.point - line.direction * 5.0, line.point + line.direction * 5.0, id)
+                }
+                is SpatialConstruction3D.DirectLine -> Vector3D(id, entity.point - entity.direction * 5.0, entity.point + entity.direction * 5.0, id)
+                else -> null
+            }
+        }
+        val constructedSurfaces = session.construction.surfaces.map { surface ->
+            val domain = SurfaceDomain3D(surface.domain.first.start, surface.domain.first.endInclusive, surface.domain.second.start, surface.domain.second.endInclusive)
+            when (surface) {
+                is SurfaceDefinition3D.Explicit -> SpatialSurfaceLayer(surface.id, surface.z, kind = SpatialSurfaceKind.Explicit, domain = domain)
+                is SurfaceDefinition3D.Implicit -> SpatialSurfaceLayer(surface.id, surface.equation, kind = SpatialSurfaceKind.Implicit, domain = domain)
+                is SurfaceDefinition3D.Parametric -> SpatialSurfaceLayer(surface.id, surface.x, kind = SpatialSurfaceKind.Parametric, expressionY = surface.y, expressionZ = surface.z, domain = domain)
+            }
+        }
+        val workspaceSurfaces = (session.baseWorkspace.surfaceLayers + constructedSurfaces).distinctBy { it.id }
         return session.baseWorkspace.copy(
             points = points,
             shapes = session.baseWorkspace.shapes + extraShapes,
@@ -572,6 +607,10 @@ class UnifiedMathStudioEngine(
             graphSliderMetadata = session.baseWorkspace.graphSliderMetadata + session.parameterValues.mapValues { (name, value) ->
                 (session.baseWorkspace.graphSliderMetadata[name] ?: GraphSliderMetadataState()).copy(value = value)
             },
+            points3D = (session.baseWorkspace.points3D + constructedPoints).distinctBy { it.id },
+            vectors3D = (session.baseWorkspace.vectors3D + constructedVectors).distinctBy { it.id },
+            surfaceLayers = workspaceSurfaces,
+            surfaceExpression = workspaceSurfaces.firstOrNull()?.expression ?: "0",
             universalMathDocument = session.document,
             modifiedAt = System.currentTimeMillis(),
         )

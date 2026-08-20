@@ -35,4 +35,16 @@ class SurfaceInputInterpreterTest {
         assertTrue(SurfaceInputInterpreter.explicit("z = ").isFailure)
         assertTrue(SurfaceInputInterpreter.explicit("").isFailure)
     }
+
+    @Test
+    fun productionInterpreterRecognizesImplicitAndParametricSurfaces() {
+        val implicit = SurfaceInputInterpreter.interpret("x^2+y^2+z^2=4").getOrThrow()
+        val parametric = SurfaceInputInterpreter.interpret("x=cos(u)*(3+cos(v)); y=sin(u)*(3+cos(v)); z=sin(v)").getOrThrow()
+
+        assertEquals(SpatialSurfaceKind.Implicit, implicit.kind)
+        assertEquals(SpatialSurfaceKind.Parametric, parametric.kind)
+        assertEquals("cos(u)*(3+cos(v))", parametric.expression)
+        assertEquals("sin(u)*(3+cos(v))", parametric.expressionY)
+        assertEquals("sin(v)", parametric.expressionZ)
+    }
 }

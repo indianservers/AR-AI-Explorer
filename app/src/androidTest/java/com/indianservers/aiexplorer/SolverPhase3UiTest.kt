@@ -8,6 +8,9 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import org.junit.Rule
 import org.junit.Test
 
@@ -52,22 +55,32 @@ class SolverPhase3UiTest {
     private fun solve(expression: String) {
         composeRule.mainClock.advanceTimeBy(1_000)
         composeRule.waitForIdle()
-        composeRule.waitUntil(3_000) {
+        composeRule.waitUntil(10_000) {
             composeRule.onAllNodesWithContentDescription("Editable Solver expression", substring = true)
                 .fetchSemanticsNodes().isNotEmpty() ||
-                composeRule.onAllNodesWithText("AI Maths Explorer", substring = true)
+                composeRule.onAllNodesWithContentDescription("Open Offline Solver", substring = true)
                     .fetchSemanticsNodes().isNotEmpty()
         }
         if (composeRule.onAllNodesWithContentDescription("Editable Solver expression", substring = true)
                 .fetchSemanticsNodes().isEmpty()
         ) {
-            composeRule.onNodeWithText("AI Maths Explorer", substring = true).assertIsDisplayed()
-            composeRule.onNodeWithText("Menu").performClick()
-            composeRule.onNodeWithText("Solver").performClick()
+            composeRule.onNodeWithContentDescription("Open Offline Solver", substring = true).performClick()
         }
         composeRule.onNodeWithContentDescription("Editable Solver expression", substring = true)
             .performTextReplacement(expression)
-        composeRule.onNodeWithText("Solve").performClick()
+        composeRule.onNodeWithContentDescription("Collapse math keyboard").performClick()
+        composeRule.onNodeWithText("Solve step by step", substring = true).performScrollTo().performClick()
+        composeRule.waitUntil(15_000) {
+            composeRule.onAllNodesWithText("Show steps", substring = true).fetchSemanticsNodes().isNotEmpty()
+        }
+        repeat(3) {
+            composeRule.onNodeWithContentDescription("Offline Solver with editor-first input and direct answers")
+                .performTouchInput { swipeUp() }
+        }
         composeRule.onNodeWithText("Show steps").performClick()
+        repeat(5) {
+            composeRule.onNodeWithContentDescription("Offline Solver with editor-first input and direct answers")
+                .performTouchInput { swipeUp() }
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.indianservers.aiexplorer
 
 import com.indianservers.aiexplorer.core.FunctionDefinition
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
+import com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode
+import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.phase2.mathstudio.SharedExperienceEngine
 import com.indianservers.aiexplorer.phase2.mathstudio.SharedMathView
 import com.indianservers.aiexplorer.phase2.mathstudio.SharedObjectGraphBuilder
@@ -17,10 +20,13 @@ import org.junit.Test
 class SharedMathExperienceTest {
     private val studio = UnifiedMathStudioEngine()
     private val shared = SharedExperienceEngine()
-    private val workspace = WorkspaceState(functions = listOf(
-        FunctionDefinition("f", "f(x)", "x^2", "cyan"),
-        FunctionDefinition("g", "g(x)", "f(x)+1", "violet"),
-    ))
+    private val workspace = WorkspaceState(
+        points = listOf(Vec2(0.0, 0.0)),
+        functions = listOf(
+            FunctionDefinition("f", "f(x)", "x^2", "cyan"),
+            FunctionDefinition("g", "g(x)", "f(x)+1", "violet"),
+        ),
+    )
 
     @Test fun universalGraphProvidesLinkedRepresentationsAndDependencies() {
         val session = studio.construct(studio.fromWorkspace(workspace), "point2d(A,0,0)")
@@ -30,6 +36,22 @@ class SharedMathExperienceTest {
         assertTrue("A@algebra" in graph.nodes)
         assertEquals(setOf("f"), graph.dependencies("g"))
         assertTrue(graph.representations("f").map { it.view }.containsAll(listOf(SharedMathView.Graph, SharedMathView.Table, SharedMathView.Cas)))
+    }
+
+    @Test fun everyGraph3dSurfaceIsAvailableToLinkedViewsAndTheSpatialScene() {
+        val layeredWorkspace = workspace.copy(
+            surfaceExpression = "z = x^2 - y^2",
+            surfaceLayers = listOf(
+                SpatialSurfaceLayer("surface-main", "z = x^2 - y^2"),
+                SpatialSurfaceLayer("surface-wave", "z = sin(x) + cos(y)", renderMode = SpatialSurfaceRenderMode.Wireframe),
+            ),
+        )
+        val session = studio.fromWorkspace(layeredWorkspace)
+        val graph = SharedObjectGraphBuilder.build(session)
+
+        assertTrue(graph.nodes.keys.containsAll(listOf("surface-main@spatial3d", "surface-wave@spatial3d")))
+        assertEquals(setOf("surface-main", "surface-wave"), session.document.objects.getValue("spatial-scene").dependencies.filter { it.startsWith("surface-") }.toSet())
+        assertEquals(setOf("surface-main", "surface-wave"), session.document.objects.values.filter { it.sourceView == "3D graph" }.map { it.id }.toSet())
     }
 
     @Test fun selectionModeLayoutAndProvenanceStaySynchronized() {

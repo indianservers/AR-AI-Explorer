@@ -3,6 +3,7 @@ package com.indianservers.aiexplorer
 import com.indianservers.aiexplorer.core.FunctionDefinition
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.spatial.ArMathWorkspaceBridge
 import com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode
@@ -57,6 +58,26 @@ class ArMathWorkspaceBridgeTest {
 
         assertEquals(1, result.sourceObjectCount)
         assertTrue(result.scene.primitives.any { it.id == "solid-0" && it.kind == SpatialPrimitiveKind.Solid })
+    }
+
+    @Test
+    fun graph3dProjectsEveryVisiblePersistentSurfaceIntoAr() {
+        val state = WorkspaceState(
+            surfaceExpression = "z = x^2 + y^2",
+            surfaceLayers = listOf(
+                SpatialSurfaceLayer("surface-main", "z = x^2 + y^2"),
+                SpatialSurfaceLayer("surface-wave", "z = sin(x) + cos(y)"),
+                SpatialSurfaceLayer("surface-hidden", "z = x*y", visible = false),
+            ),
+        )
+
+        val result = ArMathWorkspaceBridge.build(ArMathWorkspaceMode.Graph3D, state, surfaceDensity = 12)
+
+        assertEquals(2, result.sourceObjectCount)
+        assertEquals(2, result.visualizedObjectCount)
+        assertTrue(result.scene.primitives.any { it.id == "surface-main" && it.kind == SpatialPrimitiveKind.Surface })
+        assertTrue(result.scene.primitives.any { it.id == "surface-wave" && it.kind == SpatialPrimitiveKind.Surface })
+        assertTrue(result.scene.primitives.none { it.id == "surface-hidden" })
     }
 
     @Test

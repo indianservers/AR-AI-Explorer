@@ -5,6 +5,8 @@ import com.indianservers.aiexplorer.solver.domain.engine.Phase3SolverEngine
 import com.indianservers.aiexplorer.solver.domain.model.VerificationStatus
 import com.indianservers.aiexplorer.solver.testing.SolverPerformanceProbe
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -70,6 +72,29 @@ class Phase3PerformanceRegressionTest {
         repeat(30) {
             val next = engine.solve("differentiate x^4-3*x")
             assertEquals(first.visualisations, next.visualisations)
+        }
+    }
+
+    @Test
+    fun advancedRouterDoesNotMisclassifyModeGeometryOrUnsupportedIntegralProse() {
+        val engine = Phase3SolverEngine()
+        val mode = engine.solve("Find the mode of 4, 7, 6, 4, 8, 4, 9, 6")
+        assertTrue(mode.supported)
+        assertEquals(VerificationStatus.Verified, mode.verification.status)
+        assertEquals("4", mode.finalAnswer)
+
+        val tangent = engine.solve("Prove that the tangent at any point of a circle is perpendicular to the radius through the point of contact")
+        assertTrue(tangent.supported)
+        assertEquals(VerificationStatus.Verified, tangent.verification.status)
+        assertTrue(tangent.finalAnswer.orEmpty().contains("perpendicular", true))
+
+        listOf(
+            "evaluate contour integral 1/z over unit circle",
+            "prove every finite integral domain is a field",
+        ).forEach { source ->
+            val unsupported = engine.solve(source)
+            assertFalse(source, unsupported.supported)
+            assertNull(source, unsupported.finalAnswer)
         }
     }
 }

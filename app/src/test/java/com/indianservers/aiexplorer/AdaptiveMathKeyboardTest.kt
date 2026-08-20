@@ -17,14 +17,24 @@ import com.indianservers.aiexplorer.input.functionKeys
 import com.indianservers.aiexplorer.input.matrixTemplate
 import com.indianservers.aiexplorer.input.matrixStructureKeys
 import com.indianservers.aiexplorer.input.mathKeyboardCommands
+import com.indianservers.aiexplorer.input.mathKeyboardActionHeight
+import com.indianservers.aiexplorer.input.MathKeyboardKeySize
 import com.indianservers.aiexplorer.input.primaryMathKeyboardPages
 import com.indianservers.aiexplorer.input.resolveMathKeyTone
 import com.indianservers.aiexplorer.input.trigonometryKeys
+import androidx.compose.ui.unit.dp
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AdaptiveMathKeyboardTest {
+    @Test
+    fun prominentBackspaceAndEnterMeetPhoneAndTelevisionTargets() {
+        assertEquals(48.dp, mathKeyboardActionHeight(MathKeyboardKeySize.COMPACT, 48.dp, prominent = true))
+        assertEquals(56.dp, mathKeyboardActionHeight(MathKeyboardKeySize.COMPACT, 56.dp, prominent = true))
+        assertEquals(27.dp, mathKeyboardActionHeight(MathKeyboardKeySize.COMPACT, 56.dp, prominent = false))
+    }
+
     @Test
     fun primaryTabsExposeFrequentMathAndKeepAdvancedToolsInOverflow() {
         assertEquals(listOf("123", "f(x)", "abc", "trig", "Math+", "sym", "..."), primaryMathKeyboardPages.map { it.label })

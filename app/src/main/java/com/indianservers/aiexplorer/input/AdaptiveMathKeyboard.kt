@@ -61,6 +61,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.indianservers.aiexplorer.AppVisualTreatment
 import com.indianservers.aiexplorer.LocalAppVisualEffects
+import com.indianservers.aiexplorer.adaptive.LocalAdaptiveDeviceProfile
 import com.indianservers.aiexplorer.core.MathInputAssistAction
 import com.indianservers.aiexplorer.core.MathInputAssistKind
 import com.indianservers.aiexplorer.core.MathInputAssistance
@@ -110,6 +111,12 @@ enum class MathKeyboardKeySize(val label: String, val mainHeight: Dp, val action
     STANDARD("Standard", 40.dp, 32.dp, 1f),
     LARGE("Large", 48.dp, 38.dp, 1.14f),
 }
+
+internal fun mathKeyboardActionHeight(
+    appearance: MathKeyboardKeySize,
+    minimumTargetSize: Dp,
+    prominent: Boolean,
+): Dp = if (prominent) maxOf(appearance.actionHeight, minimumTargetSize) else appearance.actionHeight
 
 object MathKeyboardPreferences {
     var beginnerMode by mutableStateOf(true)
@@ -1006,10 +1013,22 @@ fun AdaptiveMathKeyboard(
             }
             KeyboardActionKey("←", "Move cursor left", Modifier.weight(1f)) { emit(StructuredMathEditing.move(workingValue, -1)) }
             KeyboardActionKey("→", "Move cursor right", Modifier.weight(1f)) { emit(StructuredMathEditing.move(workingValue, 1)) }
-            KeyboardActionKey("⌫", "Backspace", Modifier.weight(1f), accent = IntentMathPalette.Variable) {
+            KeyboardActionKey(
+                "⌫",
+                "Backspace",
+                Modifier.weight(1.4f),
+                accent = IntentMathPalette.Variable,
+                prominent = true,
+            ) {
                 applyEdit(StructuredMathEditing.backspace(workingValue))
             }
-            KeyboardActionKey("↵", "Finish math entry", Modifier.weight(1.15f), accent = IntentMathPalette.Variable) {
+            KeyboardActionKey(
+                "↵",
+                "Finish math entry",
+                Modifier.weight(1.4f),
+                accent = IntentMathPalette.Variable,
+                prominent = true,
+            ) {
                 MathKeyboardHistory.remember(workingValue.text)
                 onDone()
             }
@@ -1613,12 +1632,15 @@ private fun KeyboardActionKey(
     description: String,
     modifier: Modifier = Modifier,
     accent: Color = IntentMathPalette.Command,
+    prominent: Boolean = false,
     onClick: () -> Unit,
 ) {
     val appearance = MathKeyboardPreferences.keySize
+    val adaptiveProfile = LocalAdaptiveDeviceProfile.current
+    val keyHeight = mathKeyboardActionHeight(appearance, adaptiveProfile.minimumTargetSize, prominent)
     Box(
         modifier
-            .height(appearance.actionHeight)
+            .height(keyHeight)
             .clickable(role = Role.Button, onClick = onClick)
             .background(if (MathKeyboardPreferences.highContrast) Color.Black else accent.copy(alpha = .16f), RoundedCornerShape(7.dp))
             .border(if (MathKeyboardPreferences.highContrast) 2.dp else 1.dp, if (MathKeyboardPreferences.highContrast) Color.White else accent.copy(alpha = .42f), RoundedCornerShape(7.dp))
@@ -1626,7 +1648,13 @@ private fun KeyboardActionKey(
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {
-        Text(label, color = if (MathKeyboardPreferences.highContrast) Color.White else IntentMathPalette.Ink, fontSize = (11f * appearance.fontScale).sp, fontWeight = FontWeight.Bold, maxLines = 1)
+        Text(
+            label,
+            color = if (MathKeyboardPreferences.highContrast) Color.White else IntentMathPalette.Ink,
+            fontSize = ((if (prominent) 16f else 11f) * appearance.fontScale).sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+        )
     }
 }
 

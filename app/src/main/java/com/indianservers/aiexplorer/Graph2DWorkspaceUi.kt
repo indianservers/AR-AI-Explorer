@@ -150,6 +150,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.drop
@@ -211,6 +212,9 @@ import com.indianservers.aiexplorer.core.AdvancedGraphEngine
 import com.indianservers.aiexplorer.core.TypedGraphEngine
 import com.indianservers.aiexplorer.core.TypedGraphExpression
 import com.indianservers.aiexplorer.core.TypedGraphExpressionParser
+import com.indianservers.aiexplorer.core.AccessibleGraphDescriptionEngine
+import com.indianservers.aiexplorer.core.InteractiveGraphRow
+import com.indianservers.aiexplorer.accessibility.GraphSonificationPlayer
 import com.indianservers.aiexplorer.core.AdvancedGraphKind
 import com.indianservers.aiexplorer.core.GraphDomain
 import com.indianservers.aiexplorer.core.GraphViewport
@@ -521,6 +525,8 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val graphScope = rememberCoroutineScope()
+    val sonificationPlayer = remember { GraphSonificationPlayer() }
+    DisposableEffect(Unit) { onDispose { sonificationPlayer.close() } }
     val graph = remember { GraphAnalysis() }
     val robustGraphAnalysis = remember { RobustGraphAnalysisEngine() }
     val sharedGraphFeatures = remember { AdvancedGraphFeatureEngine() }
@@ -542,8 +548,9 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     var graphHomeRequest by remember { mutableIntStateOf(0) }
     var graphBackRequest by remember { mutableIntStateOf(0) }
     var graphForwardRequest by remember { mutableIntStateOf(0) }
-    var graphViewport by remember { mutableStateOf(GraphViewState()) }
-    var graphAxisSettings by remember { mutableStateOf(GraphAxisSettings()) }
+    val savedGraphView = vm.state.graph2DView
+    var graphViewport by remember { mutableStateOf(GraphViewState(Vec2(savedGraphView.centerX, savedGraphView.centerY), savedGraphView.zoom)) }
+    var graphAxisSettings by remember { mutableStateOf(GraphAxisSettings(savedGraphView.xName, savedGraphView.yName, savedGraphView.xUnit, savedGraphView.yUnit, runCatching { AxisNumberFormat.valueOf(savedGraphView.numberFormat) }.getOrDefault(AxisNumberFormat.Adaptive), savedGraphView.gridVisible, savedGraphView.xLogarithmic, savedGraphView.yLogarithmic)) }
     var showAxisSheet by remember { mutableStateOf(false) }
     var showMiniMap by remember { mutableStateOf(false) }
     var comparisonMode by remember { mutableStateOf(false) }
@@ -582,7 +589,12 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     var showSplitTable by remember { mutableStateOf(false) }
     var snapshotOpacity by remember { mutableFloatStateOf(.45f) }
     var accessibilityMode by remember { mutableStateOf(false) }
+    var sonificationStatus by remember { mutableStateOf("Audio trace ready") }
     var clearEpochSeen by remember { mutableIntStateOf(vm.workspaceClearEpoch) }
+    fun updateAxis(next: GraphAxisSettings) {
+        graphAxisSettings = next
+        vm.updateGraph2DView { it.copy(xName = next.xName, yName = next.yName, xUnit = next.xUnit, yUnit = next.yUnit, numberFormat = next.format.name, gridVisible = next.gridVisible, xLogarithmic = next.xLogarithmic, yLogarithmic = next.yLogarithmic) }
+    }
     BackHandler(
         enabled = equationEditorExpanded || graphAddMenuExpanded || graphViewToolsExpanded || showAxisSheet || contextMenuPosition != null || vm.showRightPanel || vm.showBottomPanel,
     ) {
@@ -713,6 +725,15 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     val explicitFunctions = visibleFunctions.filter { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }
     val selectedFunction = liveFunctions.firstOrNull { it.id == selectedGraphRowId }
     val analysisFunction = selectedFunction?.takeIf { it.visible } ?: visibleFunctions.firstOrNull()
+    val accessibleTrace = remember(analysisFunction, persistedParameterValues, graphParameterValues) {
+        analysisFunction?.let { function ->
+            runCatching {
+                val typed = TypedGraphExpressionParser.parse(function.expression)
+                val sample = TypedGraphEngine().sample(typed, parameterValues = persistedParameterValues + graphParameterValues, samples = 420)
+                AccessibleGraphDescriptionEngine.build(InteractiveGraphRow(function.id, function.expression, function.colorKey, typed = typed), sample, emptyList())
+            }.getOrNull()
+        }
+    }
     val sharedAnalysis = analysisFunction?.let { function -> objectGraphSnapshot.graphObjects.firstOrNull { it.rowId == function.id }?.advancedFeatures }
     val primaryExpression = analysisFunction?.takeIf { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }?.expression
         ?: explicitFunctions.firstOrNull()?.expression
@@ -786,6 +807,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
             homeRequest = graphHomeRequest,
             backRequest = graphBackRequest,
             forwardRequest = graphForwardRequest,
+            initialView = GraphViewState(Vec2(savedGraphView.centerX, savedGraphView.centerY), savedGraphView.zoom),
             axisSettings = graphAxisSettings,
             domains = graphDomains,
             styles = graphStyles,
@@ -845,7 +867,10 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                     dataText = updated.joinToString("; ") { "${trim(it.x)},${trim(it.y)}" }
                 }
             },
-            onViewportChange = { graphViewport = it },
+            onViewportChange = {
+                graphViewport = it
+                vm.updateGraph2DView { current -> current.copy(centerX = it.center.x, centerY = it.center.y, zoom = it.zoom) }
+            },
             onContextMenu = { id, point -> contextMenuFunctionId = id; contextMenuPosition = point },
         )
         if (presentationMode) {
@@ -931,6 +956,12 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 GlowButton("Read description") {
                     (context as? Activity)?.window?.decorView?.announceForAccessibility(spokenSummary)
                 }
+                GlowButton("Play graph audio", enabled = accessibleTrace?.notes?.isNotEmpty() == true) {
+                    val trace = accessibleTrace ?: return@GlowButton
+                    sonificationStatus = "Playing ${trace.notes.size} pitch-and-pan samples"
+                    graphScope.launch(Dispatchers.Default) { sonificationPlayer.play(trace.notes) }
+                }
+                Text(sonificationStatus, color = Muted, fontSize = 9.sp)
             }
         }
         if (!graphTypingMode && !presentationMode && !vm.hasDismissibleOverlay()) Row(
@@ -1108,18 +1139,18 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
         if (showAxisSheet) GlassPanel(Modifier.align(Alignment.Center).widthIn(max = 420.dp)) {
             PanelHeader("Axis Configuration", { showAxisSheet = false }, Cyan)
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                OutlinedTextField(graphAxisSettings.xName, { graphAxisSettings = graphAxisSettings.copy(xName = it.take(8)) }, Modifier.weight(1f), label = { Text("X name") })
-                OutlinedTextField(graphAxisSettings.yName, { graphAxisSettings = graphAxisSettings.copy(yName = it.take(8)) }, Modifier.weight(1f), label = { Text("Y name") })
+                OutlinedTextField(graphAxisSettings.xName, { updateAxis(graphAxisSettings.copy(xName = it.take(8))) }, Modifier.weight(1f), label = { Text("X name") })
+                OutlinedTextField(graphAxisSettings.yName, { updateAxis(graphAxisSettings.copy(yName = it.take(8))) }, Modifier.weight(1f), label = { Text("Y name") })
             }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                OutlinedTextField(graphAxisSettings.xUnit, { graphAxisSettings = graphAxisSettings.copy(xUnit = it.take(6)) }, Modifier.weight(1f), label = { Text("X unit") })
-                OutlinedTextField(graphAxisSettings.yUnit, { graphAxisSettings = graphAxisSettings.copy(yUnit = it.take(6)) }, Modifier.weight(1f), label = { Text("Y unit") })
+                OutlinedTextField(graphAxisSettings.xUnit, { updateAxis(graphAxisSettings.copy(xUnit = it.take(6))) }, Modifier.weight(1f), label = { Text("X unit") })
+                OutlinedTextField(graphAxisSettings.yUnit, { updateAxis(graphAxisSettings.copy(yUnit = it.take(6))) }, Modifier.weight(1f), label = { Text("Y unit") })
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                AxisNumberFormat.entries.forEach { format -> TogglePill(format.name, graphAxisSettings.format == format) { graphAxisSettings = graphAxisSettings.copy(format = format) } }
-                TogglePill("Grid", graphAxisSettings.gridVisible) { graphAxisSettings = graphAxisSettings.copy(gridVisible = it) }
-                TogglePill("Log X", graphAxisSettings.xLogarithmic) { graphAxisSettings = graphAxisSettings.copy(xLogarithmic = it) }
-                TogglePill("Log Y", graphAxisSettings.yLogarithmic) { graphAxisSettings = graphAxisSettings.copy(yLogarithmic = it) }
+                AxisNumberFormat.entries.forEach { format -> TogglePill(format.name, graphAxisSettings.format == format) { updateAxis(graphAxisSettings.copy(format = format)) } }
+                TogglePill("Grid", graphAxisSettings.gridVisible) { updateAxis(graphAxisSettings.copy(gridVisible = it)) }
+                TogglePill("Log X", graphAxisSettings.xLogarithmic) { updateAxis(graphAxisSettings.copy(xLogarithmic = it)) }
+                TogglePill("Log Y", graphAxisSettings.yLogarithmic) { updateAxis(graphAxisSettings.copy(yLogarithmic = it)) }
             }
         }
         if (contextMenuPosition != null) {

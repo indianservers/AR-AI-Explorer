@@ -697,6 +697,7 @@ private data class PointGesture(
 private data class SolidGesture(val index: Int, val from: Solid)
 private data class SolidGroupGesture(val indices: Set<Int>, val from: List<Solid>)
 private data class VectorGesture(val index: Int, val from: Vector3D)
+private data class Point3DGesture(val index: Int, val from: Point3D)
 data class SavedWorkspace(
     val id: String,
     val name: String,
@@ -751,7 +752,8 @@ class MainActivity : ComponentActivity() {
 }
 
 class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    private val history = CommandHistory()
+    private val workspaceHistories = com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule()
+    private val history: CommandHistory get() = workspaceHistories.forModule(state.module)
     private val notebookEngine = MathNotebookEngine()
     private val linkedMathKernel = LinkedMathKernel()
     private val mathObjectGraph = MathObjectGraph()
@@ -764,6 +766,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     private var solidGesture: SolidGesture? = null
     private var solidGroupGesture: SolidGroupGesture? = null
     private var vectorGesture: VectorGesture? = null
+    private var point3DGesture: Point3DGesture? = null
     private var spatialGestureFrom: com.indianservers.aiexplorer.spatial.SpatialScenePlacement? = null
     var state by mutableStateOf(WorkspaceState())
         private set
@@ -1034,11 +1037,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun open(module: MathModule) {
         rememberCurrentIntent()
-	        state = if (module == MathModule.Geometry3D && state.module != MathModule.Geometry3D) {
-            state.copy(module = module, solids = emptyList(), vectors3D = emptyList())
-        } else {
-            state.copy(module = module)
-        }
+        state = state.copy(module = module)
         showSubjectHub = false
         showMathLanding = false
         showShapesExplorer = false
@@ -1101,7 +1100,11 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
                     status = "Verifying 2D graph: $expression"
                 }
                 "3d", "graph3d" -> {
-                    state = state.copy(module = MathModule.Graph3D, surfaceExpression = expression)
+                    state = state.copy(
+                        module = MathModule.Graph3D,
+                        surfaceExpression = expression,
+                        surfaceLayers = listOf(com.indianservers.aiexplorer.core.SpatialSurfaceLayer("surface-main", expression)),
+                    )
                     status = "Verifying 3D graph: $expression"
                 }
             }
@@ -2791,21 +2794,81 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Updated point ${to.name}"
     }
 
-    fun addVector3D() {
+    fun beginPoint3DDrag(index: Int) {
+        val point = state.points3D.getOrNull(index) ?: return
+        if (point.locked) {
+            status = "Point ${point.name} is locked"
+            return
+        }
+        point3DGesture = Point3DGesture(index, point)
+        selectPoint3D(index)
+    }
+
+    fun previewPoint3DDrag(index: Int, delta: Vec3) {
+        val gesture = point3DGesture?.takeIf { it.index == index } ?: return
+        val moved = gesture.from.copy(position = gesture.from.position + delta)
+        state = state.copy(
+            points3D = state.points3D.mapIndexed { i, old -> if (i == index) moved else old },
+            modifiedAt = System.currentTimeMillis(),
+        )
+    }
+
+    fun endPoint3DDrag() {
+        val gesture = point3DGesture ?: return
+        val final = state.points3D.getOrNull(gesture.index)
+        if (final != null && final != gesture.from) history.recordApplied(TransformPoint3DCommand(gesture.index, gesture.from, final))
+        point3DGesture = null
+        status = "Moved point ${gesture.from.name}"
+    }
+
+    fun cancelPoint3DDrag() {
+        val gesture = point3DGesture ?: return
+        state = state.copy(points3D = state.points3D.mapIndexed { i, old -> if (i == gesture.index) gesture.from else old })
+        point3DGesture = null
+        status = "Point move cancelled"
+    }
+
+    fun addVector3D(
+        namePrefix: String = "w",
+        start: Vec3? = null,
+        end: Vec3? = null,
+        statusLabel: String = "3D vector",
+    ) {
         val n = state.vectors3D.size + 1
         val offset = (n - 2) * .55
         val vector = Vector3D(
-            id = "w$n",
-            name = "w$n",
-            start = Vec3(-1.5 + offset, -1.0, -1.0),
-            end = Vec3(1.4 + offset, 1.0, 1.2),
+            id = "$namePrefix$n",
+            name = "$namePrefix$n",
+            start = start ?: Vec3(-1.5 + offset, -1.0, -1.0),
+            end = end ?: Vec3(1.4 + offset, 1.0, 1.2),
         )
         state = history.execute(state, AddVector3DCommand(vector))
         selectedVector3D = state.vectors3D.lastIndex
         selectedPoint3D = -1
         selectedSolid = -1
-        status = "Added 3D vector ${vector.name}"
+        status = "Added $statusLabel ${vector.name}"
     }
+
+    fun addSegment3D() = addVector3D(
+        namePrefix = "seg",
+        start = Vec3(-1.2, 0.0, -0.6),
+        end = Vec3(1.2, 0.0, 0.6),
+        statusLabel = "3D segment construction",
+    )
+
+    fun addLine3D() = addVector3D(
+        namePrefix = "line",
+        start = Vec3(-2.5, 0.0, -1.25),
+        end = Vec3(2.5, 0.0, 1.25),
+        statusLabel = "3D line construction",
+    )
+
+    fun addRay3D() = addVector3D(
+        namePrefix = "ray",
+        start = Vec3(-1.4, 0.0, -0.8),
+        end = Vec3(2.2, 0.0, 1.1),
+        statusLabel = "3D ray construction",
+    )
 
     fun selectVector3D(index: Int) {
         selectedVector3D = index.takeIf { it in state.vectors3D.indices } ?: -1
@@ -2891,6 +2954,34 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             }
             is UnifiedSpatialMutation.Rejected -> status = mutation.message
         }
+    }
+
+    fun replaceSurfaceLayers(
+        layers: List<com.indianservers.aiexplorer.core.SpatialSurfaceLayer>,
+        label: String = "Update 3D surface layers",
+    ): Result<Unit> {
+        val before = state
+        return when (val mutation = unifiedSpatialController.replaceSurfaceLayers(unifiedSpatialController.snapshot(state), layers)) {
+            is UnifiedSpatialMutation.Applied -> {
+                state = history.execute(before, ReplaceWorkspaceCommand(before, mutation.snapshot.state, label))
+                status = "Updated ${layers.size} linked 3D surface layer${if (layers.size == 1) "" else "s"}"
+                Result.success(Unit)
+            }
+            is UnifiedSpatialMutation.Rejected -> {
+                status = mutation.message
+                Result.failure(IllegalArgumentException(mutation.message))
+            }
+        }
+    }
+
+    fun updateGraph3DView(transform: (com.indianservers.aiexplorer.workspace.Graph3DViewState) -> com.indianservers.aiexplorer.workspace.Graph3DViewState) {
+        val updated = transform(state.graph3DView)
+        if (updated != state.graph3DView) state = state.copy(graph3DView = updated, modifiedAt = System.currentTimeMillis())
+    }
+
+    fun updateGraph2DView(transform: (com.indianservers.aiexplorer.workspace.Graph2DViewState) -> com.indianservers.aiexplorer.workspace.Graph2DViewState) {
+        val updated = transform(state.graph2DView)
+        if (updated != state.graph2DView) state = state.copy(graph2DView = updated, modifiedAt = System.currentTimeMillis())
     }
 
     fun transformSpatialPlacement(label: String = "Transform spatial scene", transform: (com.indianservers.aiexplorer.spatial.SpatialScenePlacement) -> com.indianservers.aiexplorer.spatial.SpatialScenePlacement) {
@@ -3001,7 +3092,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
                 graphRowMetadata = emptyMap(),
                 graphSliderMetadata = emptyMap(),
             )
-            MathModule.Graph3D -> state.copy(surfaceExpression = "0")
+            MathModule.Graph3D -> state.copy(surfaceExpression = "0", surfaceLayers = emptyList())
             MathModule.Trigonometry,
             MathModule.Manipulatives,
             MathModule.ProbabilityStatistics,
@@ -3148,6 +3239,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                 .onFailure { vm.reportStatus("Autosave unavailable: ${it.message ?: "storage error"}") }
         }
     }
+
     LaunchedEffect(durableStore, persistenceReady, durableStateEnabled) {
         if (!persistenceReady || !durableStateEnabled) return@LaunchedEffect
         snapshotFlow { vm.savedWorkspaces }.drop(1).conflate().collect { projects ->
@@ -6753,6 +6845,10 @@ private fun MathematicsMenuPanel(
             "Visual Proofs" -> vm.openKnowledgeHub(KnowledgeSection.Proofs)
             "Dictionary", "Visual Dictionary" -> vm.openMathDictionary()
             "Probability & Statistics" -> vm.openProbabilityLab()
+            "2D Geometry" -> vm.open(MathModule.Geometry2D)
+            "3D Geometry" -> vm.open(MathModule.Geometry3D)
+            "Graphs Explorer" -> vm.open(MathModule.Graph2D)
+            "3D Graph" -> vm.open(MathModule.Graph3D)
             "Manipulatives" -> vm.open(MathModule.Manipulatives)
             "Shapes Explorer" -> vm.openShapesExplorer()
             "Set Theory & Logic" -> vm.openSetLogicVisualizer()
@@ -7003,9 +7099,16 @@ private fun TopShell(
                 "Back",
                 icon = "←",
                 iconOnly = compact,
+                modifier = Modifier.semantics { contentDescription = "Back to previous screen" },
                 onClick = { backDispatcher?.onBackPressed() ?: vm.navigateBackIntent() },
             )
-            GlowButton("Menu", icon = "≡", iconOnly = compact, onClick = vm::toggleMathMenu)
+            GlowButton(
+                "Menu",
+                icon = "≡",
+                iconOnly = compact,
+                modifier = Modifier.semantics { contentDescription = "Open Maths menu" },
+                onClick = vm::toggleMathMenu,
+            )
         }
         Column(
             Modifier.clickable { expanded = !expanded }.padding(horizontal = 5.dp)
@@ -8766,6 +8869,13 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
     fun deleteCurrent3DSelection() {
         val targets = selectedSolidIndices.filterTo(linkedSetOf()) { it in vm.state.solids.indices }
             .ifEmpty { selectedSolid?.let { setOf(selectedIndex) } ?: emptySet() }
+        if (targets.isEmpty()) {
+            when {
+                selectedVectorIndex >= 0 -> vm.deleteVector3D(selectedVectorIndex)
+                selectedPoint3DIndex >= 0 -> vm.deletePoint3D(selectedPoint3DIndex)
+            }
+            return
+        }
         vm.deleteSelectedSolids(targets)
         selectedSolidIndices = emptySet()
         subSelection = null; extrusionPreview = null; hiddenSolidIndices = emptySet(); isolatedSolidIndices = null; lockedSolidIndices = emptySet(); solidGroups = emptyList()
@@ -8887,6 +8997,10 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
             onVectorMove = { index, delta -> vm.previewVectorDrag(index, PrecisionInteraction.apply(SmartSnapEngine.constrain(delta, axisConstraint), precisionMode)) },
             onVectorDragEnd = vm::endVectorDrag,
             onVectorDragCancel = vm::cancelVectorDrag,
+            onPoint3DDragStart = vm::beginPoint3DDrag,
+            onPoint3DMove = { index, delta -> vm.previewPoint3DDrag(index, PrecisionInteraction.apply(SmartSnapEngine.constrain(delta, axisConstraint), precisionMode)) },
+            onPoint3DDragEnd = vm::endPoint3DDrag,
+            onPoint3DDragCancel = vm::cancelPoint3DDrag,
             onOrbit = { dx, dy ->
                 rotateY = (rotateY + dx).wrapDegrees()
                 rotateX = (rotateX + dy).coerceIn(-89f, 89f)
@@ -9055,6 +9169,42 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
                     GlowButton("Rot Z", icon = "RZ", iconOnly = compact, enabled = controlsEnabled) { rotateSelected3D(Vec3(0.0, 0.0, 15.0)) }
                 }
             }
+            if (selectedVector != null || selectedPoint3D != null) {
+                Row(
+                    Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(SurfaceA.copy(.90f))
+                        .border(1.dp, Cyan.copy(.38f), RoundedCornerShape(16.dp))
+                        .padding(horizontal = 7.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val locked = selectedPoint3D?.locked == true
+                    Text(
+                        text = selectedPoint3D?.let { "Point ${it.name}" } ?: selectedVector?.let { "Vector ${it.name}" }.orEmpty(),
+                        color = if (selectedPoint3D != null) Cyan else Amber,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    GlowButton("X-", icon = "←", iconOnly = compact, enabled = !locked) {
+                        selectedPoint3D?.let { vm.transformPoint3D(selectedPoint3DIndex) { p -> p.copy(position = p.position + Vec3(-.25, 0.0, 0.0)) } }
+                        selectedVector?.let { vm.moveVector3D(selectedVectorIndex, Vec3(-.25, 0.0, 0.0)) }
+                    }
+                    GlowButton("X+", icon = "→", iconOnly = compact, enabled = !locked) {
+                        selectedPoint3D?.let { vm.transformPoint3D(selectedPoint3DIndex) { p -> p.copy(position = p.position + Vec3(.25, 0.0, 0.0)) } }
+                        selectedVector?.let { vm.moveVector3D(selectedVectorIndex, Vec3(.25, 0.0, 0.0)) }
+                    }
+                    GlowButton("Y+", icon = "↑", iconOnly = compact, enabled = !locked) {
+                        selectedPoint3D?.let { vm.transformPoint3D(selectedPoint3DIndex) { p -> p.copy(position = p.position + Vec3(0.0, .25, 0.0)) } }
+                        selectedVector?.let { vm.moveVector3D(selectedVectorIndex, Vec3(0.0, .25, 0.0)) }
+                    }
+                    GlowButton("Z+", icon = "↗", iconOnly = compact, enabled = !locked) {
+                        selectedPoint3D?.let { vm.transformPoint3D(selectedPoint3DIndex) { p -> p.copy(position = p.position + Vec3(0.0, 0.0, .25)) } }
+                        selectedVector?.let { vm.moveVector3D(selectedVectorIndex, Vec3(0.0, 0.0, .25)) }
+                    }
+                    DestructiveGlowButton("Delete", icon = "×", iconOnly = compact, onClick = ::deleteCurrent3DSelection)
+                }
+            }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -9065,12 +9215,12 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
                 contentDescription = "Add a 3D solid to the workspace",
             )
             DeleteDropTarget(
-                enabled = selectedSolid != null,
+                enabled = selectedSolid != null || selectedVector != null || selectedPoint3D != null,
                 onDelete = ::deleteCurrent3DSelection,
             )
             DestructiveGlowButton(
                 "Clear all",
-                enabled = vm.state.solids.isNotEmpty() || vm.state.vectors3D.isNotEmpty(),
+                enabled = vm.state.solids.isNotEmpty() || vm.state.vectors3D.isNotEmpty() || vm.state.points3D.isNotEmpty(),
                 icon = "×",
                 onClick = onRequestClearAll,
             )
@@ -9613,6 +9763,18 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
                             vm.addVector3D()
                             addShapeOpen = false
                         },
+                        onAddSegment = {
+                            vm.addSegment3D()
+                            addShapeOpen = false
+                        },
+                        onAddLine = {
+                            vm.addLine3D()
+                            addShapeOpen = false
+                        },
+                        onAddRay = {
+                            vm.addRay3D()
+                            addShapeOpen = false
+                        },
                         onAddPoint = {
                             vm.addPoint3D()
                             addShapeOpen = false
@@ -9829,6 +9991,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         vm.state.solids,
         vm.state.vectors3D,
         vm.state.surfaceExpression,
+        vm.state.surfaceLayers,
         vm.universalMathDocument,
         arSurfaceDensity,
     ) {
@@ -11032,6 +11195,36 @@ private fun parseSpatialTriple(value: String): Vec3? {
     return Vec3(values[0], values[1], values[2])
 }
 
+private fun com.indianservers.aiexplorer.core.SpatialSurfaceLayer.surfaceDefinition(): com.indianservers.aiexplorer.spatial.SurfaceDefinition3D {
+    val bounds = com.indianservers.aiexplorer.spatial.SurfaceDomain(
+        domain.uMin..domain.uMax, domain.vMin..domain.vMax, domain.uMin..domain.uMax,
+    )
+    return when (kind) {
+        com.indianservers.aiexplorer.core.SpatialSurfaceKind.Explicit -> com.indianservers.aiexplorer.spatial.SurfaceDefinition3D.Explicit(id, expression, bounds)
+        com.indianservers.aiexplorer.core.SpatialSurfaceKind.Implicit -> com.indianservers.aiexplorer.spatial.SurfaceDefinition3D.Implicit(id, expression, bounds)
+        com.indianservers.aiexplorer.core.SpatialSurfaceKind.Parametric -> com.indianservers.aiexplorer.spatial.SurfaceDefinition3D.Parametric(id, expression, expressionY, expressionZ, domain = bounds)
+    }
+}
+
+private fun com.indianservers.aiexplorer.core.SpatialSurfaceLayer.productionMesh(density: Int): com.indianservers.aiexplorer.core.SurfaceMesh =
+    when (kind) {
+        com.indianservers.aiexplorer.core.SpatialSurfaceKind.Explicit -> Graph3D().mesh(expression, density = density)
+        else -> com.indianservers.aiexplorer.spatial.TypedSurfaceMesher().mesh(surfaceDefinition(), density.coerceIn(4, 64)).geometry.let { geometry ->
+            com.indianservers.aiexplorer.core.SurfaceMesh(
+                vertices = geometry.vertices,
+                rows = 1,
+                columns = geometry.vertices.size.coerceAtLeast(1),
+                triangleIndices = geometry.triangles,
+            )
+        }
+    }
+
+private fun com.indianservers.aiexplorer.core.SpatialSurfaceLayer.displayEquation(): String = when (kind) {
+    com.indianservers.aiexplorer.core.SpatialSurfaceKind.Explicit -> if ('=' in expression) expression else "z=$expression"
+    com.indianservers.aiexplorer.core.SpatialSurfaceKind.Implicit -> expression
+    com.indianservers.aiexplorer.core.SpatialSurfaceKind.Parametric -> "x=$expression; y=$expressionY; z=$expressionZ"
+}
+
 @Composable
 private fun Graph3DScreen(vm: ExplorerViewModel) {
     val context = LocalContext.current
@@ -11044,28 +11237,29 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     val graph3D = remember { Graph3D() }
     val surfaceCalculus = remember { SurfaceCalculus() }
     val sharedSpatialMath = remember { com.indianservers.aiexplorer.workspace.SharedSpatialMathEngine() }
-    var density by remember { mutableFloatStateOf(26f) }
-    var rotation by remember { mutableFloatStateOf(35f) }
-    var roll by remember { mutableFloatStateOf(0f) }
-    var zoom by remember { mutableFloatStateOf(1f) }
-    var cameraPan by remember { mutableStateOf(Offset.Zero) }
-    var tilt by remember { mutableFloatStateOf(55f) }
-    var sliceZ by remember { mutableFloatStateOf(2f) }
-    var traceX by remember { mutableFloatStateOf(1f) }
-    var traceY by remember { mutableFloatStateOf(1f) }
-    var showContours by remember { mutableStateOf(false) }
-    var showSlice by remember { mutableStateOf(false) }
-    var showGradient by remember { mutableStateOf(false) }
-    var showBox by remember { mutableStateOf(false) }
-    var showOrientationCube by remember(adaptiveProfile.isTelevision) { mutableStateOf(!adaptiveProfile.isTelevision) }
-    var activeTool by remember { mutableStateOf(SurfaceTool.Surface) }
+    val savedView = vm.state.graph3DView
+    var density by remember { mutableFloatStateOf(savedView.density) }
+    var rotation by remember { mutableFloatStateOf(savedView.rotation) }
+    var roll by remember { mutableFloatStateOf(savedView.roll) }
+    var zoom by remember { mutableFloatStateOf(savedView.zoom) }
+    var cameraPan by remember { mutableStateOf(Offset(savedView.panX, savedView.panY)) }
+    var tilt by remember { mutableFloatStateOf(savedView.tilt) }
+    var sliceZ by remember { mutableFloatStateOf(savedView.sliceZ) }
+    var traceX by remember { mutableFloatStateOf(savedView.traceX) }
+    var traceY by remember { mutableFloatStateOf(savedView.traceY) }
+    var showContours by remember { mutableStateOf(savedView.showContours) }
+    var showSlice by remember { mutableStateOf(savedView.showSlice) }
+    var showGradient by remember { mutableStateOf(savedView.showGradient) }
+    var showBox by remember { mutableStateOf(savedView.showBox) }
+    var showOrientationCube by remember(adaptiveProfile.isTelevision) { mutableStateOf(savedView.showOrientationCube && !adaptiveProfile.isTelevision) }
+    var activeTool by remember { mutableStateOf(runCatching { SurfaceTool.valueOf(savedView.activeTool) }.getOrDefault(SurfaceTool.Surface)) }
     var graphSceneAppearance by remember { mutableStateOf(WorkspaceAppearance()) }
     var graphAxisStyle by remember { mutableStateOf(WorkspaceVisualStyles.Spectral.axes) }
-    var surfaceLayers by remember { mutableStateOf(emptyList<com.indianservers.aiexplorer.core.SpatialSurfaceLayer>()) }
+    val surfaceLayers = vm.state.surfaceLayers
     var selectedSurfaceLayerIndex by remember { mutableIntStateOf(-1) }
     var selectedSurfaceLayerIndices by remember { mutableStateOf(emptySet<Int>()) }
     var gradientPlayback by remember { mutableStateOf(com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())) }
-    var viewPreset by remember { mutableStateOf(SurfaceViewPreset.Isometric) }
+    var viewPreset by remember { mutableStateOf(runCatching { SurfaceViewPreset.valueOf(savedView.viewPreset) }.getOrDefault(SurfaceViewPreset.Isometric)) }
     var surfaceDraft by rememberSaveable { mutableStateOf(vm.state.surfaceExpression) }
     var surfaceInputMessage by remember { mutableStateOf<String?>(null) }
     var addingSurfaceEquation by remember { mutableStateOf(false) }
@@ -11077,6 +11271,15 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var panelOffset by remember { mutableStateOf(Offset.Zero) }
     var surfaceLayerQuery by rememberSaveable { mutableStateOf("") }
     var clearEpochSeen by remember { mutableIntStateOf(vm.workspaceClearEpoch) }
+
+    fun persistView() = vm.updateGraph3DView {
+        it.copy(
+            density = density, rotation = rotation, tilt = tilt, roll = roll, zoom = zoom,
+            panX = cameraPan.x, panY = cameraPan.y, sliceZ = sliceZ, traceX = traceX, traceY = traceY,
+            showContours = showContours, showSlice = showSlice, showGradient = showGradient, showBox = showBox,
+            showOrientationCube = showOrientationCube, activeTool = activeTool.name, viewPreset = viewPreset.name,
+        )
+    }
 
     BackHandler(enabled = equationPanelOpen || propertiesOpen || insightsOpen || controlsOpen || examplesOpen) {
         when {
@@ -11094,7 +11297,6 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
 
     LaunchedEffect(vm.workspaceClearEpoch) {
         if (vm.workspaceClearEpoch != clearEpochSeen) {
-            surfaceLayers = emptyList()
             surfaceDraft = vm.state.surfaceExpression
             selectedSurfaceLayerIndex = -1
             selectedSurfaceLayerIndices = emptySet()
@@ -11117,6 +11319,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             SurfaceViewPreset.Z, SurfaceViewPreset.XY -> { tilt = 0f; rotation = 0f; roll = 0f }
         }
         cameraPan = Offset.Zero
+        persistView()
     }
 
     val primarySurfaceExpression = surfaceLayers.firstOrNull()?.expression ?: vm.state.surfaceExpression
@@ -11124,15 +11327,15 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         InteractiveParameterEngine.resolve(primarySurfaceExpression, emptyMap(), independentVariables = setOf("x", "y", "z"))
     }
 
-    val mesh = remember(resolvedPrimaryExpression, density) {
-        runCatching { graph3D.mesh(resolvedPrimaryExpression, density = density.toInt().coerceIn(8, 56)) }
+    val primaryLayer = surfaceLayers.firstOrNull()
+    val mesh = remember(primaryLayer, resolvedPrimaryExpression, density) {
+        runCatching { primaryLayer?.copy(expression = resolvedPrimaryExpression)?.productionMesh(density.toInt().coerceIn(8, 56)) }
             .getOrNull()
             ?.takeIf { candidate ->
-                candidate.vertices.size == candidate.rows * candidate.columns &&
+                (candidate.triangleIndices.isNotEmpty() || candidate.vertices.size == candidate.rows * candidate.columns) &&
                     candidate.vertices.all { point -> point.x.isFinite() && point.y.isFinite() && point.z.isFinite() }
             }
     }
-    val primaryLayer = surfaceLayers.firstOrNull()
     val primaryMesh = if (primaryLayer == null || primaryLayer.visible) mesh else null
     val additionalSurfaceMeshEntries = remember(surfaceLayers, density, selectedSurfaceLayerIndices) {
         surfaceLayers.drop(1).mapIndexedNotNull { index, layer ->
@@ -11144,7 +11347,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 com.indianservers.aiexplorer.core.SpatialQuality.High -> 36
                 com.indianservers.aiexplorer.core.SpatialQuality.Ultra -> 52
             }
-            runCatching { graph3D.mesh(layer.expression, density = qualityDensity) }.getOrNull()
+            runCatching { layer.productionMesh(qualityDensity) }.getOrNull()
                 ?.takeIf { candidate -> candidate.vertices.all { point -> point.x.isFinite() && point.y.isFinite() && point.z.isFinite() } }
                 ?.let { surfaceMesh ->
                     val selectionAlpha = when {
@@ -11170,15 +11373,18 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         primaryMesh?.let { add(0 to it) }
         additionalSurfaceMeshEntries.forEach { (index, surfaceMesh, _) -> add(index to surfaceMesh) }
     }
-    val insight = remember(resolvedPrimaryExpression) { graph3D.insight(resolvedPrimaryExpression) }
-    val surfaceParameters = remember(surfaceLayers) {
-        InteractiveParameterEngine.discover(surfaceLayers.map { it.expression }, emptyMap(), independentVariables = setOf("x", "y", "z"))
+    val insight = remember(primaryLayer, resolvedPrimaryExpression) {
+        if (primaryLayer?.kind == com.indianservers.aiexplorer.core.SpatialSurfaceKind.Explicit) graph3D.insight(resolvedPrimaryExpression)
+        else com.indianservers.aiexplorer.core.SurfaceInsight(primaryLayer?.kind?.name ?: "No surface", null, "Sampled domain", "Inspect numerically")
     }
-    val sharedSurfaceDefinition = remember(resolvedPrimaryExpression) {
-        com.indianservers.aiexplorer.spatial.SurfaceDefinition3D.Explicit("surface-main", resolvedPrimaryExpression)
+    val surfaceParameters = remember(surfaceLayers) {
+        InteractiveParameterEngine.discover(surfaceLayers.flatMap { listOf(it.expression, it.expressionY, it.expressionZ) }, emptyMap(), independentVariables = setOf("x", "y", "z", "u", "v"))
+    }
+    val sharedSurfaceDefinition = remember(primaryLayer, resolvedPrimaryExpression) {
+        primaryLayer?.copy(expression = resolvedPrimaryExpression)?.surfaceDefinition()
     }
     val sharedDifferential = remember(sharedSurfaceDefinition, traceX, traceY) {
-        runCatching { sharedSpatialMath.differential(sharedSurfaceDefinition, traceX.toDouble(), traceY.toDouble()) }.getOrNull()
+        sharedSurfaceDefinition?.let { runCatching { sharedSpatialMath.differential(it, traceX.toDouble(), traceY.toDouble()) }.getOrNull() }
     }
     val sharedSurfacePlan = remember(primaryMesh) {
         SharedGpuSceneCompiler.compile(SharedSpatialSceneBuilder.build("graph-3d-workspace", emptyList(), surface = primaryMesh))
@@ -11192,29 +11398,54 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
 
     fun plotSurfaceDraft() {
-        val next = SurfaceInputInterpreter.explicit(surfaceDraft).getOrElse {
-            surfaceInputMessage = it.message ?: "Enter z as a function of x and y."
+        val interpretation = SurfaceInputInterpreter.interpret(surfaceDraft).getOrElse {
+            surfaceInputMessage = it.message ?: "Enter an explicit, implicit, or parametric surface."
             return
-        }.canonicalEquation
-        val preview = runCatching { graph3D.mesh(next, density = 8) }.getOrNull()
-        if (preview == null || preview.vertices.none { it.z.isFinite() }) {
-            surfaceInputMessage = "The equation produced no finite surface points. Check variables and domain."
+        }
+        val next = interpretation.canonicalEquation
+        val candidate = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
+            id = surfaceLayers.getOrNull(selectedSurfaceLayerIndex)?.id ?: "surface-${System.currentTimeMillis()}",
+            expression = interpretation.expression,
+            kind = interpretation.kind,
+            expressionY = interpretation.expressionY,
+            expressionZ = interpretation.expressionZ,
+        )
+        val previewResult = runCatching { candidate.productionMesh(8) }
+        val preview = previewResult.getOrNull()
+        if (preview == null) {
+            surfaceInputMessage = "Could not plot this surface: ${previewResult.exceptionOrNull()?.message ?: "invalid expression"}"
+            return
+        }
+        if (preview.vertices.none { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() }) {
+            surfaceInputMessage = "Could not plot this surface because it has no finite points in the current domain."
             return
         }
         if (addingSurfaceEquation || selectedSurfaceLayerIndex !in surfaceLayers.indices) {
             val newIndex = surfaceLayers.size
             val layer = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
                 "surface-${System.currentTimeMillis()}",
-                next,
+                interpretation.expression,
+                kind = interpretation.kind,
+                expressionY = interpretation.expressionY,
+                expressionZ = interpretation.expressionZ,
             ).withWorkspaceAppearance(graphSceneAppearance.copy(colorIndex = newIndex))
-            surfaceLayers = surfaceLayers + layer
+            val result = vm.replaceSurfaceLayers(surfaceLayers + layer, "Add 3D surface")
+            if (result.isFailure) {
+                surfaceInputMessage = "Unable to add graph: ${result.exceptionOrNull()?.message ?: "workspace validation failed"}"
+                return
+            }
             selectedSurfaceLayerIndex = newIndex
             selectedSurfaceLayerIndices = setOf(newIndex)
-            if (newIndex == 0) vm.setSurfaceExpression(next)
             surfaceInputMessage = "Added $next"
         } else {
-            surfaceLayers = surfaceLayers.mapIndexed { index, layer -> if (index == selectedSurfaceLayerIndex) layer.copy(expression = next) else layer }
-            if (selectedSurfaceLayerIndex == 0) vm.setSurfaceExpression(next)
+            val result = vm.replaceSurfaceLayers(
+                surfaceLayers.mapIndexed { index, layer -> if (index == selectedSurfaceLayerIndex) layer.copy(expression = interpretation.expression, kind = interpretation.kind, expressionY = interpretation.expressionY, expressionZ = interpretation.expressionZ) else layer },
+                "Edit 3D surface",
+            )
+            if (result.isFailure) {
+                surfaceInputMessage = "Unable to update graph: ${result.exceptionOrNull()?.message ?: "workspace validation failed"}"
+                return
+            }
             surfaceInputMessage = "Updated $next"
         }
         surfaceDraft = next
@@ -11232,22 +11463,20 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         }
         selectedSurfaceLayerIndices = nextSelection
         selectedSurfaceLayerIndex = if (index in nextSelection) index else nextSelection.lastOrNull() ?: -1
-        surfaceDraft = surfaceLayers[index].expression
+        surfaceDraft = surfaceLayers[index].displayEquation()
         addingSurfaceEquation = false
     }
 
     fun deleteSurfaceLayers(indices: Set<Int>) {
         val targets = indices.filterTo(linkedSetOf()) { it in surfaceLayers.indices }
         if (targets.isEmpty()) return
-        surfaceLayers = surfaceLayers.filterIndexed { index, _ -> index !in targets }
+        vm.replaceSurfaceLayers(surfaceLayers.filterIndexed { index, _ -> index !in targets }, "Delete 3D surface layers")
         selectedSurfaceLayerIndices = emptySet()
         selectedSurfaceLayerIndex = -1
         addingSurfaceEquation = false
-        surfaceLayers.firstOrNull()?.let { vm.setSurfaceExpression(it.expression) }
     }
 
     fun clearGraph3DWorkspace() {
-        surfaceLayers = emptyList()
         selectedSurfaceLayerIndices = emptySet()
         selectedSurfaceLayerIndex = -1
         surfaceDraft = ""
@@ -11258,6 +11487,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         showGradient = false
         showContours = false
         surfaceInputMessage = "3D graph cleared"
+        persistView()
         vm.clearCurrentWorkspace()
     }
 
@@ -11265,7 +11495,10 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         val targets = selectedSurfaceLayerIndices.ifEmpty {
             selectedSurfaceLayerIndex.takeIf { it in surfaceLayers.indices }?.let(::setOf).orEmpty()
         }
-        surfaceLayers = surfaceLayers.mapIndexed { index, layer -> if (index in targets) layer.copy(renderMode = mode) else layer }
+        vm.replaceSurfaceLayers(
+            surfaceLayers.mapIndexed { index, layer -> if (index in targets) layer.copy(renderMode = mode) else layer },
+            "Change 3D surface render mode",
+        )
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -11301,17 +11534,18 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             showGradient = showGradient,
             showBox = showBox,
             activeTool = activeTool,
-            onRotate = { delta -> rotation = (rotation + delta).coerceIn(-180f, 180f) },
-            onTilt = { delta -> tilt = (tilt + delta).coerceIn(-89f, 89f) },
-            onRoll = { delta -> roll = (roll + delta).wrapDegrees() },
-            onPan = { delta -> cameraPan += delta },
-            onZoom = { factor -> zoom = (zoom * factor).coerceIn(.35f, 4f) },
+            onRotate = { delta -> rotation = (rotation + delta).coerceIn(-180f, 180f); persistView() },
+            onTilt = { delta -> tilt = (tilt + delta).coerceIn(-89f, 89f); persistView() },
+            onRoll = { delta -> roll = (roll + delta).wrapDegrees(); persistView() },
+            onPan = { delta -> cameraPan += delta; persistView() },
+            onZoom = { factor -> zoom = (zoom * factor).coerceIn(.35f, 4f); persistView() },
             onResetCamera = {
                 rotation = 35f
                 tilt = 55f
                 roll = 0f
                 zoom = 1f
                 cameraPan = Offset.Zero
+                persistView()
             },
             onTrace = { point ->
                 traceX = point.x.toFloat().coerceIn(-3f, 3f)
@@ -11325,7 +11559,10 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             onSelect = { palette ->
                 graphSceneAppearance = graphSceneAppearance.switchPalette(palette)
                 graphAxisStyle = palette.axes
-                surfaceLayers = surfaceLayers.map { layer -> layer.withWorkspaceAppearance(layer.workspaceAppearance().switchPalette(palette)) }
+                vm.replaceSurfaceLayers(
+                    surfaceLayers.map { layer -> layer.withWorkspaceAppearance(layer.workspaceAppearance().switchPalette(palette)) },
+                    "Change 3D graph palette",
+                )
             },
             modifier = Modifier.align(Alignment.CenterStart).padding(start = 10.dp),
         )
@@ -11365,6 +11602,12 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 label = "+ Equation",
                 contentDescription = "Add a 3D graph equation to the workspace",
             )
+            GlowButton("Layers", icon = "settings", enabled = surfaceLayers.isNotEmpty()) {
+                propertiesOpen = true
+                equationPanelOpen = false
+                insightsOpen = false
+                controlsOpen = false
+            }
             DeleteDropTarget(
                 enabled = selectedSurfaceLayerIndices.isNotEmpty(),
                 onDelete = { deleteSurfaceLayers(selectedSurfaceLayerIndices) },
@@ -11432,8 +11675,10 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             onQueryChange = { surfaceLayerQuery = it },
             onSelect = ::selectSurfaceLayer,
             onUpdateLayer = { index, layer ->
-                surfaceLayers = surfaceLayers.mapIndexed { i, old -> if (i == index) layer else old }
-                if (index == 0) vm.setSurfaceExpression(layer.expression)
+                vm.replaceSurfaceLayers(
+                    surfaceLayers.mapIndexed { i, old -> if (i == index) layer else old },
+                    "Update 3D surface properties",
+                )
             },
             onDelete = { deleteSurfaceLayers(setOf(it)) },
             onSelectAll = {
@@ -11446,13 +11691,16 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             graphAxisStyle = graphAxisStyle,
             onAppearanceChange = { updated ->
                 graphSceneAppearance = updated
-                surfaceLayers = surfaceLayers.mapIndexed { index, layer ->
-                    if (index in selectedSurfaceLayerIndices || index == selectedSurfaceLayerIndex) {
-                        layer.withWorkspaceAppearance(updated)
-                    } else {
-                        layer
-                    }
-                }
+                vm.replaceSurfaceLayers(
+                    surfaceLayers.mapIndexed { index, layer ->
+                        if (index in selectedSurfaceLayerIndices || index == selectedSurfaceLayerIndex) {
+                            layer.withWorkspaceAppearance(updated)
+                        } else {
+                            layer
+                        }
+                    },
+                    "Change 3D surface appearance",
+                )
             },
             onAxisChange = { graphAxisStyle = it },
             onClose = { propertiesOpen = false },
@@ -11494,22 +11742,23 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             showOrientationCube = showOrientationCube,
             viewPreset = viewPreset,
             gradientPlayback = gradientPlayback,
-            onDensity = { density = it },
-            onRotation = { rotation = it },
-            onTilt = { tilt = it },
-            onRoll = { roll = it },
-            onZoom = { zoom = it },
-            onSliceZ = { sliceZ = it },
-            onTraceX = { traceX = it },
-            onTraceY = { traceY = it },
+            onDensity = { density = it; persistView() },
+            onRotation = { rotation = it; persistView() },
+            onTilt = { tilt = it; persistView() },
+            onRoll = { roll = it; persistView() },
+            onZoom = { zoom = it; persistView() },
+            onSliceZ = { sliceZ = it; persistView() },
+            onTraceX = { traceX = it; persistView() },
+            onTraceY = { traceY = it; persistView() },
             onTool = { tool ->
                 activeTool = tool
                 if (tool == SurfaceTool.Contours) showContours = !showContours
                 if (tool == SurfaceTool.Slice) showSlice = !showSlice
                 if (tool == SurfaceTool.Gradient) showGradient = !showGradient
                 if (tool == SurfaceTool.BoundingBox) showBox = !showBox
+                persistView()
             },
-            onToggleOrientationCube = { showOrientationCube = !showOrientationCube },
+            onToggleOrientationCube = { showOrientationCube = !showOrientationCube; persistView() },
             onView = ::applyView,
             onGradient = { ascending ->
                 val path = mutableListOf<Vec3>()
@@ -11524,6 +11773,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 }
                 gradientPlayback = com.indianservers.aiexplorer.core.GradientPlayback3D(path, ascending = ascending).play()
                 showGradient = true
+                persistView()
             },
             onToggleGradientPlayback = {
                 gradientPlayback = if (gradientPlayback.playing) gradientPlayback.pause() else gradientPlayback.play()
@@ -11553,13 +11803,13 @@ private fun Graph3DEquationPanel(
 ) {
     GlassPanel(modifier.widthIn(max = 430.dp)) {
         PanelHeader("3D Equation", onClose, Cyan, icon = "Fx", onMove = onMove)
-        Text(message ?: "Add or update a surface equation.", color = Muted, fontSize = 11.sp)
+        Text(message ?: "Explicit z=f(x,y), implicit F(x,y,z)=0, or parametric x=...; y=...; z=...", color = Muted, fontSize = 11.sp)
         IntentAwareMathField(
             value = surfaceDraft,
             onValueChange = onSurfaceDraftChange,
             label = "3D surface",
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = "z=x^2+y^2",
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "3D surface equation input" },
+            placeholder = "z=x^2+y^2  or  x^2+y^2+z^2=4",
         )
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GlowButton("Plot", icon = "Fx", modifier = Modifier.weight(1f), onClick = onPlot)
@@ -11569,7 +11819,13 @@ private fun Graph3DEquationPanel(
         }
         AnimatedVisibility(examplesOpen) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf("z=x^2+y^2", "z=sin(x)+cos(y)", "z=cos(x^2)", "z=x*y/3", "z=sin(x*y)").forEach { example ->
+                listOf(
+                    "z=x^2+y^2",
+                    "x^2+y^2+z^2=4",
+                    "x=cos(u)*(3+cos(v)); y=sin(u)*(3+cos(v)); z=sin(v)",
+                    "z=sin(x)+cos(y)",
+                    "z=x*y/3",
+                ).forEach { example ->
                     GlowButton(example) { onSurfaceDraftChange(example) }
                 }
             }
@@ -11602,7 +11858,7 @@ private fun Graph3DPropertiesPanel(
         PanelHeader("Graph Properties", onClose, Violet, icon = "settings", onMove = onMove)
         WorkspaceAppearancePicker(graphSceneAppearance, onAppearanceChange, Modifier.fillMaxWidth())
         WorkspaceAxisPicker(graphAxisStyle, graphSceneAppearance.palette, onAxisChange, Modifier.fillMaxWidth())
-        OutlinedTextField(value = query, onValueChange = onQueryChange, label = { Text("Search surfaces") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = query, onValueChange = onQueryChange, label = { Text("Search surfaces") }, singleLine = true, modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search 3D surface layers" })
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton("Select all", enabled = surfaceLayers.isNotEmpty(), onClick = onSelectAll)
             DestructiveGlowButton("Delete selected", enabled = selectedSurfaceLayerIndices.isNotEmpty(), onClick = onDeleteSelected)
@@ -11622,6 +11878,7 @@ private fun Graph3DPropertiesPanel(
                         .padding(7.dp),
                     verticalArrangement = Arrangement.spacedBy(5.dp),
                 ) {
+                    Text(layer.kind.name + " surface", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                     OutlinedTextField(
                         value = layer.expression,
                         onValueChange = { onUpdateLayer(index, layer.copy(expression = it)) },
@@ -12824,16 +13081,31 @@ private fun SolidShapeLibrary(
     onDismiss: () -> Unit,
     onAdd: (SolidType) -> Unit,
     onAddVector: () -> Unit,
+    onAddSegment: () -> Unit,
+    onAddLine: () -> Unit,
+    onAddRay: () -> Unit,
     onAddPoint: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var search by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("All") }
+    var constructionsExpanded by remember { mutableStateOf(true) }
     var preview by remember { mutableStateOf(SolidType.Cube) }
     val categories = listOf("All", "Basic", "Curved", "Prisms", "Polyhedra")
+    val normalizedSearch = search.trim()
+    val constructionTools = listOf(
+        Triple("Point", "Exact/free 3D coordinate with name, visible, locked and style properties", onAddPoint),
+        Triple("Segment", "Finite editable construction between endpoints", onAddSegment),
+        Triple("Line", "Long editable straight construction through 3D space", onAddLine),
+        Triple("Ray", "Directional construction from a start point", onAddRay),
+        Triple("Vector", "Start/end vector with dx, dy, dz and magnitude", onAddVector),
+    )
+    val visibleConstructionTools = constructionTools.filter { (label, detail, _) ->
+        normalizedSearch.isBlank() || label.contains(normalizedSearch, ignoreCase = true) || detail.contains(normalizedSearch, ignoreCase = true)
+    }
     val visibleTypes = SolidType.entries.filter { type ->
         (category == "All" || type.libraryCategory() == category) &&
-            (search.isBlank() || type.displayName().contains(search.trim(), ignoreCase = true))
+            (normalizedSearch.isBlank() || type.displayName().contains(normalizedSearch, ignoreCase = true))
     }
     GlassPanel(modifier) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -12843,15 +13115,18 @@ private fun SolidShapeLibrary(
             }
             GlowButton("Close", icon = "×", onClick = onDismiss)
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             GlowButton("+ Add 3D Point", icon = "P", onClick = onAddPoint)
+            GlowButton("+ Segment", icon = "S", onClick = onAddSegment)
+            GlowButton("+ Line", icon = "L", onClick = onAddLine)
+            GlowButton("+ Ray", icon = "R", onClick = onAddRay)
             GlowButton("+ Add vector", onClick = onAddVector)
         }
         OutlinedTextField(
             value = search,
             onValueChange = { search = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Search all shapes") },
+            label = { Text("Search 3D tools and solids") },
             placeholder = { Text("sphere, prism, pyramid…") },
             singleLine = true,
         )

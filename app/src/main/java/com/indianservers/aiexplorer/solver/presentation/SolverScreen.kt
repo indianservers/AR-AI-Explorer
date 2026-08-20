@@ -23,6 +23,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
@@ -110,8 +113,8 @@ fun SolverScreen(
     }
     LaunchedEffect(state.solution) {
         if (state.solution != null) {
-            delay(80)
-            listState.animateScrollToItem(1)
+            delay(200)
+            listState.scrollToItem(1)
         }
     }
     Box(Modifier.fillMaxSize()) {
@@ -121,6 +124,7 @@ fun SolverScreen(
                 .widthIn(max = if (wide) 920.dp else 620.dp)
                 .fillMaxSize()
                 .padding(top = workspaceTop, bottom = workspaceBottom, start = 8.dp, end = 8.dp)
+                .testTag("solver.workspace")
                 .semantics { contentDescription = "Offline Solver with editor-first input and direct answers" },
             state = listState,
             verticalArrangement = Arrangement.spacedBy(9.dp),
@@ -132,10 +136,15 @@ fun SolverScreen(
                 ) {
                     SolverWorkspaceHeader(
                         historyCount = state.history.size,
+                        canUndo = state.canUndo,
+                        canRedo = state.canRedo,
                         onExit = onExit,
                         onHistory = model::toggleHistory,
                         onCatalogue = model::toggleCatalogue,
                         onMastery = model::toggleMastery,
+                        onUndo = model::undo,
+                        onRedo = model::redo,
+                        onClearAll = model::requestClearAll,
                     )
                     SolverModeBar(
                         operation = state.operation,
@@ -147,12 +156,13 @@ fun SolverScreen(
                         value = state.input,
                         onValueChange = model::updateInput,
                         label = "Solver expression",
-                        modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Editable Solver expression using the mathematical keyboard" },
+                        modifier = Modifier.fillMaxWidth(),
                         placeholder = "Example: 3x + 5 = 20",
                         minLines = 2,
                         showLegend = false,
                         keyboardContext = MathKeyboardContext.GENERAL,
                         useMathKeyboard = true,
+                        editorTestTag = "solver.input",
                         onDone = { model.run(SolverOperation.Solve) },
                     )
                     remember(state.input.text) { SchoolMathInputRecognizer.recognize(state.input.text) }?.let { recognition ->
@@ -167,14 +177,14 @@ fun SolverScreen(
                     GlowButton(
                         if (state.isSolving) "Working…" else "${state.operation.name} step by step  →",
                         enabled = state.input.text.isNotBlank() && !state.isSolving,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("solver.solve"),
                     ) { model.run() }
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         GlowButton("Hint first", enabled = state.input.text.isNotBlank() && !state.isSolving, onClick = model::runHintOnly)
                         GlowButton("Calculators", onClick = model::toggleCatalogue)
                         GlowButton(if (captureVisible) "Hide capture" else "Scan or write") { captureVisible = !captureVisible }
                         if (state.isSolving) GlowButton("Cancel", onClick = model::cancelSolve)
-                        if (state.input.text.isNotBlank()) GlowButton("Clear", onClick = model::clearInput)
+                        if (state.input.text.isNotBlank()) GlowButton("Clear", modifier = Modifier.testTag("solver.clear_input"), onClick = model::clearInput)
                     }
                     if (captureVisible) {
                         SolverCapturePanel(
@@ -299,6 +309,20 @@ fun SolverScreen(
                     }
                 }
             }
+        }
+        if (state.clearAllConfirmationVisible) {
+            AlertDialog(
+                onDismissRequest = model::cancelClearAll,
+                title = { Text("Clear the entire Solver session?") },
+                text = { Text("Inputs, results, steps, assumptions, and Solver history will be cleared. You can Undo this action afterward.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = model::confirmClearAll,
+                        modifier = Modifier.semantics { contentDescription = "Confirm Clear All" },
+                    ) { Text("Clear All") }
+                },
+                dismissButton = { TextButton(onClick = model::cancelClearAll) { Text("Cancel") } },
+            )
         }
     }
 }
@@ -457,10 +481,15 @@ private fun SolverInputBuilderPanel(onTemplate: (androidx.compose.ui.text.input.
 @Composable
 private fun SolverWorkspaceHeader(
     historyCount: Int,
+    canUndo: Boolean,
+    canRedo: Boolean,
     onExit: () -> Unit,
     onHistory: () -> Unit,
     onCatalogue: () -> Unit,
     onMastery: () -> Unit,
+    onUndo: () -> Unit,
+    onRedo: () -> Unit,
+    onClearAll: () -> Unit,
 ) {
     SolverPanel(accent = Violet) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -475,6 +504,9 @@ private fun SolverWorkspaceHeader(
             GlowButton("History $historyCount", onClick = onHistory)
             GlowButton("Topics", onClick = onCatalogue)
             GlowButton("My learning", onClick = onMastery)
+            GlowButton("Undo", enabled = canUndo, modifier = Modifier.testTag("solver.undo"), onClick = onUndo)
+            GlowButton("Redo", enabled = canRedo, modifier = Modifier.testTag("solver.redo"), onClick = onRedo)
+            GlowButton("Clear All", modifier = Modifier.testTag("solver.clear_all"), onClick = onClearAll)
         }
     }
 }
@@ -490,13 +522,13 @@ private fun SolverModeBar(
         Text("WHAT SHOULD I DO?", color = Cyan, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             SolverOperation.entries.forEach { item ->
-                GlowButton(if (item == operation) "● ${item.name}" else item.name) { onOperation(item) }
+                GlowButton(if (item == operation) "● ${item.name}" else item.name, modifier = Modifier.testTag("solver.mode.${item.name.lowercase()}")) { onOperation(item) }
             }
         }
         Text("EXPLANATION LEVEL", color = Muted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             ExplanationProfile.entries.forEach { item ->
-                GlowButton(if (item == profile) "● ${item.label}" else item.label) { onProfile(item) }
+                GlowButton(if (item == profile) "● ${item.label}" else item.label, modifier = Modifier.testTag("solver.profile.${item.name.lowercase()}")) { onProfile(item) }
             }
         }
     }
@@ -633,8 +665,8 @@ private fun SolverResult(
             ParseErrorDisplay(solution.input.normalized, error.span.start, error.span.endExclusive, error.message)
         }
         if (!solution.supported) {
-            Text(solution.message, color = Amber, fontSize = 13.sp, modifier = Modifier.semantics { liveRegion = LiveRegionMode.Assertive })
-            Text("No solution was invented. Edit the notation or choose a supported offline method.", color = Muted, fontSize = 11.sp)
+            Text(solution.message, color = Amber, fontSize = 13.sp, modifier = Modifier.testTag("solver.error").semantics { liveRegion = LiveRegionMode.Assertive })
+            Text("No solution was invented. Edit the notation or choose a supported offline method.", color = Muted, fontSize = 11.sp, modifier = Modifier.testTag("solver.fail_closed"))
             return@SolverPanel
         }
         val displayedAnswer =
@@ -647,7 +679,7 @@ private fun SolverResult(
             fontSize = 27.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.semantics {
+            modifier = Modifier.testTag("solver.answer").semantics {
                 liveRegion = LiveRegionMode.Polite
                 stateDescription = "Verified answer ${displayedAnswer ?: "not available"}"
             },
@@ -664,7 +696,7 @@ private fun SolverResult(
             fontSize = 11.sp,
         )
         FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            GlowButton("Show steps") { resultTab = SolverResultTab.Steps }
+            GlowButton("Show steps", modifier = Modifier.testTag("solver.show_steps")) { resultTab = SolverResultTab.Steps }
             GlowButton("Copy answer", onClick = onCopyAnswer)
             if (solution.approximateAnswer != null) {
                 GlowButton(if (showApproximate) "Show exact" else "Show decimal", onClick = onToggleAnswer)
@@ -677,7 +709,7 @@ private fun SolverResult(
             modifier = Modifier.fillMaxWidth().background(SurfaceB.copy(alpha = .55f), RoundedCornerShape(10.dp)).padding(5.dp),
         ) {
             SolverResultTab.entries.forEach { tab ->
-                GlowButton(if (tab == resultTab) "● ${tab.label}" else tab.label) { resultTab = tab }
+                GlowButton(if (tab == resultTab) "● ${tab.label}" else tab.label, modifier = Modifier.testTag("solver.result_tab.${tab.name.lowercase()}")) { resultTab = tab }
             }
         }
         if (resultTab == SolverResultTab.Overview) {
@@ -707,7 +739,7 @@ private fun SolverResult(
         }
         if (solution.assumptions.isNotEmpty() || solution.restrictions.isNotEmpty()) {
             Column(
-                Modifier.fillMaxWidth().background(Amber.copy(alpha = .07f), RoundedCornerShape(8.dp)).padding(8.dp),
+                Modifier.fillMaxWidth().testTag("solver.warnings").background(Amber.copy(alpha = .07f), RoundedCornerShape(8.dp)).padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(3.dp),
             ) {
                 Text("Assumptions and restrictions", color = Amber, fontWeight = FontWeight.Bold, fontSize = 11.sp)
@@ -723,6 +755,7 @@ private fun SolverResult(
                     .background(SurfaceB.copy(alpha = .62f), RoundedCornerShape(8.dp))
                     .border(1.dp, (if (selectedStepId == step.id) Cyan else Violet).copy(alpha = .48f), RoundedCornerShape(8.dp))
                     .clickable { onSelectStep(step.id) }
+                    .testTag("solver.step.${index + 1}")
                     .semantics {
                         selected = selectedStepId == step.id
                         stateDescription = if (selectedStepId == step.id) "Selected step ${index + 1} of ${solution.steps.size}" else "Step ${index + 1} of ${solution.steps.size}"
@@ -864,7 +897,7 @@ private fun VerificationCard(solution: SolverSolution) {
         Modifier.fillMaxWidth().background(color.copy(alpha = .08f), RoundedCornerShape(8.dp)).border(1.dp, color.copy(alpha = .45f), RoundedCornerShape(8.dp)).padding(9.dp),
         verticalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        Text("Verification | ${verification.status}", color = color, fontWeight = FontWeight.Bold)
+        Text("Verification | ${verification.status}", color = color, fontWeight = FontWeight.Bold, modifier = Modifier.testTag("solver.verification"))
         Text(verification.message, color = Ink, fontSize = 11.sp)
         verification.checks.forEach { check ->
             Text("${if (check.passed) "PASS" else "FAIL"} | ${check.label}: expected ${check.expected}, got ${check.actual}", color = if (check.passed) Green else color, fontSize = 11.sp)

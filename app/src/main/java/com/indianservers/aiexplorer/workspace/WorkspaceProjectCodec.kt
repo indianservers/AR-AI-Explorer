@@ -3,6 +3,12 @@ package com.indianservers.aiexplorer.workspace
 import com.indianservers.aiexplorer.core.FunctionDefinition
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.SolidType
+import com.indianservers.aiexplorer.core.SpatialMaterial
+import com.indianservers.aiexplorer.core.SpatialQuality
+import com.indianservers.aiexplorer.core.SpatialSurfaceLayer
+import com.indianservers.aiexplorer.core.SpatialSurfaceKind
+import com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode
+import com.indianservers.aiexplorer.core.SurfaceDomain3D
 import com.indianservers.aiexplorer.core.Vec2
 import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.core.Vector3D
@@ -23,7 +29,7 @@ data class WorkspaceProjectRecovery(
 
 /** Complete, deterministic workspace snapshot embedded beside the canonical maths document. */
 object WorkspaceSnapshotCodec {
-    const val currentSchema = 6
+    const val currentSchema = 10
     private const val maximumChars = 8_000_000
 
     fun encode(state: WorkspaceState): String {
@@ -60,6 +66,25 @@ object WorkspaceSnapshotCodec {
             state.points3D.forEach { point ->
                 add(listOf("Q", pack(point.id), pack(point.name), point.position.x, point.position.y, point.position.z, point.visible, point.locked, pack(point.styleKey)).joinToString("|"))
             }
+            state.surfaceLayers.forEach { layer ->
+                add(listOf(
+                    "H", pack(layer.id), pack(layer.expression), layer.visible, layer.material.name,
+                    layer.domain.uMin, layer.domain.uMax, layer.domain.vMin, layer.domain.vMax,
+                    layer.quality.name, layer.opacity, pack(layer.paletteKey), layer.colorIndex,
+                    pack(layer.textureKey), layer.glow, layer.renderMode.name,
+                    layer.kind.name, pack(layer.expressionY), pack(layer.expressionZ),
+                ).joinToString("|"))
+            }
+            state.graph3DView.let { view ->
+                add(listOf(
+                    "J", view.density, view.rotation, view.tilt, view.roll, view.zoom, view.panX, view.panY,
+                    view.sliceZ, view.traceX, view.traceY, view.showContours, view.showSlice, view.showGradient,
+                    view.showBox, view.showOrientationCube, pack(view.activeTool), pack(view.viewPreset),
+                ).joinToString("|"))
+            }
+            state.graph2DView.let { view ->
+                add(listOf("K", view.centerX, view.centerY, view.zoom, pack(view.xName), pack(view.yName), pack(view.xUnit), pack(view.yUnit), pack(view.numberFormat), view.gridVisible, view.xLogarithmic, view.yLogarithmic).joinToString("|"))
+            }
             state.spatialPlacement.let { placement ->
                 add(listOf("A", pack(placement.anchorId), placement.pose.positionMeters.x, placement.pose.positionMeters.y,
                     placement.pose.positionMeters.z, placement.pose.rotationDegrees.x, placement.pose.rotationDegrees.y,
@@ -95,8 +120,10 @@ object WorkspaceSnapshotCodec {
         return runCatching {
             val points = mutableListOf<Vec2>(); val shapes = mutableListOf<Shape2D>(); val dependencies = mutableListOf<PointDependency>(); val constraints = mutableListOf<GeometryConstraint2D>(); val groups = mutableListOf<GeometryGroup2D>()
             val functions = mutableListOf<FunctionDefinition>(); val rows = linkedMapOf<String, GraphRowMetadataState>()
-            val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>(); val points3D = mutableListOf<Point3D>()
+            val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>(); val points3D = mutableListOf<Point3D>(); val surfaceLayers = mutableListOf<SpatialSurfaceLayer>()
             var placement = SpatialScenePlacement()
+            var graph3DView = Graph3DViewState()
+            var graph2DView = Graph2DViewState()
             var universalDocument: UniversalMathDocument? = null
             records.drop(1).forEachIndexed { index, record ->
                 runCatching {
@@ -113,6 +140,29 @@ object WorkspaceSnapshotCodec {
                         "O" -> solids += Solid(SolidType.valueOf(f[1]), f[2].toDouble(), f[3].toDouble(), f[4].toDouble(), f[5].toDouble(), f[6].toDouble(), Vec3(f[7].toDouble(), f[8].toDouble(), f[9].toDouble()), Vec3(f[10].toDouble(), f[11].toDouble(), f[12].toDouble()))
                         "V" -> vectors += Vector3D(unpack(f[1]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), Vec3(f[6].toDouble(), f[7].toDouble(), f[8].toDouble()), unpack(f[2]))
                         "Q" -> points3D += Point3D(unpack(f[1]), unpack(f[2]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), f.getOrNull(6)?.toBooleanStrictOrNull() ?: true, f.getOrNull(7)?.toBooleanStrictOrNull() ?: false, f.getOrNull(8)?.let(::unpack) ?: "default")
+                        "H" -> surfaceLayers += SpatialSurfaceLayer(
+                            id = unpack(f[1]), expression = unpack(f[2]), visible = f[3].toBoolean(),
+                            material = SpatialMaterial.valueOf(f[4]),
+                            domain = SurfaceDomain3D(f[5].toDouble(), f[6].toDouble(), f[7].toDouble(), f[8].toDouble()),
+                            quality = SpatialQuality.valueOf(f[9]), opacity = f[10].toDouble(),
+                            paletteKey = unpack(f[11]), colorIndex = f[12].toInt(), textureKey = unpack(f[13]),
+                            glow = f[14].toBoolean(), renderMode = SpatialSurfaceRenderMode.valueOf(f[15]),
+                            kind = f.getOrNull(16)?.let(SpatialSurfaceKind::valueOf) ?: SpatialSurfaceKind.Explicit,
+                            expressionY = f.getOrNull(17)?.let(::unpack).orEmpty(),
+                            expressionZ = f.getOrNull(18)?.let(::unpack).orEmpty(),
+                        )
+                        "J" -> graph3DView = Graph3DViewState(
+                            density = f[1].toFloat(), rotation = f[2].toFloat(), tilt = f[3].toFloat(), roll = f[4].toFloat(),
+                            zoom = f[5].toFloat(), panX = f[6].toFloat(), panY = f[7].toFloat(), sliceZ = f[8].toFloat(),
+                            traceX = f[9].toFloat(), traceY = f[10].toFloat(), showContours = f[11].toBoolean(),
+                            showSlice = f[12].toBoolean(), showGradient = f[13].toBoolean(), showBox = f[14].toBoolean(),
+                            showOrientationCube = f[15].toBoolean(), activeTool = unpack(f[16]), viewPreset = unpack(f[17]),
+                        )
+                        "K" -> graph2DView = Graph2DViewState(
+                            centerX = f[1].toDouble(), centerY = f[2].toDouble(), zoom = f[3].toFloat(),
+                            xName = unpack(f[4]), yName = unpack(f[5]), xUnit = unpack(f[6]), yUnit = unpack(f[7]),
+                            numberFormat = unpack(f[8]), gridVisible = f[9].toBoolean(), xLogarithmic = f[10].toBoolean(), yLogarithmic = f[11].toBoolean(),
+                        )
                         "A" -> placement = SpatialScenePlacement(anchorId = unpack(f[1]), pose = SpatialPose(Vec3(f[2].toDouble(), f[3].toDouble(), f[4].toDouble()), Vec3(f[5].toDouble(), f[6].toDouble(), f[7].toDouble()), f[8].toDouble()), scaleMode = ARScaleMode.valueOf(f[9]), metersPerMathUnit = f[10].toDouble(), trackingQuality = TrackingQuality.valueOf(f[11]), estimated = f[12].toBoolean(), depthOcclusionEnabled = f[13].toBoolean(), measurementUncertaintyMeters = f[14].toDouble(), environmentIntensity = f[15].toFloat(), placedAt = f[16].toLong().takeIf { it >= 0 }, anchorTrackingState = f.getOrNull(17)?.let { AnchorTrackingState.valueOf(it) } ?: AnchorTrackingState.Tracking, relocalizationMessage = f.getOrNull(18)?.let(::unpack).orEmpty())
                         "U" -> universalDocument = UniversalMathDocumentCodec.decode(unpack(f[1]), recover).document
                     }
@@ -121,7 +171,11 @@ object WorkspaceSnapshotCodec {
             WorkspaceState(id = unpack(workspace[1]), name = unpack(workspace[2]), module = MathModule.valueOf(workspace[3]),
                 points = points, shapes = shapes, pointDependencies = dependencies, geometryConstraints = constraints, geometryGroups = groups, functions = functions,
                 solids = solids, vectors3D = vectors, points3D = points3D, graphRowMetadata = rows, graphSliderMetadata = sliders,
-                surfaceExpression = unpack(workspace[5]), spatialPlacement = placement, universalMathDocument = universalDocument, modifiedAt = workspace[4].toLong()).recomputed()
+                surfaceExpression = unpack(workspace[5]),
+                surfaceLayers = if (schema >= 7) surfaceLayers else listOf(SpatialSurfaceLayer("surface-main", unpack(workspace[5]))),
+                graph3DView = graph3DView,
+                graph2DView = graph2DView,
+                spatialPlacement = placement, universalMathDocument = universalDocument, modifiedAt = workspace[4].toLong()).recomputed()
         }.fold(
             onSuccess = { WorkspaceProjectRecovery(it, !checksumValid || diagnostics.isNotEmpty() || schema < currentSchema, diagnostics) },
             onFailure = { WorkspaceProjectRecovery(null, !checksumValid, diagnostics + (it.message ?: "Workspace could not be decoded.")) },
