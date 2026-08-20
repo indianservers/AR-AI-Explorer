@@ -99,6 +99,7 @@ class GraphWorkspaceReducer(private val expressions: ExpressionEngine = Expressi
                 AdvancedGraphKind.Parametric -> require(row.source.contains(';')) { "Use x(t)=…; y(t)=…" }
                 AdvancedGraphKind.VectorField -> require(row.source.contains(';')) { "Use two vector components separated by ';'." }
                 AdvancedGraphKind.Implicit, AdvancedGraphKind.Inequality -> require(row.source.contains('=' ) || listOf("<", ">").any(row.source::contains))
+                AdvancedGraphKind.Sequence, AdvancedGraphKind.RecursiveSequence, AdvancedGraphKind.List, AdvancedGraphKind.Table, AdvancedGraphKind.Regression -> Unit
                 else -> expressions.compile(stripEquation(row.source))
             }
         }.exceptionOrNull()?.message

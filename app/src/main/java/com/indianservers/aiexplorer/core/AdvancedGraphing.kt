@@ -5,7 +5,7 @@ import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 
-enum class AdvancedGraphKind { Explicit, Polar, Parametric, Implicit, Inequality, Sequence, VectorField }
+enum class AdvancedGraphKind { Explicit, Polar, Parametric, Implicit, Inequality, Sequence, RecursiveSequence, List, Table, Regression, VectorField }
 
 data class GraphDomain(val minimum: Double, val maximum: Double, val variable: String = "x") {
     init {
@@ -39,7 +39,11 @@ class AdvancedGraphEngine(private val expressions: ExpressionEngine = Expression
     fun classify(source: String): AdvancedGraphKind {
         val value = source.lowercase().replace(" ", "")
         return when {
-            value.startsWith("a(n)=") || value.startsWith("u(n)=") -> AdvancedGraphKind.Sequence
+            value.startsWith("regression(") || '~' in value -> AdvancedGraphKind.Regression
+            value.startsWith("table(") || value == "table" -> AdvancedGraphKind.Table
+            value.startsWith("[") && value.endsWith("]") -> AdvancedGraphKind.List
+            Regex("^[a-z][a-z0-9_]*\\(-?\\d+\\)=").containsMatchIn(value) && Regex("[a-z][a-z0-9_]*\\(n\\)=").containsMatchIn(value) -> AdvancedGraphKind.RecursiveSequence
+            Regex("^[a-z][a-z0-9_]*\\(n\\)=").containsMatchIn(value) -> AdvancedGraphKind.Sequence
             value.startsWith("vector:") || (value.contains(';') && value.contains("p(x,y)") && value.contains("q(x,y)")) -> AdvancedGraphKind.VectorField
             listOf("<=", ">=", "<", ">").any(value::contains) && value.contains('y') -> AdvancedGraphKind.Inequality
             value.startsWith("r=") -> AdvancedGraphKind.Polar
@@ -177,4 +181,3 @@ class AdvancedGraphEngine(private val expressions: ExpressionEngine = Expression
         return if (values.isEmpty()) null else (values.min()..values.max())
     }
 }
-

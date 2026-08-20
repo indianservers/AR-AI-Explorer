@@ -193,6 +193,37 @@ private data class ComparisonNode(val op: String, val left: Node, val right: Nod
     }
 }
 
+private data class ChainedComparisonNode(val operands: List<Node>, val operators: List<String>) : Node {
+    init { require(operands.size == operators.size + 1) }
+    override fun eval(v: Map<String, Double>): Double {
+        val values = operands.map { it.eval(v) }
+        val satisfied = operators.indices.all { index -> compareValues(operators[index], values[index], values[index + 1]) }
+        return if (satisfied) 1.0 else 0.0
+    }
+}
+
+private data class LogicalNode(val op: String, val left: Node, val right: Node) : Node {
+    override fun eval(v: Map<String, Double>): Double {
+        val a = left.eval(v) != 0.0
+        val result = when (op) {
+            "and" -> a && right.eval(v) != 0.0
+            "or" -> a || right.eval(v) != 0.0
+            else -> error("Unknown logical operator $op")
+        }
+        return if (result) 1.0 else 0.0
+    }
+}
+
+private fun compareValues(op: String, a: Double, b: Double): Boolean = when (op) {
+    "<" -> a < b
+    "<=" -> a <= b
+    ">" -> a > b
+    ">=" -> a >= b
+    "==" -> abs(a - b) < 1e-12
+    "!=" -> abs(a - b) >= 1e-12
+    else -> error("Unknown comparison $op")
+}
+
 /**
  * School-style convenience: a trig call containing only decimal numbers is
  * interpreted in degrees, while variable and pi-based graph expressions stay
@@ -309,24 +340,52 @@ private class Parser(private val input: String) {
     private var index = 0
 
     fun parse(): Expression {
-        val node = parseComparison()
+        val node = parseLogicalOr()
         skip()
         require(index == input.length) { "Unexpected token '${input[index]}'" }
         return Expression(node, input)
     }
 
-    private fun parseComparison(): Node {
-        var node = parseExpression()
+    private fun parseLogicalOr(): Node {
+        var node = parseLogicalAnd()
         while (true) {
             node = when {
-                matchString("<=") -> ComparisonNode("<=", node, parseExpression())
-                matchString(">=") -> ComparisonNode(">=", node, parseExpression())
-                matchString("==") -> ComparisonNode("==", node, parseExpression())
-                matchString("!=") -> ComparisonNode("!=", node, parseExpression())
-                matchString("<") -> ComparisonNode("<", node, parseExpression())
-                matchString(">") -> ComparisonNode(">", node, parseExpression())
+                matchString("||") || matchWord("or") -> LogicalNode("or", node, parseLogicalAnd())
                 else -> return node
             }
+        }
+    }
+
+    private fun parseLogicalAnd(): Node {
+        var node = parseComparison()
+        while (true) {
+            node = when {
+                matchString("&&") || matchWord("and") -> LogicalNode("and", node, parseComparison())
+                else -> return node
+            }
+        }
+    }
+
+    private fun parseComparison(): Node {
+        val operands = mutableListOf(parseExpression())
+        val operators = mutableListOf<String>()
+        while (true) {
+            val operator = when {
+                matchString("<=") -> "<="
+                matchString(">=") -> ">="
+                matchString("==") -> "=="
+                matchString("!=") -> "!="
+                matchString("<") -> "<"
+                matchString(">") -> ">"
+                else -> null
+            } ?: break
+            operators += operator
+            operands += parseExpression()
+        }
+        return when (operators.size) {
+            0 -> operands.single()
+            1 -> ComparisonNode(operators.single(), operands[0], operands[1])
+            else -> ChainedComparisonNode(operands, operators)
         }
     }
 
@@ -374,12 +433,12 @@ private class Parser(private val input: String) {
     private fun parsePrimary(): Node {
         skip()
         if (match('(')) {
-            val node = parseComparison()
+            val node = parseLogicalOr()
             require(match(')')) { "Missing closing parenthesis" }
             return node
         }
         if (peek()?.isDigit() == true || peek() == '.') return parseNumber()
-        if (peek()?.isLetter() == true || peek() == 'π') {
+        if (peek()?.isLetter() == true || peek() == '_' || peek() == 'π') {
             val name = parseIdentifier()
             skip()
             return if (match('(')) {
@@ -387,7 +446,7 @@ private class Parser(private val input: String) {
                 skip()
                 if (peek() != ')') {
                     do {
-                        args += parseComparison()
+                        args += parseLogicalOr()
                         skip()
                     } while (match(','))
                 }
@@ -408,13 +467,14 @@ private class Parser(private val input: String) {
 
     private fun parseIdentifier(): String {
         val start = index
-        while (peek()?.isLetter() == true || peek() == 'π') index++
+        while (peek()?.isLetterOrDigit() == true || peek() == '_' || peek() == 'π') index++
         return input.substring(start, index)
     }
 
     private fun shouldImplicitMultiply(): Boolean {
         val c = peek() ?: return false
-        return c == '(' || c == 'π' || c.isLetter()
+        if (isWordAt("and") || isWordAt("or")) return false
+        return c == '(' || c == 'π' || c == '_' || c.isLetter()
     }
 
     private fun match(c: Char): Boolean {
@@ -433,6 +493,20 @@ private class Parser(private val input: String) {
             return true
         }
         return false
+    }
+
+    private fun matchWord(value: String): Boolean {
+        skip()
+        if (!isWordAt(value)) return false
+        index += value.length
+        return true
+    }
+
+    private fun isWordAt(value: String): Boolean {
+        if (!input.regionMatches(index, value, 0, value.length, ignoreCase = true)) return false
+        val before = input.getOrNull(index - 1)
+        val after = input.getOrNull(index + value.length)
+        return before?.isLetterOrDigit() != true && after?.isLetterOrDigit() != true
     }
 
     private fun peek(): Char? = input.getOrNull(index)

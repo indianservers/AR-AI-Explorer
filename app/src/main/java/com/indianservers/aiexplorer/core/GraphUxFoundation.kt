@@ -6,8 +6,12 @@ import kotlin.math.round
 import kotlin.math.roundToLong
 
 enum class GraphAddKind(val label: String, val starter: String) {
-    Expression("Expression", "x"), Point("Point", "(1,1)"), Table("Table", "table"),
-    Inequality("Inequality", "y <= x^2"), Regression("Regression", "y1 ~ a*x1+b"), Slider("Slider", "a*x")
+    Expression("Expression", "x"),
+    Point("Point", "[(1,1)]"),
+    Table("Table", "[(0,0),(1,1),(2,4)]"),
+    Inequality("Inequality", "-2 < x < 2 and y <= x^2"),
+    Regression("Regression", "regression(linear; (0,1),(1,3),(2,5),(3,7))"),
+    Slider("Slider", "a*x"),
 }
 enum class GraphLineStyle { Solid, Dashed, Dotted }
 enum class AxisNumberFormat { Adaptive, Decimal, Fraction, Pi, Scientific }

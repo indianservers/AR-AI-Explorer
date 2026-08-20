@@ -795,17 +795,23 @@ internal fun GraphCanvas(
         val traceLabelsById = traceAnchorRows.map { it.first }.zip(arrangedTraceLabels).toMap()
         functions.forEachIndexed { index, fn ->
             if (!fn.visible) return@forEachIndexed
-            val color = when (fn.colorKey) { "cyan" -> Cyan; "green" -> Green; "amber" -> Amber; else -> Violet }
+            val color = graphColor(fn.colorKey)
             val selected = selectedFunctionId == fn.id
             val strokeWidth = if (selected) 6.0f else 4.2f
             val styleEffect = when (styles[fn.id] ?: GraphLineStyle.Solid) { GraphLineStyle.Solid -> null; GraphLineStyle.Dashed -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(16f, 9f)); GraphLineStyle.Dotted -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(3f, 8f)) }
             val typedDefinition = runCatching { TypedGraphExpressionParser.parse(fn.expression) }.getOrNull()
             if (typedDefinition is TypedGraphExpression.Inequality) {
                 val columns = 42; val rows = 42
-                val cells = runCatching { typedGraphEngine.sample(typedDefinition, GraphDomain(minX, maxX), GraphDomain(minY, maxY, "y"), parameterValues, 168).inequalityCells }.getOrDefault(emptyList())
+                val inequalitySample = runCatching { typedGraphEngine.sample(typedDefinition, GraphDomain(minX, maxX), GraphDomain(minY, maxY, "y"), parameterValues, 168) }.getOrNull()
+                val cells = inequalitySample?.inequalityCells.orEmpty()
                 val cellSize = Size(size.width / columns, size.height / rows)
                 val fillAlpha = if (selected) .25f else if (selectedFunctionId == null) .14f else .06f
                 cells.filter { it.satisfied }.forEach { cell -> drawRect(color.copy(fillAlpha), topLeft = tx(cell.center) - Offset(cellSize.width / 2, cellSize.height / 2), size = cellSize) }
+                val strict = Regex("(?<![<>=])[<>](?!=)").containsMatchIn(typedDefinition.source)
+                val boundaryEffect = if (strict) androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(10f, 7f)) else styleEffect
+                inequalitySample?.implicitSegments.orEmpty().forEach { segment ->
+                    drawLine(color.copy(alpha = if (selected || selectedFunctionId == null) .95f else .35f), tx(segment.start), tx(segment.end), if (selected) 4.5f else 2.8f, cap = StrokeCap.Round, pathEffect = boundaryEffect)
+                }
                 return@forEachIndexed
             }
             val kind = graph.definitionKind(fn.expression)
@@ -835,6 +841,13 @@ internal fun GraphCanvas(
                             }
                             drawLine(curveColor, tx(pair.first), tx(pair.second), strokeWidth, cap = StrokeCap.Round, pathEffect = styleEffect)
                         }
+                    }
+                }
+                sample?.points.orEmpty().forEach { point ->
+                    val anchor = tx(point)
+                    if (anchor.x.isFinite() && anchor.y.isFinite()) {
+                        drawCircle(color.copy(alpha = if (selected || selectedFunctionId == null) .95f else .35f), if (selected) 7f else 5f, anchor)
+                        if (selected) drawCircle(color.copy(alpha = .22f), 13f, anchor)
                     }
                 }
                 if (domain != null && selected) {

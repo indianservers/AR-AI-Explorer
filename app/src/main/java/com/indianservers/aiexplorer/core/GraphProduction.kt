@@ -12,12 +12,44 @@ import kotlin.math.sqrt
 sealed interface TypedGraphExpression {
     val source: String
     val parameters: Set<String>
-    data class Explicit(override val source: String, val expression: String, override val parameters: Set<String>) : TypedGraphExpression
+    data class Explicit(
+        override val source: String,
+        val expression: String,
+        override val parameters: Set<String>,
+        val restriction: String? = null,
+    ) : TypedGraphExpression
     data class Implicit(override val source: String, val residual: String, override val parameters: Set<String>) : TypedGraphExpression
     data class Polar(override val source: String, val radius: String, override val parameters: Set<String>) : TypedGraphExpression
     data class Parametric(override val source: String, val x: String, val y: String, override val parameters: Set<String>) : TypedGraphExpression
     data class Piecewise(override val source: String, val branches: List<PiecewiseBranch>, override val parameters: Set<String>) : TypedGraphExpression
     data class Inequality(override val source: String, val predicate: String, override val parameters: Set<String>) : TypedGraphExpression
+    data class Sequence(
+        override val source: String,
+        val name: String,
+        val expression: String,
+        val first: Int,
+        val last: Int,
+        override val parameters: Set<String>,
+    ) : TypedGraphExpression
+    data class Recursive(
+        override val source: String,
+        val name: String,
+        val initialIndex: Int,
+        val initialValue: String,
+        val recurrence: String,
+        val first: Int,
+        val last: Int,
+        override val parameters: Set<String>,
+        val initialValues: Map<Int, String> = emptyMap(),
+    ) : TypedGraphExpression
+    data class ListData(override val source: String, val points: List<Vec2>, override val parameters: Set<String> = emptySet()) : TypedGraphExpression
+    data class Regression(
+        override val source: String,
+        val kind: GraphRegressionKind,
+        val points: List<Vec2>,
+        val degree: Int = 2,
+        override val parameters: Set<String> = emptySet(),
+    ) : TypedGraphExpression
 }
 
 data class PiecewiseBranch(val condition: String, val expression: String)
@@ -26,18 +58,26 @@ data class TypedGraphSample(
     val curves: List<GraphSegment> = emptyList(),
     val implicitSegments: List<ImplicitSegment> = emptyList(),
     val inequalityCells: List<InequalityCell> = emptyList(),
+    val points: List<Vec2> = emptyList(),
+    val regression: ProfessionalRegressionResult? = null,
 )
 
 object TypedGraphExpressionParser {
     private val reserved = setOf(
         "x", "y", "t", "theta", "pi", "e", "sin", "cos", "tan", "asin", "acos", "atan",
-        "sqrt", "abs", "ln", "log", "exp", "min", "max", "floor", "ceil", "piecewise",
+        "n", "sqrt", "abs", "ln", "log", "exp", "min", "max", "floor", "ceil", "piecewise", "regression",
     )
 
     fun parse(source: String): TypedGraphExpression {
         val clean = source.trim()
         require(clean.isNotBlank()) { "Graph expression cannot be blank." }
         val compact = clean.lowercase().replace(" ", "")
+        parseRecursive(clean)?.let { return it }
+        parseSequence(clean)?.let { return it }
+        parseRegression(clean)?.let { return it }
+        parsePointList(clean)?.let { return it }
+        val (unrestricted, restriction) = extractRestriction(clean)
+        val unrestrictedCompact = unrestricted.lowercase().replace(" ", "")
         return when {
             compact.startsWith("piecewise{") -> {
                 val body = clean.substringAfter('{').substringBeforeLast('}')
@@ -49,21 +89,84 @@ object TypedGraphExpressionParser {
                 require(branches.isNotEmpty()) { "At least one piecewise branch is required." }
                 TypedGraphExpression.Piecewise(clean, branches, parameters(branches.flatMap { listOf(it.condition, it.expression) }))
             }
-            compact.startsWith("r=") -> stripEquation(clean).let { TypedGraphExpression.Polar(clean, it, parameters(listOf(it))) }
+            unrestrictedCompact.startsWith("r=") -> stripEquation(unrestricted).let { TypedGraphExpression.Polar(clean, it, parameters(listOf(it))) }
             compact.contains("x(t)=") && compact.contains("y(t)=") -> {
                 val parts = clean.split(';').map(String::trim)
                 val x = parts.firstOrNull { it.lowercase().replace(" ", "").startsWith("x(t)=") }?.let(::stripEquation) ?: error("Missing x(t).")
                 val y = parts.firstOrNull { it.lowercase().replace(" ", "").startsWith("y(t)=") }?.let(::stripEquation) ?: error("Missing y(t).")
                 TypedGraphExpression.Parametric(clean, x, y, parameters(listOf(x, y)))
             }
-            hasTopLevelInequality(clean) -> TypedGraphExpression.Inequality(clean, clean, parameters(listOf(clean)))
-            '=' in clean && !compact.startsWith("y=") && !Regex("^[a-z][a-z0-9_]*\\(x\\)=", RegexOption.IGNORE_CASE).containsMatchIn(compact) -> {
-                val sides = clean.split('=', limit = 2)
+            hasTopLevelInequality(unrestricted) -> TypedGraphExpression.Inequality(clean, normalizeInequality(unrestricted), parameters(listOf(unrestricted)))
+            '=' in unrestricted && !unrestrictedCompact.startsWith("y=") && !Regex("^[a-z][a-z0-9_]*\\(x\\)=", RegexOption.IGNORE_CASE).containsMatchIn(unrestrictedCompact) -> {
+                val sides = unrestricted.split('=', limit = 2)
                 val residual = "(${sides[0]})-(${sides[1]})"
                 TypedGraphExpression.Implicit(clean, residual, parameters(listOf(residual)))
             }
-            else -> stripEquation(clean).let { TypedGraphExpression.Explicit(clean, it, parameters(listOf(it))) }
+            else -> stripEquation(unrestricted).let {
+                TypedGraphExpression.Explicit(clean, it, parameters(listOfNotNull(it, restriction)), restriction)
+            }
         }
+    }
+
+    private fun extractRestriction(source: String): Pair<String, String?> {
+        val match = Regex("^(.*)\\{([^{}]+)}\\s*$").matchEntire(source) ?: return source to null
+        val expression = match.groupValues[1].trim()
+        return if (expression.isBlank()) source to null else expression to normalizeInequality(match.groupValues[2].trim())
+    }
+
+    private fun parseSequence(source: String): TypedGraphExpression.Sequence? {
+        val match = Regex("(?i)^([a-z][a-z0-9_]*)\\(n\\)\\s*=\\s*(.+?)[,;]\\s*n\\s*=\\s*(-?\\d+)\\s*\\.\\.\\s*(-?\\d+)\\s*$").matchEntire(source) ?: return null
+        val first = match.groupValues[3].toInt(); val last = match.groupValues[4].toInt()
+        require(first <= last && last - first <= 10_000) { "Sequence range supports at most 10,001 ordered terms." }
+        val expression = match.groupValues[2].trim()
+        return TypedGraphExpression.Sequence(source, match.groupValues[1], expression, first, last, parameters(listOf(expression)))
+    }
+
+    private fun parseRecursive(source: String): TypedGraphExpression.Recursive? {
+        val clauses = source.split(';').map(String::trim).filter(String::isNotBlank)
+        if (clauses.size < 3) return null
+        val range = Regex("(?i)^n\\s*=\\s*(-?\\d+)\\s*\\.\\.\\s*(-?\\d+)$").matchEntire(clauses.last()) ?: return null
+        val recurrence = Regex("(?i)^([a-z][a-z0-9_]*)\\(n\\)\\s*=\\s*(.+)$").matchEntire(clauses[clauses.lastIndex - 1]) ?: return null
+        val name = recurrence.groupValues[1]
+        val seedPattern = Regex("(?i)^${Regex.escape(name)}\\((-?\\d+)\\)\\s*=\\s*(.+)$")
+        val seeds = clauses.dropLast(2).associate { clause ->
+            val seed = seedPattern.matchEntire(clause) ?: return null
+            seed.groupValues[1].toInt() to seed.groupValues[2].trim()
+        }
+        require(seeds.isNotEmpty()) { "A recursive sequence needs at least one initial value." }
+        val first = range.groupValues[1].toInt(); val last = range.groupValues[2].toInt()
+        require(first <= last && last - first <= 10_000) { "Recursive range supports at most 10,001 ordered terms." }
+        val initialIndex = seeds.keys.min()
+        return TypedGraphExpression.Recursive(
+            source, name, initialIndex, seeds.getValue(initialIndex), recurrence.groupValues[2].trim(),
+            first, last, parameters(seeds.values + recurrence.groupValues[2]) - name.lowercase(), seeds,
+        )
+    }
+
+    private fun parsePointList(source: String): TypedGraphExpression.ListData? {
+        if (!source.trim().startsWith("[") || !source.trim().endsWith("]")) return null
+        val points = Regex("\\(\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*\\)")
+            .findAll(source).map { Vec2(it.groupValues[1].toDouble(), it.groupValues[2].toDouble()) }.toList()
+        return points.takeIf { it.isNotEmpty() }?.let { TypedGraphExpression.ListData(source, it) }
+    }
+
+    private fun parseRegression(source: String): TypedGraphExpression.Regression? {
+        val match = Regex("(?i)^regression\\(\\s*(linear|polynomial|quadratic|exponential|logarithmic|logistic)\\s*;(.+)\\)\\s*$").matchEntire(source) ?: return null
+        val points = Regex("\\(\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*\\)")
+            .findAll(match.groupValues[2]).map { Vec2(it.groupValues[1].toDouble(), it.groupValues[2].toDouble()) }.toList()
+        require(points.size >= 3) { "Regression requires at least three points." }
+        val kind = when (match.groupValues[1].lowercase()) {
+            "linear" -> GraphRegressionKind.Linear
+            "polynomial", "quadratic" -> GraphRegressionKind.Polynomial
+            "exponential" -> GraphRegressionKind.Exponential
+            "logarithmic" -> GraphRegressionKind.Logarithmic
+            else -> GraphRegressionKind.Logistic
+        }
+        return TypedGraphExpression.Regression(source, kind, points, if (match.groupValues[1].equals("quadratic", true)) 2 else 3)
+    }
+
+    internal fun normalizeInequality(source: String): String {
+        return source.replace("≤", "<=").replace("≥", ">=").replace("∧", " and ").replace("∨", " or ")
     }
 
     private fun parameters(expressions: List<String>): Set<String> = expressions.flatMap { source ->
@@ -92,20 +195,37 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
         samples: Int = 720,
     ): TypedGraphSample = when (definition) {
         is TypedGraphExpression.Explicit -> {
-            val curve = AdvancedGraphEngine(expressions).adaptiveExplicit(
-                AdvancedGraphDefinition(definition.expression, AdvancedGraphKind.Explicit, xDomain, parameterValues), seedIntervals = samples.coerceIn(24, 256) / 4,
-            )
-            TypedGraphSample(definition, curves = curve.segments)
+            if (definition.restriction == null) {
+                val curve = AdvancedGraphEngine(expressions).adaptiveExplicit(
+                    AdvancedGraphDefinition(definition.expression, AdvancedGraphKind.Explicit, xDomain, parameterValues), seedIntervals = samples.coerceIn(24, 256) / 4,
+                )
+                TypedGraphSample(definition, curves = curve.segments)
+            } else TypedGraphSample(definition, curves = sampleRestricted(definition, xDomain, parameterValues, samples))
         }
         is TypedGraphExpression.Polar -> TypedGraphSample(definition, curves = listOf(GraphSegment(samplePolar(definition, parameterValues, samples))))
         is TypedGraphExpression.Parametric -> TypedGraphSample(definition, curves = listOf(GraphSegment(sampleParametric(definition, parameterValues, samples))))
         is TypedGraphExpression.Piecewise -> TypedGraphSample(definition, curves = samplePiecewise(definition, xDomain, parameterValues, samples))
         is TypedGraphExpression.Implicit -> TypedGraphSample(definition, implicitSegments = marchingSquares(definition, xDomain, yDomain, parameterValues, min(240, max(24, samples / 4))))
-        is TypedGraphExpression.Inequality -> TypedGraphSample(definition, inequalityCells = AdvancedGraphEngine(expressions).inequality(definition.predicate, xDomain, yDomain, min(200, max(20, samples / 4)), min(200, max(20, samples / 4))))
+        is TypedGraphExpression.Inequality -> TypedGraphSample(
+            definition,
+            inequalityCells = AdvancedGraphEngine(expressions).inequality(definition.predicate, xDomain, yDomain, min(200, max(20, samples / 4)), min(200, max(20, samples / 4))),
+            implicitSegments = inequalityBoundaries(definition, xDomain, yDomain, parameterValues, min(180, max(24, samples / 4))),
+        )
+        is TypedGraphExpression.Sequence -> TypedGraphSample(definition, points = AdvancedGraphEngine(expressions).sequence(definition.expression, definition.first, definition.last, parameterValues).map { Vec2(it.index.toDouble(), it.value) })
+        is TypedGraphExpression.Recursive -> TypedGraphSample(definition, points = recursive(definition, parameterValues))
+        is TypedGraphExpression.ListData -> TypedGraphSample(definition, points = definition.points)
+        is TypedGraphExpression.Regression -> {
+            val fit = ProfessionalRegressionEngine(expressions).fit(definition.points, definition.kind, definition.degree)
+            TypedGraphSample(definition, curves = listOf(GraphSegment(fit.fitted.sortedBy { it.x })), points = definition.points, regression = fit)
+        }
     }
 
     fun evaluate(definition: TypedGraphExpression, coordinate: Double, parameters: Map<String, Double> = emptyMap()): Vec2? = when (definition) {
-        is TypedGraphExpression.Explicit -> value(definition.expression, parameters + ("x" to coordinate))?.let { Vec2(coordinate, it) }
+        is TypedGraphExpression.Explicit -> {
+            val variables = parameters + ("x" to coordinate)
+            val allowed = definition.restriction?.let { value(it, variables) != 0.0 } ?: true
+            if (allowed) value(definition.expression, variables)?.let { Vec2(coordinate, it) } else null
+        }
         is TypedGraphExpression.Polar -> value(definition.radius, parameters + mapOf("t" to coordinate, "theta" to coordinate))?.let { Vec2(it * kotlin.math.cos(coordinate), it * kotlin.math.sin(coordinate)) }
         is TypedGraphExpression.Parametric -> {
             val variables = parameters + ("t" to coordinate)
@@ -114,7 +234,53 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
         }
         is TypedGraphExpression.Piecewise -> definition.branches.firstOrNull { value(it.condition, parameters + ("x" to coordinate))?.let { result -> result != 0.0 } == true }
             ?.let { value(it.expression, parameters + ("x" to coordinate)) }?.let { Vec2(coordinate, it) }
+        is TypedGraphExpression.Sequence -> value(definition.expression, parameters + ("n" to coordinate))?.let { Vec2(coordinate, it) }
+        is TypedGraphExpression.Recursive -> recursive(definition, parameters).firstOrNull { abs(it.x - coordinate) < .5 }
+        is TypedGraphExpression.ListData -> definition.points.firstOrNull { abs(it.x - coordinate) < 1e-9 }
+        is TypedGraphExpression.Regression -> sample(definition, parameterValues = parameters).curves.firstOrNull()?.points?.minByOrNull { abs(it.x - coordinate) }
         is TypedGraphExpression.Implicit, is TypedGraphExpression.Inequality -> null
+    }
+
+    private fun sampleRestricted(definition: TypedGraphExpression.Explicit, domain: GraphDomain, parameters: Map<String, Double>, count: Int): List<GraphSegment> {
+        val expression = expressions.compile(definition.expression); val predicate = expressions.compile(definition.restriction!!)
+        val segments = mutableListOf<GraphSegment>(); var current = mutableListOf<Vec2>()
+        (0..count.coerceIn(64, 5000)).forEach { index ->
+            val x = domain.minimum + (domain.maximum - domain.minimum) * index / count.coerceIn(64, 5000)
+            val variables = parameters + ("x" to x)
+            val y = runCatching { expression.eval(variables) }.getOrNull()?.takeIf(Double::isFinite)
+            val allowed = runCatching { predicate.eval(variables) != 0.0 }.getOrDefault(false)
+            if (y == null || !allowed) { if (current.size > 1) segments += GraphSegment(current); current = mutableListOf() } else current += Vec2(x, y)
+        }
+        if (current.size > 1) segments += GraphSegment(current)
+        return segments
+    }
+
+    private fun recursive(definition: TypedGraphExpression.Recursive, parameters: Map<String, Double>): List<Vec2> {
+        require(definition.first >= definition.initialIndex) { "Recursive display range must start at or after the initial index." }
+        val seedSources = definition.initialValues.ifEmpty { mapOf(definition.initialIndex to definition.initialValue) }
+        val terms = seedSources.mapValues { (index, source) ->
+            expressions.compile(source).eval(parameters + ("n" to index.toDouble()))
+        }.toMutableMap()
+        val token = Regex("(?i)${Regex.escape(definition.name)}\\s*\\(\\s*n\\s*-\\s*(\\d+)\\s*\\)")
+        val lags = token.findAll(definition.recurrence).map { it.groupValues[1].toInt() }.toSet()
+        require(lags.isNotEmpty()) { "The recurrence must reference an earlier term such as ${definition.name}(n-1)." }
+        val recurrence = expressions.compile(token.replace(definition.recurrence) { match -> "_prev${match.groupValues[1]}" })
+        for (n in definition.initialIndex..definition.last) {
+            if (n in terms) continue
+            val previous = lags.associate { lag ->
+                "_prev$lag" to (terms[n - lag] ?: error("Missing initial value ${definition.name}(${n - lag})."))
+            }
+            terms[n] = recurrence.eval(parameters + previous + ("n" to n.toDouble()))
+        }
+        return (definition.first..definition.last).mapNotNull { n -> terms[n]?.takeIf(Double::isFinite)?.let { Vec2(n.toDouble(), it) } }
+    }
+
+    private fun inequalityBoundaries(definition: TypedGraphExpression.Inequality, xDomain: GraphDomain, yDomain: GraphDomain, parameters: Map<String, Double>, cells: Int): List<ImplicitSegment> {
+        val comparisons = Regex("([^*()]+|\\([^()]+\\))\\s*(<=|>=|<|>)\\s*([^*()]+|\\([^()]+\\))").findAll(definition.predicate)
+        return comparisons.flatMap { match ->
+            val residual = "(${match.groupValues[1]})-(${match.groupValues[3]})"
+            marchingSquares(TypedGraphExpression.Implicit(definition.source, residual, definition.parameters), xDomain, yDomain, parameters, cells).asSequence()
+        }.toList()
     }
 
     private fun samplePolar(definition: TypedGraphExpression.Polar, parameters: Map<String, Double>, count: Int): List<Vec2> = (0..count.coerceIn(32, 5000)).mapNotNull { index ->
@@ -424,7 +590,19 @@ object AccessibleGraphDescriptionEngine {
         val rowPoints = points.filter { row.id in it.rowIds }
         val summary = StructuredGraphSummary(
             "Graph of ${row.source}",
-            when (val typed = row.typed) { is TypedGraphExpression.Explicit -> "Explicit function of x."; is TypedGraphExpression.Implicit -> "Implicit relation in x and y."; is TypedGraphExpression.Polar -> "Polar curve traced by angle."; is TypedGraphExpression.Parametric -> "Parametric curve traced by t."; is TypedGraphExpression.Piecewise -> "Piecewise function with ${typed.branches.size} branches."; is TypedGraphExpression.Inequality -> "Shaded inequality region."; null -> "Graph expression." },
+            when (val typed = row.typed) {
+                is TypedGraphExpression.Explicit -> if (typed.restriction == null) "Explicit function of x." else "Restricted explicit function of x."
+                is TypedGraphExpression.Implicit -> "Implicit relation in x and y."
+                is TypedGraphExpression.Polar -> "Polar curve traced by angle."
+                is TypedGraphExpression.Parametric -> "Parametric curve traced by t."
+                is TypedGraphExpression.Piecewise -> "Piecewise function with ${typed.branches.size} branches."
+                is TypedGraphExpression.Inequality -> "Shaded inequality region."
+                is TypedGraphExpression.Sequence -> "Discrete sequence from n=${typed.first} to ${typed.last}."
+                is TypedGraphExpression.Recursive -> "Recursive sequence from n=${typed.first} to ${typed.last}."
+                is TypedGraphExpression.ListData -> "List of ${typed.points.size} plotted points."
+                is TypedGraphExpression.Regression -> "${typed.kind.name.lowercase()} regression through ${typed.points.size} points."
+                null -> "Graph expression."
+            },
             if (all.isEmpty()) "not sampled as a one-dimensional curve" else "x from ${fmt(minX)} to ${fmt(maxX)}",
             if (all.isEmpty()) "not applicable" else "sampled y from ${fmt(minY)} to ${fmt(maxY)}",
             rowPoints.groupBy { it.kind }.map { (kind, values) -> "${values.size} ${kind.name.lowercase()} point${if (values.size == 1) "" else "s"}: ${values.take(4).joinToString { "(${fmt(it.point.x)}, ${fmt(it.point.y)})" }}" },

@@ -198,6 +198,7 @@ import com.indianservers.aiexplorer.core.TransformGizmoHandle
 import com.indianservers.aiexplorer.core.TransformGizmoKind
 import com.indianservers.aiexplorer.core.Graph3D
 import com.indianservers.aiexplorer.core.GraphAnalysis
+import com.indianservers.aiexplorer.core.RobustGraphAnalysisEngine
 import com.indianservers.aiexplorer.core.AdvancedGraphFeatureEngine
 import com.indianservers.aiexplorer.core.GraphDefinitionKind
 import com.indianservers.aiexplorer.core.CompareModeEngine
@@ -521,6 +522,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     val haptic = LocalHapticFeedback.current
     val graphScope = rememberCoroutineScope()
     val graph = remember { GraphAnalysis() }
+    val robustGraphAnalysis = remember { RobustGraphAnalysisEngine() }
     val sharedGraphFeatures = remember { AdvancedGraphFeatureEngine() }
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
     val advancedGraph = remember { AdvancedGraphEngine() }
@@ -536,6 +538,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     var graphTypingMode by remember { mutableStateOf(false) }
     var graphAddMenuExpanded by remember { mutableStateOf(false) }
     var graphViewToolsExpanded by remember { mutableStateOf(false) }
+    var detailedAnalysisExpanded by remember { mutableStateOf(false) }
     var graphHomeRequest by remember { mutableIntStateOf(0) }
     var graphBackRequest by remember { mutableIntStateOf(0) }
     var graphForwardRequest by remember { mutableIntStateOf(0) }
@@ -581,7 +584,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     var accessibilityMode by remember { mutableStateOf(false) }
     var clearEpochSeen by remember { mutableIntStateOf(vm.workspaceClearEpoch) }
     BackHandler(
-        enabled = equationEditorExpanded || graphAddMenuExpanded || graphViewToolsExpanded || showAxisSheet || contextMenuPosition != null || vm.showBottomPanel,
+        enabled = equationEditorExpanded || graphAddMenuExpanded || graphViewToolsExpanded || showAxisSheet || contextMenuPosition != null || vm.showRightPanel || vm.showBottomPanel,
     ) {
         when {
             graphAddMenuExpanded -> graphAddMenuExpanded = false
@@ -591,6 +594,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             }
             showAxisSheet -> showAxisSheet = false
             contextMenuPosition != null -> contextMenuPosition = null
+            vm.showRightPanel -> vm.hidePanels()
             vm.showBottomPanel -> vm.hidePanels()
             graphViewToolsExpanded -> graphViewToolsExpanded = false
         }
@@ -712,15 +716,30 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
     val sharedAnalysis = analysisFunction?.let { function -> objectGraphSnapshot.graphObjects.firstOrNull { it.rowId == function.id }?.advancedFeatures }
     val primaryExpression = analysisFunction?.takeIf { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }?.expression
         ?: explicitFunctions.firstOrNull()?.expression
+    val secondaryExpression = explicitFunctions.firstOrNull { function -> function.expression != primaryExpression }?.expression
+    val effectiveParameters = objectGraphSnapshot.parameterRows.associate { it.name to it.value } + graphParameterValues
+    val analysisBounds = brushInterval?.let { it.start to it.endInclusive } ?: (0.0 to traceX.toDouble())
+    val robustReport = remember(primaryExpression, secondaryExpression, traceX, effectiveParameters, brushInterval) {
+        primaryExpression?.let { source ->
+            runCatching {
+                robustGraphAnalysis.analyze(
+                    source = source,
+                    minimum = -10.0,
+                    maximum = 10.0,
+                    at = traceX.toDouble(),
+                    secondSource = secondaryExpression,
+                    integralFrom = analysisBounds.first,
+                    integralTo = analysisBounds.second,
+                    parameters = effectiveParameters,
+                )
+            }.getOrNull()
+        }
+    }
     val sharedLines = remember(primaryExpression, traceX) {
         primaryExpression?.let { runCatching { sharedGraphFeatures.tangentAndNormal(it, traceX.toDouble()) }.getOrNull() }
     }
-    val roots = remember(primaryExpression) {
-        primaryExpression?.let { runCatching { graph.roots(it, -10.0, 10.0) }.getOrDefault(emptyList()) }.orEmpty()
-    }
-    val extrema = remember(primaryExpression) {
-        primaryExpression?.let { runCatching { graph.extrema(it, -10.0, 10.0) }.getOrDefault(emptyList()) }.orEmpty()
-    }
+    val roots = robustReport?.roots?.map { it.point.x }.orEmpty()
+    val extrema = robustReport?.extrema?.map { it.point }.orEmpty()
     val adaptiveSample = remember(primaryExpression) {
         primaryExpression?.let { expression ->
             runCatching {
@@ -728,11 +747,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             }.getOrNull()
         }
     }
-    val intersections = remember(liveFunctions) {
-        if (explicitFunctions.size < 2) emptyList() else runCatching {
-            graph.intersections(engine.compile(explicitFunctions[0].expression), engine.compile(explicitFunctions[1].expression), -10.0, 10.0)
-        }.getOrDefault(emptyList())
-    }
+    val intersections = robustReport?.intersections?.map { it.point }.orEmpty()
     val dataPoints = remember(dataText) { parseDataPoints(dataText) }
     val dataSummary = remember(dataPoints) { StatisticsEngine.summarize(dataPoints) }
     val traceY = remember(primaryExpression, traceX, graphParameterValues) {
@@ -742,9 +757,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             }.getOrNull()?.takeIf(Double::isFinite)
         }
     }
-    val traceSlope = remember(primaryExpression, traceX) {
-        primaryExpression?.let { runCatching { graph.derivative(it, traceX.toDouble()) }.getOrNull() }
-    }
+    val traceSlope = robustReport?.tangent?.slope?.value
     val pointsOfInterest = remember(roots, extrema, intersections) {
         buildList {
             roots.forEach { add("Root" to Vec2(it, 0.0)) }
@@ -1017,6 +1030,10 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                     TogglePill("POI", showPointsOfInterest) { showPointsOfInterest = it }
                     TogglePill("Table split", showSplitTable) { showSplitTable = it }
                     TogglePill("Accessible", accessibilityMode) { accessibilityMode = it }
+                    GlowButton("Analysis") {
+                        vm.togglePanel(PanelSlot.Right)
+                        graphViewToolsExpanded = false
+                    }
                     GlowButton("Present") { presentationMode = true }
                 }
             }
@@ -1070,10 +1087,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             },
             onColor = { id ->
                 vm.state.functions.indexOfFirst { it.id == id }.takeIf { it >= 0 }?.let { index ->
-                    vm.updateFunction(index) { function ->
-                        val next = when (function.colorKey) { "cyan" -> "violet"; "violet" -> "green"; "green" -> "amber"; else -> "cyan" }
-                        function.copy(colorKey = next)
-                    }
+                    vm.updateFunction(index) { function -> function.copy(colorKey = nextGraphColorKey(function.colorKey)) }
                 }
             },
             activeTool = graphTool,
@@ -1131,7 +1145,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 }) }
             }
         }
-        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(workspacePanelWidth)) {
+        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(workspacePanelWidth).fillMaxHeight(.72f)) {
             PanelHeader("Equations & Definitions", vm::hidePanels, Cyan)
             Text("Desmos-style rows · expressions, sliders and generated tables share one object graph.", color = Muted, fontSize = 11.sp)
             OutlinedTextField(
@@ -1171,12 +1185,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                     onFolderChange = { folder ->
                         vm.updateGraphRowMetadata(row.id) { it.copy(folder = folder.take(32)) }
                     },
-                    onColor = {
-                        vm.updateFunction(index) { function ->
-                            val next = when (function.colorKey) { "cyan" -> "violet"; "violet" -> "green"; "green" -> "amber"; else -> "cyan" }
-                            function.copy(colorKey = next)
-                        }
-                    },
+                    onColor = { key -> vm.updateFunction(index) { function -> function.copy(colorKey = key) } },
                 )
             }
             if (objectGraphSnapshot.parameterRows.isNotEmpty()) {
@@ -1211,51 +1220,64 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
             Text("Use the + button above the graph for every new user equation.", color = Muted, fontSize = 11.sp)
         }
         if (vm.showRightPanel) GlassPanel(
-            Modifier.align(Alignment.TopEnd).width(
-                if (adaptiveProfile.isTelevision) adaptiveProfile.workspacePolicy.sidePanelWidth else 270.dp,
-            ),
+            Modifier
+                .align(Alignment.TopEnd)
+                .width(if (adaptiveProfile.isTelevision) adaptiveProfile.workspacePolicy.sidePanelWidth else 286.dp)
+                .fillMaxHeight(if (adaptiveProfile.isTelevision) .58f else .56f),
         ) {
-            PanelHeader("Graph Insights", vm::hidePanels, Violet)
-            Insight("Selected row", selectedFunction?.name ?: "Tap a row", Amber)
-            Insight("Object graph", "${objectGraphSnapshot.expressionRows.size} rows · ${objectGraphSnapshot.parameterRows.size} sliders", Cyan)
-            Insight("Linked table", "${objectGraphSnapshot.generatedTable.size} x-values", Green)
-            objectGraphSnapshot.diagnostics.take(1).forEach { Text(it, color = Amber, fontSize = 11.sp) }
-            Insight("Tool", graphTool.name, Green)
-            Insight("Definitions", "${visibleFunctions.size} visible", Cyan)
-            Insight("Kinds", visibleFunctions.map { graph.definitionKind(it.expression).name }.distinct().joinToString(), Violet)
-            Insight("Roots", roots.joinToString { trim(it) }.ifBlank { "none detected" }, Cyan)
-            Insight("Extrema", extrema.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }.ifBlank { "none detected" }, Green)
-            sharedAnalysis?.let { features ->
-                Insight("Domain", features.domain.joinToString { "[${trim(it.from)}, ${trim(it.to)}]" }.ifBlank { "no real interval" }, Cyan)
-                Insight("Discontinuities", features.discontinuities.joinToString { "${it.kind.name} at x=${trim(it.x)}" }.ifBlank { "continuous in view" }, Amber)
-                Insight("Asymptotes", features.asymptotes.joinToString { it.equation }.ifBlank { "none detected" }, Violet)
-                Insight("Increasing", features.increasing.joinToString { "(${trim(it.from)}, ${trim(it.to)})" }.ifBlank { "none" }, Green)
-                Insight("Decreasing", features.decreasing.joinToString { "(${trim(it.from)}, ${trim(it.to)})" }.ifBlank { "none" }, Amber)
-                Insight("Concavity", "up ${features.concaveUp.size} · down ${features.concaveDown.size}", Cyan)
-                Insight("Inflections", features.inflectionPoints.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }.ifBlank { "none" }, Violet)
-            }
-            sharedLines?.let { lines ->
-                Insight("Tangent", lines.tangentEquation, Green)
-                Insight("Normal", lines.normalEquation, Cyan)
-            }
-            adaptiveSample?.let { sample ->
-                Insight("Adaptive sample", "${sample.points.size} points · ${sample.segments.size} segments", Cyan)
-                Insight("Arc length", trim(advancedGraph.arcLength(sample)), Violet)
-                Insight("Detected breaks", "${sample.discontinuities}", Amber)
-            }
-            primaryExpression?.let {
-                Insight("Derivative", runCatching { trim(graph.derivative(it, traceX.toDouble())) }.getOrDefault("undefined"), Amber)
-                Insight("Integral 0→x", runCatching { trim(graph.integral(it, 0.0, traceX.toDouble())) }.getOrDefault("undefined"), Cyan)
-            }
-            Insight("Intersections", intersections.joinToString { "(${trim(it.x)}, ${trim(it.y)})" }, Violet)
-            if (graphTool == GraphTool.Data) {
-                Insight("Data", "${dataSummary.count} points", Cyan)
-                Insight("Mean", "(${trim(dataSummary.meanX)}, ${trim(dataSummary.meanY)})", Green)
-                Insight("σ y", trim(dataSummary.standardDeviationY), Violet)
-                dataSummary.regression?.let { Insight("Regression", "y=${trim(it.slope)}x+${trim(it.intercept)} · r=${trim(it.correlation)}", Amber) }
-            }
+            PanelHeader("Analysis", vm::hidePanels, Violet)
+            Text(
+                "${selectedFunction?.name ?: analysisFunction?.name ?: "No function"} · ${roots.size} roots · ${extrema.size} extrema · ${intersections.size} intersections",
+                color = Ink,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
+            robustReport?.let { report ->
+                report.roots.take(4).forEachIndexed { index, point ->
+                    Insight("Root ${index + 1}", "x=${point.x.display} · ${point.x.confidence.label} · residual ${"%.1e".format(point.x.residual)}", Cyan)
+                }
+                report.extrema.take(4).forEachIndexed { index, point ->
+                    Insight("${point.classification} ${index + 1}", "(${point.x.display}, ${point.y.display}) · ${point.x.confidence.label}", Green)
+                }
+                report.intersections.take(4).forEachIndexed { index, point ->
+                    Insight("Intersection ${index + 1}", "(${point.x.display}, ${point.y.display}) · ${point.x.confidence.label}", Violet)
+                }
+                report.tangent?.let { tangent ->
+                    Insight("Tangent", "m=${tangent.slope.display} · ${tangent.slope.confidence.label}", Amber)
+                }
+                report.integral?.let { integral ->
+                    Insight("Integral", "${integral.signed.display} ± ${"%.1e".format(integral.signed.errorEstimate)} · ${integral.signed.confidence.label}", Cyan)
+                }
+                report.areaBetween?.let { area ->
+                    Insight("Area between", "${area.geometric.display} ± ${"%.1e".format(area.geometric.errorEstimate)}", Violet)
+                }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    GlowButton(if (detailedAnalysisExpanded) "Less" else "Details") { detailedAnalysisExpanded = !detailedAnalysisExpanded }
+                    GlowButton("Use interval") { graphTool = GraphTool.BrushArea; vm.hidePanels() }
+                }
+                AnimatedVisibility(detailedAnalysisExpanded) {
+                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        report.tangent?.let { tangent ->
+                            Insight("Equation", tangent.tangentEquation, Green)
+                            Insight("Normal", tangent.normalEquation, Cyan)
+                        }
+                        sharedAnalysis?.let { features ->
+                            Insight("Domain", features.domain.joinToString { "[${trim(it.from)}, ${trim(it.to)}]" }.ifBlank { "no real interval" }, Cyan)
+                            Insight("Breaks", features.discontinuities.joinToString { "${it.kind.name} x=${trim(it.x)}" }.ifBlank { "continuous in view" }, Amber)
+                            Insight("Asymptotes", features.asymptotes.joinToString { it.equation }.ifBlank { "none" }, Violet)
+                            Insight("Monotonic", "increasing ${features.increasing.size} · decreasing ${features.decreasing.size}", Green)
+                            Insight("Concavity", "up ${features.concaveUp.size} · down ${features.concaveDown.size}", Cyan)
+                        }
+                        adaptiveSample?.let { sample ->
+                            Insight("Sampling", "${sample.points.size} points · ${sample.segments.size} segments · ${sample.discontinuities} breaks", Cyan)
+                        }
+                        report.warnings.forEach { Text(it, color = Amber, fontSize = 10.sp) }
+                    }
+                }
+            } ?: Text("Select a supported explicit function to analyze.", color = Muted, fontSize = 11.sp)
+            objectGraphSnapshot.diagnostics.take(1).forEach { Text(it, color = Amber, fontSize = 10.sp) }
         }
-        if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
+        if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth().fillMaxHeight(.40f)) {
             PanelHeader("Graph Controls", vm::hidePanels, Ink)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Trace x = ${trim(traceX.toDouble())}", color = Muted, modifier = Modifier.width(120.dp))
@@ -1417,9 +1439,11 @@ private fun DesmosExpressionRow(
     onToggleCollapsed: () -> Unit,
     onNoteChange: (String) -> Unit,
     onFolderChange: (String) -> Unit,
-    onColor: () -> Unit,
+    onColor: (String) -> Unit,
 ) {
     val accent = graphColor(row.metadata.colorKey)
+    var showColorPicker by remember(row.id) { mutableStateOf(false) }
+    var customColor by remember(row.id) { mutableStateOf(row.metadata.colorKey.takeIf { it.startsWith("#") } ?: "#30D9FF") }
     Column(
         Modifier
             .fillMaxWidth()
@@ -1478,9 +1502,39 @@ private fun DesmosExpressionRow(
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton(if (uiState.collapsed) "Expand" else "Collapse", onClick = onToggleCollapsed)
             GlowButton(if (row.metadata.visible) "Hide" else "Show", onClick = onToggleVisible)
-            GlowButton("Color", onClick = onColor)
+            GlowButton("Color") { showColorPicker = !showColorPicker }
             GlowButton("Duplicate", onClick = onDuplicate)
             DestructiveGlowButton("Delete", onClick = onDelete)
+        }
+        AnimatedVisibility(showColorPicker) {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+                    graphColorKeys.forEach { key ->
+                        Box(
+                            Modifier
+                                .size(28.dp)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(graphColor(key))
+                                .border(if (row.metadata.colorKey == key) 2.dp else 1.dp, Ink.copy(alpha = .8f), RoundedCornerShape(6.dp))
+                                .semantics { contentDescription = "Use $key graph color" }
+                                .clickable { onColor(key); showColorPicker = false },
+                        )
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        value = customColor,
+                        onValueChange = { customColor = it.take(7) },
+                        label = { Text("Hex color") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f),
+                    )
+                    GlowButton("Apply", enabled = customColor.matches(Regex("#[0-9A-Fa-f]{6}"))) {
+                        onColor(customColor.uppercase())
+                        showColorPicker = false
+                    }
+                }
+            }
         }
     }
 }
@@ -1559,6 +1613,13 @@ private fun GeneratedTablePreview(rows: List<com.indianservers.aiexplorer.worksp
     }
 }
 
+internal val graphColorKeys = listOf("cyan", "violet", "green", "amber", "magenta", "coral", "orange", "teal")
+
+internal fun nextGraphColorKey(current: String): String {
+    val index = graphColorKeys.indexOf(current)
+    return graphColorKeys[(index + 1).coerceAtLeast(0) % graphColorKeys.size]
+}
+
 internal fun graphColor(key: String): Color = when (key) {
     "violet" -> WorkspaceVisualStyles.ReferenceViolet
     "green" -> WorkspaceVisualStyles.ReferenceBlue
@@ -1566,7 +1627,10 @@ internal fun graphColor(key: String): Color = when (key) {
     "magenta" -> WorkspaceVisualStyles.ReferenceMagenta
     "coral" -> WorkspaceVisualStyles.ReferenceCoral
     "orange" -> WorkspaceVisualStyles.ReferenceOrange
-    else -> WorkspaceVisualStyles.ReferenceCyan
+    "teal" -> Color(0xFF2DE2C5)
+    else -> if (key.matches(Regex("#[0-9A-Fa-f]{6}"))) {
+        runCatching { Color(0xFF000000L or key.drop(1).toLong(16)) }.getOrDefault(WorkspaceVisualStyles.ReferenceCyan)
+    } else WorkspaceVisualStyles.ReferenceCyan
 }
 
 private fun parseDataPoints(source: String): List<Vec2> = source
