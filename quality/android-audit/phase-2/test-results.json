@@ -1,0 +1,41 @@
+{
+  "phase": 2,
+  "date": "2026-08-20",
+  "package": "com.indianservers.aiexplorer",
+  "versionName": "1.1.5",
+  "versionCode": 15,
+  "commit": "6ffd865+local-fixes",
+  "device": "Medium_Phone_API_35",
+  "summary": {
+    "total_cases": 120,
+    "attempted_cases": 120,
+    "passed": 34,
+    "partial": 69,
+    "blocked": 17,
+    "failed_open_defects": 4,
+    "fixed_verified_defects": 2
+  },
+  "build": {
+    "assembleDebug": "pass",
+    "installDebug": "pass_after_emulator_recovery",
+    "focusedUnitRegression": "pass"
+  },
+  "session": {
+    "per_case_relaunches": 0,
+    "force_stops_during_testing": 0,
+    "recovery_launches_after_fix": 2,
+    "clear_all_dialogs_opened": 5,
+    "clear_all_confirmed": 2
+  },
+  "fixed_defects": [
+    "AND-3DG-001",
+    "AND-2DGR-001"
+  ],
+  "open_defects": [
+    "AND-3DG-002",
+    "AND-2DGR-002",
+    "AND-2DGR-003"
+  ],
+  "verdict": "not_release_ready_for_complete_phase_2_scope"
+}
+

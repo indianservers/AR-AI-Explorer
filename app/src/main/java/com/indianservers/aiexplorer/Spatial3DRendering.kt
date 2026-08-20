@@ -340,6 +340,7 @@ import com.indianservers.aiexplorer.core.Vec3
 import com.indianservers.aiexplorer.core.Vector3D
 import com.indianservers.aiexplorer.core.stripEquation
 import com.indianservers.aiexplorer.core.trim
+import com.indianservers.aiexplorer.workspace.Point3D
 import com.indianservers.aiexplorer.learning.Assignment
 import com.indianservers.aiexplorer.learning.ActivityAnswer
 import com.indianservers.aiexplorer.learning.ActivityBlock
@@ -503,9 +504,11 @@ internal fun Projected3DCanvas(
     modifier: Modifier,
     solids: List<Solid>,
     vectors: List<Vector3D>,
+    points3D: List<Point3D>,
     selectedIndex: Int,
     visibleSolidIndices: Set<Int>,
     selectedVectorIndex: Int,
+    selectedPoint3DIndex: Int,
     rx: Float,
     ry: Float,
     rz: Float,
@@ -527,6 +530,7 @@ internal fun Projected3DCanvas(
     onSelect: (Int) -> Unit,
     onSubSelect: (SubObjectSelection?) -> Unit,
     onSelectVector: (Int) -> Unit,
+    onSelectPoint3D: (Int) -> Unit,
     onSolidDragStart: (Int) -> Unit,
     onSolidMove: (Int, Vec3) -> Unit,
     onSolidRotate: (Int, Vec3) -> Unit,
@@ -554,6 +558,7 @@ internal fun Projected3DCanvas(
     val visualEffects = LocalAppVisualEffects.current
     val currentSolids by rememberUpdatedState(solids)
     val currentVectors by rememberUpdatedState(vectors)
+    val currentPoints3D by rememberUpdatedState(points3D)
     val currentRx by rememberUpdatedState(rx)
     val currentRy by rememberUpdatedState(ry)
     val currentRz by rememberUpdatedState(rz)
@@ -567,14 +572,17 @@ internal fun Projected3DCanvas(
     val currentSectionPlane by rememberUpdatedState(sectionPlane)
     val currentSelectedIndex by rememberUpdatedState(selectedIndex)
     val currentVisibleSolidIndices by rememberUpdatedState(visibleSolidIndices)
-    val structuredDescription = remember(solids, subSelection, selectedIndex) {
+    val structuredDescription = remember(solids, vectors, points3D, subSelection, selectedIndex, selectedVectorIndex, selectedPoint3DIndex) {
         val selectedHit = subSelection?.let { selection ->
             solids.getOrNull(selection.solidIndex)?.let { solid ->
                 val mode = when (selection.mode) { Selection3DMode.Vertex -> SpatialSubObjectType.Vertex; Selection3DMode.Edge -> SpatialSubObjectType.Edge; Selection3DMode.Face -> SpatialSubObjectType.Face; Selection3DMode.Object -> SpatialSubObjectType.Face }
                 com.indianservers.aiexplorer.core.SpatialSubObjectHit(selection.solidIndex, mode, selection.index, 0.0, 0.0, subObjectAnchorWorld(solid, selection))
             }
         }
-        com.indianservers.aiexplorer.core.SpatialAccessibilityEngine.describe(solids, selectedHit).joinToString(". ") { node -> node.description + ". " + node.measurements.joinToString() }
+        val solidDescription = com.indianservers.aiexplorer.core.SpatialAccessibilityEngine.describe(solids, selectedHit).joinToString(". ") { node -> node.description + ". " + node.measurements.joinToString() }
+        val vectorDescription = vectors.joinToString(". ") { vector -> "Vector ${vector.name} from (${trim(vector.start.x)}, ${trim(vector.start.y)}, ${trim(vector.start.z)}) to (${trim(vector.end.x)}, ${trim(vector.end.y)}, ${trim(vector.end.z)})" }
+        val pointDescription = points3D.joinToString(". ") { point -> "Point ${point.name} at (${trim(point.position.x)}, ${trim(point.position.y)}, ${trim(point.position.z)})" }
+        listOf(solidDescription, vectorDescription, pointDescription).filter { it.isNotBlank() }.joinToString(". ")
     }
     Canvas(
         modifier
@@ -608,6 +616,7 @@ internal fun Projected3DCanvas(
                     val down = awaitFirstDown(requireUnconsumed = false)
                     val gestureSolids = currentSolids
                     val gestureVectors = currentVectors
+                    val gesturePoints3D = currentPoints3D
                     val gestureRx = currentRx
                     val gestureRy = currentRy
                     val gestureRz = currentRz
@@ -628,6 +637,12 @@ internal fun Projected3DCanvas(
                         val a = project(rotate(vector.start, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
                         val b = project(rotate(vector.end, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
                         return pointSegmentDistance(target, a, b)
+                    }
+                    fun point3DDistance(index: Int, target: Offset): Float {
+                        val point = gesturePoints3D[index]
+                        if (!point.visible) return Float.MAX_VALUE
+                        val screen = project(rotate(point.position, gestureRx, gestureRy, gestureRz), center, scale, currentPerspective)
+                        return (screen - target).getDistance()
                     }
                     fun solidDistance(index: Int, target: Offset): Float {
                         val mesh = projectedMeshes.firstOrNull { it.solidIndex == index } ?: return Float.MAX_VALUE
@@ -678,7 +693,11 @@ internal fun Projected3DCanvas(
                     var vectorIndex = if (gizmoHit == null && !sectionHit && subHit == null && currentSelectionMode == Selection3DMode.Object) gestureVectors.indices.minByOrNull { vectorDistance(it, down.position) }
                         ?.takeIf { vectorDistance(it, down.position) < 42f }
                     else null
-                    var solidIndex = if (gizmoHit != null && !sectionHit) currentSelectedIndex else if (!sectionHit && vectorIndex == null) {
+                    val point3DIndex = if (gizmoHit == null && !sectionHit && subHit == null && vectorIndex == null && currentSelectionMode == Selection3DMode.Object) {
+                        gesturePoints3D.indices.minByOrNull { point3DDistance(it, down.position) }
+                            ?.takeIf { point3DDistance(it, down.position) < 36f }
+                    } else null
+                    var solidIndex = if (gizmoHit != null && !sectionHit) currentSelectedIndex else if (!sectionHit && vectorIndex == null && point3DIndex == null) {
                         gestureSolids.indices.filter(currentVisibleSolidIndices::contains).minByOrNull { solidDistance(it, down.position) }
                             ?.takeIf { solidDistance(it, down.position) < 48f }
                     } else null
@@ -687,6 +706,7 @@ internal fun Projected3DCanvas(
                         onSelectVector(it)
                         onVectorDragStart(it)
                     }
+                    point3DIndex?.let { onSelectPoint3D(it) }
                     solidIndex?.takeIf { gizmoHit == null }?.let {
                         onSelect(it)
                         onSolidDragStart(it)
@@ -694,6 +714,7 @@ internal fun Projected3DCanvas(
                     onGestureModeChange(when {
                         sectionHit -> GestureMode.Moving
                         vectorIndex != null -> GestureMode.Moving
+                        point3DIndex != null -> GestureMode.Selecting
                         solidIndex != null && transformMode == Transform3DMode.Move -> GestureMode.Moving
                         solidIndex != null && transformMode == Transform3DMode.Rotate -> GestureMode.Rotating
                         solidIndex != null -> GestureMode.Resizing
@@ -814,7 +835,7 @@ internal fun Projected3DCanvas(
                     }
                     activeGizmoAxis = null
                     if (vectorIndex != null) onVectorDragEnd()
-                    if (!moved && !transformed && solidIndex == null && vectorIndex == null && subHit == null && !sectionHit && gizmoHit == null) {
+                    if (!moved && !transformed && solidIndex == null && vectorIndex == null && point3DIndex == null && subHit == null && !sectionHit && gizmoHit == null) {
                         onEmptyTap()
                         val now = System.currentTimeMillis()
                         if (now - lastTapAt < 320L) {
@@ -831,6 +852,11 @@ internal fun Projected3DCanvas(
     ) {
         val center = Offset(size.width * .52f, size.height * .45f) + cameraPan
         if (showGrid) drawPerspectiveGrid(center, gridSize, visualEffects, axisStyle)
+        points3D.forEachIndexed { index, point ->
+            if (!point.visible) return@forEachIndexed
+            val pointColor = if (index == selectedPoint3DIndex) WorkspaceVisualStyles.ReferenceYellow else WorkspaceVisualStyles.spectralColor(index + vectors.size)
+            drawPoint3D(point, rx, ry, rz, center, 74f * zoom, pointColor, index == selectedPoint3DIndex, perspective)
+        }
         vectors.forEachIndexed { index, vector ->
             val vectorColor = if (index == selectedVectorIndex) {
                 WorkspaceVisualStyles.ReferenceYellow
@@ -1585,6 +1611,36 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawVector3D(
     drawGraphLabel("${vector.name} |v|=${trim(vector.magnitude)}", end + Offset(16f, -54f), color)
     if (selected) {
         drawGraphLabel("<${trim(vector.components.x)}, ${trim(vector.components.y)}, ${trim(vector.components.z)}>", start + Offset(14f, 16f), color)
+    }
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPoint3D(
+    point: Point3D,
+    rx: Float,
+    ry: Float,
+    rz: Float,
+    center: Offset,
+    scale: Float,
+    color: Color,
+    selected: Boolean,
+    perspective: Boolean,
+) {
+    val screen = project(rotate(point.position, rx, ry, rz), center, scale, perspective)
+    if (selected) {
+        drawCircle(color.copy(.18f), 36f, screen)
+        drawCircle(color.copy(.44f), 16f, screen, style = Stroke(2.5f))
+    }
+    drawLine(color.copy(.30f), Offset(center.x, center.y), screen, 1.5f)
+    drawCircle(color.copy(.22f), if (selected) 18f else 12f, screen)
+    drawCircle(color, if (selected) 8f else 6f, screen)
+    drawCircle(Color.White.copy(.90f), if (selected) 3f else 2f, screen)
+    drawGraphLabel(
+        "${point.name} (${trim(point.position.x)}, ${trim(point.position.y)}, ${trim(point.position.z)})",
+        screen + Offset(12f, -34f),
+        color,
+    )
+    if (selected) {
+        drawGraphLabel("|OP|=${trim(point.distanceFromOrigin)}", screen + Offset(12f, 18f), color)
     }
 }
 

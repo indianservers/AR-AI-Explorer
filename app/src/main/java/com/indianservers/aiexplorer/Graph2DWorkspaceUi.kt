@@ -506,7 +506,7 @@ import kotlin.math.log10
 import kotlin.math.pow
 
 @Composable
-internal fun Graph2DScreen(vm: ExplorerViewModel) {
+internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit) {
     val adaptiveProfile = LocalAdaptiveDeviceProfile.current
     val workspaceToolTop = if (adaptiveProfile.isTelevision) {
         adaptiveProfile.workspacePolicy.topChromeClearance
@@ -965,7 +965,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel) {
                 "Clear all",
                 enabled = vm.state.functions.isNotEmpty() || dataText.isNotBlank() || graphSnapshots.isNotEmpty() || pinnedTracePoints.isNotEmpty() || sketchPoints.isNotEmpty(),
                 icon = "Ã—",
-                onClick = vm::clearCurrentWorkspace,
+                onClick = onRequestClearAll,
             )
         }
         if (!graphTypingMode && !presentationMode && selectedFunction != null) SmartSelectionHud(

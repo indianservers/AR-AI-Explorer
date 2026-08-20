@@ -40,6 +40,17 @@ data class Shape2D(
     val styleKey: String = "default",
 )
 
+data class Point3D(
+    val id: String,
+    val name: String,
+    val position: Vec3,
+    val visible: Boolean = true,
+    val locked: Boolean = false,
+    val styleKey: String = "default",
+) {
+    val distanceFromOrigin: Double get() = position.magnitude()
+}
+
 enum class PointDependencyType {
     Midpoint, Centroid, Circumcenter, Incenter, Orthocenter, Intersection,
     PointOnObject, TangentPoint,
@@ -114,6 +125,7 @@ data class WorkspaceState(
     ),
     val solids: List<Solid> = emptyList(),
     val vectors3D: List<Vector3D> = emptyList(),
+    val points3D: List<Point3D> = emptyList(),
     val graphRowMetadata: Map<String, GraphRowMetadataState> = emptyMap(),
     val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
     val surfaceExpression: String = "x^2 + y^2",
@@ -557,6 +569,24 @@ data class ReplaceSolidsCommand(
 ) : WorkspaceCommand {
     override fun apply(state: WorkspaceState) = state.copy(solids = to, modifiedAt = System.currentTimeMillis())
     override fun undo(state: WorkspaceState) = state.copy(solids = from, modifiedAt = System.currentTimeMillis())
+}
+
+data class AddPoint3DCommand(val point: Point3D) : WorkspaceCommand {
+    override val label = "Add 3D point"
+    override fun apply(state: WorkspaceState) = state.copy(points3D = state.points3D + point, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(points3D = state.points3D.dropLast(1), modifiedAt = System.currentTimeMillis())
+}
+
+data class DeletePoint3DCommand(val index: Int, val point: Point3D) : WorkspaceCommand {
+    override val label = "Delete 3D point"
+    override fun apply(state: WorkspaceState) = state.copy(points3D = state.points3D.filterIndexed { pointIndex, _ -> pointIndex != index }, modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(points3D = state.points3D.toMutableList().apply { add(index.coerceIn(0, size), point) }, modifiedAt = System.currentTimeMillis())
+}
+
+data class TransformPoint3DCommand(val index: Int, val from: Point3D, val to: Point3D) : WorkspaceCommand {
+    override val label = "Transform 3D point"
+    override fun apply(state: WorkspaceState) = state.copy(points3D = state.points3D.replace(index, to), modifiedAt = System.currentTimeMillis())
+    override fun undo(state: WorkspaceState) = state.copy(points3D = state.points3D.replace(index, from), modifiedAt = System.currentTimeMillis())
 }
 
 data class AddVector3DCommand(val vector: Vector3D) : WorkspaceCommand {

@@ -1,0 +1,28 @@
+{
+  "phase": 2,
+  "date": "2026-08-20",
+  "device": "Medium_Phone_API_35",
+  "measurements": [
+    {
+      "area": "3D Geometry",
+      "result": "no crash observed",
+      "notes": "Cube add and clear workflow completed in live emulator session."
+    },
+    {
+      "area": "2D Graph",
+      "result": "no crash observed",
+      "notes": "Graph add/editor and clear workflow completed in live emulator session. Logcat contained non-fatal ART compiler-size info for Graph2DScreen."
+    },
+    {
+      "area": "Focused JVM regression",
+      "result": "pass",
+      "duration": "24s"
+    }
+  ],
+  "limitations": [
+    "No full frame-time profiling captured.",
+    "No full long-duration device stress run completed.",
+    "Emulator process disappeared once during install/relaunch workflow."
+  ]
+}
+

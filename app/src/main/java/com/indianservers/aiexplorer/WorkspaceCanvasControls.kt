@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.core.Solid
 import com.indianservers.aiexplorer.core.Geometry3D
 import com.indianservers.aiexplorer.core.Vector3D
+import com.indianservers.aiexplorer.workspace.Point3D
 import com.indianservers.aiexplorer.workspace.Shape2D
 
 enum class Transform2DMode { Select, Move, Resize, Rotate }
@@ -298,8 +299,10 @@ fun SmartSelectionHud(
 fun SpatialLayerPanel(
     solids: List<Solid>,
     vectors: List<Vector3D>,
+    points3D: List<Point3D>,
     selectedSolids: Set<Int>,
     selectedVector: Int,
+    selectedPoint: Int,
     locked: Set<Int>,
     hidden: Set<Int>,
     groups: List<Set<Int>>,
@@ -307,6 +310,7 @@ fun SpatialLayerPanel(
     onExpandedChange: (Boolean) -> Unit,
     onSelectSolid: (Int) -> Unit,
     onSelectVector: (Int) -> Unit,
+    onSelectPoint: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -319,12 +323,12 @@ fun SpatialLayerPanel(
             Modifier.fillMaxWidth().clickable { onExpandedChange(!expanded) },
             horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
         ) {
-            Text("Scene ${solids.size + vectors.size}", color = ControlInk, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            Text("Scene ${solids.size + vectors.size + points3D.size}", color = ControlInk, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             Text(if (expanded) "▲" else "▼", color = ControlCyan, fontSize = 10.sp)
         }
         AnimatedVisibility(expanded) {
             Column(Modifier.padding(top = 4.dp)) {
-                if (solids.isEmpty() && vectors.isEmpty()) Text("No scene objects", color = ControlMuted, fontSize = 10.sp)
+                if (solids.isEmpty() && vectors.isEmpty() && points3D.isEmpty()) Text("No scene objects", color = ControlMuted, fontSize = 10.sp)
                 groups.forEachIndexed { index, group ->
                     Text("▾ Group ${index + 1} · ${group.size}", color = ControlViolet, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                 }
@@ -348,6 +352,18 @@ fun SpatialLayerPanel(
                         fontSize = 10.sp,
                         modifier = Modifier.fillMaxWidth().background(Color.Transparent, RoundedCornerShape(9.dp))
                             .clickable { onSelectVector(index) }.padding(horizontal = 6.dp, vertical = 5.dp),
+                    )
+                }
+                points3D.forEachIndexed { index, point ->
+                    Text(
+                        "P ${point.name} (${point.position.x}, ${point.position.y}, ${point.position.z})",
+                        color = if (index == selectedPoint) ControlCyan else ControlMuted,
+                        fontSize = 10.sp,
+                        maxLines = 1,
+                        modifier = Modifier.fillMaxWidth().background(
+                            if (index == selectedPoint) ControlCyan.copy(.16f) else Color.Transparent,
+                            RoundedCornerShape(9.dp),
+                        ).clickable { onSelectPoint(index) }.padding(horizontal = 6.dp, vertical = 5.dp),
                     )
                 }
             }

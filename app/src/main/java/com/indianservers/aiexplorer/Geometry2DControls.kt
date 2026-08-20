@@ -1,6 +1,7 @@
 package com.indianservers.aiexplorer
 
 import androidx.compose.animation.AnimatedVisibility
+import com.indianservers.aiexplorer.core.Vec2
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -90,6 +91,8 @@ internal fun Geometry2DBottomDock(
     onDuplicate: () -> Unit,
     onDelete: () -> Unit,
     onClearAll: () -> Unit,
+    onNudge: (Vec2) -> Unit,
+    onScale: (Double) -> Unit,
     onRotateBy: (Double) -> Unit,
     onResetRotation: () -> Unit,
     onResizePolicy: (Geometry2DResizePolicy) -> Unit,
@@ -137,6 +140,28 @@ internal fun Geometry2DBottomDock(
                 Geometry2DCompactActionButton("Copy", false, Violet, Modifier.weight(1f), onClick = onDuplicate)
                 Geometry2DCompactActionButton(if (locked) "Unlock" else "Lock", locked, Amber, Modifier.weight(1f), onClick = onLock)
                 Geometry2DCompactActionButton("Del", false, Color(0xFFFF6688), Modifier.weight(1f), onClick = onDelete)
+            }
+        }
+
+        AnimatedVisibility(selected) {
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Geometry2DCompactActionButton("←", false, Cyan, Modifier.weight(1f)) { onMode(Transform2DMode.Move); onNudge(Vec2(-.25, 0.0)) }
+                    Geometry2DCompactActionButton("↑", false, Cyan, Modifier.weight(1f)) { onMode(Transform2DMode.Move); onNudge(Vec2(0.0, .25)) }
+                    Geometry2DCompactActionButton("↓", false, Cyan, Modifier.weight(1f)) { onMode(Transform2DMode.Move); onNudge(Vec2(0.0, -.25)) }
+                    Geometry2DCompactActionButton("→", false, Cyan, Modifier.weight(1f)) { onMode(Transform2DMode.Move); onNudge(Vec2(.25, 0.0)) }
+                    Geometry2DCompactActionButton("- Size", false, Cyan, Modifier.weight(1.35f)) { onMode(Transform2DMode.Resize); onScale(.9) }
+                    Geometry2DCompactActionButton("+ Size", false, Cyan, Modifier.weight(1.35f)) { onMode(Transform2DMode.Resize); onScale(1.1) }
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Geometry2DCompactActionButton("-15°", false, Violet, Modifier.weight(1f)) { onMode(Transform2DMode.Rotate); onRotateBy(-15.0) }
+                    Geometry2DCompactActionButton("+15°", false, Violet, Modifier.weight(1f)) { onMode(Transform2DMode.Rotate); onRotateBy(15.0) }
+                    Geometry2DCompactActionButton(if (resizePolicy == Geometry2DResizePolicy.Proportional) "Ratio" else "Free", resizePolicy == Geometry2DResizePolicy.Proportional, Cyan, Modifier.weight(1f)) {
+                        onMode(Transform2DMode.Resize)
+                        onResizePolicy(if (resizePolicy == Geometry2DResizePolicy.Proportional) Geometry2DResizePolicy.Free else Geometry2DResizePolicy.Proportional)
+                    }
+                    Geometry2DCompactActionButton("Clear", false, Color(0xFFFF6688), Modifier.weight(1f), onClick = onClearAll)
+                }
             }
         }
 

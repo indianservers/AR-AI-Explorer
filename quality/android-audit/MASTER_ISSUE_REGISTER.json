@@ -1,0 +1,46 @@
+{
+  "last_updated": "2026-08-20",
+  "issues": [
+    {
+      "id": "AND-3DG-001",
+      "module": "3D Geometry",
+      "severity": "S2",
+      "status": "fixed_verified",
+      "summary": "3D Clear All bypassed confirmation",
+      "fixed_files": ["app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt"]
+    },
+    {
+      "id": "AND-2DGR-001",
+      "module": "2D Graph",
+      "severity": "S2",
+      "status": "fixed_verified",
+      "summary": "Graph Clear All bypassed confirmation",
+      "fixed_files": [
+        "app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt",
+        "app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt"
+      ]
+    },
+    {
+      "id": "AND-3DG-002",
+      "module": "3D Geometry",
+      "severity": "S3",
+      "status": "open",
+      "summary": "Undo not exposed after 3D Clear All despite dialog copy"
+    },
+    {
+      "id": "AND-2DGR-002",
+      "module": "2D Graph",
+      "severity": "S3",
+      "status": "open",
+      "summary": "Undo not exposed after Graph Clear All despite dialog copy"
+    },
+    {
+      "id": "AND-2DGR-003",
+      "module": "2D Graph",
+      "severity": "S4",
+      "status": "open",
+      "summary": "Graph editor can obscure workspace-level Clear All until dismissed"
+    }
+  ]
+}
+

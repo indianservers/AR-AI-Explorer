@@ -1,0 +1,65 @@
+{
+  "runId": "2d-crash-fix-retest-2026-08-20",
+  "date": "2026-08-20",
+  "applicationId": "com.indianservers.aiexplorer",
+  "device": {
+    "serial": "emulator-5554",
+    "avd": "Medium_Phone_API_35",
+    "androidVersion": "15",
+    "apiLevel": 35,
+    "abi": "x86_64",
+    "resolution": "1080x2400",
+    "density": 420
+  },
+  "fixedFiles": [
+    "app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt"
+  ],
+  "commands": [
+    {
+      "command": ".\\gradlew.bat :app:assembleDebug",
+      "status": "pass"
+    },
+    {
+      "command": ".\\gradlew.bat :app:installDebug",
+      "status": "pass"
+    },
+    {
+      "command": ".\\gradlew.bat :app:testDebugUnitTest --tests \"com.indianservers.aiexplorer.Geometry*\" --tests \"com.indianservers.aiexplorer.workspace.Geometry*\"",
+      "status": "pass",
+      "tests": 50,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "uiRetest": {
+    "relaunchCountAfterFix": 2,
+    "keptAppOpenDuring2DRetest": true,
+    "usedClearAllBetweenObjects": true,
+    "topActivityAfterRetest": "com.indianservers.aiexplorer/.MainActivity",
+    "topActivityAtHandoff": "com.indianservers.aiexplorer/.MainActivity",
+    "fatalAndroidRuntimeLogcat": "none",
+    "checks": [
+      { "id": "open-2d", "status": "pass" },
+      { "id": "clear-baseline", "status": "pass" },
+      { "id": "add-triangle", "status": "pass" },
+      { "id": "clear-after-triangle", "status": "pass" },
+      { "id": "add-right-triangle", "status": "pass" },
+      { "id": "clear-after-right-triangle", "status": "pass" },
+      { "id": "add-square", "status": "pass" },
+      { "id": "clear-after-square", "status": "pass" },
+      { "id": "add-rectangle", "status": "pass" },
+      { "id": "selected-controls", "status": "pass" },
+      { "id": "clear-after-controls", "status": "pass" },
+      { "id": "landscape-reuse", "status": "pass" },
+      { "id": "portrait-return", "status": "pass" },
+      { "id": "pan-empty-canvas", "status": "pass" }
+    ]
+  },
+  "caseSummary": {
+    "sourceCasesAvailable": 44,
+    "pass": 22,
+    "partial": 17,
+    "blocked": 5,
+    "fail": 0
+  }
+}

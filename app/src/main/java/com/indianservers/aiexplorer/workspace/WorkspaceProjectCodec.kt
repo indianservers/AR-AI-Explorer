@@ -23,7 +23,7 @@ data class WorkspaceProjectRecovery(
 
 /** Complete, deterministic workspace snapshot embedded beside the canonical maths document. */
 object WorkspaceSnapshotCodec {
-    const val currentSchema = 5
+    const val currentSchema = 6
     private const val maximumChars = 8_000_000
 
     fun encode(state: WorkspaceState): String {
@@ -56,6 +56,9 @@ object WorkspaceSnapshotCodec {
             state.vectors3D.forEach { vector ->
                 add(listOf("V", pack(vector.id), pack(vector.name), vector.start.x, vector.start.y, vector.start.z,
                     vector.end.x, vector.end.y, vector.end.z).joinToString("|"))
+            }
+            state.points3D.forEach { point ->
+                add(listOf("Q", pack(point.id), pack(point.name), point.position.x, point.position.y, point.position.z, point.visible, point.locked, pack(point.styleKey)).joinToString("|"))
             }
             state.spatialPlacement.let { placement ->
                 add(listOf("A", pack(placement.anchorId), placement.pose.positionMeters.x, placement.pose.positionMeters.y,
@@ -92,7 +95,7 @@ object WorkspaceSnapshotCodec {
         return runCatching {
             val points = mutableListOf<Vec2>(); val shapes = mutableListOf<Shape2D>(); val dependencies = mutableListOf<PointDependency>(); val constraints = mutableListOf<GeometryConstraint2D>(); val groups = mutableListOf<GeometryGroup2D>()
             val functions = mutableListOf<FunctionDefinition>(); val rows = linkedMapOf<String, GraphRowMetadataState>()
-            val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>()
+            val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>(); val points3D = mutableListOf<Point3D>()
             var placement = SpatialScenePlacement()
             var universalDocument: UniversalMathDocument? = null
             records.drop(1).forEachIndexed { index, record ->
@@ -109,6 +112,7 @@ object WorkspaceSnapshotCodec {
                         "L" -> sliders[unpack(f[1])] = GraphSliderMetadataState(f[2].toDouble(), GraphSliderPlaybackMode.valueOf(f[3]), f[4].toInt(), f.getOrNull(5)?.toDoubleOrNull())
                         "O" -> solids += Solid(SolidType.valueOf(f[1]), f[2].toDouble(), f[3].toDouble(), f[4].toDouble(), f[5].toDouble(), f[6].toDouble(), Vec3(f[7].toDouble(), f[8].toDouble(), f[9].toDouble()), Vec3(f[10].toDouble(), f[11].toDouble(), f[12].toDouble()))
                         "V" -> vectors += Vector3D(unpack(f[1]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), Vec3(f[6].toDouble(), f[7].toDouble(), f[8].toDouble()), unpack(f[2]))
+                        "Q" -> points3D += Point3D(unpack(f[1]), unpack(f[2]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), f.getOrNull(6)?.toBooleanStrictOrNull() ?: true, f.getOrNull(7)?.toBooleanStrictOrNull() ?: false, f.getOrNull(8)?.let(::unpack) ?: "default")
                         "A" -> placement = SpatialScenePlacement(anchorId = unpack(f[1]), pose = SpatialPose(Vec3(f[2].toDouble(), f[3].toDouble(), f[4].toDouble()), Vec3(f[5].toDouble(), f[6].toDouble(), f[7].toDouble()), f[8].toDouble()), scaleMode = ARScaleMode.valueOf(f[9]), metersPerMathUnit = f[10].toDouble(), trackingQuality = TrackingQuality.valueOf(f[11]), estimated = f[12].toBoolean(), depthOcclusionEnabled = f[13].toBoolean(), measurementUncertaintyMeters = f[14].toDouble(), environmentIntensity = f[15].toFloat(), placedAt = f[16].toLong().takeIf { it >= 0 }, anchorTrackingState = f.getOrNull(17)?.let { AnchorTrackingState.valueOf(it) } ?: AnchorTrackingState.Tracking, relocalizationMessage = f.getOrNull(18)?.let(::unpack).orEmpty())
                         "U" -> universalDocument = UniversalMathDocumentCodec.decode(unpack(f[1]), recover).document
                     }
@@ -116,7 +120,7 @@ object WorkspaceSnapshotCodec {
             }
             WorkspaceState(id = unpack(workspace[1]), name = unpack(workspace[2]), module = MathModule.valueOf(workspace[3]),
                 points = points, shapes = shapes, pointDependencies = dependencies, geometryConstraints = constraints, geometryGroups = groups, functions = functions,
-                solids = solids, vectors3D = vectors, graphRowMetadata = rows, graphSliderMetadata = sliders,
+                solids = solids, vectors3D = vectors, points3D = points3D, graphRowMetadata = rows, graphSliderMetadata = sliders,
                 surfaceExpression = unpack(workspace[5]), spatialPlacement = placement, universalMathDocument = universalDocument, modifiedAt = workspace[4].toLong()).recomputed()
         }.fold(
             onSuccess = { WorkspaceProjectRecovery(it, !checksumValid || diagnostics.isNotEmpty() || schema < currentSchema, diagnostics) },
@@ -156,7 +160,7 @@ object WorkspaceProjectCodec {
             return WorkspaceProjectRecovery(snapshot.state.copy(universalMathDocument = canonical.document), archive.recovered || snapshot.recovered || canonical.recovered,
                 archive.diagnostics + snapshot.diagnostics + canonical.diagnostics)
         }
-        val base = WorkspaceState(id = project.id, points = emptyList(), shapes = emptyList(), pointDependencies = emptyList(), functions = emptyList(), solids = emptyList(), vectors3D = emptyList())
+        val base = WorkspaceState(id = project.id, points = emptyList(), shapes = emptyList(), pointDependencies = emptyList(), functions = emptyList(), solids = emptyList(), vectors3D = emptyList(), points3D = emptyList())
         val restored = WorkspaceJson.applyRecoveredMathDocument(maths.content, base)
         return restored.fold(
             onSuccess = { WorkspaceProjectRecovery(it, true, archive.diagnostics + snapshot?.diagnostics.orEmpty() + "Recovered from the canonical maths document.") },
