@@ -1,6 +1,8 @@
 package com.indianservers.aiexplorer
 
 import com.indianservers.aiexplorer.core.MathInputIntelligence
+import com.indianservers.aiexplorer.core.MathInputAssistKind
+import com.indianservers.aiexplorer.core.MathInputContext
 import com.indianservers.aiexplorer.core.MathInputIntent
 import com.indianservers.aiexplorer.core.MathInputTokenKind
 import org.junit.Assert.assertEquals
@@ -60,5 +62,53 @@ class SmartMathInputTest {
         val incomplete = MathInputIntelligence.analyze("x+")
         assertTrue(incomplete.message.contains("incomplete"))
         assertTrue("number" in incomplete.expectedNext)
+    }
+
+    @Test
+    fun autocompletesAtTheCursorAndPlacesItInsideFunctionArguments() {
+        val action = MathInputIntelligence.assist("si", 2, MathInputContext.Graph2D).actions
+            .first { it.label == "sin" }
+
+        val (text, cursor) = MathInputIntelligence.apply("si", action)
+
+        assertEquals("sin()", text)
+        assertEquals(4, cursor)
+        assertEquals(MathInputAssistKind.Autocomplete, action.kind)
+    }
+
+    @Test
+    fun offersConservativeSyntaxRepairsWithoutApplyingThemAutomatically() {
+        val multiply = MathInputIntelligence.assist("2x+1").actions.first { it.label == "Add *" }
+        val close = MathInputIntelligence.assist("sin(x+1").actions.first { it.label.startsWith("Close") }
+
+        assertEquals("2*x+1", MathInputIntelligence.apply("2x+1", multiply).first)
+        assertEquals("sin(x+1)", MathInputIntelligence.apply("sin(x+1", close).first)
+    }
+
+    @Test
+    fun exposesActiveFunctionParameterAndUsefulValues() {
+        val source = "integral(x^2,"
+        val assistance = MathInputIntelligence.assist(source, source.length, MathInputContext.Calculus)
+
+        assertEquals("integral", assistance.functionHint?.name)
+        assertEquals(1, assistance.functionHint?.activeParameter)
+        assertEquals("variable", assistance.functionHint?.parameterName)
+        assertTrue(assistance.actions.any { it.kind == MathInputAssistKind.Parameter && it.label == "x" })
+    }
+
+    @Test
+    fun blankInputsReceiveWorkspaceSpecificExamples() {
+        val graph3d = MathInputIntelligence.assist("", context = MathInputContext.Graph3D)
+
+        assertTrue(graph3d.actions.any { it.kind == MathInputAssistKind.Example && it.replacement.startsWith("z=") })
+        assertTrue(graph3d.actions.all { it.replaceStart == 0 && it.replaceEnd == 0 })
+    }
+
+    @Test
+    fun repairsNearMissFunctionNamesThroughTheSameSafeEditModel() {
+        val repair = MathInputIntelligence.assist("sni", 3).actions.first { it.label == "Fix sin" }
+
+        assertEquals("sin()", MathInputIntelligence.apply("sni", repair).first)
+        assertEquals(MathInputAssistKind.Repair, repair.kind)
     }
 }

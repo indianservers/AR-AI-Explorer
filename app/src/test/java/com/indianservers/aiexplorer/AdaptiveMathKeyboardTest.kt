@@ -27,7 +27,7 @@ import org.junit.Test
 class AdaptiveMathKeyboardTest {
     @Test
     fun primaryTabsExposeFrequentMathAndKeepAdvancedToolsInOverflow() {
-        assertEquals(listOf("123", "f(x)", "abc", "trig", "Math+", "αβ", "…"), primaryMathKeyboardPages.map { it.label })
+        assertEquals(listOf("123", "f(x)", "abc", "trig", "Math+", "sym", "..."), primaryMathKeyboardPages.map { it.label })
         assertTrue(trigonometryKeys(false).any { it.insertion == "sec()" })
         assertTrue(trigonometryKeys(false).any { it.insertion == "sinh()" })
         assertTrue(trigonometryKeys(false).any { it.insertion == "deg" })
@@ -173,7 +173,7 @@ class AdaptiveMathKeyboardTest {
     @Test
     fun numberPadUsesFamiliarSerialRowsAndDistinctSemanticTones() {
         assertEquals(listOf("7", "8", "9", "÷"), basicNumberPadRows[0].map { it.label })
-        assertEquals(listOf("4", "5", "6", "×"), basicNumberPadRows[1].map { it.label })
+        assertEquals(listOf("4", "5", "6", "*"), basicNumberPadRows[1].map { it.label })
         assertEquals(listOf("1", "2", "3", "−"), basicNumberPadRows[2].map { it.label })
         assertEquals(MathKeyTone.NUMBER, resolveMathKeyTone(basicNumberPadRows[0][0]))
         assertEquals(MathKeyTone.OPERATOR, resolveMathKeyTone(basicNumberPadRows[1][3]))
@@ -199,7 +199,7 @@ class AdaptiveMathKeyboardTest {
 
     @Test
     fun commonKeysAreAvailableAndEditAtTheCursor() {
-        assertEquals(listOf("=", "+", "−", "×", "÷", "(", ")", ","), commonMathKeys.map { it.label })
+        assertEquals(listOf("=", "+", "−", "*", "÷", "(", ")", ","), commonMathKeys.map { it.label })
 
         var value = TextFieldValue("x", TextRange(1))
         listOf("=", "(", "+", ")").forEach { label ->

@@ -61,6 +61,11 @@ import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.indianservers.aiexplorer.AppVisualTreatment
 import com.indianservers.aiexplorer.LocalAppVisualEffects
+import com.indianservers.aiexplorer.core.MathInputAssistAction
+import com.indianservers.aiexplorer.core.MathInputAssistKind
+import com.indianservers.aiexplorer.core.MathInputAssistance
+import com.indianservers.aiexplorer.core.MathInputContext
+import com.indianservers.aiexplorer.core.MathInputIntelligence
 
 enum class MathKeyboardContext {
     GENERAL,
@@ -709,6 +714,7 @@ fun AdaptiveMathKeyboard(
     var advancedGroup by remember { mutableStateOf(AdvancedMathGroup.NOTATION) }
     var commandQuery by remember { mutableStateOf("") }
     var commandCategory by remember { mutableStateOf<String?>(null) }
+    var showStructureTools by remember { mutableStateOf(false) }
     var workingValue by remember { mutableStateOf(value) }
     var expectedParentEcho by remember { mutableStateOf<TextFieldValue?>(null) }
     val clipboard = LocalClipboardManager.current
@@ -753,6 +759,14 @@ fun AdaptiveMathKeyboard(
         )
     }
     val activeMode = StructuredMathEditing.modeAt(workingValue.text, workingValue.selection.end)
+    val assistance = remember(workingValue.text, workingValue.selection.end, context) {
+        MathInputIntelligence.assist(
+            source = workingValue.text,
+            cursor = workingValue.selection.end,
+            context = context.toInputContext(),
+        )
+    }
+    LaunchedEffect(workingValue.text) { showStructureTools = false }
     val keys = when (page) {
         MathKeyboardPage.BASIC -> basicKeys
         MathKeyboardPage.FUNCTIONS -> if (MathKeyboardPreferences.beginnerMode) functionKeys.take(8) else functionKeys
@@ -868,6 +882,13 @@ fun AdaptiveMathKeyboard(
             activeMode = activeMode,
             currentSource = workingValue.text,
             currentCursor = workingValue.selection.end,
+            assistance = assistance,
+            showStructureTools = showStructureTools,
+            onShowStructureTools = { showStructureTools = true },
+            onApplyAssistance = { action ->
+                val (next, cursor) = MathInputIntelligence.apply(workingValue.text, action)
+                applyEdit(TextFieldValue(next, TextRange(cursor)))
+            },
             onInsert = edit,
         )
         if (page == MathKeyboardPage.COMMANDS) {
@@ -1023,6 +1044,10 @@ private fun StructuredEntryStrip(
     activeMode: MathInputMode,
     currentSource: String,
     currentCursor: Int,
+    assistance: MathInputAssistance,
+    showStructureTools: Boolean,
+    onShowStructureTools: () -> Unit,
+    onApplyAssistance: (MathInputAssistAction) -> Unit,
     onInsert: (MathKey) -> Unit,
 ) {
     val keys = listOf(
@@ -1052,12 +1077,60 @@ private fun StructuredEntryStrip(
             action = MathKeyAction.TOGGLE_LOG_BASE,
         ),
     )
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        keys.forEach { key ->
-            val selected = isStructuralKeyActive(key, currentSource, currentCursor, activeMode)
-            MathKeyboardKey(key, onInsert, Modifier.weight(1f), selected = selected)
+    if (assistance.actions.isNotEmpty() && !showStructureTools) {
+        Row(
+            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            assistance.functionHint?.let { hint ->
+                Text(
+                    "${hint.name}: ${hint.parameterName}",
+                    color = IntentMathPalette.Function,
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    modifier = Modifier.widthIn(min = 72.dp, max = 132.dp),
+                )
+            }
+            assistance.actions.forEach { action ->
+                KeyboardActionKey(
+                    label = action.label,
+                    description = action.detail,
+                    modifier = Modifier.widthIn(min = 70.dp, max = 150.dp),
+                    accent = when (action.kind) {
+                        MathInputAssistKind.Repair -> IntentMathPalette.Error
+                        MathInputAssistKind.Autocomplete -> IntentMathPalette.Function
+                        MathInputAssistKind.Parameter -> IntentMathPalette.Variable
+                        MathInputAssistKind.Example -> IntentMathPalette.Constant
+                    },
+                ) { onApplyAssistance(action) }
+            }
+            KeyboardActionKey(
+                label = "Math",
+                description = "Show structural math controls",
+                modifier = Modifier.widthIn(min = 62.dp),
+            ) { onShowStructureTools() }
+        }
+    } else {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            keys.forEach { key ->
+                val selected = isStructuralKeyActive(key, currentSource, currentCursor, activeMode)
+                MathKeyboardKey(key, onInsert, Modifier.weight(1f), selected = selected)
+            }
         }
     }
+}
+
+internal fun MathKeyboardContext.toInputContext(): MathInputContext = when (this) {
+    MathKeyboardContext.GENERAL -> MathInputContext.General
+    MathKeyboardContext.GRAPH_2D -> MathInputContext.Graph2D
+    MathKeyboardContext.GRAPH_3D -> MathInputContext.Graph3D
+    MathKeyboardContext.CALCULUS -> MathInputContext.Calculus
+    MathKeyboardContext.MATRIX -> MathInputContext.Matrix
+    MathKeyboardContext.SETS -> MathInputContext.Sets
+    MathKeyboardContext.STATISTICS -> MathInputContext.Statistics
+    MathKeyboardContext.SCIENCE -> MathInputContext.Science
 }
 
 internal fun isStructuralKeyActive(

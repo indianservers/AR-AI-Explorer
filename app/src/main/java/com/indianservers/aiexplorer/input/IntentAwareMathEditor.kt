@@ -169,6 +169,10 @@ fun IntentAwareMathField(
         onValueChange(StructuredMathCodec.toParser(it).text)
     }
     val analysis = remember(value) { MathInputIntelligence.analyze(value) }
+    val assistance = remember(value, editorValue.selection.end, keyboardContext) {
+        val parserValue = StructuredMathCodec.toParser(editorValue)
+        MathInputIntelligence.assist(value, parserValue.selection.end, keyboardContext.toInputContext())
+    }
     val transformation = remember { IntentAwareMathVisualTransformation() }
     val healthy = analysis.validBrackets && !analysis.hasErrors
     val accent = when {
@@ -245,7 +249,9 @@ fun IntentAwareMathField(
             if (analysis.variables.isNotEmpty()) Text("vars ${analysis.variables.joinToString()}", color = IntentMathPalette.Variable, fontSize = 10.sp)
         }
         if (showLegend) TokenLegend(analysis)
-        analysis.suggestions.firstOrNull()?.let { suggestion -> Text("TIP  $suggestion", color = IntentMathPalette.Constant, fontSize = 9.sp) }
+        (assistance.primaryMessage ?: analysis.suggestions.firstOrNull())?.let { suggestion ->
+            Text("TIP  $suggestion", color = IntentMathPalette.Constant, fontSize = 9.sp, maxLines = 1)
+        }
     }
     if (keyboardVisible) {
         AdaptiveMathKeyboardPopup(
@@ -288,6 +294,9 @@ fun IntentAwareMathValueField(
     val focusManager = LocalFocusManager.current
     val systemKeyboard = LocalSoftwareKeyboardController.current
     val analysis = remember(value.text) { MathInputIntelligence.analyze(value.text) }
+    val assistance = remember(value.text, value.selection.end, keyboardContext) {
+        MathInputIntelligence.assist(value.text, value.selection.end, keyboardContext.toInputContext())
+    }
     val transformation = remember { IntentAwareMathVisualTransformation() }
     val healthy = analysis.validBrackets && !analysis.hasErrors
     val accent = when { !healthy -> IntentMathPalette.Error; analysis.confidence >= .85 -> IntentMathPalette.Variable; else -> IntentMathPalette.Command }
@@ -365,7 +374,9 @@ fun IntentAwareMathValueField(
                 if (analysis.variables.isNotEmpty()) Text("vars ${analysis.variables.joinToString()}", color = IntentMathPalette.Variable, fontSize = 10.sp)
             }
             if (showLegend) TokenLegend(analysis)
-            analysis.suggestions.firstOrNull()?.let { Text("TIP  $it", color = IntentMathPalette.Constant, fontSize = 9.sp) }
+            (assistance.primaryMessage ?: analysis.suggestions.firstOrNull())?.let {
+                Text("TIP  $it", color = IntentMathPalette.Constant, fontSize = 9.sp, maxLines = 1)
+            }
         }
     }
     if (keyboardVisible) {
