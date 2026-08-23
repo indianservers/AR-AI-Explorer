@@ -105,8 +105,11 @@ object ArPhase4SpatialBridge {
         includeOccluded: Boolean = true,
     ): List<ArPickHit> {
         if (viewportWidth <= 0 || viewportHeight <= 0) return emptyList()
-        val ray = worldRay(screenPoint, viewportWidth, viewportHeight, frame) ?: return emptyList()
-        return ArScenePicker.pickAll(scene, ray, includeOccluded = includeOccluded)
+        val ray = runCatching { worldRay(screenPoint, viewportWidth, viewportHeight, frame) }.getOrNull()
+            ?: return emptyList()
+        return runCatching {
+            ArScenePicker.pickAll(scene, ray, includeOccluded = includeOccluded)
+        }.getOrDefault(emptyList())
     }
 
     private fun worldRay(
@@ -130,7 +133,7 @@ object ArPhase4SpatialBridge {
         val y = 1f - screenPoint.y / viewportHeight * 2f
         val near = unproject(inverse, x, y, -1f) ?: return null
         val far = unproject(inverse, x, y, 1f) ?: return null
-        return ArRay(near, far - near)
+        return runCatching { ArRay(near, far - near) }.getOrNull()
     }
 
     private fun unproject(inverse: FloatArray, x: Float, y: Float, z: Float): ArVector3? {

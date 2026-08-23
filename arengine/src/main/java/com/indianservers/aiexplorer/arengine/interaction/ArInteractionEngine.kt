@@ -111,13 +111,20 @@ object ArScenePicker {
         toleranceUnits: Double = .08,
         includeOccluded: Boolean = true,
     ): List<ArPickHit> {
-        require(toleranceUnits.isFinite() && toleranceUnits > 0.0)
-        val localOrigin = ArCoordinateTransform.worldToMath(worldRay.origin, scene.placement)
-        val localPoint = ArCoordinateTransform.worldToMath(worldRay.origin + worldRay.unitDirection, scene.placement)
-        val ray = ArRay(localOrigin, localPoint - localOrigin)
+        if (!toleranceUnits.isFinite() || toleranceUnits <= 0.0) return emptyList()
+        val ray = runCatching {
+            val localOrigin = ArCoordinateTransform.worldToMath(worldRay.origin, scene.placement)
+            val localPoint = ArCoordinateTransform.worldToMath(worldRay.origin + worldRay.unitDirection, scene.placement)
+            ArRay(localOrigin, localPoint - localOrigin)
+        }.getOrNull() ?: return emptyList()
         val hits = scene.objects.asSequence()
             .filter { it.visible && it.selectable }
-            .flatMap { pickObject(it, ray, toleranceUnits).asSequence() }
+            .flatMap { objectValue ->
+                runCatching { pickObject(objectValue, ray, toleranceUnits) }
+                    .getOrDefault(emptyList())
+                    .asSequence()
+            }
+            .filter { it.distance.isFinite() && it.distance >= 0.0 && it.pointUnits.isFiniteVector() }
             .sortedWith(compareBy<ArPickHit> { it.distance }.thenBy { it.objectId }.thenBy { it.kind.ordinal }.thenBy { it.subObjectIndex ?: -1 })
             .toList()
         if (includeOccluded) return hits.mapIndexed { index, hit -> hit.copy(occlusionRank = index) }
@@ -173,36 +180,43 @@ object ArScenePicker {
         val q = cross(s, edge1)
         val v = inverse * direction.dot(q)
         if (v < 0.0 || u + v > 1.0) return null
-        return (inverse * edge2.dot(q)).takeIf { it >= 0.0 }
+        return (inverse * edge2.dot(q)).takeIf { it.isFinite() && it >= 0.0 }
     }
 
     private fun raySegment(origin: ArVector3, direction: ArVector3, a: ArVector3, b: ArVector3, radius: Double): Pair<Double, ArVector3>? {
+        if (!radius.isFinite() || radius <= 0.0) return null
         val segment = b - a
         val w = origin - a
         val aa = direction.dot(direction)
+        if (!aa.isFinite() || aa < 1e-15) return null
         val bb = direction.dot(segment)
         val cc = segment.dot(segment)
         if (cc < 1e-15) return raySphere(origin, direction, a, radius)?.let { it to a }
         val dd = direction.dot(w)
         val ee = segment.dot(w)
         val denominator = aa * cc - bb * bb
-        var segmentT = if (abs(denominator) < 1e-15) 0.0 else ((aa * ee - bb * dd) / denominator).coerceIn(0.0, 1.0)
+        var segmentT = if (!denominator.isFinite() || abs(denominator) < 1e-15) 0.0 else ((aa * ee - bb * dd) / denominator).coerceIn(0.0, 1.0)
         var rayT = max(0.0, (bb * segmentT - dd) / aa)
         segmentT = ((bb * rayT + ee) / cc).coerceIn(0.0, 1.0)
         rayT = max(0.0, (bb * segmentT - dd) / aa)
         val point = a + segment * segmentT
-        return (rayT to point).takeIf { (origin + direction * rayT - point).magnitude() <= radius }
+        return (rayT to point).takeIf {
+            rayT.isFinite() && point.isFiniteVector() && (origin + direction * rayT - point).magnitude() <= radius
+        }
     }
 
     private fun raySphere(origin: ArVector3, direction: ArVector3, center: ArVector3, radius: Double): Double? {
+        if (!radius.isFinite() || radius <= 0.0) return null
         val offset = origin - center
         val b = offset.dot(direction)
         val c = offset.dot(offset) - radius * radius
         val discriminant = b * b - c
-        if (discriminant < 0.0) return null
+        if (!discriminant.isFinite() || discriminant < 0.0) return null
         val root = sqrt(discriminant)
-        return listOf(-b - root, -b + root).firstOrNull { it >= 0.0 }
+        return listOf(-b - root, -b + root).firstOrNull { it.isFinite() && it >= 0.0 }
     }
+
+    private fun ArVector3.isFiniteVector() = x.isFinite() && y.isFinite() && z.isFinite()
 }
 
 data class ArSelectionState(

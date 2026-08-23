@@ -10593,13 +10593,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 } else {
                                     val snapshot = arFrame
                                     if (snapshot != null) {
-                                        val hits = ArPhase4SpatialBridge.pick(
-                                            ArVector2(down.position.x, down.position.y),
-                                            viewportSize.width,
-                                            viewportSize.height,
-                                            snapshot,
-                                            canonicalArScene,
-                                        ).filter { it.kind == subObjectKind }
+                                        val hits = runCatching {
+                                            ArPhase4SpatialBridge.pick(
+                                                ArVector2(down.position.x, down.position.y),
+                                                viewportSize.width,
+                                                viewportSize.height,
+                                                snapshot,
+                                                canonicalArScene,
+                                            )
+                                        }.getOrDefault(emptyList()).filter { it.kind == subObjectKind }
                                         overlapHits = hits
                                         val hit = if (
                                             hits.firstOrNull()?.objectId == arSelection.primaryObjectId &&
@@ -10631,13 +10633,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                     trackingAllowsDirectManipulation &&
                                     arFrame != null
                                 ) {
-                                    ArPhase4SpatialBridge.pick(
-                                        ArVector2(hover.position.x, hover.position.y),
-                                        viewportSize.width,
-                                        viewportSize.height,
-                                        arFrame!!,
-                                        canonicalArScene,
-                                    ).firstOrNull { it.kind == subObjectKind }
+                                    runCatching {
+                                        ArPhase4SpatialBridge.pick(
+                                            ArVector2(hover.position.x, hover.position.y),
+                                            viewportSize.width,
+                                            viewportSize.height,
+                                            arFrame!!,
+                                            canonicalArScene,
+                                        ).firstOrNull { it.kind == subObjectKind }
+                                    }.getOrNull()
                                 } else {
                                     null
                                 }
