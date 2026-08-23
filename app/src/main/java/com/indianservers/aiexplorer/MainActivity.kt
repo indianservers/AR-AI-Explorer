@@ -12240,8 +12240,7 @@ internal enum class TrigLab(val label: String) {
     Transform("Transform"),
     Identities("Identities"),
     Applications("Applications"),
-    Challenge("Challenge"),
-    Reference("Reference"),
+    AiTutor("AI Tutor"),
 }
 internal enum class TrigLineStyle { Solid, Dashed, Dotted }
 
@@ -12372,20 +12371,19 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
     }
 
     fun trigTabLabel(item: TrigLab): String = when (item) {
-        TrigLab.Circle -> "Circle"
+        TrigLab.Circle -> "Unit Circle"
         TrigLab.Graphs -> "Graphs"
         TrigLab.Transform -> "Transform"
-        TrigLab.Identities -> "Identity"
-        TrigLab.Applications -> "Apps"
-        TrigLab.Challenge -> "Challenge"
-        TrigLab.Reference -> "Ref"
+        TrigLab.Identities -> "Identities"
+        TrigLab.Applications -> "Real World"
+        TrigLab.AiTutor -> "AI Tutor"
     }
 
     Box(Modifier.fillMaxSize()) {
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp, bottom = 112.dp),
+                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp, bottom = 118.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             GlassPanel(
@@ -12396,214 +12394,235 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
                     .clip(RoundedCornerShape(18.dp))
                     .background(Brush.linearGradient(listOf(SurfaceA.copy(alpha = .99f), SurfaceB.copy(alpha = .98f)))),
             ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Column {
-                    Text("AI Maths Explorer", color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
-                    Text("Trigonometry Lab", color = Muted, fontSize = 10.sp)
-                }
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                    GlowButton("Home", icon = "H", iconOnly = true) { homeRequest++ }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Column {
+                        Text(
+                            when (lab) {
+                                TrigLab.Circle -> "AI Maths Explorer"
+                                TrigLab.Graphs -> "Trig Graphs"
+                                TrigLab.Transform -> "Transformations Lab"
+                                TrigLab.Identities -> "Identities Lab"
+                                TrigLab.Applications -> "Real World"
+                                TrigLab.AiTutor -> "AI Tutor"
+                            },
+                            color = Ink,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                        )
+                        Text(
+                            when (lab) {
+                                TrigLab.Circle -> "Trigonometry Lab"
+                                TrigLab.Graphs -> "Live Sync with Unit Circle"
+                                TrigLab.Transform -> "Explore Trig Functions"
+                                TrigLab.Identities -> "Visual Proofs"
+                                TrigLab.Applications -> "Trigonometry in Action"
+                                TrigLab.AiTutor -> "Planned for next version"
+                            },
+                            color = Muted,
+                            fontSize = 11.sp,
+                        )
+                    }
                     GlowButton(if (animateAngle) "Pause" else "Animate", icon = if (animateAngle) "||" else ">", iconOnly = true) { animateAngle = !animateAngle }
-                    GlowButton("AI", icon = "AI", iconOnly = true) { tutorOpen = !tutorOpen }
                 }
-            }
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                Insight("View", lab.label, Cyan)
-                TogglePill(if (animateAngle) "Pause" else "Animate", animateAngle) { animateAngle = it }
-            }
-            TrigCanvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(
-                        when (lab) {
-                            TrigLab.Circle -> 250.dp
-                            TrigLab.Graphs, TrigLab.Transform -> 210.dp
-                            TrigLab.Identities -> 220.dp
-                            else -> 180.dp
-                        }
-                    )
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(SurfaceA.copy(alpha = .96f))
-                    .border(1.dp, Cyan.copy(alpha = .42f), RoundedCornerShape(16.dp)),
-                angleDegrees = angle,
-                transform = transform,
-                function = function,
-                showTangents = showTangents,
-                showProjections = showProjections,
-                showWave = showWave,
-                homeRequest = homeRequest,
-                onZoomChanged = { zoom = it },
-                onAngleChange = { angle = snapAngle(it) },
-                visibleFunctions = when (lab) {
-                    TrigLab.Graphs -> visibleFunctions
-                    TrigLab.Transform -> setOf(TrigFunction.Sine)
-                    else -> visibleFunctions
-                },
-                showAsymptotes = showAsymptotes,
-                polarSamples = emptyList(),
-                harmonics = emptyList(),
-                lineStyle = lineStyle,
-                paletteShift = paletteShift,
-                equationTarget = null,
-                equationRoots = emptyList(),
-                onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
-            )
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Insight("Angle", "${trim(angle.toDouble())} deg", Cyan)
-                Insight("Radians", radianLabel(angle.toDouble()), Green)
-                Insight("Quadrant", quadrantLabel, Amber)
-            }
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("-360", color = Muted, fontSize = 10.sp)
-                Slider(angle, { angle = snapAngle(it) }, valueRange = -360f..360f, modifier = Modifier.weight(1f))
-                Text("360", color = Muted, fontSize = 10.sp)
-            }
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                specialAngles.forEach { value -> GlowButton("${trim(value.toDouble())} deg", onClick = { setAngleAnimated(value) }) }
-            }
 
-            when (lab) {
-                TrigLab.Circle -> {
-                    Text("Live Function Values", color = Cyan, fontWeight = FontWeight.Bold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Insight("sin theta", trim(snapshot.sine), Cyan)
-                        Insight("cos theta", trim(snapshot.cosine), Amber)
-                        Insight("tan theta", tanText, Green)
-                        Insight("csc theta", cscText, Violet)
-                        Insight("sec theta", secText, Violet)
-                        Insight("cot theta", cotText, Violet)
+                when (lab) {
+                    TrigLab.Circle -> {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Insight("Angle", "${trim(angle.toDouble())} deg", Cyan)
+                            Insight("Radians", radianLabel(angle.toDouble()), Green)
+                            Insight("Quadrant", quadrantLabel, Amber)
+                        }
+                        TrigCanvas(
+                            modifier = Modifier.fillMaxWidth().height(300.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(alpha = .96f)).border(1.dp, Cyan.copy(alpha = .42f), RoundedCornerShape(16.dp)),
+                            angleDegrees = angle,
+                            transform = transform,
+                            function = function,
+                            showTangents = showTangents,
+                            showProjections = showProjections,
+                            showWave = showWave,
+                            homeRequest = homeRequest,
+                            onZoomChanged = { zoom = it },
+                            onAngleChange = { angle = snapAngle(it) },
+                            visibleFunctions = visibleFunctions,
+                            showAsymptotes = showAsymptotes,
+                            lineStyle = lineStyle,
+                            paletteShift = paletteShift,
+                            equationTarget = null,
+                            equationRoots = emptyList(),
+                            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
+                        )
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Insight("sin theta", trim(snapshot.sine), Cyan)
+                            Insight("cos theta", trim(snapshot.cosine), Amber)
+                            Insight("tan theta", tanText, Green)
+                            Insight("Exact sin", snapshot.exactSine ?: "approx ${trim(snapshot.sine)}", Cyan)
+                            Insight("Exact cos", snapshot.exactCosine ?: "approx ${trim(snapshot.cosine)}", Amber)
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("-180 deg", color = Muted, fontSize = 10.sp)
+                            Slider(angle, { angle = snapAngle(it) }, valueRange = -180f..180f, modifier = Modifier.weight(1f))
+                            Text("180 deg", color = Muted, fontSize = 10.sp)
+                        }
+                        Text("Quick Angles", color = Muted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            specialAngles.forEach { value -> GlowButton("${trim(value.toDouble())} deg", onClick = { setAngleAnimated(value) }) }
+                        }
                     }
-                    Text("Exact Values", color = Amber, fontWeight = FontWeight.Bold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Insight("sin", snapshot.exactSine ?: "approx ${trim(snapshot.sine)}", Cyan)
-                        Insight("cos", snapshot.exactCosine ?: "approx ${trim(snapshot.cosine)}", Amber)
-                        Insight("tan", snapshot.exactTangent ?: tanText, Green)
-                    }
-                    Text("Reference triangle uses the ${trim(snapshot.referenceAngleDegrees)} deg reference angle. Opposite=${trim(kotlin.math.abs(snapshot.sine))}, adjacent=${trim(kotlin.math.abs(snapshot.cosine))}, hypotenuse=1.", color = Muted, fontSize = 11.sp)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        TogglePill("Projections", showProjections) { showProjections = it }
-                        TogglePill("Tangents", showTangents) { showTangents = it }
-                        TogglePill("Wave", showWave) { showWave = it }
-                    }
-                }
-                TrigLab.Graphs -> {
-                    Text("Trig Graphs", color = Cyan, fontWeight = FontWeight.Bold)
-                    Text("Markers stay synchronized with the unit-circle angle. Tangent breaks at undefined values.", color = Muted, fontSize = 11.sp)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent).forEach { item ->
-                            TogglePill(item.name, item in visibleFunctions) { enabled ->
-                                visibleFunctions = if (enabled) visibleFunctions + item else (visibleFunctions - item).ifEmpty { setOf(TrigFunction.Sine) }
-                                function = item
+
+                    TrigLab.Graphs -> {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Insight("Angle", "${trim(angle.toDouble())} deg", Cyan)
+                            TogglePill("Sync ON", true) {}
+                        }
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            listOf(TrigFunction.Sine to "sin(x)", TrigFunction.Cosine to "cos(x)", TrigFunction.Tangent to "tan(x)").forEach { (item, label) ->
+                                GlowButton(label, modifier = Modifier.weight(1f)) {
+                                    function = item
+                                    visibleFunctions = setOf(item)
+                                }
                             }
                         }
-                        TogglePill("Asymptotes", showAsymptotes) { showAsymptotes = it }
-                        TrigLineStyle.entries.forEach { style -> TogglePill(style.name, lineStyle == style) { lineStyle = style } }
-                        GlowButton("Reset view") { homeRequest++ }
-                    }
-                    Insight("Trace", "x=${trim(angle.toDouble())} deg, sin=${trim(snapshot.sine)}, cos=${trim(snapshot.cosine)}, tan=$tanText", Green)
-                    Insight("Zoom", "${trim(zoom.toDouble())}x", Violet)
-                }
-                TrigLab.Transform -> {
-                    Text("y = A sin(B(x - h)) + k", color = Ink, fontWeight = FontWeight.ExtraBold)
-                    AxisSlider("A amplitude/reflection", amplitude, -3f..3f) { amplitude = it }
-                    AxisSlider("B frequency parameter", frequencyB, -3f..3f) { frequencyB = it }
-                    AxisSlider("h phase shift", phase, -3.14f..3.14f) { phase = it }
-                    AxisSlider("k vertical shift", verticalShift, -2f..2f) { verticalShift = it }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Insight("Amplitude", "|A| = ${trim(kotlin.math.abs(amplitude.toDouble()))}", Cyan)
-                        Insight("Period", if (kotlin.math.abs(frequencyB) < .0001f) "Undefined" else "2pi/|B| = ${trim(period)}", Amber)
-                        Insight("Midline", "y = ${trim(verticalShift.toDouble())}", Green)
-                    }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        GlowButton("Reset") { amplitude = 1f; frequencyB = 1f; phase = 0f; verticalShift = 0f }
-                        GlowButton("Reflection") { amplitude = -1f; frequencyB = 1f; phase = 0f; verticalShift = 0f }
-                        GlowButton("Shifted wave") { amplitude = 1.5f; frequencyB = 2f; phase = .7f; verticalShift = .5f }
-                    }
-                }
-                TrigLab.Identities -> {
-                    val identities = listOf(
-                        "sin^2 theta + cos^2 theta = 1" to "The unit-circle point is (cos theta, sin theta); radius^2 is always 1.",
-                        "1 + tan^2 theta = sec^2 theta" to "Divide sin^2 + cos^2 = 1 by cos^2 theta. Avoid angles where cos theta = 0.",
-                        "sec^2 theta - tan^2 theta = 1" to "Rearrange 1 + tan^2 theta = sec^2 theta.",
-                        "sin(-theta) = -sin theta" to "Mirrored angles have opposite y-coordinates.",
-                        "cos(-theta) = cos theta" to "Mirrored angles keep the same x-coordinate.",
-                    )
-                    val current = identities[identityIndex.coerceIn(identities.indices)]
-                    Text(current.first, color = Cyan, fontWeight = FontWeight.ExtraBold)
-                    Text(current.second, color = Muted, fontSize = 12.sp)
-                    Text("Step ${identityStep + 1}/4: ${listOf("Place theta on the unit circle", "Highlight the changing projection", "Compare both sides numerically", "The equality follows from the geometry")[identityStep.coerceIn(0, 3)]}", color = Green, fontSize = 12.sp)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        GlowButton("Replay") { identityStep = 0 }
-                        GlowButton("Next step") { identityStep = (identityStep + 1).coerceAtMost(3) }
-                        GlowButton("Next identity") { identityIndex = (identityIndex + 1) % identities.size; identityStep = 0 }
-                    }
-                    Insight("Live check", "sin^2 + cos^2 = ${trim(snapshot.sine * snapshot.sine + snapshot.cosine * snapshot.cosine)}", Amber)
-                    Insight(identity.label, if (identity.evidence.equivalent) "Existing engine verification ready" else identity.evidence.explanation, Violet)
-                }
-                TrigLab.Applications -> {
-                    Text("Real World Applications", color = Cyan, fontWeight = FontWeight.Bold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf("Ferris Wheel", "Pendulum", "Sound Wave", "Satellite Orbit", "Day/Night").forEach { item -> TogglePill(item, application == item) { application = item } }
-                    }
-                    AxisSlider("Amplitude / radius", appAmplitude, 1f..50f) { appAmplitude = it }
-                    AxisSlider("Speed / frequency", appSpeed, .1f..4f) { appSpeed = it }
-                    AxisSlider("Vertical offset", appOffset, 0f..60f) { appOffset = it }
-                    AxisSlider("Time", appTime, 0f..12.57f) { appTime = it }
-                    val height = appAmplitude * kotlin.math.sin(appSpeed * appTime) + appOffset
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        GlowButton(if (appPlaying) "Pause" else "Play") { appPlaying = !appPlaying }
-                        GlowButton("Reset") { appTime = 0f; appPlaying = false }
-                    }
-                    Insight(application, "model value = ${trim(height.toDouble())}", Green)
-                    Text("Simplified educational sine/cosine model. It shows periodic structure, not engineering-grade physical simulation.", color = Muted, fontSize = 11.sp)
-                }
-                TrigLab.Challenge -> {
-                    Text("Challenge Mode", color = Amber, fontWeight = FontWeight.ExtraBold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Insight("Score", "$challengeScore", Cyan)
-                        Insight("Streak", "$challengeStreak", Green)
-                        Insight("XP", "+${challengeStreak * 5}", Amber)
-                    }
-                    Text("Find an angle in [-360 deg, 360 deg] where sin theta = ${trim(challengeTarget.toDouble())}.", color = Ink)
-                    GlowButton("Check answer") {
-                        val correct = kotlin.math.abs(snapshot.sine - challengeTarget) < .025
-                        if (correct) {
-                            challengeScore += 120
-                            challengeStreak += 1
-                            challengeFeedback = "Correct. theta=${trim(angle.toDouble())} deg works; coterminal answers also count."
-                        } else {
-                            challengeStreak = 0
-                            challengeFeedback = "Not yet. Current sin theta=${trim(snapshot.sine)}. Try 30 deg or 150 deg for 0.5."
+                        TrigCanvas(
+                            modifier = Modifier.fillMaxWidth().height(360.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(alpha = .96f)).border(1.dp, Cyan.copy(alpha = .35f), RoundedCornerShape(16.dp)),
+                            angleDegrees = angle,
+                            transform = transform,
+                            function = function,
+                            showTangents = false,
+                            showProjections = false,
+                            showWave = true,
+                            homeRequest = homeRequest,
+                            onZoomChanged = { zoom = it },
+                            onAngleChange = { angle = snapAngle(it) },
+                            visibleFunctions = visibleFunctions,
+                            showAsymptotes = showAsymptotes,
+                            lineStyle = lineStyle,
+                            paletteShift = paletteShift,
+                            equationTarget = null,
+                            equationRoots = emptyList(),
+                            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
+                        )
+                        Insight("Trace", "${function.name.lowercase()}(${trim(angle.toDouble())} deg) = ${when (function) { TrigFunction.Sine -> trim(snapshot.sine); TrigFunction.Cosine -> trim(snapshot.cosine); TrigFunction.Tangent -> tanText; else -> trim(snapshot.sine) }}", Green)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            TogglePill("Asymptotes", showAsymptotes) { showAsymptotes = it }
+                            GlowButton("Reset view") { homeRequest++ }
                         }
                     }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        GlowButton("Hint") { challengeFeedback = "Use the y-coordinate on the unit circle. Positive sine is in quadrants I and II." }
-                        GlowButton("Next") { challengeTarget = listOf(.5f, 0f, -1f, .7071f).random(); challengeFeedback = "New target ready." }
-                    }
-                    Text(challengeFeedback, color = if (challengeFeedback.startsWith("Correct")) Green else Amber, fontSize = 12.sp)
-                }
-                TrigLab.Reference -> {
-                    Text("Trig Quick Reference", color = Cyan, fontWeight = FontWeight.Bold)
-                    OutlinedTextField(referenceQuery, { referenceQuery = it }, label = { Text("Search angle, value, identity") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
-                    val filtered = referenceRows.filter { row -> referenceQuery.isBlank() || listOf(row.first, row.second, row.third).any { it.contains(referenceQuery, true) } }
-                    filtered.forEach { row ->
-                        Row(
-                            Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).clickable {
-                                row.first.substringBefore(" ").toFloatOrNull()?.let { setAngleAnimated(it) }
-                            }.padding(7.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Text(row.first, color = Ink, fontSize = 11.sp, modifier = Modifier.weight(1.2f))
-                            Text("sin ${row.second}", color = Cyan, fontSize = 11.sp, modifier = Modifier.weight(1f))
-                            val tan = when (row.first.substringBefore(" ")) { "90", "270" -> "undefined"; else -> "see table" }
-                            Text("cos ${row.third} / tan $tan", color = Muted, fontSize = 11.sp, modifier = Modifier.weight(1.4f))
-                        }
-                    }
-                    Text("Identities: reciprocal, quotient, Pythagorean, even/odd. Transformations: amplitude |A|, period 2pi/|B|, phase h, vertical shift k.", color = Muted, fontSize = 11.sp)
-                }
-            }
-            }
 
+                    TrigLab.Transform -> {
+                        Text("y = A sin(B(x - h)) + k", color = Ink, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            AxisSlider("A", amplitude, -3f..3f) { amplitude = it }
+                            AxisSlider("B", frequencyB, -3f..3f) { frequencyB = it }
+                            AxisSlider("h", phase, -3.14f..3.14f) { phase = it }
+                            AxisSlider("k", verticalShift, -2f..2f) { verticalShift = it }
+                        }
+                        TrigCanvas(
+                            modifier = Modifier.fillMaxWidth().height(330.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(alpha = .96f)).border(1.dp, Cyan.copy(alpha = .35f), RoundedCornerShape(16.dp)),
+                            angleDegrees = angle,
+                            transform = transform,
+                            function = TrigFunction.Sine,
+                            showTangents = false,
+                            showProjections = false,
+                            showWave = true,
+                            homeRequest = homeRequest,
+                            onZoomChanged = { zoom = it },
+                            onAngleChange = { angle = snapAngle(it) },
+                            visibleFunctions = setOf(TrigFunction.Sine),
+                            showAsymptotes = false,
+                            lineStyle = lineStyle,
+                            paletteShift = paletteShift,
+                            equationTarget = null,
+                            equationRoots = emptyList(),
+                            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
+                        )
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Insight("Amplitude", "|A| = ${trim(kotlin.math.abs(amplitude.toDouble()))}", Cyan)
+                            Insight("Period", if (kotlin.math.abs(frequencyB) < .0001f) "Undefined" else "2pi/B = ${trim(period)}", Amber)
+                            Insight("Phase Shift", "h = ${trim(phase.toDouble())}", Violet)
+                            Insight("Vertical Shift", "k = ${trim(verticalShift.toDouble())}", Green)
+                        }
+                    }
+
+                    TrigLab.Identities -> {
+                        val identities = listOf(
+                            "sin^2 theta + cos^2 theta = 1" to "The unit-circle point is (cos theta, sin theta). The radius is 1, so the two projected squares add to 1.",
+                            "1 + tan^2 theta = sec^2 theta" to "Divide sin^2 theta + cos^2 theta = 1 by cos^2 theta.",
+                        )
+                        val current = identities[identityIndex.coerceIn(identities.indices)]
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            identities.forEachIndexed { index, item ->
+                                GlowButton(item.first, modifier = Modifier.weight(1f)) { identityIndex = index; identityStep = 0 }
+                            }
+                        }
+                        TrigCanvas(
+                            modifier = Modifier.fillMaxWidth().height(330.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(alpha = .96f)).border(1.dp, Amber.copy(alpha = .45f), RoundedCornerShape(16.dp)),
+                            angleDegrees = angle,
+                            transform = transform,
+                            function = TrigFunction.Sine,
+                            showTangents = false,
+                            showProjections = true,
+                            showWave = false,
+                            homeRequest = homeRequest,
+                            onZoomChanged = { zoom = it },
+                            onAngleChange = { angle = snapAngle(it) },
+                            visibleFunctions = setOf(TrigFunction.Sine, TrigFunction.Cosine),
+                            showAsymptotes = false,
+                            lineStyle = lineStyle,
+                            paletteShift = paletteShift,
+                            equationTarget = null,
+                            equationRoots = emptyList(),
+                            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
+                        )
+                        Text(current.first, color = Cyan, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+                        Text(current.second, color = Muted, fontSize = 13.sp)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            GlowButton("Replay") { identityStep = 0 }
+                            GlowButton("Next step") { identityStep = (identityStep + 1).coerceAtMost(3) }
+                        }
+                    }
+
+                    TrigLab.Applications -> {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            listOf("Ferris Wheel", "Pendulum", "Sound Wave", "Satellite Orbit").forEach { item ->
+                                TogglePill(item, application == item) { application = item }
+                            }
+                        }
+                        TrigCanvas(
+                            modifier = Modifier.fillMaxWidth().height(300.dp).clip(RoundedCornerShape(16.dp)).background(SurfaceA.copy(alpha = .96f)).border(1.dp, Cyan.copy(alpha = .35f), RoundedCornerShape(16.dp)),
+                            angleDegrees = angle,
+                            transform = transform,
+                            function = TrigFunction.Sine,
+                            showTangents = false,
+                            showProjections = false,
+                            showWave = true,
+                            homeRequest = homeRequest,
+                            onZoomChanged = { zoom = it },
+                            onAngleChange = { angle = snapAngle(it) },
+                            visibleFunctions = setOf(TrigFunction.Sine),
+                            showAsymptotes = false,
+                            lineStyle = lineStyle,
+                            paletteShift = paletteShift,
+                            equationTarget = null,
+                            equationRoots = emptyList(),
+                            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
+                        )
+                        val height = appAmplitude * kotlin.math.sin(appSpeed * appTime) + appOffset
+                        Insight("Height Equation", "h(t) = ${trim(appAmplitude.toDouble())} sin(t) + ${trim(appOffset.toDouble())}", Cyan)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            GlowButton(if (appPlaying) "Pause" else "Play") { appPlaying = !appPlaying }
+                            GlowButton("Reset") { appTime = 0f; appPlaying = false }
+                            Insight("Height", "${trim(height.toDouble())} m", Green)
+                            Insight("Time", "${trim(appTime.toDouble())} s", Amber)
+                        }
+                        AxisSlider("Time", appTime, 0f..12.57f) { appTime = it }
+                    }
+
+                    TrigLab.AiTutor -> {
+                        Text("AI Tutor will come in the next version.", color = Cyan, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                        Text("This release keeps Trigonometry focused on Unit Circle, Graphs, Transformations, Identities, and Real World applications.", color = Muted, fontSize = 13.sp)
+                    }
+                }
+            }
         }
 
         GlassPanel(
@@ -12628,30 +12647,6 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
                         }
                     }
                 }
-            }
-        }
-
-        if (tutorOpen) {
-            GlassPanel(
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 12.dp, bottom = 98.dp)
-                    .widthIn(max = 340.dp)
-                    .heightIn(max = 390.dp),
-            ) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text("AI Tutor", color = Cyan, fontWeight = FontWeight.ExtraBold)
-                    GlowButton("Collapse", icon = "collapse", iconOnly = true) { tutorOpen = false }
-                }
-                Text("Context: ${trim(angle.toDouble())} deg, ${radianLabel(angle.toDouble())}, $quadrantLabel, ${lab.label}", color = Muted, fontSize = 10.sp)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                    listOf("Why is tan 90 undefined?", "What is a radian?", "Which quadrant?", "Why sin^2+cos^2=1?").forEach { sample ->
-                        GlowButton(sample.take(18)) { tutorPrompt = sample; tutorAnswer = tutorReply(sample) }
-                    }
-                }
-                OutlinedTextField(tutorPrompt, { tutorPrompt = it }, label = { Text("Ask about trigonometry") }, modifier = Modifier.fillMaxWidth(), maxLines = 2)
-                GlowButton("Ask", enabled = tutorPrompt.isNotBlank()) { tutorAnswer = tutorReply(tutorPrompt) }
-                Text(tutorAnswer, color = Ink, fontSize = 12.sp)
             }
         }
     }
