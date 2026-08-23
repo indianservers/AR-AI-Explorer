@@ -616,6 +616,8 @@ internal val MathCreationTools = listOf(
     MathWorkspaceOption("2D Geometry", "Construct points, lines, circles, polygons and constraints", "2D"),
     MathWorkspaceOption("3D Geometry", "Explore solids, vectors, sections and measurements", "3D"),
     MathWorkspaceOption("Graphs Explorer", "Plot and investigate 2D functions, curves and inequalities", "Graph"),
+    MathWorkspaceOption("Spatial AR", "Place existing mathematical constructions into augmented reality", "AR"),
+    MathWorkspaceOption("AR 3D Graph", "Anchor and explore 3D graph surfaces in augmented reality", "AR"),
     MathWorkspaceOption("Shapes Explorer", "Construct and investigate interactive 2D shapes", "2D"),
     MathWorkspaceOption("Manipulatives", "Algebra tiles, fractions, balance and tactile labs", "Tiles"),
     MathWorkspaceOption("Probability & Statistics", "Distributions, intervals and probability plots", "Stat"),
@@ -665,7 +667,7 @@ private val MathHomeCategories = listOf(
         "Visual Workspaces",
         "Geometry, graphs, tiles and spatial exploration",
         "3D",
-        listOf("2D Geometry", "3D Geometry", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
+        listOf("2D Geometry", "3D Geometry", "Spatial AR", "AR 3D Graph", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
     ),
     MathHomeCategory("Data & Probability", "Statistics, distributions and probability labs", "STAT", listOf("Probability & Statistics")),
     MathHomeCategory("Learn & Practise", "Coaching, concepts and explained questions", "GO", listOf("Learn All", "Adaptive Math Coach", "Math Concepts", "Dictionary", "MCQs")),
@@ -3022,9 +3024,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun previewSpatialGesture(panPixels: Offset, rotationDegrees: Float, scaleFactor: Float) {
         val from = spatialGestureFrom ?: return
-        val moved = SpatialPlacementEngine.move(from, Vec3((panPixels.x / 520f).toDouble(), 0.0, (panPixels.y / 520f).toDouble()))
-        val rotated = SpatialPlacementEngine.rotate(moved, Vec3(0.0, rotationDegrees.toDouble(), 0.0))
-        val transformed = if (kotlin.math.abs(scaleFactor - 1f) > .001f) SpatialPlacementEngine.scale(rotated, scaleFactor.toDouble()) else rotated
+        val moved = SpatialPlacementEngine.move(from, Vec3((panPixels.x / 1800f).toDouble(), 0.0, (panPixels.y / 1800f).toDouble()))
+        val rotated = SpatialPlacementEngine.rotate(moved, Vec3(0.0, (rotationDegrees * .35f).toDouble(), 0.0))
+        val dampedScale = 1.0 + (scaleFactor.toDouble() - 1.0) * .35
+        val transformed = if (kotlin.math.abs(scaleFactor - 1f) > .001f) SpatialPlacementEngine.scale(rotated, dampedScale) else rotated
         state = state.copy(spatialPlacement = transformed)
     }
 
@@ -3884,6 +3887,8 @@ private fun openMathTool(vm: ExplorerViewModel, title: String): Boolean {
         "2D Geometry" -> vm.open(MathModule.Geometry2D)
         "3D Geometry" -> vm.open(MathModule.Geometry3D)
         "Graphs Explorer" -> vm.open(MathModule.Graph2D)
+        "Spatial AR" -> vm.open(MathModule.SpatialAR)
+        "AR 3D Graph" -> vm.open(MathModule.ARGraph3D)
         "Manipulatives" -> vm.open(MathModule.Manipulatives)
         "Shapes Explorer" -> vm.openShapesExplorer()
         "Set Theory & Logic" -> vm.openSetLogicVisualizer()
@@ -4427,6 +4432,7 @@ fun Screen(
                 MathQuickLaunchButton("3D Graph", "xyz", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Graph3D) }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                MathQuickLaunchButton("AR", "AR", Green, Modifier.weight(1f)) { vm.open(MathModule.SpatialAR) }
                 MathQuickLaunchButton("AR 3D Graph", "AR", Green, Modifier.weight(1f)) { vm.open(MathModule.ARGraph3D) }
                 MathQuickLaunchButton("Trigonometry", "θ", Green, Modifier.weight(1f)) { vm.open(MathModule.Trigonometry) }
                 MathQuickLaunchButton("Solver", "Fx", Violet, Modifier.weight(1f)) { vm.openSolver() }
@@ -6901,6 +6907,8 @@ private fun MathematicsMenuPanel(
             "3D Geometry" -> vm.open(MathModule.Geometry3D)
             "Graphs Explorer" -> vm.open(MathModule.Graph2D)
             "3D Graph" -> vm.open(MathModule.Graph3D)
+            "Spatial AR" -> vm.open(MathModule.SpatialAR)
+            "AR 3D Graph" -> vm.open(MathModule.ARGraph3D)
             "Manipulatives" -> vm.open(MathModule.Manipulatives)
             "Shapes Explorer" -> vm.openShapesExplorer()
             "Set Theory & Logic" -> vm.openSetLogicVisualizer()
@@ -9843,7 +9851,8 @@ private fun Geometry3DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
 private fun SpatialARScreen(vm: ExplorerViewModel) {
     val context = LocalContext.current
     val activity = context as? ComponentActivity
-    val runtime = remember(activity) { activity?.let(::ArCoreRuntime) }
+    var arRuntimeEpoch by remember { mutableIntStateOf(0) }
+    val runtime = remember(activity, arRuntimeEpoch) { activity?.let(::ArCoreRuntime) }
     var compositorView by remember { mutableStateOf<ARCoreCompositorView?>(null) }
     var capabilities by remember { mutableStateOf(ARCapabilities(ARAvailability.Checking)) }
     var liveAR by remember { mutableStateOf(false) }
@@ -9913,6 +9922,8 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     var arSurfaceQuality by rememberSaveable { mutableStateOf(ArSurfaceQuality.Balanced) }
     var autoStartAttempted by remember { mutableStateOf(false) }
     var requestCameraPermission by remember { mutableStateOf(false) }
+    var retryLiveArAfterRuntimeRestart by remember { mutableStateOf(false) }
+    var arViewEpoch by remember { mutableIntStateOf(0) }
     val currentLiveAR by rememberUpdatedState(liveAR)
     val currentCompositorView by rememberUpdatedState(compositorView)
     var cameraGranted by remember {
@@ -9925,6 +9936,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         }
         if (runtime == null) {
             capabilities = capabilities.copy(availability = ARAvailability.Error, message = "ARCore runtime is unavailable; use the spatial simulator.")
+            return
+        }
+        if (runtime.state is ArRuntimeState.Closed) {
+            liveAR = false
+            arFrame = null
+            frameState = null
+            compositorView = null
+            retryLiveArAfterRuntimeRestart = true
+            arRuntimeEpoch++
             return
         }
         if (!cameraGranted) {
@@ -9964,6 +9984,23 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         if (!autoStartAttempted && runtime != null) {
             autoStartAttempted = true
             startLiveAr(userRequestedInstall = false)
+        }
+    }
+    fun restartLiveAr(userRequestedInstall: Boolean = true) {
+        currentCompositorView?.releaseRenderer()
+        currentCompositorView?.onPause()
+        compositorView = null
+        arFrame = null
+        frameState = null
+        liveAR = false
+        runtime?.pause()
+        arViewEpoch++
+        startLiveAr(userRequestedInstall = userRequestedInstall)
+    }
+    LaunchedEffect(runtime, retryLiveArAfterRuntimeRestart, cameraGranted) {
+        if (retryLiveArAfterRuntimeRestart && runtime != null) {
+            retryLiveArAfterRuntimeRestart = false
+            startLiveAr(userRequestedInstall = true)
         }
     }
     DisposableEffect(runtime, activity) {
@@ -10289,6 +10326,18 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         arOverlayRotationY = 0f
         arOverlayRotationZ = 0f
     }
+    fun switchLiveArWorkspace(mode: ArMathWorkspaceMode) {
+        arWorkspaceMode = mode
+        arSelection = ArSelectionState()
+        overlapHits = emptyList()
+        stylusHoverHit = null
+        arAnalysisEnabled = mode == ArMathWorkspaceMode.Graph3D
+        arPlacementMode = ArPlacementMode.FloorTable
+        displayFirstMode = false
+        placementMode = activeAnchor == null
+        reticleHit = null
+        restartLiveAr(userRequestedInstall = true)
+    }
     fun rankedHitAt(point: Offset): ArHitCandidate? = runtime
         ?.hitTest(ArVector2(point.x, point.y))
         ?.let(ArHitPolicy::rank)
@@ -10311,27 +10360,29 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     }
     Box(Modifier.fillMaxSize().onSizeChanged { viewportSize = it }) {
         if (liveAR && runtime != null && !displayFirstMode) {
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = { viewContext ->
-                    ARCoreCompositorView(
-                        viewContext,
-                        runtime,
-                        sceneProvider = { currentCompositorScene },
-                        onFrame = { snapshot ->
-                            arFrame = snapshot
-                            frameState = snapshot.toSpatialFrame()
-                            reticleHit = if (anchorPlacementMode && viewportSize.width > 0 && viewportSize.height > 0) {
-                                rankedHitAt(Offset(viewportSize.width / 2f, viewportSize.height / 2f))
-                            } else {
-                                null
-                            }
-                            liveError = ""
-                        },
-                        onError = { liveError = it },
-                    ).also { compositorView = it }
-                },
-            )
+            androidx.compose.runtime.key(runtime, arViewEpoch) {
+                AndroidView(
+                    modifier = Modifier.fillMaxSize(),
+                    factory = { viewContext ->
+                        ARCoreCompositorView(
+                            viewContext,
+                            runtime,
+                            sceneProvider = { currentCompositorScene },
+                            onFrame = { snapshot ->
+                                arFrame = snapshot
+                                frameState = snapshot.toSpatialFrame()
+                                reticleHit = if (anchorPlacementMode && viewportSize.width > 0 && viewportSize.height > 0) {
+                                    rankedHitAt(Offset(viewportSize.width / 2f, viewportSize.height / 2f))
+                                } else {
+                                    null
+                                }
+                                liveError = ""
+                            },
+                            onError = { liveError = it },
+                        ).also { compositorView = it }
+                    },
+                )
+            }
             Box(
                 Modifier
                     .fillMaxSize()
@@ -10344,12 +10395,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 var totalRotation = 0f
                                 while (true) {
                                     val event = awaitPointerEvent()
-                                    totalPan += event.calculatePan()
-                                    totalScale *= event.calculateZoom()
-                                    totalRotation += event.calculateRotation()
-                                    arOverlayPan += event.calculatePan()
-                                    arOverlayScale = (arOverlayScale * event.calculateZoom()).coerceIn(.18f, 1.35f)
-                                    arOverlayRotationZ = (arOverlayRotationZ + event.calculateRotation()).wrapDegrees()
+                                    val pan = event.calculatePan()
+                                    val zoom = event.calculateZoom()
+                                    val rotation = event.calculateRotation()
+                                    totalPan += pan
+                                    totalScale *= zoom
+                                    totalRotation += rotation
+                                    arOverlayPan += Offset(pan.x * .35f, pan.y * .35f)
+                                    arOverlayScale = (arOverlayScale * (1f + (zoom - 1f) * .35f)).coerceIn(.18f, 1.35f)
+                                    arOverlayRotationZ = (arOverlayRotationZ + rotation * .35f).wrapDegrees()
                                     event.changes.forEach { it.consume() }
                                     if (event.changes.none { it.pressed }) break
                                 }
@@ -10410,10 +10464,12 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 totalScale *= event.calculateZoom()
                                 if (objectGesture) {
                                     val raw = Vec3(
-                                        totalPan.x / 420.0 * precisionMultiplier,
-                                        -totalPan.y / 420.0 * precisionMultiplier,
-                                        totalPan.y / 620.0 * precisionMultiplier,
+                                        totalPan.x / 1600.0 * precisionMultiplier,
+                                        -totalPan.y / 1600.0 * precisionMultiplier,
+                                        totalPan.y / 2100.0 * precisionMultiplier,
                                     )
+                                    val dampedRotation = totalRotation * .35f
+                                    val dampedScale = 1.0 + (totalScale.toDouble() - 1.0) * .35
                                     val axisDelta = when (gizmoAxis) {
                                         ArGizmoAxis.X -> Vec3(raw.x, 0.0, 0.0)
                                         ArGizmoAxis.Y -> Vec3(0.0, raw.y, 0.0)
@@ -10446,13 +10502,13 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                             ArGizmoMode.Translate -> vm.previewSolidGroupMove(snappedDelta)
                                             ArGizmoMode.Rotate -> vm.previewSolidGroupRotation(
                                                 when (gizmoAxis) {
-                                                    ArGizmoAxis.X -> Vec3(totalRotation.toDouble(), 0.0, 0.0)
-                                                    ArGizmoAxis.Y -> Vec3(0.0, totalRotation.toDouble(), 0.0)
-                                                    ArGizmoAxis.Z -> Vec3(0.0, 0.0, totalRotation.toDouble())
-                                                    ArGizmoAxis.Uniform -> Vec3(totalRotation.toDouble(), totalRotation.toDouble(), totalRotation.toDouble())
+                                                    ArGizmoAxis.X -> Vec3(dampedRotation.toDouble(), 0.0, 0.0)
+                                                    ArGizmoAxis.Y -> Vec3(0.0, dampedRotation.toDouble(), 0.0)
+                                                    ArGizmoAxis.Z -> Vec3(0.0, 0.0, dampedRotation.toDouble())
+                                                    ArGizmoAxis.Uniform -> Vec3(dampedRotation.toDouble(), dampedRotation.toDouble(), dampedRotation.toDouble())
                                                 },
                                             )
-                                            ArGizmoMode.Scale -> vm.previewSolidGroupScale(totalScale.toDouble())
+                                            ArGizmoMode.Scale -> vm.previewSolidGroupScale(dampedScale)
                                         }
                                     } else {
                                         val index = editableIndices.single()
@@ -10461,10 +10517,10 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                             ArGizmoMode.Rotate -> vm.previewSolidRotation(
                                                 index,
                                                 when (gizmoAxis) {
-                                                    ArGizmoAxis.X -> Vec3(totalRotation.toDouble(), 0.0, 0.0)
-                                                    ArGizmoAxis.Y -> Vec3(0.0, totalRotation.toDouble(), 0.0)
-                                                    ArGizmoAxis.Z -> Vec3(0.0, 0.0, totalRotation.toDouble())
-                                                    ArGizmoAxis.Uniform -> Vec3(totalRotation.toDouble(), totalRotation.toDouble(), totalRotation.toDouble())
+                                                    ArGizmoAxis.X -> Vec3(dampedRotation.toDouble(), 0.0, 0.0)
+                                                    ArGizmoAxis.Y -> Vec3(0.0, dampedRotation.toDouble(), 0.0)
+                                                    ArGizmoAxis.Z -> Vec3(0.0, 0.0, dampedRotation.toDouble())
+                                                    ArGizmoAxis.Uniform -> Vec3(dampedRotation.toDouble(), dampedRotation.toDouble(), dampedRotation.toDouble())
                                                 },
                                             )
                                             ArGizmoMode.Scale -> vm.previewSolidAxisScale(
@@ -10475,7 +10531,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                                     ArGizmoAxis.Z -> TransformGizmoAxis.Z
                                                     ArGizmoAxis.Uniform -> TransformGizmoAxis.Uniform
                                                 },
-                                                totalScale.toDouble(),
+                                                dampedScale,
                                             )
                                         }
                                     }
@@ -10615,17 +10671,17 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Modifier
                 .align(Alignment.TopStart)
                 .padding(start = 10.dp, top = 10.dp)
-                .widthIn(max = if (arHudExpanded) 300.dp else 292.dp)
+                .widthIn(max = 360.dp)
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                     TransparentIcon("AR", Cyan)
                     Column {
-                        Text("AR", color = Cyan, fontWeight = FontWeight.Bold, fontSize = if (arHudExpanded) 18.sp else 15.sp)
+                        Text("AR", color = Cyan, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                         Text(if (liveAR) guidance.title else "Camera ready", color = Muted, fontSize = 10.sp, maxLines = 1)
                     }
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                if (false) Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     GlowButton("Hide", icon = "⌄", iconOnly = true) {
                         arHudHidden = true
                         arHudExpanded = false
@@ -10639,7 +10695,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     GlowButton("Home", icon = "H", iconOnly = true, onClick = vm::returnToMathMenu)
                 }
             }
-            if (!arHudExpanded) {
+            if (true) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     listOf(
                         ArMathWorkspaceMode.Geometry2D,
@@ -10650,18 +10706,16 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         GlowButton(
                             if (arWorkspaceMode == mode) "• ${mode.shortLabel}" else mode.shortLabel,
                             iconOnly = false,
-                            onClick = {
-                                arWorkspaceMode = mode
-                                resetArDisplay(mode)
-                            },
+                            onClick = { switchLiveArWorkspace(mode) },
                         )
                     }
                     GlowButton(if (liveAR && !displayFirstMode) "AR On" else "Full AR", icon = if (liveAR && !displayFirstMode) "AR" else "6D", iconOnly = true) {
                         arPlacementMode = ArPlacementMode.FloorTable
                         displayFirstMode = false
                         placementMode = activeAnchor == null
-                        startLiveAr(userRequestedInstall = true)
+                        restartLiveAr(userRequestedInstall = true)
                     }
+                    if (false) {
                     GlowButton("Add ${arWorkspaceMode.shortLabel}", icon = "+", iconOnly = true) {
                         showArAddOptions = true
                         arHudExpanded = false
@@ -10682,10 +10736,10 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         arHudExpanded = true
                         showAdvancedTools = true
                     }
+                    }
                 }
                 if (liveError.isNotBlank()) {
                     Text(liveError, color = Amber, fontSize = 10.sp, maxLines = 2)
-                    GlowButton("Open non-AR ${arWorkspaceMode.shortLabel}", icon = "E", onClick = ::openCurrentArWorkspaceEditor)
                 }
             } else {
             Text(
@@ -10700,7 +10754,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 ArMathWorkspaceMode.entries.forEach { mode ->
                     GlowButton(if (arWorkspaceMode == mode) "• ${mode.shortLabel}" else mode.shortLabel) {
-                        arWorkspaceMode = mode
+                        switchLiveArWorkspace(mode)
                     }
                 }
             }
@@ -10762,7 +10816,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 fontSize = 12.sp,
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                GlowButton(if (liveAR) "Camera on" else "Open camera", onClick = { startLiveAr(userRequestedInstall = true) })
+                GlowButton(if (liveAR) "Restart camera" else "Open camera", onClick = { restartLiveAr(userRequestedInstall = true) })
                 GlowButton("Edit current", onClick = ::openCurrentArWorkspaceEditor)
                 GlowButton("Copy current", onClick = ::duplicateCurrentArItem)
                 DestructiveGlowButton("Clear all", onClick = ::clearCurrentArWorkspace)
@@ -10778,14 +10832,14 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     displayFirstMode = false
                     placementMode = true
                     reticleHit = null
-                    startLiveAr(userRequestedInstall = true)
+                    restartLiveAr(userRequestedInstall = true)
                 }
                 GlowButton(if (arPlacementMode == ArPlacementMode.Wall && anchorPlacementMode) "• Wall" else "Wall") {
                     arPlacementMode = ArPlacementMode.Wall
                     displayFirstMode = false
                     placementMode = true
                     reticleHit = null
-                    startLiveAr(userRequestedInstall = true)
+                    restartLiveAr(userRequestedInstall = true)
                 }
                 GlowButton("Reset", onClick = {
                     placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
@@ -11109,11 +11163,52 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Text("Placement and measurements are educational estimates, not certified physical measurements.", color = Amber, fontSize = 11.sp)
             }
         }
+        if (!arHudHidden) {
+            val canDeleteCurrent = when (arWorkspaceMode) {
+                ArMathWorkspaceMode.Geometry2D -> vm.state.shapes.isNotEmpty()
+                ArMathWorkspaceMode.Geometry3D -> vm.state.solids.isNotEmpty() || vm.state.vectors3D.isNotEmpty()
+                ArMathWorkspaceMode.Graph2D -> vm.state.functions.isNotEmpty()
+                ArMathWorkspaceMode.Graph3D -> vm.state.surfaceExpression.isNotBlank() && vm.state.surfaceExpression != "0"
+                ArMathWorkspaceMode.CAS -> false
+            }
+            GlassPanel(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    GlowButton(
+                        "Add",
+                        icon = "+",
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        showArAddOptions = true
+                        arHudExpanded = false
+                    }
+                    DestructiveGlowButton(
+                        "Delete selected",
+                        enabled = arSelection.objectIds.isNotEmpty() || canDeleteCurrent,
+                        icon = "-",
+                        onClick = ::deleteCurrentArItem,
+                    )
+                    DestructiveGlowButton(
+                        "Clear all",
+                        icon = "X",
+                        onClick = ::clearCurrentArWorkspace,
+                    )
+                }
+            }
+        }
         if (showArAddOptions) {
             GlassPanel(
                 Modifier
                     .align(Alignment.BottomStart)
-                    .padding(start = 10.dp, end = 10.dp, bottom = 78.dp)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 98.dp)
                     .widthIn(max = 360.dp)
                     .heightIn(max = 520.dp)
                     .verticalScroll(rememberScrollState())
@@ -12280,14 +12375,19 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
             onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
         )
 
-        GlassPanel(
+        Column(
             Modifier
-                .align(Alignment.TopStart)
-                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp)
-                .widthIn(max = 390.dp)
-                .heightIn(max = 620.dp)
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize()
+                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp, bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            GlassPanel(
+                Modifier
+                    .widthIn(max = 390.dp)
+                    .weight(1f)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Brush.linearGradient(listOf(SurfaceA.copy(alpha = .99f), SurfaceB.copy(alpha = .98f)))),
+            ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text("AI Maths Explorer", color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
@@ -12298,6 +12398,15 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
                     GlowButton(if (animateAngle) "Pause" else "Animate", icon = if (animateAngle) "||" else ">", iconOnly = true) { animateAngle = !animateAngle }
                     GlowButton("AI", icon = "AI", iconOnly = true) { tutorOpen = !tutorOpen }
                 }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                TrigLab.entries.forEach { item ->
+                    GlowButton(if (lab == item) "* ${item.label}" else item.label) {
+                        lab = item
+                        if (item == TrigLab.Graphs) visibleFunctions = visibleFunctions + setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)
+                    }
+                }
+                TogglePill(if (animateAngle) "Pause" else "Animate", animateAngle) { animateAngle = it }
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Insight("Angle", "${trim(angle.toDouble())} deg", Cyan)
@@ -12453,23 +12562,8 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
                     Text("Identities: reciprocal, quotient, Pythagorean, even/odd. Transformations: amplitude |A|, period 2pi/|B|, phase h, vertical shift k.", color = Muted, fontSize = 11.sp)
                 }
             }
-        }
-
-        GlassPanel(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-        ) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                TrigLab.entries.forEach { item ->
-                    GlowButton(if (lab == item) "* ${item.label}" else item.label) {
-                        lab = item
-                        if (item == TrigLab.Graphs) visibleFunctions = visibleFunctions + setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)
-                    }
-                }
-                TogglePill(if (animateAngle) "Pause" else "Animate", animateAngle) { animateAngle = it }
             }
+
         }
 
         if (tutorOpen) {

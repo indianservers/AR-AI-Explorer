@@ -81,6 +81,20 @@ class ArMathWorkspaceBridgeTest {
     }
 
     @Test
+    fun graph3dFallsBackToSurfaceExpressionWhenNoLayerExists() {
+        val state = WorkspaceState(
+            surfaceExpression = "z = sin(x) * cos(y)",
+            surfaceLayers = emptyList(),
+        )
+
+        val result = ArMathWorkspaceBridge.build(ArMathWorkspaceMode.Graph3D, state, surfaceDensity = 12)
+
+        assertEquals(1, result.sourceObjectCount)
+        assertEquals(1, result.visualizedObjectCount)
+        assertTrue(result.scene.primitives.any { it.id == "surface-main" && it.kind == SpatialPrimitiveKind.Surface })
+    }
+
+    @Test
     fun casModeVisualizesGraphableSymbolicAndCoordinateObjects() {
         val function = UniversalMathObjectFactory.symbolic("cas-f", UniversalMathKind.Function, "f", "x^2", sourceView = "CAS")
         val point = UniversalMathObjectFactory.point2D("cas-a", "A", 2.0, 3.0)

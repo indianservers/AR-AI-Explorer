@@ -80,7 +80,7 @@ private fun MathHomeFeatureIcon(label: String, fallback: String, accent: Color, 
         Text("f(x)", color = accent, fontSize = 13.sp, fontWeight = FontWeight.Black)
         return
     }
-    if (label !in setOf("2D", "3D", "Graphs", "3D Graph", "AR 3D Graph", "Proofs", "Visual Proofs", "Theorems")) {
+    if (label !in setOf("2D", "3D", "Graphs", "3D Graph", "AR", "Spatial AR", "AR 3D Graph", "Proofs", "Visual Proofs", "Theorems")) {
         Text(fallback, color = accent, fontSize = 13.sp, fontWeight = FontWeight.Black)
         return
     }
@@ -135,7 +135,7 @@ private fun MathHomeFeatureIcon(label: String, fallback: String, accent: Color, 
                 drawCircle(accent.copy(.7f), stroke, Offset(size.width * .88f, size.height * .68f))
                 drawCircle(accent.copy(.7f), stroke, Offset(size.width * .16f, size.height * .88f))
             }
-            "AR 3D Graph" -> {
+            "AR", "Spatial AR", "AR 3D Graph" -> {
                 val frame = Path().apply {
                     moveTo(size.width * .18f, size.height * .22f)
                     lineTo(size.width * .82f, size.height * .22f)

@@ -140,7 +140,12 @@ object ArMathWorkspaceBridge {
 
     private fun graph3D(workspace: WorkspaceState, density: Int): ArMathWorkspaceScene {
         val diagnostics = mutableListOf<String>()
-        val visibleLayers = workspace.surfaceLayers.filter { it.visible }
+        val visibleLayers = workspace.surfaceLayers
+            .ifEmpty { listOf(SpatialSurfaceLayer("surface-main", workspace.surfaceExpression.ifBlank { "z = x^2 + y^2" })) }
+            .mapIndexed { index, layer ->
+                if (index == 0 && layer.expression.isBlank()) layer.copy(expression = workspace.surfaceExpression.ifBlank { "z = x^2 + y^2" }) else layer
+            }
+            .filter { it.visible }
         val generatedLayers = visibleLayers.mapNotNull { layer ->
             runCatching { layerGeometry(layer, density.coerceIn(12, 64)) }
                 .onFailure { diagnostics += "${layer.id}: ${it.message ?: "could not be sampled"}" }
