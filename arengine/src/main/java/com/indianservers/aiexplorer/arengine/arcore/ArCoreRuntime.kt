@@ -273,7 +273,9 @@ class ArCoreRuntime(
             is InstantPlacementPoint -> ArHitType.InstantPlacement
             else -> return null
         }
-        val distance = hit.distance.toDouble().coerceAtLeast(0.0)
+        val rawDistance = hit.distance.toDouble()
+        if (!rawDistance.isFinite() || rawDistance < 0.0) return null
+        val distance = rawDistance.coerceAtLeast(0.0)
         val confidence = when (type) {
             ArHitType.Plane -> 0.95
             ArHitType.Depth -> 0.85
@@ -289,11 +291,12 @@ class ArCoreRuntime(
             ArHitType.Simulator -> 0.05
         }
         val id = "hit-${UUID.randomUUID()}"
+        val pose = runCatching { ArCorePoseMapper.map(hit.hitPose) }.getOrNull() ?: return null
         pendingHits[id] = hit
         return ArHitCandidate(
             id = id,
             type = type,
-            pose = ArCorePoseMapper.map(hit.hitPose),
+            pose = pose,
             distanceMeters = distance,
             confidence = confidence,
             uncertaintyMeters = uncertainty,

@@ -10212,6 +10212,18 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         arOverlayRotationY = 0f
         arOverlayRotationZ = 0f
     }
+    fun keepLiveArAfterEquation(mode: ArMathWorkspaceMode) {
+        arWorkspaceMode = mode
+        arSelection = ArSelectionState()
+        overlapHits = emptyList()
+        stylusHoverHit = null
+        arAnalysisEnabled = mode == ArMathWorkspaceMode.Graph3D
+        arPlacementMode = ArPlacementMode.FloorTable
+        displayFirstMode = false
+        placementMode = activeAnchor == null
+        reticleHit = null
+        if (!liveAR) startLiveAr(userRequestedInstall = true)
+    }
     fun plotArGraphExpression() {
         val expression = arGraphExpressionDraft.trim()
         if (expression.isBlank()) return
@@ -10221,17 +10233,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         } else {
             vm.addFunction(expression)
         }
-        arWorkspaceMode = ArMathWorkspaceMode.Graph2D
         showArAddOptions = false
-        resetArDisplayNow(ArMathWorkspaceMode.Graph2D)
+        keepLiveArAfterEquation(ArMathWorkspaceMode.Graph2D)
     }
     fun plotArSurfaceExpression() {
         val expression = arSurfaceExpressionDraft.trim()
         if (expression.isBlank()) return
         vm.setSurfaceExpression(expression)
-        arWorkspaceMode = ArMathWorkspaceMode.Graph3D
         showArAddOptions = false
-        resetArDisplayNow(ArMathWorkspaceMode.Graph3D)
+        keepLiveArAfterEquation(ArMathWorkspaceMode.Graph3D)
     }
     fun clearCurrentArWorkspace() {
         placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
@@ -11174,6 +11184,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             GlassPanel(
                 Modifier
                     .align(Alignment.BottomCenter)
+                    .windowInsetsPadding(WindowInsets.safeDrawing)
                     .padding(start = 10.dp, end = 10.dp, bottom = 8.dp)
                     .fillMaxWidth()
             ) {
@@ -11191,13 +11202,13 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         arHudExpanded = false
                     }
                     DestructiveGlowButton(
-                        "Delete selected",
+                        "Delete",
                         enabled = arSelection.objectIds.isNotEmpty() || canDeleteCurrent,
                         icon = "-",
                         onClick = ::deleteCurrentArItem,
                     )
                     DestructiveGlowButton(
-                        "Clear all",
+                        "Clear",
                         icon = "X",
                         onClick = ::clearCurrentArWorkspace,
                     )
@@ -11208,6 +11219,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             GlassPanel(
                 Modifier
                     .align(Alignment.BottomStart)
+                    .windowInsetsPadding(WindowInsets.safeDrawing)
                     .padding(start = 10.dp, end = 10.dp, bottom = 98.dp)
                     .widthIn(max = 360.dp)
                     .heightIn(max = 520.dp)
@@ -12355,36 +12367,28 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
-        TrigCanvas(
-            modifier = Modifier.fillMaxSize(), angleDegrees = angle, transform = transform, function = function,
-            showTangents = showTangents, showProjections = showProjections, showWave = showWave,
-            homeRequest = homeRequest, onZoomChanged = { zoom = it }, onAngleChange = { angle = snapAngle(it) },
-            visibleFunctions = when (lab) {
-                TrigLab.Graphs -> visibleFunctions
-                TrigLab.Transform -> setOf(TrigFunction.Sine)
-                else -> visibleFunctions
-            },
-            showAsymptotes = showAsymptotes,
-            polarSamples = emptyList(),
-            harmonics = emptyList(),
-            lineStyle = lineStyle,
-            paletteShift = paletteShift,
-            equationTarget = null,
-            equationRoots = emptyList(),
-            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
-        )
+    fun trigTabLabel(item: TrigLab): String = when (item) {
+        TrigLab.Circle -> "Circle"
+        TrigLab.Graphs -> "Graphs"
+        TrigLab.Transform -> "Transform"
+        TrigLab.Identities -> "Identity"
+        TrigLab.Applications -> "Apps"
+        TrigLab.Challenge -> "Challenge"
+        TrigLab.Reference -> "Ref"
+    }
 
+    Box(Modifier.fillMaxSize()) {
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp, bottom = 8.dp),
+                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp, bottom = 112.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             GlassPanel(
                 Modifier
-                    .widthIn(max = 390.dp)
+                    .fillMaxWidth()
                     .weight(1f)
+                    .verticalScroll(rememberScrollState())
                     .clip(RoundedCornerShape(18.dp))
                     .background(Brush.linearGradient(listOf(SurfaceA.copy(alpha = .99f), SurfaceB.copy(alpha = .98f)))),
             ) {
@@ -12400,14 +12404,46 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
                 }
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                TrigLab.entries.forEach { item ->
-                    GlowButton(if (lab == item) "* ${item.label}" else item.label) {
-                        lab = item
-                        if (item == TrigLab.Graphs) visibleFunctions = visibleFunctions + setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)
-                    }
-                }
+                Insight("View", lab.label, Cyan)
                 TogglePill(if (animateAngle) "Pause" else "Animate", animateAngle) { animateAngle = it }
             }
+            TrigCanvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(
+                        when (lab) {
+                            TrigLab.Circle -> 250.dp
+                            TrigLab.Graphs, TrigLab.Transform -> 210.dp
+                            TrigLab.Identities -> 220.dp
+                            else -> 180.dp
+                        }
+                    )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(SurfaceA.copy(alpha = .96f))
+                    .border(1.dp, Cyan.copy(alpha = .42f), RoundedCornerShape(16.dp)),
+                angleDegrees = angle,
+                transform = transform,
+                function = function,
+                showTangents = showTangents,
+                showProjections = showProjections,
+                showWave = showWave,
+                homeRequest = homeRequest,
+                onZoomChanged = { zoom = it },
+                onAngleChange = { angle = snapAngle(it) },
+                visibleFunctions = when (lab) {
+                    TrigLab.Graphs -> visibleFunctions
+                    TrigLab.Transform -> setOf(TrigFunction.Sine)
+                    else -> visibleFunctions
+                },
+                showAsymptotes = showAsymptotes,
+                polarSamples = emptyList(),
+                harmonics = emptyList(),
+                lineStyle = lineStyle,
+                paletteShift = paletteShift,
+                equationTarget = null,
+                equationRoots = emptyList(),
+                onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
+            )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Insight("Angle", "${trim(angle.toDouble())} deg", Cyan)
                 Insight("Radians", radianLabel(angle.toDouble()), Green)
@@ -12564,6 +12600,31 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
             }
             }
 
+        }
+
+        GlassPanel(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(horizontal = 10.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TrigLab.entries.forEach { item ->
+                    GlowButton(if (lab == item) "* ${trigTabLabel(item)}" else trigTabLabel(item)) {
+                        lab = item
+                        if (item == TrigLab.Graphs) {
+                            visibleFunctions = visibleFunctions + setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)
+                        }
+                    }
+                }
+            }
         }
 
         if (tutorOpen) {
