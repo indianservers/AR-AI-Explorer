@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import com.google.ar.core.Config
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,7 +40,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,23 +54,19 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.indianservers.aiexplorer.ar3dgraph.ar.ARCameraPermissionManager
 import com.indianservers.aiexplorer.ar3dgraph.ar.ARCapabilityChecker
-import com.indianservers.aiexplorer.ar3dgraph.ar.ARCoreSessionManager
-import com.indianservers.aiexplorer.ar3dgraph.ar.ARSessionLifecycleCoordinator
 import com.indianservers.aiexplorer.ar3dgraph.ar.ARTrackingState
-import com.indianservers.aiexplorer.ar3dgraph.ar.AnchorPlacementResult
 import com.indianservers.aiexplorer.ar3dgraph.integration.DisconnectedGraphEngineContract
 import com.indianservers.aiexplorer.ar3dgraph.integration.GraphEngineContract
-import com.indianservers.aiexplorer.ar3dgraph.rendering.ARGraphCameraView
-import com.indianservers.aiexplorer.ar3dgraph.rendering.ARGraphRenderListener
+import io.github.sceneview.ar.PlacementScene
+import io.github.sceneview.ar.node.AnchorNode
+import io.github.sceneview.rememberEngine
+import io.github.sceneview.rememberMaterialLoader
+import io.github.sceneview.rememberModelLoader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,15 +77,9 @@ fun AR3DGraphScreen(
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current
-    val lifecycleOwner = LocalLifecycleOwner.current
     val checker = remember(context) { ARCapabilityChecker(context) }
-    var sessionEpoch by remember { mutableStateOf(0) }
-    val sessionManager = remember(activity, sessionEpoch) { activity?.let(::ARCoreSessionManager) }
-    val lifecycle = remember(sessionManager) { sessionManager?.let(::ARSessionLifecycleCoordinator) }
-    var cameraView by remember { mutableStateOf<ARGraphCameraView?>(null) }
     var showHelp by remember { mutableStateOf(false) }
     var controlsCollapsed by remember { mutableStateOf(false) }
-    val latestCameraView by rememberUpdatedState(cameraView)
     val ui = model.uiState
     val configuration = LocalConfiguration.current
     val controlsMaxHeight = if (configuration.screenWidthDp > configuration.screenHeightDp) 196.dp else 340.dp
@@ -118,50 +108,10 @@ fun AR3DGraphScreen(
         checkCapability()
     }
 
-    LaunchedEffect(ui.capability, ui.cameraPermission, lifecycle) {
-        if (ui.capability == ARCapabilityState.Supported &&
-            ui.cameraPermission == ARCameraPermissionState.Granted &&
-            ui.session == ARSessionState.Idle && lifecycle != null
-        ) {
-            model.onSessionTransition(lifecycle.enter())
-        }
-    }
-
-    LaunchedEffect(ui.renderData, cameraView) {
-        ui.renderData?.let { cameraView?.submitGraph(it) }
-    }
-
-    DisposableEffect(lifecycleOwner, lifecycle) {
-        val observer = object : DefaultLifecycleObserver {
-            override fun onPause(owner: LifecycleOwner) {
-                latestCameraView?.onPause()
-                lifecycle?.pause()?.let(model::onSessionTransition)
-            }
-
-            override fun onResume(owner: LifecycleOwner) {
-                refreshPermission()
-                val permissionGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                if (permissionGranted) {
-                    lifecycle?.resume()?.let { transition ->
-                        if (transition.state == ARSessionState.SessionRunning) {
-                            model.onSessionTransition(transition)
-                            latestCameraView?.onResume()
-                        }
-                    }
-                } else {
-                    latestCameraView?.onPause()
-                    lifecycle?.pause()
-                }
-                if (model.uiState.capability == ARCapabilityState.InstallationRequested) checkCapability()
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
+    DisposableEffect(checker) {
         onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
             checker.cancel()
             model.onScreenExit()
-            latestCameraView?.dispose()
-            lifecycle?.close()
         }
     }
 
@@ -209,40 +159,14 @@ fun AR3DGraphScreen(
                     .semantics { contentDescription = "AR camera and graph placement viewport" }
                     .testTag("ar3dgraph-camera-container"),
             ) {
-                if (ui.session == ARSessionState.SessionRunning && sessionManager != null) {
-                    AndroidView(
-                        factory = { viewContext ->
-                            val listener = object : ARGraphRenderListener {
-                                private fun main(block: () -> Unit) {
-                                    activity?.runOnUiThread(block) ?: block()
-                                }
-                                override fun onTrackingChanged(state: ARTrackingState, message: String) = main {
-                                    model.onTrackingChanged(state, message)
-                                }
-                                override fun onPlacementStarted() = main(model::onPlacementStarted)
-                                override fun onPlacementResult(result: AnchorPlacementResult) = main {
-                                    model.onPlacementResult(result)
-                                }
-                                override fun onRendererError(message: String) = main {
-                                    model.onRendererError(message)
-                                }
-                            }
-                            ARGraphCameraView(
-                                viewContext,
-                                sessionManager,
-                                listener,
-                                initialTransform = ui.userTransform,
-                                onTransformChanged = model::onUserTransformChanged,
-                            ).also { view ->
-                                cameraView = view
-                                ui.renderData?.let(view::submitGraph)
-                            }
-                        },
-                        modifier = Modifier.fillMaxSize().testTag("ar3dgraph-camera-view"),
-                        onRelease = { view ->
-                            if (cameraView === view) cameraView = null
-                            view.dispose()
-                        },
+                if (ui.capability == ARCapabilityState.Supported && ui.cameraPermission == ARCameraPermissionState.Granted) {
+                    SceneViewARGraphViewport(
+                        ui = ui,
+                        onSessionRunning = model::onSceneViewSessionRunning,
+                        onSessionPaused = model::onSceneViewSessionPaused,
+                        onTrackingChanged = model::onTrackingChanged,
+                        onPlacementStarted = model::onPlacementStarted,
+                        onPlacementPlaced = { model.onPlacementResult(com.indianservers.aiexplorer.ar3dgraph.ar.AnchorPlacementResult.Placed) },
                     )
                 } else {
                     Column(
@@ -325,7 +249,6 @@ fun AR3DGraphScreen(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(
                     onClick = {
-                        cameraView?.resetView()
                         model.resetView()
                     },
                     enabled = ui.placement == ARGraphPlacementState.Placed,
@@ -333,7 +256,6 @@ fun AR3DGraphScreen(
                 ) { Text("Reset View") }
                 OutlinedButton(
                     onClick = {
-                        cameraView?.resetPlacement()
                         model.resetPlacement()
                     },
                     enabled = ui.renderData != null,
@@ -341,7 +263,6 @@ fun AR3DGraphScreen(
                 ) { Text("Reset Placement") }
                 OutlinedButton(
                     onClick = {
-                        cameraView?.clearGraph()
                         model.clearGraph()
                     },
                     enabled = ui.renderData != null || ui.placement == ARGraphPlacementState.GeneratingGraph,
@@ -354,12 +275,8 @@ fun AR3DGraphScreen(
             when {
                 ui.capability == ARCapabilityState.ARCoreNotInstalled || ui.capability == ARCapabilityState.ARCoreUpdateRequired -> {
                     Button(onClick = {
-                        val transition = sessionManager?.requestInstall(userRequested = true)
-                        if (transition?.capability == ARCapabilityState.InstallationRequested) model.onInstallationRequested()
-                        else if (transition != null) {
-                            model.onSessionTransition(transition)
-                            checkCapability()
-                        }
+                        model.onInstallationRequested()
+                        checkCapability()
                     }) { Text(if (ui.capability == ARCapabilityState.ARCoreUpdateRequired) "Update ARCore" else "Install ARCore") }
                 }
                 ui.capability == ARCapabilityState.Supported &&
@@ -376,10 +293,7 @@ fun AR3DGraphScreen(
 
             if (ui.capability == ARCapabilityState.Error || ui.session == ARSessionState.SessionError) {
                 OutlinedButton(onClick = {
-                    latestCameraView?.dispose()
-                    sessionManager?.close()
                     model.prepareSessionRetry()
-                    sessionEpoch++
                     checkCapability()
                 }) { Text("Retry") }
             }
@@ -404,6 +318,79 @@ fun AR3DGraphScreen(
             modifier = Modifier.testTag("ar3dgraph-help-dialog"),
         )
     }
+}
+
+@Composable
+private fun SceneViewARGraphViewport(
+    ui: AR3DGraphUiState,
+    onSessionRunning: (String) -> Unit,
+    onSessionPaused: () -> Unit,
+    onTrackingChanged: (ARTrackingState, String) -> Unit,
+    onPlacementStarted: () -> Unit,
+    onPlacementPlaced: () -> Unit,
+) {
+    val engine = rememberEngine()
+    val modelLoader = rememberModelLoader(engine)
+    val materialLoader = rememberMaterialLoader(engine)
+    var lastPlacedGraphSignature by remember { mutableStateOf<Int?>(null) }
+
+    DisposableEffect(Unit) {
+        onSessionRunning("SceneView AR session ready. Scan a floor, table or wall, then tap to anchor the 3D graph.")
+        onDispose { onSessionPaused() }
+    }
+
+    PlacementScene(
+        modifier = Modifier.fillMaxSize().testTag("ar3dgraph-sceneview"),
+        engine = engine,
+        modelLoader = modelLoader,
+        materialLoader = materialLoader,
+        planeRenderer = ui.renderData == null || ui.placement != ARGraphPlacementState.Placed,
+        planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL,
+        instantPlacement = true,
+        showReticle = true,
+        coaching = true,
+        groundShadows = true,
+        sessionConfiguration = { session, config ->
+            if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
+                config.depthMode = Config.DepthMode.AUTOMATIC
+            }
+            config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
+            config.focusMode = Config.FocusMode.AUTO
+        },
+        onPlaced = { anchor ->
+            LaunchedEffect(anchor, ui.renderData) {
+                onPlacementStarted()
+                val signature = ui.renderData?.hashCode()
+                if (signature != null && signature != lastPlacedGraphSignature) {
+                    lastPlacedGraphSignature = signature
+                }
+                onPlacementPlaced()
+            }
+            AnchorNode(anchor = anchor) {
+                ui.renderData?.let { graph ->
+                    SceneViewGraphSurfaceNodes(
+                        materialLoader = materialLoader,
+                        graph = graph,
+                    )
+                }
+            }
+        },
+        content = { controller ->
+            LaunchedEffect(ui.renderData, ui.placement) {
+                if (ui.renderData == null) {
+                    controller.clear()
+                    lastPlacedGraphSignature = null
+                    onTrackingChanged(ARTrackingState.Tracking, "Graph cleared. Generate a 3D surface, then tap to place it.")
+                } else if (ui.placement == ARGraphPlacementState.GraphReadyForPlacement && controller.count > 0) {
+                    controller.clear()
+                    lastPlacedGraphSignature = null
+                    onTrackingChanged(ARTrackingState.Tracking, "Placement cleared. Tap a detected floor, table or wall to anchor it again.")
+                } else if (controller.count == 0) {
+                    onTrackingChanged(ARTrackingState.Tracking, "3D graph ready. Tap a detected floor, table or wall to anchor it.")
+                }
+            }
+        },
+    )
 }
 
 @Composable

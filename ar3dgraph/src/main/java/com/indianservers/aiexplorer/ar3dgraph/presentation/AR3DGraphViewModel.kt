@@ -85,6 +85,22 @@ class AR3DGraphViewModel(
         )
     }
 
+    fun onSceneViewSessionRunning(message: String = "ARCore + SceneView session is running.") = update {
+        it.copy(
+            capability = ARCapabilityState.Supported,
+            session = ARSessionState.SessionRunning,
+            message = message,
+        )
+    }
+
+    fun onSceneViewSessionPaused() = update {
+        it.copy(session = ARSessionState.SessionPaused, message = "AR session paused.")
+    }
+
+    fun onSceneViewSessionFailed(message: String) = update {
+        it.copy(session = ARSessionState.SessionError, placement = ARGraphPlacementState.PlacementFailed, message = message, graphMessage = message)
+    }
+
     fun onInstallationRequested() = update {
         it.copy(capability = ARCapabilityState.InstallationRequested, message = "Complete the ARCore installation or update, then return and retry.")
     }

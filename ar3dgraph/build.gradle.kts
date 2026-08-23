@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation(libs.google.ar.core)
+    implementation(libs.sceneview.ar)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
