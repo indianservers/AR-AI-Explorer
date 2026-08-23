@@ -91,6 +91,36 @@ class UnifiedSpatialMathControllerTest {
         assertTrue(exported.contains("\"renderMode\":\"Wireframe\""))
     }
 
+    @Test fun graph3dAcceptsManyIndependentlyControlledSurfaceLayersWithoutDroppingEarlierGraphs() {
+        val layers = (0 until 12).map { index ->
+            SpatialSurfaceLayer(
+                id = if (index == 0) "surface-main" else "surface-$index",
+                expression = "x^2+y^2+${index + 1}",
+                visible = index != 4,
+                opacity = (1.0 - index * .04).coerceAtLeast(.2),
+                colorIndex = index,
+                renderMode = SpatialSurfaceRenderMode.entries[index % SpatialSurfaceRenderMode.entries.size],
+            )
+        }
+
+        val added = controller.replaceSurfaceLayers(controller.snapshot(state()), layers) as UnifiedSpatialMutation.Applied
+        val modifiedLayers = added.snapshot.state.surfaceLayers.mapIndexed { index, layer ->
+            when (index) {
+                0 -> layer.copy(expression = "sin(x)+cos(y)")
+                7 -> layer.copy(visible = false, opacity = .35, material = SpatialMaterial.Glass)
+                else -> layer
+            }
+        }
+        val modified = controller.replaceSurfaceLayers(added.snapshot, modifiedLayers) as UnifiedSpatialMutation.Applied
+
+        assertEquals(12, modified.snapshot.state.surfaceLayers.size)
+        assertEquals("sin(x)+cos(y)", modified.snapshot.state.surfaceLayers.first().expression)
+        assertEquals("x^2+y^2+12", modified.snapshot.state.surfaceLayers.last().expression)
+        assertFalse(modified.snapshot.state.surfaceLayers[7].visible)
+        assertEquals(.35, modified.snapshot.state.surfaceLayers[7].opacity, 0.0)
+        assertEquals(12, modified.snapshot.document.objects.values.count { it.sourceView == "3D graph" })
+    }
+
     @Test fun deletingEverySurfaceRemovesCanonicalLayersAndSceneDependencies() {
         val changed = controller.replaceSurfaceLayers(controller.snapshot(state()), emptyList()) as UnifiedSpatialMutation.Applied
 

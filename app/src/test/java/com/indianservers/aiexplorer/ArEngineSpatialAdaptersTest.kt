@@ -4,6 +4,8 @@ import com.indianservers.aiexplorer.arengine.contract.ArAvailability
 import com.indianservers.aiexplorer.arengine.contract.ArCameraSnapshot
 import com.indianservers.aiexplorer.arengine.contract.ArCapabilities
 import com.indianservers.aiexplorer.arengine.contract.ArFrameSnapshot
+import com.indianservers.aiexplorer.arengine.contract.ArHitCandidate
+import com.indianservers.aiexplorer.arengine.contract.ArHitType
 import com.indianservers.aiexplorer.arengine.contract.ArLightEstimate
 import com.indianservers.aiexplorer.arengine.contract.ArPose
 import com.indianservers.aiexplorer.arengine.contract.ArQuaternion
@@ -23,6 +25,7 @@ import com.indianservers.aiexplorer.spatial.TrackingQuality
 import com.indianservers.aiexplorer.spatial.toSpatialCapabilities
 import com.indianservers.aiexplorer.spatial.toSpatialFrame
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -66,6 +69,30 @@ class ArEngineSpatialAdaptersTest {
         assertEquals(1.0, frame.cameraPose.positionMeters.x, 0.0)
         assertEquals(1.5f, frame.lighting.pixelIntensity)
         assertEquals(3, frame.lighting.sphericalHarmonics.size)
+    }
+
+    @Test
+    fun arPlacementModesAcceptOnlyMatchingTrackedPlanes() {
+        val floor = ArHitCandidate(
+            id = "floor",
+            type = ArHitType.Plane,
+            pose = ArPose(orientation = ArQuaternion.Identity),
+            distanceMeters = 1.0,
+            confidence = .95,
+            uncertaintyMeters = .02,
+        )
+        val wall = floor.copy(
+            id = "wall",
+            pose = ArPose(orientation = ArQuaternion.fromEulerDegrees(0.0, 0.0, 90.0)),
+        )
+        val instant = floor.copy(id = "instant", type = ArHitType.InstantPlacement)
+
+        assertTrue(ArPlacementMode.FloorTable.accepts(floor))
+        assertFalse(ArPlacementMode.FloorTable.accepts(wall))
+        assertTrue(ArPlacementMode.Wall.accepts(wall))
+        assertFalse(ArPlacementMode.Wall.accepts(floor))
+        assertFalse(ArPlacementMode.FloorTable.accepts(instant))
+        assertFalse(ArPlacementMode.Viewer.accepts(floor))
     }
 
     @Test

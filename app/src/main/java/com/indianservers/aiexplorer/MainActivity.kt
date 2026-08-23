@@ -160,6 +160,7 @@ import com.indianservers.aiexplorer.adaptive.adaptiveFocusRing
 import com.indianservers.aiexplorer.adaptive.adaptiveDialogWidth
 import com.indianservers.aiexplorer.adaptive.rememberAdaptiveDeviceProfile
 import com.indianservers.aiexplorer.adaptive.tvRemoteScrollable
+import com.indianservers.aiexplorer.ar3dgraph.presentation.AR3DGraphScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.conflate
@@ -480,7 +481,6 @@ import com.indianservers.aiexplorer.spatial.ARAvailability
 import com.indianservers.aiexplorer.spatial.ARCapabilities
 import com.indianservers.aiexplorer.arengine.arcore.ArCoreRuntime
 import com.indianservers.aiexplorer.arengine.contract.ArVector2
-import com.indianservers.aiexplorer.arengine.contract.ArVector3
 import com.indianservers.aiexplorer.arengine.contract.ArFrameSnapshot
 import com.indianservers.aiexplorer.arengine.contract.ArHitCandidate
 import com.indianservers.aiexplorer.arengine.contract.ArHitPolicy
@@ -3099,7 +3099,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             MathModule.MatricesLinearTransformations,
             MathModule.DataSpreadsheet,
             MathModule.DiscreteMathematics,
-            MathModule.NumberTheory -> state
+            MathModule.NumberTheory,
+            MathModule.ARGraph3D -> state
         }
         state = history.execute(
             state,
@@ -3117,6 +3118,51 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         workspaceClearEpoch++
         dismissAllMenusAndPanels()
         status = "${state.module.label} workspace cleared - Undo is available"
+    }
+
+    fun clearArWorkspace(mode: ArMathWorkspaceMode) {
+        val cleared = when (mode) {
+            ArMathWorkspaceMode.Geometry2D -> state.copy(
+                points = emptyList(),
+                shapes = emptyList(),
+                pointDependencies = emptyList(),
+                geometryConstraints = emptyList(),
+                geometryGroups = emptyList(),
+            )
+            ArMathWorkspaceMode.Geometry3D -> state.copy(
+                solids = emptyList(),
+                vectors3D = emptyList(),
+                points3D = emptyList(),
+                spatialPlacement = com.indianservers.aiexplorer.spatial.SpatialScenePlacement(),
+            )
+            ArMathWorkspaceMode.Graph2D -> state.copy(
+                functions = emptyList(),
+                graphRowMetadata = emptyMap(),
+                graphSliderMetadata = emptyMap(),
+            )
+            ArMathWorkspaceMode.Graph3D -> state.copy(
+                surfaceExpression = "0",
+                surfaceLayers = emptyList(),
+                spatialPlacement = com.indianservers.aiexplorer.spatial.SpatialScenePlacement(),
+            )
+            ArMathWorkspaceMode.CAS -> state
+        }
+        if (cleared == state) return
+        state = history.execute(
+            state,
+            com.indianservers.aiexplorer.workspace.ReplaceWorkspaceCommand(state, cleared, "Clear AR ${mode.label}"),
+        )
+        selectedShape = -1
+        selectedShapes = emptySet()
+        selectedPoint = -1
+        selectedSolid = -1
+        selectedVector3D = -1
+        selectedPoint3D = -1
+        pendingConstruction = emptyList()
+        pendingPointIndices = emptyList()
+        geometryTool = GeometryTool.Select
+        workspaceClearEpoch++
+        status = "Cleared AR ${mode.label} - Undo is available"
     }
 
     fun reset() = clearCurrentWorkspace()
@@ -3301,7 +3347,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                         Modifier
                             .fillMaxSize()
                             .padding(
-                                start = if (vm.showChrome) {
+                                start = if (vm.showChrome && vm.state.module != MathModule.ARGraph3D) {
                                     adaptiveProfile.workspacePolicy.reservedNavigationWidth
                                 } else {
                                     0.dp
@@ -3379,11 +3425,15 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                             MathModule.DiscreteMathematics -> SetTheoryLogicVisualizerScreen(vm, wide = wide)
                             MathModule.NumberTheory -> NumberTheoryWorkspace(vm)
                             MathModule.SpatialAR -> SpatialARScreen(vm)
+                            MathModule.ARGraph3D -> AR3DGraphScreen(
+                                onBack = vm::navigateBackIntent,
+                                graphEngine = remember { Existing3DGraphEngineBridge() },
+                            )
                         }
                     }
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub && !vm.showMathDictionary && !vm.showMathsLearnAll) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
                     }
-                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
+                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && vm.state.module != MathModule.ARGraph3D && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
                         TopShell(
                             vm,
                             compact,
@@ -4377,6 +4427,7 @@ fun Screen(
                 MathQuickLaunchButton("3D Graph", "xyz", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Graph3D) }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                MathQuickLaunchButton("AR 3D Graph", "AR", Green, Modifier.weight(1f)) { vm.open(MathModule.ARGraph3D) }
                 MathQuickLaunchButton("Trigonometry", "θ", Green, Modifier.weight(1f)) { vm.open(MathModule.Trigonometry) }
                 MathQuickLaunchButton("Solver", "Fx", Violet, Modifier.weight(1f)) { vm.openSolver() }
             }
@@ -4762,6 +4813,7 @@ fun Screen(
                     Triple(MathModule.Geometry3D, "3D Geometry", "Create and manipulate solids, vectors, sections and measurements"),
                     Triple(MathModule.Graph2D, "Graph", "Plot explicit, implicit, polar, parametric and inequality graphs"),
                     Triple(MathModule.Graph3D, "3D Graph", "Explore explicit, implicit and parametric surfaces"),
+                    Triple(MathModule.ARGraph3D, "AR 3D Graph", "Check AR support and prepare a safe camera session for future 3D graph placement"),
                     Triple(MathModule.Trigonometry, "Trigonometry", "Use unit circles, identities, triangles and transformations"),
                     Triple(MathModule.Manipulatives, "Math Tiles", "Learn with algebra tiles, fractions, balances and tactile models"),
                     Triple(MathModule.ProbabilityStatistics, "Probability & Statistics Lab", "Simulate experiments, explore distributions and analyse samples"),
@@ -9844,7 +9896,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     var arHudHidden by remember { mutableStateOf(false) }
     val graphArWorkspace = arWorkspaceMode == ArMathWorkspaceMode.Graph2D || arWorkspaceMode == ArMathWorkspaceMode.Graph3D
     var displayFirstMode by remember { mutableStateOf(!graphArWorkspace) }
-    var arPlacementMode by rememberSaveable { mutableStateOf(if (graphArWorkspace) ArPlacementMode.PlaneAnchor else ArPlacementMode.Screen) }
+    var arPlacementMode by rememberSaveable { mutableStateOf(if (graphArWorkspace) ArPlacementMode.FloorTable else ArPlacementMode.Viewer) }
     var showArAddOptions by remember { mutableStateOf(false) }
     var arGraphExpressionDraft by rememberSaveable { mutableStateOf("x^2") }
     var arSurfaceExpressionDraft by rememberSaveable { mutableStateOf("z = x^2 + y^2") }
@@ -9950,7 +10002,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 placementMode = false
                 reticleHit = null
             }
-            arPlacementMode == ArPlacementMode.PlaneAnchor && !placement.isPlaced -> placementMode = true
+            arPlacementMode != ArPlacementMode.Viewer && !placement.isPlaced -> placementMode = true
         }
     }
     LaunchedEffect(liveAR, displayFirstMode, graphArWorkspace) {
@@ -9966,7 +10018,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         stylusHoverHit = null
         arAnalysisEnabled = arWorkspaceMode == ArMathWorkspaceMode.Graph3D
         if (arWorkspaceMode == ArMathWorkspaceMode.Graph2D || arWorkspaceMode == ArMathWorkspaceMode.Graph3D) {
-            arPlacementMode = ArPlacementMode.PlaneAnchor
+            arPlacementMode = ArPlacementMode.FloorTable
             displayFirstMode = false
             placementMode = !vm.state.spatialPlacement.isPlaced
             reticleHit = null
@@ -10030,8 +10082,9 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         ?.removePrefix("vector-")
         ?.toIntOrNull()
         ?.takeIf(vm.state.vectors3D.indices::contains)
-    val instant6DofMode = arPlacementMode == ArPlacementMode.Instant6Dof && !displayFirstMode && !placementMode
-    val anchorPlacementMode = arPlacementMode == ArPlacementMode.PlaneAnchor && placementMode && !displayFirstMode
+    val activeAnchor = runtime?.anchors()?.firstOrNull { it.id == placement.anchorId }
+    val anchorPlacementMode = arPlacementMode != ArPlacementMode.Viewer && !displayFirstMode && (placementMode || activeAnchor == null)
+    val objectManipulationMode = !displayFirstMode && !anchorPlacementMode && activeAnchor != null
     val phase4Scene = remember(styledSharedScene, arSelection, anchorPlacementMode, reticleHit, gizmoMode, stylusHoverHit) {
         phase4DisplayScene(styledSharedScene, arSelection, anchorPlacementMode && reticleHit != null, vm.state.solids, gizmoMode, stylusHoverHit?.objectId)
     }
@@ -10099,26 +10152,6 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         ),
         depthOcclusionEnabled = false,
     )
-    LaunchedEffect(liveAR, arFrame?.timestampNanos, arPlacementMode, displayFirstMode, placementMode, arWorkspaceMode) {
-        val snapshot = arFrame
-        if (
-            liveAR &&
-            snapshot != null &&
-            arPlacementMode == ArPlacementMode.Instant6Dof &&
-            !displayFirstMode &&
-            !placementMode &&
-            !placement.anchorId.startsWith("instant-world-") &&
-            snapshot.camera.trackingState == ArTrackingState.Tracking
-        ) {
-            vm.transformSpatialPlacement("Place instant 6DoF scene") {
-                it.instantCameraFrontPlacement(
-                    frame = snapshot,
-                    rotationDegrees = Vec3(arOverlayRotationX.toDouble(), arOverlayRotationY.toDouble(), arOverlayRotationZ.toDouble()),
-                )
-            }
-        }
-    }
-    val activeAnchor = runtime?.anchors()?.firstOrNull { it.id == placement.anchorId }
     val canonicalArScene = remember(interactiveScene, placement, activeAnchor, arSelection) {
         ArPhase4SpatialBridge.scene(interactiveScene, placement, activeAnchor, arSelection)
     }
@@ -10131,6 +10164,46 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             screenLocked = displayFirstMode,
         ),
     )
+    fun resetArDisplayNow(forMode: ArMathWorkspaceMode = arWorkspaceMode) {
+        arPlacementMode = ArPlacementMode.Viewer
+        displayFirstMode = true
+        placementMode = false
+        reticleHit = null
+        arOverlayPan = Offset.Zero
+        arOverlayScale = if (forMode == ArMathWorkspaceMode.Graph3D) .50f else .42f
+        arOverlayRotationX = if (forMode == ArMathWorkspaceMode.Graph3D) -18f else 0f
+        arOverlayRotationY = 0f
+        arOverlayRotationZ = 0f
+    }
+    fun plotArGraphExpression() {
+        val expression = arGraphExpressionDraft.trim()
+        if (expression.isBlank()) return
+        val target = vm.state.functions.lastIndex
+        if (target >= 0) {
+            vm.updateFunction(target) { it.copy(expression = expression, visible = true) }
+        } else {
+            vm.addFunction(expression)
+        }
+        arWorkspaceMode = ArMathWorkspaceMode.Graph2D
+        showArAddOptions = false
+        resetArDisplayNow(ArMathWorkspaceMode.Graph2D)
+    }
+    fun plotArSurfaceExpression() {
+        val expression = arSurfaceExpressionDraft.trim()
+        if (expression.isBlank()) return
+        vm.setSurfaceExpression(expression)
+        arWorkspaceMode = ArMathWorkspaceMode.Graph3D
+        showArAddOptions = false
+        resetArDisplayNow(ArMathWorkspaceMode.Graph3D)
+    }
+    fun clearCurrentArWorkspace() {
+        placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
+        vm.clearArWorkspace(arWorkspaceMode)
+        arSelection = ArSelectionState()
+        arGroups = emptyList()
+        showArAddOptions = false
+        resetArDisplayNow(arWorkspaceMode)
+    }
     fun deleteCurrentArItem() {
         when (arWorkspaceMode) {
             ArMathWorkspaceMode.Geometry2D -> {
@@ -10160,6 +10233,42 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             ArMathWorkspaceMode.CAS -> vm.openMathNotebook()
         }
     }
+    fun duplicateCurrentArItem() {
+        when (arWorkspaceMode) {
+            ArMathWorkspaceMode.Geometry2D -> {
+                if (vm.selectedShape !in vm.state.shapes.indices && vm.state.shapes.isNotEmpty()) {
+                    vm.selectShape(vm.state.shapes.lastIndex)
+                }
+                if (vm.selectedShape in vm.state.shapes.indices) vm.duplicateSelectedShape() else vm.open(MathModule.Geometry2D)
+            }
+            ArMathWorkspaceMode.Geometry3D -> {
+                val target = selectedSolidIndices.singleOrNull()
+                    ?: vm.selectedSolid.takeIf { it in vm.state.solids.indices }
+                target?.let {
+                    vm.selectSolid(it)
+                    vm.duplicateSelectedSolid()
+                    arSelection = ArSelectionState(setOf("solid-${vm.selectedSolid}"), "solid-${vm.selectedSolid}")
+                } ?: selectedVectorIndex?.let { index ->
+                    val source = vm.state.vectors3D[index]
+                    vm.addVector3D()
+                    vm.transformVector3D(vm.state.vectors3D.lastIndex) {
+                        source.copy(
+                            name = "${source.name} copy",
+                            start = source.start + Vec3(.35, .15, .35),
+                            end = source.end + Vec3(.35, .15, .35),
+                        )
+                    }
+                } ?: vm.open(MathModule.Geometry3D)
+            }
+            ArMathWorkspaceMode.Graph2D -> vm.state.functions.lastIndex.takeIf { it >= 0 }?.let(vm::duplicateFunction)
+            ArMathWorkspaceMode.Graph3D -> {
+                val expression = vm.state.surfaceExpression.takeIf { it.isNotBlank() && it != "0" } ?: arSurfaceExpressionDraft
+                arSurfaceExpressionDraft = expression
+                vm.setSurfaceExpression(expression)
+            }
+            ArMathWorkspaceMode.CAS -> vm.openMathNotebook()
+        }
+    }
     fun openCurrentArWorkspaceEditor() {
         when (arWorkspaceMode) {
             ArMathWorkspaceMode.Geometry2D -> vm.open(MathModule.Geometry2D)
@@ -10170,7 +10279,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         }
     }
     fun resetArDisplay(forMode: ArMathWorkspaceMode = arWorkspaceMode) {
-        arPlacementMode = ArPlacementMode.Screen
+        arPlacementMode = ArPlacementMode.Viewer
         displayFirstMode = true
         placementMode = false
         reticleHit = null
@@ -10180,71 +10289,10 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         arOverlayRotationY = 0f
         arOverlayRotationZ = 0f
     }
-    fun enterInstant6Dof() {
-        arPlacementMode = ArPlacementMode.Instant6Dof
-        displayFirstMode = false
-        placementMode = false
-        reticleHit = null
-        val snapshot = arFrame
-        if (!liveAR) {
-            startLiveAr(userRequestedInstall = true)
-            return
-        }
-        if (snapshot == null || snapshot.camera.trackingState != ArTrackingState.Tracking) {
-            liveError = "Move slowly until ARCore tracking is ready, then tap 6DoF again."
-            return
-        }
-        placement.anchorId.takeIf { it.isNotBlank() && !it.startsWith("instant-world-") }?.let { runtime?.detachAnchor(it) }
-        vm.transformSpatialPlacement("Place instant 6DoF scene") {
-            it.instantCameraFrontPlacement(
-                frame = snapshot,
-                rotationDegrees = Vec3(arOverlayRotationX.toDouble(), arOverlayRotationY.toDouble(), arOverlayRotationZ.toDouble()),
-            )
-        }
-        liveError = ""
-    }
     fun rankedHitAt(point: Offset): ArHitCandidate? = runtime
         ?.hitTest(ArVector2(point.x, point.y))
         ?.let(ArHitPolicy::rank)
-        ?.firstOrNull()
-
-    fun placeInstantWorldAtTap(point: Offset) {
-        val snapshot = arFrame
-        if (snapshot == null || viewportSize.width <= 0 || viewportSize.height <= 0) {
-            liveError = "Move slowly until ARCore tracking is ready, then tap again."
-            return
-        }
-        if (snapshot.camera.trackingState != ArTrackingState.Tracking) {
-            liveError = "Tracking is limited. Hold still, scan a textured area, then tap again."
-            return
-        }
-        val camera = snapshot.camera.pose
-        val forward = camera.orientation.rotate(ArVector3(0.0, 0.0, -1.0))
-        val right = camera.orientation.rotate(ArVector3(1.0, 0.0, 0.0))
-        val up = camera.orientation.rotate(ArVector3(0.0, 1.0, 0.0))
-        val x = ((point.x / viewportSize.width.toFloat()) - .5f).toDouble().coerceIn(-.5, .5)
-        val y = ((point.y / viewportSize.height.toFloat()) - .5f).toDouble().coerceIn(-.5, .5)
-        val world = camera.positionMeters + forward * 1.45 + right * (x * .9) - up * (y * .9)
-        placement.anchorId.takeIf { it.isNotBlank() && !it.startsWith("instant-world-") }?.let { runtime?.detachAnchor(it) }
-        vm.transformSpatialPlacement("Place AR graph from tap") {
-            it.copy(
-                anchorId = "instant-world-${System.currentTimeMillis()}",
-                pose = it.pose.copy(
-                    positionMeters = Vec3(world.x, world.y, world.z),
-                    rotationDegrees = Vec3(arOverlayRotationX.toDouble(), arOverlayRotationY.toDouble(), arOverlayRotationZ.toDouble()),
-                ),
-                trackingQuality = TrackingQuality.Tracking,
-                estimated = true,
-                measurementUncertaintyMeters = .08,
-                relocalizationMessage = "Placed from camera 6DoF pose; no surface, wall, or plane was required.",
-                placedAt = System.currentTimeMillis(),
-            )
-        }
-        displayFirstMode = false
-        placementMode = false
-        reticleHit = null
-        liveError = ""
-    }
+        ?.firstOrNull(arPlacementMode::accepts)
     LaunchedEffect(arSelection.primaryObjectId, vm.state.solids, vm.state.vectors3D) {
         val solid = arSelection.primaryObjectId?.removePrefix("solid-")?.toIntOrNull()?.let(vm.state.solids::getOrNull)
         val vector = arSelection.primaryObjectId?.removePrefix("vector-")?.toIntOrNull()?.let(vm.state.vectors3D::getOrNull)
@@ -10262,7 +10310,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         }
     }
     Box(Modifier.fillMaxSize().onSizeChanged { viewportSize = it }) {
-        if (liveAR && runtime != null) {
+        if (liveAR && runtime != null && !displayFirstMode) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { viewContext ->
@@ -10287,10 +10335,10 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Box(
                 Modifier
                     .fillMaxSize()
-                    .pointerInput(arSelection, gizmoMode, gizmoAxis, anchorPlacementMode, instant6DofMode, subObjectKind, arMultiSelect, snapEnabled, precisionMode, numericPlaneNormal, numericPlaneOffset, canonicalArScene, arFrame, trackingAllowsDirectManipulation) {
+                    .pointerInput(arSelection, gizmoMode, gizmoAxis, anchorPlacementMode, objectManipulationMode, subObjectKind, arMultiSelect, snapEnabled, precisionMode, numericPlaneNormal, numericPlaneOffset, canonicalArScene, arFrame, trackingAllowsDirectManipulation) {
                         awaitEachGesture {
                             val down = awaitFirstDown(requireUnconsumed = false)
-                            if (!anchorPlacementMode && !instant6DofMode) {
+                            if (!anchorPlacementMode && !objectManipulationMode) {
                                 var totalPan = Offset.Zero
                                 var totalScale = 1f
                                 var totalRotation = 0f
@@ -10333,7 +10381,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 ?.toIntOrNull()
                                 ?.takeIf(vm.state.vectors3D.indices::contains)
                                 ?.takeIf { "vector-$it" !in arSelection.lockedObjectIds }
-                            val objectGesture = instant6DofMode && (editableIndices.isNotEmpty() || vectorGestureIndex != null)
+                            val objectGesture = objectManipulationMode && (editableIndices.isNotEmpty() || vectorGestureIndex != null)
                             val basePosition = editableIndices.singleOrNull()?.let(vm.state.solids::getOrNull)?.position
                             val snapTargets = if (snapEnabled && basePosition != null) {
                                 vm.state.solids.flatMapIndexed { index, solid ->
@@ -10467,10 +10515,15 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                                 reticleHit = null
                                             }
                                             .onFailure {
-                                                liveError = it.message ?: "Could not create the spatial anchor; using camera 6DoF placement."
-                                                placeInstantWorldAtTap(down.position)
+                                                liveError = it.message ?: "Could not create the spatial anchor; scan the selected surface and tap again."
                                             }
-                                    } ?: placeInstantWorldAtTap(down.position)
+                                    } ?: run {
+                                        liveError = when (arPlacementMode) {
+                                            ArPlacementMode.FloorTable -> "No tracked floor/table plane at the tap point. Move slowly to scan, then tap a highlighted horizontal surface."
+                                            ArPlacementMode.Wall -> "No tracked wall plane at the tap point. Scan a textured wall, then tap the detected vertical surface."
+                                            ArPlacementMode.Viewer -> "3D Viewer does not create AR anchors. Switch to Floor/Table or Wall for full AR placement."
+                                        }
+                                    }
                                 } else {
                                     val snapshot = arFrame
                                     if (snapshot != null) {
@@ -10501,14 +10554,14 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                             }
                         }
                     }
-                    .pointerInput(arFrame, canonicalArScene, viewportSize, anchorPlacementMode, instant6DofMode, trackingAllowsDirectManipulation, subObjectKind) {
+                    .pointerInput(arFrame, canonicalArScene, viewportSize, anchorPlacementMode, objectManipulationMode, trackingAllowsDirectManipulation, subObjectKind) {
                         awaitPointerEventScope {
                             while (true) {
                                 val event = awaitPointerEvent()
                                 val hover = event.changes.firstOrNull { it.type == PointerType.Stylus && !it.pressed }
                                 stylusHoverHit = if (
                                     hover != null &&
-                                    instant6DofMode &&
+                                    objectManipulationMode &&
                                     trackingAllowsDirectManipulation &&
                                     arFrame != null
                                 ) {
@@ -10537,7 +10590,11 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 }
                 Text(
                     reticleHit?.let { "${it.type.name} - ${(it.confidence * 100).roundToInt()}% - ±${trim(it.uncertaintyMeters)} m" }
-                        ?: "Tap to place from camera 6DoF",
+                        ?: when (arPlacementMode) {
+                            ArPlacementMode.FloorTable -> "Move your phone slowly to scan a floor or table."
+                            ArPlacementMode.Wall -> "Move your phone slowly to scan a wall."
+                            ArPlacementMode.Viewer -> "3D Viewer is not live AR."
+                        },
                     color = Ink,
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Center).offset(y = 48.dp).clip(RoundedCornerShape(10.dp)).background(SurfaceA.copy(.88f)).padding(8.dp),
@@ -10599,13 +10656,20 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                             },
                         )
                     }
-                    GlowButton(if (liveAR) "On" else "Camera", icon = if (liveAR) "C" else "AR", iconOnly = true) { startLiveAr(userRequestedInstall = true) }
-                    GlowButton("Instant 6DoF", icon = "6D", iconOnly = true, onClick = ::enterInstant6Dof)
+                    GlowButton(if (liveAR && !displayFirstMode) "AR On" else "Full AR", icon = if (liveAR && !displayFirstMode) "AR" else "6D", iconOnly = true) {
+                        arPlacementMode = ArPlacementMode.FloorTable
+                        displayFirstMode = false
+                        placementMode = activeAnchor == null
+                        startLiveAr(userRequestedInstall = true)
+                    }
                     GlowButton("Add ${arWorkspaceMode.shortLabel}", icon = "+", iconOnly = true) {
                         showArAddOptions = true
                         arHudExpanded = false
                     }
+                    GlowButton("Edit ${arWorkspaceMode.shortLabel}", icon = "E", iconOnly = true, onClick = ::openCurrentArWorkspaceEditor)
+                    GlowButton("Copy ${arWorkspaceMode.shortLabel}", icon = "C", iconOnly = true, onClick = ::duplicateCurrentArItem)
                     DestructiveGlowButton("Delete ${arWorkspaceMode.shortLabel}", icon = "-", iconOnly = true, onClick = ::deleteCurrentArItem)
+                    DestructiveGlowButton("Clear all", icon = "X", iconOnly = true, onClick = ::clearCurrentArWorkspace)
                     GlowButton(
                         "Center display",
                         icon = "D",
@@ -10681,17 +10745,17 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Insight("AR mode", if (liveAR) "Live ARCore camera + shared GPU scene" else "Accessible spatial simulator", Cyan)
             }
             Insight("ARCore", capabilities.message, if (capabilities.availability == ARAvailability.Unsupported) Amber else Green)
-            Insight("Display", arPlacementMode.label, if (instant6DofMode) Green else if (displayFirstMode) Cyan else Amber)
+            Insight("Display", arPlacementMode.label, if (objectManipulationMode) Green else if (displayFirstMode) Cyan else Amber)
             Insight("Tracking", when {
-                displayFirstMode -> "Screen locked"
-                instant6DofMode -> guidance.title
+                displayFirstMode -> "3D Viewer fallback"
+                objectManipulationMode -> guidance.title
                 else -> guidance.title
             }, if (displayFirstMode || guidance.safeToPlace) Green else Amber)
             Text(
                 when {
-                    displayFirstMode -> "Stable screen AR: graph stays visible and can be moved directly."
-                    instant6DofMode -> "Instant ARCore 6DoF: object is placed in front of the camera so you can walk around it without scanning a plane."
-                    anchorPlacementMode -> "Tap the graph into the real world. Floor, table, wall, depth point, feature point, or camera 6DoF fallback are accepted."
+                    displayFirstMode -> "3D Viewer fallback: orbit, scale, and edit without claiming camera-based AR tracking."
+                    objectManipulationMode -> "Graph anchored. Move around it to explore; use transform tools to move, rotate, or scale the object intentionally."
+                    anchorPlacementMode -> "Surface detected only after a valid tracked ${arPlacementMode.label.lowercase()} plane hit. Tap to create a persistent AR anchor."
                     else -> guidance.instruction
                 },
                 color = Muted,
@@ -10699,19 +10763,29 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 GlowButton(if (liveAR) "Camera on" else "Open camera", onClick = { startLiveAr(userRequestedInstall = true) })
-                GlowButton(if (arPlacementMode == ArPlacementMode.Screen) "• Screen" else "Screen") {
-                    arPlacementMode = ArPlacementMode.Screen
+                GlowButton("Edit current", onClick = ::openCurrentArWorkspaceEditor)
+                GlowButton("Copy current", onClick = ::duplicateCurrentArItem)
+                DestructiveGlowButton("Clear all", onClick = ::clearCurrentArWorkspace)
+                GlowButton(if (arPlacementMode == ArPlacementMode.Viewer) "• Viewer" else "3D Viewer") {
+                    arPlacementMode = ArPlacementMode.Viewer
                     displayFirstMode = true
                     placementMode = false
                     reticleHit = null
                     if (!placement.isPlaced) vm.placeSpatialScene()
                 }
-                GlowButton(if (instant6DofMode) "• Recenter 6DoF" else "6DoF", onClick = ::enterInstant6Dof)
-                GlowButton(if (anchorPlacementMode) "• Tap place" else "Tap place") {
-                    arPlacementMode = ArPlacementMode.PlaneAnchor
+                GlowButton(if (arPlacementMode == ArPlacementMode.FloorTable && anchorPlacementMode) "• Floor/Table" else "Floor/Table") {
+                    arPlacementMode = ArPlacementMode.FloorTable
                     displayFirstMode = false
                     placementMode = true
                     reticleHit = null
+                    startLiveAr(userRequestedInstall = true)
+                }
+                GlowButton(if (arPlacementMode == ArPlacementMode.Wall && anchorPlacementMode) "• Wall" else "Wall") {
+                    arPlacementMode = ArPlacementMode.Wall
+                    displayFirstMode = false
+                    placementMode = true
+                    reticleHit = null
+                    startLiveAr(userRequestedInstall = true)
                 }
                 GlowButton("Reset", onClick = {
                     placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
@@ -11049,7 +11123,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         Text("Add ${arWorkspaceMode.label}", color = Ink, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                         Text("Options follow the selected AR workspace", color = Muted, fontSize = 10.sp)
                     }
-                    GlowButton("Close", icon = "x", iconOnly = true) { showArAddOptions = false }
+                    GlowButton("Collapse", icon = "collapse", iconOnly = true) { showArAddOptions = false }
                 }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     when (arWorkspaceMode) {
@@ -11090,14 +11164,13 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 label = "New graph expression",
                                 modifier = Modifier.fillMaxWidth(),
                                 placeholder = "y = x^2 or x^2 + y^2 = 9",
+                                imeAction = ImeAction.Done,
+                                onDone = ::plotArGraphExpression,
                             )
-                            GlowButton("Add expression", icon = "+", enabled = arGraphExpressionDraft.isNotBlank()) {
-                                vm.addFunction(arGraphExpressionDraft.trim())
-                                arWorkspaceMode = ArMathWorkspaceMode.Graph2D
-                                arGraphExpressionDraft = "x"
-                                showArAddOptions = false
-                                resetArDisplay(ArMathWorkspaceMode.Graph2D)
+                            vm.state.functions.lastOrNull()?.let { function ->
+                                Text("Current: ${function.name} = ${function.expression}", color = Muted, fontSize = 11.sp, maxLines = 2)
                             }
+                            GlowButton(if (vm.state.functions.isEmpty()) "Add expression" else "Update current", icon = "+", enabled = arGraphExpressionDraft.isNotBlank(), onClick = ::plotArGraphExpression)
                             listOf(
                                 "Line" to "x",
                                 "Parabola" to "x^2",
@@ -11125,13 +11198,11 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 label = "New 3D surface",
                                 modifier = Modifier.fillMaxWidth(),
                                 placeholder = "z = x^2 + y^2",
+                                imeAction = ImeAction.Done,
+                                onDone = ::plotArSurfaceExpression,
                             )
-                            GlowButton("Plot surface", icon = "+", enabled = arSurfaceExpressionDraft.isNotBlank()) {
-                                vm.setSurfaceExpression(arSurfaceExpressionDraft.trim())
-                                arWorkspaceMode = ArMathWorkspaceMode.Graph3D
-                                showArAddOptions = false
-                                resetArDisplay(ArMathWorkspaceMode.Graph3D)
-                            }
+                            Text("Current: ${vm.state.surfaceExpression.ifBlank { "none" }}", color = Muted, fontSize = 11.sp, maxLines = 2)
+                            GlowButton(if (vm.state.surfaceExpression.isBlank() || vm.state.surfaceExpression == "0") "Plot surface" else "Update surface", icon = "+", enabled = arSurfaceExpressionDraft.isNotBlank(), onClick = ::plotArSurfaceExpression)
                             listOf(
                                 "Paraboloid" to "x^2 + y^2",
                                 "Saddle" to "x^2 - y^2",
@@ -11337,7 +11408,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             }
     }
     val primaryMesh = if (primaryLayer == null || primaryLayer.visible) mesh else null
-    val additionalSurfaceMeshEntries = remember(surfaceLayers, density, selectedSurfaceLayerIndices) {
+    val additionalSurfaceMeshEntries = remember(surfaceLayers, density) {
         surfaceLayers.drop(1).mapIndexedNotNull { index, layer ->
             if (!layer.visible) return@mapIndexedNotNull null
             val actualIndex = index + 1
@@ -11350,18 +11421,15 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             runCatching { layer.productionMesh(qualityDensity) }.getOrNull()
                 ?.takeIf { candidate -> candidate.vertices.all { point -> point.x.isFinite() && point.y.isFinite() && point.z.isFinite() } }
                 ?.let { surfaceMesh ->
-                    val selectionAlpha = when {
-                        selectedSurfaceLayerIndices.isEmpty() -> 1f
-                        actualIndex in selectedSurfaceLayerIndices -> 1f
-                        else -> .25f
-                    }
                     Triple(
                         actualIndex,
                         surfaceMesh,
                         StyledSurfaceMesh(
                             mesh = surfaceMesh,
                             appearance = layer.workspaceAppearance().copy(colorIndex = layer.colorIndex + actualIndex),
-                            opacity = layer.opacity.toFloat() * selectionAlpha,
+                            // Selection is indicated by the HUD/properties row. Fading other surfaces
+                            // made the first graph look deleted as soon as a second graph was added.
+                            opacity = layer.opacity.toFloat(),
                             renderMode = layer.renderMode,
                         ),
                     )
@@ -11404,7 +11472,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         }
         val next = interpretation.canonicalEquation
         val candidate = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
-            id = surfaceLayers.getOrNull(selectedSurfaceLayerIndex)?.id ?: "surface-${System.currentTimeMillis()}",
+            id = surfaceLayers.getOrNull(selectedSurfaceLayerIndex)?.id ?: "surface-${System.nanoTime()}",
             expression = interpretation.expression,
             kind = interpretation.kind,
             expressionY = interpretation.expressionY,
@@ -11423,7 +11491,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         if (addingSurfaceEquation || selectedSurfaceLayerIndex !in surfaceLayers.indices) {
             val newIndex = surfaceLayers.size
             val layer = com.indianservers.aiexplorer.core.SpatialSurfaceLayer(
-                "surface-${System.currentTimeMillis()}",
+                "surface-${System.nanoTime()}",
                 interpretation.expression,
                 kind = interpretation.kind,
                 expressionY = interpretation.expressionY,
@@ -11512,12 +11580,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             appearance = surfaceLayers.firstOrNull()?.workspaceAppearance() ?: graphSceneAppearance,
             additionalMeshes = additionalSurfaceMeshes,
             axisStyle = graphAxisStyle,
-            surfaceOpacity = (surfaceLayers.firstOrNull()?.opacity ?: 1.0).toFloat() *
-                when {
-                    selectedSurfaceLayerIndices.isEmpty() -> 1f
-                    0 in selectedSurfaceLayerIndices -> 1f
-                    else -> .25f
-                },
+            surfaceOpacity = (surfaceLayers.firstOrNull()?.opacity ?: 1.0).toFloat(),
             selectableMeshes = selectableSurfaceMeshes,
             gradientPath = gradientPlayback.path,
             gradientPathIndex = gradientPlayback.index,
@@ -11593,7 +11656,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                     selectedSurfaceLayerIndex = -1
                     selectedSurfaceLayerIndices = emptySet()
                     surfaceDraft = ""
-                    surfaceInputMessage = "Enter an equation, then tap Plot."
+                    surfaceInputMessage = "Enter an equation and press Enter to plot."
                     equationPanelOpen = true
                     propertiesOpen = false
                     insightsOpen = false
@@ -11679,6 +11742,30 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                     surfaceLayers.mapIndexed { i, old -> if (i == index) layer else old },
                     "Update 3D surface properties",
                 )
+            },
+            onEdit = { index ->
+                selectSurfaceLayer(index)
+                surfaceDraft = surfaceLayers[index].displayEquation()
+                addingSurfaceEquation = false
+                propertiesOpen = false
+                equationPanelOpen = true
+            },
+            onDuplicate = { index ->
+                val source = surfaceLayers[index]
+                val newIndex = surfaceLayers.size
+                val duplicate = source.copy(
+                    id = "surface-${System.nanoTime()}",
+                    colorIndex = source.colorIndex + 1,
+                )
+                val result = vm.replaceSurfaceLayers(surfaceLayers + duplicate, "Duplicate 3D surface")
+                if (result.isSuccess) {
+                    selectedSurfaceLayerIndex = newIndex
+                    selectedSurfaceLayerIndices = setOf(newIndex)
+                    surfaceDraft = duplicate.displayEquation()
+                    surfaceInputMessage = "Duplicated surface ${index + 1}"
+                } else {
+                    surfaceInputMessage = "Unable to duplicate graph: ${result.exceptionOrNull()?.message ?: "workspace validation failed"}"
+                }
             },
             onDelete = { deleteSurfaceLayers(setOf(it)) },
             onSelectAll = {
@@ -11810,6 +11897,8 @@ private fun Graph3DEquationPanel(
             label = "3D surface",
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "3D surface equation input" },
             placeholder = "z=x^2+y^2  or  x^2+y^2+z^2=4",
+            imeAction = ImeAction.Done,
+            onDone = onPlot,
         )
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GlowButton("Plot", icon = "Fx", modifier = Modifier.weight(1f), onClick = onPlot)
@@ -11842,6 +11931,8 @@ private fun Graph3DPropertiesPanel(
     onQueryChange: (String) -> Unit,
     onSelect: (Int, Boolean) -> Unit,
     onUpdateLayer: (Int, com.indianservers.aiexplorer.core.SpatialSurfaceLayer) -> Unit,
+    onEdit: (Int) -> Unit,
+    onDuplicate: (Int) -> Unit,
     onDelete: (Int) -> Unit,
     onSelectAll: () -> Unit,
     onDeleteSelected: () -> Unit,
@@ -11865,9 +11956,13 @@ private fun Graph3DPropertiesPanel(
             DestructiveGlowButton("Clear all", enabled = surfaceLayers.isNotEmpty(), onClick = onClearAll)
         }
         if (surfaceLayers.isEmpty()) Text("Use + Equation to add the first surface.", color = Muted, fontSize = 11.sp)
-        surfaceLayers.mapIndexed { index, layer -> index to layer }
-            .filter { (_, layer) -> query.isBlank() || layer.expression.contains(query.trim(), ignoreCase = true) }
-            .forEach { (index, layer) ->
+        val filteredLayers = surfaceLayers.mapIndexed { index, layer -> index to layer }
+            .filter { (_, layer) -> query.isBlank() || layer.displayEquation().contains(query.trim(), ignoreCase = true) }
+        Column(
+            Modifier.fillMaxWidth().heightIn(max = 430.dp).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(7.dp),
+        ) {
+            filteredLayers.forEach { (index, layer) ->
                 Column(
                     Modifier
                         .fillMaxWidth()
@@ -11879,15 +11974,19 @@ private fun Graph3DPropertiesPanel(
                     verticalArrangement = Arrangement.spacedBy(5.dp),
                 ) {
                     Text(layer.kind.name + " surface", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                    OutlinedTextField(
-                        value = layer.expression,
-                        onValueChange = { onUpdateLayer(index, layer.copy(expression = it)) },
-                        label = { Text("Surface ${index + 1}") },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
+                    Text(
+                        "Surface ${index + 1}: ${layer.displayEquation()}",
+                        color = Ink,
+                        fontSize = 12.sp,
+                        modifier = Modifier.fillMaxWidth().semantics {
+                            contentDescription = "3D surface layer ${index + 1}: ${layer.displayEquation()}"
+                        },
+                        maxLines = 2,
                     )
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         GlowButton(if (index in selectedSurfaceLayerIndices) "Selected" else "Select") { onSelect(index, true) }
+                        GlowButton("Edit") { onEdit(index) }
+                        GlowButton("Copy") { onDuplicate(index) }
                         GlowButton(if (layer.visible) "Hide" else "Show") { onUpdateLayer(index, layer.copy(visible = !layer.visible)) }
                         GlowButton(layer.material.name) {
                             val entries = com.indianservers.aiexplorer.core.SpatialMaterial.entries
@@ -11914,6 +12013,7 @@ private fun Graph3DPropertiesPanel(
                     AxisSlider("Opacity", layer.opacity.toFloat(), .1f..1f) { opacity -> onUpdateLayer(index, layer.copy(opacity = opacity.toDouble())) }
                 }
             }
+        }
     }
 }
 
@@ -12024,8 +12124,13 @@ private fun Graph3DControlsPanel(
 }
 
 internal enum class TrigLab(val label: String) {
-    Circle("Circle + Waves"), Identities("Identity Lab"), Triangle("Triangle Solver"),
-    Equations("Equations"), Polar("Polar Curves"), Applications("Heights + Distance"), Harmonics("Fourier Lab")
+    Circle("Unit Circle"),
+    Graphs("Trig Graphs"),
+    Transform("Transform"),
+    Identities("Identities"),
+    Applications("Applications"),
+    Challenge("Challenge"),
+    Reference("Reference"),
 }
 internal enum class TrigLineStyle { Solid, Dashed, Dotted }
 
@@ -12037,15 +12142,15 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
     } else {
         72.dp
     }
-    var angle by remember { mutableFloatStateOf(45f) }
-    var amplitude by remember { mutableFloatStateOf(1f) }
-    var period by remember { mutableFloatStateOf((2 * Math.PI).toFloat()) }
-    var phase by remember { mutableFloatStateOf(0f) }
-    var verticalShift by remember { mutableFloatStateOf(0f) }
+    var angle by rememberSaveable { mutableFloatStateOf(-135f) }
+    var amplitude by rememberSaveable { mutableFloatStateOf(1.5f) }
+    var frequencyB by rememberSaveable { mutableFloatStateOf(1f) }
+    var phase by rememberSaveable { mutableFloatStateOf(0f) }
+    var verticalShift by rememberSaveable { mutableFloatStateOf(.5f) }
     var function by remember { mutableStateOf(TrigFunction.Sine) }
-    var visibleFunctions by remember { mutableStateOf(setOf(TrigFunction.Sine)) }
+    var visibleFunctions by remember { mutableStateOf(setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)) }
     var angleUnit by remember { mutableStateOf(TrigAngleUnit.Degrees) }
-    var lab by remember { mutableStateOf(TrigLab.Circle) }
+    var lab by rememberSaveable { mutableStateOf(TrigLab.Circle) }
     var identityIndex by remember { mutableIntStateOf(0) }
     var identityStep by remember { mutableIntStateOf(0) }
     var showTangents by remember { mutableStateOf(true) }
@@ -12054,133 +12159,341 @@ private fun TrigonometryScreen(vm: ExplorerViewModel) {
     var showAsymptotes by remember { mutableStateOf(true) }
     var homeRequest by remember { mutableIntStateOf(0) }
     var zoom by remember { mutableFloatStateOf(1f) }
-    var animateAngle by remember { mutableStateOf(false) }
+    var animateAngle by rememberSaveable { mutableStateOf(false) }
     var rotationDirection by remember { mutableIntStateOf(1) }
     var lineStyle by remember { mutableStateOf(TrigLineStyle.Solid) }
     var paletteShift by remember { mutableIntStateOf(0) }
-    var inverseFunction by remember { mutableStateOf(InverseTrigFunction.ArcSine) }
-    var inverseInput by remember { mutableFloatStateOf(.5f) }
-    var equationTarget by remember { mutableFloatStateOf(.5f) }
-    var polarType by remember { mutableStateOf(PolarCurveType.Rose) }
-    var polarParameter by remember { mutableFloatStateOf(3f) }
-    var triangleA by remember { mutableFloatStateOf(4f) }
-    var triangleB by remember { mutableFloatStateOf(5f) }
-    var triangleMode by remember { mutableStateOf("SAS") }
-    var observationDistance by remember { mutableFloatStateOf(20f) }
-    var observerHeight by remember { mutableFloatStateOf(1.6f) }
-    var harmonic1 by remember { mutableFloatStateOf(1f) }
-    var harmonic2 by remember { mutableFloatStateOf(.5f) }
-    var harmonic3 by remember { mutableFloatStateOf(.25f) }
+    var application by rememberSaveable { mutableStateOf("Ferris Wheel") }
+    var appPlaying by rememberSaveable { mutableStateOf(false) }
+    var appTime by rememberSaveable { mutableFloatStateOf(2.2f) }
+    var appAmplitude by rememberSaveable { mutableFloatStateOf(20f) }
+    var appSpeed by rememberSaveable { mutableFloatStateOf(1f) }
+    var appOffset by rememberSaveable { mutableFloatStateOf(25f) }
+    var referenceQuery by rememberSaveable { mutableStateOf("") }
+    var tutorOpen by rememberSaveable { mutableStateOf(false) }
+    var tutorPrompt by rememberSaveable { mutableStateOf("") }
+    var tutorAnswer by rememberSaveable { mutableStateOf("Ask a trigonometry question. I will use the current angle and screen as context.") }
+    var challengeTarget by rememberSaveable { mutableFloatStateOf(.5f) }
+    var challengeScore by rememberSaveable { mutableIntStateOf(0) }
+    var challengeStreak by rememberSaveable { mutableIntStateOf(0) }
+    var challengeFeedback by rememberSaveable { mutableStateOf("Find an angle where sin theta = 0.5.") }
     var clearEpochSeen by remember { mutableIntStateOf(vm.workspaceClearEpoch) }
     LaunchedEffect(vm.workspaceClearEpoch) {
         if (vm.workspaceClearEpoch != clearEpochSeen) {
-            angle = 45f
+            angle = -135f
             amplitude = 1f
-            period = (2 * Math.PI).toFloat()
+            frequencyB = 1f
             phase = 0f
             verticalShift = 0f
             function = TrigFunction.Sine
-            visibleFunctions = emptySet()
+            visibleFunctions = setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)
             animateAngle = false
-            showTangents = false
-            showProjections = false
-            showWave = false
-            showAsymptotes = false
+            showTangents = true
+            showProjections = true
+            showWave = true
+            showAsymptotes = true
             clearEpochSeen = vm.workspaceClearEpoch
         }
     }
 
     LaunchedEffect(animateAngle) {
-        while (animateAngle) { delay(32); angle += rotationDirection; if (angle > 180f) angle = -180f; if (angle < -180f) angle = 180f }
+        while (animateAngle) {
+            delay(32)
+            angle += rotationDirection * .9f
+            if (angle > 360f) angle = -360f
+            if (angle < -360f) angle = 360f
+        }
+    }
+    LaunchedEffect(appPlaying, lab) {
+        while (appPlaying && lab == TrigLab.Applications) {
+            delay(32)
+            appTime = (appTime + .03f * appSpeed).let { if (it > 12.57f) 0f else it }
+        }
     }
 
     val radians = Math.toRadians(angle.toDouble())
     val snapshot = remember(angle) { InteractiveTrigEngine.snapshot(radians) }
-    val transform = TrigTransform(amplitude.toDouble(), period.toDouble(), phase.toDouble(), verticalShift.toDouble())
+    val period = if (kotlin.math.abs(frequencyB) < .0001f) 1_000_000.0 else 2 * Math.PI / kotlin.math.abs(frequencyB.toDouble())
+    val transform = TrigTransform(amplitude.toDouble(), period, phase.toDouble(), verticalShift.toDouble())
     val identityLab = remember { InteractiveTrigIdentityLab() }
     val identity = remember(identityIndex) { identityLab.verify(identityIndex) }
     val safeAngle = kotlin.math.abs(angle.toDouble()).coerceIn(1.0, 178.0)
-    val triangle = remember(triangleA, triangleB, safeAngle, triangleMode) {
-        when (triangleMode) {
-            "SSS" -> TriangleTrigSolver.sss(triangleA.toDouble(), triangleB.toDouble(), ((triangleA + triangleB) * .72f).toDouble())
-            "SSA" -> TriangleTrigSolver.ssa(triangleA.toDouble(), triangleB.toDouble(), safeAngle).firstOrNull()
-                ?: TriangleTrigSolver.sas(triangleA.toDouble(), triangleB.toDouble(), safeAngle)
-            "ASA" -> TriangleTrigSolver.asa(triangleA.toDouble(), safeAngle.coerceAtMost(120.0), ((180 - safeAngle) / 2).coerceAtLeast(1.0))
-            "AAS" -> TriangleTrigSolver.aas(triangleA.toDouble(), safeAngle.coerceAtMost(120.0), ((180 - safeAngle) / 2).coerceAtLeast(1.0))
-            else -> TriangleTrigSolver.sas(triangleA.toDouble(), triangleB.toDouble(), safeAngle)
+    val triangle = remember(safeAngle) { TriangleTrigSolver.sas(4.0, 5.0, safeAngle) }
+    val displayAngle = InteractiveTrigEngine.fromRadians(radians, angleUnit)
+    val tanText = snapshot.tangent?.let(::trim) ?: "Undefined"
+    val secText = if (kotlin.math.abs(snapshot.cosine) < 1e-8) "Undefined" else trim(1.0 / snapshot.cosine)
+    val cscText = if (kotlin.math.abs(snapshot.sine) < 1e-8) "Undefined" else trim(1.0 / snapshot.sine)
+    val cotText = if (kotlin.math.abs(snapshot.sine) < 1e-8) "Undefined" else trim(snapshot.cosine / snapshot.sine)
+    val quadrantLabel = when {
+        snapshot.degrees == 0.0 || snapshot.degrees == 90.0 || snapshot.degrees == 180.0 || snapshot.degrees == 270.0 -> "Axis"
+        else -> "Q${snapshot.quadrant}"
+    }
+    val specialAngles = listOf(0f, 30f, 45f, 60f, 90f, 120f, 135f, 180f, 270f, 360f)
+    val referenceRows = listOf(
+        Triple("0 deg (0)", "0", "1"),
+        Triple("30 deg (pi/6)", "1/2", "sqrt(3)/2"),
+        Triple("45 deg (pi/4)", "sqrt(2)/2", "sqrt(2)/2"),
+        Triple("60 deg (pi/3)", "sqrt(3)/2", "1/2"),
+        Triple("90 deg (pi/2)", "1", "0"),
+        Triple("120 deg (2pi/3)", "sqrt(3)/2", "-1/2"),
+        Triple("135 deg (3pi/4)", "sqrt(2)/2", "-sqrt(2)/2"),
+        Triple("150 deg (5pi/6)", "1/2", "-sqrt(3)/2"),
+        Triple("180 deg (pi)", "0", "-1"),
+        Triple("270 deg (3pi/2)", "-1", "0"),
+        Triple("360 deg (2pi)", "0", "1"),
+    )
+
+    fun setAngleAnimated(value: Float) {
+        angle = value.coerceIn(-360f, 360f)
+    }
+
+    fun tutorReply(question: String): String {
+        val q = question.lowercase()
+        return when {
+            "tan" in q && ("90" in q || "undefined" in q) -> "tan theta = sin theta / cos theta. At ${trim(angle.toDouble())} deg, cos theta is ${trim(snapshot.cosine)}. When cos theta is 0, tangent is undefined rather than a huge number."
+            "identity" in q || "sin2" in q || "sin^2" in q -> "On the unit circle, the point is (cos theta, sin theta). Its radius is 1, so cos^2 theta + sin^2 theta = 1 by Pythagoras."
+            "radian" in q -> "A radian measures angle by arc length divided by radius. 180 deg is pi radians; the current angle is ${radianLabel(angle.toDouble())}."
+            "quadrant" in q -> "The current angle is ${trim(angle.toDouble())} deg, so the terminal side is in $quadrantLabel. Sine and cosine signs follow that quadrant."
+            "reference" in q -> "The reference angle is the acute angle to the x-axis. Here it is ${trim(snapshot.referenceAngleDegrees)} deg."
+            "asymptote" in q -> "Tangent has vertical asymptotes where cos theta = 0, such as 90 deg and 270 deg, because tan theta divides by cosine."
+            else -> "Current context: ${trim(angle.toDouble())} deg, ${radianLabel(angle.toDouble())}, $quadrantLabel, screen ${lab.label}. Try asking about tangent, radians, identities, quadrants, or reference angles."
         }
     }
-    val displayAngle = InteractiveTrigEngine.fromRadians(radians, angleUnit)
-    val inverseRadians = InteractiveTrigEngine.inverse(inverseInput.toDouble(), inverseFunction)
-    val roots = remember(function, equationTarget) { InteractiveTrigEngine.equationRoots(function, equationTarget.toDouble(), 0.0, 2 * Math.PI) }
-    val polar = remember(polarType, polarParameter) { InteractiveTrigEngine.polarSamples(polarType, polarParameter.toDouble()) }
-    val harmonics = listOf(HarmonicComponent(harmonic1.toDouble(), 1), HarmonicComponent(harmonic2.toDouble(), 2), HarmonicComponent(harmonic3.toDouble(), 3))
 
     Box(Modifier.fillMaxSize()) {
         TrigCanvas(
-            modifier = Modifier.fillMaxSize(), angleDegrees = angle, transform = if (lab == TrigLab.Equations) TrigTransform() else transform, function = function,
+            modifier = Modifier.fillMaxSize(), angleDegrees = angle, transform = transform, function = function,
             showTangents = showTangents, showProjections = showProjections, showWave = showWave,
             homeRequest = homeRequest, onZoomChanged = { zoom = it }, onAngleChange = { angle = snapAngle(it) },
-            visibleFunctions = if (lab == TrigLab.Equations) setOf(function) else visibleFunctions, showAsymptotes = showAsymptotes,
-            polarSamples = if (lab == TrigLab.Polar) polar else emptyList(),
-            harmonics = if (lab == TrigLab.Harmonics) harmonics else emptyList(),
+            visibleFunctions = when (lab) {
+                TrigLab.Graphs -> visibleFunctions
+                TrigLab.Transform -> setOf(TrigFunction.Sine)
+                else -> visibleFunctions
+            },
+            showAsymptotes = showAsymptotes,
+            polarSamples = emptyList(),
+            harmonics = emptyList(),
             lineStyle = lineStyle,
             paletteShift = paletteShift,
-            equationTarget = equationTarget.takeIf { lab == TrigLab.Equations },
-            equationRoots = if (lab == TrigLab.Equations) roots.map { it.radians } else emptyList(),
-            onTransformChange = { a, p, h, k -> amplitude = a; period = p; phase = h; verticalShift = k },
+            equationTarget = null,
+            equationRoots = emptyList(),
+            onTransformChange = { a, p, h, k -> amplitude = a; frequencyB = (2 * Math.PI / p).toFloat(); phase = h; verticalShift = k },
         )
-        Row(Modifier.align(Alignment.TopStart).padding(top = workspaceToolTop, start = 10.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            GlowButton("Home") { homeRequest++ }; Text("${trim(zoom.toDouble())}x", color = Muted, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(SurfaceA).padding(9.dp))
-        }
-        if (vm.showLeftPanel) GlassPanel(Modifier.align(Alignment.TopStart).width(220.dp)) {
-            PanelHeader("Trigonometry Labs", vm::hidePanels, Cyan)
-            Text("Seven tactile labs cover the complete toolkit.", color = Muted, fontSize = 12.sp)
-            TrigLab.entries.forEach { item -> GlowButton(if (lab == item) "* ${item.label}" else item.label, onClick = { lab = item }) }
-        }
-        if (vm.showRightPanel) GlassPanel(Modifier.align(Alignment.TopEnd).width(270.dp)) {
-            PanelHeader("Live Insights", vm::hidePanels, Violet)
-            Insight("Angle", "${trim(displayAngle.display)}${displayAngle.suffix}", Cyan)
-            Insight("Quadrant", "Q${snapshot.quadrant} - reference ${trim(snapshot.referenceAngleDegrees)} deg", Cyan)
-            Insight("sin / cos", "${snapshot.exactSine ?: trim(snapshot.sine)} / ${snapshot.exactCosine ?: trim(snapshot.cosine)}", Violet)
-            Insight("tan", snapshot.exactTangent ?: snapshot.tangent?.let(::trim) ?: "undefined", Green)
-            Insight("Triangle", "c=${trim(triangle.c)}, area=${trim(triangle.area)}", Amber)
-            when (lab) {
-                TrigLab.Identities -> Insight(identity.label, if (identity.evidence.equivalent) "Verified" else identity.evidence.explanation, Green)
-                TrigLab.Equations -> Insight("Roots in [0, 2pi]", roots.joinToString { it.exactLabel ?: "${trim(it.degrees)} deg" }.ifBlank { "None" }, Amber)
-                TrigLab.Applications -> Insight("Estimated height", "${trim(InteractiveTrigEngine.heightFromObservation(observationDistance.toDouble(), safeAngle.coerceAtMost(89.0), observerHeight.toDouble()))} units", Amber)
-                TrigLab.Polar -> Insight("Polar", "${polarType.name} - ${polar.size} samples", Violet)
-                TrigLab.Harmonics -> Insight("Composite", "sum A_n sin(nx + phase)", Violet)
-                else -> Unit
+
+        GlassPanel(
+            Modifier
+                .align(Alignment.TopStart)
+                .padding(top = workspaceToolTop, start = 10.dp, end = 10.dp)
+                .widthIn(max = 390.dp)
+                .heightIn(max = 620.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Column {
+                    Text("AI Maths Explorer", color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Trigonometry Lab", color = Muted, fontSize = 10.sp)
+                }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    GlowButton("Home", icon = "H", iconOnly = true) { homeRequest++ }
+                    GlowButton(if (animateAngle) "Pause" else "Animate", icon = if (animateAngle) "||" else ">", iconOnly = true) { animateAngle = !animateAngle }
+                    GlowButton("AI", icon = "AI", iconOnly = true) { tutorOpen = !tutorOpen }
+                }
             }
-        }
-        if (vm.showBottomPanel) GlassPanel(Modifier.align(Alignment.BottomStart).fillMaxWidth()) {
-            PanelHeader("${lab.label} Controls", vm::hidePanels, Ink)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                TrigAngleUnit.entries.forEach { unit -> TogglePill(unit.name, angleUnit == unit) { angleUnit = unit } }
-                TogglePill(if (animateAngle) "Pause" else "Animate", animateAngle) { animateAngle = it }
-                GlowButton(if (rotationDirection > 0) "CCW +" else "CW -", onClick = { rotationDirection *= -1 })
-                listOf(-180f, -90f, 0f, 30f, 45f, 60f, 90f, 180f).forEach { value -> GlowButton("${trim(value.toDouble())} deg", onClick = { angle = value }) }
+                Insight("Angle", "${trim(angle.toDouble())} deg", Cyan)
+                Insight("Radians", radianLabel(angle.toDouble()), Green)
+                Insight("Quadrant", quadrantLabel, Amber)
             }
-            Row(verticalAlignment = Alignment.CenterVertically) { Text("Angle ${trim(displayAngle.display)}${displayAngle.suffix}", color = Ink, modifier = Modifier.width(155.dp)); Slider(angle, { angle = snapAngle(it) }, valueRange = -180f..180f, modifier = Modifier.weight(1f)) }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("-360", color = Muted, fontSize = 10.sp)
+                Slider(angle, { angle = snapAngle(it) }, valueRange = -360f..360f, modifier = Modifier.weight(1f))
+                Text("360", color = Muted, fontSize = 10.sp)
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                specialAngles.forEach { value -> GlowButton("${trim(value.toDouble())} deg", onClick = { setAngleAnimated(value) }) }
+            }
+
             when (lab) {
                 TrigLab.Circle -> {
-                    AxisSlider("Amplitude", amplitude, .25f..3f) { amplitude = it }; AxisSlider("Period", period, 1f..12.57f) { period = it }; AxisSlider("Phase", phase, -3.14f..3.14f) { phase = it }; AxisSlider("Vertical", verticalShift, -2f..2f) { verticalShift = it }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { TrigFunction.entries.forEach { item -> TogglePill(item.name, item in visibleFunctions) { enabled -> visibleFunctions = if (enabled) visibleFunctions + item else (visibleFunctions - item).ifEmpty { setOf(item) }; function = item } }; TogglePill("Asymptotes", showAsymptotes) { showAsymptotes = it }; TrigLineStyle.entries.forEach { style -> TogglePill(style.name, lineStyle == style) { lineStyle = style } }; GlowButton("Cycle colours", onClick = { paletteShift++ }) }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { InverseTrigFunction.entries.forEach { item -> TogglePill(item.name, inverseFunction == item) { inverseFunction = item } } }; AxisSlider("Inverse input", inverseInput, -1f..1f) { inverseInput = it }; Text("Result ${radianLabel(Math.toDegrees(inverseRadians))} rad = ${trim(Math.toDegrees(inverseRadians))} deg", color = Green)
+                    Text("Live Function Values", color = Cyan, fontWeight = FontWeight.Bold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Insight("sin theta", trim(snapshot.sine), Cyan)
+                        Insight("cos theta", trim(snapshot.cosine), Amber)
+                        Insight("tan theta", tanText, Green)
+                        Insight("csc theta", cscText, Violet)
+                        Insight("sec theta", secText, Violet)
+                        Insight("cot theta", cotText, Violet)
+                    }
+                    Text("Exact Values", color = Amber, fontWeight = FontWeight.Bold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Insight("sin", snapshot.exactSine ?: "approx ${trim(snapshot.sine)}", Cyan)
+                        Insight("cos", snapshot.exactCosine ?: "approx ${trim(snapshot.cosine)}", Amber)
+                        Insight("tan", snapshot.exactTangent ?: tanText, Green)
+                    }
+                    Text("Reference triangle uses the ${trim(snapshot.referenceAngleDegrees)} deg reference angle. Opposite=${trim(kotlin.math.abs(snapshot.sine))}, adjacent=${trim(kotlin.math.abs(snapshot.cosine))}, hypotenuse=1.", color = Muted, fontSize = 11.sp)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        TogglePill("Projections", showProjections) { showProjections = it }
+                        TogglePill("Tangents", showTangents) { showTangents = it }
+                        TogglePill("Wave", showWave) { showWave = it }
+                    }
+                }
+                TrigLab.Graphs -> {
+                    Text("Trig Graphs", color = Cyan, fontWeight = FontWeight.Bold)
+                    Text("Markers stay synchronized with the unit-circle angle. Tangent breaks at undefined values.", color = Muted, fontSize = 11.sp)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent).forEach { item ->
+                            TogglePill(item.name, item in visibleFunctions) { enabled ->
+                                visibleFunctions = if (enabled) visibleFunctions + item else (visibleFunctions - item).ifEmpty { setOf(TrigFunction.Sine) }
+                                function = item
+                            }
+                        }
+                        TogglePill("Asymptotes", showAsymptotes) { showAsymptotes = it }
+                        TrigLineStyle.entries.forEach { style -> TogglePill(style.name, lineStyle == style) { lineStyle = style } }
+                        GlowButton("Reset view") { homeRequest++ }
+                    }
+                    Insight("Trace", "x=${trim(angle.toDouble())} deg, sin=${trim(snapshot.sine)}, cos=${trim(snapshot.cosine)}, tan=$tanText", Green)
+                    Insight("Zoom", "${trim(zoom.toDouble())}x", Violet)
+                }
+                TrigLab.Transform -> {
+                    Text("y = A sin(B(x - h)) + k", color = Ink, fontWeight = FontWeight.ExtraBold)
+                    AxisSlider("A amplitude/reflection", amplitude, -3f..3f) { amplitude = it }
+                    AxisSlider("B frequency parameter", frequencyB, -3f..3f) { frequencyB = it }
+                    AxisSlider("h phase shift", phase, -3.14f..3.14f) { phase = it }
+                    AxisSlider("k vertical shift", verticalShift, -2f..2f) { verticalShift = it }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Insight("Amplitude", "|A| = ${trim(kotlin.math.abs(amplitude.toDouble()))}", Cyan)
+                        Insight("Period", if (kotlin.math.abs(frequencyB) < .0001f) "Undefined" else "2pi/|B| = ${trim(period)}", Amber)
+                        Insight("Midline", "y = ${trim(verticalShift.toDouble())}", Green)
+                    }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        GlowButton("Reset") { amplitude = 1f; frequencyB = 1f; phase = 0f; verticalShift = 0f }
+                        GlowButton("Reflection") { amplitude = -1f; frequencyB = 1f; phase = 0f; verticalShift = 0f }
+                        GlowButton("Shifted wave") { amplitude = 1.5f; frequencyB = 2f; phase = .7f; verticalShift = .5f }
+                    }
                 }
                 TrigLab.Identities -> {
-                    val steps = listOf("Start: ${identity.left}", "Check domain: ${identity.evidence.leftDomain.description}", "Apply the named identity: ${identity.label}", "Simplify toward ${identity.right}", if (identity.evidence.equivalent) "Verified: both sides agree" else identity.evidence.explanation)
-                    Text("${identity.left} = ${identity.right}", color = Ink); Text(steps[identityStep.coerceIn(steps.indices)], color = if (identityStep == steps.lastIndex) Green else Muted)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { GlowButton("Previous step", onClick = { identityStep = (identityStep - 1).coerceAtLeast(0) }); GlowButton("Next step", onClick = { identityStep = (identityStep + 1).coerceAtMost(steps.lastIndex) }); GlowButton("Next identity", onClick = { identityIndex = (identityIndex + 1) % identityLab.catalog.size; identityStep = 0 }) }
+                    val identities = listOf(
+                        "sin^2 theta + cos^2 theta = 1" to "The unit-circle point is (cos theta, sin theta); radius^2 is always 1.",
+                        "1 + tan^2 theta = sec^2 theta" to "Divide sin^2 + cos^2 = 1 by cos^2 theta. Avoid angles where cos theta = 0.",
+                        "sec^2 theta - tan^2 theta = 1" to "Rearrange 1 + tan^2 theta = sec^2 theta.",
+                        "sin(-theta) = -sin theta" to "Mirrored angles have opposite y-coordinates.",
+                        "cos(-theta) = cos theta" to "Mirrored angles keep the same x-coordinate.",
+                    )
+                    val current = identities[identityIndex.coerceIn(identities.indices)]
+                    Text(current.first, color = Cyan, fontWeight = FontWeight.ExtraBold)
+                    Text(current.second, color = Muted, fontSize = 12.sp)
+                    Text("Step ${identityStep + 1}/4: ${listOf("Place theta on the unit circle", "Highlight the changing projection", "Compare both sides numerically", "The equality follows from the geometry")[identityStep.coerceIn(0, 3)]}", color = Green, fontSize = 12.sp)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        GlowButton("Replay") { identityStep = 0 }
+                        GlowButton("Next step") { identityStep = (identityStep + 1).coerceAtMost(3) }
+                        GlowButton("Next identity") { identityIndex = (identityIndex + 1) % identities.size; identityStep = 0 }
+                    }
+                    Insight("Live check", "sin^2 + cos^2 = ${trim(snapshot.sine * snapshot.sine + snapshot.cosine * snapshot.cosine)}", Amber)
+                    Insight(identity.label, if (identity.evidence.equivalent) "Existing engine verification ready" else identity.evidence.explanation, Violet)
                 }
-                TrigLab.Triangle -> { FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { listOf("SSS", "SAS", "SSA", "ASA", "AAS").forEach { item -> TogglePill(item, triangleMode == item) { triangleMode = item } } }; AxisSlider("Side a", triangleA, 1f..12f) { triangleA = it }; AxisSlider("Side b", triangleB, 1f..12f) { triangleB = it }; Text("a=${trim(triangle.a)}, b=${trim(triangle.b)}, c=${trim(triangle.c)} - A=${trim(triangle.angleA)} deg, B=${trim(triangle.angleB)} deg, C=${trim(triangle.angleC)} deg", color = Green); if (triangleMode == "SSA") Text("Ambiguous SSA: ${TriangleTrigSolver.ssa(triangleA.toDouble(), triangleB.toDouble(), safeAngle).size} valid solution(s)", color = Amber); Text("Sine and cosine rules update with the construction.", color = Muted) }
-                TrigLab.Equations -> { FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { TrigFunction.entries.forEach { item -> TogglePill(item.name, function == item) { function = item } } }; AxisSlider("Equation target", equationTarget, -2f..2f) { equationTarget = it }; Text("${function.name}(x) = ${trim(equationTarget.toDouble())}: ${roots.joinToString { it.exactLabel ?: "${trim(it.degrees)} deg" }}", color = Green) }
-                TrigLab.Polar -> { FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) { PolarCurveType.entries.forEach { item -> TogglePill(item.name, polarType == item) { polarType = item } } }; AxisSlider("Polar parameter", polarParameter, .25f..8f) { polarParameter = it } }
-                TrigLab.Applications -> { AxisSlider("Ground distance", observationDistance, 1f..100f) { observationDistance = it }; AxisSlider("Observer height", observerHeight, 0f..3f) { observerHeight = it }; Text("height = observer height + distance x tan(elevation)", color = Muted) }
-                TrigLab.Harmonics -> { AxisSlider("Fundamental A1", harmonic1, 0f..2f) { harmonic1 = it }; AxisSlider("Second A2", harmonic2, 0f..2f) { harmonic2 = it }; AxisSlider("Third A3", harmonic3, 0f..2f) { harmonic3 = it } }
+                TrigLab.Applications -> {
+                    Text("Real World Applications", color = Cyan, fontWeight = FontWeight.Bold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf("Ferris Wheel", "Pendulum", "Sound Wave", "Satellite Orbit", "Day/Night").forEach { item -> TogglePill(item, application == item) { application = item } }
+                    }
+                    AxisSlider("Amplitude / radius", appAmplitude, 1f..50f) { appAmplitude = it }
+                    AxisSlider("Speed / frequency", appSpeed, .1f..4f) { appSpeed = it }
+                    AxisSlider("Vertical offset", appOffset, 0f..60f) { appOffset = it }
+                    AxisSlider("Time", appTime, 0f..12.57f) { appTime = it }
+                    val height = appAmplitude * kotlin.math.sin(appSpeed * appTime) + appOffset
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        GlowButton(if (appPlaying) "Pause" else "Play") { appPlaying = !appPlaying }
+                        GlowButton("Reset") { appTime = 0f; appPlaying = false }
+                    }
+                    Insight(application, "model value = ${trim(height.toDouble())}", Green)
+                    Text("Simplified educational sine/cosine model. It shows periodic structure, not engineering-grade physical simulation.", color = Muted, fontSize = 11.sp)
+                }
+                TrigLab.Challenge -> {
+                    Text("Challenge Mode", color = Amber, fontWeight = FontWeight.ExtraBold)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Insight("Score", "$challengeScore", Cyan)
+                        Insight("Streak", "$challengeStreak", Green)
+                        Insight("XP", "+${challengeStreak * 5}", Amber)
+                    }
+                    Text("Find an angle in [-360 deg, 360 deg] where sin theta = ${trim(challengeTarget.toDouble())}.", color = Ink)
+                    GlowButton("Check answer") {
+                        val correct = kotlin.math.abs(snapshot.sine - challengeTarget) < .025
+                        if (correct) {
+                            challengeScore += 120
+                            challengeStreak += 1
+                            challengeFeedback = "Correct. theta=${trim(angle.toDouble())} deg works; coterminal answers also count."
+                        } else {
+                            challengeStreak = 0
+                            challengeFeedback = "Not yet. Current sin theta=${trim(snapshot.sine)}. Try 30 deg or 150 deg for 0.5."
+                        }
+                    }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        GlowButton("Hint") { challengeFeedback = "Use the y-coordinate on the unit circle. Positive sine is in quadrants I and II." }
+                        GlowButton("Next") { challengeTarget = listOf(.5f, 0f, -1f, .7071f).random(); challengeFeedback = "New target ready." }
+                    }
+                    Text(challengeFeedback, color = if (challengeFeedback.startsWith("Correct")) Green else Amber, fontSize = 12.sp)
+                }
+                TrigLab.Reference -> {
+                    Text("Trig Quick Reference", color = Cyan, fontWeight = FontWeight.Bold)
+                    OutlinedTextField(referenceQuery, { referenceQuery = it }, label = { Text("Search angle, value, identity") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
+                    val filtered = referenceRows.filter { row -> referenceQuery.isBlank() || listOf(row.first, row.second, row.third).any { it.contains(referenceQuery, true) } }
+                    filtered.forEach { row ->
+                        Row(
+                            Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).clickable {
+                                row.first.substringBefore(" ").toFloatOrNull()?.let { setAngleAnimated(it) }
+                            }.padding(7.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(row.first, color = Ink, fontSize = 11.sp, modifier = Modifier.weight(1.2f))
+                            Text("sin ${row.second}", color = Cyan, fontSize = 11.sp, modifier = Modifier.weight(1f))
+                            val tan = when (row.first.substringBefore(" ")) { "90", "270" -> "undefined"; else -> "see table" }
+                            Text("cos ${row.third} / tan $tan", color = Muted, fontSize = 11.sp, modifier = Modifier.weight(1.4f))
+                        }
+                    }
+                    Text("Identities: reciprocal, quotient, Pythagorean, even/odd. Transformations: amplitude |A|, period 2pi/|B|, phase h, vertical shift k.", color = Muted, fontSize = 11.sp)
+                }
             }
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) { TogglePill("Tangents", showTangents) { showTangents = it }; TogglePill("Projections", showProjections) { showProjections = it }; TogglePill("Wave", showWave) { showWave = it }; GlowButton("Close", onClick = vm::hidePanels) }
+        }
+
+        GlassPanel(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+        ) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                TrigLab.entries.forEach { item ->
+                    GlowButton(if (lab == item) "* ${item.label}" else item.label) {
+                        lab = item
+                        if (item == TrigLab.Graphs) visibleFunctions = visibleFunctions + setOf(TrigFunction.Sine, TrigFunction.Cosine, TrigFunction.Tangent)
+                    }
+                }
+                TogglePill(if (animateAngle) "Pause" else "Animate", animateAngle) { animateAngle = it }
+            }
+        }
+
+        if (tutorOpen) {
+            GlassPanel(
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 12.dp, bottom = 98.dp)
+                    .widthIn(max = 340.dp)
+                    .heightIn(max = 390.dp),
+            ) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Text("AI Tutor", color = Cyan, fontWeight = FontWeight.ExtraBold)
+                    GlowButton("Collapse", icon = "collapse", iconOnly = true) { tutorOpen = false }
+                }
+                Text("Context: ${trim(angle.toDouble())} deg, ${radianLabel(angle.toDouble())}, $quadrantLabel, ${lab.label}", color = Muted, fontSize = 10.sp)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    listOf("Why is tan 90 undefined?", "What is a radian?", "Which quadrant?", "Why sin^2+cos^2=1?").forEach { sample ->
+                        GlowButton(sample.take(18)) { tutorPrompt = sample; tutorAnswer = tutorReply(sample) }
+                    }
+                }
+                OutlinedTextField(tutorPrompt, { tutorPrompt = it }, label = { Text("Ask about trigonometry") }, modifier = Modifier.fillMaxWidth(), maxLines = 2)
+                GlowButton("Ask", enabled = tutorPrompt.isNotBlank()) { tutorAnswer = tutorReply(tutorPrompt) }
+                Text(tutorAnswer, color = Ink, fontSize = 12.sp)
+            }
         }
     }
 }
@@ -13411,7 +13724,7 @@ private fun MiniDock(modifier: Modifier = Modifier, items: List<String>, onMove:
         }
         AnimatedVisibility(expanded) {
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                GlowButton("X", onClick = { expanded = false })
+                GlowButton("Collapse", onClick = { expanded = false })
                 items.forEach { GlowButton(it, onClick = { onClick(it); expanded = false }) }
             }
         }
@@ -13495,12 +13808,15 @@ internal fun GraphEquationEditor(
         }
         AnimatedVisibility(addMenuExpanded && !isTyping) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                GlowButton("X", onClick = onToggleAddMenu)
+                GlowButton("Collapse", onClick = onToggleAddMenu)
                 GraphAddKind.entries.forEach { kind -> GlowButton(kind.label, onClick = { onAddKind(kind) }) }
             }
         }
         AnimatedVisibility(expanded) {
-            Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
+            Column(
+                Modifier.fillMaxWidth().heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(7.dp),
+            ) {
                 if (functions.isEmpty()) {
                     Text("Tap + to add your first equation.", color = Muted, fontSize = 12.sp)
                 } else {
@@ -13562,6 +13878,8 @@ internal fun GraphEquationEditor(
                             keyboardContext = MathKeyboardContext.GRAPH_2D,
                             imeAction = ImeAction.Done,
                             onDone = {
+                                // Live typing stages the preview; Enter explicitly commits the plot.
+                                onExpressionChange(function.id, editorValue.text)
                                 editorValue.text.takeIf(String::isNotBlank)?.let { expression ->
                                     recentExpressions = (listOf(expression) + recentExpressions.filterNot { it == expression }).take(8)
                                 }
@@ -13597,7 +13915,7 @@ internal fun GraphEquationEditor(
                             maxLines = 2,
                         )
                         Text(
-                            "Use your keyboard: pi or π - x^2 or x² - × - ÷ - √ - ≤ - ≥",
+                            "Press Enter to plot. Use: pi or π - x^2 or x² - × - ÷ - √ - ≤ - ≥",
                             color = Muted,
                             fontSize = 10.sp,
                             modifier = Modifier.fillMaxWidth(),
@@ -14034,6 +14352,7 @@ private fun visualModuleIcon(module: MathModule): String = when (module) {
     MathModule.DiscreteMathematics -> "sets"
     MathModule.NumberTheory -> "N"
     MathModule.SpatialAR -> "ar"
+    MathModule.ARGraph3D -> "ar"
 }
 
 private fun moduleIcon(module: MathModule): String = when (module) {
@@ -14049,6 +14368,7 @@ private fun moduleIcon(module: MathModule): String = when (module) {
     MathModule.DiscreteMathematics -> "∪"
     MathModule.NumberTheory -> "ℕ"
     MathModule.SpatialAR -> "AR"
+    MathModule.ARGraph3D -> "AR"
 }
 
 internal fun menuIcon(label: String): String = when {

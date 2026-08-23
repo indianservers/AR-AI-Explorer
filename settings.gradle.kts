@@ -25,4 +25,5 @@ dependencyResolutionManagement {
 rootProject.name = "AI Maths Explorer"
 include(":app")
 include(":arengine")
+include(":ar3dgraph")
 include(":macrobenchmark")

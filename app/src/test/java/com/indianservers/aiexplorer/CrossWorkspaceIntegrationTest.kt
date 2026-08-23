@@ -8,9 +8,31 @@ import com.indianservers.aiexplorer.core.SpatialSurfaceRenderMode
 import com.indianservers.aiexplorer.workspace.MathModule
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 import org.junit.Test
 
 class CrossWorkspaceIntegrationTest {
+    @Test
+    fun graph2dAddsAndControlsManyGraphsWithoutReplacingEarlierRows() {
+        val viewModel = ExplorerViewModel(SavedStateHandle())
+        viewModel.open(MathModule.Graph2D)
+        val initialCount = viewModel.state.functions.size
+
+        repeat(12) { index -> viewModel.addFunction("x+${index + 1}") }
+        val added = viewModel.state.functions.drop(initialCount)
+        val firstAddedIndex = initialCount
+        val eighthAddedIndex = initialCount + 7
+        viewModel.editExpression(firstAddedIndex, "sin(x)")
+        viewModel.updateFunction(eighthAddedIndex) { it.copy(visible = false, colorKey = "amber") }
+
+        assertEquals(initialCount + 12, viewModel.state.functions.size)
+        assertEquals("sin(x)", viewModel.state.functions[firstAddedIndex].expression)
+        assertEquals("x+12", viewModel.state.functions.last().expression)
+        assertFalse(viewModel.state.functions[eighthAddedIndex].visible)
+        assertEquals("amber", viewModel.state.functions[eighthAddedIndex].colorKey)
+        assertEquals(12, added.map { it.id }.distinct().size)
+    }
+
     @Test
     fun threeDimensionalContentSurvivesSwitchingAwayAndBack() {
         val viewModel = ExplorerViewModel(SavedStateHandle())

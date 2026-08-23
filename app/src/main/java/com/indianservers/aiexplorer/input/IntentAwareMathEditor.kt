@@ -211,6 +211,8 @@ fun IntentAwareMathField(
                 accent = accent,
                 healthy = healthy,
                 transformation = transformation,
+                imeAction = imeAction,
+                onDone = onDone,
                 onFocusChange = {
                     keyboardVisible = it
                     if (it) systemKeyboard?.hide()
@@ -342,6 +344,8 @@ fun IntentAwareMathValueField(
                 accent = accent,
                 healthy = healthy,
                 transformation = transformation,
+                imeAction = imeAction,
+                onDone = onDone,
                 onFocusChange = {
                     keyboardVisible = it
                     if (it) systemKeyboard?.hide()
@@ -411,6 +415,8 @@ private fun MathKeyboardOnlyTextField(
     accent: Color,
     healthy: Boolean,
     transformation: VisualTransformation,
+    imeAction: ImeAction = ImeAction.Default,
+    onDone: (() -> Unit)? = null,
     onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     editorTestTag: String? = null,
@@ -589,7 +595,8 @@ private fun MathKeyboardOnlyTextField(
                 cursorBrush = SolidColor(Color.Transparent),
                 visualTransformation = transformation,
                 onTextLayout = { textLayout = it },
-                keyboardOptions = KeyboardOptions(showKeyboardOnFocus = false),
+                keyboardOptions = KeyboardOptions(showKeyboardOnFocus = false, imeAction = imeAction),
+                keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
                 decorationBox = { innerTextField ->
                     Box {
                         if (value.text.isBlank()) {

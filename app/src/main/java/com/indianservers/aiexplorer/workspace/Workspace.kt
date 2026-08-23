@@ -144,6 +144,7 @@ enum class MathModule(val label: String) {
     DiscreteMathematics("Discrete"),
     NumberTheory("Numbers"),
     SpatialAR("AR"),
+    ARGraph3D("AR 3D Graph"),
 }
 
 data class WorkspaceState(

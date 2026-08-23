@@ -80,7 +80,7 @@ private fun MathHomeFeatureIcon(label: String, fallback: String, accent: Color, 
         Text("f(x)", color = accent, fontSize = 13.sp, fontWeight = FontWeight.Black)
         return
     }
-    if (label !in setOf("2D", "3D", "Graphs", "3D Graph", "Proofs", "Visual Proofs", "Theorems")) {
+    if (label !in setOf("2D", "3D", "Graphs", "3D Graph", "AR 3D Graph", "Proofs", "Visual Proofs", "Theorems")) {
         Text(fallback, color = accent, fontSize = 13.sp, fontWeight = FontWeight.Black)
         return
     }
@@ -134,6 +134,29 @@ private fun MathHomeFeatureIcon(label: String, fallback: String, accent: Color, 
                 drawCircle(accent.copy(.7f), stroke, Offset(size.width * .48f, size.height * .10f))
                 drawCircle(accent.copy(.7f), stroke, Offset(size.width * .88f, size.height * .68f))
                 drawCircle(accent.copy(.7f), stroke, Offset(size.width * .16f, size.height * .88f))
+            }
+            "AR 3D Graph" -> {
+                val frame = Path().apply {
+                    moveTo(size.width * .18f, size.height * .22f)
+                    lineTo(size.width * .82f, size.height * .22f)
+                    lineTo(size.width * .82f, size.height * .78f)
+                    lineTo(size.width * .18f, size.height * .78f)
+                    close()
+                }
+                drawPath(frame, glow, style = Stroke(stroke * 2.4f))
+                drawPath(frame, accent, style = Stroke(stroke, cap = androidx.compose.ui.graphics.StrokeCap.Round, join = androidx.compose.ui.graphics.StrokeJoin.Round))
+                val origin = Offset(size.width * .48f, size.height * .62f)
+                glowingLine(origin, Offset(size.width * .48f, size.height * .34f), stroke * .78f)
+                glowingLine(origin, Offset(size.width * .72f, size.height * .64f), stroke * .78f)
+                glowingLine(origin, Offset(size.width * .30f, size.height * .76f), stroke * .78f)
+                drawCircle(Color(0xFF43D7FF), stroke * 1.25f, origin)
+                drawCircle(accent.copy(.75f), stroke * .95f, Offset(size.width * .48f, size.height * .34f))
+                drawCircle(accent.copy(.75f), stroke * .95f, Offset(size.width * .72f, size.height * .64f))
+                drawCircle(accent.copy(.75f), stroke * .95f, Offset(size.width * .30f, size.height * .76f))
+                drawLine(accent.copy(.68f), Offset(size.width * .25f, size.height * .30f), Offset(size.width * .36f, size.height * .30f), stroke * .75f)
+                drawLine(accent.copy(.68f), Offset(size.width * .25f, size.height * .30f), Offset(size.width * .25f, size.height * .41f), stroke * .75f)
+                drawLine(accent.copy(.68f), Offset(size.width * .75f, size.height * .70f), Offset(size.width * .64f, size.height * .70f), stroke * .75f)
+                drawLine(accent.copy(.68f), Offset(size.width * .75f, size.height * .70f), Offset(size.width * .75f, size.height * .59f), stroke * .75f)
             }
             "Proofs", "Visual Proofs" -> {
                 drawCircle(accent, size.minDimension * .22f, Offset(size.width * .30f, size.height * .43f), style = Stroke(stroke))

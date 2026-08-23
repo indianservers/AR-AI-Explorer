@@ -41,4 +41,23 @@ class AdvancedTrigonometryTest {
         assertEquals(180.0, aas.angleA + aas.angleB + aas.angleC, 1e-12)
         assertTrue(asa.area > 0 && aas.area > 0)
     }
+
+    @Test fun redesignedTrigLabCriticalValuesStayStable() {
+        val negative = InteractiveTrigEngine.snapshot(-3 * PI / 4)
+        assertEquals(225.0, negative.degrees, 1e-9)
+        assertEquals(3, negative.quadrant)
+        assertEquals(-kotlin.math.sqrt(2.0) / 2.0, negative.sine, 1e-12)
+        assertEquals(-kotlin.math.sqrt(2.0) / 2.0, negative.cosine, 1e-12)
+        assertEquals("1", negative.exactTangent)
+
+        val ninety = InteractiveTrigEngine.snapshot(PI / 2)
+        assertNull(ninety.tangent)
+
+        val transform = TrigTransform(amplitude = -2.0, period = PI, phaseShift = .5, verticalShift = 1.0)
+        assertEquals(1.0, transform.valueAt(.5, TrigFunction.Sine), 1e-9)
+        assertEquals(-1.0, transform.valueAt(.5 + PI / 4, TrigFunction.Sine), 1e-9)
+
+        val challenge = InteractiveTrigEngine.snapshot(PI / 6)
+        assertEquals(.5, challenge.sine, 1e-9)
+    }
 }

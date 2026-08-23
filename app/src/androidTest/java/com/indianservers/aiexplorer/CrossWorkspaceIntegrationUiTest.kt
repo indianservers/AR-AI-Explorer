@@ -6,8 +6,10 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextReplacement
 import org.junit.Rule
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CrossWorkspaceIntegrationUiTest {
@@ -50,8 +52,10 @@ class CrossWorkspaceIntegrationUiTest {
 
         composeRule.onNodeWithContentDescription("Add a 3D graph equation to the workspace").performClick()
         composeRule.onNodeWithContentDescription("Editable 3D surface").performTextReplacement("x=cos(u)*(3+cos(v)); y=sin(u)*(3+cos(v)); z=sin(v)")
-        composeRule.onNodeWithText("Plot").performClick()
+        composeRule.onNodeWithContentDescription("Editable 3D surface").performImeAction()
         composeRule.onNodeWithText("Layers").performClick()
+        composeRule.onNodeWithText("Implicit surface").fetchSemanticsNode()
+        composeRule.onNodeWithText("Parametric surface").fetchSemanticsNode()
         composeRule.onNodeWithContentDescription("Search 3D surface layers").performTextReplacement("cos(u)")
         composeRule.onNodeWithText("Parametric surface").assertIsDisplayed()
     }
@@ -64,10 +68,29 @@ class CrossWorkspaceIntegrationUiTest {
 
         composeRule.onNodeWithContentDescription("Add a 3D graph equation to the workspace").performClick()
         composeRule.onNodeWithContentDescription("Editable 3D surface").performTextReplacement("z=sin(x)+cos(y)")
-        composeRule.onNodeWithText("Plot").performClick()
+        composeRule.onNodeWithContentDescription("Editable 3D surface").performImeAction()
         composeRule.onNodeWithText("Layers").performClick()
         composeRule.onNodeWithContentDescription("Search 3D surface layers").performTextReplacement("sin(x)")
         composeRule.onNodeWithText("Explicit surface").assertIsDisplayed()
+    }
+
+    @Test
+    fun graph2dEnterPlotsRepeatedAddsAndKeepsEveryEarlierGraph() {
+        awaitHome()
+        composeRule.onNodeWithContentDescription("Open Graphs").performClick()
+        awaitDescription("Breadcrumb Maths", "Graph")
+
+        listOf("sin(x)", "cos(x)", "x^3-2*x").forEach { expression ->
+            composeRule.onNodeWithContentDescription("Add a graph equation to the workspace").performClick()
+            composeRule.onNodeWithContentDescription("Editable", substring = true).performTextReplacement(expression)
+            composeRule.onNodeWithContentDescription("Editable", substring = true).performImeAction()
+            composeRule.onNodeWithText("Collapse ▲").performClick()
+        }
+
+        composeRule.onNodeWithText("Equations (5)").performClick()
+        assertTrue(composeRule.onAllNodesWithText("h(x)", substring = true).fetchSemanticsNodes().isNotEmpty())
+        assertTrue(composeRule.onAllNodesWithText("i(x)", substring = true).fetchSemanticsNodes().isNotEmpty())
+        assertTrue(composeRule.onAllNodesWithText("j(x)", substring = true).fetchSemanticsNodes().isNotEmpty())
     }
 
     private fun openAndReturn(openDescription: String, expectedDescription: String, expectedPart: String? = null) {
