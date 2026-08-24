@@ -70,7 +70,7 @@ import io.github.sceneview.rememberModelLoader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AR3DGraphScreen(
+private fun LegacyAR3DGraphScreen(
     onBack: () -> Unit,
     graphEngine: GraphEngineContract = DisconnectedGraphEngineContract,
     model: AR3DGraphViewModel = viewModel(),
@@ -321,7 +321,7 @@ fun AR3DGraphScreen(
 }
 
 @Composable
-private fun SceneViewARGraphViewport(
+internal fun SceneViewARGraphViewport(
     ui: AR3DGraphUiState,
     onSessionRunning: (String) -> Unit,
     onSessionPaused: () -> Unit,
@@ -346,11 +346,14 @@ private fun SceneViewARGraphViewport(
         materialLoader = materialLoader,
         planeRenderer = ui.renderData == null || ui.placement != ARGraphPlacementState.Placed,
         planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL,
-        instantPlacement = true,
+        instantPlacement = false,
         showReticle = true,
-        coaching = true,
+        coaching = false,
         groundShadows = true,
         sessionConfiguration = { session, config ->
+            config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL
+            config.instantPlacementMode = Config.InstantPlacementMode.DISABLED
+            config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
             if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
                 config.depthMode = Config.DepthMode.AUTOMATIC
             }

@@ -12,11 +12,22 @@ internal enum class ArPlacementMode(val label: String, val shortLabel: String) {
 }
 
 internal fun ArPlacementMode.accepts(hit: ArHitCandidate): Boolean {
-    if (hit.type != ArHitType.Plane) return false
-    val normalY = abs(hit.pose.orientation.rotate(ArVector3.Up).y)
     return when (this) {
-        ArPlacementMode.FloorTable -> normalY >= .7
-        ArPlacementMode.Wall -> normalY < .7
         ArPlacementMode.Viewer -> false
+        ArPlacementMode.FloorTable -> when (hit.type) {
+            ArHitType.InstantPlacement -> true
+            ArHitType.Plane, ArHitType.Depth, ArHitType.OrientedPoint -> {
+                val normalY = abs(hit.pose.orientation.rotate(ArVector3.Up).y)
+                normalY >= .55
+            }
+            ArHitType.Simulator -> true
+        }
+        ArPlacementMode.Wall -> when (hit.type) {
+            ArHitType.Plane, ArHitType.Depth, ArHitType.OrientedPoint -> {
+                val normalY = abs(hit.pose.orientation.rotate(ArVector3.Up).y)
+                normalY < .55
+            }
+            ArHitType.InstantPlacement, ArHitType.Simulator -> false
+        }
     }
 }

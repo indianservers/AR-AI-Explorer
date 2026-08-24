@@ -1146,6 +1146,7 @@ internal fun TrigCanvas(
     showTangents: Boolean,
     showProjections: Boolean,
     showWave: Boolean,
+    showUnitCircle: Boolean = true,
     homeRequest: Int,
     onZoomChanged: (Float) -> Unit,
     onAngleChange: (Float) -> Unit,
@@ -1168,9 +1169,9 @@ internal fun TrigCanvas(
         }
     }
     fun angleAt(position: Offset, width: Float, height: Float): Float {
-        val waveTop = height * .68f
-        if (position.y >= waveTop && position.x in width * .15f..width * .71f) {
-            val progress = ((position.x - width * .15f - 42f) / (width * .56f - 70f)).coerceIn(0f, 1f)
+        val (waveTopLeft, waveSize) = trigWavePane(width, height, showUnitCircle)
+        if (showWave && position.y >= waveTopLeft.y && position.x in waveTopLeft.x..(waveTopLeft.x + waveSize.width)) {
+            val progress = ((position.x - waveTopLeft.x - 42f) / (waveSize.width - 70f)).coerceIn(0f, 1f)
             val degrees = progress * 360f
             return if (degrees > 180f) degrees - 360f else degrees
         }
@@ -1178,33 +1179,34 @@ internal fun TrigCanvas(
         return Math.toDegrees(kotlin.math.atan2((center.y - position.y).toDouble(), (position.x - center.x).toDouble())).toFloat()
     }
     fun isManipulationTarget(position: Offset, width: Float, height: Float): Boolean {
-        val waveHit = showWave && position.y in height * .66f..height * .91f && position.x in width * .12f..width * .74f
+        val (waveTopLeft, waveSize) = trigWavePane(width, height, showUnitCircle)
+        val waveHit = showWave &&
+            position.y in (waveTopLeft.y - 24f)..(waveTopLeft.y + waveSize.height + 24f) &&
+            position.x in (waveTopLeft.x - 24f)..(waveTopLeft.x + waveSize.width + 24f)
         val center = Offset(width * .47f, height * .42f)
         val radius = min(width, height) * .235f
-        val circleHit = abs((position - center).getDistance() - radius) <= maxOf(48f, radius * .28f)
+        val circleHit = showUnitCircle && abs((position - center).getDistance() - radius) <= maxOf(48f, radius * .28f)
         return waveHit || circleHit
     }
     fun transformHandle(position: Offset, width: Float, height: Float): String? {
         if (!showWave) return null
-        val top = height * .68f
-        val paneHeight = height * .2f
-        val origin = Offset(width * .15f + 42f, top + paneHeight / 2f)
-        val waveWidth = width * .56f - 70f
-        val scaleY = paneHeight * .14f
+        val (waveTopLeft, waveSize) = trigWavePane(width, height, showUnitCircle)
+        val origin = Offset(waveTopLeft.x + 42f, waveTopLeft.y + waveSize.height / 2f)
+        val waveWidth = waveSize.width - 70f
+        val scaleY = waveSize.height * .14f
         val handles = mapOf(
             "amplitude" to Offset(origin.x + waveWidth, origin.y - transform.amplitude.toFloat() * scaleY),
-            "period" to Offset(origin.x + (transform.period / (4 * Math.PI)).toFloat().coerceIn(.08f, 1f) * waveWidth, top + paneHeight - 20f),
-            "phase" to Offset(origin.x + ((transform.phaseShift + Math.PI) / (2 * Math.PI)).toFloat().coerceIn(0f, 1f) * waveWidth, top + 20f),
+            "period" to Offset(origin.x + (transform.period / (4 * Math.PI)).toFloat().coerceIn(.08f, 1f) * waveWidth, waveTopLeft.y + waveSize.height - 20f),
+            "phase" to Offset(origin.x + ((transform.phaseShift + Math.PI) / (2 * Math.PI)).toFloat().coerceIn(0f, 1f) * waveWidth, waveTopLeft.y + 20f),
             "vertical" to Offset(origin.x - 16f, origin.y - transform.verticalShift.toFloat() * scaleY),
         )
         return handles.minByOrNull { (_, point) -> (point - position).getDistance() }?.takeIf { (_, point) -> (point - position).getDistance() < 44f }?.key
     }
     fun updateTransform(handle: String, position: Offset, width: Float, height: Float) {
-        val top = height * .68f
-        val paneHeight = height * .2f
-        val origin = Offset(width * .15f + 42f, top + paneHeight / 2f)
-        val waveWidth = width * .56f - 70f
-        val scaleY = paneHeight * .14f
+        val (waveTopLeft, waveSize) = trigWavePane(width, height, showUnitCircle)
+        val origin = Offset(waveTopLeft.x + 42f, waveTopLeft.y + waveSize.height / 2f)
+        val waveWidth = waveSize.width - 70f
+        val scaleY = waveSize.height * .14f
         var a = transform.amplitude.toFloat(); var p = transform.period.toFloat(); var h = transform.phaseShift.toFloat(); var k = transform.verticalShift.toFloat()
         when (handle) {
             "amplitude" -> a = kotlin.math.abs((origin.y - position.y) / scaleY).coerceIn(.25f, 3f)
@@ -1214,7 +1216,7 @@ internal fun TrigCanvas(
         }
         onTransformChange(a, p, h, k)
     }
-    val interactiveModifier = modifier.pointerInput(showWave, transform, polarSamples, harmonics) {
+    val interactiveModifier = modifier.pointerInput(showWave, showUnitCircle, transform, polarSamples, harmonics) {
         awaitEachGesture {
             val down = awaitFirstDown(requireUnconsumed = false)
             var gestureViewport = viewport
@@ -1288,46 +1290,47 @@ internal fun TrigCanvas(
             center.y - sin(theta).toFloat() * radius,
         )
         drawTrigGrid()
-        drawLine(Color.White.copy(.85f), Offset(center.x - radius * 1.35f, center.y), Offset(center.x + radius * 1.38f, center.y), 2.4f)
-        drawLine(Color.White.copy(.85f), Offset(center.x, center.y + radius * 1.35f), Offset(center.x, center.y - radius * 1.38f), 2.4f)
-        drawCircle(Cyan.copy(alpha = .88f), radius = radius, center = center, style = Stroke(3.2f))
         val p = circlePoint(angle)
         val cosPoint = Offset(p.x, center.y)
         val sinPoint = Offset(center.x, p.y)
-        drawLine(Violet, center, p, 4f, cap = StrokeCap.Round)
-        if (showProjections) {
-            drawLine(Cyan.copy(alpha = .9f), p, cosPoint, 2.8f)
-            drawLine(Violet.copy(alpha = .8f), p, sinPoint, 2.4f)
-            drawLine(Cyan, center, cosPoint, 4f, cap = StrokeCap.Round)
-            drawLine(Violet, center, sinPoint, 3.4f, cap = StrokeCap.Round)
+        if (showUnitCircle) {
+            drawLine(Color.White.copy(.85f), Offset(center.x - radius * 1.35f, center.y), Offset(center.x + radius * 1.38f, center.y), 2.4f)
+            drawLine(Color.White.copy(.85f), Offset(center.x, center.y + radius * 1.35f), Offset(center.x, center.y - radius * 1.38f), 2.4f)
+            drawCircle(Cyan.copy(alpha = .88f), radius = radius, center = center, style = Stroke(3.2f))
+            drawLine(Violet, center, p, 4f, cap = StrokeCap.Round)
+            if (showProjections) {
+                drawLine(Cyan.copy(alpha = .9f), p, cosPoint, 2.8f)
+                drawLine(Violet.copy(alpha = .8f), p, sinPoint, 2.4f)
+                drawLine(Cyan, center, cosPoint, 4f, cap = StrokeCap.Round)
+                drawLine(Violet, center, sinPoint, 3.4f, cap = StrokeCap.Round)
+            }
+            if (showTangents) {
+                val tangentX = center.x + radius
+                val tangentY = center.y - tan(angle).toFloat().coerceIn(-3f, 3f) * radius
+                drawLine(Cyan.copy(alpha = .75f), Offset(tangentX, center.y - radius * 1.55f), Offset(tangentX, center.y + radius * 1.55f), 2f)
+                drawLine(Cyan.copy(alpha = .75f), p, Offset(tangentX, tangentY), 2.8f)
+            }
+            drawArc(Violet, startAngle = -angleDegrees, sweepAngle = angleDegrees, useCenter = false, topLeft = Offset(center.x - 64f, center.y - 64f), size = Size(128f, 128f), style = Stroke(4f, cap = StrokeCap.Round))
+            listOf(0.0, PI / 2, PI, 3 * PI / 2).forEach { theta ->
+                drawRadiantPoint(circlePoint(theta), Cyan, when (theta) {
+                    0.0 -> "(1, 0)"
+                    PI / 2 -> "(0, 1)"
+                    PI -> "(-1, 0)"
+                    else -> "(0, -1)"
+                })
+            }
+            drawRadiantPoint(center, Color.White, "O")
+            drawRadiantPoint(p, Violet, "P (${trim(cos(angle))}, ${trim(sin(angle))})")
+            drawTrigText("theta", center.x + 68f, center.y - 24f, Violet)
+            drawTrigText("cos theta", (center.x + cosPoint.x) / 2f, center.y + 34f, Cyan)
+            drawTrigText("sin theta", p.x + 12f, (center.y + p.y) / 2f, Violet)
+            drawTrigText("tan theta", center.x + radius + 22f, center.y - 82f, Cyan)
+            drawQuadrantCards(center, radius)
+            drawRightTriangleCard(Offset(size.width * .76f, size.height * .48f), angleDegrees)
+            drawIdentitiesCard(Offset(size.width * .76f, size.height * .64f))
         }
-        if (showTangents) {
-            val tangentX = center.x + radius
-            val tangentY = center.y - tan(angle).toFloat().coerceIn(-3f, 3f) * radius
-            drawLine(Cyan.copy(alpha = .75f), Offset(tangentX, center.y - radius * 1.55f), Offset(tangentX, center.y + radius * 1.55f), 2f)
-            drawLine(Cyan.copy(alpha = .75f), p, Offset(tangentX, tangentY), 2.8f)
-        }
-        drawArc(Violet, startAngle = -angleDegrees, sweepAngle = angleDegrees, useCenter = false, topLeft = Offset(center.x - 64f, center.y - 64f), size = Size(128f, 128f), style = Stroke(4f, cap = StrokeCap.Round))
-        listOf(0.0, PI / 2, PI, 3 * PI / 2).forEach { theta ->
-            drawRadiantPoint(circlePoint(theta), Cyan, when (theta) {
-                0.0 -> "(1, 0)"
-                PI / 2 -> "(0, 1)"
-                PI -> "(-1, 0)"
-                else -> "(0, -1)"
-            })
-        }
-        drawRadiantPoint(center, Color.White, "O")
-        drawRadiantPoint(p, Violet, "P (${trim(cos(angle))}, ${trim(sin(angle))})")
-        drawTrigText("theta", center.x + 68f, center.y - 24f, Violet)
-        drawTrigText("cos theta", (center.x + cosPoint.x) / 2f, center.y + 34f, Cyan)
-        drawTrigText("sin theta", p.x + 12f, (center.y + p.y) / 2f, Violet)
-        drawTrigText("tan theta", center.x + radius + 22f, center.y - 82f, Cyan)
-        drawQuadrantCards(center, radius)
-        drawRightTriangleCard(Offset(size.width * .76f, size.height * .48f), angleDegrees)
-        drawIdentitiesCard(Offset(size.width * .76f, size.height * .64f))
         if (showWave) {
-            val waveTopLeft = Offset(size.width * .15f, size.height * .68f)
-            val waveSize = Size(size.width * .56f, size.height * .2f)
+            val (waveTopLeft, waveSize) = trigWavePane(size.width, size.height, showUnitCircle)
             drawSineWavePane(waveTopLeft, waveSize, angleDegrees, transform, function, visibleFunctions, showAsymptotes, harmonics, lineStyle, paletteShift)
             drawTrigTransformHandles(waveTopLeft, waveSize, transform)
             if (equationTarget != null) {
@@ -1344,6 +1347,14 @@ internal fun TrigCanvas(
         }
         if (polarSamples.isNotEmpty()) drawPolarCurvePane(Offset(size.width * .73f, size.height * .18f), Size(size.width * .24f, size.height * .25f), polarSamples)
         drawContext.canvas.restore()
+    }
+}
+
+private fun trigWavePane(width: Float, height: Float, showUnitCircle: Boolean): Pair<Offset, Size> {
+    return if (showUnitCircle) {
+        Offset(width * .15f, height * .68f) to Size(width * .56f, height * .2f)
+    } else {
+        Offset(width * .06f, height * .12f) to Size(width * .88f, height * .76f)
     }
 }
 

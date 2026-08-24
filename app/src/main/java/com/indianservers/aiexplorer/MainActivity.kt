@@ -607,7 +607,7 @@ private data class AppIntentSnapshot(
 
 internal val MathCreationTools = listOf(
     MathWorkspaceOption("Unified Math Studio", "Linked algebra, graph, table, geometry and solver views", "Live"),
-    MathWorkspaceOption("Explore Workspaces", "2D, 3D, graphing, trigonometry and spatial AR", "W"),
+    MathWorkspaceOption("Explore Workspaces", "2D, 3D, graphing and trigonometry", "W"),
     MathWorkspaceOption("Scientific Calculator", "Scientific keypad, constants and conversions", "Sci"),
     MathWorkspaceOption("Math Notebook", "Named values, linked functions and reusable exact results", "#"),
     MathWorkspaceOption("Solver", "Offline arithmetic and algebra with verified, traceable steps", "Solve"),
@@ -616,7 +616,6 @@ internal val MathCreationTools = listOf(
     MathWorkspaceOption("2D Geometry", "Construct points, lines, circles, polygons and constraints", "2D"),
     MathWorkspaceOption("3D Geometry", "Explore solids, vectors, sections and measurements", "3D"),
     MathWorkspaceOption("Graphs Explorer", "Plot and investigate 2D functions, curves and inequalities", "Graph"),
-    MathWorkspaceOption("Spatial AR", "Place existing mathematical constructions into augmented reality", "AR"),
     MathWorkspaceOption("AR 3D Graph", "Anchor and explore 3D graph surfaces in augmented reality", "AR"),
     MathWorkspaceOption("Shapes Explorer", "Construct and investigate interactive 2D shapes", "2D"),
     MathWorkspaceOption("Manipulatives", "Algebra tiles, fractions, balance and tactile labs", "Tiles"),
@@ -667,7 +666,7 @@ private val MathHomeCategories = listOf(
         "Visual Workspaces",
         "Geometry, graphs, tiles and spatial exploration",
         "3D",
-        listOf("2D Geometry", "3D Geometry", "Spatial AR", "AR 3D Graph", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
+        listOf("2D Geometry", "3D Geometry", "3D Graph", "AR 3D Graph", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
     ),
     MathHomeCategory("Data & Probability", "Statistics, distributions and probability labs", "STAT", listOf("Probability & Statistics")),
     MathHomeCategory("Learn & Practise", "Coaching, concepts and explained questions", "GO", listOf("Learn All", "Adaptive Math Coach", "Math Concepts", "Dictionary", "MCQs")),
@@ -4432,8 +4431,10 @@ fun Screen(
                 MathQuickLaunchButton("3D Graph", "xyz", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Graph3D) }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                MathQuickLaunchButton("AR", "AR", Green, Modifier.weight(1f)) { vm.open(MathModule.SpatialAR) }
                 MathQuickLaunchButton("AR 3D Graph", "AR", Green, Modifier.weight(1f)) { vm.open(MathModule.ARGraph3D) }
+                MathQuickLaunchButton("Spatial AR", "AR", Violet, Modifier.weight(1f)) { vm.open(MathModule.SpatialAR) }
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 MathQuickLaunchButton("Trigonometry", "θ", Green, Modifier.weight(1f)) { vm.open(MathModule.Trigonometry) }
                 MathQuickLaunchButton("Solver", "Fx", Violet, Modifier.weight(1f)) { vm.openSolver() }
             }
@@ -4819,7 +4820,8 @@ fun Screen(
                     Triple(MathModule.Geometry3D, "3D Geometry", "Create and manipulate solids, vectors, sections and measurements"),
                     Triple(MathModule.Graph2D, "Graph", "Plot explicit, implicit, polar, parametric and inequality graphs"),
                     Triple(MathModule.Graph3D, "3D Graph", "Explore explicit, implicit and parametric surfaces"),
-                    Triple(MathModule.ARGraph3D, "AR 3D Graph", "Check AR support and prepare a safe camera session for future 3D graph placement"),
+                    Triple(MathModule.ARGraph3D, "AR 3D Graph", "Plot a 3D surface and anchor it into a camera-guided AR scene"),
+                    Triple(MathModule.SpatialAR, "Spatial AR", "Place maths objects into an AR workspace with direct manipulation controls"),
                     Triple(MathModule.Trigonometry, "Trigonometry", "Use unit circles, identities, triangles and transformations"),
                     Triple(MathModule.Manipulatives, "Math Tiles", "Learn with algebra tiles, fractions, balances and tactile models"),
                     Triple(MathModule.ProbabilityStatistics, "Probability & Statistics Lab", "Simulate experiments, explore distributions and analyse samples"),
@@ -4827,7 +4829,6 @@ fun Screen(
                     Triple(MathModule.DataSpreadsheet, "Data Table & Spreadsheet", "Calculate with linked cells, tables, summaries and graph-ready series"),
                     Triple(MathModule.DiscreteMathematics, "Discrete Mathematics Lab", "Explore sets, logic, relations, graphs and combinatorics"),
                     Triple(MathModule.NumberTheory, "Number Theory Lab", "Investigate primes, factors, divisibility, gcd and modular arithmetic"),
-                    Triple(MathModule.SpatialAR, "Spatial AR", "Place existing mathematical constructions into augmented reality"),
                 )
                 FlowRow(
                     Modifier.fillMaxWidth(),
