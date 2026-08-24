@@ -12,8 +12,11 @@ enum class ArAvailability {
 data class ArCapabilities(
     val availability: ArAvailability,
     val depthSupported: Boolean = false,
+    val rawDepthSupported: Boolean = false,
     val environmentalHdrSupported: Boolean = false,
     val instantPlacementSupported: Boolean = false,
+    val augmentedImagesSupported: Boolean = true,
+    val openGlEs3Supported: Boolean = true,
     val geospatialSupported: Boolean = false,
     val message: String = "",
 )
@@ -45,6 +48,53 @@ enum class ArTrackingFailure {
     CameraUnavailable,
     Relocalizing,
     Unknown,
+}
+
+enum class ArStudentTrackingStatus {
+    Initializing,
+    MoveSlowly,
+    SearchingForSurface,
+    SurfaceDetected,
+    TrackingStable,
+    TrackingLimited,
+    TrackingLost,
+}
+
+data class ArTrackingGuidance(
+    val status: ArStudentTrackingStatus,
+    val title: String,
+    val instruction: String,
+    val placementReady: Boolean,
+)
+
+object ArTrackingGuidancePolicy {
+    fun evaluate(frame: ArFrameSnapshot?): ArTrackingGuidance {
+        if (frame == null) return guidance(ArStudentTrackingStatus.Initializing)
+        val trackedSurface = frame.planes.any { it.trackingState == ArTrackingState.Tracking }
+        return when {
+            frame.camera.trackingState == ArTrackingState.Lost -> guidance(ArStudentTrackingStatus.TrackingLost)
+            frame.camera.trackingState != ArTrackingState.Tracking -> when (frame.camera.trackingFailure) {
+                ArTrackingFailure.ExcessiveMotion -> guidance(ArStudentTrackingStatus.MoveSlowly)
+                ArTrackingFailure.InsufficientFeatures -> guidance(ArStudentTrackingStatus.SearchingForSurface)
+                ArTrackingFailure.InsufficientLight -> ArTrackingGuidance(ArStudentTrackingStatus.TrackingLimited, "More light needed", "Move to a brighter area and aim at a textured surface.", false)
+                ArTrackingFailure.Relocalizing -> ArTrackingGuidance(ArStudentTrackingStatus.TrackingLimited, "Finding your model", "Hold still and point toward the last placed surface.", false)
+                else -> guidance(ArStudentTrackingStatus.Initializing)
+            }
+            trackedSurface -> guidance(ArStudentTrackingStatus.TrackingStable)
+            frame.planes.isNotEmpty() -> guidance(ArStudentTrackingStatus.SurfaceDetected)
+            else -> guidance(ArStudentTrackingStatus.SearchingForSurface)
+        }
+    }
+
+    private fun guidance(status: ArStudentTrackingStatus) = when (status) {
+        ArStudentTrackingStatus.Initializing -> ArTrackingGuidance(status, "Starting AR", "Hold the device steady while the camera starts.", false)
+        ArStudentTrackingStatus.MoveSlowly -> ArTrackingGuidance(status, "Move device slowly", "Move gently from side to side so the room can be mapped.", false)
+        ArStudentTrackingStatus.SearchingForSurface -> ArTrackingGuidance(status, "Searching for a surface", "Aim at a textured floor, desk or wall and move slowly.", false)
+        ArStudentTrackingStatus.SurfaceDetected -> ArTrackingGuidance(status, "Surface detected", "Keep scanning briefly to improve placement accuracy.", false)
+        ArStudentTrackingStatus.TrackingStable -> ArTrackingGuidance(status, "Tracking stable", "Tap the highlighted surface to place the construction.", true)
+        ArStudentTrackingStatus.TrackingLimited -> ArTrackingGuidance(status, "Tracking limited", "Hold still, improve lighting and view the object from another angle.", false)
+        ArStudentTrackingStatus.TrackingLost -> ArTrackingGuidance(status, "Tracking lost", "Return to the last tracked area; your mathematical work is preserved.", false)
+    }
 }
 
 enum class ArPlaneOrientation { HorizontalUp, HorizontalDown, Vertical, Arbitrary }

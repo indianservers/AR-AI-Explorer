@@ -486,6 +486,15 @@ import com.indianservers.aiexplorer.arengine.contract.ArHitCandidate
 import com.indianservers.aiexplorer.arengine.contract.ArHitPolicy
 import com.indianservers.aiexplorer.arengine.contract.ArRuntimeState
 import com.indianservers.aiexplorer.arengine.contract.ArTrackingState
+import com.indianservers.aiexplorer.arengine.measurement.ArConeFit
+import com.indianservers.aiexplorer.arengine.measurement.ArCuboidFit
+import com.indianservers.aiexplorer.arengine.measurement.ArCylinderFit
+import com.indianservers.aiexplorer.arengine.measurement.ArFitShape
+import com.indianservers.aiexplorer.arengine.measurement.ArMeasuredPoint
+import com.indianservers.aiexplorer.arengine.measurement.ArMeasurementFormatter
+import com.indianservers.aiexplorer.arengine.measurement.ArPrimitiveFit
+import com.indianservers.aiexplorer.arengine.measurement.ArPrimitiveFitWorkflow
+import com.indianservers.aiexplorer.arengine.measurement.ArSphereFit
 import com.indianservers.aiexplorer.arengine.interaction.ArGizmoAxis
 import com.indianservers.aiexplorer.arengine.interaction.ArGizmoMode
 import com.indianservers.aiexplorer.arengine.interaction.ArPickHit
@@ -573,6 +582,35 @@ enum class LearningComfort(val label: String, val description: String) {
 
 internal data class MathWorkspaceOption(val title: String, val description: String, val icon: String)
 
+private data class ArLabWorkspace(
+    val title: String,
+    val description: String,
+    val labData: String,
+    val route: MathModule?,
+    val status: String = "PLANNED",
+)
+
+private val ArLabWorkspaces = listOf(
+    ArLabWorkspace("AR 3D Graph", "Anchor and inspect 3D graph surfaces in the room", "Surface mesh, axes, grid, equation and plane-anchor data", MathModule.ARGraph3D, "OPEN"),
+    ArLabWorkspace("AR 3D Shapes", "Place solids, vectors, sections and measurements in AR", "Solid model, transform, measurement and section data", MathModule.SpatialAR, "OPEN"),
+    ArLabWorkspace("AR 2D Shapes", "Place 2D constructions on a table or wall", "Point, line, circle, polygon and constraint data", MathModule.SpatialAR, "OPEN"),
+    ArLabWorkspace("AR Coordinate Plane", "Plot, drag and measure points, lines, slopes and midpoints", "Coordinate axes, points, line segments, slope and distance data", MathModule.ARCoordinatePlane, "OPEN"),
+    ArLabWorkspace("AR Vector Lab", "Explore vector addition, subtraction, dot product and cross product", "Vector components, resultant vector and product-operation data", MathModule.ARVectorLab, "OPEN"),
+    ArLabWorkspace("AR Trigonometry Lab", "Walk around an interactive unit circle with live sin, cos and tan values", "Angle, unit-circle point, tangent ray and trig-value data", null),
+    ArLabWorkspace("AR Calculus Lab", "Visualize tangent lines, derivatives, Riemann sums and integration", "Curve, tangent, sample rectangles and accumulated-area data", null),
+    ArLabWorkspace("AR Geometry Construction", "Use a virtual compass and ruler for bisectors, parallels and polygons", "Construction tools, constraints and geometric proof-step data", null),
+    ArLabWorkspace("AR Solids Dissection", "Tap solids to reveal faces, edges, vertices and nets", "Solid topology, exploded faces, edge graph and net-layout data", null),
+    ArLabWorkspace("AR Volume Explorer", "Fill cubes, cones, spheres and cylinders with animated volume", "Solid dimensions, fill percentage and formula-mapping data", null),
+    ArLabWorkspace("AR Transformation Lab", "Compare translation, rotation, reflection and scaling in AR", "Before/after shapes, transform matrix and animation data", null),
+    ArLabWorkspace("AR Physics-Math Workspace", "Combine projectile motion, waves, pendulums, vectors and circular motion", "Physics state, equations, path traces and vector-field data", null),
+    ArLabWorkspace("AR Statistics Workspace", "Place histograms, pie charts, box plots and scatter plots in the room", "Dataset, chart geometry, axis scale and annotation data", null),
+    ArLabWorkspace("AR Number Line", "Walk along integers, fractions, decimals and inequalities", "Number-line ticks, intervals, markers and inequality-region data", null),
+    ArLabWorkspace("AR Function Machine", "Show input to process to output for linear, quadratic and exponential functions", "Input cards, transformation rule and output-mapping data", null),
+    ArLabWorkspace("AR Mathematical Art", "Create fractals, Mandelbrot, Koch and Sierpinski experiences", "Iteration depth, seed geometry and color-mapping data", null),
+    ArLabWorkspace("AR Formula Universe", "Tap formulas and expand them into 3D visual explanations", "Formula, variables, proof scene and example-state data", null),
+    ArLabWorkspace("AR Math Museum", "Explore Ramanujan, Euclid, Newton and Euler galleries", "Gallery room, exhibit metadata, theorem and story-card data", null),
+)
+
 private data class AppIntentSnapshot(
     val module: MathModule,
     val showSubjectHub: Boolean,
@@ -608,6 +646,7 @@ private data class AppIntentSnapshot(
 internal val MathCreationTools = listOf(
     MathWorkspaceOption("Unified Math Studio", "Linked algebra, graph, table, geometry and solver views", "Live"),
     MathWorkspaceOption("Explore Workspaces", "2D, 3D, graphing and trigonometry", "W"),
+    MathWorkspaceOption("AR Labs", "AR-first math workspaces sharing the AI and AR engine", "AR"),
     MathWorkspaceOption("Scientific Calculator", "Scientific keypad, constants and conversions", "Sci"),
     MathWorkspaceOption("Math Notebook", "Named values, linked functions and reusable exact results", "#"),
     MathWorkspaceOption("Solver", "Offline arithmetic and algebra with verified, traceable steps", "Solve"),
@@ -666,7 +705,7 @@ private val MathHomeCategories = listOf(
         "Visual Workspaces",
         "Geometry, graphs, tiles and spatial exploration",
         "3D",
-        listOf("2D Geometry", "3D Geometry", "3D Graph", "AR 3D Graph", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
+        listOf("2D Geometry", "3D Geometry", "3D Graph", "AR 3D Graph", "AR Labs", "Shapes Explorer", "Graphs Explorer", "Explore Workspaces", "Manipulatives"),
     ),
     MathHomeCategory("Data & Probability", "Statistics, distributions and probability labs", "STAT", listOf("Probability & Statistics")),
     MathHomeCategory("Learn & Practise", "Coaching, concepts and explained questions", "GO", listOf("Learn All", "Adaptive Math Coach", "Math Concepts", "Dictionary", "MCQs")),
@@ -3102,7 +3141,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             MathModule.DataSpreadsheet,
             MathModule.DiscreteMathematics,
             MathModule.NumberTheory,
-            MathModule.ARGraph3D -> state
+            MathModule.ARGraph3D,
+            MathModule.ARCoordinatePlane,
+            MathModule.ARVectorLab -> state
         }
         state = history.execute(
             state,
@@ -3349,7 +3390,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                         Modifier
                             .fillMaxSize()
                             .padding(
-                                start = if (vm.showChrome && vm.state.module != MathModule.ARGraph3D) {
+                                start = if (vm.showChrome && vm.state.module != MathModule.ARGraph3D && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab) {
                                     adaptiveProfile.workspacePolicy.reservedNavigationWidth
                                 } else {
                                     0.dp
@@ -3431,11 +3472,13 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                                 onBack = vm::navigateBackIntent,
                                 graphEngine = remember { Existing3DGraphEngineBridge() },
                             )
+                            MathModule.ARCoordinatePlane -> ARCoordinatePlaneScreen(onBack = vm::navigateBackIntent)
+                            MathModule.ARVectorLab -> ARVectorLabScreen(onBack = vm::navigateBackIntent)
                         }
                     }
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub && !vm.showMathDictionary && !vm.showMathsLearnAll) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
                     }
-                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && vm.state.module != MathModule.ARGraph3D && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
+                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && vm.state.module != MathModule.ARGraph3D && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
                         TopShell(
                             vm,
                             compact,
@@ -4095,14 +4138,17 @@ fun Screen(
     val dictionaryRepository = remember { MathDictionaryRepository(context) }
     var query by rememberSaveable { mutableStateOf("") }
     var showWorkspaces by rememberSaveable { mutableStateOf(false) }
+    var showArLabs by rememberSaveable { mutableStateOf(false) }
     var showConcepts by rememberSaveable { mutableStateOf(false) }
     var selectedLearningCategory by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedHomeCategory by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedPreview by rememberSaveable { mutableStateOf<String?>(null) }
     var showHomeMenu by rememberSaveable { mutableStateOf(false) }
     var workspaceOpenRequest by remember { mutableIntStateOf(0) }
+    var arLabsOpenRequest by remember { mutableIntStateOf(0) }
     val hubScrollState = rememberScrollState()
     val workspacesRequester = remember { BringIntoViewRequester() }
+    val arLabsRequester = remember { BringIntoViewRequester() }
     val searchRequester = remember { BringIntoViewRequester() }
     val allTools = remember { (MathCreationTools + MathLearningTools + SuggestedMathTools).distinctBy { it.title } }
     val personalMessage = remember(vm.settings, vm.recentMathTools) { personalizedHomeMessage(vm.settings, vm.recentMathTools) }
@@ -4173,12 +4219,22 @@ fun Screen(
                 query = ""
                 selectedHomeCategory = null
                 showConcepts = false
+                showArLabs = false
                 showWorkspaces = true
                 workspaceOpenRequest++
+            }
+            "AR Labs" -> {
+                query = ""
+                selectedHomeCategory = null
+                showConcepts = false
+                showWorkspaces = false
+                showArLabs = true
+                arLabsOpenRequest++
             }
             "Math Concepts" -> {
                 selectedHomeCategory = null
                 showWorkspaces = false
+                showArLabs = false
                 showConcepts = true
             }
             else -> if (!openMathTool(vm, option.title)) selectedPreview = option.title
@@ -4188,6 +4244,12 @@ fun Screen(
     LaunchedEffect(workspaceOpenRequest) {
         if (workspaceOpenRequest > 0 && showWorkspaces) {
             workspacesRequester.bringIntoView()
+        }
+    }
+
+    LaunchedEffect(arLabsOpenRequest) {
+        if (arLabsOpenRequest > 0 && showArLabs) {
+            arLabsRequester.bringIntoView()
         }
     }
 
@@ -4420,7 +4482,7 @@ fun Screen(
                 onClick = { openOption(allTools.first { it.title == "Solver" }) },
             )
 
-            if (selectedHomeCategory == null && !showWorkspaces) {
+            if (selectedHomeCategory == null && !showWorkspaces && !showArLabs) {
             Text("QUICK EXPLORE", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 MathQuickLaunchButton("2D", "2D", Cyan, Modifier.weight(1f)) { vm.open(MathModule.Geometry2D) }
@@ -4432,7 +4494,7 @@ fun Screen(
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 MathQuickLaunchButton("AR 3D Graph", "AR", Green, Modifier.weight(1f)) { vm.open(MathModule.ARGraph3D) }
-                MathQuickLaunchButton("Spatial AR", "AR", Violet, Modifier.weight(1f)) { vm.open(MathModule.SpatialAR) }
+                MathQuickLaunchButton("AR Labs", "AR", Violet, Modifier.weight(1f)) { openOption(allTools.first { it.title == "AR Labs" }) }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 MathQuickLaunchButton("Trigonometry", "θ", Green, Modifier.weight(1f)) { vm.open(MathModule.Trigonometry) }
@@ -4455,6 +4517,7 @@ fun Screen(
                         showConcepts = !showConcepts
                         selectedHomeCategory = null
                         showWorkspaces = false
+                        showArLabs = false
                     }
                     .focusable()
                     .semantics {
@@ -4674,6 +4737,7 @@ fun Screen(
                                 .adaptiveFocusRing(shape = RoundedCornerShape(19.dp), focusColor = accent)
                                 .clickable {
                                     showConcepts = false
+                                    showArLabs = false
                                     selectedHomeCategory = null
                                     allTools.firstOrNull { it.title == primaryToolTitle }?.let(::openOption)
                                 }
@@ -4863,6 +4927,75 @@ fun Screen(
             }
         }
 
+        AnimatedVisibility(showArLabs && query.isBlank()) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .bringIntoViewRequester(arLabsRequester)
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Green.copy(alpha = .06f))
+                    .border(1.dp, Green.copy(alpha = .34f), RoundedCornerShape(18.dp))
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text("AR Labs", color = Green, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                        Text("AR-first Maths workspaces", color = Muted, fontSize = 11.sp)
+                    }
+                    GlowButton("Collapse", icon = "collapse", iconOnly = true) { showArLabs = false }
+                }
+                Text(
+                    "Every lab uses the shared AI and AR engine with lab-specific scene data.",
+                    color = Ink,
+                    fontSize = 11.sp,
+                )
+                BoxWithConstraints(Modifier.fillMaxWidth()) {
+                    val columns = if (wide) 3 else if (maxWidth >= 520.dp) 2 else 1
+                    FlowRow(
+                        Modifier.fillMaxWidth(),
+                        maxItemsInEachRow = columns,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        ArLabWorkspaces.forEachIndexed { index, lab ->
+                            val accent = when (index % 5) {
+                                0 -> Green
+                                1 -> Cyan
+                                2 -> Violet
+                                3 -> Amber
+                                else -> Color(0xFFFF67A6)
+                            }
+                            val selectable = lab.route != null
+                            Column(
+                                Modifier
+                                    .weight(1f)
+                                    .heightIn(min = 142.dp)
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .background(accent.copy(alpha = if (selectable) .11f else .065f))
+                                    .border(1.dp, accent.copy(alpha = if (selectable) .56f else .30f), RoundedCornerShape(14.dp))
+                                    .clickable {
+                                        lab.route?.let(vm::open) ?: run { selectedPreview = lab.title }
+                                    }
+                                    .focusable()
+                                    .semantics { contentDescription = "${lab.status} ${lab.title}. ${lab.description}. ${lab.labData}" }
+                                    .padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                    TransparentIcon("AR", accent)
+                                    Text(lab.status, color = if (selectable) Green else Muted, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
+                                }
+                                Text(lab.title, color = accent, fontSize = 14.sp, fontWeight = FontWeight.Bold, maxLines = 2)
+                                Text(lab.description, color = Ink.copy(.86f), fontSize = 9.sp, maxLines = 2)
+                                Text(lab.labData, color = Muted, fontSize = 8.sp, lineHeight = 10.sp, maxLines = 3)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         val learning = MathLearningTools.filter { it in visibleTools }
         if (learning.isNotEmpty() && query.isNotBlank()) {
             Text("LEARN & PRACTISE", color = Violet, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
@@ -5030,6 +5163,7 @@ fun Screen(
             MathHomeNavItem("⌂", "Home", true, Cyan) {
                 selectedHomeCategory = null
                 showWorkspaces = false
+                showArLabs = false
                 showConcepts = false
             }
             MathHomeNavItem("▤", "Learn", false, Violet) {
@@ -5041,6 +5175,7 @@ fun Screen(
             MathHomeNavItem("S", "Search", false, Cyan) {
                 selectedHomeCategory = null
                 showWorkspaces = false
+                showArLabs = false
                 showConcepts = false
                 query = ""
                 scope.launch { searchRequester.bringIntoView() }
@@ -6883,6 +7018,7 @@ private fun MathematicsMenuPanel(
     val launcherScrollState = rememberScrollState()
     var launcherQuery by rememberSaveable { mutableStateOf("") }
     var showWorkspaces by remember { mutableStateOf(false) }
+    var showArLabs by remember { mutableStateOf(false) }
     var showConcepts by remember { mutableStateOf(false) }
     var showSuggestions by remember { mutableStateOf(false) }
     var futureSelection by remember { mutableStateOf<String?>(null) }
@@ -6914,6 +7050,7 @@ private fun MathematicsMenuPanel(
             "Shapes Explorer" -> vm.openShapesExplorer()
             "Set Theory & Logic" -> vm.openSetLogicVisualizer()
             "Explore Workspaces" -> showWorkspaces = !showWorkspaces
+            "AR Labs" -> showArLabs = !showArLabs
             "Math Concepts" -> showConcepts = !showConcepts
             else -> futureSelection = title
         }
@@ -6988,6 +7125,19 @@ private fun MathematicsMenuPanel(
                         Text("Interactive workspaces", color = Muted, fontSize = 11.sp)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             MathModule.entries.forEach { module -> GlowButton(module.label, onClick = { vm.open(module) }) }
+                        }
+                    }
+                }
+
+                AnimatedVisibility(showArLabs) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text("AR Labs", color = Muted, fontSize = 11.sp)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            ArLabWorkspaces.forEach { lab ->
+                                GlowButton("${lab.title} - ${lab.status}", icon = "AR") {
+                                    lab.route?.let(vm::open) ?: run { futureSelection = lab.title }
+                                }
+                            }
                         }
                     }
                 }
@@ -9902,6 +10052,10 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     var showSpatialDetails by remember { mutableStateOf(false) }
     var showAdvancedTools by remember { mutableStateOf(false) }
     var showAnalysisTools by remember { mutableStateOf(false) }
+    var showFitTools by remember { mutableStateOf(false) }
+    var fitWorkflow by remember { mutableStateOf<ArPrimitiveFitWorkflow?>(null) }
+    var fitAnchorIds by remember { mutableStateOf<List<String>>(emptyList()) }
+    var fitMessage by remember { mutableStateOf("") }
     var arHudExpanded by remember { mutableStateOf(false) }
     var arHudHidden by remember { mutableStateOf(false) }
     val graphArWorkspace = arWorkspaceMode == ArMathWorkspaceMode.Graph2D || arWorkspaceMode == ArMathWorkspaceMode.Graph3D
@@ -10029,6 +10183,92 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     }
 
     val placement = vm.state.spatialPlacement
+    fun clearFitAnchors() {
+        fitAnchorIds.forEach { runtime?.detachAnchor(it) }
+        fitAnchorIds = emptyList()
+    }
+
+    fun createFittedSolid(fit: ArPrimitiveFit) {
+        val unitsPerMeter = 1.0 / placement.metersPerMathUnit
+        val modelAnchor = fitAnchorIds.firstOrNull()?.let { id -> runtime?.anchors()?.firstOrNull { it.id == id } }
+        val modelOrigin = if (placement.isPlaced) placement.pose.positionMeters else modelAnchor?.pose?.positionMeters?.let { Vec3(it.x, it.y, it.z) } ?: placement.pose.positionMeters
+        if (!placement.isPlaced && modelAnchor != null) {
+            vm.placeSpatialHit(
+                SpatialHit(
+                    type = SpatialHitType.Plane,
+                    positionMeters = modelOrigin,
+                    distanceMeters = (modelOrigin - (frameState?.cameraPose?.positionMeters ?: Vec3(0.0, 0.0, 0.0))).magnitude(),
+                    confidence = fitWorkflow?.points?.firstOrNull()?.confidence ?: .65,
+                    uncertaintyMeters = fit.uncertaintyMeters,
+                    trackableId = modelAnchor.id,
+                ),
+            )
+        }
+        fun local(world: com.indianservers.aiexplorer.arengine.contract.ArVector3) = Vec3(
+            (world.x - modelOrigin.x) * unitsPerMeter,
+            (world.y - modelOrigin.y) * unitsPerMeter,
+            (world.z - modelOrigin.z) * unitsPerMeter,
+        )
+        when (fit) {
+            is ArCylinderFit -> {
+                vm.addSolid(SolidType.Cylinder)
+                vm.transformSolid(vm.selectedSolid) { solid ->
+                    solid.copy(
+                        radius = fit.radiusMeters * unitsPerMeter,
+                        width = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        depth = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        height = fit.heightMeters * unitsPerMeter,
+                        position = local(fit.baseCenter + fit.axis * (fit.heightMeters / 2.0)),
+                    )
+                }
+            }
+            is ArConeFit -> {
+                vm.addSolid(SolidType.Cone)
+                vm.transformSolid(vm.selectedSolid) { solid ->
+                    solid.copy(
+                        radius = fit.radiusMeters * unitsPerMeter,
+                        width = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        depth = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        height = fit.heightMeters * unitsPerMeter,
+                        position = local(fit.baseCenter + fit.axis * (fit.heightMeters / 2.0)),
+                    )
+                }
+            }
+            is ArSphereFit -> {
+                vm.addSolid(SolidType.Sphere)
+                vm.transformSolid(vm.selectedSolid) { solid ->
+                    solid.copy(
+                        radius = fit.radiusMeters * unitsPerMeter,
+                        width = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        height = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        depth = fit.radiusMeters * 2.0 * unitsPerMeter,
+                        position = local(fit.center),
+                    )
+                }
+            }
+            is ArCuboidFit -> {
+                vm.addSolid(SolidType.Cuboid)
+                vm.transformSolid(vm.selectedSolid) { solid ->
+                    solid.copy(
+                        width = fit.lengthMeters * unitsPerMeter,
+                        depth = fit.widthMeters * unitsPerMeter,
+                        height = fit.heightMeters * unitsPerMeter,
+                        position = local(fit.origin) + Vec3(
+                            fit.lengthMeters * unitsPerMeter / 2.0,
+                            fit.heightMeters * unitsPerMeter / 2.0,
+                            fit.widthMeters * unitsPerMeter / 2.0,
+                        ),
+                    )
+                }
+            }
+        }
+        val type = fit::class.simpleName?.removePrefix("Ar")?.removeSuffix("Fit") ?: "shape"
+        fitMessage = "$type fitted. Fine-tune with transform controls, then lock the object."
+        fitWorkflow = fitWorkflow?.lock()
+        fitAnchorIds.drop(1).forEach { runtime?.detachAnchor(it) }
+        fitAnchorIds = emptyList()
+        arSelection = ArSelectionState(setOf("solid-${vm.selectedSolid}"), "solid-${vm.selectedSolid}")
+    }
     LaunchedEffect(placement.isPlaced, displayFirstMode, arPlacementMode, graphArWorkspace) {
         when {
             displayFirstMode && !placement.isPlaced -> {
@@ -10562,7 +10802,28 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                                 vm.endSpatialGesture()
                             }
                             if (totalPan.getDistance() < 12f && kotlin.math.abs(totalRotation) < 2f && kotlin.math.abs(totalScale - 1f) < .03f) {
-                                if (anchorPlacementMode) {
+                                val activeFit = fitWorkflow
+                                if (activeFit != null && !activeFit.complete) {
+                                    rankedHitAt(down.position)?.let { hit ->
+                                        runtime.createAnchor(hit.id, System.currentTimeMillis())
+                                            .onSuccess { anchor ->
+                                                fitAnchorIds = fitAnchorIds + anchor.id
+                                                val label = ('A'.code + activeFit.points.size).toChar().toString()
+                                                fitWorkflow = activeFit.add(
+                                                    ArMeasuredPoint(
+                                                        label = label,
+                                                        positionMeters = anchor.pose.positionMeters,
+                                                        uncertaintyMeters = hit.uncertaintyMeters,
+                                                        confidence = hit.confidence,
+                                                    ),
+                                                )
+                                                fitMessage = fitWorkflow?.instruction.orEmpty()
+                                            }
+                                            .onFailure { fitMessage = it.message ?: "Could not anchor this fit point." }
+                                    } ?: run {
+                                        fitMessage = "No reliable surface at this point. Move slowly, improve lighting and try again."
+                                    }
+                                } else if (anchorPlacementMode) {
                                     rankedHitAt(down.position)?.let { hit ->
                                         runtime.createAnchor(hit.id, System.currentTimeMillis())
                                             .onSuccess { anchor ->
@@ -11089,6 +11350,60 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     GlowButton("Show all objects") { arSelection = ArSelectionEngine.showAll(arSelection) }
                 }
                 if (arGroups.isNotEmpty()) Insight("Groups", "${arGroups.size} AR group(s) - shared transforms enabled", Violet)
+                if (arWorkspaceMode == ArMathWorkspaceMode.Geometry3D) {
+                    GlowButton(if (showFitTools) "Hide shape fitting" else "Fit shape to object") {
+                        showFitTools = !showFitTools
+                        if (showFitTools && !liveAR) startLiveAr(userRequestedInstall = true)
+                    }
+                    if (showFitTools) {
+                        Text("Guided mathematical fitting", color = Ink, fontWeight = FontWeight.Bold)
+                        Text("This is an approximate educational fit, not automatic object scanning or an engineering measurement.", color = Amber, fontSize = 11.sp)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            ArFitShape.entries.forEach { shape ->
+                                GlowButton(if (fitWorkflow?.shape == shape) "â€¢ ${shape.name}" else shape.name) {
+                                    clearFitAnchors()
+                                    fitWorkflow = ArPrimitiveFitWorkflow(shape)
+                                    fitMessage = fitWorkflow?.instruction.orEmpty()
+                                    displayFirstMode = false
+                                    arPlacementMode = ArPlacementMode.FloorTable
+                                    placementMode = false
+                                    if (!liveAR) startLiveAr(userRequestedInstall = true)
+                                }
+                            }
+                        }
+                        fitWorkflow?.let { workflow ->
+                            Insight("Fit progress", "${workflow.points.size}/${workflow.shape.requiredPoints} points - ${(workflow.progress * 100).roundToInt()}%", Violet)
+                            Text(fitMessage.ifBlank { workflow.instruction }, color = if (workflow.complete) Green else Muted, fontSize = 12.sp)
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                GlowButton("Undo point", enabled = workflow.points.isNotEmpty() && !workflow.locked) {
+                                    fitAnchorIds.lastOrNull()?.let { runtime?.detachAnchor(it) }
+                                    fitAnchorIds = fitAnchorIds.dropLast(1)
+                                    fitWorkflow = workflow.undo()
+                                    fitMessage = fitWorkflow?.instruction.orEmpty()
+                                }
+                                GlowButton("Restart fit") {
+                                    clearFitAnchors()
+                                    fitWorkflow = workflow.restart()
+                                    fitMessage = fitWorkflow?.instruction.orEmpty()
+                                }
+                            }
+                            workflow.result()?.let { result ->
+                                val uncertainty = result.uncertaintyMeters
+                                Insight("Volume", "${ArMeasurementFormatter.number(result.volumeCubicMeters * 1_000_000.0, uncertainty * 1_000_000.0)} cm^3", Green)
+                                Insight("Surface area", "${ArMeasurementFormatter.number(result.surfaceAreaSquareMeters * 10_000.0, uncertainty * 10_000.0)} cm^2", Cyan)
+                                when (result) {
+                                    is ArCylinderFit -> Text("r = ${ArMeasurementFormatter.number(result.radiusMeters * 100.0, uncertainty * 100.0)} cm, h = ${ArMeasurementFormatter.number(result.heightMeters * 100.0, uncertainty * 100.0)} cm; V = pi r^2 h; TSA = 2 pi r(r + h)", color = Muted, fontSize = 11.sp)
+                                    is ArConeFit -> Text("r = ${ArMeasurementFormatter.number(result.radiusMeters * 100.0, uncertainty * 100.0)} cm, h = ${ArMeasurementFormatter.number(result.heightMeters * 100.0, uncertainty * 100.0)} cm, l = ${ArMeasurementFormatter.number(result.slantHeightMeters * 100.0, uncertainty * 100.0)} cm; V = pi r^2 h / 3", color = Muted, fontSize = 11.sp)
+                                    is ArSphereFit -> Text("r = ${ArMeasurementFormatter.number(result.radiusMeters * 100.0, uncertainty * 100.0)} cm; V = 4 pi r^3 / 3; A = 4 pi r^2", color = Muted, fontSize = 11.sp)
+                                    is ArCuboidFit -> Text("l = ${ArMeasurementFormatter.number(result.lengthMeters * 100.0, uncertainty * 100.0)} cm, w = ${ArMeasurementFormatter.number(result.widthMeters * 100.0, uncertainty * 100.0)} cm, h = ${ArMeasurementFormatter.number(result.heightMeters * 100.0, uncertainty * 100.0)} cm; V = lwh", color = Muted, fontSize = 11.sp)
+                                }
+                                GlowButton(if (workflow.locked) "Fit locked" else "Create fitted model", enabled = !workflow.locked) {
+                                    createFittedSolid(result)
+                                }
+                            }
+                        }
+                    }
+                }
                 GlowButton(if (showAnalysisTools) "Hide analysis" else "Analysis & measurements", onClick = { showAnalysisTools = !showAnalysisTools })
                 if (showAnalysisTools) {
                 Text("Surface analysis & measurement", color = Ink, fontWeight = FontWeight.Bold)
@@ -14508,6 +14823,8 @@ private fun visualModuleIcon(module: MathModule): String = when (module) {
     MathModule.NumberTheory -> "N"
     MathModule.SpatialAR -> "ar"
     MathModule.ARGraph3D -> "ar"
+    MathModule.ARCoordinatePlane -> "ar"
+    MathModule.ARVectorLab -> "ar"
 }
 
 private fun moduleIcon(module: MathModule): String = when (module) {
@@ -14524,6 +14841,8 @@ private fun moduleIcon(module: MathModule): String = when (module) {
     MathModule.NumberTheory -> "ℕ"
     MathModule.SpatialAR -> "AR"
     MathModule.ARGraph3D -> "AR"
+    MathModule.ARCoordinatePlane -> "AR"
+    MathModule.ARVectorLab -> "AR"
 }
 
 internal fun menuIcon(label: String): String = when {

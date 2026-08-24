@@ -213,6 +213,7 @@ class ArCoreRuntime(
             session = null
             val candidate = Session(activity).also { created = it }
             val depthSupported = candidate.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
+            val rawDepthSupported = candidate.isDepthModeSupported(Config.DepthMode.RAW_DEPTH_ONLY)
             val geospatialSupported = runCatching { candidate.isGeospatialModeSupported(Config.GeospatialMode.ENABLED) }.getOrDefault(false)
             val (hdrSupported, instantSupported) = configureWithFallbacks(candidate, depthSupported)
             cameraTextureName?.let(candidate::setCameraTextureName)
@@ -221,6 +222,7 @@ class ArCoreRuntime(
             ArCapabilities(
                 availability = ArAvailability.Ready,
                 depthSupported = depthSupported,
+                rawDepthSupported = rawDepthSupported,
                 environmentalHdrSupported = hdrSupported,
                 instantPlacementSupported = instantSupported,
                 geospatialSupported = geospatialSupported,
