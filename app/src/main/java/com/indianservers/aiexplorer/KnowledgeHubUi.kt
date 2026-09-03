@@ -603,6 +603,68 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
             visualProofPlayback = visualProofEngine.next(visualProofPlayback)
         }
     }
+	    LaunchedEffect(proofWorkspaceOpen) {
+	        vm.setChromeVisible(!proofWorkspaceOpen)
+	    }
+	    DisposableEffect(Unit) {
+	        onDispose { vm.setChromeVisible(true) }
+	    }
+	    if (proofWorkspaceOpen && (visualProofPlayback.frame.lab.id in setOf("triangle-angle-sum", "pythagorean", "triangle-area", "parallelogram-area", "trapezoid-area", "circle-area", "polygon-angle-sum", "similar-triangles", "intersecting-chords", "circle-angle", "derivative-slope", "integral-area", "epsilon-delta", "algebra-square", "absolute-inequality", "equation-balance", "matrix-transform", "eigenvector-direction", "odd-sum-square", "modular-clock", "normal-area", "anscombe-quartet", "vector-addition", "circle-ratio", "shear-area", "unit-circle-identity", "set-de-morgan", "slope-triangle", "counting-paths") || visualProofPlayback.frame.lab.id.startsWith("nt-"))) {
+	        VisualProofMockupLessonScreen(
+	            playback = visualProofPlayback,
+	            onBack = {
+	                if (visualProofPlayback.playing) visualProofPlayback = visualProofEngine.togglePlaying(visualProofPlayback)
+	                proofWorkspaceOpen = false
+	                proofFormulasOpen = true
+	            },
+	            onTogglePlaying = { visualProofPlayback = visualProofEngine.togglePlaying(visualProofPlayback) },
+	            onReset = {
+	                visualProofPlayback = when (visualProofPlayback.frame.lab.id) {
+	                    "triangle-angle-sum" -> visualProofEngine.setParameter(
+	                        visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "height", 3.32),
+	                        "offset",
+	                        1.29,
+	                    )
+	                    "triangle-area" -> visualProofEngine.setParameter(
+	                        visualProofEngine.reset(visualProofPlayback),
+	                        "apex",
+	                        2.0,
+	                    )
+	                    "circle-area" -> visualProofEngine.setParameter(
+	                        visualProofEngine.reset(visualProofPlayback),
+	                        "n",
+	                        16.0,
+	                    )
+	                    "integral-area" -> visualProofEngine.setParameter(
+	                        visualProofEngine.reset(visualProofPlayback),
+	                        "n",
+	                        24.0,
+	                    )
+	                    "equation-balance" -> visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "b", 3.0), "c", 11.0)
+	                    "matrix-transform" -> visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "c", 1.0)
+	                    "eigenvector-direction" -> visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "lambda", 1.6), "other", 1.6), "vy", .7)
+	                    "odd-sum-square" -> visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "n", 4.0)
+	                    "modular-clock" -> visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "a", 9.0), "b", 7.0), "n", 12.0)
+	                    "vector-addition" -> visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "ux", 3.0), "uy", 2.0), "vx", 1.0), "vy", 3.0)
+	                    "circle-ratio" -> visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "n", 48.0)
+	                    "unit-circle-identity" -> visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "theta", 50.0)
+	                    "slope-triangle" -> visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "m", .5), "run", 2.0)
+	                    "counting-paths" -> visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.reset(visualProofPlayback), "right", 4.0), "up", 4.0)
+	                    else -> visualProofEngine.reset(visualProofPlayback)
+	                }
+	            },
+	            onSeekStep = { target ->
+	                visualProofPlayback = visualProofPlayback.copy(
+	                    frame = visualProofPlayback.frame.copy(step = target),
+	                    playing = false,
+	                )
+	            },
+	            onParameterChange = { name, value ->
+	                visualProofPlayback = visualProofEngine.setParameter(visualProofPlayback, name, value)
+	            },
+	        )
+	        return
+	    }
 	    val result = remember(query, topic, level, formulaCategory, dictionaryInitial, dictionaryClassBand, dictionaryDifficulty, vm.activeKnowledgeSection) {
         if (vm.activeKnowledgeSection == KnowledgeSection.Dictionary) {
             KnowledgeSearchResult(
@@ -778,7 +840,45 @@ internal fun MathKnowledgeScreen(vm: ExplorerViewModel, wide: Boolean) {
                             onOpen = { lab ->
                                 runCatching { visualProofEngine.start(lab.id) }
                                     .onSuccess {
-                                        visualProofPlayback = it
+	                                        visualProofPlayback = if (lab.id == "triangle-angle-sum") {
+	                                            visualProofEngine.togglePlaying(
+	                                                visualProofEngine.setParameter(
+	                                                    visualProofEngine.setParameter(it, "height", 3.32),
+	                                                    "offset",
+	                                                    1.29,
+	                                                ),
+	                                            )
+	                                        } else if (lab.id == "triangle-area") {
+	                                            visualProofEngine.togglePlaying(visualProofEngine.setParameter(it, "apex", 2.0))
+	                                        } else if (lab.id == "circle-area") {
+	                                            visualProofEngine.togglePlaying(visualProofEngine.setParameter(it, "n", 16.0))
+	                                        } else if (lab.id == "integral-area") {
+	                                            visualProofEngine.setParameter(it, "n", 24.0)
+	                                        } else if (lab.id == "equation-balance") {
+	                                            visualProofEngine.setParameter(visualProofEngine.setParameter(it, "b", 3.0), "c", 11.0)
+	                                        } else if (lab.id == "matrix-transform") {
+	                                            visualProofEngine.setParameter(it, "c", 1.0)
+	                                        } else if (lab.id == "eigenvector-direction") {
+	                                            visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(it, "lambda", 1.6), "other", 1.6), "vy", .7)
+	                                        } else if (lab.id == "odd-sum-square") {
+	                                            visualProofEngine.setParameter(it, "n", 4.0)
+	                                        } else if (lab.id == "modular-clock") {
+	                                            visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(it, "a", 9.0), "b", 7.0), "n", 12.0)
+	                                        } else if (lab.id == "vector-addition") {
+	                                            visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(visualProofEngine.setParameter(it, "ux", 3.0), "uy", 2.0), "vx", 1.0), "vy", 3.0)
+	                                        } else if (lab.id == "circle-ratio") {
+	                                            visualProofEngine.setParameter(it, "n", 48.0)
+	                                        } else if (lab.id == "unit-circle-identity") {
+	                                            visualProofEngine.setParameter(it, "theta", 50.0)
+	                                        } else if (lab.id == "slope-triangle") {
+	                                            visualProofEngine.setParameter(visualProofEngine.setParameter(it, "m", .5), "run", 2.0)
+	                                        } else if (lab.id == "counting-paths") {
+	                                            visualProofEngine.setParameter(visualProofEngine.setParameter(it, "right", 4.0), "up", 4.0)
+	                                        } else if (lab.id in setOf("pythagorean", "parallelogram-area", "trapezoid-area", "polygon-angle-sum")) {
+	                                            visualProofEngine.togglePlaying(it)
+	                                        } else {
+	                                            it
+	                                        }
                                         visualProofError = null
                                         proofWorkspaceOpen = true
                                         proofFormulasOpen = false

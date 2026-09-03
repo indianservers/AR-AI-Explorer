@@ -389,6 +389,7 @@ fun AdaptiveAppScaffold(
     profile: AdaptiveDeviceProfile,
     modifier: Modifier = Modifier,
     backdrop: Brush? = null,
+    edgeToEdge: Boolean = false,
     content: @Composable BoxScope.(AdaptiveDeviceProfile) -> Unit,
 ) {
     CompositionLocalProvider(LocalAdaptiveDeviceProfile provides profile) {
@@ -396,9 +397,12 @@ fun AdaptiveAppScaffold(
             modifier = modifier
                 .fillMaxSize()
                 .then(if (backdrop != null) Modifier.background(backdrop) else Modifier)
-                .windowInsetsPadding(WindowInsets.safeDrawing)
-                .padding(profile.contentPadding)
-                .padding(profile.overscanPadding),
+                .then(
+                    if (edgeToEdge) Modifier else Modifier
+                        .windowInsetsPadding(WindowInsets.safeDrawing)
+                        .padding(profile.contentPadding)
+                        .padding(profile.overscanPadding),
+                ),
         ) {
             content(profile)
         }

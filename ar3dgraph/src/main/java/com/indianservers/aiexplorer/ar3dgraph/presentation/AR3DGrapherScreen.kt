@@ -73,6 +73,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.indianservers.aiexplorer.ar3dgraph.ar.ARCameraPermissionManager
 import com.indianservers.aiexplorer.ar3dgraph.ar.ARCapabilityChecker
@@ -118,6 +121,7 @@ fun AR3DGraphScreen(
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val checker = remember(context) { ARCapabilityChecker(context) }
     val ui = model.uiState
     var showHelp by remember { mutableStateOf(false) }
@@ -142,7 +146,13 @@ fun AR3DGraphScreen(
     fun refreshPermission() {
         val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         val rationale = activity?.let { ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.CAMERA) } ?: false
-        model.onCameraPermission(ARCameraPermissionManager.classify(granted, rationale, ui.hasRequestedCamera))
+        model.onCameraPermission(
+            ARCameraPermissionManager.classify(
+                granted = granted,
+                shouldShowRationale = rationale,
+                hasRequested = model.uiState.hasRequestedCamera,
+            ),
+        )
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { refreshPermission() }
@@ -155,6 +165,20 @@ fun AR3DGraphScreen(
     LaunchedEffect(checker) {
         refreshPermission()
         checkCapability()
+    }
+
+    // Permission dialogs and the system App Info screen pause this Activity. Some OEMs deliver
+    // the result before Compose's launcher callback is active again, so reconcile the real
+    // package permission whenever the screen resumes.
+    DisposableEffect(lifecycleOwner, checker) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                refreshPermission()
+                if (model.uiState.capability != ARCapabilityState.Supported) checkCapability()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     DisposableEffect(checker) {

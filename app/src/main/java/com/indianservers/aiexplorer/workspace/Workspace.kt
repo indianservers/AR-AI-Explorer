@@ -133,12 +133,17 @@ data class Graph2DViewState(
 
 enum class MathModule(val label: String) {
     Geometry2D("2D"),
+    CoordinatePlane("Coordinate Plane"),
     Geometry3D("3D"),
+    VectorLab("Vector Lab"),
     Graph2D("Graph"),
     Graph3D("3D Graph"),
     Trigonometry("Trig"),
     Manipulatives("Tiles"),
     ProbabilityStatistics("Probability"),
+    CalculusLab("Calculus Lab"),
+    PhysicsMath("Physics–Math"),
+    MathematicalArt("Mathematical Art"),
     MatricesLinearTransformations("Matrices"),
     DataSpreadsheet("Data"),
     DiscreteMathematics("Discrete"),
@@ -172,6 +177,7 @@ data class WorkspaceState(
     val surfaceLayers: List<SpatialSurfaceLayer> = listOf(SpatialSurfaceLayer("surface-main", surfaceExpression)),
     val graph3DView: Graph3DViewState = Graph3DViewState(),
     val spatialPlacement: SpatialScenePlacement = SpatialScenePlacement(),
+    val labSessionValues: Map<String, String> = emptyMap(),
     val universalMathDocument: UniversalMathDocument? = null,
     val modifiedAt: Long = System.currentTimeMillis(),
 )
@@ -732,6 +738,7 @@ object WorkspaceJson {
         appendLine("  \"surfaceLayers\": [${state.surfaceLayers.joinToString { layer -> "{\"id\":\"${layer.id.jsonEscaped()}\",\"kind\":\"${layer.kind}\",\"expression\":\"${layer.expression.jsonEscaped()}\",\"expressionY\":\"${layer.expressionY.jsonEscaped()}\",\"expressionZ\":\"${layer.expressionZ.jsonEscaped()}\",\"visible\":${layer.visible},\"material\":\"${layer.material}\",\"domain\":{\"uMin\":${layer.domain.uMin},\"uMax\":${layer.domain.uMax},\"vMin\":${layer.domain.vMin},\"vMax\":${layer.domain.vMax}},\"quality\":\"${layer.quality}\",\"opacity\":${layer.opacity},\"paletteKey\":\"${layer.paletteKey.jsonEscaped()}\",\"colorIndex\":${layer.colorIndex},\"textureKey\":\"${layer.textureKey.jsonEscaped()}\",\"glow\":${layer.glow},\"renderMode\":\"${layer.renderMode}\"}" }}],")
         appendLine("  \"graph3DView\": {\"density\":${state.graph3DView.density},\"rotation\":${state.graph3DView.rotation},\"tilt\":${state.graph3DView.tilt},\"roll\":${state.graph3DView.roll},\"zoom\":${state.graph3DView.zoom},\"panX\":${state.graph3DView.panX},\"panY\":${state.graph3DView.panY},\"sliceZ\":${state.graph3DView.sliceZ},\"traceX\":${state.graph3DView.traceX},\"traceY\":${state.graph3DView.traceY},\"showContours\":${state.graph3DView.showContours},\"showSlice\":${state.graph3DView.showSlice},\"showGradient\":${state.graph3DView.showGradient},\"showBox\":${state.graph3DView.showBox},\"showOrientationCube\":${state.graph3DView.showOrientationCube},\"activeTool\":\"${state.graph3DView.activeTool.jsonEscaped()}\",\"viewPreset\":\"${state.graph3DView.viewPreset.jsonEscaped()}\"},")
         appendLine("  \"spatialPlacement\": {\"anchorId\":\"${state.spatialPlacement.anchorId.jsonEscaped()}\",\"positionMeters\":{\"x\":${state.spatialPlacement.pose.positionMeters.x},\"y\":${state.spatialPlacement.pose.positionMeters.y},\"z\":${state.spatialPlacement.pose.positionMeters.z}},\"rotationDegrees\":{\"x\":${state.spatialPlacement.pose.rotationDegrees.x},\"y\":${state.spatialPlacement.pose.rotationDegrees.y},\"z\":${state.spatialPlacement.pose.rotationDegrees.z}},\"uniformScale\":${state.spatialPlacement.pose.uniformScale},\"scaleMode\":\"${state.spatialPlacement.scaleMode}\",\"metersPerMathUnit\":${state.spatialPlacement.metersPerMathUnit},\"estimated\":${state.spatialPlacement.estimated},\"depthOcclusionEnabled\":${state.spatialPlacement.depthOcclusionEnabled}},")
+        appendLine("  \"labSessionValues\": {${state.labSessionValues.jsonObjectEntries()}},")
         appendLine("  \"universalMathDocument\": ${UniversalMathDocumentCodec.encode(UniversalWorkspaceBridge.fromWorkspace(state)).prependIndent("  ")},")
         appendLine("  \"modifiedAt\": ${state.modifiedAt}")
         appendLine("}")
@@ -779,6 +786,10 @@ private fun String.jsonEscaped(): String = buildString {
             else -> char
         })
     }
+}
+
+private fun Map<String, String>.jsonObjectEntries(): String = toSortedMap().entries.joinToString {
+    "\"${it.key.jsonEscaped()}\":\"${it.value.jsonEscaped()}\""
 }
 
 private fun <T> List<T>.replace(index: Int, value: T): List<T> = mapIndexed { i, old -> if (i == index) value else old }

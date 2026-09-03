@@ -517,14 +517,7 @@ internal fun MathFormulaText(
     )
 }
 
-internal val InteractiveVisualProofSceneIds = setOf(
-    "triangle-angle-sum", "pythagorean", "derivative-slope", "integral-area", "normal-area",
-    "vector-addition", "matrix-transform", "circle-ratio", "algebra-square", "shear-area",
-    "triangle-area", "parallelogram-area", "trapezoid-area", "circle-area", "polygon-angle-sum",
-    "similar-triangles", "intersecting-chords", "circle-angle", "unit-circle-identity", "odd-sum-square",
-    "absolute-inequality", "equation-balance", "set-de-morgan", "epsilon-delta", "slope-triangle",
-    "eigenvector-direction", "counting-paths", "modular-clock", "anscombe-quartet",
-)
+internal val InteractiveVisualProofSceneIds = VisualProofCatalog.labs.mapTo(linkedSetOf()) { it.id }
 
 private fun proofValue(value: Double): String = trim(round(value * 100.0) / 100.0)
 

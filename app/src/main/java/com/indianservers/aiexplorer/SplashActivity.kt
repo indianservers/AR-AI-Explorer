@@ -1,6 +1,5 @@
 package com.indianservers.aiexplorer
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,6 +11,8 @@ import androidx.core.view.WindowCompat
 import kotlinx.coroutines.delay
 
 class SplashActivity : ComponentActivity() {
+    private var launchedMain = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -19,12 +20,17 @@ class SplashActivity : ComponentActivity() {
             AiExplorerSplashScreen(Modifier.fillMaxSize())
             LaunchedEffect(Unit) {
                 delay(SPLASH_DURATION_MILLIS)
-                val transition = ActivityOptions.makeCustomAnimation(this@SplashActivity, 0, 0)
-                val mainIntent = Intent(this@SplashActivity, MainActivity::class.java).putExtras(intent)
-                startActivity(mainIntent, transition.toBundle())
-                finish()
+                launchMainActivity()
             }
         }
+    }
+
+    private fun launchMainActivity() {
+        if (launchedMain || isFinishing || isDestroyed) return
+        launchedMain = true
+        val mainIntent = Intent(this, MainActivity::class.java).putExtras(intent)
+        startActivity(mainIntent)
+        finish()
     }
 
     private companion object {

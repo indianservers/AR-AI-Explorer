@@ -8,26 +8,52 @@ import org.junit.Test
 
 class AppVisualEffectsTest {
     @Test
-    fun existingPaletteSetAndColorValuesRemainUnchanged() {
+    fun exactlyTwoBuiltInThemesAreAvailable() {
         assertEquals(
-            listOf("Modern", "Aurora", "Ocean", "Forest", "Solar", "Crimson", "Royal", "Mono", "Sunset"),
-            AppColorScheme.entries.map { it.name },
+            listOf("Current", "Maths Explorer Vibrant"),
+            AppColorScheme.entries.map { it.displayName },
         )
-        assertEquals(Color(0xFF030507), AppColorScheme.Modern.palette.background)
-        assertEquals(Color(0xFF20D9FF), AppColorScheme.Modern.palette.primary)
-        assertEquals(Color(0xFF52F5C8), AppColorScheme.Aurora.palette.primary)
-        assertEquals(Color(0xFFE66BFF), AppColorScheme.Aurora.palette.secondary)
-        assertEquals(Color(0xFF7C83FF), AppColorScheme.Royal.palette.primary)
-        assertEquals(Color(0xFFFFC857), AppColorScheme.Royal.palette.secondary)
     }
 
     @Test
-    fun onlyAuroraAndRoyalReceiveEnhancedVisualTreatment() {
-        val enhanced = AppColorScheme.entries.filter { visualEffectsFor(it).enhanced }
-        assertEquals(listOf(AppColorScheme.Aurora, AppColorScheme.Royal), enhanced)
-        assertEquals(AppVisualTreatment.NeonGlass, visualEffectsFor(AppColorScheme.Aurora).treatment)
-        assertEquals(AppVisualTreatment.SpectralWireframe, visualEffectsFor(AppColorScheme.Royal).treatment)
-        assertFalse(visualEffectsFor(AppColorScheme.Modern).enhanced)
+    fun currentPaletteRetainsTheOriginalCoreColors() {
+        val current = AppColorScheme.Current.palette
+        assertEquals(Color(0xFF030507), current.background)
+        assertEquals(Color(0xFF07101A), current.surface)
+        assertEquals(Color(0xFF0B1017), current.surfaceAlt)
+        assertEquals(Color(0xFFEAF5FF), current.ink)
+        assertEquals(Color(0xFFB8C4D8), current.muted)
+        assertEquals(Color(0xFF20D9FF), current.primary)
+        assertEquals(Color(0xFF985DFF), current.secondary)
+        assertEquals(Color(0xFF48E0A4), current.success)
+        assertEquals(Color(0xFFFFC857), current.warning)
+    }
+
+    @Test
+    fun vibrantPaletteUsesTheSampledV4ColorSystem() {
+        val vibrant = AppColorScheme.MathsExplorerVibrant.palette
+        assertEquals(Color(0xFFF4F7FF), vibrant.background)
+        assertEquals(Color.White, vibrant.surface)
+        assertEquals(Color(0xFF121A33), vibrant.navigation)
+        assertEquals(Color(0xFF121A33), vibrant.ink)
+        assertEquals(Color(0xFF64708A), vibrant.muted)
+        assertEquals(Color(0xFFD9E2F2), vibrant.border)
+        assertEquals(Color(0xFF5458E8), vibrant.primary)
+        assertEquals(Color(0xFF08A9B8), vibrant.cyan)
+        assertEquals(Color(0xFF8B5CF6), vibrant.violet)
+        assertEquals(Color(0xFFF2A516), vibrant.amber)
+        assertEquals(Color(0xFFEF6375), vibrant.coral)
+        assertEquals(Color(0xFF21A66A), vibrant.green)
+        assertEquals(6, vibrant.chartColors.size)
+    }
+
+    @Test
+    fun themesOnlyUseTheStandardColorTreatment() {
+        AppColorScheme.entries.forEach { scheme ->
+            assertFalse(visualEffectsFor(scheme).enhanced)
+            assertEquals(0f, visualEffectsFor(scheme).gridGlowAlpha)
+            assertEquals(0f, visualEffectsFor(scheme).graphGlowAlpha)
+        }
     }
 
     @Test
@@ -43,40 +69,13 @@ class AppVisualEffectsTest {
                 effects.graphGlowAlpha,
             ).forEach { value -> assertTrue(value in 0f..1f) }
         }
-        assertEquals(
-            setOf(
-                "treatment",
-                "backdropAccentAlpha",
-                "backdropSecondaryAlpha",
-                "surfaceTintAlpha",
-                "borderGlowAlpha",
-                "activeGlowAlpha",
-                "gridGlowAlpha",
-                "graphGlowAlpha",
-            ),
-            AppVisualEffects::class.java.declaredFields
-                .map { it.name }
-                .filterNot { it.startsWith("$") || it in setOf("Companion", "Standard") }
-                .toSet(),
-        )
     }
 
     @Test
     fun activeControlDetectionIsExplicitAndDoesNotMisreadInactiveLabels() {
-        listOf("• Plot", "Compare: ON", "Selected: Royal", "Trace active", "Method current", "Comparing")
+        listOf("• Plot", "Compare: ON", "Selected: Vibrant", "Trace active", "Method current", "Comparing")
             .forEach { assertTrue(it, isVisuallyActiveLabel(it)) }
-        listOf("Plot", "Inactive", "Turn on", "Current value", "Select Royal")
+        listOf("Plot", "Inactive", "Turn on", "Current value", "Select Vibrant")
             .forEach { assertFalse(it, isVisuallyActiveLabel(it)) }
-    }
-
-    @Test
-    fun enhancedEffectsHaveVisibleButSubtleGraphAndGridStrengths() {
-        listOf(AppColorScheme.Aurora, AppColorScheme.Royal).map(::visualEffectsFor).forEach { effects ->
-            assertTrue(effects.gridGlowAlpha in .15f..45f)
-            assertTrue(effects.graphGlowAlpha in .20f..50f)
-            assertTrue(effects.activeGlowAlpha < effects.borderGlowAlpha)
-        }
-        assertEquals(0f, visualEffectsFor(AppColorScheme.Modern).gridGlowAlpha)
-        assertEquals(0f, visualEffectsFor(AppColorScheme.Modern).graphGlowAlpha)
     }
 }

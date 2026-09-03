@@ -91,7 +91,13 @@ private fun LegacyAR3DGraphScreen(
     fun refreshPermission() {
         val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
         val rationale = activity?.let { ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.CAMERA) } ?: false
-        model.onCameraPermission(ARCameraPermissionManager.classify(granted, rationale, ui.hasRequestedCamera))
+        model.onCameraPermission(
+            ARCameraPermissionManager.classify(
+                granted = granted,
+                shouldShowRationale = rationale,
+                hasRequested = model.uiState.hasRequestedCamera,
+            ),
+        )
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -350,14 +356,14 @@ internal fun SceneViewARGraphViewport(
         showReticle = true,
         coaching = false,
         groundShadows = true,
-        sessionConfiguration = { session, config ->
+        sessionConfiguration = { _, config ->
             config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL
             config.instantPlacementMode = Config.InstantPlacementMode.DISABLED
             config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
-            if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
-                config.depthMode = Config.DepthMode.AUTOMATIC
-            }
-            config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
+            // The graph does not consume depth or HDR. Avoid optional camera pipelines whose
+            // combination is rejected by some otherwise ARCore-compatible camera profiles.
+            config.depthMode = Config.DepthMode.DISABLED
+            config.lightEstimationMode = Config.LightEstimationMode.AMBIENT_INTENSITY
             config.focusMode = Config.FocusMode.AUTO
         },
         onPlaced = { anchor ->

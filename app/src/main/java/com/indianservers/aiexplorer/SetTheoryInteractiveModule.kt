@@ -63,16 +63,16 @@ import com.indianservers.aiexplorer.core.SetTheoryStudioEngine
 import com.indianservers.aiexplorer.core.VennRegionEngine
 import kotlin.math.min
 
-private val SetSpace = Color(0xFF010612)
-private val SetPanel = Color(0xEE081528)
-private val SetInk = Color(0xFFF5F9FF)
-private val SetMuted = Color(0xFFA9B7D3)
-private val SetCyan = Color(0xFF28DFFF)
-private val SetViolet = Color(0xFFA86BFF)
-private val SetGreen = Color(0xFF4EE5A4)
-private val SetAmber = Color(0xFFFFB83F)
-private val SetPink = Color(0xFFFF66A5)
-private val SetRed = Color(0xFFFF667C)
+private val SetSpace get() = themedColor(Color(0xFF010612), Background)
+private val SetPanel get() = themedColor(Color(0xEE081528), ActiveAppPalette.surface)
+private val SetInk get() = themedColor(Color(0xFFF5F9FF), Ink)
+private val SetMuted get() = themedColor(Color(0xFFA9B7D3), Muted)
+private val SetCyan get() = themedColor(Color(0xFF28DFFF), Cyan)
+private val SetViolet get() = themedColor(Color(0xFFA86BFF), Violet)
+private val SetGreen get() = themedColor(Color(0xFF4EE5A4), Green)
+private val SetAmber get() = themedColor(Color(0xFFFFB83F), Amber)
+private val SetPink get() = themedColor(Color(0xFFFF66A5), Coral)
+private val SetRed get() = themedColor(Color(0xFFFF667C), Coral)
 
 private enum class SetModulePage {
     Hub, Introduction, Types, Representation, Workspace, Subsets, PowerSet,
@@ -149,18 +149,28 @@ internal fun SetTheoryInteractiveModule(
 
     Column(
         Modifier.fillMaxSize()
-            .background(Brush.radialGradient(listOf(Color(0xFF17214A), SetSpace, Color.Black), center = Offset(260f, 30f), radius = 1200f))
+            .background(
+                Brush.radialGradient(
+                    listOf(
+                        themedColor(Color(0xFF17214A), SetSpace),
+                        SetSpace,
+                        themedColor(Color.Black, SetSpace),
+                    ),
+                    center = Offset(260f, 30f),
+                    radius = 1200f,
+                ),
+            )
             .verticalScroll(rememberScrollState())
             .padding(horizontal = if (wide) 28.dp else 9.dp, vertical = 9.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            SetButton("< BACK", SetCyan) { if (page == SetModulePage.Hub) vm.returnToMathMenu() else navigate(SetModulePage.Hub) }
+            SetButton("< BACK", themedColor(SetCyan, Color.Transparent)) { if (page == SetModulePage.Hub) vm.returnToMathMenu() else navigate(SetModulePage.Hub) }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(if (page == SetModulePage.Hub) "Set Theory" else pageTitle(page), color = SetInk, fontSize = 20.sp, fontWeight = FontWeight.Black)
-                Text("INTERACTIVE SETS & VENN DIAGRAMS", color = SetViolet, fontSize = 8.sp, fontWeight = FontWeight.Bold)
+                Text(if (page == SetModulePage.Hub) "Set Theory" else pageTitle(page), color = themedColor(SetInk, Color.Transparent), fontSize = 20.sp, fontWeight = FontWeight.Black)
+                Text("INTERACTIVE SETS & VENN DIAGRAMS", color = themedColor(SetViolet, Color.Transparent), fontSize = 8.sp, fontWeight = FontWeight.Bold)
             }
-            SetButton("LOGIC", SetViolet, onOpenLogic)
+            SetButton("LOGIC", themedColor(SetViolet, Color.Transparent), onOpenLogic)
         }
 
         when (page) {

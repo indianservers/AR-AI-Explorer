@@ -36,10 +36,10 @@ fun HomeSearchSuggestions(
     onSuggestion: (HomeSearchSuggestion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val cyan = Color(0xFF20D9FF)
-    val violet = Color(0xFF9B6CFF)
-    val ink = Color(0xFFEAF7FF)
-    val muted = Color(0xFF91A4B5)
+    val cyan = themedColor(Color(0xFF20D9FF), ActiveAppPalette.cyan)
+    val violet = themedColor(Color(0xFF9B6CFF), ActiveAppPalette.violet)
+    val ink = themedColor(Color(0xFFEAF7FF), ActiveAppPalette.ink)
+    val muted = themedColor(Color(0xFF91A4B5), ActiveAppPalette.muted)
     if (query.isBlank()) {
         Column(modifier.fillMaxWidth()) {
             Text("TRY A SEARCH", color = muted, fontSize = 9.sp, fontWeight = FontWeight.Bold)
@@ -60,8 +60,8 @@ fun HomeSearchSuggestions(
         }
     } else if (suggestions.isNotEmpty()) {
         Column(
-            modifier.fillMaxWidth().background(Color(0xF20A1522), RoundedCornerShape(14.dp))
-                .border(1.dp, violet.copy(.38f), RoundedCornerShape(14.dp)).padding(6.dp),
+            modifier.fillMaxWidth().background(themedColor(Color(0xF20A1522), ActiveAppPalette.surface), RoundedCornerShape(14.dp))
+                .border(1.dp, themedColor(violet.copy(.38f), ActiveAppPalette.border), RoundedCornerShape(14.dp)).padding(6.dp),
         ) {
             Text("SUGGESTIONS", color = violet, fontSize = 9.sp, fontWeight = FontWeight.Bold)
             suggestions.take(8).forEach { suggestion ->

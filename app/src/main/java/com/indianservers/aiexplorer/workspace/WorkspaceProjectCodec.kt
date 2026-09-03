@@ -29,7 +29,7 @@ data class WorkspaceProjectRecovery(
 
 /** Complete, deterministic workspace snapshot embedded beside the canonical maths document. */
 object WorkspaceSnapshotCodec {
-    const val currentSchema = 10
+    const val currentSchema = 11
     private const val maximumChars = 8_000_000
 
     fun encode(state: WorkspaceState): String {
@@ -94,6 +94,7 @@ object WorkspaceSnapshotCodec {
                     placement.environmentIntensity, placement.placedAt ?: -1L, placement.anchorTrackingState.name,
                     pack(placement.relocalizationMessage)).joinToString("|"))
             }
+            state.labSessionValues.toSortedMap().forEach { (key, value) -> add("X|${pack(key)}|${pack(value)}") }
             state.universalMathDocument?.let { document -> add("U|${pack(UniversalMathDocumentCodec.encode(document))}") }
         }
         val body = records.joinToString("\n")
@@ -121,6 +122,7 @@ object WorkspaceSnapshotCodec {
             val points = mutableListOf<Vec2>(); val shapes = mutableListOf<Shape2D>(); val dependencies = mutableListOf<PointDependency>(); val constraints = mutableListOf<GeometryConstraint2D>(); val groups = mutableListOf<GeometryGroup2D>()
             val functions = mutableListOf<FunctionDefinition>(); val rows = linkedMapOf<String, GraphRowMetadataState>()
             val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>(); val points3D = mutableListOf<Point3D>(); val surfaceLayers = mutableListOf<SpatialSurfaceLayer>()
+            val labSessionValues = linkedMapOf<String, String>()
             var placement = SpatialScenePlacement()
             var graph3DView = Graph3DViewState()
             var graph2DView = Graph2DViewState()
@@ -164,6 +166,7 @@ object WorkspaceSnapshotCodec {
                             numberFormat = unpack(f[8]), gridVisible = f[9].toBoolean(), xLogarithmic = f[10].toBoolean(), yLogarithmic = f[11].toBoolean(),
                         )
                         "A" -> placement = SpatialScenePlacement(anchorId = unpack(f[1]), pose = SpatialPose(Vec3(f[2].toDouble(), f[3].toDouble(), f[4].toDouble()), Vec3(f[5].toDouble(), f[6].toDouble(), f[7].toDouble()), f[8].toDouble()), scaleMode = ARScaleMode.valueOf(f[9]), metersPerMathUnit = f[10].toDouble(), trackingQuality = TrackingQuality.valueOf(f[11]), estimated = f[12].toBoolean(), depthOcclusionEnabled = f[13].toBoolean(), measurementUncertaintyMeters = f[14].toDouble(), environmentIntensity = f[15].toFloat(), placedAt = f[16].toLong().takeIf { it >= 0 }, anchorTrackingState = f.getOrNull(17)?.let { AnchorTrackingState.valueOf(it) } ?: AnchorTrackingState.Tracking, relocalizationMessage = f.getOrNull(18)?.let(::unpack).orEmpty())
+                        "X" -> labSessionValues[unpack(f[1])] = unpack(f[2])
                         "U" -> universalDocument = UniversalMathDocumentCodec.decode(unpack(f[1]), recover).document
                     }
                 }.onFailure { diagnostics += "Skipped damaged workspace record $index: ${it.message ?: "invalid data"}." }
@@ -175,7 +178,7 @@ object WorkspaceSnapshotCodec {
                 surfaceLayers = if (schema >= 7) surfaceLayers else listOf(SpatialSurfaceLayer("surface-main", unpack(workspace[5]))),
                 graph3DView = graph3DView,
                 graph2DView = graph2DView,
-                spatialPlacement = placement, universalMathDocument = universalDocument, modifiedAt = workspace[4].toLong()).recomputed()
+                spatialPlacement = placement, labSessionValues = labSessionValues, universalMathDocument = universalDocument, modifiedAt = workspace[4].toLong()).recomputed()
         }.fold(
             onSuccess = { WorkspaceProjectRecovery(it, !checksumValid || diagnostics.isNotEmpty() || schema < currentSchema, diagnostics) },
             onFailure = { WorkspaceProjectRecovery(null, !checksumValid, diagnostics + (it.message ?: "Workspace could not be decoded.")) },

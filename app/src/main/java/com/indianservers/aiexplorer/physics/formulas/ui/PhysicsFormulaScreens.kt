@@ -43,14 +43,14 @@ import com.indianservers.aiexplorer.physics.formulas.model.PhysicsFormulaLevel
 import com.indianservers.aiexplorer.physics.formulas.navigation.PhysicsFormulaRoute
 import com.indianservers.aiexplorer.physics.formulas.navigation.PhysicsFormulaViewModel
 
-private val Bg = Color(0xFF050B14)
-private val Panel = Color(0xE80A1828)
-private val Blue = Color(0xFF62CBFF)
-private val Green = Color(0xFF70E0A1)
-private val Violet = Color(0xFFB4A0FF)
-private val Amber = Color(0xFFFFC66B)
-private val Ink = Color(0xFFF1F7FC)
-private val Muted = Color(0xFF9BAFC0)
+private val Bg get() = com.indianservers.aiexplorer.themedColor(Color(0xFF050B14), com.indianservers.aiexplorer.ActiveAppPalette.background)
+private val Panel get() = com.indianservers.aiexplorer.themedColor(Color(0xE80A1828), com.indianservers.aiexplorer.ActiveAppPalette.surface)
+private val Blue get() = com.indianservers.aiexplorer.themedColor(Color(0xFF62CBFF), com.indianservers.aiexplorer.ActiveAppPalette.primary)
+private val Green get() = com.indianservers.aiexplorer.themedColor(Color(0xFF70E0A1), com.indianservers.aiexplorer.ActiveAppPalette.green)
+private val Violet get() = com.indianservers.aiexplorer.themedColor(Color(0xFFB4A0FF), com.indianservers.aiexplorer.ActiveAppPalette.violet)
+private val Amber get() = com.indianservers.aiexplorer.themedColor(Color(0xFFFFC66B), com.indianservers.aiexplorer.ActiveAppPalette.amber)
+private val Ink get() = com.indianservers.aiexplorer.themedColor(Color(0xFFF1F7FC), com.indianservers.aiexplorer.ActiveAppPalette.ink)
+private val Muted get() = com.indianservers.aiexplorer.themedColor(Color(0xFF9BAFC0), com.indianservers.aiexplorer.ActiveAppPalette.muted)
 
 @Composable
 fun PhysicsFormulaHome(vm: PhysicsFormulaViewModel, onExit: () -> Unit) {

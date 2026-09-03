@@ -88,7 +88,7 @@ internal fun SolverHomeLaunch(
         }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text("SOLVER QUEST", color = Color.White, fontSize = if (wide) 21.sp else 17.sp, fontWeight = FontWeight.ExtraBold)
-            Text("Solve it. Understand it. Master the next one.", color = Ink.copy(alpha = .88f), fontSize = 10.sp, maxLines = 2)
+            Text("Solve it. Understand it. Master the next one.", color = themedColor(Ink.copy(alpha = .88f), Color(0xFFD6F7FA)), fontSize = 10.sp, maxLines = 2)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                 SolverBadge("OFFLINE", accent)
                 SolverBadge("VERIFIED STEPS", secondary)
@@ -98,8 +98,8 @@ internal fun SolverHomeLaunch(
             }
         }
         Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text("LEVEL UP", color = accent, fontSize = 8.sp, fontWeight = FontWeight.Black)
-            Text("SOLVE  >", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+            Text("LEVEL UP", color = themedColor(accent, Color(0xFFD6F7FA)), fontSize = 8.sp, fontWeight = FontWeight.Black)
+            Text("SOLVE  >", color = themedColor(Color.White, Green), fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
         }
     }
 }

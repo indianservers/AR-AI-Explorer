@@ -6,3 +6,4 @@ com.indianservers.aiexplorer.arengine-debug-4 C:\Indian Servers\AIExplorer\areng
 com.indianservers.aiexplorer.arengine-debug-5 C:\Indian Servers\AIExplorer\arengine\build\intermediates\packaged_res\debug\packageDebugResources
 com.indianservers.aiexplorer.arengine-debug-6 C:\Indian Servers\AIExplorer\arengine\src\debug\res
 com.indianservers.aiexplorer.arengine-main-7 C:\Indian Servers\AIExplorer\arengine\src\main\res
+gradleHome-0 C:\Users\saisa\.gradle

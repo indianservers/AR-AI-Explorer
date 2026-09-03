@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,131 +39,228 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
+/** Every application-owned colour role. Document and dataset colours remain independent. */
 data class AppPalette(
     val background: Color,
     val surface: Color,
     val surfaceAlt: Color,
+    val navigation: Color,
     val ink: Color,
     val muted: Color,
     val primary: Color,
-    val secondary: Color,
-    val success: Color,
-    val warning: Color,
+    val cyan: Color,
+    val violet: Color,
+    val amber: Color,
+    val coral: Color,
+    val green: Color,
+    val border: Color,
+    val divider: Color,
+    val grid: Color,
+    val axis: Color,
+    val selected: Color,
+    val unselected: Color,
+    val disabledSurface: Color,
+    val disabledContent: Color,
+    val shadow: Color,
+    val tooltip: Color,
+    val onTooltip: Color,
+    val focus: Color,
+    val input: Color,
+    val geometryFill: Color,
+    val geometryOutline: Color,
+    val matrixHighlight: Color,
+    val calculatorKey: Color,
+    val calculatorOperator: Color,
+    val chartColors: List<Color>,
+) {
+    val secondary: Color get() = violet
+    val success: Color get() = green
+    val warning: Color get() = amber
+    val error: Color get() = coral
+    val graphPrimary: Color get() = primary
+    val graphSecondary: Color get() = violet
+    val point: Color get() = cyan
+    val handle: Color get() = cyan
+    val vectorAxis: Color get() = axis
+}
+
+private fun currentPalette() = AppPalette(
+    background = Color(0xFF030507),
+    surface = Color(0xFF07101A),
+    surfaceAlt = Color(0xFF0B1017),
+    navigation = Color(0xFF07101A),
+    ink = Color(0xFFEAF5FF),
+    muted = Color(0xFFB8C4D8),
+    primary = Color(0xFF20D9FF),
+    cyan = Color(0xFF20D9FF),
+    violet = Color(0xFF985DFF),
+    amber = Color(0xFFFFC857),
+    coral = Color(0xFFFF5E73),
+    green = Color(0xFF48E0A4),
+    border = Color(0xFF20D9FF).copy(alpha = .28f),
+    divider = Color(0xFFB8C4D8).copy(alpha = .18f),
+    grid = Color(0xFF20D9FF).copy(alpha = .20f),
+    axis = Color(0xFFEAF5FF).copy(alpha = .85f),
+    selected = Color(0xFF20D9FF),
+    unselected = Color(0xFFB8C4D8),
+    disabledSurface = Color(0xFF0B1017),
+    disabledContent = Color(0xFFB8C4D8).copy(alpha = .38f),
+    shadow = Color.Black,
+    tooltip = Color(0xFF07101A),
+    onTooltip = Color(0xFFEAF5FF),
+    focus = Color(0xFF20D9FF),
+    input = Color(0xFF0B1017),
+    geometryFill = Color(0xFFFFC857),
+    geometryOutline = Color(0xFFFFC857),
+    matrixHighlight = Color(0xFF985DFF),
+    calculatorKey = Color(0xFF0B1017),
+    calculatorOperator = Color(0xFFFFC857),
+    chartColors = listOf(
+        Color(0xFF20D9FF), Color(0xFF985DFF), Color(0xFFFFC857),
+        Color(0xFFFF5E73), Color(0xFF48E0A4), Color(0xFF70D6E8),
+    ),
+)
+
+/** Exact practical colours sampled from the supplied V4 redesign screenshots. */
+private fun mathsExplorerVibrantPalette() = AppPalette(
+    background = Color(0xFFF4F7FF),
+    surface = Color(0xFFFFFFFF),
+    surfaceAlt = Color(0xFFF6F8FE),
+    navigation = Color(0xFF121A33),
+    ink = Color(0xFF121A33),
+    muted = Color(0xFF64708A),
+    primary = Color(0xFF5458E8),
+    cyan = Color(0xFF08A9B8),
+    violet = Color(0xFF8B5CF6),
+    amber = Color(0xFFF2A516),
+    coral = Color(0xFFEF6375),
+    green = Color(0xFF21A66A),
+    border = Color(0xFFD9E2F2),
+    divider = Color(0xFFE3E9F4),
+    grid = Color(0xFFD7DFEF),
+    axis = Color(0xFF414960),
+    selected = Color(0xFF5458E8),
+    unselected = Color(0xFFB6BAC9),
+    disabledSurface = Color(0xFFEEF2F9),
+    disabledContent = Color(0xFFBBBEC9),
+    shadow = Color(0xFF121A33).copy(alpha = .14f),
+    tooltip = Color(0xFF121A33),
+    onTooltip = Color.White,
+    focus = Color(0xFF5458E8),
+    input = Color.White,
+    geometryFill = Color(0xFFFFF5DA),
+    geometryOutline = Color(0xFFF2A516),
+    matrixHighlight = Color(0xFFF2ECFF),
+    calculatorKey = Color(0xFFF6F8FE),
+    calculatorOperator = Color(0xFFF2A516),
+    chartColors = listOf(
+        Color(0xFF5458E8), Color(0xFF8B5CF6), Color(0xFF08A9B8),
+        Color(0xFFEF6375), Color(0xFF21A66A), Color(0xFFF2A516),
+    ),
 )
 
 enum class AppColorScheme(val displayName: String, val description: String, val palette: AppPalette) {
-    Modern(
-        "Modern",
-        "The original cyan and violet AI Explorer look.",
-        AppPalette(
-            background = Color(0xFF030507), surface = Color(0xFF07101A), surfaceAlt = Color(0xFF0B1017),
-            ink = Color(0xFFEAF5FF), muted = Color(0xFFB8C4D8), primary = Color(0xFF20D9FF),
-            secondary = Color(0xFF985DFF), success = Color(0xFF48E0A4), warning = Color(0xFFFFC857),
-        ),
-    ),
-    Aurora(
-        "Aurora",
-        "Mint, electric blue and magenta on deep charcoal.",
-        AppPalette(
-            background = Color(0xFF05080B), surface = Color(0xFF0A1518), surfaceAlt = Color(0xFF11141D),
-            ink = Color(0xFFF1FFFC), muted = Color(0xFFB7CAC7), primary = Color(0xFF52F5C8),
-            secondary = Color(0xFFE66BFF), success = Color(0xFF80ED99), warning = Color(0xFFFFD166),
-        ),
-    ),
-    Ocean(
-        "Ocean",
-        "Marine blue with aqua, coral and clean white.",
-        AppPalette(
-            background = Color(0xFF031018), surface = Color(0xFF071B26), surfaceAlt = Color(0xFF10212D),
-            ink = Color(0xFFF0FAFF), muted = Color(0xFFA8C7D5), primary = Color(0xFF31C7D8),
-            secondary = Color(0xFFFF7A72), success = Color(0xFF58D6A9), warning = Color(0xFFFFD166),
-        ),
-    ),
-    Forest(
-        "Forest",
-        "Deep green with mint, gold and sky accents.",
-        AppPalette(
-            background = Color(0xFF06100C), surface = Color(0xFF0D1C15), surfaceAlt = Color(0xFF17211B),
-            ink = Color(0xFFF1FBF4), muted = Color(0xFFB4C8BA), primary = Color(0xFF63D69B),
-            secondary = Color(0xFF67B7E1), success = Color(0xFFA3E635), warning = Color(0xFFF6C453),
-        ),
-    ),
-    Solar(
-        "Solar",
-        "Graphite with warm gold, cyan and energetic coral.",
-        AppPalette(
-            background = Color(0xFF0D0C0A), surface = Color(0xFF1A1711), surfaceAlt = Color(0xFF211D18),
-            ink = Color(0xFFFFF8E8), muted = Color(0xFFD0C4AA), primary = Color(0xFFFFC247),
-            secondary = Color(0xFF42D4D0), success = Color(0xFF72D572), warning = Color(0xFFFF7B54),
-        ),
-    ),
-    Crimson(
-        "Crimson",
-        "Wine red balanced by ice blue and rose.",
-        AppPalette(
-            background = Color(0xFF10070B), surface = Color(0xFF211018), surfaceAlt = Color(0xFF281820),
-            ink = Color(0xFFFFF2F5), muted = Color(0xFFD2B7BF), primary = Color(0xFFFF5C7A),
-            secondary = Color(0xFF70D6E8), success = Color(0xFF66D19E), warning = Color(0xFFFFC857),
-        ),
-    ),
-    Royal(
-        "Royal",
-        "Indigo, gold and turquoise with high visual depth.",
-        AppPalette(
-            background = Color(0xFF080817), surface = Color(0xFF12142A), surfaceAlt = Color(0xFF1B1C35),
-            ink = Color(0xFFF7F5FF), muted = Color(0xFFBEBCDA), primary = Color(0xFF7C83FF),
-            secondary = Color(0xFFFFC857), success = Color(0xFF46D9B0), warning = Color(0xFFFF8A5B),
-        ),
-    ),
-    Mono(
-        "Mono",
-        "Neutral graphite with crisp white and restrained teal.",
-        AppPalette(
-            background = Color(0xFF090A0B), surface = Color(0xFF151719), surfaceAlt = Color(0xFF202326),
-            ink = Color(0xFFF7F7F7), muted = Color(0xFFBFC3C7), primary = Color(0xFFE8ECEF),
-            secondary = Color(0xFF64D8CB), success = Color(0xFF73D69C), warning = Color(0xFFF1C75B),
-        ),
-    ),
-    Sunset(
-        "Sunset",
-        "Coral, lavender and turquoise over warm black.",
-        AppPalette(
-            background = Color(0xFF100A0E), surface = Color(0xFF21141B), surfaceAlt = Color(0xFF291C24),
-            ink = Color(0xFFFFF5F1), muted = Color(0xFFD7BBB4), primary = Color(0xFFFF8066),
-            secondary = Color(0xFFB88CFF), success = Color(0xFF55D6BE), warning = Color(0xFFFFD166),
-        ),
+    Current("Current", "The original Maths Explorer colour theme.", currentPalette()),
+    MathsExplorerVibrant(
+        "Maths Explorer Vibrant",
+        "Indigo, teal and purposeful maths accents on light workspaces.",
+        mathsExplorerVibrantPalette(),
     ),
 }
 
-internal var Ink by mutableStateOf(AppColorScheme.Modern.palette.ink)
-internal var Muted by mutableStateOf(AppColorScheme.Modern.palette.muted)
-internal var Background by mutableStateOf(AppColorScheme.Modern.palette.background)
-internal var SurfaceA by mutableStateOf(AppColorScheme.Modern.palette.surface.copy(alpha = 0.87f))
-internal var SurfaceB by mutableStateOf(AppColorScheme.Modern.palette.surfaceAlt.copy(alpha = 0.73f))
-internal var Cyan by mutableStateOf(AppColorScheme.Modern.palette.primary)
-internal var Violet by mutableStateOf(AppColorScheme.Modern.palette.secondary)
-internal var Green by mutableStateOf(AppColorScheme.Modern.palette.success)
-internal var Amber by mutableStateOf(AppColorScheme.Modern.palette.warning)
-internal var Grid by mutableStateOf(AppColorScheme.Modern.palette.primary.copy(alpha = 0.20f))
+internal fun AppColorScheme.materialColorScheme() = palette.let { colors ->
+    if (this == AppColorScheme.Current) {
+        // Keep the original Material colour mapping untouched for existing users.
+        darkColorScheme(
+            background = colors.background,
+            surface = colors.surface,
+            surfaceVariant = colors.surfaceAlt,
+            primary = colors.primary,
+            secondary = colors.secondary,
+            tertiary = colors.success,
+            onBackground = colors.ink,
+            onSurface = colors.ink,
+            onPrimary = colors.background,
+            onSecondary = colors.background,
+        )
+    } else {
+        darkColorScheme(
+            background = colors.background,
+            onBackground = colors.ink,
+            surface = colors.surface,
+            onSurface = colors.ink,
+            surfaceVariant = colors.surfaceAlt,
+            onSurfaceVariant = colors.muted,
+            surfaceTint = colors.primary,
+            inverseSurface = colors.navigation,
+            inverseOnSurface = colors.onTooltip,
+            primary = colors.primary,
+            onPrimary = Color.White,
+            primaryContainer = Color(0xFFEEF0FF),
+            onPrimaryContainer = colors.ink,
+            inversePrimary = Color(0xFFBFC2FF),
+            secondary = colors.violet,
+            onSecondary = Color(0xFF030507),
+            secondaryContainer = colors.matrixHighlight,
+            onSecondaryContainer = colors.ink,
+            tertiary = colors.cyan,
+            onTertiary = colors.ink,
+            tertiaryContainer = Color(0xFFE8FAFC),
+            onTertiaryContainer = colors.ink,
+            error = colors.coral,
+            onError = colors.ink,
+            errorContainer = Color(0xFFFFF0F2),
+            onErrorContainer = colors.ink,
+            outline = colors.border,
+            outlineVariant = colors.divider,
+            scrim = colors.shadow,
+        )
+    }
+}
+
+internal var Ink by mutableStateOf(currentPalette().ink)
+internal var Muted by mutableStateOf(currentPalette().muted)
+internal var Background by mutableStateOf(currentPalette().background)
+internal var SurfaceA by mutableStateOf(currentPalette().surface.copy(alpha = 0.87f))
+internal var SurfaceB by mutableStateOf(currentPalette().surfaceAlt.copy(alpha = 0.73f))
+internal var Navy by mutableStateOf(currentPalette().navigation)
+internal var Cyan by mutableStateOf(currentPalette().cyan)
+internal var Violet by mutableStateOf(currentPalette().violet)
+internal var Green by mutableStateOf(currentPalette().green)
+internal var Amber by mutableStateOf(currentPalette().amber)
+internal var Coral by mutableStateOf(currentPalette().coral)
+internal var Grid by mutableStateOf(currentPalette().grid)
+internal var Axis by mutableStateOf(currentPalette().axis)
+internal var AppBorder by mutableStateOf(currentPalette().border)
+internal var ActiveAppPalette by mutableStateOf(currentPalette())
+
+/** Preserves a screen's exact legacy colour in Current and supplies its semantic Vibrant colour. */
+internal fun themedColor(current: Color, vibrant: Color): Color =
+    if (ActiveAppPalette == AppColorScheme.Current.palette) current else vibrant
 
 internal fun applyAppPalette(palette: AppPalette) {
+    ActiveAppPalette = palette
     Background = palette.background
-    SurfaceA = palette.surface.copy(alpha = 0.87f)
-    SurfaceB = palette.surfaceAlt.copy(alpha = 0.73f)
+    val vibrant = palette == AppColorScheme.MathsExplorerVibrant.palette
+    SurfaceA = if (vibrant) palette.surface else palette.surface.copy(alpha = 0.87f)
+    SurfaceB = if (vibrant) palette.surfaceAlt else palette.surfaceAlt.copy(alpha = 0.73f)
+    Navy = palette.navigation
     Ink = palette.ink
     Muted = palette.muted
-    Cyan = palette.primary
-    Violet = palette.secondary
-    Green = palette.success
-    Amber = palette.warning
-    Grid = palette.primary.copy(alpha = 0.20f)
+    Cyan = palette.cyan
+    Violet = palette.violet
+    Green = palette.green
+    Amber = palette.amber
+    Coral = palette.coral
+    Grid = palette.grid
+    Axis = palette.axis
+    AppBorder = palette.border
 }
 
 internal fun appBackdrop(scheme: AppColorScheme): Brush {
     val palette = scheme.palette
-    val effects = visualEffectsFor(scheme)
-    return when (effects.treatment) {
-        AppVisualTreatment.Standard -> Brush.radialGradient(
+    return if (scheme == AppColorScheme.Current) {
+        Brush.radialGradient(
             colors = listOf(
                 palette.primary.copy(alpha = 0.20f),
                 palette.background,
@@ -171,28 +269,8 @@ internal fun appBackdrop(scheme: AppColorScheme): Brush {
             radius = 1100f,
             center = Offset(420f, 220f),
         )
-        AppVisualTreatment.NeonGlass -> Brush.linearGradient(
-            colors = listOf(
-                palette.primary.copy(alpha = effects.backdropAccentAlpha),
-                palette.background,
-                palette.surfaceAlt.copy(alpha = .92f),
-                palette.secondary.copy(alpha = effects.backdropSecondaryAlpha),
-                palette.background,
-            ),
-            start = Offset.Zero,
-            end = Offset(1150f, 1700f),
-        )
-        AppVisualTreatment.SpectralWireframe -> Brush.linearGradient(
-            colors = listOf(
-                palette.background,
-                palette.primary.copy(alpha = effects.backdropAccentAlpha),
-                palette.background,
-                palette.secondary.copy(alpha = effects.backdropSecondaryAlpha),
-                palette.background,
-            ),
-            start = Offset(120f, 0f),
-            end = Offset(980f, 1500f),
-        )
+    } else {
+        Brush.linearGradient(listOf(palette.background, palette.background))
     }
 }
 

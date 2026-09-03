@@ -89,9 +89,11 @@ class DurableMathStore(context: Context) {
             spokenMath = preferences[spokenMath] ?: false, graphSonification = preferences[graphSonification] ?: false,
             largeTouchTargets = preferences[largeTouchTargets] ?: false,
             decimalPrecision = (preferences[decimalPrecision] ?: 2).coerceIn(0, 10),
-            colorScheme = runCatching {
-                AppColorScheme.valueOf(preferences[colorScheme] ?: AppColorScheme.Modern.name)
-            }.getOrDefault(AppColorScheme.Modern),
+            colorScheme = when (preferences[colorScheme]) {
+                AppColorScheme.MathsExplorerVibrant.name -> AppColorScheme.MathsExplorerVibrant
+                null, "Modern", AppColorScheme.Current.name -> AppColorScheme.Current
+                else -> AppColorScheme.Current
+            },
             learnerName = preferences[learnerName].orEmpty(),
             learnerClass = preferences[learnerClass].orEmpty(),
             learnerStandard = preferences[learnerStandard].orEmpty(),

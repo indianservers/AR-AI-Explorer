@@ -118,7 +118,11 @@ internal fun FormulaCategoryGallery(
                 .clip(RoundedCornerShape(8.dp))
                 .background(
                     Brush.horizontalGradient(
-                        listOf(Color(0xFF10112D), Color(0xFF071A31), Color(0xFF170A2D)),
+                        listOf(
+                            themedColor(Color(0xFF10112D), ActiveAppPalette.surface),
+                            themedColor(Color(0xFF071A31), ActiveAppPalette.surface),
+                            themedColor(Color(0xFF170A2D), ActiveAppPalette.surfaceAlt),
+                        ),
                     ),
                 )
                 .border(1.dp, Violet.copy(alpha = .42f), RoundedCornerShape(8.dp))

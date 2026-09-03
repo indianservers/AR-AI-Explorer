@@ -52,15 +52,15 @@ import com.indianservers.aiexplorer.features.numbertheory.visualproofs.domain.Nu
 import com.indianservers.aiexplorer.features.numbertheory.visualproofs.rendering.NumberTheoryProofCanvas
 import kotlinx.coroutines.delay
 
-internal val ProofSpace = Color(0xFF030914)
-internal val ProofPanel = Color(0xFF0B1727)
-internal val ProofPanelSoft = Color(0xFF102339)
-internal val ProofInk = Color(0xFFF4F7FC)
-internal val ProofMuted = Color(0xFF9EB0C9)
-internal val ProofCyan = Color(0xFF31D8EA)
-internal val ProofGreen = Color(0xFF4DE3A7)
-internal val ProofAmber = Color(0xFFFFBE4D)
-internal val ProofCoral = Color(0xFFFF765E)
+internal val ProofSpace get() = com.indianservers.aiexplorer.themedColor(Color(0xFF030914), com.indianservers.aiexplorer.ActiveAppPalette.background)
+internal val ProofPanel get() = com.indianservers.aiexplorer.themedColor(Color(0xFF0B1727), com.indianservers.aiexplorer.ActiveAppPalette.surface)
+internal val ProofPanelSoft get() = com.indianservers.aiexplorer.themedColor(Color(0xFF102339), com.indianservers.aiexplorer.ActiveAppPalette.surfaceAlt)
+internal val ProofInk get() = com.indianservers.aiexplorer.themedColor(Color(0xFFF4F7FC), com.indianservers.aiexplorer.ActiveAppPalette.ink)
+internal val ProofMuted get() = com.indianservers.aiexplorer.themedColor(Color(0xFF9EB0C9), com.indianservers.aiexplorer.ActiveAppPalette.muted)
+internal val ProofCyan get() = com.indianservers.aiexplorer.themedColor(Color(0xFF31D8EA), com.indianservers.aiexplorer.ActiveAppPalette.cyan)
+internal val ProofGreen get() = com.indianservers.aiexplorer.themedColor(Color(0xFF4DE3A7), com.indianservers.aiexplorer.ActiveAppPalette.green)
+internal val ProofAmber get() = com.indianservers.aiexplorer.themedColor(Color(0xFFFFBE4D), com.indianservers.aiexplorer.ActiveAppPalette.amber)
+internal val ProofCoral get() = com.indianservers.aiexplorer.themedColor(Color(0xFFFF765E), com.indianservers.aiexplorer.ActiveAppPalette.coral)
 
 @Composable
 internal fun NumberTheoryVisualProofScreen(

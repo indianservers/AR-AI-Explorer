@@ -53,29 +53,7 @@ internal data class AppVisualEffects(
 
 internal val LocalAppVisualEffects = staticCompositionLocalOf { AppVisualEffects.Standard }
 
-internal fun visualEffectsFor(scheme: AppColorScheme): AppVisualEffects = when (scheme) {
-    AppColorScheme.Aurora -> AppVisualEffects(
-        treatment = AppVisualTreatment.NeonGlass,
-        backdropAccentAlpha = .16f,
-        backdropSecondaryAlpha = .10f,
-        surfaceTintAlpha = .08f,
-        borderGlowAlpha = .48f,
-        activeGlowAlpha = .22f,
-        gridGlowAlpha = .22f,
-        graphGlowAlpha = .32f,
-    )
-    AppColorScheme.Royal -> AppVisualEffects(
-        treatment = AppVisualTreatment.SpectralWireframe,
-        backdropAccentAlpha = .18f,
-        backdropSecondaryAlpha = .13f,
-        surfaceTintAlpha = .09f,
-        borderGlowAlpha = .52f,
-        activeGlowAlpha = .25f,
-        gridGlowAlpha = .28f,
-        graphGlowAlpha = .38f,
-    )
-    else -> AppVisualEffects.Standard
-}
+internal fun visualEffectsFor(scheme: AppColorScheme): AppVisualEffects = AppVisualEffects.Standard
 
 internal fun isVisuallyActiveLabel(label: String): Boolean {
     val normalized = label.trim().lowercase()

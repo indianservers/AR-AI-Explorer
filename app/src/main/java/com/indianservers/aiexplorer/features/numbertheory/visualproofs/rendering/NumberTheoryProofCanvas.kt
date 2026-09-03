@@ -27,13 +27,13 @@ import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-internal val Stage = Color(0xFF030914)
-internal val Cyan = Color(0xFF2ADBF2)
-internal val Green = Color(0xFF4DE3A7)
-internal val Amber = Color(0xFFFFBD47)
-internal val Violet = Color(0xFF9A80FF)
-internal val Coral = Color(0xFFFF765E)
-internal val Muted = Color(0xFF8FA2BE)
+internal val Stage get() = com.indianservers.aiexplorer.themedColor(Color(0xFF030914), com.indianservers.aiexplorer.ActiveAppPalette.background)
+internal val Cyan get() = com.indianservers.aiexplorer.themedColor(Color(0xFF2ADBF2), com.indianservers.aiexplorer.ActiveAppPalette.cyan)
+internal val Green get() = com.indianservers.aiexplorer.themedColor(Color(0xFF4DE3A7), com.indianservers.aiexplorer.ActiveAppPalette.green)
+internal val Amber get() = com.indianservers.aiexplorer.themedColor(Color(0xFFFFBD47), com.indianservers.aiexplorer.ActiveAppPalette.amber)
+internal val Violet get() = com.indianservers.aiexplorer.themedColor(Color(0xFF9A80FF), com.indianservers.aiexplorer.ActiveAppPalette.violet)
+internal val Coral get() = com.indianservers.aiexplorer.themedColor(Color(0xFFFF765E), com.indianservers.aiexplorer.ActiveAppPalette.coral)
+internal val Muted get() = com.indianservers.aiexplorer.themedColor(Color(0xFF8FA2BE), com.indianservers.aiexplorer.ActiveAppPalette.muted)
 
 @Composable
 internal fun NumberTheoryProofCanvas(

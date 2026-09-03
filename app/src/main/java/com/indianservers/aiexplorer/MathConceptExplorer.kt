@@ -46,15 +46,15 @@ import com.indianservers.aiexplorer.workspace.MathModule
 import kotlin.math.cos
 import kotlin.math.sin
 
-private val ConceptSpace = Color(0xFF020612)
-private val ConceptPanel = Color(0xEE091426)
-private val ConceptInk = Color(0xFFF5F8FF)
-private val ConceptMuted = Color(0xFFAAB7D2)
-private val ConceptCyan = Color(0xFF29DFFF)
-private val ConceptPurple = Color(0xFFA96AFF)
-private val ConceptGreen = Color(0xFF4DE5A3)
-private val ConceptAmber = Color(0xFFFFB63E)
-private val ConceptPink = Color(0xFFFF68A6)
+private val ConceptSpace get() = themedColor(Color(0xFF020612), Background)
+private val ConceptPanel get() = themedColor(Color(0xEE091426), ActiveAppPalette.surface)
+private val ConceptInk get() = themedColor(Color(0xFFF5F8FF), Ink)
+private val ConceptMuted get() = themedColor(Color(0xFFAAB7D2), Muted)
+private val ConceptCyan get() = themedColor(Color(0xFF29DFFF), Cyan)
+private val ConceptPurple get() = themedColor(Color(0xFFA96AFF), Violet)
+private val ConceptGreen get() = themedColor(Color(0xFF4DE5A3), Green)
+private val ConceptAmber get() = themedColor(Color(0xFFFFB63E), Amber)
+private val ConceptPink get() = themedColor(Color(0xFFFF68A6), Coral)
 
 internal enum class MathClassBand(val label: String) {
     Class1("Class 1"), Class2("Class 2"), Class3("Class 3"), Class4("Class 4"), Class5("Class 5"),

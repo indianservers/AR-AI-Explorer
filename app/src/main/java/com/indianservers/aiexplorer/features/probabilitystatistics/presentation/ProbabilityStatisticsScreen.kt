@@ -54,18 +54,20 @@ import com.indianservers.aiexplorer.features.probabilitystatistics.models.Statis
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.StatisticsTopic
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.TopicProgress
 import com.indianservers.aiexplorer.features.probabilitystatistics.models.TopicWorkspaceMode
+import com.indianservers.aiexplorer.ActiveAppPalette
+import com.indianservers.aiexplorer.themedColor
 
-internal val PsSpace = Color(0xFF040914)
-internal val PsPanel = Color(0xF00B1728)
-internal val PsPanelSoft = Color(0xFF101F34)
-internal val PsInk = Color(0xFFF5F8FF)
-internal val PsMuted = Color(0xFFA8B6CC)
-internal val PsCyan = Color(0xFF29D8F0)
-internal val PsGreen = Color(0xFF4CDEA4)
-internal val PsAmber = Color(0xFFFFBE4A)
-internal val PsCoral = Color(0xFFFF765F)
-internal val PsViolet = Color(0xFF9A83FF)
-internal val PsRed = Color(0xFFFF637D)
+internal val PsSpace get() = themedColor(Color(0xFF040914), ActiveAppPalette.background)
+internal val PsPanel get() = themedColor(Color(0xF00B1728), ActiveAppPalette.surface)
+internal val PsPanelSoft get() = themedColor(Color(0xFF101F34), ActiveAppPalette.surfaceAlt)
+internal val PsInk get() = themedColor(Color(0xFFF5F8FF), ActiveAppPalette.ink)
+internal val PsMuted get() = themedColor(Color(0xFFA8B6CC), ActiveAppPalette.muted)
+internal val PsCyan get() = themedColor(Color(0xFF29D8F0), ActiveAppPalette.cyan)
+internal val PsGreen get() = themedColor(Color(0xFF4CDEA4), ActiveAppPalette.green)
+internal val PsAmber get() = themedColor(Color(0xFFFFBE4A), ActiveAppPalette.amber)
+internal val PsCoral get() = themedColor(Color(0xFFFF765F), ActiveAppPalette.coral)
+internal val PsViolet get() = themedColor(Color(0xFF9A83FF), ActiveAppPalette.violet)
+internal val PsRed get() = themedColor(Color(0xFFFF637D), ActiveAppPalette.coral)
 
 @Composable
 internal fun ProbabilityStatisticsScreen(

@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.Amber
+import com.indianservers.aiexplorer.ActiveAppPalette
 import com.indianservers.aiexplorer.Cyan
 import com.indianservers.aiexplorer.GlowButton
 import com.indianservers.aiexplorer.Green
@@ -61,11 +62,20 @@ import com.indianservers.aiexplorer.SurfaceA
 import com.indianservers.aiexplorer.SurfaceB
 import com.indianservers.aiexplorer.TransparentIcon
 import com.indianservers.aiexplorer.Violet
+import com.indianservers.aiexplorer.themedColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+
+private fun dictionaryBackground(current: Color) = themedColor(current, ActiveAppPalette.background)
+private fun dictionarySurface(current: Color) = themedColor(current, ActiveAppPalette.surface)
+private fun dictionarySurfaceAlt(current: Color) = themedColor(current, ActiveAppPalette.surfaceAlt)
+private fun dictionaryInk(current: Color) = themedColor(current, ActiveAppPalette.ink)
+private fun dictionaryMuted(current: Color) = themedColor(current, ActiveAppPalette.muted)
+private fun dictionaryBorder(current: Color) = themedColor(current, ActiveAppPalette.border)
+private fun dictionaryAccent(current: Color) = themedColor(current, ActiveAppPalette.primary)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -153,7 +163,7 @@ internal fun MathDictionaryScreen(
     Box(
         modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFF071326), Color(0xFF081A34), Color(0xFF060B19)))),
+            .background(Brush.verticalGradient(listOf(dictionaryBackground(Color(0xFF071326)), dictionaryBackground(Color(0xFF081A34)), dictionaryBackground(Color(0xFF060B19))))),
     ) {
         LazyColumn(
             Modifier
@@ -168,12 +178,12 @@ internal fun MathDictionaryScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("<-", color = Color(0xFFEAF0FF), fontSize = 26.sp)
-                    Text(if (bookmarksOnly) "Saved" else "Save", color = Color(0xFFEAF0FF), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { bookmarksOnly = !bookmarksOnly })
+                    Text("<-", color = dictionaryInk(Color(0xFFEAF0FF)), fontSize = 26.sp)
+                    Text(if (bookmarksOnly) "Saved" else "Save", color = dictionaryInk(Color(0xFFEAF0FF)), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { bookmarksOnly = !bookmarksOnly })
                 }
                 Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Math Dictionary", color = Color.White, fontSize = 34.sp, fontWeight = FontWeight.Black, maxLines = 1)
-                    Text("Understand every maths word", color = Color(0xFF9EAAC3), fontSize = 15.sp)
+                    Text("Math Dictionary", color = dictionaryInk(Color.White), fontSize = 34.sp, fontWeight = FontWeight.Black, maxLines = 1)
+                    Text("Understand every maths word", color = dictionaryMuted(Color(0xFF9EAAC3)), fontSize = 15.sp)
                 }
             }
             item {
@@ -181,14 +191,14 @@ internal fun MathDictionaryScreen(
                     value = query,
                     onValueChange = { query = it },
                     placeholder = { Text("Search ${stats.termCount.coerceAtLeast(600)}+ terms") },
-                    leadingIcon = { Text("Q", color = Color(0xFFDDE6FF), fontSize = 22.sp, fontWeight = FontWeight.Black) },
-                    trailingIcon = { Text("mic", color = Color(0xFF8581FF), fontSize = 12.sp, fontWeight = FontWeight.Bold) },
+                    leadingIcon = { Text("Q", color = dictionaryAccent(Color(0xFFDDE6FF)), fontSize = 22.sp, fontWeight = FontWeight.Black) },
+                    trailingIcon = { Text("mic", color = dictionaryAccent(Color(0xFF8581FF)), fontSize = 12.sp, fontWeight = FontWeight.Bold) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)),
                 )
             }
             item {
-                Text("Browse by letter", color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text("Browse by letter", color = dictionaryInk(Color.White), fontSize = 17.sp, fontWeight = FontWeight.Bold)
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     ('A'..'Z').forEach { letter ->
                         DictionaryLetterButton(letter.toString(), selectedLetter == letter.toString()) {
@@ -198,7 +208,7 @@ internal fun MathDictionaryScreen(
                 }
             }
             item {
-                Text("Filters", color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                Text("Filters", color = dictionaryInk(Color.White), fontSize = 17.sp, fontWeight = FontWeight.Bold)
                 Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     DictionaryFilterButton("topics", selectedCategory ?: "All topics", Modifier.weight(1f), ::cycleCategory)
                     DictionaryFilterButton("level", selectedDifficulty ?: "All levels", Modifier.weight(1f), ::cycleDifficulty)
@@ -206,8 +216,8 @@ internal fun MathDictionaryScreen(
             }
             item {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(if (loading) "Loading dictionary..." else "${visibleSummaries.size} terms", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Black)
-                    Text(if (descendingSort) "Z-A" else "A-Z", color = Color(0xFF8581FF), fontSize = 14.sp, fontWeight = FontWeight.Black, modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { descendingSort = !descendingSort }.padding(horizontal = 10.dp, vertical = 8.dp))
+                    Text(if (loading) "Loading dictionary..." else "${visibleSummaries.size} terms", color = dictionaryInk(Color.White), fontSize = 22.sp, fontWeight = FontWeight.Black)
+                    Text(if (descendingSort) "Z-A" else "A-Z", color = dictionaryAccent(Color(0xFF8581FF)), fontSize = 14.sp, fontWeight = FontWeight.Black, modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { descendingSort = !descendingSort }.padding(horizontal = 10.dp, vertical = 8.dp))
                 }
             }
             if (!loading && visibleSummaries.isEmpty()) {
@@ -247,12 +257,12 @@ private fun DictionaryLetterButton(letter: String, selected: Boolean, onClick: (
         Modifier
             .size(48.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(if (selected) Brush.linearGradient(listOf(Color(0xFF8177FF), Color(0xFF476DFF))) else Brush.linearGradient(listOf(Color(0xFF192237), Color(0xFF11192B))))
-            .border(1.dp, if (selected) Color(0xFF9C96FF) else Color(0xFF2C3854), RoundedCornerShape(16.dp))
+            .background(if (selected) Brush.linearGradient(listOf(dictionaryAccent(Color(0xFF8177FF)), dictionaryAccent(Color(0xFF476DFF)))) else Brush.linearGradient(listOf(dictionarySurfaceAlt(Color(0xFF192237)), dictionarySurfaceAlt(Color(0xFF11192B)))))
+            .border(1.dp, if (selected) dictionaryAccent(Color(0xFF9C96FF)) else dictionaryBorder(Color(0xFF2C3854)), RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text(letter, color = Color(0xFFEAF0FF), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(letter, color = if (selected) Color.White else dictionaryInk(Color(0xFFEAF0FF)), fontSize = 20.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -262,16 +272,16 @@ private fun DictionaryFilterButton(icon: String, label: String, modifier: Modifi
         modifier
             .height(52.dp)
             .clip(RoundedCornerShape(17.dp))
-            .background(Brush.linearGradient(listOf(Color(0xAA1A2540), Color(0x8A111A2D))))
-            .border(1.dp, Color(0xFF2E3B5A), RoundedCornerShape(17.dp))
+            .background(Brush.linearGradient(listOf(dictionarySurface(Color(0xAA1A2540)), dictionarySurface(Color(0x8A111A2D)))))
+            .border(1.dp, dictionaryBorder(Color(0xFF2E3B5A)), RoundedCornerShape(17.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(icon, color = Color(0xFFD9E2FF), fontSize = 11.sp, fontWeight = FontWeight.Black)
-        Text(label, color = Color(0xFFEAF0FF), fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-        Text("v", color = Color(0xFFD9E2FF), fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(icon, color = dictionaryAccent(Color(0xFFD9E2FF)), fontSize = 11.sp, fontWeight = FontWeight.Black)
+        Text(label, color = dictionaryInk(Color(0xFFEAF0FF)), fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+        Text("v", color = dictionaryAccent(Color(0xFFD9E2FF)), fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -288,8 +298,8 @@ private fun DictionaryBottomNavigation(
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            .background(Brush.verticalGradient(listOf(Color(0xEE172238), Color(0xF00D1528))))
-            .border(1.dp, Color(0x333E4A68), RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+            .background(Brush.verticalGradient(listOf(themedColor(Color(0xEE172238), ActiveAppPalette.navigation), themedColor(Color(0xF00D1528), ActiveAppPalette.navigation))))
+            .border(1.dp, themedColor(Color(0x333E4A68), ActiveAppPalette.navigation), RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
             .padding(horizontal = 12.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
@@ -322,8 +332,8 @@ private fun DictionaryListCard(term: MathDictionaryTermSummary, onOpen: () -> Un
         Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(22.dp))
-            .background(Brush.linearGradient(listOf(Color(0xAA18233A), Color(0x8A0F1A2E))))
-            .border(1.dp, Color(0xFF2A3652), RoundedCornerShape(22.dp))
+            .background(Brush.linearGradient(listOf(dictionarySurface(Color(0xAA18233A)), dictionarySurface(Color(0x8A0F1A2E)))))
+            .border(1.dp, dictionaryBorder(Color(0xFF2A3652)), RoundedCornerShape(22.dp))
             .clickable(onClick = onOpen)
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(15.dp),
@@ -332,16 +342,16 @@ private fun DictionaryListCard(term: MathDictionaryTermSummary, onOpen: () -> Un
         DictionaryConceptIcon(term.word, term.imageAsset, Modifier.size(74.dp))
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(term.word, color = Color(0xFFF7F9FF), fontSize = 19.sp, fontWeight = FontWeight.Black, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
-                Text(if (term.isBookmarked) "saved" else "save", color = Color(0xFFDDE6FF), fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable(onClick = onBookmark).padding(4.dp))
+                Text(term.word, color = dictionaryInk(Color(0xFFF7F9FF)), fontSize = 19.sp, fontWeight = FontWeight.Black, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                Text(if (term.isBookmarked) "saved" else "save", color = dictionaryAccent(Color(0xFFDDE6FF)), fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable(onClick = onBookmark).padding(4.dp))
             }
-            Text(term.shortDefinition, color = Color(0xFFB6C0D6), fontSize = 14.sp, lineHeight = 20.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(term.shortDefinition, color = dictionaryMuted(Color(0xFFB6C0D6)), fontSize = 14.sp, lineHeight = 20.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
                 DictionaryChip(term.category, Color(0xFF8581FF))
                 DictionaryChip(term.difficultyLevel, if (term.difficultyLevel == "Advanced") Violet else Green)
             }
         }
-        Text(">", color = Color(0xFFDDE6FF), fontSize = 26.sp, fontWeight = FontWeight.Light)
+        Text(">", color = dictionaryAccent(Color(0xFFDDE6FF)), fontSize = 26.sp, fontWeight = FontWeight.Light)
     }
 }
 @Composable
@@ -362,7 +372,7 @@ private fun MathDictionaryDetailPage(
     Box(
         modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFF071326), Color(0xFF081A34), Color(0xFF060B19)))),
+            .background(Brush.verticalGradient(listOf(dictionaryBackground(Color(0xFF071326)), dictionaryBackground(Color(0xFF081A34)), dictionaryBackground(Color(0xFF060B19))))),
     ) {
         LazyColumn(
             Modifier

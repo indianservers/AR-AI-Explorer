@@ -47,7 +47,7 @@ data class WorkspaceAssistantCommand(
 
 object WorkspaceAssistantContextFactory {
     fun from(state: WorkspaceState, selectedShapeIndex: Int = -1, selectedSolidIndex: Int = -1, selectedVectorIndex: Int = -1): WorkspaceAssistantContext = when (state.module) {
-        MathModule.Geometry2D -> {
+        MathModule.Geometry2D, MathModule.CoordinatePlane -> {
             val shape = state.shapes.getOrNull(selectedShapeIndex)
             WorkspaceAssistantContext(
                 module = state.module,
@@ -59,7 +59,7 @@ object WorkspaceAssistantContextFactory {
                 summaryFacts = listOf("${state.shapes.size} shapes", "${state.points.size} points", "${state.geometryConstraints.size} constraints"),
             )
         }
-        MathModule.Geometry3D -> {
+        MathModule.Geometry3D, MathModule.VectorLab -> {
             val solid = state.solids.getOrNull(selectedSolidIndex)
             val vector = state.vectors3D.getOrNull(selectedVectorIndex)
             WorkspaceAssistantContext(
@@ -91,6 +91,10 @@ object WorkspaceAssistantContextFactory {
             objectCount = 1,
             summaryFacts = listOf("surface z = ${state.surfaceExpression}"),
         )
+        MathModule.CalculusLab -> labContext(state.module, "limits", "derivatives", "integrals", "applications")
+        MathModule.MatricesLinearTransformations -> labContext(state.module, "exact matrices", "row reduction", "linear systems", "transformations")
+        MathModule.PhysicsMath -> labContext(state.module, "motion", "projectiles", "force and energy", "oscillations")
+        MathModule.MathematicalArt -> labContext(state.module, "polar art", "parametric art", "fractals", "symmetry")
         else -> WorkspaceAssistantContext(
             module = state.module,
             targetKind = WorkspaceAssistantTargetKind.WORKSPACE,
@@ -98,6 +102,13 @@ object WorkspaceAssistantContextFactory {
             pointCount = state.points.size,
         )
     }
+
+    private fun labContext(module: MathModule, vararg capabilities: String) = WorkspaceAssistantContext(
+        module = module,
+        targetKind = WorkspaceAssistantTargetKind.WORKSPACE,
+        objectCount = 0,
+        summaryFacts = capabilities.map { "supports $it" },
+    )
 }
 
 object WorkspaceAssistantSummarizer {
@@ -225,7 +236,7 @@ object WorkspaceAssistantCommandParser {
                 return WorkspaceAssistantCommand(WorkspaceAssistantCommandType.ADD_3D_SOLID, targetName = it.name)
             }
             return when (state.module) {
-                MathModule.Geometry2D -> WorkspaceAssistantCommand(WorkspaceAssistantCommandType.ADD_2D_SHAPE, reason = "No shape name supplied.")
+                MathModule.Geometry2D, MathModule.CoordinatePlane -> WorkspaceAssistantCommand(WorkspaceAssistantCommandType.ADD_2D_SHAPE, reason = "No shape name supplied.")
                 MathModule.Geometry3D -> WorkspaceAssistantCommand(WorkspaceAssistantCommandType.ADD_3D_SOLID, reason = "No solid name supplied.")
                 else -> WorkspaceAssistantCommand(WorkspaceAssistantCommandType.UNKNOWN, reason = "Add command is only supported in geometry workspaces.")
             }

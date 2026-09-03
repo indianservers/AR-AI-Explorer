@@ -74,7 +74,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -82,6 +81,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -567,7 +567,7 @@ data class AppSettings(
     val graphSonification: Boolean = false,
     val largeTouchTargets: Boolean = false,
     val decimalPrecision: Int = 2,
-    val colorScheme: AppColorScheme = AppColorScheme.Modern,
+    val colorScheme: AppColorScheme = AppColorScheme.Current,
     val learnerName: String = "",
     val learnerClass: String = "",
     val learnerStandard: String = "",
@@ -810,6 +810,42 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     private var spatialGestureFrom: com.indianservers.aiexplorer.spatial.SpatialScenePlacement? = null
     var state by mutableStateOf(WorkspaceState())
         private set
+    private val labSessionValues = mutableStateMapOf<String, String>().apply {
+        putAll(savedStateHandle.get<HashMap<String, String>>("labSessionValues").orEmpty())
+    }
+    var labSessionRevision by mutableIntStateOf(0)
+        private set
+
+    init {
+        if (labSessionValues.isNotEmpty()) state = state.copy(labSessionValues = labSessionValues.toMap())
+    }
+
+    fun labValue(module: MathModule, key: String, default: String): String =
+        labSessionValues["${module.name}::$key"] ?: default
+
+    fun setLabValue(module: MathModule, key: String, value: String) {
+        val storageKey = "${module.name}::$key"
+        if (labSessionValues[storageKey] == value) return
+        labSessionValues[storageKey] = value
+        state = state.copy(labSessionValues = labSessionValues.toMap(), modifiedAt = System.currentTimeMillis())
+        savedStateHandle["labSessionValues"] = HashMap(labSessionValues)
+    }
+
+    fun clearLabSession(module: MathModule) {
+        val prefix = "${module.name}::"
+        val removed = labSessionValues.keys.filter { it.startsWith(prefix) }
+        removed.forEach(labSessionValues::remove)
+        state = state.copy(labSessionValues = labSessionValues.toMap(), modifiedAt = System.currentTimeMillis())
+        savedStateHandle["labSessionValues"] = HashMap(labSessionValues)
+        labSessionRevision++
+    }
+
+    private fun restoreLabSession(values: Map<String, String>) {
+        labSessionValues.clear()
+        labSessionValues.putAll(values)
+        savedStateHandle["labSessionValues"] = HashMap(labSessionValues)
+        labSessionRevision++
+    }
     var selectedPoint by mutableIntStateOf(-1)
         private set
     var selectedShape by mutableIntStateOf(-1)
@@ -826,6 +862,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         private set
     var showChrome by mutableStateOf(true)
         private set
+
+    fun setChromeVisible(visible: Boolean) {
+        showChrome = visible
+    }
 
     fun updateStatus(message: String) {
         status = message
@@ -2159,6 +2199,39 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         status = "Added point ${selectedPoint + 1}"
     }
 
+    fun deleteCoordinatePoint(index: Int) {
+        if (index !in state.points.indices) return
+        val survivingShapes = state.shapes
+            .filterNot { index in it.pointIndices }
+            .map { shape -> shape.copy(pointIndices = shape.pointIndices.map { if (it > index) it - 1 else it }) }
+        val survivingShapeIds = survivingShapes.mapTo(hashSetOf()) { it.id }
+        val next = state.copy(
+            points = state.points.filterIndexed { pointIndex, _ -> pointIndex != index },
+            shapes = survivingShapes,
+            pointDependencies = state.pointDependencies
+                .filterNot { it.outputIndex == index || index in it.inputIndices }
+                .map { dependency ->
+                    dependency.copy(
+                        outputIndex = if (dependency.outputIndex > index) dependency.outputIndex - 1 else dependency.outputIndex,
+                        inputIndices = dependency.inputIndices.map { if (it > index) it - 1 else it },
+                    )
+                },
+            geometryConstraints = state.geometryConstraints
+                .filterNot { index in it.pointIndices || it.shapeIds.any { id -> id !in survivingShapeIds } }
+                .map { constraint -> constraint.copy(pointIndices = constraint.pointIndices.map { if (it > index) it - 1 else it }) },
+            geometryGroups = state.geometryGroups.mapNotNull { group ->
+                group.copy(shapeIds = group.shapeIds.filterTo(linkedSetOf()) { it in survivingShapeIds })
+                    .takeIf { it.shapeIds.isNotEmpty() }
+            },
+            modifiedAt = System.currentTimeMillis(),
+        )
+        state = history.execute(state, ReplaceWorkspaceCommand(state, next, "Delete coordinate point ${index + 1}"))
+        selectedPoint = -1
+        selectedShape = -1
+        selectedShapes = emptySet()
+        status = "Deleted point ${index + 1} and its dependent objects"
+    }
+
     fun handleGeometryTap(point: Vec2, hitPointIndex: Int?) {
         val snapped = hitPointIndex?.let(state.points::getOrNull) ?: if (settings.snap) {
             Vec2(round(point.x * 2.0) / 2.0, round(point.y * 2.0) / 2.0)
@@ -3114,8 +3187,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun clearCurrentWorkspace() {
+        clearLabSession(state.module)
         val cleared = when (state.module) {
-            MathModule.Geometry2D -> state.copy(
+            MathModule.Geometry2D, MathModule.CoordinatePlane -> state.copy(
                 points = emptyList(),
                 shapes = emptyList(),
                 pointDependencies = emptyList(),
@@ -3128,6 +3202,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
                 points3D = emptyList(),
                 spatialPlacement = com.indianservers.aiexplorer.spatial.SpatialScenePlacement(),
             )
+            MathModule.VectorLab -> state.copy(vectors3D = emptyList(), points3D = emptyList())
             MathModule.Graph2D -> state.copy(
                 functions = emptyList(),
                 graphRowMetadata = emptyMap(),
@@ -3137,6 +3212,9 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             MathModule.Trigonometry,
             MathModule.Manipulatives,
             MathModule.ProbabilityStatistics,
+            MathModule.CalculusLab,
+            MathModule.PhysicsMath,
+            MathModule.MathematicalArt,
             MathModule.MatricesLinearTransformations,
             MathModule.DataSpreadsheet,
             MathModule.DiscreteMathematics,
@@ -3216,7 +3294,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun hydrateDurableState(recovered: WorkspaceState?, projects: List<SavedWorkspace>, persistedSettings: AppSettings) {
-        recovered?.let { state = it }
+        recovered?.let { state = it; restoreLabSession(it.labSessionValues) }
         savedWorkspaces = projects
         settings = persistedSettings
         selectedPoint = selectedPoint.takeIf { it in state.points.indices } ?: -1
@@ -3227,6 +3305,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun importWorkspace(imported: WorkspaceState, recovered: Boolean, diagnostics: List<String>) {
         state = imported.copy(modifiedAt = System.currentTimeMillis())
+        restoreLabSession(state.labSessionValues)
         selectedPoint = state.points.indices.firstOrNull() ?: -1
         selectedShape = -1
         selectedShapes = emptySet()
@@ -3359,18 +3438,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
     val activePalette = vm.settings.colorScheme.palette
     ProvideAppVisualEffects(vm.settings.colorScheme) {
         MaterialTheme(
-            colorScheme = darkColorScheme(
-                background = activePalette.background,
-                surface = activePalette.surface,
-                surfaceVariant = activePalette.surfaceAlt,
-                primary = activePalette.primary,
-                secondary = activePalette.secondary,
-                tertiary = activePalette.success,
-                onBackground = activePalette.ink,
-                onSurface = activePalette.ink,
-                onPrimary = activePalette.background,
-                onSecondary = activePalette.background,
-            ),
+            colorScheme = vm.settings.colorScheme.materialColorScheme(),
         ) {
         Surface(Modifier.fillMaxSize(), color = activePalette.background) {
             Box(Modifier.fillMaxSize()) {
@@ -3379,6 +3447,9 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                     profile = adaptiveProfile,
                     modifier = Modifier.fillMaxSize(),
                     backdrop = appBackdrop(vm.settings.colorScheme),
+                    edgeToEdge = vm.showKnowledgeHub &&
+                        vm.activeKnowledgeSection == KnowledgeSection.Proofs &&
+                        !vm.showChrome,
                 ) {
                     BoxWithConstraints(Modifier.fillMaxSize()) {
                         val compact = if (adaptiveProfile.isTelevision) false else maxWidth < 520.dp
@@ -3457,12 +3528,20 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                     } else {
                         when (vm.state.module) {
                             MathModule.Geometry2D -> Geometry2DScreen(vm, compact, onRequestClearAll = { showClearConfirmation = true })
+                            MathModule.CoordinatePlane -> CoordinatePlaneWorkspace(vm)
                             MathModule.Geometry3D -> Geometry3DScreen(vm, compact, onRequestClearAll = { showClearConfirmation = true })
+                            MathModule.VectorLab -> VectorLabWorkspace(vm)
                             MathModule.Graph2D -> Graph2DScreen(vm, onRequestClearAll = { showClearConfirmation = true })
                             MathModule.Graph3D -> Graph3DScreen(vm)
-                            MathModule.Trigonometry -> TrigonometryScreen(vm)
+                            MathModule.Trigonometry -> TrigonometryMockupScreen(
+                                onBack = vm::navigateBackIntent,
+                                onMenu = vm::toggleMathMenu,
+                            )
                             MathModule.Manipulatives -> ManipulativesScreen(vm, wide)
                             MathModule.ProbabilityStatistics -> ProbabilityLabScreen(vm, wide = wide)
+                            MathModule.CalculusLab -> CalculusLabWorkspace(vm)
+                            MathModule.PhysicsMath -> PhysicsMathWorkspace(vm)
+                            MathModule.MathematicalArt -> MathematicalArtWorkspace(vm)
                             MathModule.MatricesLinearTransformations -> MatricesLinearTransformationsWorkspace(vm)
                             MathModule.DataSpreadsheet -> DataSpreadsheetWorkspace(vm)
                             MathModule.DiscreteMathematics -> SetTheoryLogicVisualizerScreen(vm, wide = wide)
@@ -3478,7 +3557,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                     }
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub && !vm.showMathDictionary && !vm.showMathsLearnAll) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
                     }
-                    if (vm.showChrome && vm.state.module != MathModule.SpatialAR && vm.state.module != MathModule.ARGraph3D && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
+                    if (vm.showChrome && vm.state.module != MathModule.Trigonometry && vm.state.module != MathModule.SpatialAR && vm.state.module != MathModule.ARGraph3D && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
                         TopShell(
                             vm,
                             compact,
@@ -3509,7 +3588,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                     )
                     }
                 }
-                if (!showSplash && !vm.showGamifyMaths && !vm.showMathLanding) {
+                if (!showSplash && vm.showChrome && !vm.showGamifyMaths && !vm.showMathLanding && vm.state.module != MathModule.Trigonometry) {
                     Box(
                         Modifier
                             .align(Alignment.TopEnd)
@@ -3588,7 +3667,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                         }
                     }
                 }
-                if (!showSplash && !vm.showMathDictionary) {
+                if (!showSplash && !vm.showMathDictionary && vm.state.module != MathModule.Trigonometry) {
                     GlobalAiAssistantOverlay(
                         vm = vm,
                         expanded = showAiAssistant,
@@ -4332,7 +4411,7 @@ fun Screen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(
-            Modifier.fillMaxWidth(),
+            Modifier.fillMaxWidth().background(themedColor(Color.Transparent, Navy)),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -4343,10 +4422,10 @@ fun Screen(
             ) {
                 TransparentIcon("SUM", Cyan)
                 Column(Modifier.weight(1f)) {
-                    Text("Namaskar ${learnerDisplayName(vm.settings)},", color = Muted, fontSize = 8.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                    Text("Mathematics", color = Ink, fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
-                    Text("Explorer", color = Cyan, fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
-                    Text("Explore  -  Learn  -  Master", color = Muted, fontSize = 9.sp, maxLines = 1)
+                    Text("Namaskar ${learnerDisplayName(vm.settings)},", color = themedColor(Muted, Color(0xFFCCD4E5)), fontSize = 8.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+                    Text("Mathematics", color = themedColor(Ink, Color.White), fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Explorer", color = themedColor(Cyan, Color.White), fontSize = if (wide) 27.sp else 21.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("Explore  -  Learn  -  Master", color = themedColor(Muted, Color(0xFFCCD4E5)), fontSize = 9.sp, maxLines = 1)
                 }
             }
             Row(
@@ -4398,8 +4477,8 @@ fun Screen(
             Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(14.dp))
-                .background(Brush.horizontalGradient(listOf(Cyan.copy(.12f), Violet.copy(.08f), Color.Transparent)))
-                .border(1.dp, Cyan.copy(.20f), RoundedCornerShape(14.dp))
+                .background(Brush.horizontalGradient(listOf(themedColor(Cyan.copy(.12f), ActiveAppPalette.surface), themedColor(Violet.copy(.08f), ActiveAppPalette.surface), themedColor(Color.Transparent, ActiveAppPalette.surface))))
+                .border(1.dp, themedColor(Cyan.copy(.20f), ActiveAppPalette.border), RoundedCornerShape(14.dp))
                 .padding(horizontal = 11.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(3.dp),
         ) {
@@ -4420,6 +4499,7 @@ fun Screen(
             trailingIcon = { Text("≋", color = Cyan, fontSize = 20.sp, fontWeight = FontWeight.Bold) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
+                .background(themedColor(Color.Transparent, ActiveAppPalette.surface), RoundedCornerShape(4.dp))
                 .bringIntoViewRequester(searchRequester)
                 .semantics { contentDescription = "Global mathematics search for lessons, concepts, dictionary and tools" },
         )
@@ -4447,7 +4527,11 @@ fun Screen(
                     .clip(RoundedCornerShape(24.dp))
                     .background(
                         Brush.horizontalGradient(
-                            listOf(Violet.copy(.42f), Cyan.copy(.17f), Color(0xED091426)),
+                            listOf(
+                                themedColor(Violet.copy(.42f), Color(0xFF6D55EA)),
+                                themedColor(Cyan.copy(.17f), Color(0xFF5746C8)),
+                                themedColor(Color(0xED091426), Color(0xFF3F358F)),
+                            ),
                         ),
                     )
                     .border(1.dp, Violet.copy(.78f), RoundedCornerShape(24.dp))
@@ -4470,11 +4554,11 @@ fun Screen(
                     MathHomeArtwork.Draw("GamifyMaths", Color.White, Modifier.fillMaxSize().padding(7.dp))
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text("GAMIFYMATHS", color = Ink, fontSize = if (wide) 22.sp else 18.sp, fontWeight = FontWeight.ExtraBold)
-                    Text(gamifyCategory.description, color = Muted, fontSize = 10.sp, maxLines = 2)
-                    Text("NEW - SPEED CALCULATION", color = Green, fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
+                    Text("GAMIFYMATHS", color = themedColor(Ink, Color.White), fontSize = if (wide) 22.sp else 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(gamifyCategory.description, color = themedColor(Muted, Color(0xFFE7E3FF)), fontSize = 10.sp, maxLines = 2)
+                    Text("NEW - SPEED CALCULATION", color = themedColor(Green, Color(0xFFF1EDFF)), fontSize = 8.sp, fontWeight = FontWeight.ExtraBold)
                 }
-                Text("PLAY  >", color = Green, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+                Text("PLAY  >", color = themedColor(Green, Amber), fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
             }
 
             SolverHomeLaunch(
@@ -4881,7 +4965,9 @@ fun Screen(
                 )
                 val destinations = listOf(
                     Triple(MathModule.Geometry2D, "2D Geometry", "Construct and drag points, lines, circles, polygons and constraints"),
+                    Triple(MathModule.CoordinatePlane, "Coordinate Plane", "Plot, drag and connect points; inspect distance, midpoint, slope and equations"),
                     Triple(MathModule.Geometry3D, "3D Geometry", "Create and manipulate solids, vectors, sections and measurements"),
+                    Triple(MathModule.VectorLab, "Vector Lab", "Build 2D/3D vectors and explore sums, products, projections and angles"),
                     Triple(MathModule.Graph2D, "Graph", "Plot explicit, implicit, polar, parametric and inequality graphs"),
                     Triple(MathModule.Graph3D, "3D Graph", "Explore explicit, implicit and parametric surfaces"),
                     Triple(MathModule.ARGraph3D, "AR 3D Graph", "Plot a 3D surface and anchor it into a camera-guided AR scene"),
@@ -4889,6 +4975,9 @@ fun Screen(
                     Triple(MathModule.Trigonometry, "Trigonometry", "Use unit circles, identities, triangles and transformations"),
                     Triple(MathModule.Manipulatives, "Math Tiles", "Learn with algebra tiles, fractions, balances and tactile models"),
                     Triple(MathModule.ProbabilityStatistics, "Probability & Statistics Lab", "Simulate experiments, explore distributions and analyse samples"),
+                    Triple(MathModule.CalculusLab, "Calculus Lab", "Explore limits, derivatives, integrals, Riemann sums and extrema with exact and numerical verification"),
+                    Triple(MathModule.PhysicsMath, "Physics–Math Workspace", "Connect motion, projectiles, forces, energy and oscillations to vectors, equations and graphs"),
+                    Triple(MathModule.MathematicalArt, "Mathematical Art", "Create polar, parametric and fractal artwork from symmetry, oscillations, recursion and complex iteration"),
                     Triple(MathModule.MatricesLinearTransformations, "Matrices & Linear Transformations", "Edit matrices and see their geometric action on vectors and shapes"),
                     Triple(MathModule.DataSpreadsheet, "Data Table & Spreadsheet", "Calculate with linked cells, tables, summaries and graph-ready series"),
                     Triple(MathModule.DiscreteMathematics, "Discrete Mathematics Lab", "Explore sets, logic, relations, graphs and combinatorics"),
@@ -14541,10 +14630,10 @@ internal fun GlowButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = when {
                 visuallyActive -> androidx.compose.ui.graphics.lerp(SurfaceB, Cyan, effects.activeGlowAlpha * .32f)
-                effects.enhanced -> SurfaceB.copy(alpha = .92f)
-                else -> Color(0x99101824)
+                effects.enhanced -> themedColor(SurfaceB.copy(alpha = .92f), ActiveAppPalette.surface)
+                else -> themedColor(Color(0x99101824), ActiveAppPalette.surface)
             },
-            contentColor = Ink,
+            contentColor = themedColor(Ink, ActiveAppPalette.ink),
         ),
         shape = buttonShape,
         modifier = modifier
@@ -14811,12 +14900,17 @@ internal class MathSyntaxVisualTransformation : VisualTransformation {
 
 private fun visualModuleIcon(module: MathModule): String = when (module) {
     MathModule.Geometry2D -> "2d"
+    MathModule.CoordinatePlane -> "coordinate"
     MathModule.Geometry3D -> "3d"
+    MathModule.VectorLab -> "vector"
     MathModule.Graph2D -> "graph"
     MathModule.Graph3D -> "graph"
     MathModule.Trigonometry -> "T"
     MathModule.Manipulatives -> "M"
     MathModule.ProbabilityStatistics -> "P"
+    MathModule.CalculusLab -> "graph"
+    MathModule.PhysicsMath -> "graph"
+    MathModule.MathematicalArt -> "graph"
     MathModule.MatricesLinearTransformations -> "matrix"
     MathModule.DataSpreadsheet -> "table"
     MathModule.DiscreteMathematics -> "sets"
@@ -14829,12 +14923,17 @@ private fun visualModuleIcon(module: MathModule): String = when (module) {
 
 private fun moduleIcon(module: MathModule): String = when (module) {
     MathModule.Geometry2D -> "△"
+    MathModule.CoordinatePlane -> "⌖"
     MathModule.Geometry3D -> "◇"
+    MathModule.VectorLab -> "→"
     MathModule.Graph2D -> "ƒ"
     MathModule.Graph3D -> "⌁"
     MathModule.Trigonometry -> "θ"
     MathModule.Manipulatives -> "▦"
     MathModule.ProbabilityStatistics -> "P"
+    MathModule.CalculusLab -> "∫"
+    MathModule.PhysicsMath -> "F"
+    MathModule.MathematicalArt -> "✦"
     MathModule.MatricesLinearTransformations -> "M×"
     MathModule.DataSpreadsheet -> "▤"
     MathModule.DiscreteMathematics -> "∪"

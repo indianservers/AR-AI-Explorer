@@ -75,16 +75,18 @@ import com.indianservers.aiexplorer.workspace.MathGraphObject
 import com.indianservers.aiexplorer.workspace.WorkspaceState
 import com.indianservers.aiexplorer.persistence.MathFileExchange
 import com.indianservers.aiexplorer.input.IntentAwareMathField
+import com.indianservers.aiexplorer.ActiveAppPalette
+import com.indianservers.aiexplorer.themedColor
 import kotlinx.coroutines.launch
 
-private val StudioBackground = Color(0xFF03070C)
-private val StudioSurface = Color(0xEE09131F)
-private val StudioInk = Color(0xFFEAF5FF)
-private val StudioMuted = Color(0xFF9EB0C8)
-private val StudioCyan = Color(0xFF20D9FF)
-private val StudioViolet = Color(0xFF985DFF)
-private val StudioGreen = Color(0xFF48E0A4)
-private val StudioAmber = Color(0xFFFFC857)
+private val StudioBackground get() = themedColor(Color(0xFF03070C), ActiveAppPalette.background)
+private val StudioSurface get() = themedColor(Color(0xEE09131F), ActiveAppPalette.surface)
+private val StudioInk get() = themedColor(Color(0xFFEAF5FF), ActiveAppPalette.ink)
+private val StudioMuted get() = themedColor(Color(0xFF9EB0C8), ActiveAppPalette.muted)
+private val StudioCyan get() = themedColor(Color(0xFF20D9FF), ActiveAppPalette.cyan)
+private val StudioViolet get() = themedColor(Color(0xFF985DFF), ActiveAppPalette.violet)
+private val StudioGreen get() = themedColor(Color(0xFF48E0A4), ActiveAppPalette.green)
+private val StudioAmber get() = themedColor(Color(0xFFFFC857), ActiveAppPalette.amber)
 
 @Composable
 fun UnifiedMathStudioScreen(

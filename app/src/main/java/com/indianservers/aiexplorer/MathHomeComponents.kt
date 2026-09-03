@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.indianservers.aiexplorer.adaptive.adaptiveFocusRing
 
-private val NavInk = Color(0xFFF4F7FF)
-private val NavMuted = Color(0xFFAAB3CE)
+private val NavInk get() = themedColor(Color(0xFFF4F7FF), ActiveAppPalette.ink)
+private val NavMuted get() = themedColor(Color(0xFFAAB3CE), Color(0xFFCCD4E5))
 
 @Composable
 internal fun MathQuickLaunchButton(
@@ -49,8 +49,16 @@ internal fun MathQuickLaunchButton(
             .height(74.dp)
             .shadow(5.dp, RoundedCornerShape(14.dp), ambientColor = accent.copy(.28f), spotColor = accent.copy(.34f))
             .clip(RoundedCornerShape(14.dp))
-            .background(Brush.linearGradient(listOf(accent.copy(.22f), accent.copy(.09f), Color(0xE6081120))))
-            .border(1.dp, accent.copy(.55f), RoundedCornerShape(14.dp))
+            .background(
+                Brush.linearGradient(
+                    listOf(
+                        themedColor(accent.copy(.22f), ActiveAppPalette.surface),
+                        themedColor(accent.copy(.09f), ActiveAppPalette.surface),
+                        themedColor(Color(0xE6081120), ActiveAppPalette.surface),
+                    ),
+                ),
+            )
+            .border(1.dp, themedColor(accent.copy(.55f), ActiveAppPalette.border), RoundedCornerShape(14.dp))
             .adaptiveFocusRing(shape = RoundedCornerShape(14.dp), focusColor = accent)
             .clickable(onClick = onClick)
             .focusable()

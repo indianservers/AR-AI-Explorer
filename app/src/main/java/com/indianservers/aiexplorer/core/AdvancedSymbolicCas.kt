@@ -137,7 +137,11 @@ internal object AdvancedSymbolicCas {
         val simplified = engine.simplify(antiderivative)
         val check = engine.simplify(engine.expand(differentiate(simplified, variable)))
         val target = engine.simplify(engine.expand(parsed))
-        require(engine.render(check) == engine.render(target)) { "Reverse differentiation did not verify the proposed antiderivative." }
+        val checkRational = rational(check, variable)
+        val targetRational = rational(target, variable)
+        val rationalResidualIsZero = checkRational != null && targetRational != null &&
+            (checkRational.numerator * targetRational.denominator + -(targetRational.numerator * checkRational.denominator)).isZero
+        require(engine.render(check) == engine.render(target) || rationalResidualIsZero) { "Reverse differentiation did not verify the proposed antiderivative." }
         val answer = "${engine.render(simplified)} + C"
         CasRow(source, "integral", answer, null, MathDomainAnalyzer.analyze(parsed).constraints.map { it.display }, listOf(
             CasStep("Apply integration rules", engine.render(simplified), "Integrate polynomial, logarithmic and supported elementary patterns exactly."),

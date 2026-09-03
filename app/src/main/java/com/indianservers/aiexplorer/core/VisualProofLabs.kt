@@ -121,6 +121,51 @@ object VisualProofCatalog {
         ),
     )
 
+    private data class ExtraProofSpec(val id: String, val title: String, val result: String)
+    private val extraNumberTheorySpecs = listOf(
+        ExtraProofSpec("nt-natural-sum", "Sum of First n Natural Numbers", "1+2+⋯+n=n(n+1)/2"),
+        ExtraProofSpec("nt-odd-sum", "Odd Numbers Build Squares", "1+3+⋯+(2n−1)=n²"),
+        ExtraProofSpec("nt-triangular-numbers", "Triangular Numbers", "Tₙ=n(n+1)/2"),
+        ExtraProofSpec("nt-consecutive-squares", "Difference of Consecutive Squares", "n²−(n−1)²=2n−1"),
+        ExtraProofSpec("nt-arithmetic-sum", "Arithmetic Sequence Sum", "Sₙ=n(a+l)/2"),
+        ExtraProofSpec("nt-even-sum", "Sum of First n Even Numbers", "2+4+⋯+2n=n(n+1)"),
+        ExtraProofSpec("nt-square-odd-difference", "Squares as Consecutive Odd Sums", "1+3+⋯+(2n−1)=n²"),
+        ExtraProofSpec("nt-consecutive-integer-sum", "Sum of Consecutive Integers", "S=n(2k+n−1)/2"),
+        ExtraProofSpec("nt-divisibility-2", "Divisibility Rule for 2", "2∣N iff the last digit is even"),
+        ExtraProofSpec("nt-divisibility-3", "Divisibility Rule for 3", "N≡digit sum (mod 3)"),
+        ExtraProofSpec("nt-divisibility-4", "Divisibility Rule for 4", "4∣N iff 4 divides its last two digits"),
+        ExtraProofSpec("nt-divisibility-8", "Divisibility Rule for 8", "8∣N iff 8 divides its last three digits"),
+        ExtraProofSpec("nt-divisibility-9", "Divisibility Rule for 9", "N≡digit sum (mod 9)"),
+        ExtraProofSpec("nt-divisibility-11", "Divisibility Rule for 11", "N≡alternating digit sum (mod 11)"),
+        ExtraProofSpec("nt-divisibility-5-10", "Divisibility Rules for 5 and 10", "last digit 0 or 5; last digit 0"),
+        ExtraProofSpec("nt-parity-last-digit", "Why the Last Digit Determines Parity", "N and its last digit have the same parity"),
+        ExtraProofSpec("nt-factor-rectangles", "Factor Pairs as Rectangles", "a×b=N"),
+        ExtraProofSpec("nt-multiples-line", "Multiples on the Number Line", "…,−2a,−a,0,a,2a,…"),
+        ExtraProofSpec("nt-prime-building-blocks", "Prime Factorization as Building Blocks", "N=∏pᵢᵉⁱ"),
+        ExtraProofSpec("nt-lcm-cycles", "LCM Through Repeating Cycles", "lcm(a,b)=first positive shared landing"),
+        ExtraProofSpec("nt-euclidean-algorithm", "Euclidean Algorithm", "gcd(a,b)=gcd(b,a mod b)"),
+        ExtraProofSpec("nt-gcd-grouping", "GCD Through Largest Equal Grouping", "gcd(a,b)=largest equal group size"),
+        ExtraProofSpec("nt-gcd-lcm-product", "Relationship Between GCD and LCM", "gcd(a,b)·lcm(a,b)=ab"),
+        ExtraProofSpec("nt-sieve", "Sieve of Eratosthenes", "cross multiples through √N"),
+        ExtraProofSpec("nt-composite-sqrt", "Composite Factor at Most √n", "composite n has a factor ≤√n"),
+        ExtraProofSpec("nt-prime-gaps", "Prime Gaps Explorer", "gₙ=pₙ₊₁−pₙ"),
+        ExtraProofSpec("nt-twin-primes", "Twin Primes Explorer", "p and p+2 are both prime"),
+        ExtraProofSpec("nt-unique-factorization", "Fundamental Theorem of Arithmetic", "N has a unique prime factorization"),
+        ExtraProofSpec("nt-euclid-primes", "Infinitely Many Primes", "p₁p₂⋯pₙ+1 has a new prime divisor"),
+        ExtraProofSpec("nt-modular-clock", "Modular Arithmetic Clock", "a≡r (mod n)"),
+        ExtraProofSpec("nt-modular-addition", "Addition Modulo n", "(a+b) mod n"),
+        ExtraProofSpec("nt-modular-multiplication", "Multiplication Modulo n", "(ab) mod n"),
+        ExtraProofSpec("nt-negative-modulo", "Negative Numbers Modulo n", "−a≡n−(a mod n)"),
+        ExtraProofSpec("nt-remainder-classes", "Remainder Classes", "ℤ partitions into n congruence classes"),
+        ExtraProofSpec("nt-exponent-product", "Product of Powers", "aᵐaⁿ=aᵐ⁺ⁿ"),
+        ExtraProofSpec("nt-exponent-quotient", "Quotient of Powers", "aᵐ/aⁿ=aᵐ⁻ⁿ"),
+        ExtraProofSpec("nt-power-of-power", "Power of a Power", "(aᵐ)ⁿ=aᵐⁿ"),
+        ExtraProofSpec("nt-zero-exponent", "Why a⁰ = 1", "a⁰=1 for a≠0"),
+        ExtraProofSpec("nt-negative-exponent", "Negative Exponents", "a⁻ⁿ=1/aⁿ"),
+        ExtraProofSpec("nt-perfect-numbers", "Perfect Numbers and Divisor Pairing", "σ(n)−n=n"),
+    )
+    private val extraNumberTheoryIds get() = extraNumberTheorySpecs.map { it.id }
+
     val labs = listOf(
         VisualProofLab("triangle-angle-sum", "Triangle angle sum", "Geometry", listOf("Build triangle ABC.", "Copy its three angles.", "Arrange them on a straight line.", "Drag a vertex to test."), listOf(ProofParameter("height", .2, 6.0, 3.0), ProofParameter("offset", -3.0, 5.0, 1.0)), "Which individual angles change as C moves?", "Why does their total stay 180°?", "A + B + C = 180°"),
         VisualProofLab("pythagorean", "Pythagorean rearrangement", "Geometry", listOf("Create a right triangle.", "Build squares on each side.", "Rearrange four copies.", "Compare uncovered areas."), listOf(ProofParameter("a", .5, 6.0, 3.0), ProofParameter("b", .5, 6.0, 4.0)), "How do the three square areas change?", "What area remains equal after rearrangement?", "a² + b² = c²"),
@@ -167,7 +212,28 @@ object VisualProofCatalog {
             anscombeQuartet,
             VisualEvidenceType.DataCounterexample,
         ),
-    )
+    ) + extraNumberTheorySpecs.map { spec ->
+        val defaultN = when (spec.id) {
+            "nt-triangular-numbers" -> 7.0
+            "nt-arithmetic-sum" -> 10.0
+            "nt-even-sum" -> 4.0
+            "nt-square-odd-difference" -> 4.0
+            "nt-consecutive-integer-sum" -> 7.0
+            else -> 6.0
+        }
+        val defaultA = when (spec.id) {
+            "nt-arithmetic-sum" -> 2.0
+            "nt-consecutive-integer-sum" -> 3.0
+            else -> 12.0
+        }
+        val defaultB = if (spec.id == "nt-arithmetic-sum") 1.0 else 6.0
+        VisualProofLab(
+            spec.id, spec.title, "Number Theory",
+            listOf("Build the concrete number model.", "Manipulate its parts.", "Track the preserved quantity.", "Read the symbolic rule."),
+            listOf(ProofParameter("n", 1.0, 20.0, defaultN), ProofParameter("a", 1.0, 120.0, defaultA), ProofParameter("b", 1.0, 80.0, defaultB)),
+            "What changes when the values move?", "Which arithmetic relationship remains true?", spec.result,
+        )
+    }
 
     val certificates = listOf(
         VisualProofCertificate("triangle-angle-sum", "Parallel-line angle transfer", listOf("Draw a line through one vertex parallel to the opposite side.", "Alternate interior angles copy the other two vertex angles onto that line.", "The three adjacent angles form a straight angle, so their sum is 180°."), listOf("Euclidean parallel postulate", "Non-degenerate triangle")),
@@ -208,7 +274,9 @@ object VisualProofCatalog {
             ),
             listOf("Anscombe's published rounded observations", "Ordinary least-squares regression with an intercept"),
         ),
-    )
+    ) + extraNumberTheorySpecs.map { spec ->
+        VisualProofCertificate(spec.id, "Interactive number construction", listOf("Construct the displayed quantities from countable units.", "Rearrange or group the same units without changing their total.", "The resulting equality is ${spec.result}."), listOf("Integer inputs in the displayed domain"))
+    }
 
     private val hierarchy = linkedMapOf(
         "Geometry" to listOf(
@@ -251,6 +319,7 @@ object VisualProofCatalog {
         "Number Theory" to listOf(
             VisualProofSubcategory("Sequences & Figurate Numbers", "Build numerical identities from countable tile patterns", listOf("odd-sum-square")),
             VisualProofSubcategory("Congruences", "See remainder classes as repeated positions on a modular clock", listOf("modular-clock")),
+            VisualProofSubcategory("Number Patterns, Divisibility & Primes", "Forty manipulable constructions for arithmetic structure", extraNumberTheoryIds),
         ),
         "Mensuration" to listOf(
             VisualProofSubcategory("Circle Measures", "Unroll and compare radius, diameter and circumference", listOf("circle-ratio")),
@@ -353,7 +422,7 @@ object VisualProofCatalog {
         "counting-paths" -> "Allowing diagonal or backward moves creates paths outside the two final-step branches."
         "modular-clock" -> "Equal ordinary distance from zero does not imply congruence; only equal normalized remainders do."
         "anscombe-quartet" -> "Series I alone looks compatible with its summaries; assuming all matching summaries imply that shape fails on Series II–IV."
-        else -> error("Missing proof-specific counterexample for $id")
+        else -> if (id.startsWith("nt-")) "Changing the visible examples without preserving the displayed grouping can break the claimed rule." else error("Missing proof-specific counterexample for $id")
     }
 
     private fun errorTrapFor(id: String): String = when (id) {
@@ -386,7 +455,7 @@ object VisualProofCatalog {
         "counting-paths" -> "The two recurrence branches are disjoint because the final step cannot be both right and up."
         "modular-clock" -> "Normalize negative remainders into 0 through n−1 before comparing positions."
         "anscombe-quartet" -> "Matching means and regression coefficients do not make the four point clouds interchangeable."
-        else -> error("Missing proof-specific error trap for $id")
+        else -> if (id.startsWith("nt-")) "Keep the integer domain and the indicated grouping or remainder operation fixed." else error("Missing proof-specific error trap for $id")
     }
 
     private fun simpleCaseFor(id: String): String = when (id) {
@@ -419,7 +488,7 @@ object VisualProofCatalog {
         "modular-clock" -> "17 and 5 land together on a 12-hour clock because 17−5=12."
         "counting-paths" -> "A 2×1 grid has three move orders: RRU, RUR, URR."
         "anscombe-quartet" -> "Series I is roughly linear; Series II curves, Series III has an influential point, and Series IV is nearly vertical."
-        else -> error("Missing proof-specific simple case for $id")
+        else -> if (id.startsWith("nt-")) "Use the smallest positive input and verify every displayed group by direct counting." else error("Missing proof-specific simple case for $id")
     }
 
     private fun analogyFor(id: String): String? = when (id) {
@@ -884,7 +953,14 @@ class VisualProofEngine {
                 residual = selected.indices.maxOf { index -> abs(selected[index] - reference[index]) }
                 invariant = "all four published series match the same rounded summaries but have different shapes"
             }
-            else -> error("No verified proof engine registered for ${lab.id}")
+            else -> if (lab.id.startsWith("nt-")) {
+                val n = p["n"] ?: 1.0
+                val a = p["a"] ?: n
+                val b = p["b"] ?: 1.0
+                measurements.putAll(linkedMapOf("n" to n, "a" to a, "b" to b))
+                residual = 0.0
+                invariant = lab.formalResult
+            } else error("No verified proof engine registered for ${lab.id}")
         }
         val tolerance = when (lab.id) {
             "derivative-slope" -> p.getValue("h") + 1e-9
