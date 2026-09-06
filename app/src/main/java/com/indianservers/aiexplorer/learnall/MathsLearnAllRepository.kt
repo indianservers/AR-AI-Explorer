@@ -9,9 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayInputStream
 import java.security.MessageDigest
-import java.util.zip.GZIPInputStream
 
 data class MathsLessonSection(
     val title: String = "",
@@ -1104,26 +1102,8 @@ class MathsLearnAllRepository(context: Context) {
     }
 }
 
-private fun Context.readBundledLessonsText(): String {
-    // AAPT may transparently unpack .gz assets and expose them without the .gz suffix.
-    val candidates = listOf(
-        "maths_learn_all_lessons.v3.json",
-        "maths_learn_all_lessons.v3.json.gz",
-        "maths_learn_all_lessons.v2.json",
-        "maths_learn_all_lessons.v2.json.gz",
-        "maths_learn_all_lessons.json",
-    )
-    val packagedAssets = assets.list("").orEmpty().toSet()
-    val assetName = candidates.firstOrNull(packagedAssets::contains)
-        ?: return "[]"
-    val bytes = assets.open(assetName).use { it.readBytes() }
-    val isGzip = bytes.size >= 2 && bytes[0] == 0x1f.toByte() && bytes[1] == 0x8b.toByte()
-    return if (isGzip) {
-        GZIPInputStream(ByteArrayInputStream(bytes)).bufferedReader(Charsets.UTF_8).use { it.readText() }
-    } else {
-        bytes.toString(Charsets.UTF_8)
-    }
-}
+private fun Context.readBundledLessonsText(): String =
+    assets.open("maths_learn_all_lessons.json").bufferedReader(Charsets.UTF_8).use { it.readText() }
 
 private fun JSONObject.lessonContent(): MathsLessonContent = MathsLessonContent(
     introduction = optSections("intro"),
