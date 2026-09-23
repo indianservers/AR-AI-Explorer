@@ -57,7 +57,9 @@ private fun CanvasChip(label: String, selected: Boolean, accent: Color, enabled:
         fontSize = 10.sp,
         fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
         modifier = Modifier
-            .background(if (selected) accent.copy(.2f) else Color.Transparent, RoundedCornerShape(10.dp))
+            .background(if (LocalGeometryGlass.current) {
+                Brush.linearGradient(if (selected) listOf(Color(0xFF864BFF), Color(0xFF4A1DC1)) else listOf(Color(0xFF12223A), Color(0xFF081322)))
+            } else Brush.linearGradient(listOf(if (selected) accent.copy(.2f) else Color.Transparent, if (selected) accent.copy(.2f) else Color.Transparent)), RoundedCornerShape(10.dp))
             .border(1.dp, if (selected) accent.copy(.65f) else ControlMuted.copy(.2f), RoundedCornerShape(10.dp))
             .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 8.dp, vertical = 7.dp),

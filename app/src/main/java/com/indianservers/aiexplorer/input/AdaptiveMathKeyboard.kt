@@ -798,8 +798,8 @@ fun AdaptiveMathKeyboard(
             .background(Color.Black, keyboardShape)
             .border(2.dp, Color.White, keyboardShape)
         !visualEffects.enhanced -> keyboardShell
-            .background(Color(0xFF07131F), keyboardShape)
-            .border(1.dp, IntentMathPalette.Command.copy(alpha = .62f), keyboardShape)
+            .background(SmartInputStyle.Panel, keyboardShape)
+            .border(1.dp, SmartInputStyle.Border, keyboardShape)
         else -> {
             val surface = MaterialTheme.colorScheme.surface
             val primary = MaterialTheme.colorScheme.primary
@@ -1528,11 +1528,7 @@ private fun MathKeyboardKey(
                 )
             }
             .background(
-                when {
-                    MathKeyboardPreferences.highContrast -> Color.Black
-                    selected -> accent.copy(alpha = .34f)
-                    else -> accent.copy(alpha = if (isMultiply || isVariable) .15f else .08f)
-                },
+                SmartInputStyle.key(accent, selected, MathKeyboardPreferences.highContrast),
                 RoundedCornerShape(7.dp),
             )
             .border(
@@ -1615,13 +1611,13 @@ private fun KeyboardTab(label: String, selected: Boolean, onClick: () -> Unit) {
     val appearance = MathKeyboardPreferences.keySize
     Text(
         label,
-        color = if (selected) Color(0xFF06121D) else IntentMathPalette.Ink,
+        color = if (selected && MathKeyboardPreferences.highContrast) Color(0xFF06121D) else IntentMathPalette.Ink,
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
             .clickable(role = Role.Tab, onClick = onClick)
-            .background(if (selected) IntentMathPalette.Number else if (MathKeyboardPreferences.highContrast) Color.Black else Color(0xFF122538), RoundedCornerShape(7.dp))
-            .border(if (MathKeyboardPreferences.highContrast) 1.dp else 0.dp, Color.White, RoundedCornerShape(7.dp))
+            .background(if (MathKeyboardPreferences.highContrast) Brush.verticalGradient(listOf(if (selected) IntentMathPalette.Number else Color.Black, if (selected) IntentMathPalette.Number else Color.Black)) else SmartInputStyle.key(IntentMathPalette.Command, selected), RoundedCornerShape(7.dp))
+            .border(1.dp, if (MathKeyboardPreferences.highContrast) Color.White else if (selected) SmartInputStyle.Violet else SmartInputStyle.Blue.copy(alpha = .22f), RoundedCornerShape(7.dp))
             .padding(horizontal = (9f * appearance.fontScale).dp, vertical = (6f * appearance.fontScale).dp),
     )
 }
@@ -1642,7 +1638,7 @@ private fun KeyboardActionKey(
         modifier
             .height(keyHeight)
             .clickable(role = Role.Button, onClick = onClick)
-            .background(if (MathKeyboardPreferences.highContrast) Color.Black else accent.copy(alpha = .16f), RoundedCornerShape(7.dp))
+            .background(SmartInputStyle.key(accent, prominent, MathKeyboardPreferences.highContrast), RoundedCornerShape(7.dp))
             .border(if (MathKeyboardPreferences.highContrast) 2.dp else 1.dp, if (MathKeyboardPreferences.highContrast) Color.White else accent.copy(alpha = .42f), RoundedCornerShape(7.dp))
             .padding(horizontal = 7.dp)
             .semantics { contentDescription = description },

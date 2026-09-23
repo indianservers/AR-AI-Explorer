@@ -995,7 +995,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
             DestructiveGlowButton(
                 "Clear all",
                 enabled = vm.state.functions.isNotEmpty() || dataText.isNotBlank() || graphSnapshots.isNotEmpty() || pinnedTracePoints.isNotEmpty() || sketchPoints.isNotEmpty(),
-                icon = "Ã—",
+                icon = "×",
                 onClick = onRequestClearAll,
             )
         }

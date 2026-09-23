@@ -41,6 +41,7 @@ internal enum class WorkspacePaletteId {
     EmeraldGold,
     Porcelain,
     Topographic,
+    GeometryGlass,
 }
 internal enum class WorkspaceTexture { Smooth, Mesh, Contour, Faceted }
 
@@ -211,7 +212,19 @@ internal object WorkspaceVisualStyles {
         defaultGlow = false,
     )
 
-    val palettes = listOf(Spectral, Aurora, Ember, Ice, CyberNeon, Abyss, EmeraldGold, Porcelain, Topographic)
+    val GeometryGlass = WorkspacePalette(
+        id = WorkspacePaletteId.GeometryGlass,
+        label = "Geometry Glass",
+        background = Color(0xFF020713),
+        colors = listOf(Color(0xFFFFD83D), Color(0xFF299EFF), Color(0xFF9345FF), Color(0xFFFF4F9A), Color(0xFF35DA79), Color(0xFFFF913C)),
+        axes = WorkspaceAxisStyle(
+            x = Color(0xFFFF4667), y = Color(0xFF22AAFF), z = Color(0xFF35EB76),
+            grid = Color(0xFF244675).copy(alpha = .32f),
+        ),
+        defaultTexture = WorkspaceTexture.Smooth,
+    )
+
+    val palettes = listOf(Spectral, Aurora, Ember, Ice, CyberNeon, Abyss, EmeraldGold, Porcelain, Topographic, GeometryGlass)
     fun palette(id: WorkspacePaletteId): WorkspacePalette = palettes.first { it.id == id }
     fun spectralColor(index: Int): Color = Spectral.colors[index.mod(Spectral.colors.size)]
 }

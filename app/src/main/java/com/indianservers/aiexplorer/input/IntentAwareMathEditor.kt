@@ -185,10 +185,10 @@ fun IntentAwareMathField(
         modifier
             .fillMaxWidth()
             .background(
-                Brush.linearGradient(listOf(Color(0xEE091522), Color(0xF20D1020), accent.copy(alpha = .10f))),
+                SmartInputStyle.Panel,
                 RoundedCornerShape(18.dp),
             )
-            .border(1.dp, accent.copy(alpha = .62f), RoundedCornerShape(18.dp))
+            .border(1.dp, if (healthy) SmartInputStyle.Border else SolidColor(IntentMathPalette.Error), RoundedCornerShape(18.dp))
             .padding(8.dp)
             .semantics { contentDescription = "$label. ${analysis.accessibleSummary}" },
         verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -242,8 +242,8 @@ fun IntentAwareMathField(
                     errorCursorColor = IntentMathPalette.Error,
                     focusedLabelColor = accent,
                     unfocusedLabelColor = IntentMathPalette.Muted,
-                    focusedContainerColor = Color(0x77101B2A),
-                    unfocusedContainerColor = Color(0x44101B2A),
+                    focusedContainerColor = SmartInputStyle.Inset,
+                    unfocusedContainerColor = SmartInputStyle.Inset,
                 ),
             )
         }
@@ -318,8 +318,8 @@ fun IntentAwareMathValueField(
     }
     Column(
         modifier.fillMaxWidth()
-            .background(Brush.linearGradient(listOf(Color(0xEE091522), Color(0xF20D1020), accent.copy(.10f))), RoundedCornerShape(18.dp))
-            .border(1.dp, accent.copy(.62f), RoundedCornerShape(18.dp))
+            .background(SmartInputStyle.Panel, RoundedCornerShape(18.dp))
+            .border(1.dp, if (healthy) SmartInputStyle.Border else SolidColor(IntentMathPalette.Error), RoundedCornerShape(18.dp))
             .padding(if (compactChrome) 4.dp else 8.dp)
             .semantics { contentDescription = "$label. ${analysis.accessibleSummary}" },
         verticalArrangement = Arrangement.spacedBy(if (compactChrome) 3.dp else 6.dp),
@@ -371,7 +371,7 @@ fun IntentAwareMathValueField(
                     focusedTextColor = IntentMathPalette.Ink, unfocusedTextColor = IntentMathPalette.Ink,
                     focusedBorderColor = accent, unfocusedBorderColor = accent.copy(.35f), cursorColor = IntentMathPalette.Number,
                     errorCursorColor = IntentMathPalette.Error, focusedLabelColor = accent, unfocusedLabelColor = IntentMathPalette.Muted,
-                    focusedContainerColor = Color(0x77101B2A), unfocusedContainerColor = Color(0x44101B2A),
+                    focusedContainerColor = SmartInputStyle.Inset, unfocusedContainerColor = SmartInputStyle.Inset,
                 ),
             )
         }
@@ -441,7 +441,7 @@ private fun MathKeyboardOnlyTextField(
     Column(
         modifier
             .fillMaxWidth()
-            .background(Color(0x77101B2A), RoundedCornerShape(8.dp))
+            .background(SmartInputStyle.Inset, RoundedCornerShape(8.dp))
             .border(
                 width = if (focused) 1.5.dp else 1.dp,
                 color = if (!healthy) IntentMathPalette.Error else if (focused) accent else accent.copy(alpha = .38f),

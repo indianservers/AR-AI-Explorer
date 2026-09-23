@@ -1772,8 +1772,9 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjectio
                     Brush.linearGradient(
                         listOf(
                             (if (selectedFace) Amber else litColor).copy(alpha = faceAlpha),
-                            Color.White.copy(
+                            (if (appearance.paletteId == WorkspacePaletteId.GeometryGlass) litColor else Color.White).copy(
                                 alpha = if (visualMode == SpatialVisualMode.XRay) .025f
+                                else if (appearance.paletteId == WorkspacePaletteId.GeometryGlass) faceAlpha * .68f
                                 else if (appearance.material == com.indianservers.aiexplorer.core.SpatialMaterial.Gloss) .22f
                                 else .10f,
                             ),

@@ -132,12 +132,12 @@ data class Graph2DViewState(
 )
 
 enum class MathModule(val label: String) {
-    Geometry2D("2D"),
+    Geometry2D("2D geometry"),
     CoordinatePlane("Coordinate Plane"),
-    Geometry3D("3D"),
+    Geometry3D("3D geometry"),
     VectorLab("Vector Lab"),
-    Graph2D("Graph"),
-    Graph3D("3D Graph"),
+    Graph2D("2D graph"),
+    Graph3D("3D graph"),
     Trigonometry("Trig"),
     Manipulatives("Tiles"),
     ProbabilityStatistics("Probability"),
