@@ -69,7 +69,7 @@ object TypedGraphExpressionParser {
     )
 
     fun parse(source: String): TypedGraphExpression {
-        val clean = source.trim()
+        val clean = MathExpressionNormalizer.normalize(source).trim()
         require(clean.isNotBlank()) { "Graph expression cannot be blank." }
         val compact = clean.lowercase().replace(" ", "")
         parseRecursive(clean)?.let { return it }
@@ -97,7 +97,7 @@ object TypedGraphExpressionParser {
                 TypedGraphExpression.Parametric(clean, x, y, parameters(listOf(x, y)))
             }
             hasTopLevelInequality(unrestricted) -> TypedGraphExpression.Inequality(clean, normalizeInequality(unrestricted), parameters(listOf(unrestricted)))
-            '=' in unrestricted && !unrestrictedCompact.startsWith("y=") && !Regex("^[a-z][a-z0-9_]*\\(x\\)=", RegexOption.IGNORE_CASE).containsMatchIn(unrestrictedCompact) -> {
+            '=' in unrestricted && (!unrestrictedCompact.startsWith("y=") || Regex("\\by\\b").containsMatchIn(unrestrictedCompact.substringAfter('='))) && !Regex("^[a-z][a-z0-9_]*\\(x\\)=", RegexOption.IGNORE_CASE).containsMatchIn(unrestrictedCompact) -> {
                 val sides = unrestricted.split('=', limit = 2)
                 val residual = "(${sides[0]})-(${sides[1]})"
                 TypedGraphExpression.Implicit(clean, residual, parameters(listOf(residual)))
@@ -109,7 +109,7 @@ object TypedGraphExpressionParser {
     }
 
     private fun extractRestriction(source: String): Pair<String, String?> {
-        val match = Regex("^(.*)\\{([^{}]+)}\\s*$").matchEntire(source) ?: return source to null
+        val match = Regex("^(.*)\\{([^{}]+)\\}\\s*$").matchEntire(source) ?: return source to null
         val expression = match.groupValues[1].trim()
         return if (expression.isBlank()) source to null else expression to normalizeInequality(match.groupValues[2].trim())
     }
@@ -290,11 +290,39 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
     }
 
     private fun inequalityBoundaries(definition: TypedGraphExpression.Inequality, xDomain: GraphDomain, yDomain: GraphDomain, parameters: Map<String, Double>, cells: Int): List<ImplicitSegment> {
-        val comparisons = Regex("([^*()]+|\\([^()]+\\))\\s*(<=|>=|<|>)\\s*([^*()]+|\\([^()]+\\))").findAll(definition.predicate)
-        return comparisons.flatMap { match ->
-            val residual = "(${match.groupValues[1]})-(${match.groupValues[3]})"
-            marchingSquares(TypedGraphExpression.Implicit(definition.source, residual, definition.parameters), xDomain, yDomain, parameters, cells).asSequence()
-        }.toList()
+        // Keep arithmetic/function parentheses intact when extracting each boundary.
+        // Regex fragments previously truncated x^(2)+1 to x^ and crashed sampling.
+        return definition.predicate.split(Regex("\\b(?:and|or)\\b|&&|\\|\\|"))
+            .flatMap { clause ->
+                var expression = clause.trim()
+                fun outerPairEnclosesAll(text: String): Boolean {
+                    if (!text.startsWith('(') || !text.endsWith(')')) return false
+                    var depth = 0
+                    text.forEachIndexed { index, ch ->
+                        if (ch == '(') depth++
+                        if (ch == ')') depth--
+                        if (depth == 0 && index < text.lastIndex) return false
+                    }
+                    return depth == 0
+                }
+                while (outerPairEnclosesAll(expression)) expression = expression.substring(1, expression.lastIndex).trim()
+                var depth = 0
+                val relations = Regex("<=|>=|<|>").findAll(expression).filter { match ->
+                    depth = 0
+                    expression.substring(0, match.range.first).forEach { ch ->
+                        if (ch == '(') depth++
+                        if (ch == ')') depth--
+                    }
+                    depth == 0
+                }.toList()
+                val starts = listOf(0) + relations.map { it.range.last + 1 }
+                val ends = relations.map { it.range.first } + listOf(expression.length)
+                val operands = starts.zip(ends).map { (start, end) -> expression.substring(start, end).trim() }
+                operands.zipWithNext().flatMap { (left, right) ->
+                    val residual = "($left)-($right)"
+                    marchingSquares(TypedGraphExpression.Implicit(definition.source, residual, definition.parameters), xDomain, yDomain, parameters, cells)
+                }
+            }
     }
 
     private fun samplePolar(definition: TypedGraphExpression.Polar, parameters: Map<String, Double>, count: Int): List<Vec2> = (0..count.coerceIn(32, 5000)).mapNotNull { index ->

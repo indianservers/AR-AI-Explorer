@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" tests="100" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:00:53.535Z" hostname="INDIANSERVERS" time="0.022">
+  <properties/>
+  <testcase name="selectsOnlyReliableMatchingSurface[0: Plane/HorizontalUp/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.002"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[1: Plane/HorizontalUp/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[2: Plane/HorizontalDown/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[3: Plane/HorizontalDown/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[4: Plane/Vertical/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[5: Plane/Vertical/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[6: Plane/Arbitrary/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[7: Plane/Arbitrary/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[8: Depth/HorizontalUp/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[9: Depth/HorizontalUp/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[10: Depth/HorizontalDown/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[11: Depth/HorizontalDown/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[12: Depth/Vertical/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[13: Depth/Vertical/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[14: Depth/Arbitrary/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[15: Depth/Arbitrary/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[16: OrientedPoint/HorizontalUp/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[17: OrientedPoint/HorizontalUp/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[18: OrientedPoint/HorizontalDown/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[19: OrientedPoint/HorizontalDown/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[20: OrientedPoint/Vertical/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[21: OrientedPoint/Vertical/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[22: OrientedPoint/Arbitrary/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[23: OrientedPoint/Arbitrary/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[24: InstantPlacement/HorizontalUp/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[25: InstantPlacement/HorizontalUp/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[26: InstantPlacement/HorizontalDown/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[27: InstantPlacement/HorizontalDown/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[28: InstantPlacement/Vertical/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[29: InstantPlacement/Vertical/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[30: InstantPlacement/Arbitrary/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[31: InstantPlacement/Arbitrary/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[32: Simulator/HorizontalUp/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[33: Simulator/HorizontalUp/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[34: Simulator/HorizontalDown/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[35: Simulator/HorizontalDown/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[36: Simulator/Vertical/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[37: Simulator/Vertical/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[38: Simulator/Arbitrary/FloorTable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[39: Simulator/Arbitrary/Wall]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[40: range 0.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[41: range 0.01]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[42: range 0.149]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[43: range 0.15]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[44: range 0.151]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[45: range 1.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[46: range 7.999]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[47: range 8.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[48: range 8.001]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[49: range 100.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[50: confidence 0.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[51: confidence 0.1]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[52: confidence 0.3]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[53: confidence 0.599]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[54: confidence 0.6]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[55: confidence 0.601]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[56: confidence 0.7]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[57: confidence 0.8]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[58: confidence 0.99]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[59: confidence 1.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[60: uncertainty 0.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[61: uncertainty 0.01]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[62: uncertainty 0.1]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[63: uncertainty 0.249]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[64: uncertainty 0.25]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[65: uncertainty 0.251]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[66: uncertainty 0.3]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[67: uncertainty 0.5]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[68: uncertainty 1.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[69: uncertainty 8.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[70: camera Stopped]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[71: camera Paused]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[72: camera Tracking]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[73: camera Lost]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[74: camera failure None]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[75: camera failure Initializing]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[76: camera failure ExcessiveMotion]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[77: camera failure InsufficientFeatures]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[78: camera failure InsufficientLight]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[79: camera failure CameraUnavailable]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[80: camera failure Relocalizing]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[81: camera failure Unknown]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[82: hit Stopped]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[83: hit Paused]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[84: hit Tracking]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[85: hit Lost]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[86: plane extent 0.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[87: plane extent 0.119]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[88: plane extent 0.12]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[89: plane extent 2.0]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[90: plane Stopped]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[91: plane Paused]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[92: plane Tracking]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[93: plane Lost]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[94: outside polygon]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[95: expired plane]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[96: zero timestamp]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[97: no planes]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.001"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[98: wall target rejects floor]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <testcase name="selectsOnlyReliableMatchingSurface[99: any target accepts floor]" classname="com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

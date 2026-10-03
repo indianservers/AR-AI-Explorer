@@ -509,6 +509,18 @@ import kotlin.math.round
 import kotlin.math.log10
 import kotlin.math.pow
 
+internal fun graphRenderExpression(source: String, resolved: String?, parameterA: Double): String {
+    // A constant RHS is not an explicit function for an implicit equation.
+    val typed = runCatching { TypedGraphExpressionParser.parse(source) }.getOrNull()
+    if (typed is TypedGraphExpression.Explicit && typed.restriction == null && resolved != null) return resolved
+    return source.replace(Regex("\\ba\\b"), trim(parameterA))
+}
+
+internal fun graphTransformationPreview(source: String, enabled: Boolean, kind: GraphTransformKind, amount: Double): String? {
+    if (!enabled || runCatching { TypedGraphExpressionParser.parse(source) }.getOrNull() !is TypedGraphExpression.Explicit) return null
+    return GraphUxEngine.transform(source, kind, amount)
+}
+
 @Composable
 internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit) {
     val adaptiveProfile = LocalAdaptiveDeviceProfile.current
@@ -719,7 +731,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     }
     val liveFunctions = vm.state.functions.map { function ->
         val resolved = objectGraphSnapshot.graphObjects.firstOrNull { it.rowId == function.id }?.resolvedExpression
-        function.copy(expression = resolved ?: function.expression.replace(Regex("\\ba\\b"), trim(parameterA.toDouble())))
+        function.copy(expression = graphRenderExpression(function.expression, resolved, parameterA.toDouble()))
     }
     val visibleFunctions = liveFunctions.filter { it.visible }
     val explicitFunctions = visibleFunctions.filter { graph.definitionKind(it.expression) == GraphDefinitionKind.Explicit }
@@ -818,7 +830,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
             parameterHandleEnabled = parameterHandleEnabled,
             parameterValues = objectGraphSnapshot.parameterRows.associate { it.name to it.value },
             previewExpression = directCurveDelta?.let { delta -> selectedFunction?.let { GraphDirectManipulationEngine.translate(it.expression, delta) } }
-                ?: selectedFunction?.let { GraphUxEngine.transform(it.expression, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
+                ?: selectedFunction?.let { graphTransformationPreview(it.expression, vm.showBottomPanel || animateGraphTransform, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
             brushInterval = brushInterval,
             sketchPoints = sketchPoints,
             pinnedTracePoints = pinnedTracePoints,
@@ -832,9 +844,9 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 equationEditorExpanded = true
             },
             onClearSelection = {
-                selectedGraphRowId = null
-                equationEditorExpanded = false
-                vm.dismissAllMenusAndPanels()
+                // A background tap is not a request to remove the active graph or its inspector.
+                contextMenuPosition = null
+                graphAddMenuExpanded = false
             },
             onTraceChange = { traceX = it.toFloat().coerceIn(-1_000f, 1_000f) },
             onParameterAChange = { parameterA = it.toFloat().coerceIn(-20f, 20f) },
@@ -1069,16 +1081,15 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 }
             }
         }
-        if (!presentationMode && (equationEditorExpanded || graphAddMenuExpanded)) {
+        if (!presentationMode && graphAddMenuExpanded) {
             DimmedWorkspaceScrim {
-                equationEditorExpanded = false
                 graphAddMenuExpanded = false
-                graphTypingMode = false
             }
         }
         if (!presentationMode) GraphEquationEditor(
             Modifier.align(Alignment.TopCenter),
-            functions = liveFunctions,
+            // Keep editable source separate from parameter-expanded render expressions.
+            functions = vm.state.functions,
             selectedId = selectedGraphRowId,
             expanded = equationEditorExpanded,
             onExpandedChange = { equationEditorExpanded = it },

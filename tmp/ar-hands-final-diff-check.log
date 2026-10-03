@@ -1,0 +1,11 @@
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/core/AdvancedGraphing.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/core/MathInputIntelligence.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/core/MathModels.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/core/SurfaceInputInterpreter.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/spatial/ARCoreCompositorView.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/spatial/ArMathWorkspaceBridge.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/spatial/ArPhase4SpatialBridge.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/indianservers/aiexplorer/spatial/SpatialModels.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/test/java/com/indianservers/aiexplorer/UnifiedSpatialMathControllerTest.kt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ar3dgraph/build.gradle.kts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'arengine/src/main/java/com/indianservers/aiexplorer/arengine/contract/ArRuntimeContracts.kt', LF will be replaced by CRLF the next time Git touches it

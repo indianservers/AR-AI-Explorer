@@ -3,7 +3,6 @@ package com.indianservers.aiexplorer.ar3dgraph.ar
 import android.app.Activity
 import android.util.Log
 import com.google.ar.core.ArCoreApk
-import com.google.ar.core.Config
 import com.google.ar.core.Session
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.core.exceptions.UnavailableApkTooOldException
@@ -73,12 +72,7 @@ class ARCoreSessionManager(
         return runCatching {
             candidate = Session(activity)
             val activeCandidate = requireNotNull(candidate)
-            val config = Config(activeCandidate)
-                .setPlaneFindingMode(Config.PlaneFindingMode.DISABLED)
-                .setInstantPlacementMode(Config.InstantPlacementMode.DISABLED)
-                .setDepthMode(Config.DepthMode.DISABLED)
-                .setLightEstimationMode(Config.LightEstimationMode.DISABLED)
-            activeCandidate.configure(config)
+            com.indianservers.aiexplorer.arengine.arcore.ArCoreConfiguration.configure(activeCandidate, depthSupported = false, allowHdr = false, allowInstant = false)
             session = activeCandidate
             state = ARSessionState.Ready
             ARSessionTransition(state, "AR session ready.")

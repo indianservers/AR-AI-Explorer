@@ -1,0 +1,6 @@
+MediaPipe test fixture right_hands.jpg, downloaded from
+https://storage.googleapis.com/mediapipe-assets/right_hands.jpg
+Source manifest: https://github.com/google-ai-edge/mediapipe/blob/master/mediapipe/tasks/testdata/vision/BUILD
+Copyright The MediaPipe Authors. Apache License 2.0.
+https://www.apache.org/licenses/LICENSE-2.0
+Included only in the instrumentation APK, not the production app.

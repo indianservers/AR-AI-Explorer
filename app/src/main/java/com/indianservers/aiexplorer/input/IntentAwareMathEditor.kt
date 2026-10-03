@@ -135,7 +135,20 @@ object IntentMathPalette {
 class IntentAwareMathVisualTransformation : VisualTransformation {
     private val structured = StructuredMathVisualTransformation()
 
-    override fun filter(text: AnnotatedString): TransformedText = structured.filter(text)
+    override fun filter(text: AnnotatedString): TransformedText {
+        val transformed = structured.filter(text)
+        val styled = AnnotatedString.Builder(transformed.text)
+        MathInputIntelligence.analyze(text.text).tokens.forEach { token ->
+            val start = transformed.offsetMapping.originalToTransformed(token.start)
+                .coerceIn(0, transformed.text.length)
+            val end = transformed.offsetMapping.originalToTransformed(token.end)
+                .coerceIn(start, transformed.text.length)
+            if (start < end) styled.addStyle(
+                SpanStyle(color = IntentMathPalette.color(token.kind, token.depth)), start, end,
+            )
+        }
+        return TransformedText(styled.toAnnotatedString(), transformed.offsetMapping)
+    }
 }
 
 @Composable
@@ -525,7 +538,7 @@ private fun MathKeyboardOnlyTextField(
                             val visualStart = transformed.offsetMapping.originalToTransformed(activeSlot.contentStart)
                             val mappedEnd = transformed.offsetMapping.originalToTransformed(activeSlot.contentEnd)
                             val visualEnd = if (activeSlot.isPlaceholder) visualStart + 1 else maxOf(visualStart + 1, mappedEnd)
-                            val layout = textLayout
+                            val layout = textLayout?.takeIf { it.layoutInput.text == transformed.text }
                             if (layout != null && transformed.text.isNotEmpty()) {
                                 var bounds: Rect? = null
                                 val last = (visualEnd - 1).coerceAtMost(transformed.text.lastIndex)
@@ -568,7 +581,7 @@ private fun MathKeyboardOnlyTextField(
                             val transformedOffset = transformed.offsetMapping.originalToTransformed(
                                 value.selection.start.coerceIn(0, value.text.length),
                             )
-                            val cursor = textLayout?.getCursorRect(transformedOffset)
+                            val cursor = textLayout?.takeIf { it.layoutInput.text == transformed.text }?.getCursorRect(transformedOffset)
                             if (cursor != null) {
                                 drawLine(
                                     color = IntentMathPalette.Number.copy(alpha = .28f),
@@ -585,7 +598,9 @@ private fun MathKeyboardOnlyTextField(
                             }
                         }
                     },
-                readOnly = false,
+                // Custom keys update the value; read-only blocks Android IME sessions
+                // while retaining touch selection and cursor positioning.
+                readOnly = true,
                 singleLine = singleLine,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     color = IntentMathPalette.Ink,

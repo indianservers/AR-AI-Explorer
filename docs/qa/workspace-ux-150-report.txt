@@ -1,0 +1,60 @@
+Workspace UX regression report — 2026-10-03
+
+Outcome
+150/150 UX activities passed on Android API 35 emulator-5556.
+2D graph: 38/38. 3D graph: 38/38. 2D geometry: 37/37. 3D geometry: 37/37.
+23 relevant graph-rendering, graph-UX and geometry unit tests passed.
+Debug app and instrumentation APK builds passed. Final APK installed on emulator-5556.
+
+Fixed behavior
+The normal 2D graph canvas background handler cleared the active graph selection, collapsed the
+equation editor and dismissed workspace panels. Its editor also had a full-canvas dismissal scrim.
+Empty-space taps now retain the selected graph and its inspector; the add chooser remains dismissible.
+Graph functions were not being deleted by that handler. Selection and controls disappearance was
+the identified fault; visual smoke verification confirms the plotted graphs remain visible after a tap.
+
+The same interaction policy now applies to related workspaces:
+- 3D graph equation/properties/insights/controls panes remain open during canvas navigation.
+- 2D geometry background taps retain the selected object and its controls, closing transient context menus.
+- 3D geometry background taps keep workspace panels; formula inspectors have explicit Close/Back.
+- Explicit Collapse/Close/Back actions and intentional panel changes remain available.
+
+What was tested
+The full list is workspace-ux-150-activities.txt, with an ID and executed result for every activity.
+Coverage includes object addition, empty margin taps at multiple locations, long press, double tap,
+camera navigation, two-finger zoom, inspector close/reopen, add/cancel flows, two-object interaction,
+background/resume and graph power input from the MathKeyboard.
+The UI tests verify unchanged mathematical objects during navigation, intentional add counts,
+the active workspace, continued canvas presence and retained inspector state. 2D graph checks also
+verify that the same selected equation field remains present after background interactions.
+
+Input and execution method
+150 activities used Android UI touch instrumentation; graph source entry used visible MathKeyboard
+keys, including long-press powers. Starting fixture chooses the workspace and a baseline x^2 graph.
+Geometry objects are added using the actual shape picker; the picker search is populated through
+Compose text semantics. Back and activity lifecycle transitions are simulated directly.
+This is an automated emulator UX run, not 150 manually executed physical-phone cases.
+
+Separate manual smoke verification
+Opened 2D graph, tapped + Graph, then tapped empty canvas at screen (35,1900).
+Before/after XML retains Equations (2), g(x), Collapse and Editable g(x) equation.
+Screenshots show the curve and control pane still present. Before/after evidence is saved.
+
+Test-harness corrections
+Initial runs exposed selector/coordinate mistakes: Triangle matched the search field as well as
+the tile; a controls-header center tap hit its nested Add button; after camera fitting a drag began
+on a vertex; and MathKeyboard Finish had already submitted 3D input before the test sought Plot.
+Corrected the selectors, used the header title area and empty upper margins, and accepted Finish's
+submission behavior. Reran all 150 activities together: four test methods passed in 145.409 seconds.
+
+Evidence
+workspace-ux-150-evidence/results.json — all 150 executed results
+workspace-ux-150-evidence/final-emulator-run.log — final instrumentation run
+workspace-ux-150-evidence/app-build.log — debug app/instrumentation build
+workspace-ux-150-evidence/unit-and-build.log — 23 relevant unit tests
+workspace-ux-150-evidence/*-final.png — final screenshots for all four workspaces
+workspace-ux-150-evidence/graph2d-manual-{before,after}.{png,xml} — direct smoke check
+
+Limits
+These checks cover the listed portrait-emulator activities. They do not establish physical-device,
+landscape, screen-reader or AR camera/hand tracking behavior. No physical OnePlus phone is connected.

@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":arengine"))
     implementation(libs.google.ar.core)
     implementation(libs.sceneview.ar)
     implementation(libs.androidx.core.ktx)

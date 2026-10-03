@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:00:53.429Z" hostname="INDIANSERVERS" time="0.033">
+  <properties/>
+  <testcase name="circleRejectsCollinearPoints" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.002"/>
+  <testcase name="constructionStateRoundTripsWithoutLosing3dArParameters" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.012"/>
+  <testcase name="circleFitReturnsCircumcenterRadiusAndDiameter" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.0"/>
+  <testcase name="capabilityRegistryCoversEveryCataloguedLabWithLessonSpecificFlags" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.002"/>
+  <testcase name="polygonReportsAreaPerimeterAndPlanarity" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.002"/>
+  <testcase name="guidedFitWorkflowReportsProgressSupportsUndoAndProducesResult" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.004"/>
+  <testcase name="cylinderConeSphereAndCuboidFitsExposeCorrectFormulaValues" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.004"/>
+  <testcase name="formatterAvoidsFalsePrecision" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.002"/>
+  <testcase name="unitsConvertLengthAreaVolumeAndDescribeScale" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.002"/>
+  <testcase name="angleRejectsCoincidentPoints" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.0"/>
+  <testcase name="distanceAngleAndPolylineUseWorldSpace" classname="com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

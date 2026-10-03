@@ -1,0 +1,505 @@
+100 shared AR manual acceptance cases
+Target: OnePlus Nord CE5; 25 scenarios across four distinct 3D constructions = 100 AR 3D Graph cases.
+All physical-camera cases NOT RUN: phone not connected; emulator ARCore camera initialization failed.
+Enter math through touchscreen MathKeyboard; use real camera rather than fake runtime.
+Record Android/OxygenOS and AR service versions, observed guidance, surface, anchor result, screenshot and pass/fail.
+
+AR-M001 | AR 3D Graph | Floor
+Action: Using MathKeyboard prepare x^2+y^2. Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.
+Expected: Only a stable upward floor anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M002 | AR 3D Graph | Table
+Action: Using MathKeyboard prepare x^2+y^2. Select Floor/Table and scan a textured tabletop.
+Expected: Tracked tabletop becomes ready and supports placement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M003 | AR 3D Graph | Wall
+Action: Using MathKeyboard prepare x^2+y^2. Select Wall and scan brick or patterned wallpaper.
+Expected: Only a stable vertical wall anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M004 | AR 3D Graph | Wrong target floor
+Action: Using MathKeyboard prepare x^2+y^2. Select Wall and point only at the floor.
+Expected: No floor placement in wall mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M005 | AR 3D Graph | Wrong target wall
+Action: Using MathKeyboard prepare x^2+y^2. Select Floor/Table and point only at a wall.
+Expected: No wall placement in floor mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M006 | AR 3D Graph | Ceiling
+Action: Using MathKeyboard prepare x^2+y^2. Select Floor/Table and aim at a ceiling.
+Expected: No ceiling placement as a floor.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M007 | AR 3D Graph | Polygon edge
+Action: Using MathKeyboard prepare x^2+y^2. Tap just outside a tracked plane polygon.
+Expected: Out-of-polygon hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M008 | AR 3D Graph | Tiny plane
+Action: Using MathKeyboard prepare x^2+y^2. Tap immediately after a small plane is first detected.
+Expected: Small or unstable plane is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M009 | AR 3D Graph | Textureless wall
+Action: Using MathKeyboard prepare x^2+y^2. Scan a plain white wall with Wall selected.
+Expected: Useful scanning guidance; no estimated wall masquerades as tracked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M010 | AR 3D Graph | Mirror
+Action: Using MathKeyboard prepare x^2+y^2. Aim Wall at a mirror or transparent glass.
+Expected: No false readiness without a usable tracked plane; no crash.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M011 | AR 3D Graph | Darkness
+Action: Using MathKeyboard prepare x^2+y^2. Dim lighting while scanning; then turn a lamp on.
+Expected: More-light guidance and stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M012 | AR 3D Graph | Motion
+Action: Using MathKeyboard prepare x^2+y^2. Translate or rotate quickly while scanning; then slow down.
+Expected: Move-slowly guidance resets readiness; stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M013 | AR 3D Graph | Occlusion
+Action: Using MathKeyboard prepare x^2+y^2. Cover camera briefly, uncover and return to prior surface.
+Expected: No placement during failure; readiness requires stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M014 | AR 3D Graph | Target change
+Action: Using MathKeyboard prepare x^2+y^2. Detect floor and wall; alternate target and tap immediately.
+Expected: Fresh matching stability is required after each target change.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M015 | AR 3D Graph | Near range
+Action: Using MathKeyboard prepare x^2+y^2. Try a hit closer than 15 cm.
+Expected: Overly close hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M016 | AR 3D Graph | Far range
+Action: Using MathKeyboard prepare x^2+y^2. Try a hit farther than 8 metres.
+Expected: Overly distant hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M017 | AR 3D Graph | Math input
+Action: Using MathKeyboard prepare x^2+y^2. Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.
+Expected: Custom keyboard stays active; native IME hidden; valid construction updates.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M018 | AR 3D Graph | Invalid input
+Action: Using MathKeyboard prepare x^2+y^2. Enter an unfinished expression or invalid construction and submit.
+Expected: Actionable error; no crash; previous valid mathematical work survives.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M019 | AR 3D Graph | Singularity
+Action: Using MathKeyboard prepare x^2+y^2. For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.
+Expected: Discontinuities or intersection handling do not crash; valid content renders.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M020 | AR 3D Graph | Permission
+Action: Using MathKeyboard prepare x^2+y^2. Deny camera permission, then grant it in settings and retry Full AR.
+Expected: Visible permission state; successful retry does not erase work.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M021 | AR 3D Graph | Service
+Action: Using MathKeyboard prepare x^2+y^2. Open without AR service, install or update it, return and retry.
+Expected: Installation state is visible; camera startup can recover.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M022 | AR 3D Graph | Background
+Action: Using MathKeyboard prepare x^2+y^2. Anchor, background the app, then return.
+Expected: Anchor is preserved; placement readiness is freshly checked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M023 | AR 3D Graph | Rotation
+Action: Using MathKeyboard prepare x^2+y^2. Rotate portrait-landscape-portrait while live camera is running.
+Expected: Camera geometry, reticle and touch hit coordinates stay aligned.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M024 | AR 3D Graph | Replacement
+Action: Using MathKeyboard prepare x^2+y^2. Anchor, then cause a replacement hit to expire before placement.
+Expected: Old anchor survives unsuccessful replacement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M025 | AR 3D Graph | Shared session
+Action: Using MathKeyboard prepare x^2+y^2. Switch to another AR workspace and back while session is running.
+Expected: Shared camera session survives; launch mode and mathematical work are correct.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M026 | AR 3D Graph | Floor
+Action: Using MathKeyboard prepare x^2-y^2. Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.
+Expected: Only a stable upward floor anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M027 | AR 3D Graph | Table
+Action: Using MathKeyboard prepare x^2-y^2. Select Floor/Table and scan a textured tabletop.
+Expected: Tracked tabletop becomes ready and supports placement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M028 | AR 3D Graph | Wall
+Action: Using MathKeyboard prepare x^2-y^2. Select Wall and scan brick or patterned wallpaper.
+Expected: Only a stable vertical wall anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M029 | AR 3D Graph | Wrong target floor
+Action: Using MathKeyboard prepare x^2-y^2. Select Wall and point only at the floor.
+Expected: No floor placement in wall mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M030 | AR 3D Graph | Wrong target wall
+Action: Using MathKeyboard prepare x^2-y^2. Select Floor/Table and point only at a wall.
+Expected: No wall placement in floor mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M031 | AR 3D Graph | Ceiling
+Action: Using MathKeyboard prepare x^2-y^2. Select Floor/Table and aim at a ceiling.
+Expected: No ceiling placement as a floor.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M032 | AR 3D Graph | Polygon edge
+Action: Using MathKeyboard prepare x^2-y^2. Tap just outside a tracked plane polygon.
+Expected: Out-of-polygon hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M033 | AR 3D Graph | Tiny plane
+Action: Using MathKeyboard prepare x^2-y^2. Tap immediately after a small plane is first detected.
+Expected: Small or unstable plane is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M034 | AR 3D Graph | Textureless wall
+Action: Using MathKeyboard prepare x^2-y^2. Scan a plain white wall with Wall selected.
+Expected: Useful scanning guidance; no estimated wall masquerades as tracked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M035 | AR 3D Graph | Mirror
+Action: Using MathKeyboard prepare x^2-y^2. Aim Wall at a mirror or transparent glass.
+Expected: No false readiness without a usable tracked plane; no crash.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M036 | AR 3D Graph | Darkness
+Action: Using MathKeyboard prepare x^2-y^2. Dim lighting while scanning; then turn a lamp on.
+Expected: More-light guidance and stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M037 | AR 3D Graph | Motion
+Action: Using MathKeyboard prepare x^2-y^2. Translate or rotate quickly while scanning; then slow down.
+Expected: Move-slowly guidance resets readiness; stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M038 | AR 3D Graph | Occlusion
+Action: Using MathKeyboard prepare x^2-y^2. Cover camera briefly, uncover and return to prior surface.
+Expected: No placement during failure; readiness requires stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M039 | AR 3D Graph | Target change
+Action: Using MathKeyboard prepare x^2-y^2. Detect floor and wall; alternate target and tap immediately.
+Expected: Fresh matching stability is required after each target change.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M040 | AR 3D Graph | Near range
+Action: Using MathKeyboard prepare x^2-y^2. Try a hit closer than 15 cm.
+Expected: Overly close hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M041 | AR 3D Graph | Far range
+Action: Using MathKeyboard prepare x^2-y^2. Try a hit farther than 8 metres.
+Expected: Overly distant hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M042 | AR 3D Graph | Math input
+Action: Using MathKeyboard prepare x^2-y^2. Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.
+Expected: Custom keyboard stays active; native IME hidden; valid construction updates.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M043 | AR 3D Graph | Invalid input
+Action: Using MathKeyboard prepare x^2-y^2. Enter an unfinished expression or invalid construction and submit.
+Expected: Actionable error; no crash; previous valid mathematical work survives.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M044 | AR 3D Graph | Singularity
+Action: Using MathKeyboard prepare x^2-y^2. For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.
+Expected: Discontinuities or intersection handling do not crash; valid content renders.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M045 | AR 3D Graph | Permission
+Action: Using MathKeyboard prepare x^2-y^2. Deny camera permission, then grant it in settings and retry Full AR.
+Expected: Visible permission state; successful retry does not erase work.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M046 | AR 3D Graph | Service
+Action: Using MathKeyboard prepare x^2-y^2. Open without AR service, install or update it, return and retry.
+Expected: Installation state is visible; camera startup can recover.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M047 | AR 3D Graph | Background
+Action: Using MathKeyboard prepare x^2-y^2. Anchor, background the app, then return.
+Expected: Anchor is preserved; placement readiness is freshly checked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M048 | AR 3D Graph | Rotation
+Action: Using MathKeyboard prepare x^2-y^2. Rotate portrait-landscape-portrait while live camera is running.
+Expected: Camera geometry, reticle and touch hit coordinates stay aligned.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M049 | AR 3D Graph | Replacement
+Action: Using MathKeyboard prepare x^2-y^2. Anchor, then cause a replacement hit to expire before placement.
+Expected: Old anchor survives unsuccessful replacement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M050 | AR 3D Graph | Shared session
+Action: Using MathKeyboard prepare x^2-y^2. Switch to another AR workspace and back while session is running.
+Expected: Shared camera session survives; launch mode and mathematical work are correct.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M051 | AR 3D Graph | Floor
+Action: Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.
+Expected: Only a stable upward floor anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M052 | AR 3D Graph | Table
+Action: Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table and scan a textured tabletop.
+Expected: Tracked tabletop becomes ready and supports placement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M053 | AR 3D Graph | Wall
+Action: Using MathKeyboard prepare sin(x)+cos(y). Select Wall and scan brick or patterned wallpaper.
+Expected: Only a stable vertical wall anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M054 | AR 3D Graph | Wrong target floor
+Action: Using MathKeyboard prepare sin(x)+cos(y). Select Wall and point only at the floor.
+Expected: No floor placement in wall mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M055 | AR 3D Graph | Wrong target wall
+Action: Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table and point only at a wall.
+Expected: No wall placement in floor mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M056 | AR 3D Graph | Ceiling
+Action: Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table and aim at a ceiling.
+Expected: No ceiling placement as a floor.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M057 | AR 3D Graph | Polygon edge
+Action: Using MathKeyboard prepare sin(x)+cos(y). Tap just outside a tracked plane polygon.
+Expected: Out-of-polygon hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M058 | AR 3D Graph | Tiny plane
+Action: Using MathKeyboard prepare sin(x)+cos(y). Tap immediately after a small plane is first detected.
+Expected: Small or unstable plane is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M059 | AR 3D Graph | Textureless wall
+Action: Using MathKeyboard prepare sin(x)+cos(y). Scan a plain white wall with Wall selected.
+Expected: Useful scanning guidance; no estimated wall masquerades as tracked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M060 | AR 3D Graph | Mirror
+Action: Using MathKeyboard prepare sin(x)+cos(y). Aim Wall at a mirror or transparent glass.
+Expected: No false readiness without a usable tracked plane; no crash.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M061 | AR 3D Graph | Darkness
+Action: Using MathKeyboard prepare sin(x)+cos(y). Dim lighting while scanning; then turn a lamp on.
+Expected: More-light guidance and stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M062 | AR 3D Graph | Motion
+Action: Using MathKeyboard prepare sin(x)+cos(y). Translate or rotate quickly while scanning; then slow down.
+Expected: Move-slowly guidance resets readiness; stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M063 | AR 3D Graph | Occlusion
+Action: Using MathKeyboard prepare sin(x)+cos(y). Cover camera briefly, uncover and return to prior surface.
+Expected: No placement during failure; readiness requires stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M064 | AR 3D Graph | Target change
+Action: Using MathKeyboard prepare sin(x)+cos(y). Detect floor and wall; alternate target and tap immediately.
+Expected: Fresh matching stability is required after each target change.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M065 | AR 3D Graph | Near range
+Action: Using MathKeyboard prepare sin(x)+cos(y). Try a hit closer than 15 cm.
+Expected: Overly close hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M066 | AR 3D Graph | Far range
+Action: Using MathKeyboard prepare sin(x)+cos(y). Try a hit farther than 8 metres.
+Expected: Overly distant hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M067 | AR 3D Graph | Math input
+Action: Using MathKeyboard prepare sin(x)+cos(y). Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.
+Expected: Custom keyboard stays active; native IME hidden; valid construction updates.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M068 | AR 3D Graph | Invalid input
+Action: Using MathKeyboard prepare sin(x)+cos(y). Enter an unfinished expression or invalid construction and submit.
+Expected: Actionable error; no crash; previous valid mathematical work survives.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M069 | AR 3D Graph | Singularity
+Action: Using MathKeyboard prepare sin(x)+cos(y). For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.
+Expected: Discontinuities or intersection handling do not crash; valid content renders.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M070 | AR 3D Graph | Permission
+Action: Using MathKeyboard prepare sin(x)+cos(y). Deny camera permission, then grant it in settings and retry Full AR.
+Expected: Visible permission state; successful retry does not erase work.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M071 | AR 3D Graph | Service
+Action: Using MathKeyboard prepare sin(x)+cos(y). Open without AR service, install or update it, return and retry.
+Expected: Installation state is visible; camera startup can recover.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M072 | AR 3D Graph | Background
+Action: Using MathKeyboard prepare sin(x)+cos(y). Anchor, background the app, then return.
+Expected: Anchor is preserved; placement readiness is freshly checked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M073 | AR 3D Graph | Rotation
+Action: Using MathKeyboard prepare sin(x)+cos(y). Rotate portrait-landscape-portrait while live camera is running.
+Expected: Camera geometry, reticle and touch hit coordinates stay aligned.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M074 | AR 3D Graph | Replacement
+Action: Using MathKeyboard prepare sin(x)+cos(y). Anchor, then cause a replacement hit to expire before placement.
+Expected: Old anchor survives unsuccessful replacement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M075 | AR 3D Graph | Shared session
+Action: Using MathKeyboard prepare sin(x)+cos(y). Switch to another AR workspace and back while session is running.
+Expected: Shared camera session survives; launch mode and mathematical work are correct.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M076 | AR 3D Graph | Floor
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.
+Expected: Only a stable upward floor anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M077 | AR 3D Graph | Table
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table and scan a textured tabletop.
+Expected: Tracked tabletop becomes ready and supports placement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M078 | AR 3D Graph | Wall
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Select Wall and scan brick or patterned wallpaper.
+Expected: Only a stable vertical wall anchors.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M079 | AR 3D Graph | Wrong target floor
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Select Wall and point only at the floor.
+Expected: No floor placement in wall mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M080 | AR 3D Graph | Wrong target wall
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table and point only at a wall.
+Expected: No wall placement in floor mode.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M081 | AR 3D Graph | Ceiling
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table and aim at a ceiling.
+Expected: No ceiling placement as a floor.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M082 | AR 3D Graph | Polygon edge
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Tap just outside a tracked plane polygon.
+Expected: Out-of-polygon hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M083 | AR 3D Graph | Tiny plane
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Tap immediately after a small plane is first detected.
+Expected: Small or unstable plane is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M084 | AR 3D Graph | Textureless wall
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Scan a plain white wall with Wall selected.
+Expected: Useful scanning guidance; no estimated wall masquerades as tracked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M085 | AR 3D Graph | Mirror
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Aim Wall at a mirror or transparent glass.
+Expected: No false readiness without a usable tracked plane; no crash.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M086 | AR 3D Graph | Darkness
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Dim lighting while scanning; then turn a lamp on.
+Expected: More-light guidance and stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M087 | AR 3D Graph | Motion
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Translate or rotate quickly while scanning; then slow down.
+Expected: Move-slowly guidance resets readiness; stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M088 | AR 3D Graph | Occlusion
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Cover camera briefly, uncover and return to prior surface.
+Expected: No placement during failure; readiness requires stable recovery.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M089 | AR 3D Graph | Target change
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Detect floor and wall; alternate target and tap immediately.
+Expected: Fresh matching stability is required after each target change.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M090 | AR 3D Graph | Near range
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Try a hit closer than 15 cm.
+Expected: Overly close hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M091 | AR 3D Graph | Far range
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Try a hit farther than 8 metres.
+Expected: Overly distant hit is rejected.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M092 | AR 3D Graph | Math input
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.
+Expected: Custom keyboard stays active; native IME hidden; valid construction updates.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M093 | AR 3D Graph | Invalid input
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Enter an unfinished expression or invalid construction and submit.
+Expected: Actionable error; no crash; previous valid mathematical work survives.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M094 | AR 3D Graph | Singularity
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.
+Expected: Discontinuities or intersection handling do not crash; valid content renders.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M095 | AR 3D Graph | Permission
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Deny camera permission, then grant it in settings and retry Full AR.
+Expected: Visible permission state; successful retry does not erase work.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M096 | AR 3D Graph | Service
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Open without AR service, install or update it, return and retry.
+Expected: Installation state is visible; camera startup can recover.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M097 | AR 3D Graph | Background
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Anchor, background the app, then return.
+Expected: Anchor is preserved; placement readiness is freshly checked.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M098 | AR 3D Graph | Rotation
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Rotate portrait-landscape-portrait while live camera is running.
+Expected: Camera geometry, reticle and touch hit coordinates stay aligned.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M099 | AR 3D Graph | Replacement
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Anchor, then cause a replacement hit to expire before placement.
+Expected: Old anchor survives unsuccessful replacement.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA
+
+AR-M100 | AR 3D Graph | Shared session
+Action: Using MathKeyboard prepare x^2+y^2+z^2=4. Switch to another AR workspace and back while session is running.
+Expected: Shared camera session survives; launch mode and mathematical work are correct.
+Status: NOT_RUN_REQUIRES_PHYSICAL_CAMERA

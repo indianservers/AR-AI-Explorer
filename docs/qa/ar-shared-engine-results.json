@@ -1,0 +1,77 @@
+{
+  "automatedSuites": {
+    "arengine": [
+      {
+        "name": "com.indianservers.aiexplorer.arengine.analysis.ArSpatialAnalysisTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.arcore.ArCoreStateMapperTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.ArEngineContractsTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.interaction.ArInteractionEngineTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.measurement.ArMeasurementToolkitTest",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.rendering.ArRenderPoliciesTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.session.ArLabSessionControllerTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence100Test",
+        "tests": 100,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.arengine.session.ArSurfaceTrackingTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0
+      }
+    ],
+    "app": [
+      {
+        "name": "com.indianservers.aiexplorer.AR3DGraphNavigationTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "com.indianservers.aiexplorer.ArEngineSpatialAdaptersTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0
+      }
+    ]
+  },
+  "physicalManualCasesRun": 0,
+  "emulatorUiChecks": "Workspace and floor/wall selection in all four modes; camera failure reporting; Add panel; MathKeyboard focus; touchscreen x^(2)+y^(2) entry with long-press 2; Update surface; native IME hidden.",
+  "cameraLimitation": "ARCore expected camera 0; emulator exposed cameras 1 and 10. Initialization failed on API 35 and API 37."
+}

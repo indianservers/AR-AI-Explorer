@@ -125,6 +125,9 @@ data class ArHitCandidate(
     val confidence: Double,
     val uncertaintyMeters: Double,
     val trackableId: String? = null,
+    val planeOrientation: ArPlaneOrientation? = null,
+    val trackingState: ArTrackingState = ArTrackingState.Tracking,
+    val insideSurface: Boolean = true,
 ) {
     init {
         require(id.isNotBlank())
@@ -240,6 +243,8 @@ interface ArRuntime : AutoCloseable {
     /** Enables CPU depth acquisition only while an interaction or renderer needs it. */
     fun setDepthEnabled(enabled: Boolean) = Unit
     fun updateFrame(): Result<ArFrameSnapshot>
+    /** Optional camera feed for on-device vision; uses the existing ARCore camera, never another camera session. */
+    fun acquireCameraImage(): ArCameraImage? = null
     fun hitTest(screenPoint: ArVector2): List<ArHitCandidate>
     fun createAnchor(hitId: String, nowMillis: Long): Result<ArAnchorHandle>
     fun anchors(): List<ArAnchorHandle>

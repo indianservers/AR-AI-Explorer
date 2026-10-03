@@ -1,0 +1,906 @@
+{
+  "targetDevice": "OnePlus Nord CE5",
+  "physicalCameraCasesRun": 0,
+  "cases": [
+    {
+      "id": "AR-M001",
+      "workspace": "AR 3D Graph",
+      "scenario": "Floor",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.",
+      "expected": "Only a stable upward floor anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M002",
+      "workspace": "AR 3D Graph",
+      "scenario": "Table",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Select Floor/Table and scan a textured tabletop.",
+      "expected": "Tracked tabletop becomes ready and supports placement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M003",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wall",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Select Wall and scan brick or patterned wallpaper.",
+      "expected": "Only a stable vertical wall anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M004",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target floor",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Select Wall and point only at the floor.",
+      "expected": "No floor placement in wall mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M005",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target wall",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Select Floor/Table and point only at a wall.",
+      "expected": "No wall placement in floor mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M006",
+      "workspace": "AR 3D Graph",
+      "scenario": "Ceiling",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Select Floor/Table and aim at a ceiling.",
+      "expected": "No ceiling placement as a floor.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M007",
+      "workspace": "AR 3D Graph",
+      "scenario": "Polygon edge",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Tap just outside a tracked plane polygon.",
+      "expected": "Out-of-polygon hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M008",
+      "workspace": "AR 3D Graph",
+      "scenario": "Tiny plane",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Tap immediately after a small plane is first detected.",
+      "expected": "Small or unstable plane is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M009",
+      "workspace": "AR 3D Graph",
+      "scenario": "Textureless wall",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Scan a plain white wall with Wall selected.",
+      "expected": "Useful scanning guidance; no estimated wall masquerades as tracked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M010",
+      "workspace": "AR 3D Graph",
+      "scenario": "Mirror",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Aim Wall at a mirror or transparent glass.",
+      "expected": "No false readiness without a usable tracked plane; no crash.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M011",
+      "workspace": "AR 3D Graph",
+      "scenario": "Darkness",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Dim lighting while scanning; then turn a lamp on.",
+      "expected": "More-light guidance and stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M012",
+      "workspace": "AR 3D Graph",
+      "scenario": "Motion",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Translate or rotate quickly while scanning; then slow down.",
+      "expected": "Move-slowly guidance resets readiness; stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M013",
+      "workspace": "AR 3D Graph",
+      "scenario": "Occlusion",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Cover camera briefly, uncover and return to prior surface.",
+      "expected": "No placement during failure; readiness requires stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M014",
+      "workspace": "AR 3D Graph",
+      "scenario": "Target change",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Detect floor and wall; alternate target and tap immediately.",
+      "expected": "Fresh matching stability is required after each target change.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M015",
+      "workspace": "AR 3D Graph",
+      "scenario": "Near range",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Try a hit closer than 15 cm.",
+      "expected": "Overly close hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M016",
+      "workspace": "AR 3D Graph",
+      "scenario": "Far range",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Try a hit farther than 8 metres.",
+      "expected": "Overly distant hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M017",
+      "workspace": "AR 3D Graph",
+      "scenario": "Math input",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.",
+      "expected": "Custom keyboard stays active; native IME hidden; valid construction updates.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M018",
+      "workspace": "AR 3D Graph",
+      "scenario": "Invalid input",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Enter an unfinished expression or invalid construction and submit.",
+      "expected": "Actionable error; no crash; previous valid mathematical work survives.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M019",
+      "workspace": "AR 3D Graph",
+      "scenario": "Singularity",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.",
+      "expected": "Discontinuities or intersection handling do not crash; valid content renders.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M020",
+      "workspace": "AR 3D Graph",
+      "scenario": "Permission",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Deny camera permission, then grant it in settings and retry Full AR.",
+      "expected": "Visible permission state; successful retry does not erase work.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M021",
+      "workspace": "AR 3D Graph",
+      "scenario": "Service",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Open without AR service, install or update it, return and retry.",
+      "expected": "Installation state is visible; camera startup can recover.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M022",
+      "workspace": "AR 3D Graph",
+      "scenario": "Background",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Anchor, background the app, then return.",
+      "expected": "Anchor is preserved; placement readiness is freshly checked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M023",
+      "workspace": "AR 3D Graph",
+      "scenario": "Rotation",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Rotate portrait-landscape-portrait while live camera is running.",
+      "expected": "Camera geometry, reticle and touch hit coordinates stay aligned.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M024",
+      "workspace": "AR 3D Graph",
+      "scenario": "Replacement",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Anchor, then cause a replacement hit to expire before placement.",
+      "expected": "Old anchor survives unsuccessful replacement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M025",
+      "workspace": "AR 3D Graph",
+      "scenario": "Shared session",
+      "construction": "x^2+y^2",
+      "action": "Using MathKeyboard prepare x^2+y^2. Switch to another AR workspace and back while session is running.",
+      "expected": "Shared camera session survives; launch mode and mathematical work are correct.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M026",
+      "workspace": "AR 3D Graph",
+      "scenario": "Floor",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.",
+      "expected": "Only a stable upward floor anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M027",
+      "workspace": "AR 3D Graph",
+      "scenario": "Table",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Select Floor/Table and scan a textured tabletop.",
+      "expected": "Tracked tabletop becomes ready and supports placement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M028",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wall",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Select Wall and scan brick or patterned wallpaper.",
+      "expected": "Only a stable vertical wall anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M029",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target floor",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Select Wall and point only at the floor.",
+      "expected": "No floor placement in wall mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M030",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target wall",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Select Floor/Table and point only at a wall.",
+      "expected": "No wall placement in floor mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M031",
+      "workspace": "AR 3D Graph",
+      "scenario": "Ceiling",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Select Floor/Table and aim at a ceiling.",
+      "expected": "No ceiling placement as a floor.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M032",
+      "workspace": "AR 3D Graph",
+      "scenario": "Polygon edge",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Tap just outside a tracked plane polygon.",
+      "expected": "Out-of-polygon hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M033",
+      "workspace": "AR 3D Graph",
+      "scenario": "Tiny plane",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Tap immediately after a small plane is first detected.",
+      "expected": "Small or unstable plane is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M034",
+      "workspace": "AR 3D Graph",
+      "scenario": "Textureless wall",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Scan a plain white wall with Wall selected.",
+      "expected": "Useful scanning guidance; no estimated wall masquerades as tracked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M035",
+      "workspace": "AR 3D Graph",
+      "scenario": "Mirror",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Aim Wall at a mirror or transparent glass.",
+      "expected": "No false readiness without a usable tracked plane; no crash.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M036",
+      "workspace": "AR 3D Graph",
+      "scenario": "Darkness",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Dim lighting while scanning; then turn a lamp on.",
+      "expected": "More-light guidance and stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M037",
+      "workspace": "AR 3D Graph",
+      "scenario": "Motion",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Translate or rotate quickly while scanning; then slow down.",
+      "expected": "Move-slowly guidance resets readiness; stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M038",
+      "workspace": "AR 3D Graph",
+      "scenario": "Occlusion",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Cover camera briefly, uncover and return to prior surface.",
+      "expected": "No placement during failure; readiness requires stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M039",
+      "workspace": "AR 3D Graph",
+      "scenario": "Target change",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Detect floor and wall; alternate target and tap immediately.",
+      "expected": "Fresh matching stability is required after each target change.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M040",
+      "workspace": "AR 3D Graph",
+      "scenario": "Near range",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Try a hit closer than 15 cm.",
+      "expected": "Overly close hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M041",
+      "workspace": "AR 3D Graph",
+      "scenario": "Far range",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Try a hit farther than 8 metres.",
+      "expected": "Overly distant hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M042",
+      "workspace": "AR 3D Graph",
+      "scenario": "Math input",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.",
+      "expected": "Custom keyboard stays active; native IME hidden; valid construction updates.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M043",
+      "workspace": "AR 3D Graph",
+      "scenario": "Invalid input",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Enter an unfinished expression or invalid construction and submit.",
+      "expected": "Actionable error; no crash; previous valid mathematical work survives.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M044",
+      "workspace": "AR 3D Graph",
+      "scenario": "Singularity",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.",
+      "expected": "Discontinuities or intersection handling do not crash; valid content renders.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M045",
+      "workspace": "AR 3D Graph",
+      "scenario": "Permission",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Deny camera permission, then grant it in settings and retry Full AR.",
+      "expected": "Visible permission state; successful retry does not erase work.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M046",
+      "workspace": "AR 3D Graph",
+      "scenario": "Service",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Open without AR service, install or update it, return and retry.",
+      "expected": "Installation state is visible; camera startup can recover.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M047",
+      "workspace": "AR 3D Graph",
+      "scenario": "Background",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Anchor, background the app, then return.",
+      "expected": "Anchor is preserved; placement readiness is freshly checked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M048",
+      "workspace": "AR 3D Graph",
+      "scenario": "Rotation",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Rotate portrait-landscape-portrait while live camera is running.",
+      "expected": "Camera geometry, reticle and touch hit coordinates stay aligned.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M049",
+      "workspace": "AR 3D Graph",
+      "scenario": "Replacement",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Anchor, then cause a replacement hit to expire before placement.",
+      "expected": "Old anchor survives unsuccessful replacement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M050",
+      "workspace": "AR 3D Graph",
+      "scenario": "Shared session",
+      "construction": "x^2-y^2",
+      "action": "Using MathKeyboard prepare x^2-y^2. Switch to another AR workspace and back while session is running.",
+      "expected": "Shared camera session survives; launch mode and mathematical work are correct.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M051",
+      "workspace": "AR 3D Graph",
+      "scenario": "Floor",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.",
+      "expected": "Only a stable upward floor anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M052",
+      "workspace": "AR 3D Graph",
+      "scenario": "Table",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table and scan a textured tabletop.",
+      "expected": "Tracked tabletop becomes ready and supports placement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M053",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wall",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Select Wall and scan brick or patterned wallpaper.",
+      "expected": "Only a stable vertical wall anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M054",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target floor",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Select Wall and point only at the floor.",
+      "expected": "No floor placement in wall mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M055",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target wall",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table and point only at a wall.",
+      "expected": "No wall placement in floor mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M056",
+      "workspace": "AR 3D Graph",
+      "scenario": "Ceiling",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Select Floor/Table and aim at a ceiling.",
+      "expected": "No ceiling placement as a floor.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M057",
+      "workspace": "AR 3D Graph",
+      "scenario": "Polygon edge",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Tap just outside a tracked plane polygon.",
+      "expected": "Out-of-polygon hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M058",
+      "workspace": "AR 3D Graph",
+      "scenario": "Tiny plane",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Tap immediately after a small plane is first detected.",
+      "expected": "Small or unstable plane is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M059",
+      "workspace": "AR 3D Graph",
+      "scenario": "Textureless wall",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Scan a plain white wall with Wall selected.",
+      "expected": "Useful scanning guidance; no estimated wall masquerades as tracked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M060",
+      "workspace": "AR 3D Graph",
+      "scenario": "Mirror",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Aim Wall at a mirror or transparent glass.",
+      "expected": "No false readiness without a usable tracked plane; no crash.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M061",
+      "workspace": "AR 3D Graph",
+      "scenario": "Darkness",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Dim lighting while scanning; then turn a lamp on.",
+      "expected": "More-light guidance and stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M062",
+      "workspace": "AR 3D Graph",
+      "scenario": "Motion",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Translate or rotate quickly while scanning; then slow down.",
+      "expected": "Move-slowly guidance resets readiness; stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M063",
+      "workspace": "AR 3D Graph",
+      "scenario": "Occlusion",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Cover camera briefly, uncover and return to prior surface.",
+      "expected": "No placement during failure; readiness requires stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M064",
+      "workspace": "AR 3D Graph",
+      "scenario": "Target change",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Detect floor and wall; alternate target and tap immediately.",
+      "expected": "Fresh matching stability is required after each target change.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M065",
+      "workspace": "AR 3D Graph",
+      "scenario": "Near range",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Try a hit closer than 15 cm.",
+      "expected": "Overly close hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M066",
+      "workspace": "AR 3D Graph",
+      "scenario": "Far range",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Try a hit farther than 8 metres.",
+      "expected": "Overly distant hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M067",
+      "workspace": "AR 3D Graph",
+      "scenario": "Math input",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.",
+      "expected": "Custom keyboard stays active; native IME hidden; valid construction updates.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M068",
+      "workspace": "AR 3D Graph",
+      "scenario": "Invalid input",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Enter an unfinished expression or invalid construction and submit.",
+      "expected": "Actionable error; no crash; previous valid mathematical work survives.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M069",
+      "workspace": "AR 3D Graph",
+      "scenario": "Singularity",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.",
+      "expected": "Discontinuities or intersection handling do not crash; valid content renders.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M070",
+      "workspace": "AR 3D Graph",
+      "scenario": "Permission",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Deny camera permission, then grant it in settings and retry Full AR.",
+      "expected": "Visible permission state; successful retry does not erase work.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M071",
+      "workspace": "AR 3D Graph",
+      "scenario": "Service",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Open without AR service, install or update it, return and retry.",
+      "expected": "Installation state is visible; camera startup can recover.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M072",
+      "workspace": "AR 3D Graph",
+      "scenario": "Background",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Anchor, background the app, then return.",
+      "expected": "Anchor is preserved; placement readiness is freshly checked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M073",
+      "workspace": "AR 3D Graph",
+      "scenario": "Rotation",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Rotate portrait-landscape-portrait while live camera is running.",
+      "expected": "Camera geometry, reticle and touch hit coordinates stay aligned.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M074",
+      "workspace": "AR 3D Graph",
+      "scenario": "Replacement",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Anchor, then cause a replacement hit to expire before placement.",
+      "expected": "Old anchor survives unsuccessful replacement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M075",
+      "workspace": "AR 3D Graph",
+      "scenario": "Shared session",
+      "construction": "sin(x)+cos(y)",
+      "action": "Using MathKeyboard prepare sin(x)+cos(y). Switch to another AR workspace and back while session is running.",
+      "expected": "Shared camera session survives; launch mode and mathematical work are correct.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M076",
+      "workspace": "AR 3D Graph",
+      "scenario": "Floor",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table, scan textured tiles slowly sideways, hold steady and tap the interior.",
+      "expected": "Only a stable upward floor anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M077",
+      "workspace": "AR 3D Graph",
+      "scenario": "Table",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table and scan a textured tabletop.",
+      "expected": "Tracked tabletop becomes ready and supports placement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M078",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wall",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Select Wall and scan brick or patterned wallpaper.",
+      "expected": "Only a stable vertical wall anchors.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M079",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target floor",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Select Wall and point only at the floor.",
+      "expected": "No floor placement in wall mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M080",
+      "workspace": "AR 3D Graph",
+      "scenario": "Wrong target wall",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table and point only at a wall.",
+      "expected": "No wall placement in floor mode.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M081",
+      "workspace": "AR 3D Graph",
+      "scenario": "Ceiling",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Select Floor/Table and aim at a ceiling.",
+      "expected": "No ceiling placement as a floor.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M082",
+      "workspace": "AR 3D Graph",
+      "scenario": "Polygon edge",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Tap just outside a tracked plane polygon.",
+      "expected": "Out-of-polygon hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M083",
+      "workspace": "AR 3D Graph",
+      "scenario": "Tiny plane",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Tap immediately after a small plane is first detected.",
+      "expected": "Small or unstable plane is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M084",
+      "workspace": "AR 3D Graph",
+      "scenario": "Textureless wall",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Scan a plain white wall with Wall selected.",
+      "expected": "Useful scanning guidance; no estimated wall masquerades as tracked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M085",
+      "workspace": "AR 3D Graph",
+      "scenario": "Mirror",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Aim Wall at a mirror or transparent glass.",
+      "expected": "No false readiness without a usable tracked plane; no crash.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M086",
+      "workspace": "AR 3D Graph",
+      "scenario": "Darkness",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Dim lighting while scanning; then turn a lamp on.",
+      "expected": "More-light guidance and stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M087",
+      "workspace": "AR 3D Graph",
+      "scenario": "Motion",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Translate or rotate quickly while scanning; then slow down.",
+      "expected": "Move-slowly guidance resets readiness; stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M088",
+      "workspace": "AR 3D Graph",
+      "scenario": "Occlusion",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Cover camera briefly, uncover and return to prior surface.",
+      "expected": "No placement during failure; readiness requires stable recovery.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M089",
+      "workspace": "AR 3D Graph",
+      "scenario": "Target change",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Detect floor and wall; alternate target and tap immediately.",
+      "expected": "Fresh matching stability is required after each target change.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M090",
+      "workspace": "AR 3D Graph",
+      "scenario": "Near range",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Try a hit closer than 15 cm.",
+      "expected": "Overly close hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M091",
+      "workspace": "AR 3D Graph",
+      "scenario": "Far range",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Try a hit farther than 8 metres.",
+      "expected": "Overly distant hit is rejected.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M092",
+      "workspace": "AR 3D Graph",
+      "scenario": "Math input",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Open Add/editor; clear input; use MathKeyboard to enter a new construction. For graph3D use x^2+y^2 with long-press 2; graph2D use y^2=x; geometry use point or solid controls.",
+      "expected": "Custom keyboard stays active; native IME hidden; valid construction updates.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M093",
+      "workspace": "AR 3D Graph",
+      "scenario": "Invalid input",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Enter an unfinished expression or invalid construction and submit.",
+      "expected": "Actionable error; no crash; previous valid mathematical work survives.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M094",
+      "workspace": "AR 3D Graph",
+      "scenario": "Singularity",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. For graph3D enter 1/(x-y), graph2D enter 1/x; for geometry create intersecting constructions, then anchor.",
+      "expected": "Discontinuities or intersection handling do not crash; valid content renders.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M095",
+      "workspace": "AR 3D Graph",
+      "scenario": "Permission",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Deny camera permission, then grant it in settings and retry Full AR.",
+      "expected": "Visible permission state; successful retry does not erase work.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M096",
+      "workspace": "AR 3D Graph",
+      "scenario": "Service",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Open without AR service, install or update it, return and retry.",
+      "expected": "Installation state is visible; camera startup can recover.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M097",
+      "workspace": "AR 3D Graph",
+      "scenario": "Background",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Anchor, background the app, then return.",
+      "expected": "Anchor is preserved; placement readiness is freshly checked.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M098",
+      "workspace": "AR 3D Graph",
+      "scenario": "Rotation",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Rotate portrait-landscape-portrait while live camera is running.",
+      "expected": "Camera geometry, reticle and touch hit coordinates stay aligned.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M099",
+      "workspace": "AR 3D Graph",
+      "scenario": "Replacement",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Anchor, then cause a replacement hit to expire before placement.",
+      "expected": "Old anchor survives unsuccessful replacement.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    },
+    {
+      "id": "AR-M100",
+      "workspace": "AR 3D Graph",
+      "scenario": "Shared session",
+      "construction": "x^2+y^2+z^2=4",
+      "action": "Using MathKeyboard prepare x^2+y^2+z^2=4. Switch to another AR workspace and back while session is running.",
+      "expected": "Shared camera session survives; launch mode and mathematical work are correct.",
+      "status": "NOT_RUN_REQUIRES_PHYSICAL_CAMERA"
+    }
+  ]
+}

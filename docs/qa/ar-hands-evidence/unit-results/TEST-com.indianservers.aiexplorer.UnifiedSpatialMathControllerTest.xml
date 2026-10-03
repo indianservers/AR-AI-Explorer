@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:01:38.573Z" hostname="INDIANSERVERS" time="0.12">
+  <properties/>
+  <testcase name="implicitAndParametricSurfacesValidatePersistAndRemainCanonical" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.036"/>
+  <testcase name="graph3dViewRoundTripsWithTheWorkspaceSnapshot" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.001"/>
+  <testcase name="solverHandoffPreservesIdsDefinitionsAndProvenance" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.006"/>
+  <testcase name="graph2dViewportAxesAndUnitsRoundTrip" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.001"/>
+  <testcase name="invalidSpatialMutationsFailClosed" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.006"/>
+  <testcase name="surfaceEditRoundTripsThroughAuthoritativeDocument" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.005"/>
+  <testcase name="deletingEverySurfaceRemovesCanonicalLayersAndSceneDependencies" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.002"/>
+  <testcase name="aStaleInvalidLayerDoesNotBlockAddingAnotherGraph" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.003"/>
+  <testcase name="multipleSurfaceLayersAreCanonicalAndLosslesslyPersisted" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.037"/>
+  <testcase name="solidAndVectorEditsProjectBackToWorkspace" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.008"/>
+  <testcase name="schemaSixSingleSurfaceMigratesIntoPrimaryLayer" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.002"/>
+  <testcase name="surfaceSlidersAndTableUseOneResolvedExpression" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.003"/>
+  <testcase name="graph3dAcceptsManyIndependentlyControlledSurfaceLayersWithoutDroppingEarlierGraphs" classname="com.indianservers.aiexplorer.UnifiedSpatialMathControllerTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

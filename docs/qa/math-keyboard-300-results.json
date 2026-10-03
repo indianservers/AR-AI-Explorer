@@ -1,0 +1,27 @@
+{
+  "tests": 420,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "keyboard_suites": [
+    {
+      "name": "com.indianservers.aiexplorer.MathKeyboardGraph2D150Test",
+      "tests": "150",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.indianservers.aiexplorer.MathKeyboardGraph3D150Test",
+      "tests": "150",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "physical_device_testing": "Not run: no Android device connected",
+  "fixes": [
+    "Added semicolon keyboard key for parametric coordinates",
+    "Preserved parenthesized powers and functions while extracting inequality boundaries",
+    "Removed mathematical z-height clipping at -8/8 from 3D meshes",
+    "Rejected function calls with no arguments during expression compilation"
+  ]
+}

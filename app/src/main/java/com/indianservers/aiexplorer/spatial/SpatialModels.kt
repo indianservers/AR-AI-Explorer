@@ -27,6 +27,8 @@ data class SpatialScenePlacement(
     val environmentIntensity: Float = 1f,
     val relocalizationMessage: String = "",
     val placedAt: Long? = null,
+    /** Session-local anchor origin; preserves user offsets while ARCore refines the anchor pose. */
+    val anchorReferencePositionMeters: Vec3? = null,
 ) {
     val isPlaced: Boolean get() = anchorId.isNotBlank()
     val visibleScale: String get() {
@@ -63,6 +65,7 @@ object SpatialPlacementEngine {
         trackingQuality = TrackingQuality.Tracking,
         estimated = true,
         placedAt = now,
+        anchorReferencePositionMeters = hitPositionMeters,
     )
 
     fun place(current: SpatialScenePlacement, hit: SpatialHit, now: Long, bounds: SafePlacementBounds = SafePlacementBounds()): Pair<SpatialScenePlacement, PlacementValidation> {
@@ -76,6 +79,7 @@ object SpatialPlacementEngine {
             anchorTrackingState = if (validation.accepted) AnchorTrackingState.Tracking else AnchorTrackingState.Relocalizing,
             relocalizationMessage = validation.messages.joinToString(" "),
             placedAt = if (validation.accepted) now else current.placedAt,
+            anchorReferencePositionMeters = if (validation.accepted) hit.positionMeters else current.anchorReferencePositionMeters,
         )
         return placement to validation
     }

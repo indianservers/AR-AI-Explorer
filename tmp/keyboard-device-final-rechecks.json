@@ -1,0 +1,83 @@
+[
+  {
+    "id": "NEW-2D-005",
+    "source": "y=log(x^2+1)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+1)",
+    "rendered": "log(x^(2)+1)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-102",
+    "source": "x^2\/1+y^2=1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "x^(2)\/1+y^(2)=1",
+    "rendered": "x^(2)\/1+y^(2)=1",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-103",
+    "source": "r=1*sin(theta)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "r=1*sin(theta)",
+    "rendered": "r=1*sin(theta)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-104",
+    "source": "x(t)=1*t;y(t)=t^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "x(t)=1*t;y(t)=t^(2)",
+    "rendered": "x(t)=1*t;y(t)=t^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-125",
+    "source": "y>sqrt(x^2+5)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y>sqrt(x^(2)+5)",
+    "rendered": "y>sqrt(x^(2)+5)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-3D-025",
+    "source": "z=tan(x-y)\/3",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "tan(x-y)\/3",
+    "rendered": "",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-3D-122",
+    "source": "x^2+y^2=1.1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "x^(2)+y^(2)=1.1",
+    "rendered": "",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-3D-123",
+    "source": "x=u;y=v;z=u^2+v^2+1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "x=u;y=v;z=u^(2)+v^(2)+1",
+    "rendered": "",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-3D-150",
+    "source": "x=u;y=v;z=u^2+v^2+10",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "x=u;y=v;z=u^(2)+v^(2)+10",
+    "rendered": "",
+    "nativeKeyboardVisible": false
+  }
+]

@@ -33,10 +33,11 @@ object ArPhase4SpatialBridge {
         val anchorPose = anchor?.pose ?: ArPose(
             ArVector3(placement.pose.positionMeters.x, placement.pose.positionMeters.y, placement.pose.positionMeters.z),
         )
+        val positioned = placement.anchoredPosition(anchor)
         val worldOffset = ArVector3(
-            placement.pose.positionMeters.x - anchorPose.positionMeters.x,
-            placement.pose.positionMeters.y - anchorPose.positionMeters.y,
-            placement.pose.positionMeters.z - anchorPose.positionMeters.z,
+            positioned.x - anchorPose.positionMeters.x,
+            positioned.y - anchorPose.positionMeters.y,
+            positioned.z - anchorPose.positionMeters.z,
         )
         val anchorLocalOffset = anchorPose.orientation.normalized().conjugate().rotate(worldOffset)
         return ArScene(

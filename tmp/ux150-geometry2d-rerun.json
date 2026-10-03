@@ -1,0 +1,502 @@
+[
+  {
+    "id": "GEOMETRY2D-UX-001",
+    "workspace": "geometry2d",
+    "operation": "add",
+    "activity": "Add an object using the workspace add control",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-002",
+    "workspace": "geometry2d",
+    "operation": "open",
+    "activity": "Open the equation\/object controls",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "FAIL",
+    "error": "Inspector must be open"
+  },
+  {
+    "id": "GEOMETRY2D-UX-003",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty left margin at 48% height with controls open",
+    "parameters": {
+      "x": 0.005,
+      "y": 0.48
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-004",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty left margin at 56% height with controls open",
+    "parameters": {
+      "x": 0.005,
+      "y": 0.56
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-005",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty left margin at 64% height with controls open",
+    "parameters": {
+      "x": 0.005,
+      "y": 0.64
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-006",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty left margin at 72% height with controls open",
+    "parameters": {
+      "x": 0.005,
+      "y": 0.72
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-007",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty right margin at 48% height with controls open",
+    "parameters": {
+      "x": 0.995,
+      "y": 0.48
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-008",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty right margin at 56% height with controls open",
+    "parameters": {
+      "x": 0.995,
+      "y": 0.56
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-009",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty right margin at 64% height with controls open",
+    "parameters": {
+      "x": 0.995,
+      "y": 0.64
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-010",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty right margin at 72% height with controls open",
+    "parameters": {
+      "x": 0.995,
+      "y": 0.72
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-011",
+    "workspace": "geometry2d",
+    "operation": "double",
+    "activity": "Double-tap an empty margin with controls open",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-012",
+    "workspace": "geometry2d",
+    "operation": "hold",
+    "activity": "Long-press empty space with controls open",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-013",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space left by 35 pixels without changing objects",
+    "parameters": {
+      "direction": "left",
+      "pixels": 35
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-014",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space left by 70 pixels without changing objects",
+    "parameters": {
+      "direction": "left",
+      "pixels": 70
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-015",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space right by 35 pixels without changing objects",
+    "parameters": {
+      "direction": "right",
+      "pixels": 35
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "FAIL",
+    "error": "Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.6), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>"
+  },
+  {
+    "id": "GEOMETRY2D-UX-016",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space right by 70 pixels without changing objects",
+    "parameters": {
+      "direction": "right",
+      "pixels": 70
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "FAIL",
+    "error": "Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.0, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>"
+  },
+  {
+    "id": "GEOMETRY2D-UX-017",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space up by 35 pixels without changing objects",
+    "parameters": {
+      "direction": "up",
+      "pixels": 35
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-018",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space up by 70 pixels without changing objects",
+    "parameters": {
+      "direction": "up",
+      "pixels": 70
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-019",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space down by 35 pixels without changing objects",
+    "parameters": {
+      "direction": "down",
+      "pixels": 35
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-020",
+    "workspace": "geometry2d",
+    "operation": "pan",
+    "activity": "Navigate empty space down by 70 pixels without changing objects",
+    "parameters": {
+      "direction": "down",
+      "pixels": 70
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-021",
+    "workspace": "geometry2d",
+    "operation": "pinch",
+    "activity": "Two-finger zoom with spread factor 0.8; preserve objects and controls",
+    "parameters": {
+      "factor": 0.8
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-022",
+    "workspace": "geometry2d",
+    "operation": "pinch",
+    "activity": "Two-finger zoom with spread factor 1.2; preserve objects and controls",
+    "parameters": {
+      "factor": 1.2
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-023",
+    "workspace": "geometry2d",
+    "operation": "pinch",
+    "activity": "Two-finger zoom with spread factor 0.6; preserve objects and controls",
+    "parameters": {
+      "factor": 0.6
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-024",
+    "workspace": "geometry2d",
+    "operation": "pinch",
+    "activity": "Two-finger zoom with spread factor 1.5; preserve objects and controls",
+    "parameters": {
+      "factor": 1.5
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-025",
+    "workspace": "geometry2d",
+    "operation": "double",
+    "activity": "Reset\/fit the camera with an empty-space double tap",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-026",
+    "workspace": "geometry2d",
+    "operation": "hold",
+    "activity": "Long-press empty space after camera navigation",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-027",
+    "workspace": "geometry2d",
+    "operation": "close",
+    "activity": "Close the inspector explicitly",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-028",
+    "workspace": "geometry2d",
+    "operation": "open",
+    "activity": "Reopen the inspector for the same object",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "FAIL",
+    "error": "Inspector must be open"
+  },
+  {
+    "id": "GEOMETRY2D-UX-029",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty space after reopening the inspector",
+    "parameters": {
+      "x": 0.995,
+      "y": 0.68
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-030",
+    "workspace": "geometry2d",
+    "operation": "toggle",
+    "activity": "Close and reopen controls without losing the active object",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "FAIL",
+    "error": "Inspector must be open"
+  },
+  {
+    "id": "GEOMETRY2D-UX-031",
+    "workspace": "geometry2d",
+    "operation": "cancel_back",
+    "activity": "Open Add and cancel using Back\/Close without adding an object",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-032",
+    "workspace": "geometry2d",
+    "operation": "cancel_outside",
+    "activity": "Open Add and cancel outside the chooser without removing existing objects",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 1,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-033",
+    "workspace": "geometry2d",
+    "operation": "add",
+    "activity": "Add a second independent object through the add UI",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 2,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-034",
+    "workspace": "geometry2d",
+    "operation": "tap",
+    "activity": "Tap empty space with two objects present",
+    "parameters": {
+      "x": 0.005,
+      "y": 0.76
+    },
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 2,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-035",
+    "workspace": "geometry2d",
+    "operation": "resume",
+    "activity": "Background and resume; retain the object list",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 2,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-036",
+    "workspace": "geometry2d",
+    "operation": "closed_pan",
+    "activity": "Navigate the camera with the inspector explicitly closed",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "PASS",
+    "objectCount": 2,
+    "inspectorOpen": false
+  },
+  {
+    "id": "GEOMETRY2D-UX-037",
+    "workspace": "geometry2d",
+    "operation": "open",
+    "activity": "Reopen controls after background\/resume and camera navigation",
+    "parameters": {},
+    "expected": "Intentional add changes only the object count; all other actions preserve mathematical objects. Controls stay open until explicitly closed.",
+    "inputMethod": "Android emulator UI touch instrumentation",
+    "status": "FAIL",
+    "error": "Inspector must be open"
+  }
+]

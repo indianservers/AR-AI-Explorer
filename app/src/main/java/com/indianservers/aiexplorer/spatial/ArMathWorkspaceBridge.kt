@@ -19,7 +19,7 @@ import kotlin.math.sin
 enum class ArMathWorkspaceMode(val label: String, val shortLabel: String, val description: String) {
     Geometry2D("2D Geometry", "2D", "Place linked points, lines, circles and polygons on a spatial plane."),
     Geometry3D("3D Geometry", "3D", "Place and directly manipulate the existing solids and vectors."),
-    Graph2D("Graph", "Graph", "Lift the existing 2D functions into a readable spatial graph plane."),
+    Graph2D("2D Graph", "Graph", "Lift the existing 2D functions into a readable spatial graph plane."),
     Graph3D("3D Graph", "G3D", "Explore the current explicit, implicit or parametric surface in space."),
     CAS("CAS Objects", "CAS", "Visualize graphable CAS and Algebra objects without flattening the notebook into a static answer."),
 }

@@ -451,6 +451,7 @@ private class Parser(private val input: String) {
                     } while (match(','))
                 }
                 require(match(')')) { "Missing closing parenthesis" }
+                require(args.isNotEmpty()) { "$name requires an argument" }
                 FunctionNode(name, args)
             } else {
                 VariableNode(name)
@@ -541,11 +542,11 @@ data class LinearInsight(val slope: Double, val xIntercept: Double?, val yInterc
 
 class GraphAnalysis(private val engine: ExpressionEngine = ExpressionEngine()) {
     fun definitionKind(expression: String): GraphDefinitionKind {
-        val normalized = expression.trim().lowercase()
+        val normalized = MathExpressionNormalizer.normalize(expression).lowercase().replace(Regex("\\s+"), "")
         return when {
             normalized.startsWith("r=") || normalized.startsWith("r =") -> GraphDefinitionKind.Polar
             normalized.contains("x(t)") && normalized.contains("y(t)") && normalized.contains(';') -> GraphDefinitionKind.Parametric
-            normalized.contains('=') && !normalized.startsWith("y=") && !normalized.startsWith("y =") &&
+            normalized.contains('=') && (!normalized.startsWith("y=") || Regex("\\by\\b").containsMatchIn(normalized.substringAfter('='))) &&
                 !normalized.substringBefore('=').contains("(x)") -> GraphDefinitionKind.Implicit
             else -> GraphDefinitionKind.Explicit
         }
@@ -1158,7 +1159,7 @@ class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {
             for (j in 0..density) {
                 val y = min + (max - min) * j / density
                 val z = sample(x, y)
-                vertices += Vec3(x, y, z.coerceIn(-8.0, 8.0))
+                vertices += Vec3(x, y, z)
             }
         }
         return SurfaceMesh(vertices, density + 1, density + 1)

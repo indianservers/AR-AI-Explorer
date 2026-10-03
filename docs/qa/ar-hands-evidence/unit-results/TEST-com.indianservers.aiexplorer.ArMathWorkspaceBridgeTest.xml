@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:01:37.722Z" hostname="INDIANSERVERS" time="0.048">
+  <properties/>
+  <testcase name="twoDimensionalGeometryKeepsCanonicalShapeIdsAndPointHandles" classname="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" time="0.006"/>
+  <testcase name="graph3dProjectsEveryVisiblePersistentSurfaceIntoAr" classname="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" time="0.02"/>
+  <testcase name="graph3dFallsBackToSurfaceExpressionWhenNoLayerExists" classname="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" time="0.002"/>
+  <testcase name="casModeVisualizesGraphableSymbolicAndCoordinateObjects" classname="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" time="0.014"/>
+  <testcase name="graphModeSamplesEveryVisibleFunctionUsingItsExistingId" classname="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" time="0.006"/>
+  <testcase name="geometry3DReusesExistingSolidRendererAndSelectionIds" classname="com.indianservers.aiexplorer.ArMathWorkspaceBridgeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

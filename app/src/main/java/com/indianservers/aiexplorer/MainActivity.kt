@@ -537,6 +537,11 @@ import com.indianservers.aiexplorer.spatial.ArPhase4SpatialBridge
 import com.indianservers.aiexplorer.spatial.ArPhase5AnalysisBridge
 import com.indianservers.aiexplorer.spatial.ArPhase5AnalysisOptions
 import com.indianservers.aiexplorer.spatial.ArMathWorkspaceBridge
+import com.indianservers.aiexplorer.arengine.interaction.ArHandGestureController
+import com.indianservers.aiexplorer.arengine.interaction.ArHandLandmarker
+import com.indianservers.aiexplorer.arengine.interaction.ArHandFrame
+import com.indianservers.aiexplorer.arengine.interaction.ArHandPhase
+import com.indianservers.aiexplorer.arengine.interaction.ArHandTool
 import com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode
 import com.indianservers.aiexplorer.spatial.ARPrivacySafetyChecklist
 import com.indianservers.aiexplorer.spatial.SharedGpuSceneCompiler
@@ -670,9 +675,10 @@ private fun ARWorkspaceDirectoryScreen(
 }
 
 private val ArLabWorkspaces = listOf(
+    ArLabWorkspace("AR 2D Graph", "Anchor curves and equations on a floor or wall; move them with touch or hands", "Curves, axes, grid and tracked anchors", MathModule.ARGraph2D, "OPEN"),
     ArLabWorkspace("AR 3D Graph", "Anchor and inspect 3D graph surfaces in the room", "Surface mesh, axes, grid, equation and plane-anchor data", MathModule.ARGraph3D, "OPEN"),
-    ArLabWorkspace("AR 3D Shapes", "Place solids, vectors, sections and measurements in AR", "Solid model, transform, measurement and section data", MathModule.SpatialAR, "OPEN"),
-    ArLabWorkspace("AR 2D Shapes", "Place 2D constructions on a table or wall", "Point, line, circle, polygon and constraint data", MathModule.SpatialAR, "OPEN"),
+    ArLabWorkspace("AR 3D Geometry", "Place and manipulate solids and vectors with touch or hands", "Solid model, transform, measurement and section data", MathModule.ARGeometry3D, "OPEN"),
+    ArLabWorkspace("AR 2D Geometry", "Place and manipulate triangles, circles and constructions on a table or wall", "Point, line, circle, polygon and constraint data", MathModule.ARGeometry2D, "OPEN"),
     ArLabWorkspace("AR Coordinate Plane", "Plot, drag and measure points, lines, slopes and midpoints", "Coordinate axes, points, line segments, slope and distance data", MathModule.ARCoordinatePlane, "OPEN"),
     ArLabWorkspace("AR Vector Lab", "Explore vector addition, subtraction, dot product and cross product", "Vector components, resultant vector and product-operation data", MathModule.ARVectorLab, "OPEN"),
     ArLabWorkspace("AR Trigonometry Lab", "Walk around an interactive unit circle with live sin, cos and tan values", "Angle, unit-circle point, tangent ray and trig-value data", null),
@@ -1195,7 +1201,23 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         return true
     }
 
+    var arWorkspaceLaunchMode by mutableStateOf(ArMathWorkspaceMode.Geometry3D)
+        private set
+
     fun open(module: MathModule) {
+        arWorkspaceLaunchMode = when {
+            module == MathModule.ARGraph3D -> ArMathWorkspaceMode.Graph3D
+            module == MathModule.ARGraph2D -> ArMathWorkspaceMode.Graph2D
+            module == MathModule.ARGeometry2D -> ArMathWorkspaceMode.Geometry2D
+            module == MathModule.ARGeometry3D -> ArMathWorkspaceMode.Geometry3D
+            module == MathModule.SpatialAR -> when (state.module) {
+                MathModule.Graph2D -> ArMathWorkspaceMode.Graph2D
+                MathModule.Graph3D -> ArMathWorkspaceMode.Graph3D
+                MathModule.Geometry2D, MathModule.CoordinatePlane -> ArMathWorkspaceMode.Geometry2D
+                else -> ArMathWorkspaceMode.Geometry3D
+            }
+            else -> arWorkspaceLaunchMode
+        }
         rememberCurrentIntent()
         state = state.copy(module = if (module == MathModule.CoordinatePlane) MathModule.Geometry2D else module)
         showSubjectHub = false
@@ -1545,6 +1567,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         rememberCurrentIntent()
 	        shapeExplorerScene = false
         showShapesExplorer = false
+        arWorkspaceLaunchMode = ArMathWorkspaceMode.Geometry3D
         state = state.copy(module = MathModule.SpatialAR)
         status = "Shape prepared for AR placement"
     }
@@ -3222,6 +3245,13 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         state = state.copy(spatialPlacement = transformed)
     }
 
+    fun previewSpatialHandGesture(deltaMeters: Vec3, rotationDegrees: Float, scaleFactor: Float) {
+        val from = spatialGestureFrom ?: return
+        val moved = SpatialPlacementEngine.move(from, deltaMeters)
+        val rotated = SpatialPlacementEngine.rotate(moved, Vec3(0.0, rotationDegrees.toDouble(), 0.0))
+        state = state.copy(spatialPlacement = SpatialPlacementEngine.scale(rotated, scaleFactor.toDouble().coerceIn(.25, 4.0)))
+    }
+
     fun endSpatialGesture() {
         val from = spatialGestureFrom ?: return
         val to = state.spatialPlacement
@@ -3299,6 +3329,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             MathModule.DataSpreadsheet,
             MathModule.DiscreteMathematics,
             MathModule.NumberTheory,
+            MathModule.ARGraph2D, MathModule.ARGeometry2D, MathModule.ARGeometry3D,
             MathModule.ARGraph3D,
             MathModule.ARCoordinatePlane,
             MathModule.ARVectorLab -> state
@@ -3541,7 +3572,7 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                         Modifier
                             .fillMaxSize()
                             .padding(
-                                start = if (vm.showChrome && vm.state.module != MathModule.ARGraph3D && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab) {
+                                start = if (vm.showChrome && vm.state.module !in setOf(MathModule.ARGraph2D, MathModule.ARGeometry2D, MathModule.ARGeometry3D, MathModule.ARGraph3D) && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab) {
                                     adaptiveProfile.workspacePolicy.reservedNavigationWidth
                                 } else {
                                     0.dp
@@ -3627,17 +3658,17 @@ fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Bool
                             MathModule.DiscreteMathematics -> SetTheoryLogicVisualizerScreen(vm, wide = wide)
                             MathModule.NumberTheory -> NumberTheoryWorkspace(vm)
                             MathModule.SpatialAR -> SpatialARScreen(vm)
-                            MathModule.ARGraph3D -> AR3DGraphScreen(
-                                onBack = vm::navigateBackIntent,
-                                graphEngine = remember { Existing3DGraphEngineBridge() },
-                            )
+                            MathModule.ARGraph2D -> SpatialARScreen(vm, ArMathWorkspaceMode.Graph2D)
+                            MathModule.ARGeometry2D -> SpatialARScreen(vm, ArMathWorkspaceMode.Geometry2D)
+                            MathModule.ARGeometry3D -> SpatialARScreen(vm, ArMathWorkspaceMode.Geometry3D)
+                            MathModule.ARGraph3D -> SpatialARScreen(vm, ArMathWorkspaceMode.Graph3D)
                             MathModule.ARCoordinatePlane -> ARCoordinatePlaneScreen(onBack = vm::navigateBackIntent)
                             MathModule.ARVectorLab -> ARVectorLabScreen(onBack = vm::navigateBackIntent)
                         }
                     }
                     if (vm.showLearningPanel && !vm.showLearningIntelligence && !vm.showSolver && !vm.showProblemSolver && !vm.showScientificCalculator && !vm.showMathNotebook && !vm.showProbabilityLab && !vm.showKnowledgeHub && !vm.showMathDictionary && !vm.showMathsLearnAll) LearningCoachPanel(vm, Modifier.align(Alignment.CenterEnd))
                     }
-                    if (vm.showChrome && vm.state.module != MathModule.Trigonometry && vm.state.module != MathModule.SpatialAR && vm.state.module != MathModule.ARGraph3D && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
+                    if (vm.showChrome && vm.state.module != MathModule.Trigonometry && vm.state.module != MathModule.SpatialAR && vm.state.module !in setOf(MathModule.ARGraph2D, MathModule.ARGeometry2D, MathModule.ARGeometry3D, MathModule.ARGraph3D) && vm.state.module != MathModule.ARCoordinatePlane && vm.state.module != MathModule.ARVectorLab && !vm.showShapesExplorer && !vm.showUnifiedMathStudio && !vm.showAdaptiveMathLearning && !vm.showMathsLearnAll && !vm.showMathDictionary && !vm.showLearningIntelligence && !vm.showBiologyHub && !vm.showChemistryHub && !vm.showPhysicsHub && !vm.showMathLanding) {
                         TopShell(
                             vm,
                             compact,
@@ -8332,7 +8363,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
                 if (hitPointIndex == null) vm.dismissAllMenusAndPanels()
                 vm.handleGeometryTap(point, hitPointIndex)
             },
-            onClearSelection = vm::clearGeometrySelection,
+            onClearSelection = { contextMenuShapeIndex = null },
             onLassoSelection = vm::selectShapes,
             onObjectLongPress = { shapeIndex, _, _ ->
                 shapeIndex?.let(vm::selectShape)
@@ -8386,7 +8417,7 @@ private fun Geometry2DScreen(vm: ExplorerViewModel, compact: Boolean, onRequestC
             val details = shapeExplorer2DDetails(selectedShape!!, vm.state.points)
             val shapeSummaryExpanded = objectDetailsExpanded
             if (shapeSummaryExpanded) {
-                DimmedWorkspaceScrim { objectDetailsExpanded = false }
+                // Object details remain open while the user navigates the canvas.
             }
             Column(
                 Modifier
@@ -9372,6 +9403,7 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
     Box(Modifier.fillMaxSize()) {
         Projected3DCanvas(
             modifier = Modifier.fillMaxSize()
+                .semantics { contentDescription = "Interactive 3D geometry canvas" }
                 .background(sceneAppearance.palette.background)
                 .appWorkspaceTreatment(0.dp, sceneAppearance.palette.axes.z, sceneAppearance.palette.axes.y),
             solids = renderedSolids,
@@ -9477,7 +9509,7 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
                 zoom = 1f
                 cameraPan = Offset.Zero
             },
-            onEmptyTap = vm::dismissAllMenusAndPanels,
+            onEmptyTap = { /* Keep the selected object's inspector during camera navigation. */ },
             onGestureModeChange = { gestureMode = it },
         )
         WorkspaceThemeButton(
@@ -9763,7 +9795,7 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
             DestructiveGlowButton("Delete", icon = "×", onClick = ::deleteCurrent3DSelection)
         }
         if (!vm.shapeExplorerScene && formulaInspectorOpen && selectedSolid != null) {
-            DimmedWorkspaceScrim { formulaInspectorOpen = false }
+            // This inspector has an explicit close action; background taps navigate the scene.
             Selected3DFormulaInspector(
                 solid = selectedSolid,
                 index = selectedIndex,
@@ -10271,11 +10303,27 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
 }
 
 @Composable
-private fun SpatialARScreen(vm: ExplorerViewModel) {
+private fun SpatialARScreen(vm: ExplorerViewModel, initialMode: ArMathWorkspaceMode = vm.arWorkspaceLaunchMode) {
     val context = LocalContext.current
     val activity = context as? ComponentActivity
     var arRuntimeEpoch by remember { mutableIntStateOf(0) }
     val runtime = remember(activity, arRuntimeEpoch) { activity?.let(::ArCoreRuntime) }
+    val surfaceIntelligence = remember(runtime) { com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence() }
+    var surfaceAssessment by remember(runtime) { mutableStateOf(surfaceIntelligence.assessment) }
+    var handsEnabled by rememberSaveable { mutableStateOf(false) }
+    var handTool by remember { mutableStateOf(ArHandTool.Move) }
+    var handStatus by remember { mutableStateOf("Hands off") }
+    var handCursor by remember { mutableStateOf<ArVector2?>(null) }
+    var handHudSize by remember { mutableStateOf(IntSize.Zero) }
+    val handHudPaddingPixels = with(LocalDensity.current) { 10.dp.toPx() }
+    var handDetector by remember { mutableStateOf<ArHandLandmarker?>(null) }
+    val handController = remember(runtime) { ArHandGestureController() }
+    var handTargetId by remember { mutableStateOf<String?>(null) }
+    var handGestureActive by remember { mutableStateOf(false) }
+    var handCameraActive by remember { mutableStateOf(true) }
+    var lastHandFrameMillis by remember { mutableStateOf(0L) }
+    var handCameraBaseline by remember { mutableStateOf<ArFrameSnapshot?>(null) }
+    var handPlacementBaseline by remember { mutableStateOf<com.indianservers.aiexplorer.spatial.SpatialScenePlacement?>(null) }
     var compositorView by remember { mutableStateOf<ARCoreCompositorView?>(null) }
     var capabilities by remember { mutableStateOf(ARCapabilities(ARAvailability.Checking)) }
     var liveAR by remember { mutableStateOf(false) }
@@ -10309,17 +10357,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     var arGradientPlaying by remember { mutableStateOf(false) }
     var liveError by remember { mutableStateOf("") }
     var selectedLesson by remember { mutableIntStateOf(0) }
-    var arWorkspaceMode by remember {
-        mutableStateOf(
-            when {
-                vm.state.surfaceExpression.isNotBlank() -> ArMathWorkspaceMode.Graph3D
-                vm.state.functions.any { it.visible } -> ArMathWorkspaceMode.Graph2D
-                vm.state.solids.isNotEmpty() || vm.state.vectors3D.isNotEmpty() -> ArMathWorkspaceMode.Geometry3D
-                vm.state.points.isNotEmpty() || vm.state.shapes.isNotEmpty() -> ArMathWorkspaceMode.Geometry2D
-                else -> ArMathWorkspaceMode.Graph3D
-            },
-        )
-    }
+    var arWorkspaceMode by rememberSaveable(initialMode) { mutableStateOf(initialMode) }
     var thermalLevel by remember { mutableStateOf(ThermalLevel.Nominal) }
     var showSpatialDetails by remember { mutableStateOf(false) }
     var showAdvancedTools by remember { mutableStateOf(false) }
@@ -10331,8 +10369,8 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     var arHudExpanded by remember { mutableStateOf(false) }
     var arHudHidden by remember { mutableStateOf(false) }
     val graphArWorkspace = arWorkspaceMode == ArMathWorkspaceMode.Graph2D || arWorkspaceMode == ArMathWorkspaceMode.Graph3D
-    var displayFirstMode by remember { mutableStateOf(!graphArWorkspace) }
-    var arPlacementMode by rememberSaveable { mutableStateOf(if (graphArWorkspace) ArPlacementMode.FloorTable else ArPlacementMode.Viewer) }
+    var displayFirstMode by remember { mutableStateOf(false) }
+    var arPlacementMode by rememberSaveable { mutableStateOf(ArPlacementMode.FloorTable) }
     var showArAddOptions by remember { mutableStateOf(false) }
     var arGraphExpressionDraft by rememberSaveable { mutableStateOf("x^2") }
     var arSurfaceExpressionDraft by rememberSaveable { mutableStateOf("z = x^2 + y^2") }
@@ -10391,6 +10429,9 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                     liveError = it.message ?: "ARCore could not open the camera."
                     liveAR = false
                 }
+        } else {
+            liveAR = false
+            liveError = capabilities.message.ifBlank { "AR camera could not start. Tap Full AR to retry." }
         }
     }
     val cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -10419,6 +10460,9 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         compositorView = null
         arFrame = null
         frameState = null
+        surfaceIntelligence.reset()
+        surfaceAssessment = surfaceIntelligence.assessment
+        reticleHit = null
         liveAR = false
         runtime?.pause()
         arViewEpoch++
@@ -10433,11 +10477,17 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
     DisposableEffect(runtime, activity) {
         val observer = object : DefaultLifecycleObserver {
             override fun onPause(owner: LifecycleOwner) {
+                handCameraActive = false
+                surfaceIntelligence.reset()
+                surfaceAssessment = surfaceIntelligence.assessment
+                reticleHit = null
+                arFrame = null
                 currentCompositorView?.onPause()
                 runtime?.pause()
             }
 
             override fun onResume(owner: LifecycleOwner) {
+                handCameraActive = true
                 if (currentLiveAR) {
                     runtime?.resume()
                     currentCompositorView?.onResume()
@@ -10706,6 +10756,112 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         ArPhase4SpatialBridge.scene(interactiveScene, placement, activeAnchor, arSelection)
     }
     val trackingAllowsDirectManipulation = !liveAR || arFrame?.camera?.trackingState == ArTrackingState.Tracking
+    fun finishHandGesture(cancel: Boolean) {
+        if (!handGestureActive) return
+        val solid = handTargetId?.removePrefix("solid-")?.toIntOrNull()?.takeIf(vm.state.solids.indices::contains)
+        val shape = vm.state.shapes.indexOfFirst { it.id == handTargetId }.takeIf { it >= 0 }
+        when {
+            solid != null -> if (cancel) vm.cancelSolidDrag() else vm.endSolidDrag()
+            shape != null -> if (cancel) vm.cancelPointDrag() else vm.endPointDrag()
+            else -> if (cancel) vm.cancelSpatialGesture() else vm.endSpatialGesture()
+        }
+        handGestureActive = false; handTargetId = null
+        handCameraBaseline = null; handPlacementBaseline = null
+    }
+    fun handleHandFrame(result: ArHandFrame) {
+        lastHandFrameMillis = result.timestampMillis
+        val camera = arFrame
+        val reliable = handsEnabled && handCameraActive && liveAR && !displayFirstMode && !showArAddOptions &&
+            camera?.camera?.trackingState == ArTrackingState.Tracking &&
+            camera.camera.trackingFailure == com.indianservers.aiexplorer.arengine.contract.ArTrackingFailure.None &&
+            activeAnchor?.trackingState == com.indianservers.aiexplorer.arengine.contract.ArAnchorTrackingState.Tracking &&
+            android.os.SystemClock.uptimeMillis()-result.timestampMillis in 0..350
+        val action = handController.update(result, handTool, reliable,
+            viewportSize.width.toFloat() / viewportSize.height.coerceAtLeast(1))
+        handCursor = action.cursor
+        when (action.phase) {
+            ArHandPhase.Cancel -> { finishHandGesture(true); handStatus = "Tracking paused — hold steady" }
+            ArHandPhase.End -> { finishHandGesture(false); handStatus = "Released" }
+            ArHandPhase.Begin -> {
+                val point = action.cursor ?: return
+                val screenX = point.x * viewportSize.width
+                val screenY = point.y * viewportSize.height
+                if (camera == null || point.y !in 0f.. .88f ||
+                    (!arHudHidden && screenX < handHudSize.width + handHudPaddingPixels &&
+                        screenY < handHudSize.height + handHudPaddingPixels)) return
+                val hit = ArPhase4SpatialBridge.pick(ArVector2(point.x*viewportSize.width, point.y*viewportSize.height),
+                    viewportSize.width, viewportSize.height, camera, canonicalArScene, includeOccluded = false)
+                    .firstOrNull { it.kind == ArSubObjectKind.Whole && it.objectId !in arSelection.lockedObjectIds }
+                if (hit == null) { handStatus = "Aim at an object, release and pinch again"; return }
+                val solid = hit.objectId.removePrefix("solid-").toIntOrNull()?.takeIf(vm.state.solids.indices::contains)
+                val shape = vm.state.shapes.indexOfFirst { it.id == hit.objectId }.takeIf { it >= 0 }
+                if (shape != null && vm.state.shapes[shape].locked) { handStatus = "Object locked"; return }
+                arSelection = ArSelectionEngine.select(arSelection, hit, false)
+                handTargetId = hit.objectId; handCameraBaseline = camera; handPlacementBaseline = placement
+                when {
+                    solid != null -> { vm.selectSolid(solid); vm.beginSolidDrag(solid) }
+                    shape != null -> vm.beginShapeDrag(shape)
+                    else -> vm.beginSpatialGesture()
+                }
+                handGestureActive = true
+                handStatus = "${handTool.name}: ${canonicalArScene.objects.firstOrNull { it.id == hit.objectId }?.label ?: "construction"}"
+            }
+            ArHandPhase.Update -> if (handGestureActive) {
+                val baseCamera = handCameraBaseline ?: return
+                val basePlacement = handPlacementBaseline ?: return
+                val depth = (baseCamera.camera.pose.positionMeters - (activeAnchor?.pose?.positionMeters ?: baseCamera.camera.pose.positionMeters)).magnitude().coerceIn(.25, 4.0)
+                val projection = baseCamera.camera.projectionMatrix.values
+                val localScreen = com.indianservers.aiexplorer.arengine.contract.ArVector3(
+                    action.pan.x*2*depth/kotlin.math.abs(projection[0]).coerceAtLeast(.1f),
+                    -action.pan.y*2*depth/kotlin.math.abs(projection[5]).coerceAtLeast(.1f), 0.0)
+                val worldDelta = baseCamera.camera.pose.orientation.rotate(localScreen)
+                val orientation = (activeAnchor?.pose?.orientation ?: com.indianservers.aiexplorer.arengine.contract.ArQuaternion.Identity) *
+                    com.indianservers.aiexplorer.arengine.contract.ArQuaternion.fromEulerDegrees(basePlacement.pose.rotationDegrees.x, basePlacement.pose.rotationDegrees.y, basePlacement.pose.rotationDegrees.z)
+                val units = orientation.conjugate().rotate(worldDelta) * (1.0/(basePlacement.metersPerMathUnit*basePlacement.pose.uniformScale).coerceAtLeast(.001))
+                val solid = handTargetId?.removePrefix("solid-")?.toIntOrNull()?.takeIf(vm.state.solids.indices::contains)
+                val shape = vm.state.shapes.indexOfFirst { it.id == handTargetId }.takeIf { it >= 0 }
+                when {
+                    solid != null -> when (handTool) {
+                        ArHandTool.Move -> vm.previewSolidDrag(solid, Vec3(units.x, units.y, units.z))
+                        ArHandTool.Rotate -> vm.previewSolidRotation(solid, Vec3(0.0, action.rotationDegrees.toDouble(), 0.0))
+                        ArHandTool.Scale -> vm.previewSolidScale(solid, action.scale.toDouble())
+                    }
+                    shape != null -> when (handTool) {
+                        ArHandTool.Move -> vm.previewShapeDrag(Vec2(units.x, units.y))
+                        ArHandTool.Rotate -> vm.previewShapeRotation(action.rotationDegrees.toDouble())
+                        ArHandTool.Scale -> vm.previewShapeScale(action.scale.toDouble())
+                    }
+                    else -> vm.previewSpatialHandGesture(Vec3(worldDelta.x, worldDelta.y, worldDelta.z), action.rotationDegrees, action.scale)
+                }
+            }
+            ArHandPhase.Idle -> if (!handGestureActive) handStatus = if (reliable) "Pinch an object; release to stop" else "Anchor a construction with a tracked camera first"
+        }
+    }
+    val currentHandHandler by rememberUpdatedState<(ArHandFrame) -> Unit>(::handleHandFrame)
+    val currentHandDetector by rememberUpdatedState(handDetector)
+    val currentHandsEnabled by rememberUpdatedState(handsEnabled)
+    DisposableEffect(handsEnabled, runtime) {
+        if (handsEnabled) {
+            handStatus = "Starting hand tracking"
+            handDetector = ArHandLandmarker(context, { currentHandHandler(it) }, { handStatus = it })
+        }
+        onDispose {
+            handDetector?.close(); handDetector = null
+            handController.reset(); finishHandGesture(true); handCursor = null
+        }
+    }
+    LaunchedEffect(handTool, arWorkspaceMode, liveAR, displayFirstMode, showArAddOptions) {
+        handController.reset(); finishHandGesture(true); handCursor = null
+    }
+    LaunchedEffect(handsEnabled) {
+        while (handsEnabled) {
+            delay(100)
+            if (handGestureActive && (!handCameraActive || arFrame?.camera?.trackingState != ArTrackingState.Tracking ||
+                android.os.SystemClock.uptimeMillis()-lastHandFrameMillis > 350 || !liveAR)) {
+                handController.reset(); finishHandGesture(true); handCursor = null
+            }
+        }
+    }
     val gpuPlan = remember(interactiveScene) { SharedGpuSceneCompiler.compile(interactiveScene) }
     val currentCompositorScene by rememberUpdatedState(
         SpatialCompositorScene(
@@ -10757,6 +10913,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         keepLiveArAfterEquation(ArMathWorkspaceMode.Graph3D)
     }
     fun clearCurrentArWorkspace() {
+        handController.reset(); finishHandGesture(true)
         placement.anchorId.takeIf(String::isNotBlank)?.let { runtime?.detachAnchor(it) }
         vm.clearArWorkspace(arWorkspaceMode)
         arSelection = ArSelectionState()
@@ -10765,6 +10922,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         resetArDisplayNow(arWorkspaceMode)
     }
     fun deleteCurrentArItem() {
+        handController.reset(); finishHandGesture(true)
         when (arWorkspaceMode) {
             ArMathWorkspaceMode.Geometry2D -> {
                 if (vm.state.shapes.isNotEmpty()) {
@@ -10861,10 +11019,13 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
         reticleHit = null
         restartLiveAr(userRequestedInstall = true)
     }
-    fun rankedHitAt(point: Offset): ArHitCandidate? = runtime
-        ?.hitTest(ArVector2(point.x, point.y))
-        ?.let(ArHitPolicy::rank)
-        ?.firstOrNull(arPlacementMode::accepts)
+    fun rankedHitAt(point: Offset): ArHitCandidate? {
+        if (!surfaceAssessment.guidance.placementReady) return null
+        val target = if (arPlacementMode == ArPlacementMode.Wall)
+            com.indianservers.aiexplorer.arengine.session.ArSurfaceTarget.Wall
+        else com.indianservers.aiexplorer.arengine.session.ArSurfaceTarget.FloorTable
+        return surfaceIntelligence.selectHit(arFrame, runtime?.hitTest(ArVector2(point.x, point.y)).orEmpty(), target)
+    }
     LaunchedEffect(arSelection.primaryObjectId, vm.state.solids, vm.state.vectors3D) {
         val solid = arSelection.primaryObjectId?.removePrefix("solid-")?.toIntOrNull()?.let(vm.state.solids::getOrNull)
         val vector = arSelection.primaryObjectId?.removePrefix("vector-")?.toIntOrNull()?.let(vm.state.vectors3D::getOrNull)
@@ -10891,8 +11052,13 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                             viewContext,
                             runtime,
                             sceneProvider = { currentCompositorScene },
+                            wantsCameraImage = { currentHandsEnabled && currentHandDetector?.canAcceptFrame == true },
+                            onCameraImage = { currentHandDetector?.submit(it) },
                             onFrame = { snapshot ->
                                 arFrame = snapshot
+                                surfaceAssessment = surfaceIntelligence.observe(snapshot,
+                                    if (arPlacementMode == ArPlacementMode.Wall) com.indianservers.aiexplorer.arengine.session.ArSurfaceTarget.Wall
+                                    else com.indianservers.aiexplorer.arengine.session.ArSurfaceTarget.FloorTable)
                                 frameState = snapshot.toSpatialFrame()
                                 reticleHit = if (anchorPlacementMode && viewportSize.width > 0 && viewportSize.height > 0) {
                                     rankedHitAt(Offset(viewportSize.width / 2f, viewportSize.height / 2f))
@@ -10909,9 +11075,14 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
             Box(
                 Modifier
                     .fillMaxSize()
-                    .pointerInput(arSelection, gizmoMode, gizmoAxis, anchorPlacementMode, objectManipulationMode, subObjectKind, arMultiSelect, snapEnabled, precisionMode, numericPlaneNormal, numericPlaneOffset, canonicalArScene, arFrame, trackingAllowsDirectManipulation) {
+                    .pointerInput(handsEnabled, arSelection, gizmoMode, gizmoAxis, anchorPlacementMode, objectManipulationMode, subObjectKind, arMultiSelect, snapEnabled, precisionMode, numericPlaneNormal, numericPlaneOffset, canonicalArScene, arFrame, trackingAllowsDirectManipulation) {
                         awaitEachGesture {
                             val down = awaitFirstDown(requireUnconsumed = false)
+                            if (handsEnabled && !anchorPlacementMode && objectManipulationMode) {
+                                do { val event = awaitPointerEvent(); event.changes.forEach { it.consume() } }
+                                while (event.changes.any { it.pressed })
+                                return@awaitEachGesture
+                            }
                             if (!anchorPlacementMode && !objectManipulationMode) {
                                 var totalPan = Offset.Zero
                                 var totalScale = 1f
@@ -11194,11 +11365,7 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 }
                 Text(
                     reticleHit?.let { "${it.type.name} - ${(it.confidence * 100).roundToInt()}% - ±${trim(it.uncertaintyMeters)} m" }
-                        ?: when (arPlacementMode) {
-                            ArPlacementMode.FloorTable -> "Move your phone slowly to scan a floor or table."
-                            ArPlacementMode.Wall -> "Move your phone slowly to scan a wall."
-                            ArPlacementMode.Viewer -> "3D Viewer is not live AR."
-                        },
+                        ?: surfaceAssessment.guidance.instruction,
                     color = Ink,
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Center).offset(y = 48.dp).clip(RoundedCornerShape(10.dp)).background(SurfaceA.copy(.88f)).padding(8.dp),
@@ -11215,18 +11382,26 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                 onGestureEnd = vm::endSpatialGesture,
             )
         }
+        if (handsEnabled && liveAR) handCursor?.let { cursor ->
+            Canvas(Modifier.fillMaxSize()) {
+                val point = Offset(cursor.x*size.width, cursor.y*size.height)
+                drawCircle(if (handGestureActive) Green else Cyan, 16f, point, style = Stroke(3f))
+                drawCircle(if (handGestureActive) Green else Cyan, 4f, point)
+            }
+        }
         if (!arHudHidden) GlassPanel(
             Modifier
                 .align(Alignment.TopStart)
                 .padding(start = 10.dp, top = 10.dp)
                 .widthIn(max = 360.dp)
+                .onSizeChanged { handHudSize = it }
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                     TransparentIcon("AR", Cyan)
                     Column {
-                        Text("AR", color = Cyan, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                        Text(if (liveAR) guidance.title else "Camera ready", color = Muted, fontSize = 10.sp, maxLines = 1)
+                        Text("AR ${arWorkspaceMode.label}", color = Cyan, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        Text(if (displayFirstMode) "3D Viewer" else if (liveError.isNotBlank()) "Camera unavailable" else if (liveAR) surfaceAssessment.guidance.title else "Starting camera", color = Muted, fontSize = 10.sp, maxLines = 1)
                     }
                 }
                 if (false) Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -11263,6 +11438,17 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         placementMode = activeAnchor == null
                         restartLiveAr(userRequestedInstall = true)
                     }
+                    listOf(ArPlacementMode.FloorTable, ArPlacementMode.Wall).forEach { target ->
+                        GlowButton(if (arPlacementMode == target) "• ${target.label}" else target.label) {
+                            arPlacementMode = target
+                            displayFirstMode = false
+                            placementMode = true
+                            surfaceIntelligence.reset()
+                            surfaceAssessment = surfaceIntelligence.assessment
+                            reticleHit = null
+                            if (!liveAR) startLiveAr(userRequestedInstall = true)
+                        }
+                    }
                     if (false) {
                     GlowButton("Add ${arWorkspaceMode.shortLabel}", icon = "+", iconOnly = true) {
                         showArAddOptions = true
@@ -11285,6 +11471,19 @@ private fun SpatialARScreen(vm: ExplorerViewModel) {
                         showAdvancedTools = true
                     }
                     }
+                }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    GlowButton(if (handsEnabled) "Hands on" else "Hands off", icon = "H") { handsEnabled = !handsEnabled }
+                    if (handsEnabled) ArHandTool.entries.forEach { tool ->
+                        GlowButton(if (handTool == tool) "• ${tool.name}" else tool.name) { handTool = tool }
+                    }
+                    if (handsEnabled) GlowButton("Hide controls", icon = "⌄", iconOnly = true) {
+                        arHudHidden = true
+                    }
+                }
+                if (handsEnabled) {
+                    Text(if (!liveAR) "Hands need a live AR camera" else handStatus, color = Cyan, fontSize = 10.sp, maxLines = 2)
+                    Text("Choose Move, Rotate or Scale. Pinch to grab; release to stop. Use two pinches to spread or turn.", color = Muted, fontSize = 10.sp)
                 }
                 if (liveError.isNotBlank()) {
                     Text(liveError, color = Amber, fontSize = 10.sp, maxLines = 2)
@@ -12272,6 +12471,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
         SurfaceCanvas3D(
             modifier = Modifier
                 .fillMaxSize()
+                .semantics { contentDescription = "Interactive 3D graph canvas" }
                 .background((surfaceLayers.firstOrNull()?.workspaceAppearance() ?: graphSceneAppearance).palette.background)
                 .appWorkspaceTreatment(0.dp, graphAxisStyle.z, graphAxisStyle.y),
             expression = resolvedPrimaryExpression,
@@ -12405,14 +12605,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             }
         }
 
-        if (equationPanelOpen || propertiesOpen || insightsOpen || controlsOpen) {
-            DimmedWorkspaceScrim {
-                equationPanelOpen = false
-                propertiesOpen = false
-                insightsOpen = false
-                controlsOpen = false
-            }
-        }
+        // These are modeless workspace inspectors. Close/Back dismisses them explicitly.
 
         if (equationPanelOpen) Graph3DEquationPanel(
             surfaceDraft = surfaceDraft,
@@ -14990,7 +15183,7 @@ private fun visualModuleIcon(module: MathModule): String = when (module) {
     MathModule.DiscreteMathematics -> "sets"
     MathModule.NumberTheory -> "N"
     MathModule.SpatialAR -> "ar"
-    MathModule.ARGraph3D -> "ar"
+    MathModule.ARGraph2D, MathModule.ARGeometry2D, MathModule.ARGeometry3D, MathModule.ARGraph3D -> "ar"
     MathModule.ARCoordinatePlane -> "ar"
     MathModule.ARVectorLab -> "ar"
 }
@@ -15013,7 +15206,7 @@ private fun moduleIcon(module: MathModule): String = when (module) {
     MathModule.DiscreteMathematics -> "∪"
     MathModule.NumberTheory -> "ℕ"
     MathModule.SpatialAR -> "AR"
-    MathModule.ARGraph3D -> "AR"
+    MathModule.ARGraph2D, MathModule.ARGeometry2D, MathModule.ARGeometry3D, MathModule.ARGraph3D -> "AR"
     MathModule.ARCoordinatePlane -> "AR"
     MathModule.ARVectorLab -> "AR"
 }

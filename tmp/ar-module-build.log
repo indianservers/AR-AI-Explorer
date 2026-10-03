@@ -1,0 +1,80 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:preBuild UP-TO-DATE
+> Task :ar3dgraph:preDebugBuild UP-TO-DATE
+> Task :ar3dgraph:processDebugNavigationResources UP-TO-DATE
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:generateDebugResources UP-TO-DATE
+> Task :ar3dgraph:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:parseDebugLocalResources UP-TO-DATE
+> Task :ar3dgraph:generateDebugRFile UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:compileDebugKotlin UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:bundleLibCompileToJarDebug
+> Task :ar3dgraph:compileDebugKotlin
+> Task :ar3dgraph:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:bundleLibCompileToJarDebug UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt:969:64 'fun announceForAccessibility(p0: CharSequence!): Unit' is deprecated. Deprecated in Java.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:730:57 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:735:64 Unnecessary safe call on a non-null receiver of type 'FunctionDefinition'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/KnowledgeHubUi.kt:1075:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:8432:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:9783:34 Unnecessary safe call on a non-null receiver of type 'Solid'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13693:49 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13698:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13746:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PointerInputChange'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13789:82 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14818:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14820:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14821:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14823:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14865:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14866:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14868:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14869:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt:969:64 'fun announceForAccessibility(p0: CharSequence!): Unit' is deprecated. Deprecated in Java.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:730:57 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:735:64 Unnecessary safe call on a non-null receiver of type 'FunctionDefinition'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/KnowledgeHubUi.kt:1075:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:8432:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:9783:34 Unnecessary safe call on a non-null receiver of type 'Solid'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13693:49 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13698:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13746:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PointerInputChange'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:13789:82 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14818:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14820:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14821:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14823:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14865:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14866:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14868:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14869:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 45s
+23 actionable tasks: 3 executed, 20 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html

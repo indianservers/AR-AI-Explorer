@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.SpatialProductionInteractionsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:01:38.528Z" hostname="INDIANSERVERS" time="0.03">
+  <properties/>
+  <testcase name="overlapCyclingIsolationAndOccludedSelectionAreDeterministic" classname="com.indianservers.aiexplorer.SpatialProductionInteractionsTest" time="0.004"/>
+  <testcase name="subObjectHistoryAndExtrusionPreviewUndoAtEditGranularity" classname="com.indianservers.aiexplorer.SpatialProductionInteractionsTest" time="0.003"/>
+  <testcase name="surfaceTraceContourGradientLayersAccessibilityAndDeviceContractsAreInteractive" classname="com.indianservers.aiexplorer.SpatialProductionInteractionsTest" time="0.011"/>
+  <testcase name="faceEdgeVertexSnappingAndMeasurementsUseMeshGeometry" classname="com.indianservers.aiexplorer.SpatialProductionInteractionsTest" time="0.004"/>
+  <testcase name="booleanMeshesNetsEulerRevolutionAndExportsProduceStandardArtifacts" classname="com.indianservers.aiexplorer.SpatialProductionInteractionsTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

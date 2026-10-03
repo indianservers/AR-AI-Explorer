@@ -1,0 +1,1510 @@
+MATH KEYBOARD GRAPH MANUAL CHECKLIST
+300 cases: 150 for 2D and 150 for 3D.
+Status: automated keyboard-action replay; physical phone execution NOT performed.
+For each case: open the indicated graph workspace; clear the input; use only MathKeyboard; press Done/Add.
+Digits and operators: tap the matching keys. Powers ^2/^3: long-press 2/3.
+Functions: choose the function key, fill its argument, then use the right-arrow to leave the template.
+Use abc for letters and semicolon; sym for <=. For sqrt, hold x² on Math+ and select √x. Invalid cases must show an error and keep the app responsive.
+At each valid case: inspect the plot, pan/zoom, edit one digit, undo, and re-add. Confirm native keyboard stays hidden.
+For explicit cases verify the trace/surface coordinate below. Implicit cases list a point on the relation.
+Record physical-device PASS/FAIL, device model, Android version, and any crash separately.
+
+2D-001 | y=1*x+1
+Keys: TAP y -> TAP = -> TAP 1 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5
+Physical device result: NOT RUN
+
+2D-002 | y=x^2+1
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.25
+Physical device result: NOT RUN
+
+2D-003 | y=x^3-1*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 1 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-0.375
+Physical device result: NOT RUN
+
+2D-004 | y=sin(x)+1
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.479425538604203
+Physical device result: NOT RUN
+
+2D-005 | y=cos(x)*1
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.8775825618903728
+Physical device result: NOT RUN
+
+2D-006 | y=sqrt(x^2+1)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.118033988749895
+Physical device result: NOT RUN
+
+2D-007 | y=abs(x-1)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 1 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.5
+Physical device result: NOT RUN
+
+2D-008 | y=exp(x)/1
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.6487212707001282
+Physical device result: NOT RUN
+
+2D-009 | y=ln(x^2+1)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.22314355131420976
+Physical device result: NOT RUN
+
+2D-010 | y=2*x+1
+Keys: TAP y -> TAP = -> TAP 2 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.0
+Physical device result: NOT RUN
+
+2D-011 | y=x^2+2
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.25
+Physical device result: NOT RUN
+
+2D-012 | y=x^3-2*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 2 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-0.875
+Physical device result: NOT RUN
+
+2D-013 | y=sin(x)+2
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.479425538604203
+Physical device result: NOT RUN
+
+2D-014 | y=cos(x)*2
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.7551651237807455
+Physical device result: NOT RUN
+
+2D-015 | y=sqrt(x^2+2)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5
+Physical device result: NOT RUN
+
+2D-016 | y=abs(x-2)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 2 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5
+Physical device result: NOT RUN
+
+2D-017 | y=exp(x)/2
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.8243606353500641
+Physical device result: NOT RUN
+
+2D-018 | y=ln(x^2+2)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.8109302162163288
+Physical device result: NOT RUN
+
+2D-019 | y=3*x+1
+Keys: TAP y -> TAP = -> TAP 3 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.5
+Physical device result: NOT RUN
+
+2D-020 | y=x^2+3
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.25
+Physical device result: NOT RUN
+
+2D-021 | y=x^3-3*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 3 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-1.375
+Physical device result: NOT RUN
+
+2D-022 | y=sin(x)+3
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.479425538604203
+Physical device result: NOT RUN
+
+2D-023 | y=cos(x)*3
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.6327476856711183
+Physical device result: NOT RUN
+
+2D-024 | y=sqrt(x^2+3)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.8027756377319946
+Physical device result: NOT RUN
+
+2D-025 | y=abs(x-3)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 3 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.5
+Physical device result: NOT RUN
+
+2D-026 | y=exp(x)/3
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.5495737569000427
+Physical device result: NOT RUN
+
+2D-027 | y=ln(x^2+3)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.1786549963416462
+Physical device result: NOT RUN
+
+2D-028 | y=4*x+1
+Keys: TAP y -> TAP = -> TAP 4 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.0
+Physical device result: NOT RUN
+
+2D-029 | y=x^2+4
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.25
+Physical device result: NOT RUN
+
+2D-030 | y=x^3-4*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 4 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-1.875
+Physical device result: NOT RUN
+
+2D-031 | y=sin(x)+4
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.479425538604203
+Physical device result: NOT RUN
+
+2D-032 | y=cos(x)*4
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.510330247561491
+Physical device result: NOT RUN
+
+2D-033 | y=sqrt(x^2+4)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.0615528128088303
+Physical device result: NOT RUN
+
+2D-034 | y=abs(x-4)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 4 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.5
+Physical device result: NOT RUN
+
+2D-035 | y=exp(x)/4
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.41218031767503205
+Physical device result: NOT RUN
+
+2D-036 | y=ln(x^2+4)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.4469189829363254
+Physical device result: NOT RUN
+
+2D-037 | y=5*x+1
+Keys: TAP y -> TAP = -> TAP 5 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.5
+Physical device result: NOT RUN
+
+2D-038 | y=x^2+5
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.25
+Physical device result: NOT RUN
+
+2D-039 | y=x^3-5*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 5 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-2.375
+Physical device result: NOT RUN
+
+2D-040 | y=sin(x)+5
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.479425538604203
+Physical device result: NOT RUN
+
+2D-041 | y=cos(x)*5
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.387912809451864
+Physical device result: NOT RUN
+
+2D-042 | y=sqrt(x^2+5)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.29128784747792
+Physical device result: NOT RUN
+
+2D-043 | y=abs(x-5)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 5 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.5
+Physical device result: NOT RUN
+
+2D-044 | y=exp(x)/5
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.3297442541400256
+Physical device result: NOT RUN
+
+2D-045 | y=ln(x^2+5)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.6582280766035324
+Physical device result: NOT RUN
+
+2D-046 | y=6*x+1
+Keys: TAP y -> TAP = -> TAP 6 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.0
+Physical device result: NOT RUN
+
+2D-047 | y=x^2+6
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.25
+Physical device result: NOT RUN
+
+2D-048 | y=x^3-6*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 6 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-2.875
+Physical device result: NOT RUN
+
+2D-049 | y=sin(x)+6
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.479425538604203
+Physical device result: NOT RUN
+
+2D-050 | y=cos(x)*6
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.2654953713422366
+Physical device result: NOT RUN
+
+2D-051 | y=sqrt(x^2+6)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.5
+Physical device result: NOT RUN
+
+2D-052 | y=abs(x-6)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 6 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.5
+Physical device result: NOT RUN
+
+2D-053 | y=exp(x)/6
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.27478687845002137
+Physical device result: NOT RUN
+
+2D-054 | y=ln(x^2+6)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.8325814637483102
+Physical device result: NOT RUN
+
+2D-055 | y=7*x+1
+Keys: TAP y -> TAP = -> TAP 7 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.5
+Physical device result: NOT RUN
+
+2D-056 | y=x^2+7
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.25
+Physical device result: NOT RUN
+
+2D-057 | y=x^3-7*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 7 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-3.375
+Physical device result: NOT RUN
+
+2D-058 | y=sin(x)+7
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.479425538604203
+Physical device result: NOT RUN
+
+2D-059 | y=cos(x)*7
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.143077933232609
+Physical device result: NOT RUN
+
+2D-060 | y=sqrt(x^2+7)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.692582403567252
+Physical device result: NOT RUN
+
+2D-061 | y=abs(x-7)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 7 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.5
+Physical device result: NOT RUN
+
+2D-062 | y=exp(x)/7
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.2355316101000183
+Physical device result: NOT RUN
+
+2D-063 | y=ln(x^2+7)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.9810014688665833
+Physical device result: NOT RUN
+
+2D-064 | y=8*x+1
+Keys: TAP y -> TAP = -> TAP 8 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.0
+Physical device result: NOT RUN
+
+2D-065 | y=x^2+8
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8.25
+Physical device result: NOT RUN
+
+2D-066 | y=x^3-8*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 8 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-3.875
+Physical device result: NOT RUN
+
+2D-067 | y=sin(x)+8
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8.479425538604204
+Physical device result: NOT RUN
+
+2D-068 | y=cos(x)*8
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.020660495122982
+Physical device result: NOT RUN
+
+2D-069 | y=sqrt(x^2+8)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.8722813232690143
+Physical device result: NOT RUN
+
+2D-070 | y=abs(x-8)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 8 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.5
+Physical device result: NOT RUN
+
+2D-071 | y=exp(x)/8
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.20609015883751602
+Physical device result: NOT RUN
+
+2D-072 | y=ln(x^2+8)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.1102132003465894
+Physical device result: NOT RUN
+
+2D-073 | y=9*x+1
+Keys: TAP y -> TAP = -> TAP 9 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.5
+Physical device result: NOT RUN
+
+2D-074 | y=x^2+9
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9.25
+Physical device result: NOT RUN
+
+2D-075 | y=x^3-9*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 9 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-4.375
+Physical device result: NOT RUN
+
+2D-076 | y=sin(x)+9
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9.479425538604204
+Physical device result: NOT RUN
+
+2D-077 | y=cos(x)*9
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.898243057013355
+Physical device result: NOT RUN
+
+2D-078 | y=sqrt(x^2+9)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.0413812651491097
+Physical device result: NOT RUN
+
+2D-079 | y=abs(x-9)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 9 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8.5
+Physical device result: NOT RUN
+
+2D-080 | y=exp(x)/9
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.18319125230001423
+Physical device result: NOT RUN
+
+2D-081 | y=ln(x^2+9)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.224623551524334
+Physical device result: NOT RUN
+
+2D-082 | y=10*x+1
+Keys: TAP y -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.0
+Physical device result: NOT RUN
+
+2D-083 | y=x^2+10
+Keys: TAP y -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10.25
+Physical device result: NOT RUN
+
+2D-084 | y=x^3-10*x
+Keys: TAP y -> TAP = -> TAP x -> HOLD 3 -> TAP - -> TAP 1 -> TAP 0 -> TAP * -> TAP x -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-4.875
+Physical device result: NOT RUN
+
+2D-085 | y=sin(x)+10
+Keys: TAP y -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10.479425538604204
+Physical device result: NOT RUN
+
+2D-086 | y=cos(x)*10
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP * -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8.775825618903728
+Physical device result: NOT RUN
+
+2D-087 | y=sqrt(x^2+10)
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.2015621187164243
+Physical device result: NOT RUN
+
+2D-088 | y=abs(x-10)
+Keys: TAP y -> TAP = -> TAP abs template -> TAP x -> TAP - -> TAP 1 -> TAP 0 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9.5
+Physical device result: NOT RUN
+
+2D-089 | y=exp(x)/10
+Keys: TAP y -> TAP = -> TAP exp template -> TAP x -> TAP right arrow -> TAP / -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.1648721270700128
+Physical device result: NOT RUN
+
+2D-090 | y=ln(x^2+10)
+Keys: TAP y -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.327277705584417
+Physical device result: NOT RUN
+
+2D-091 | x^2+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done/Add
+Expected: implicit: x=1.0, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-092 | y=x+y^2-1
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 1 -> TAP Done/Add
+Expected: implicit: x=1, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-093 | r=1+cos(theta)
+Keys: TAP r -> TAP = -> TAP 1 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (2, 0); visible curve
+Physical device result: NOT RUN
+
+2D-094 | x(t)=1*cos(t);y(t)=1*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 1 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 1 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (1, 0); visible curve
+Physical device result: NOT RUN
+
+2D-095 | y<=x^2+1
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-096 | x^2+y^2=2
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 2 -> TAP Done/Add
+Expected: implicit: x=1.4142135623730951, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-097 | y=x+y^2-2
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 2 -> TAP Done/Add
+Expected: implicit: x=2, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-098 | r=2+cos(theta)
+Keys: TAP r -> TAP = -> TAP 2 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (3, 0); visible curve
+Physical device result: NOT RUN
+
+2D-099 | x(t)=2*cos(t);y(t)=2*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 2 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 2 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (2, 0); visible curve
+Physical device result: NOT RUN
+
+2D-100 | y<=x^2+2
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-101 | x^2+y^2=3
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 3 -> TAP Done/Add
+Expected: implicit: x=1.7320508075688772, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-102 | y=x+y^2-3
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 3 -> TAP Done/Add
+Expected: implicit: x=3, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-103 | r=3+cos(theta)
+Keys: TAP r -> TAP = -> TAP 3 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (4, 0); visible curve
+Physical device result: NOT RUN
+
+2D-104 | x(t)=3*cos(t);y(t)=3*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 3 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 3 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (3, 0); visible curve
+Physical device result: NOT RUN
+
+2D-105 | y<=x^2+3
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-106 | x^2+y^2=4
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 4 -> TAP Done/Add
+Expected: implicit: x=2.0, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-107 | y=x+y^2-4
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 4 -> TAP Done/Add
+Expected: implicit: x=4, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-108 | r=4+cos(theta)
+Keys: TAP r -> TAP = -> TAP 4 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (5, 0); visible curve
+Physical device result: NOT RUN
+
+2D-109 | x(t)=4*cos(t);y(t)=4*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 4 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 4 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (4, 0); visible curve
+Physical device result: NOT RUN
+
+2D-110 | y<=x^2+4
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-111 | x^2+y^2=5
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 5 -> TAP Done/Add
+Expected: implicit: x=2.23606797749979, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-112 | y=x+y^2-5
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 5 -> TAP Done/Add
+Expected: implicit: x=5, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-113 | r=5+cos(theta)
+Keys: TAP r -> TAP = -> TAP 5 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (6, 0); visible curve
+Physical device result: NOT RUN
+
+2D-114 | x(t)=5*cos(t);y(t)=5*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 5 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 5 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (5, 0); visible curve
+Physical device result: NOT RUN
+
+2D-115 | y<=x^2+5
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-116 | x^2+y^2=6
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 6 -> TAP Done/Add
+Expected: implicit: x=2.449489742783178, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-117 | y=x+y^2-6
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 6 -> TAP Done/Add
+Expected: implicit: x=6, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-118 | r=6+cos(theta)
+Keys: TAP r -> TAP = -> TAP 6 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (7, 0); visible curve
+Physical device result: NOT RUN
+
+2D-119 | x(t)=6*cos(t);y(t)=6*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 6 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 6 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (6, 0); visible curve
+Physical device result: NOT RUN
+
+2D-120 | y<=x^2+6
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-121 | x^2+y^2=7
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 7 -> TAP Done/Add
+Expected: implicit: x=2.6457513110645907, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-122 | y=x+y^2-7
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 7 -> TAP Done/Add
+Expected: implicit: x=7, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-123 | r=7+cos(theta)
+Keys: TAP r -> TAP = -> TAP 7 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (8, 0); visible curve
+Physical device result: NOT RUN
+
+2D-124 | x(t)=7*cos(t);y(t)=7*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 7 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 7 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (7, 0); visible curve
+Physical device result: NOT RUN
+
+2D-125 | y<=x^2+7
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-126 | x^2+y^2=8
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 8 -> TAP Done/Add
+Expected: implicit: x=2.8284271247461903, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-127 | y=x+y^2-8
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 8 -> TAP Done/Add
+Expected: implicit: x=8, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-128 | r=8+cos(theta)
+Keys: TAP r -> TAP = -> TAP 8 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (9, 0); visible curve
+Physical device result: NOT RUN
+
+2D-129 | x(t)=8*cos(t);y(t)=8*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 8 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 8 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (8, 0); visible curve
+Physical device result: NOT RUN
+
+2D-130 | y<=x^2+8
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-131 | x^2+y^2=9
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 9 -> TAP Done/Add
+Expected: implicit: x=3.0, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-132 | y=x+y^2-9
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 9 -> TAP Done/Add
+Expected: implicit: x=9, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-133 | r=9+cos(theta)
+Keys: TAP r -> TAP = -> TAP 9 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (10, 0); visible curve
+Physical device result: NOT RUN
+
+2D-134 | x(t)=9*cos(t);y(t)=9*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 9 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 9 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (9, 0); visible curve
+Physical device result: NOT RUN
+
+2D-135 | y<=x^2+9
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-136 | x^2+y^2=10
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: implicit: x=3.1622776601683795, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-137 | y=x+y^2-10
+Keys: TAP y -> TAP = -> TAP x -> TAP + -> TAP y -> HOLD 2 -> TAP - -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: implicit: x=10, y=0, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+2D-138 | r=10+cos(theta)
+Keys: TAP r -> TAP = -> TAP 1 -> TAP 0 -> TAP + -> TAP cos template -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (11, 0); visible curve
+Physical device result: NOT RUN
+
+2D-139 | x(t)=10*cos(t);y(t)=10*sin(t)
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP cos template -> TAP t -> TAP right arrow -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP sin template -> TAP t -> TAP right arrow -> TAP Done/Add
+Expected: At parameter 0: point (10, 0); visible curve
+Physical device result: NOT RUN
+
+2D-140 | y<=x^2+10
+Keys: TAP y -> TAP <= -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: Shade the region below and including the parabola; show its boundary; no crash
+Physical device result: NOT RUN
+
+2D-141 | y=
+Keys: TAP y -> TAP = -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-142 | y=sin(
+Keys: TAP y -> TAP = -> TAP sin template -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-143 | y=1+
+Keys: TAP y -> TAP = -> TAP 1 -> TAP + -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-144 | x^2+=1
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP = -> TAP 1 -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-145 | y=sqrt()
+Keys: TAP y -> TAP = -> TAP sqrt template -> TAP right arrow -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-146 | y=cos(x))
+Keys: TAP y -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP ) -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-147 | y=2**x
+Keys: TAP y -> TAP = -> TAP 2 -> TAP * -> TAP * -> TAP x -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-148 | y=1/
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-149 | y=ln()
+Keys: TAP y -> TAP = -> TAP ln template -> TAP right arrow -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+2D-150 | y=(x+1
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-001 | z=1*x+y
+Keys: TAP z -> TAP = -> TAP 1 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-002 | z=x^2+y^2+1
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5
+Physical device result: NOT RUN
+
+3D-003 | z=x^2-y^2+1
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1
+Physical device result: NOT RUN
+
+3D-004 | z=x^3+y^3+1
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1
+Physical device result: NOT RUN
+
+3D-005 | z=sin(x)+cos(y)+1
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.3570081004945758
+Physical device result: NOT RUN
+
+3D-006 | z=sin(x*y)*1
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-0.24740395925452294
+Physical device result: NOT RUN
+
+3D-007 | z=sqrt(x^2+y^2+1)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.224744871391589
+Physical device result: NOT RUN
+
+3D-008 | z=exp(-x^2-y^2)*1
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.6065306597126334
+Physical device result: NOT RUN
+
+3D-009 | z=ln(x^2+y^2+1)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.4054651081081644
+Physical device result: NOT RUN
+
+3D-010 | z=abs(x)+abs(y)+1
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 1 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2
+Physical device result: NOT RUN
+
+3D-011 | z=(x+y+1)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 1 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.6666666666666666
+Physical device result: NOT RUN
+
+3D-012 | z=2*x+y
+Keys: TAP z -> TAP = -> TAP 2 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.5
+Physical device result: NOT RUN
+
+3D-013 | z=x^2+y^2+2
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.5
+Physical device result: NOT RUN
+
+3D-014 | z=x^2-y^2+2
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2
+Physical device result: NOT RUN
+
+3D-015 | z=x^3+y^3+2
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2
+Physical device result: NOT RUN
+
+3D-016 | z=sin(x)+cos(y)+2
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.3570081004945758
+Physical device result: NOT RUN
+
+3D-017 | z=sin(x*y)*2
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-0.4948079185090459
+Physical device result: NOT RUN
+
+3D-018 | z=sqrt(x^2+y^2+2)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 2 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5811388300841898
+Physical device result: NOT RUN
+
+3D-019 | z=exp(-x^2-y^2)*2
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.2130613194252668
+Physical device result: NOT RUN
+
+3D-020 | z=ln(x^2+y^2+2)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 2 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=0.9162907318741551
+Physical device result: NOT RUN
+
+3D-021 | z=abs(x)+abs(y)+2
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 2 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3
+Physical device result: NOT RUN
+
+3D-022 | z=(x+y+2)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 2 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.3333333333333333
+Physical device result: NOT RUN
+
+3D-023 | z=3*x+y
+Keys: TAP z -> TAP = -> TAP 3 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.0
+Physical device result: NOT RUN
+
+3D-024 | z=x^2+y^2+3
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.5
+Physical device result: NOT RUN
+
+3D-025 | z=x^2-y^2+3
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3
+Physical device result: NOT RUN
+
+3D-026 | z=x^3+y^3+3
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3
+Physical device result: NOT RUN
+
+3D-027 | z=sin(x)+cos(y)+3
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.357008100494576
+Physical device result: NOT RUN
+
+3D-028 | z=sin(x*y)*3
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-0.7422118777635688
+Physical device result: NOT RUN
+
+3D-029 | z=sqrt(x^2+y^2+3)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 3 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.8708286933869707
+Physical device result: NOT RUN
+
+3D-030 | z=exp(-x^2-y^2)*3
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.8195919791379003
+Physical device result: NOT RUN
+
+3D-031 | z=ln(x^2+y^2+3)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 3 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.252762968495368
+Physical device result: NOT RUN
+
+3D-032 | z=abs(x)+abs(y)+3
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 3 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4
+Physical device result: NOT RUN
+
+3D-033 | z=(x+y+3)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 3 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.0
+Physical device result: NOT RUN
+
+3D-034 | z=4*x+y
+Keys: TAP z -> TAP = -> TAP 4 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5
+Physical device result: NOT RUN
+
+3D-035 | z=x^2+y^2+4
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.5
+Physical device result: NOT RUN
+
+3D-036 | z=x^2-y^2+4
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4
+Physical device result: NOT RUN
+
+3D-037 | z=x^3+y^3+4
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4
+Physical device result: NOT RUN
+
+3D-038 | z=sin(x)+cos(y)+4
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.357008100494576
+Physical device result: NOT RUN
+
+3D-039 | z=sin(x*y)*4
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-0.9896158370180917
+Physical device result: NOT RUN
+
+3D-040 | z=sqrt(x^2+y^2+4)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 4 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.1213203435596424
+Physical device result: NOT RUN
+
+3D-041 | z=exp(-x^2-y^2)*4
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.4261226388505337
+Physical device result: NOT RUN
+
+3D-042 | z=ln(x^2+y^2+4)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 4 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.5040773967762742
+Physical device result: NOT RUN
+
+3D-043 | z=abs(x)+abs(y)+4
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 4 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5
+Physical device result: NOT RUN
+
+3D-044 | z=(x+y+4)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 4 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.6666666666666665
+Physical device result: NOT RUN
+
+3D-045 | z=5*x+y
+Keys: TAP z -> TAP = -> TAP 5 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.0
+Physical device result: NOT RUN
+
+3D-046 | z=x^2+y^2+5
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.5
+Physical device result: NOT RUN
+
+3D-047 | z=x^2-y^2+5
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5
+Physical device result: NOT RUN
+
+3D-048 | z=x^3+y^3+5
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5
+Physical device result: NOT RUN
+
+3D-049 | z=sin(x)+cos(y)+5
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.357008100494576
+Physical device result: NOT RUN
+
+3D-050 | z=sin(x*y)*5
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-1.2370197962726146
+Physical device result: NOT RUN
+
+3D-051 | z=sqrt(x^2+y^2+5)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 5 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.345207879911715
+Physical device result: NOT RUN
+
+3D-052 | z=exp(-x^2-y^2)*5
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.032653298563167
+Physical device result: NOT RUN
+
+3D-053 | z=ln(x^2+y^2+5)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 5 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.7047480922384253
+Physical device result: NOT RUN
+
+3D-054 | z=abs(x)+abs(y)+5
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 5 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6
+Physical device result: NOT RUN
+
+3D-055 | z=(x+y+5)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 5 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.3333333333333335
+Physical device result: NOT RUN
+
+3D-056 | z=6*x+y
+Keys: TAP z -> TAP = -> TAP 6 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.5
+Physical device result: NOT RUN
+
+3D-057 | z=x^2+y^2+6
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.5
+Physical device result: NOT RUN
+
+3D-058 | z=x^2-y^2+6
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6
+Physical device result: NOT RUN
+
+3D-059 | z=x^3+y^3+6
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6
+Physical device result: NOT RUN
+
+3D-060 | z=sin(x)+cos(y)+6
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.357008100494576
+Physical device result: NOT RUN
+
+3D-061 | z=sin(x*y)*6
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-1.4844237555271376
+Physical device result: NOT RUN
+
+3D-062 | z=sqrt(x^2+y^2+6)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 6 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.5495097567963922
+Physical device result: NOT RUN
+
+3D-063 | z=exp(-x^2-y^2)*6
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.6391839582758005
+Physical device result: NOT RUN
+
+3D-064 | z=ln(x^2+y^2+6)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 6 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=1.8718021769015913
+Physical device result: NOT RUN
+
+3D-065 | z=abs(x)+abs(y)+6
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 6 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7
+Physical device result: NOT RUN
+
+3D-066 | z=(x+y+6)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 6 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.0
+Physical device result: NOT RUN
+
+3D-067 | z=7*x+y
+Keys: TAP z -> TAP = -> TAP 7 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.0
+Physical device result: NOT RUN
+
+3D-068 | z=x^2+y^2+7
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7.5
+Physical device result: NOT RUN
+
+3D-069 | z=x^2-y^2+7
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7
+Physical device result: NOT RUN
+
+3D-070 | z=x^3+y^3+7
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=7
+Physical device result: NOT RUN
+
+3D-071 | z=sin(x)+cos(y)+7
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8.357008100494575
+Physical device result: NOT RUN
+
+3D-072 | z=sin(x*y)*7
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-1.7318277147816605
+Physical device result: NOT RUN
+
+3D-073 | z=sqrt(x^2+y^2+7)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 7 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.7386127875258306
+Physical device result: NOT RUN
+
+3D-074 | z=exp(-x^2-y^2)*7
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.245714617988434
+Physical device result: NOT RUN
+
+3D-075 | z=ln(x^2+y^2+7)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 7 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.0149030205422647
+Physical device result: NOT RUN
+
+3D-076 | z=abs(x)+abs(y)+7
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 7 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8
+Physical device result: NOT RUN
+
+3D-077 | z=(x+y+7)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 7 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.666666666666667
+Physical device result: NOT RUN
+
+3D-078 | z=8*x+y
+Keys: TAP z -> TAP = -> TAP 8 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.5
+Physical device result: NOT RUN
+
+3D-079 | z=x^2+y^2+8
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8.5
+Physical device result: NOT RUN
+
+3D-080 | z=x^2-y^2+8
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8
+Physical device result: NOT RUN
+
+3D-081 | z=x^3+y^3+8
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=8
+Physical device result: NOT RUN
+
+3D-082 | z=sin(x)+cos(y)+8
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9.357008100494575
+Physical device result: NOT RUN
+
+3D-083 | z=sin(x*y)*8
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-1.9792316740361835
+Physical device result: NOT RUN
+
+3D-084 | z=sqrt(x^2+y^2+8)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 8 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.9154759474226504
+Physical device result: NOT RUN
+
+3D-085 | z=exp(-x^2-y^2)*8
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.852245277701067
+Physical device result: NOT RUN
+
+3D-086 | z=ln(x^2+y^2+8)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 8 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.1400661634962708
+Physical device result: NOT RUN
+
+3D-087 | z=abs(x)+abs(y)+8
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 8 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9
+Physical device result: NOT RUN
+
+3D-088 | z=(x+y+8)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 8 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.333333333333333
+Physical device result: NOT RUN
+
+3D-089 | z=9*x+y
+Keys: TAP z -> TAP = -> TAP 9 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.0
+Physical device result: NOT RUN
+
+3D-090 | z=x^2+y^2+9
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9.5
+Physical device result: NOT RUN
+
+3D-091 | z=x^2-y^2+9
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9
+Physical device result: NOT RUN
+
+3D-092 | z=x^3+y^3+9
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=9
+Physical device result: NOT RUN
+
+3D-093 | z=sin(x)+cos(y)+9
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10.357008100494575
+Physical device result: NOT RUN
+
+3D-094 | z=sin(x*y)*9
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-2.2266356332907065
+Physical device result: NOT RUN
+
+3D-095 | z=sqrt(x^2+y^2+9)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 9 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.082207001484488
+Physical device result: NOT RUN
+
+3D-096 | z=exp(-x^2-y^2)*9
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=5.458775937413701
+Physical device result: NOT RUN
+
+3D-097 | z=ln(x^2+y^2+9)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 9 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.2512917986064953
+Physical device result: NOT RUN
+
+3D-098 | z=abs(x)+abs(y)+9
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 9 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10
+Physical device result: NOT RUN
+
+3D-099 | z=(x+y+9)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 9 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.0
+Physical device result: NOT RUN
+
+3D-100 | z=10*x+y
+Keys: TAP z -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP x -> TAP + -> TAP y -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=4.5
+Physical device result: NOT RUN
+
+3D-101 | z=x^2+y^2+10
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10.5
+Physical device result: NOT RUN
+
+3D-102 | z=x^2-y^2+10
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10
+Physical device result: NOT RUN
+
+3D-103 | z=x^3+y^3+10
+Keys: TAP z -> TAP = -> TAP x -> HOLD 3 -> TAP + -> TAP y -> HOLD 3 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=10
+Physical device result: NOT RUN
+
+3D-104 | z=sin(x)+cos(y)+10
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP right arrow -> TAP + -> TAP cos template -> TAP y -> TAP right arrow -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=11.357008100494575
+Physical device result: NOT RUN
+
+3D-105 | z=sin(x*y)*10
+Keys: TAP z -> TAP = -> TAP sin template -> TAP x -> TAP * -> TAP y -> TAP right arrow -> TAP * -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=-2.474039592545229
+Physical device result: NOT RUN
+
+3D-106 | z=sqrt(x^2+y^2+10)
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=3.24037034920393
+Physical device result: NOT RUN
+
+3D-107 | z=exp(-x^2-y^2)*10
+Keys: TAP z -> TAP = -> TAP exp template -> TAP - -> TAP x -> HOLD 2 -> TAP - -> TAP y -> HOLD 2 -> TAP right arrow -> TAP * -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.065306597126334
+Physical device result: NOT RUN
+
+3D-108 | z=ln(x^2+y^2+10)
+Keys: TAP z -> TAP = -> TAP ln template -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP right arrow -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=2.3513752571634776
+Physical device result: NOT RUN
+
+3D-109 | z=abs(x)+abs(y)+10
+Keys: TAP z -> TAP = -> TAP abs template -> TAP x -> TAP right arrow -> TAP + -> TAP abs template -> TAP y -> TAP right arrow -> TAP + -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=11
+Physical device result: NOT RUN
+
+3D-110 | z=(x+y+10)/(1+x^2+y^2)
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP + -> TAP 1 -> TAP 0 -> TAP ) -> TAP / -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP Done/Add
+Expected: explicit: x=0.5, y=-0.5, z=0.0; expected value=6.666666666666667
+Physical device result: NOT RUN
+
+3D-111 | x^2+y^2+z^2=1.21
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 2 -> TAP 1 -> TAP Done/Add
+Expected: implicit: x=1.1, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-112 | z=x^2+y^2+z^2-1
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 1 -> TAP Done/Add
+Expected: implicit: x=1.0, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-113 | x=u;y=v;z=1*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 1 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -0.25); visible surface
+Physical device result: NOT RUN
+
+3D-114 | x^2+y^2+z^2=1.44
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 4 -> TAP 4 -> TAP Done/Add
+Expected: implicit: x=1.2, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-115 | z=x^2+y^2+z^2-2
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 2 -> TAP Done/Add
+Expected: implicit: x=1.4142135623730951, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-116 | x=u;y=v;z=2*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 2 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -0.5); visible surface
+Physical device result: NOT RUN
+
+3D-117 | x^2+y^2+z^2=1.69
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 6 -> TAP 9 -> TAP Done/Add
+Expected: implicit: x=1.3, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-118 | z=x^2+y^2+z^2-3
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 3 -> TAP Done/Add
+Expected: implicit: x=1.7320508075688772, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-119 | x=u;y=v;z=3*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 3 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -0.75); visible surface
+Physical device result: NOT RUN
+
+3D-120 | x^2+y^2+z^2=1.96
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 9 -> TAP 6 -> TAP Done/Add
+Expected: implicit: x=1.4, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-121 | z=x^2+y^2+z^2-4
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 4 -> TAP Done/Add
+Expected: implicit: x=2.0, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-122 | x=u;y=v;z=4*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 4 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -1.0); visible surface
+Physical device result: NOT RUN
+
+3D-123 | x^2+y^2+z^2=2.25
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 2 -> TAP . -> TAP 2 -> TAP 5 -> TAP Done/Add
+Expected: implicit: x=1.5, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-124 | z=x^2+y^2+z^2-5
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 5 -> TAP Done/Add
+Expected: implicit: x=2.23606797749979, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-125 | x=u;y=v;z=5*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 5 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -1.25); visible surface
+Physical device result: NOT RUN
+
+3D-126 | x^2+y^2+z^2=2.56
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 2 -> TAP . -> TAP 5 -> TAP 6 -> TAP Done/Add
+Expected: implicit: x=1.6, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-127 | z=x^2+y^2+z^2-6
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 6 -> TAP Done/Add
+Expected: implicit: x=2.449489742783178, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-128 | x=u;y=v;z=6*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 6 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -1.5); visible surface
+Physical device result: NOT RUN
+
+3D-129 | x^2+y^2+z^2=2.89
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 2 -> TAP . -> TAP 8 -> TAP 9 -> TAP Done/Add
+Expected: implicit: x=1.7, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-130 | z=x^2+y^2+z^2-7
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 7 -> TAP Done/Add
+Expected: implicit: x=2.6457513110645907, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-131 | x=u;y=v;z=7*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 7 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -1.75); visible surface
+Physical device result: NOT RUN
+
+3D-132 | x^2+y^2+z^2=3.24
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 3 -> TAP . -> TAP 2 -> TAP 4 -> TAP Done/Add
+Expected: implicit: x=1.8, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-133 | z=x^2+y^2+z^2-8
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 8 -> TAP Done/Add
+Expected: implicit: x=2.8284271247461903, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-134 | x=u;y=v;z=8*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 8 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -2.0); visible surface
+Physical device result: NOT RUN
+
+3D-135 | x^2+y^2+z^2=3.61
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 3 -> TAP . -> TAP 6 -> TAP 1 -> TAP Done/Add
+Expected: implicit: x=1.9, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-136 | z=x^2+y^2+z^2-9
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 9 -> TAP Done/Add
+Expected: implicit: x=3.0, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-137 | x=u;y=v;z=9*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 9 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -2.25); visible surface
+Physical device result: NOT RUN
+
+3D-138 | x^2+y^2+z^2=4.00
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP = -> TAP 4 -> TAP . -> TAP 0 -> TAP 0 -> TAP Done/Add
+Expected: implicit: x=2.0, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-139 | z=x^2+y^2+z^2-10
+Keys: TAP z -> TAP = -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP - -> TAP 1 -> TAP 0 -> TAP Done/Add
+Expected: implicit: x=3.1622776601683795, y=0, z=0; expected value=0.0
+Physical device result: NOT RUN
+
+3D-140 | x=u;y=v;z=10*u*v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP u -> TAP * -> TAP v -> TAP Done/Add
+Expected: At u=0.5, v=-0.5: point (0.5, -0.5, -2.5); visible surface
+Physical device result: NOT RUN
+
+3D-141 | z=
+Keys: TAP z -> TAP = -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-142 | z=sin(
+Keys: TAP z -> TAP = -> TAP sin template -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-143 | z=1+
+Keys: TAP z -> TAP = -> TAP 1 -> TAP + -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-144 | x^2+y^2+=1
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP = -> TAP 1 -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-145 | z=sqrt()
+Keys: TAP z -> TAP = -> TAP sqrt template -> TAP right arrow -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-146 | z=cos(x))
+Keys: TAP z -> TAP = -> TAP cos template -> TAP x -> TAP right arrow -> TAP ) -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-147 | z=2**x
+Keys: TAP z -> TAP = -> TAP 2 -> TAP * -> TAP * -> TAP x -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-148 | x=u;x=v;y=u;z=v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP x -> TAP = -> TAP v -> TAP ; -> TAP y -> TAP = -> TAP u -> TAP ; -> TAP z -> TAP = -> TAP v -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-149 | x=u;y=v
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN
+
+3D-150 | z=ln()
+Keys: TAP z -> TAP = -> TAP ln template -> TAP right arrow -> TAP Done/Add
+Expected: Show validation error; no crash
+Physical device result: NOT RUN

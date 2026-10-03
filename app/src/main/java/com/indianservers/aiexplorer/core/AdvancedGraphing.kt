@@ -37,7 +37,7 @@ data class InequalityCell(val center: Vec2, val satisfied: Boolean)
 /** Renderer-independent advanced graph services shared by 2D, lessons, and future AR views. */
 class AdvancedGraphEngine(private val expressions: ExpressionEngine = ExpressionEngine()) {
     fun classify(source: String): AdvancedGraphKind {
-        val value = source.lowercase().replace(" ", "")
+        val value = MathExpressionNormalizer.normalize(source).lowercase().replace(Regex("\\s+"), "")
         return when {
             value.startsWith("regression(") || '~' in value -> AdvancedGraphKind.Regression
             value.startsWith("table(") || value == "table" -> AdvancedGraphKind.Table
@@ -48,7 +48,7 @@ class AdvancedGraphEngine(private val expressions: ExpressionEngine = Expression
             listOf("<=", ">=", "<", ">").any(value::contains) && value.contains('y') -> AdvancedGraphKind.Inequality
             value.startsWith("r=") -> AdvancedGraphKind.Polar
             value.contains("x(t)") && value.contains("y(t)") -> AdvancedGraphKind.Parametric
-            value.contains('=') && !value.startsWith("y=") && !value.substringBefore('=').contains("(x)") -> AdvancedGraphKind.Implicit
+            value.contains('=') && (!value.startsWith("y=") || Regex("\\by\\b").containsMatchIn(value.substringAfter('='))) && !value.substringBefore('=').contains("(x)") -> AdvancedGraphKind.Implicit
             else -> AdvancedGraphKind.Explicit
         }
     }

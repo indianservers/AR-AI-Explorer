@@ -1,0 +1,1206 @@
+300 NEW MATH KEYBOARD EMULATOR CASES
+No formula overlaps the previous 300-case batch.
+Input method: touchscreen keys only; no paste, native keyboard, or direct text replacement.
+For each case open + Graph/+ Equation, focus the editor and clear existing input.
+Use abc for letters and semicolon; 123 for digits/operators/parentheses; sym for comparisons.
+Hold a number after a base to enter a power. Press Done then inspect the graph.
+
+NEW-2D-001 | y=tan(x)/1
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5463024898437905
+
+NEW-2D-002 | y=asin(x)+1
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.523598775598299
+
+NEW-2D-003 | y=acos(x)-1
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.04719755119659785
+
+NEW-2D-004 | y=atan(x)*1
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.4636476090008061
+
+NEW-2D-005 | y=log(x^2+1)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.09691001300805642
+
+NEW-2D-006 | y=min(x,0.1)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 1 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.1
+
+NEW-2D-007 | y=max(x,0.1)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 1 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-008 | y=1/(x^2+1)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.8
+
+NEW-2D-009 | y=(x-1)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 1 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-010 | y=if(x>0,1*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 1 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-011 | y=tan(x)/2
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.27315124492189524
+
+NEW-2D-012 | y=asin(x)+2
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.523598775598299
+
+NEW-2D-013 | y=acos(x)-2
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -0.9528024488034021
+
+NEW-2D-014 | y=atan(x)*2
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.9272952180016122
+
+NEW-2D-015 | y=log(x^2+2)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.3521825181113625
+
+NEW-2D-016 | y=min(x,0.2)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 2 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.2
+
+NEW-2D-017 | y=max(x,0.2)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 2 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-018 | y=1/(x^2+2)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.4444444444444444
+
+NEW-2D-019 | y=(x-2)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 2 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.25
+
+NEW-2D-020 | y=if(x>0,2*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 2 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.0
+
+NEW-2D-021 | y=tan(x)/3
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.18210082994793017
+
+NEW-2D-022 | y=asin(x)+3
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.523598775598299
+
+NEW-2D-023 | y=acos(x)-3
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -1.9528024488034021
+
+NEW-2D-024 | y=atan(x)*3
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.3909428270024182
+
+NEW-2D-025 | y=log(x^2+3)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5118833609788743
+
+NEW-2D-026 | y=min(x,0.3)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 3 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.3
+
+NEW-2D-027 | y=max(x,0.3)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 3 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-028 | y=1/(x^2+3)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.3076923076923077
+
+NEW-2D-029 | y=(x-3)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 3 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 6.25
+
+NEW-2D-030 | y=if(x>0,3*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 3 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.5
+
+NEW-2D-031 | y=tan(x)/4
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.13657562246094762
+
+NEW-2D-032 | y=asin(x)+4
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.523598775598299
+
+NEW-2D-033 | y=acos(x)-4
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -2.952802448803402
+
+NEW-2D-034 | y=atan(x)*4
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.8545904360032244
+
+NEW-2D-035 | y=log(x^2+4)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.6283889300503115
+
+NEW-2D-036 | y=min(x,0.4)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 4 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.4
+
+NEW-2D-037 | y=max(x,0.4)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 4 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-038 | y=1/(x^2+4)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.23529411764705882
+
+NEW-2D-039 | y=(x-4)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 4 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 12.25
+
+NEW-2D-040 | y=if(x>0,4*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 4 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.0
+
+NEW-2D-041 | y=tan(x)/5
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.1092604979687581
+
+NEW-2D-042 | y=asin(x)+5
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 5.523598775598299
+
+NEW-2D-043 | y=acos(x)-5
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -3.952802448803402
+
+NEW-2D-044 | y=atan(x)*5
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.3182380450040303
+
+NEW-2D-045 | y=log(x^2+5)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.7201593034059569
+
+NEW-2D-046 | y=min(x,0.5)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 5 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-047 | y=max(x,0.5)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 5 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-048 | y=1/(x^2+5)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.19047619047619047
+
+NEW-2D-049 | y=(x-5)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 5 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 20.25
+
+NEW-2D-050 | y=if(x>0,5*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 5 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.5
+
+NEW-2D-051 | y=tan(x)/6
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.09105041497396509
+
+NEW-2D-052 | y=asin(x)+6
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 6.523598775598299
+
+NEW-2D-053 | y=acos(x)-6
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -4.952802448803402
+
+NEW-2D-054 | y=atan(x)*6
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.7818856540048365
+
+NEW-2D-055 | y=log(x^2+6)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.7958800173440752
+
+NEW-2D-056 | y=min(x,0.6)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 6 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-057 | y=max(x,0.6)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 6 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.6
+
+NEW-2D-058 | y=1/(x^2+6)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.16
+
+NEW-2D-059 | y=(x-6)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 6 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 30.25
+
+NEW-2D-060 | y=if(x>0,6*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 6 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.0
+
+NEW-2D-061 | y=tan(x)/7
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.07804321283482721
+
+NEW-2D-062 | y=asin(x)+7
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 7.523598775598299
+
+NEW-2D-063 | y=acos(x)-7
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -5.952802448803402
+
+NEW-2D-064 | y=atan(x)*7
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.2455332630056426
+
+NEW-2D-065 | y=log(x^2+7)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.8603380065709937
+
+NEW-2D-066 | y=min(x,0.7)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 7 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-067 | y=max(x,0.7)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 7 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.7
+
+NEW-2D-068 | y=1/(x^2+7)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.13793103448275862
+
+NEW-2D-069 | y=(x-7)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 7 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 42.25
+
+NEW-2D-070 | y=if(x>0,7*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 7 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.5
+
+NEW-2D-071 | y=tan(x)/8
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.06828781123047381
+
+NEW-2D-072 | y=asin(x)+8
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 8.523598775598298
+
+NEW-2D-073 | y=acos(x)-8
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -6.952802448803402
+
+NEW-2D-074 | y=atan(x)*8
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.7091808720064487
+
+NEW-2D-075 | y=log(x^2+8)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.9164539485499251
+
+NEW-2D-076 | y=min(x,0.8)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 8 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-077 | y=max(x,0.8)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 8 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.8
+
+NEW-2D-078 | y=1/(x^2+8)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.12121212121212122
+
+NEW-2D-079 | y=(x-8)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 8 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 56.25
+
+NEW-2D-080 | y=if(x>0,8*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 8 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.0
+
+NEW-2D-081 | y=tan(x)/9
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.060700276649310055
+
+NEW-2D-082 | y=asin(x)+9
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 9.523598775598298
+
+NEW-2D-083 | y=acos(x)-9
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -7.952802448803402
+
+NEW-2D-084 | y=atan(x)*9
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.1728284810072545
+
+NEW-2D-085 | y=log(x^2+9)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.9661417327390326
+
+NEW-2D-086 | y=min(x,0.9)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 9 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-087 | y=max(x,0.9)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 0 -> TAP . -> TAP 9 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.9
+
+NEW-2D-088 | y=1/(x^2+9)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.10810810810810811
+
+NEW-2D-089 | y=(x-9)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 9 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 72.25
+
+NEW-2D-090 | y=if(x>0,9*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 9 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.5
+
+NEW-2D-091 | y=tan(x)/10
+Keys: TAP y -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP / -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.05463024898437905
+
+NEW-2D-092 | y=asin(x)+10
+Keys: TAP y -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 10.523598775598298
+
+NEW-2D-093 | y=acos(x)-10
+Keys: TAP y -> TAP = -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP ) -> TAP - -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -8.952802448803402
+
+NEW-2D-094 | y=atan(x)*10
+Keys: TAP y -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP * -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.636476090008061
+
+NEW-2D-095 | y=log(x^2+10)
+Keys: TAP y -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.0107238653917732
+
+NEW-2D-096 | y=min(x,1.0)
+Keys: TAP y -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP 1 -> TAP . -> TAP 0 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-2D-097 | y=max(x,1.0)
+Keys: TAP y -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP 1 -> TAP . -> TAP 0 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.0
+
+NEW-2D-098 | y=1/(x^2+10)
+Keys: TAP y -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.0975609756097561
+
+NEW-2D-099 | y=(x-10)^2
+Keys: TAP y -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 1 -> TAP 0 -> TAP ) -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 90.25
+
+NEW-2D-100 | y=if(x>0,10*x,-x)
+Keys: TAP y -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP 0 -> TAP , -> TAP 1 -> TAP 0 -> TAP * -> TAP x -> TAP , -> TAP - -> TAP x -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 5.0
+
+NEW-2D-101 | x=y^2+1
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP Done
+Expected implicit: at (1, 0, 0), value 0
+
+NEW-2D-102 | x^2/1+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 1 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (1.0, 0, 0), value 0
+
+NEW-2D-103 | r=1*sin(theta)
+Keys: TAP r -> TAP = -> TAP 1 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 1
+
+NEW-2D-104 | x(t)=1*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 1 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-105 | y>sqrt(x^2+1)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-106 | x=y^2+2
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 2 -> TAP Done
+Expected implicit: at (2, 0, 0), value 0
+
+NEW-2D-107 | x^2/2+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (1.4142135623730951, 0, 0), value 0
+
+NEW-2D-108 | r=2*sin(theta)
+Keys: TAP r -> TAP = -> TAP 2 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 2
+
+NEW-2D-109 | x(t)=2*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 2 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-110 | y>sqrt(x^2+2)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 2 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-111 | x=y^2+3
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 3 -> TAP Done
+Expected implicit: at (3, 0, 0), value 0
+
+NEW-2D-112 | x^2/3+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 3 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (1.7320508075688772, 0, 0), value 0
+
+NEW-2D-113 | r=3*sin(theta)
+Keys: TAP r -> TAP = -> TAP 3 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 3
+
+NEW-2D-114 | x(t)=3*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 3 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-115 | y>sqrt(x^2+3)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 3 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-116 | x=y^2+4
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 4 -> TAP Done
+Expected implicit: at (4, 0, 0), value 0
+
+NEW-2D-117 | x^2/4+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 4 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (2.0, 0, 0), value 0
+
+NEW-2D-118 | r=4*sin(theta)
+Keys: TAP r -> TAP = -> TAP 4 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 4
+
+NEW-2D-119 | x(t)=4*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 4 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-120 | y>sqrt(x^2+4)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 4 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-121 | x=y^2+5
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 5 -> TAP Done
+Expected implicit: at (5, 0, 0), value 0
+
+NEW-2D-122 | x^2/5+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 5 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (2.23606797749979, 0, 0), value 0
+
+NEW-2D-123 | r=5*sin(theta)
+Keys: TAP r -> TAP = -> TAP 5 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 5
+
+NEW-2D-124 | x(t)=5*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 5 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-125 | y>sqrt(x^2+5)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 5 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-126 | x=y^2+6
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 6 -> TAP Done
+Expected implicit: at (6, 0, 0), value 0
+
+NEW-2D-127 | x^2/6+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 6 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (2.449489742783178, 0, 0), value 0
+
+NEW-2D-128 | r=6*sin(theta)
+Keys: TAP r -> TAP = -> TAP 6 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 6
+
+NEW-2D-129 | x(t)=6*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 6 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-130 | y>sqrt(x^2+6)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 6 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-131 | x=y^2+7
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 7 -> TAP Done
+Expected implicit: at (7, 0, 0), value 0
+
+NEW-2D-132 | x^2/7+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 7 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (2.6457513110645907, 0, 0), value 0
+
+NEW-2D-133 | r=7*sin(theta)
+Keys: TAP r -> TAP = -> TAP 7 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 7
+
+NEW-2D-134 | x(t)=7*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 7 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-135 | y>sqrt(x^2+7)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 7 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-136 | x=y^2+8
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 8 -> TAP Done
+Expected implicit: at (8, 0, 0), value 0
+
+NEW-2D-137 | x^2/8+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 8 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (2.8284271247461903, 0, 0), value 0
+
+NEW-2D-138 | r=8*sin(theta)
+Keys: TAP r -> TAP = -> TAP 8 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 8
+
+NEW-2D-139 | x(t)=8*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 8 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-140 | y>sqrt(x^2+8)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 8 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-141 | x=y^2+9
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 9 -> TAP Done
+Expected implicit: at (9, 0, 0), value 0
+
+NEW-2D-142 | x^2/9+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 9 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (3.0, 0, 0), value 0
+
+NEW-2D-143 | r=9*sin(theta)
+Keys: TAP r -> TAP = -> TAP 9 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 9
+
+NEW-2D-144 | x(t)=9*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 9 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-145 | y>sqrt(x^2+9)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 9 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-2D-146 | x=y^2+10
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done
+Expected implicit: at (10, 0, 0), value 0
+
+NEW-2D-147 | x^2/10+y^2=1
+Keys: TAP x -> HOLD 2 -> TAP / -> TAP 1 -> TAP 0 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP Done
+Expected implicit: at (3.1622776601683795, 0, 0), value 0
+
+NEW-2D-148 | r=10*sin(theta)
+Keys: TAP r -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP t -> TAP h -> TAP e -> TAP t -> TAP a -> TAP ) -> TAP Done
+Expected polar: at (1.5707963267948966, -0.5, 0), value 10
+
+NEW-2D-149 | x(t)=10*t;y(t)=t^2
+Keys: TAP x -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP 1 -> TAP 0 -> TAP * -> TAP t -> TAP ; -> TAP y -> TAP ( -> TAP t -> TAP ) -> TAP = -> TAP t -> HOLD 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 0.25
+
+NEW-2D-150 | y>sqrt(x^2+10)
+Keys: TAP y -> TAP > -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP ) -> TAP Done
+Expected inequality: at (0.5, -0.5, 0), value 0
+
+NEW-3D-001 | z=tan(x-y)/1
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.5574077246549023
+
+NEW-3D-002 | z=asin(x)+acos(y)+1
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.617993877991495
+
+NEW-3D-003 | z=atan(x*y)*1
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -0.24497866312686414
+
+NEW-3D-004 | z=log(1+x^2+y^2)*1
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.17609125905568124
+
+NEW-3D-005 | z=min(x,y)+1
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-3D-006 | z=max(x,y)-1
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -0.5
+
+NEW-3D-007 | z=1/(x^2+y^2+1)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.6666666666666666
+
+NEW-3D-008 | z=(x-1)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 1 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-3D-009 | z=if(x>y,1*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 1 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5
+
+NEW-3D-010 | z=cos(x-y)/1
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5403023058681398
+
+NEW-3D-011 | z=exp(x+y)+1
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2
+
+NEW-3D-012 | z=sqrt(abs(x*y)+1)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.118033988749895
+
+NEW-3D-013 | z=tan(x-y)/2
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.7787038623274511
+
+NEW-3D-014 | z=asin(x)+acos(y)+2
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.617993877991495
+
+NEW-3D-015 | z=atan(x*y)*2
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -0.4899573262537283
+
+NEW-3D-016 | z=log(1+x^2+y^2)*2
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.3521825181113625
+
+NEW-3D-017 | z=min(x,y)+2
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.5
+
+NEW-3D-018 | z=max(x,y)-2
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -1.5
+
+NEW-3D-019 | z=1/(x^2+y^2+2)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 2 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.4
+
+NEW-3D-020 | z=(x-2)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 2 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.5
+
+NEW-3D-021 | z=if(x>y,2*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 2 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.0
+
+NEW-3D-022 | z=cos(x-y)/2
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.2701511529340699
+
+NEW-3D-023 | z=exp(x+y)+2
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3
+
+NEW-3D-024 | z=sqrt(abs(x*y)+2)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 2 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.5
+
+NEW-3D-025 | z=tan(x-y)/3
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5191359082183008
+
+NEW-3D-026 | z=asin(x)+acos(y)+3
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 5.617993877991495
+
+NEW-3D-027 | z=atan(x*y)*3
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -0.7349359893805925
+
+NEW-3D-028 | z=log(1+x^2+y^2)*3
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.5282737771670437
+
+NEW-3D-029 | z=min(x,y)+3
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.5
+
+NEW-3D-030 | z=max(x,y)-3
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -2.5
+
+NEW-3D-031 | z=1/(x^2+y^2+3)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 3 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.2857142857142857
+
+NEW-3D-032 | z=(x-3)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 3 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 6.5
+
+NEW-3D-033 | z=if(x>y,3*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 3 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.5
+
+NEW-3D-034 | z=cos(x-y)/3
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.18010076862271326
+
+NEW-3D-035 | z=exp(x+y)+3
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 3 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4
+
+NEW-3D-036 | z=sqrt(abs(x*y)+3)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 3 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.8027756377319946
+
+NEW-3D-037 | z=tan(x-y)/4
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.3893519311637256
+
+NEW-3D-038 | z=asin(x)+acos(y)+4
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 6.617993877991495
+
+NEW-3D-039 | z=atan(x*y)*4
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -0.9799146525074566
+
+NEW-3D-040 | z=log(1+x^2+y^2)*4
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.704365036222725
+
+NEW-3D-041 | z=min(x,y)+4
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.5
+
+NEW-3D-042 | z=max(x,y)-4
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -3.5
+
+NEW-3D-043 | z=1/(x^2+y^2+4)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 4 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.2222222222222222
+
+NEW-3D-044 | z=(x-4)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 4 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 12.5
+
+NEW-3D-045 | z=if(x>y,4*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 4 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.0
+
+NEW-3D-046 | z=cos(x-y)/4
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.13507557646703494
+
+NEW-3D-047 | z=exp(x+y)+4
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 4 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 5
+
+NEW-3D-048 | z=sqrt(abs(x*y)+4)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 4 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.0615528128088303
+
+NEW-3D-049 | z=tan(x-y)/5
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.31148154493098046
+
+NEW-3D-050 | z=asin(x)+acos(y)+5
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 7.617993877991495
+
+NEW-3D-051 | z=atan(x*y)*5
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -1.2248933156343207
+
+NEW-3D-052 | z=log(1+x^2+y^2)*5
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.8804562952784062
+
+NEW-3D-053 | z=min(x,y)+5
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.5
+
+NEW-3D-054 | z=max(x,y)-5
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -4.5
+
+NEW-3D-055 | z=1/(x^2+y^2+5)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 5 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.18181818181818182
+
+NEW-3D-056 | z=(x-5)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 5 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 20.5
+
+NEW-3D-057 | z=if(x>y,5*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 5 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.5
+
+NEW-3D-058 | z=cos(x-y)/5
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.10806046117362796
+
+NEW-3D-059 | z=exp(x+y)+5
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 5 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 6
+
+NEW-3D-060 | z=sqrt(abs(x*y)+5)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 5 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.29128784747792
+
+NEW-3D-061 | z=tan(x-y)/6
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.2595679541091504
+
+NEW-3D-062 | z=asin(x)+acos(y)+6
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 8.617993877991495
+
+NEW-3D-063 | z=atan(x*y)*6
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -1.469871978761185
+
+NEW-3D-064 | z=log(1+x^2+y^2)*6
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.0565475543340874
+
+NEW-3D-065 | z=min(x,y)+6
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 5.5
+
+NEW-3D-066 | z=max(x,y)-6
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -5.5
+
+NEW-3D-067 | z=1/(x^2+y^2+6)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 6 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.15384615384615385
+
+NEW-3D-068 | z=(x-6)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 6 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 30.5
+
+NEW-3D-069 | z=if(x>y,6*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 6 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.0
+
+NEW-3D-070 | z=cos(x-y)/6
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.09005038431135663
+
+NEW-3D-071 | z=exp(x+y)+6
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 6 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 7
+
+NEW-3D-072 | z=sqrt(abs(x*y)+6)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 6 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.5
+
+NEW-3D-073 | z=tan(x-y)/7
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.22248681780784318
+
+NEW-3D-074 | z=asin(x)+acos(y)+7
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 9.617993877991495
+
+NEW-3D-075 | z=atan(x*y)*7
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -1.714850641888049
+
+NEW-3D-076 | z=log(1+x^2+y^2)*7
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.2326388133897686
+
+NEW-3D-077 | z=min(x,y)+7
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 6.5
+
+NEW-3D-078 | z=max(x,y)-7
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -6.5
+
+NEW-3D-079 | z=1/(x^2+y^2+7)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 7 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.13333333333333333
+
+NEW-3D-080 | z=(x-7)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 7 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 42.5
+
+NEW-3D-081 | z=if(x>y,7*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 7 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.5
+
+NEW-3D-082 | z=cos(x-y)/7
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.07718604369544854
+
+NEW-3D-083 | z=exp(x+y)+7
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 7 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 8
+
+NEW-3D-084 | z=sqrt(abs(x*y)+7)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 7 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.692582403567252
+
+NEW-3D-085 | z=tan(x-y)/8
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.1946759655818628
+
+NEW-3D-086 | z=asin(x)+acos(y)+8
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 10.617993877991495
+
+NEW-3D-087 | z=atan(x*y)*8
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -1.9598293050149131
+
+NEW-3D-088 | z=log(1+x^2+y^2)*8
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.40873007244545
+
+NEW-3D-089 | z=min(x,y)+8
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 7.5
+
+NEW-3D-090 | z=max(x,y)-8
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -7.5
+
+NEW-3D-091 | z=1/(x^2+y^2+8)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 8 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.11764705882352941
+
+NEW-3D-092 | z=(x-8)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 8 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 56.5
+
+NEW-3D-093 | z=if(x>y,8*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 8 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.0
+
+NEW-3D-094 | z=cos(x-y)/8
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.06753778823351747
+
+NEW-3D-095 | z=exp(x+y)+8
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 8 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 9
+
+NEW-3D-096 | z=sqrt(abs(x*y)+8)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 8 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 2.8722813232690143
+
+NEW-3D-097 | z=tan(x-y)/9
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.17304530273943358
+
+NEW-3D-098 | z=asin(x)+acos(y)+9
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 11.617993877991495
+
+NEW-3D-099 | z=atan(x*y)*9
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -2.204807968141777
+
+NEW-3D-100 | z=log(1+x^2+y^2)*9
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.5848213315011312
+
+NEW-3D-101 | z=min(x,y)+9
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 8.5
+
+NEW-3D-102 | z=max(x,y)-9
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -8.5
+
+NEW-3D-103 | z=1/(x^2+y^2+9)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 9 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.10526315789473684
+
+NEW-3D-104 | z=(x-9)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 9 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 72.5
+
+NEW-3D-105 | z=if(x>y,9*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 9 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 4.5
+
+NEW-3D-106 | z=cos(x-y)/9
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.06003358954090442
+
+NEW-3D-107 | z=exp(x+y)+9
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 9 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 10
+
+NEW-3D-108 | z=sqrt(abs(x*y)+9)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 9 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.0413812651491097
+
+NEW-3D-109 | z=tan(x-y)/10
+Keys: TAP z -> TAP = -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.15574077246549023
+
+NEW-3D-110 | z=asin(x)+acos(y)+10
+Keys: TAP z -> TAP = -> TAP a -> TAP s -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP ) -> TAP + -> TAP a -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 12.617993877991495
+
+NEW-3D-111 | z=atan(x*y)*10
+Keys: TAP z -> TAP = -> TAP a -> TAP t -> TAP a -> TAP n -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP * -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -2.4497866312686414
+
+NEW-3D-112 | z=log(1+x^2+y^2)*10
+Keys: TAP z -> TAP = -> TAP l -> TAP o -> TAP g -> TAP ( -> TAP 1 -> TAP + -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP ) -> TAP * -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 1.7609125905568124
+
+NEW-3D-113 | z=min(x,y)+10
+Keys: TAP z -> TAP = -> TAP m -> TAP i -> TAP n -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 9.5
+
+NEW-3D-114 | z=max(x,y)-10
+Keys: TAP z -> TAP = -> TAP m -> TAP a -> TAP x -> TAP ( -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP - -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value -9.5
+
+NEW-3D-115 | z=1/(x^2+y^2+10)
+Keys: TAP z -> TAP = -> TAP 1 -> TAP / -> TAP ( -> TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.09523809523809523
+
+NEW-3D-116 | z=(x-10)^2+y^2
+Keys: TAP z -> TAP = -> TAP ( -> TAP x -> TAP - -> TAP 1 -> TAP 0 -> TAP ) -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 90.5
+
+NEW-3D-117 | z=if(x>y,10*x,y)
+Keys: TAP z -> TAP = -> TAP i -> TAP f -> TAP ( -> TAP x -> TAP > -> TAP y -> TAP , -> TAP 1 -> TAP 0 -> TAP * -> TAP x -> TAP , -> TAP y -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 5.0
+
+NEW-3D-118 | z=cos(x-y)/10
+Keys: TAP z -> TAP = -> TAP c -> TAP o -> TAP s -> TAP ( -> TAP x -> TAP - -> TAP y -> TAP ) -> TAP / -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 0.05403023058681398
+
+NEW-3D-119 | z=exp(x+y)+10
+Keys: TAP z -> TAP = -> TAP e -> TAP x -> TAP p -> TAP ( -> TAP x -> TAP + -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP 0 -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 11
+
+NEW-3D-120 | z=sqrt(abs(x*y)+10)
+Keys: TAP z -> TAP = -> TAP s -> TAP q -> TAP r -> TAP t -> TAP ( -> TAP a -> TAP b -> TAP s -> TAP ( -> TAP x -> TAP * -> TAP y -> TAP ) -> TAP + -> TAP 1 -> TAP 0 -> TAP ) -> TAP Done
+Expected explicit: at (0.5, -0.5, 0), value 3.2015621187164243
+
+NEW-3D-121 | x=y^2+z^2+0.1
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 1 -> TAP Done
+Expected implicit: at (0.1, 0, 0), value 0
+
+NEW-3D-122 | x^2+y^2=1.1
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 1 -> TAP Done
+Expected implicit: at (1.0488088481701516, 0, 0), value 0
+
+NEW-3D-123 | x=u;y=v;z=u^2+v^2+1
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 1 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 1.5
+
+NEW-3D-124 | x=y^2+z^2+0.2
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 2 -> TAP Done
+Expected implicit: at (0.2, 0, 0), value 0
+
+NEW-3D-125 | x^2+y^2=1.2
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 2 -> TAP Done
+Expected implicit: at (1.0954451150103321, 0, 0), value 0
+
+NEW-3D-126 | x=u;y=v;z=u^2+v^2+2
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 2 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 2.5
+
+NEW-3D-127 | x=y^2+z^2+0.3
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 3 -> TAP Done
+Expected implicit: at (0.3, 0, 0), value 0
+
+NEW-3D-128 | x^2+y^2=1.3
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 3 -> TAP Done
+Expected implicit: at (1.140175425099138, 0, 0), value 0
+
+NEW-3D-129 | x=u;y=v;z=u^2+v^2+3
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 3 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 3.5
+
+NEW-3D-130 | x=y^2+z^2+0.4
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 4 -> TAP Done
+Expected implicit: at (0.4, 0, 0), value 0
+
+NEW-3D-131 | x^2+y^2=1.4
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 4 -> TAP Done
+Expected implicit: at (1.1832159566199232, 0, 0), value 0
+
+NEW-3D-132 | x=u;y=v;z=u^2+v^2+4
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 4 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 4.5
+
+NEW-3D-133 | x=y^2+z^2+0.5
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 5 -> TAP Done
+Expected implicit: at (0.5, 0, 0), value 0
+
+NEW-3D-134 | x^2+y^2=1.5
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 5 -> TAP Done
+Expected implicit: at (1.224744871391589, 0, 0), value 0
+
+NEW-3D-135 | x=u;y=v;z=u^2+v^2+5
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 5 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 5.5
+
+NEW-3D-136 | x=y^2+z^2+0.6
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 6 -> TAP Done
+Expected implicit: at (0.6, 0, 0), value 0
+
+NEW-3D-137 | x^2+y^2=1.6
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 6 -> TAP Done
+Expected implicit: at (1.2649110640673518, 0, 0), value 0
+
+NEW-3D-138 | x=u;y=v;z=u^2+v^2+6
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 6 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 6.5
+
+NEW-3D-139 | x=y^2+z^2+0.7
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 7 -> TAP Done
+Expected implicit: at (0.7, 0, 0), value 0
+
+NEW-3D-140 | x^2+y^2=1.7
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 7 -> TAP Done
+Expected implicit: at (1.3038404810405297, 0, 0), value 0
+
+NEW-3D-141 | x=u;y=v;z=u^2+v^2+7
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 7 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 7.5
+
+NEW-3D-142 | x=y^2+z^2+0.8
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 8 -> TAP Done
+Expected implicit: at (0.8, 0, 0), value 0
+
+NEW-3D-143 | x^2+y^2=1.8
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 8 -> TAP Done
+Expected implicit: at (1.3416407864998738, 0, 0), value 0
+
+NEW-3D-144 | x=u;y=v;z=u^2+v^2+8
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 8 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 8.5
+
+NEW-3D-145 | x=y^2+z^2+0.9
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 0 -> TAP . -> TAP 9 -> TAP Done
+Expected implicit: at (0.9, 0, 0), value 0
+
+NEW-3D-146 | x^2+y^2=1.9
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 1 -> TAP . -> TAP 9 -> TAP Done
+Expected implicit: at (1.378404875209022, 0, 0), value 0
+
+NEW-3D-147 | x=u;y=v;z=u^2+v^2+9
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 9 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 9.5
+
+NEW-3D-148 | x=y^2+z^2+1.0
+Keys: TAP x -> TAP = -> TAP y -> HOLD 2 -> TAP + -> TAP z -> HOLD 2 -> TAP + -> TAP 1 -> TAP . -> TAP 0 -> TAP Done
+Expected implicit: at (1.0, 0, 0), value 0
+
+NEW-3D-149 | x^2+y^2=2.0
+Keys: TAP x -> HOLD 2 -> TAP + -> TAP y -> HOLD 2 -> TAP = -> TAP 2 -> TAP . -> TAP 0 -> TAP Done
+Expected implicit: at (1.4142135623730951, 0, 0), value 0
+
+NEW-3D-150 | x=u;y=v;z=u^2+v^2+10
+Keys: TAP x -> TAP = -> TAP u -> TAP ; -> TAP y -> TAP = -> TAP v -> TAP ; -> TAP z -> TAP = -> TAP u -> HOLD 2 -> TAP + -> TAP v -> HOLD 2 -> TAP + -> TAP 1 -> TAP 0 -> TAP Done
+Expected parametric: at (0.5, -0.5, 0), value 10.5

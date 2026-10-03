@@ -275,6 +275,20 @@ object MathInputIntelligence {
     }
 
     private fun repairActions(source: String, cursor: Int): List<MathInputAssistAction> = buildList {
+        val stack = ArrayDeque<Char>()
+        for (index in source.indices) {
+            val ch = source[index]
+            if (ch in "([{") stack.addLast(ch)
+            if (ch in ")]}") {
+                val opener = when (ch) { ')' -> '('; ']' -> '['; else -> '{' }
+                if (stack.lastOrNull() == opener) stack.removeLast()
+                else if (stack.isEmpty()) {
+                    val start = source.substring(0, index).indexOfLast { it in "=;" } + 1
+                    add(MathInputAssistAction("Add $opener", "Add the missing opening delimiter; review the grouping", opener.toString(), start, start, 1, MathInputAssistKind.Repair))
+                    break
+                }
+            }
+        }
         val closers = missingClosingDelimiters(source)
         if (closers != null && closers.isNotEmpty()) add(
             MathInputAssistAction(

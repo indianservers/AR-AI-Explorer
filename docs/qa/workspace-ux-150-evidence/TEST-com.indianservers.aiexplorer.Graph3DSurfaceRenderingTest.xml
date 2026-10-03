@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.Graph3DSurfaceRenderingTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:22:06.740Z" hostname="INDIANSERVERS" time="0.053">
+  <properties/>
+  <testcase name="acceptanceSurfacesProduceCompleteFiniteGridTopology" classname="com.indianservers.aiexplorer.Graph3DSurfaceRenderingTest" time="0.052"/>
+  <testcase name="newAndMigratedLayersDefaultToSurfaceWithMeshAndKeepExplicitModes" classname="com.indianservers.aiexplorer.Graph3DSurfaceRenderingTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

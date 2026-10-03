@@ -135,7 +135,7 @@ class UnifiedSpatialMathControllerTest {
         val legacy = current.lineSequence()
             .filterNot { it.startsWith("H|") }
             .joinToString("\n")
-            .replaceFirst("AIEXPLORER_WORKSPACE|10|", "AIEXPLORER_WORKSPACE|6|")
+            .replaceFirst(Regex("AIEXPLORER_WORKSPACE\\|\\d+\\|"), "AIEXPLORER_WORKSPACE|6|")
 
         val recovered = WorkspaceSnapshotCodec.decode(legacy, recover = true)
         val recoveredState = recovered.state!!

@@ -1,0 +1,68 @@
+AR dedicated workspaces and hand interaction — 2026-10-03
+
+Implemented
+- Dedicated AR 2D Graph, AR 3D Graph, AR 2D Geometry and AR 3D Geometry routes in AR Lab.
+- All four routes use the shared ARCore runtime, surface/anchor engine, canonical scene and hand controller.
+- Optional Hands control: choose Move, Rotate or Scale, hold thumb/index pinch to select an object,
+  then move the pinch; release commits. Two pinches support spreading and turning in the chosen tool.
+- Geometry transforms edit the linked shape/solid through existing command history; graph transforms
+  change its spatial placement. Cancel restores the baseline; release records one undoable gesture.
+- Selection highlights and a hand cursor provide feedback. Hide controls / Show AR controls clear
+  the interaction area. Placement taps remain available before anchoring, including with Hands enabled.
+- Locked or hidden objects cannot be grabbed. HUD pinches cannot select objects underneath controls.
+- Stable pinch delay, hysteresis, stale-frame cancellation, tracking-loss cancellation, viewport-change
+  cancellation and duplicate hand-identity rejection prevent unstable updates.
+- Delete/Clear cancel active gestures before modifying the construction.
+- Fixed anchored rendering/picking ignoring authored translation when a native anchor exists.
+  Anchor refinements now preserve the user's movement offset.
+
+ARCore / inference integration
+ARCore supplies camera/environment tracking, CPU camera images and surface anchors. Its Android API
+does not provide hand landmarks. MediaPipe Tasks Vision 1.0.0 supplies on-device hand inference.
+The official Hand Landmarker float16 model v1 is bundled; no inference upload or second camera session.
+Native camera images are closed after copying YUV planes. One worker accepts one frame at a time,
+with renderer sampling capped at 10 Hz and inference images bounded to a 480-pixel maximum dimension.
+Camera rotation/crop transforms align landmarks to the rendered viewport. Gestures use physical
+viewport aspect when measuring pinch and two-hand angles.
+
+Validation actually completed
+- Debug app and instrumentation APK builds: PASS.
+- AR-engine unit tests: 165 passed, zero failed (19 new gesture/camera tests).
+- Relevant workspace/navigation/renderer tests: 63 passed, zero failed (4 new route/transform tests).
+- Emulator Android instrumentation: 1 passed. Real bundled model recognized two hands, 21 landmarks
+  each, from the official right_hands.jpg fixture converted to YUV camera-plane format.
+- Direct ADB UI checks on emulator-5556: opened all four dedicated routes, enabled Hands on each,
+  selected Rotate and Scale in AR 2D Graph, disabled Hands again, hid controls and restored them.
+  Captured route screenshots/XML. AR 2D Graph capture was refreshed using the final installed APK;
+  the other three route captures precede the final help-text and Hide-controls additions.
+- Corrected an existing schema migration test fixture: it hard-coded schema 10 although the writer
+  has advanced. The fixture now substitutes the actual header version when constructing schema 6.
+
+Not validated on physical hardware
+No OnePlus Nord CE 5 is connected. Emulator ARCore cannot initialize its rear camera, so actual
+floor/wall detection, anchored camera-frame hand interaction, occlusion, latency and device thermal
+behavior remain unverified. The inference fixture and emulator control checks do not establish that
+real-world AR manipulation works. The prior 100 physical surface cases remain pending.
+
+Evidence
+ar-hands-evidence/build-and-unit-tests.log
+ar-hands-evidence/final-debug-build.log
+ar-hands-evidence/hand-inference-device.log
+ar-hands-evidence/unit-results/*.xml
+ar-hands-evidence/{graph2d,graph3d,geometry2d,geometry3d}-hands.{png,xml}
+
+Physical-device acceptance steps (pending)
+1. Launch each of the four dedicated routes on the OnePlus, place on a floor/table, then on a wall.
+2. Add y^2 / an implicit circle, a 3D surface, a triangle and a solid through the existing math UI.
+3. Enable Hands, hide controls, pinch the visible object for at least 120 ms and move it.
+4. Release, then Undo and Redo; confirm exactly one gesture is recorded and source geometry stays linked.
+5. Choose Rotate and turn two pinches; choose Scale and spread two pinches. Verify one-hand alternatives.
+6. Open the pinch, cover the camera, leave frame, switch tools, rotate the phone and background/resume.
+   Verify release commits and tracking/viewport loss cancels without a jump or a stuck gesture.
+7. Delete/Clear during a grab, test locked/hidden objects and pinch over HUD controls.
+8. Run a 10-minute session and check latency, camera continuity, battery/thermal behavior and crashes.
+
+Primary references
+https://developers.google.com/ar/develop/fundamentals
+https://developers.google.com/edge/mediapipe/solutions/vision/hand_landmarker/android
+https://developers.google.com/edge/mediapipe/solutions/vision/hand_landmarker

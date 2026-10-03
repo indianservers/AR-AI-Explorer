@@ -10,7 +10,6 @@ import com.google.ar.core.Plane
 import com.google.ar.core.Point
 import com.google.ar.core.Session
 import com.google.ar.core.Trackable
-import com.google.ar.core.exceptions.UnsupportedConfigurationException
 import com.indianservers.aiexplorer.arengine.contract.ArAnchorHandle
 import com.indianservers.aiexplorer.arengine.contract.ArAvailability
 import com.indianservers.aiexplorer.arengine.contract.ArCapabilities
@@ -31,10 +30,10 @@ class ArCoreRuntime(
     private val activity: Activity,
 ) : ArRuntime {
     private val installCoordinator = ArCoreInstallCoordinator(activity)
-    private val frameMapper = ArCoreFrameMapper()
+    private val trackableIds = mutableMapOf<Trackable, String>()
+    private val frameMapper = ArCoreFrameMapper(trackableIds)
     private val anchorRegistry = ArCoreAnchorRegistry()
     private val pendingHits = linkedMapOf<String, HitResult>()
-    private val trackableIds = mutableMapOf<Trackable, String>()
     private var session: Session? = null
     private var latestFrame: Frame? = null
     private var capabilities: ArCapabilities? = null
@@ -48,6 +47,7 @@ class ArCoreRuntime(
     @Synchronized
     override fun checkAvailability(): ArRuntimeState {
         if (!ensureOpen()) return state
+        if (session != null && (state is ArRuntimeState.Ready || state is ArRuntimeState.Running || state is ArRuntimeState.Paused)) return state
         state = installCoordinator.checkAvailability()
         return state
     }
@@ -58,11 +58,15 @@ class ArCoreRuntime(
                 callback(state)
                 return
             }
+            if (session != null && (state is ArRuntimeState.Ready || state is ArRuntimeState.Running || state is ArRuntimeState.Paused)) {
+                callback(state)
+                return
+            }
             state = ArRuntimeState.Checking
         }
         installCoordinator.checkAvailabilityAsync { result ->
             val delivered = synchronized(this) {
-                if (state is ArRuntimeState.Closed) state else {
+                if (state is ArRuntimeState.Closed || session != null && (state is ArRuntimeState.Ready || state is ArRuntimeState.Running || state is ArRuntimeState.Paused)) state else {
                     state = result
                     result
                 }
@@ -82,6 +86,7 @@ class ArCoreRuntime(
             state = ArRuntimeState.PermissionRequired()
             return state
         }
+        if (session != null && (state is ArRuntimeState.Ready || state is ArRuntimeState.Running || state is ArRuntimeState.Paused)) return state
         val availabilityState = installCoordinator.checkAvailability()
         if (availabilityState is ArRuntimeState.Checking ||
             availabilityState is ArRuntimeState.Unsupported ||
@@ -102,6 +107,7 @@ class ArCoreRuntime(
     @Synchronized
     override fun resume(): Result<ArRuntimeState> = runCatching {
         ensureOpenOrThrow()
+        if (state is ArRuntimeState.Running) return@runCatching state
         val active = session ?: error("Prepare the ARCore runtime before resume.")
         val readyCapabilities = capabilities ?: error("ARCore capabilities are unavailable.")
         active.resume()
@@ -170,6 +176,28 @@ class ArCoreRuntime(
     }
 
     @Synchronized
+    override fun acquireCameraImage(): com.indianservers.aiexplorer.arengine.contract.ArCameraImage? {
+        if (state !is ArRuntimeState.Running) return null
+        val frame = latestFrame ?: return null
+        return try {
+            frame.acquireCameraImage().use { image ->
+                if (image.format != android.graphics.ImageFormat.YUV_420_888) return null
+                val output = FloatArray(6)
+                frame.transformCoordinates2d(com.google.ar.core.Coordinates2d.IMAGE_NORMALIZED,
+                    floatArrayOf(0f, 0f, 1f, 0f, 0f, 1f), com.google.ar.core.Coordinates2d.VIEW_NORMALIZED, output)
+                com.indianservers.aiexplorer.arengine.contract.ArCameraImage(
+                    android.os.SystemClock.uptimeMillis(), image.width, image.height,
+                    image.planes.map { plane ->
+                        val buffer = plane.buffer.duplicate()
+                        val bytes = ByteArray(buffer.remaining()); buffer.get(bytes)
+                        com.indianservers.aiexplorer.arengine.contract.ArCameraImagePlane(bytes, plane.rowStride, plane.pixelStride)
+                    }, (0..2).map { ArVector2(output[it*2], output[it*2+1]) })
+            }
+        } catch (_: com.google.ar.core.exceptions.NotYetAvailableException) { null }
+          catch (_: com.google.ar.core.exceptions.DeadlineExceededException) { null }
+    }
+
+    @Synchronized
     override fun createAnchor(hitId: String, nowMillis: Long): Result<ArAnchorHandle> = runCatching {
         ensureOpenOrThrow()
         require(state is ArRuntimeState.Running) { "ARCore must be running before an anchor is created." }
@@ -209,27 +237,30 @@ class ArCoreRuntime(
         var created: Session? = null
         return runCatching {
             anchorRegistry.clear()
+            pendingHits.clear()
+            trackableIds.clear()
+            latestFrame = null
             runCatching { session?.close() }
             session = null
             val candidate = Session(activity).also { created = it }
             val depthSupported = candidate.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
             val rawDepthSupported = candidate.isDepthModeSupported(Config.DepthMode.RAW_DEPTH_ONLY)
             val geospatialSupported = runCatching { candidate.isGeospatialModeSupported(Config.GeospatialMode.ENABLED) }.getOrDefault(false)
-            val (hdrSupported, instantSupported) = configureWithFallbacks(candidate, depthSupported)
+            val features = ArCoreConfiguration.configure(candidate, depthSupported)
             cameraTextureName?.let(candidate::setCameraTextureName)
             displayGeometry?.let { (rotation, width, height) -> candidate.setDisplayGeometry(rotation, width, height) }
             session = candidate
             ArCapabilities(
                 availability = ArAvailability.Ready,
-                depthSupported = depthSupported,
+                depthSupported = features.depth,
                 rawDepthSupported = rawDepthSupported,
-                environmentalHdrSupported = hdrSupported,
-                instantPlacementSupported = instantSupported,
+                environmentalHdrSupported = features.hdr,
+                instantPlacementSupported = features.instantPlacement,
                 geospatialSupported = geospatialSupported,
                 message = buildString {
                     append("ARCore session ready")
-                    append(if (depthSupported) " with Depth" else " without Depth")
-                    append(if (hdrSupported) " and environmental HDR." else " and ambient lighting.")
+                    append(if (features.depth) " with Depth" else " without Depth")
+                    append(if (features.hdr) " and environmental HDR." else " and ambient lighting.")
                 },
             ).also { capabilities = it }.let(ArRuntimeState::Ready)
         }.getOrElse { error ->
@@ -240,29 +271,11 @@ class ArCoreRuntime(
         }
     }
 
-    private fun configureWithFallbacks(session: Session, depthSupported: Boolean): Pair<Boolean, Boolean> {
-        val combinations = listOf(true to true, false to true, true to false, false to false)
-        combinations.forEach { (hdr, instant) ->
-            val config = Config(session)
-                .setPlaneFindingMode(Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL)
-                .setFocusMode(Config.FocusMode.AUTO)
-                .setLightEstimationMode(if (hdr) Config.LightEstimationMode.ENVIRONMENTAL_HDR else Config.LightEstimationMode.AMBIENT_INTENSITY)
-                .setInstantPlacementMode(if (instant) Config.InstantPlacementMode.LOCAL_Y_UP else Config.InstantPlacementMode.DISABLED)
-            if (depthSupported) config.setDepthMode(Config.DepthMode.AUTOMATIC)
-            try {
-                session.configure(config)
-                return hdr to instant
-            } catch (_: UnsupportedConfigurationException) {
-                // Try the next strictly smaller optional feature combination.
-            }
-        }
-        error("ARCore rejected the baseline plane-tracking configuration.")
-    }
-
     private fun mapHit(hit: HitResult): ArHitCandidate? {
         val trackable = hit.trackable
+        if (trackable.trackingState != com.google.ar.core.TrackingState.TRACKING) return null
         val accepted = when (trackable) {
-            is Plane -> trackable.isPoseInPolygon(hit.hitPose)
+            is Plane -> trackable.subsumedBy == null && trackable.isPoseInPolygon(hit.hitPose)
             is Point -> trackable.orientationMode == Point.OrientationMode.ESTIMATED_SURFACE_NORMAL
             is DepthPoint, is InstantPlacementPoint -> true
             else -> false
@@ -303,6 +316,8 @@ class ArCoreRuntime(
             confidence = confidence,
             uncertaintyMeters = uncertainty,
             trackableId = trackableIds.getOrPut(trackable) { "${type.name.lowercase()}-${UUID.randomUUID()}" },
+            planeOrientation = (trackable as? Plane)?.let { ArCoreStateMapper.planeOrientation(it.type) },
+            trackingState = ArCoreStateMapper.tracking(trackable.trackingState),
         )
     }
 

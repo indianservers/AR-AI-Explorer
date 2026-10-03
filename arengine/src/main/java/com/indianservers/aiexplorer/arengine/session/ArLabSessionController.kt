@@ -19,6 +19,8 @@ data class ArLabSessionState(
 )
 
 class ArLabSessionController(private val runtime: ArRuntime) : AutoCloseable {
+    private val surfaces = ArSurfaceIntelligence()
+    private var latestFrame: ArFrameSnapshot? = null
     var state = ArLabSessionState(runtimeState = runtime.state)
         private set
 
@@ -33,17 +35,24 @@ class ArLabSessionController(private val runtime: ArRuntime) : AutoCloseable {
     }
 
     fun onFrame(frame: ArFrameSnapshot): ArLabSessionState {
-        state = state.copy(runtimeState = runtime.state, guidance = ArTrackingGuidancePolicy.evaluate(frame), lastError = null)
+        latestFrame = frame
+        state = state.copy(runtimeState = runtime.state, guidance = surfaces.observe(frame).guidance, lastError = null)
         return state
     }
 
     fun setDepthNeeded(enabled: Boolean) = runtime.setDepthEnabled(enabled)
 
-    fun hits(screenPoint: ArVector2): List<ArHitCandidate> = runtime.hitTest(screenPoint)
+    fun hits(screenPoint: ArVector2): List<ArHitCandidate> {
+        if (!state.guidance.placementReady) return emptyList()
+        return runtime.hitTest(screenPoint).filter { surfaces.selectHit(latestFrame, listOf(it), ArSurfaceTarget.Any) != null }
+    }
 
     fun place(hit: ArHitCandidate, nowMillis: Long): Result<ArAnchorHandle> {
-        state.activeAnchor?.let { runtime.detachAnchor(it.id) }
+        if (!state.guidance.placementReady || surfaces.selectHit(latestFrame, listOf(hit), ArSurfaceTarget.Any) == null)
+            return Result.failure(IllegalStateException("Scan a tracked floor, table or wall before placing."))
+        val previous = state.activeAnchor
         return runtime.createAnchor(hit.id, nowMillis).onSuccess { anchor ->
+            previous?.let { runtime.detachAnchor(it.id) }
             state = state.copy(activeAnchor = anchor, lastError = null)
         }.onFailure { error ->
             state = state.copy(lastError = error.message ?: "Placement failed")
@@ -80,7 +89,9 @@ class ArLabSessionController(private val runtime: ArRuntime) : AutoCloseable {
     }
 
     fun pause(): ArLabSessionState {
-        state = state.copy(runtimeState = runtime.pause())
+        surfaces.reset()
+        latestFrame = null
+        state = state.copy(runtimeState = runtime.pause(), guidance = surfaces.assessment.guidance)
         return state
     }
 

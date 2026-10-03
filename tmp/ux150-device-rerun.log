@@ -1,0 +1,139 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.WorkspaceUx150TouchTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.WorkspaceUx150TouchTest:
+INSTRUMENTATION_STATUS: test=geometry2d
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.WorkspaceUx150TouchTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: GEOMETRY2D-UX-002: Inspector must be open
+GEOMETRY2D-UX-015: Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.6), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>
+GEOMETRY2D-UX-016: Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.0, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>
+GEOMETRY2D-UX-028: Inspector must be open
+GEOMETRY2D-UX-030: Inspector must be open
+GEOMETRY2D-UX-037: Inspector must be open
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.runWorkspace(WorkspaceUx150TouchTest.kt:191)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.geometry2d(WorkspaceUx150TouchTest.kt:120)
+
+INSTRUMENTATION_STATUS: stream=
+Error in geometry2d(com.indianservers.aiexplorer.WorkspaceUx150TouchTest):
+java.lang.AssertionError: GEOMETRY2D-UX-002: Inspector must be open
+GEOMETRY2D-UX-015: Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.6), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>
+GEOMETRY2D-UX-016: Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.0, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>
+GEOMETRY2D-UX-028: Inspector must be open
+GEOMETRY2D-UX-030: Inspector must be open
+GEOMETRY2D-UX-037: Inspector must be open
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.runWorkspace(WorkspaceUx150TouchTest.kt:191)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.geometry2d(WorkspaceUx150TouchTest.kt:120)
+
+INSTRUMENTATION_STATUS: test=geometry2d
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.WorkspaceUx150TouchTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=graph2d
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.WorkspaceUx150TouchTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=graph2d
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.WorkspaceUx150TouchTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=graph3d
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.WorkspaceUx150TouchTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: GRAPH3D-UX-001: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+GRAPH3D-UX-033: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+GRAPH3D-UX-038: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.runWorkspace(WorkspaceUx150TouchTest.kt:191)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.graph3d(WorkspaceUx150TouchTest.kt:119)
+
+INSTRUMENTATION_STATUS: stream=
+Error in graph3d(com.indianservers.aiexplorer.WorkspaceUx150TouchTest):
+java.lang.AssertionError: GRAPH3D-UX-001: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+GRAPH3D-UX-033: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+GRAPH3D-UX-038: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.runWorkspace(WorkspaceUx150TouchTest.kt:191)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.graph3d(WorkspaceUx150TouchTest.kt:119)
+
+INSTRUMENTATION_STATUS: test=graph3d
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 120.378
+There were 2 failures:
+1) geometry2d(com.indianservers.aiexplorer.WorkspaceUx150TouchTest)
+java.lang.AssertionError: GEOMETRY2D-UX-002: Inspector must be open
+GEOMETRY2D-UX-015: Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.6), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>
+GEOMETRY2D-UX-016: Navigation must preserve mathematical objects expected:<([Vec2(x=-2.4, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])> but was:<([Vec2(x=-2.0, y=-1.7900797128677368), Vec2(x=2.4, y=-1.6), Vec2(x=0.0, y=2.2)], [Shape2D(id=shape-explorer-triangle-4099558378975, type=Triangle, pointIndices=[0, 1, 2], name=Triangle, visible=true, locked=false, styleKey=default)])>
+GEOMETRY2D-UX-028: Inspector must be open
+GEOMETRY2D-UX-030: Inspector must be open
+GEOMETRY2D-UX-037: Inspector must be open
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.runWorkspace(WorkspaceUx150TouchTest.kt:191)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.geometry2d(WorkspaceUx150TouchTest.kt:120)
+2) graph3d(com.indianservers.aiexplorer.WorkspaceUx150TouchTest)
+java.lang.AssertionError: GRAPH3D-UX-001: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+GRAPH3D-UX-033: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+GRAPH3D-UX-038: Failed to inject touch input.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Plot' (ignoreCase: false)'
+There are no existing nodes for that selector.
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.runWorkspace(WorkspaceUx150TouchTest.kt:191)
+	at com.indianservers.aiexplorer.WorkspaceUx150TouchTest.graph3d(WorkspaceUx150TouchTest.kt:119)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
+
+
+INSTRUMENTATION_CODE: -1

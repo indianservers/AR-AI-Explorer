@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.Geometry2DControlsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:22:06.442Z" hostname="INDIANSERVERS" time="0.024">
+  <properties/>
+  <testcase name="rotationSnapsNearFifteenDegreeIncrement" classname="com.indianservers.aiexplorer.Geometry2DControlsTest" time="0.014"/>
+  <testcase name="rotationRemainsContinuousAwayFromSnapPoint" classname="com.indianservers.aiexplorer.Geometry2DControlsTest" time="0.0"/>
+  <testcase name="invalidAnglesAreNeverReportedAsSnapped" classname="com.indianservers.aiexplorer.Geometry2DControlsTest" time="0.0"/>
+  <testcase name="rotationSnapsAcrossNegativeAngles" classname="com.indianservers.aiexplorer.Geometry2DControlsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

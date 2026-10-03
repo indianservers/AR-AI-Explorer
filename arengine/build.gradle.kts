@@ -36,5 +36,6 @@ android {
 
 dependencies {
     implementation(libs.google.ar.core)
+    implementation("com.google.mediapipe:tasks-vision:1.0.0")
     testImplementation(libs.junit)
 }

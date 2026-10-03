@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.SpatialModelsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:01:38.467Z" hostname="INDIANSERVERS" time="0.06">
+  <properties/>
+  <testcase name="placementScaleModesAndBoundsAreExplicit" classname="com.indianservers.aiexplorer.SpatialModelsTest" time="0.002"/>
+  <testcase name="spatialPlacementPersistsAndIsUndoable" classname="com.indianservers.aiexplorer.SpatialModelsTest" time="0.054"/>
+  <testcase name="degradedTrackingAlwaysBlocksPlacementAndPreservesGuidance" classname="com.indianservers.aiexplorer.SpatialModelsTest" time="0.002"/>
+  <testcase name="mathAndAnchorCoordinatesRoundTripAcrossPoseAndScale" classname="com.indianservers.aiexplorer.SpatialModelsTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

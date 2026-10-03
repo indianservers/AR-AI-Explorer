@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -126,6 +127,7 @@ object MathKeyboardPreferences {
 
 enum class MathKeyAction {
     INSERT,
+    INSERT_POWER_DIGIT,
     TOGGLE_SUPERSCRIPT,
     TOGGLE_SUBSCRIPT,
     TOGGLE_FRACTION,
@@ -156,7 +158,29 @@ data class MathCommand(
     val contexts: Set<MathKeyboardContext> = emptySet(),
 )
 
+internal fun applyMathKeyboardKey(value: TextFieldValue, key: MathKey): TextFieldValue =
+    when (key.action) {
+        MathKeyAction.INSERT -> MathTextEditing.insert(value, key)
+        MathKeyAction.INSERT_POWER_DIGIT -> MathTextEditing.insertPowerDigit(value, key.insertion)
+        MathKeyAction.TOGGLE_SUPERSCRIPT -> StructuredMathEditing.toggleSuperscript(value)
+        MathKeyAction.TOGGLE_SUBSCRIPT -> StructuredMathEditing.toggleSubscript(value)
+        MathKeyAction.TOGGLE_FRACTION -> StructuredMathEditing.toggleFraction(value, key)
+        MathKeyAction.TOGGLE_ROOT -> StructuredMathEditing.toggleRoot(value, key)
+        MathKeyAction.TOGGLE_CUBE_ROOT -> StructuredMathEditing.toggleCubeRoot(value, key)
+        MathKeyAction.TOGGLE_NTH_ROOT -> StructuredMathEditing.toggleNthRoot(value, key)
+        MathKeyAction.TOGGLE_LOG_BASE -> StructuredMathEditing.toggleLogBase(value)
+    }
+
 object MathTextEditing {
+    fun insertPowerDigit(value: TextFieldValue, digit: String): TextFieldValue {
+        require(digit.length == 1 && digit.single() in '0'..'9')
+        if (StructuredMathEditing.modeAt(value.text, value.selection.end) == MathInputMode.SUPERSCRIPT) {
+            return insert(value, MathKey(digit))
+        }
+        val template = if (value.selection.collapsed) "^($digit)" else "(%s)^($digit)"
+        return insert(value, MathKey(digit, template))
+    }
+
     fun insert(value: TextFieldValue, key: MathKey): TextFieldValue {
         val selectionStart = value.selection.min
         val selectionEnd = value.selection.max
@@ -407,7 +431,7 @@ internal val matrixStructureKeys = listOf(
     MathKey("Aᵀ", "(%s)^(T)", description = "Matrix transpose"),
 )
 
-private val symbolKeys = listOf(
+internal val symbolKeys = listOf(
     MathKey("α"), MathKey("β"), MathKey("γ"), MathKey("δ"),
     MathKey("θ", "theta"), MathKey("λ", "lambda"), MathKey("μ", "mu"), MathKey("σ", "sigma"),
     MathKey("φ", "phi"), MathKey("ω", "omega"), MathKey("Δ", "delta"), MathKey("π", "pi"),
@@ -430,10 +454,10 @@ private val symbolKeys = listOf(
     MathKey("∪"), MathKey("∩"), MathKey("⊂"), MathKey("∅", "{}"),
 )
 
-private val letterKeys = ("qwertyuiopasdfghjklzxcvbnm".map { MathKey(it.toString()) } +
+internal val letterKeys = ("qwertyuiopasdfghjklzxcvbnm".map { MathKey(it.toString()) } +
     listOf(
         MathKey("Space", " ", description = "Space"),
-        MathKey(","), MathKey("_"),
+        MathKey(","), MathKey(";", description = "Separate parametric coordinates"), MathKey("_"),
         MathKey("[ ]", "[]", 1, description = "Square brackets", tone = MathKeyTone.BRACKET),
         MathKey("{ }", "{}", 1, description = "Braces", tone = MathKeyTone.BRACKET),
     ))
@@ -753,16 +777,7 @@ fun AdaptiveMathKeyboard(
     val edit: (MathKey) -> Unit = { key ->
         MathKeyboardHistory.rememberSymbol(key)
         applyEdit(
-            when (key.action) {
-                MathKeyAction.INSERT -> MathTextEditing.insert(workingValue, key)
-                MathKeyAction.TOGGLE_SUPERSCRIPT -> StructuredMathEditing.toggleSuperscript(workingValue)
-                MathKeyAction.TOGGLE_SUBSCRIPT -> StructuredMathEditing.toggleSubscript(workingValue)
-                MathKeyAction.TOGGLE_FRACTION -> StructuredMathEditing.toggleFraction(workingValue, key)
-                MathKeyAction.TOGGLE_ROOT -> StructuredMathEditing.toggleRoot(workingValue, key)
-                MathKeyAction.TOGGLE_CUBE_ROOT -> StructuredMathEditing.toggleCubeRoot(workingValue, key)
-                MathKeyAction.TOGGLE_NTH_ROOT -> StructuredMathEditing.toggleNthRoot(workingValue, key)
-                MathKeyAction.TOGGLE_LOG_BASE -> StructuredMathEditing.toggleLogBase(workingValue)
-            },
+            applyMathKeyboardKey(workingValue, key),
         )
     }
     val activeMode = StructuredMathEditing.modeAt(workingValue.text, workingValue.selection.end)
@@ -885,6 +900,17 @@ fun AdaptiveMathKeyboard(
                 KeyboardTab(item.label, page == item) { page = item }
             }
         }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            listOf(
+                MathKey("x"), MathKey("y"),
+                MathKey("²", "^2", description = "Square"),
+                MathKey("xⁿ", "^()", 1, action = MathKeyAction.TOGGLE_SUPERSCRIPT),
+                MathKey("√", "sqrt(%s)", 1, action = MathKeyAction.TOGGLE_ROOT),
+                MathKey("( )", "(%s)", 1),
+            ).forEach { key ->
+                MathKeyboardKey(key = key, onClick = edit, modifier = Modifier.weight(1f), selected = false)
+            }
+        }
         StructuredEntryStrip(
             activeMode = activeMode,
             currentSource = workingValue.text,
@@ -963,7 +989,7 @@ fun AdaptiveMathKeyboard(
                                     selected = false,
                                 )
                             }
-                            repeat(columns - firstFunctionRow.size - 1) { Spacer(Modifier.weight(1f)) }
+                            repeat((columns - firstFunctionRow.size - 1).coerceAtLeast(0)) { Spacer(Modifier.weight(1f)) }
                         }
                     }
                     val remainingKeys = if (page == MathKeyboardPage.TRIG) {
@@ -1165,7 +1191,7 @@ internal fun isStructuralKeyActive(
     MathKeyAction.TOGGLE_CUBE_ROOT -> StructuredMathEditing.isCubeRootActive(source, cursor)
     MathKeyAction.TOGGLE_NTH_ROOT -> StructuredMathEditing.isNthRootActive(source, cursor)
     MathKeyAction.TOGGLE_LOG_BASE -> StructuredMathEditing.isLogBaseActive(source, cursor)
-    MathKeyAction.INSERT -> false
+    MathKeyAction.INSERT, MathKeyAction.INSERT_POWER_DIGIT -> false
 }
 
 @Composable
@@ -1518,12 +1544,18 @@ private fun MathKeyboardKey(
     var variantsExpanded by remember { mutableStateOf(false) }
     Box(
         modifier
+            .testTag("math.key.${key.insertion}")
             .height(appearance.mainHeight)
             .pointerInput(key) {
                 detectTapGestures(
                     onTap = { onClick(key) },
                     onLongPress = {
-                        if (key.variants.isNotEmpty()) variantsExpanded = true else onClick(key)
+                        val powerKey = numberPowerLongPressKey(key)
+                        when {
+                            powerKey != null -> onClick(powerKey)
+                            key.variants.isNotEmpty() -> variantsExpanded = true
+                            else -> onClick(key)
+                        }
                     },
                 )
             }
@@ -1537,7 +1569,9 @@ private fun MathKeyboardKey(
                 RoundedCornerShape(7.dp),
             )
             .semantics {
-                contentDescription = key.description
+                contentDescription = if (numberPowerLongPressKey(key) != null) {
+                    "${key.description}. Long press for power ${key.insertion}"
+                } else key.description
                 this.selected = selected
                 role = Role.Button
             },
@@ -1572,6 +1606,10 @@ private fun MathKeyboardKey(
         }
     }
 }
+
+internal fun numberPowerLongPressKey(key: MathKey): MathKey? =
+    key.takeIf { it.action == MathKeyAction.INSERT && it.insertion.length == 1 && it.insertion.single() in '0'..'9' }
+        ?.copy(action = MathKeyAction.INSERT_POWER_DIGIT, description = "Power ${key.insertion}")
 
 internal fun resolveMathKeyTone(key: MathKey): MathKeyTone {
     key.tone?.let { return it }
@@ -1615,6 +1653,7 @@ private fun KeyboardTab(label: String, selected: Boolean, onClick: () -> Unit) {
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
+            .testTag("math.tab.$label")
             .clickable(role = Role.Tab, onClick = onClick)
             .background(if (MathKeyboardPreferences.highContrast) Brush.verticalGradient(listOf(if (selected) IntentMathPalette.Number else Color.Black, if (selected) IntentMathPalette.Number else Color.Black)) else SmartInputStyle.key(IntentMathPalette.Command, selected), RoundedCornerShape(7.dp))
             .border(1.dp, if (MathKeyboardPreferences.highContrast) Color.White else if (selected) SmartInputStyle.Violet else SmartInputStyle.Blue.copy(alpha = .22f), RoundedCornerShape(7.dp))

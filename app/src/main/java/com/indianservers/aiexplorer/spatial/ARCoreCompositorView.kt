@@ -42,6 +42,8 @@ class ARCoreCompositorView(
     sceneProvider: () -> SpatialCompositorScene,
     onFrame: (ArFrameSnapshot) -> Unit,
     onError: (String) -> Unit,
+    wantsCameraImage: () -> Boolean = { false },
+    onCameraImage: (com.indianservers.aiexplorer.arengine.contract.ArCameraImage) -> Unit = {},
 ) : GLSurfaceView(context) {
     private val compositor = CompositorRenderer(
         runtime = runtime,
@@ -49,6 +51,8 @@ class ARCoreCompositorView(
         onFrame = onFrame,
         onError = onError,
         rotationProvider = ::currentDisplayRotation,
+        wantsCameraImage = wantsCameraImage,
+        onCameraImage = onCameraImage,
     )
 
     init {
@@ -80,6 +84,8 @@ class ARCoreCompositorView(
         private val onFrame: (ArFrameSnapshot) -> Unit,
         private val onError: (String) -> Unit,
         private val rotationProvider: () -> Int,
+        private val wantsCameraImage: () -> Boolean,
+        private val onCameraImage: (com.indianservers.aiexplorer.arengine.contract.ArCameraImage) -> Unit,
     ) : Renderer {
         private val mainHandler = Handler(Looper.getMainLooper())
         private val spatialRenderer = OpenGlEsSpatialRenderer()
@@ -97,6 +103,7 @@ class ARCoreCompositorView(
         private var viewportHeight = 0
         private var configuredRotation = -1
         private var released = false
+        private var lastVisionFrameMillis = 0L
 
         override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
             released = false
@@ -134,6 +141,12 @@ class ARCoreCompositorView(
                 return
             }
             updateFrameTime(frame.timestampNanos)
+            val now = android.os.SystemClock.uptimeMillis()
+            if (wantsCameraImage() && now-lastVisionFrameMillis >= 100) {
+                lastVisionFrameMillis = now
+                runCatching { runtime.acquireCameraImage()?.let(onCameraImage) }
+                    .onFailure { error -> mainHandler.post { onError(error.message ?: "Camera image unavailable") } }
+            }
             uploadCameraCoordinates(frame)
             drawCamera()
             if (!current.screenLocked) drawTrackedPlanes(frame)
@@ -152,10 +165,10 @@ class ARCoreCompositorView(
                     .takeIf(String::isNotBlank)
                     ?.let { id -> runtime.anchors().firstOrNull { it.id == id } }
                 val pose = current.placement.pose
-                val anchorPosition = anchor?.pose?.positionMeters
+                val anchoredPosition = current.placement.anchoredPosition(anchor)
                 val orientation = anchor?.pose?.orientation ?: ArQuaternion.Identity
                 val model = ArModelMatrix.compose(
-                    position = anchorPosition ?: ArVector3(pose.positionMeters.x, pose.positionMeters.y, pose.positionMeters.z),
+                    position = ArVector3(anchoredPosition.x, anchoredPosition.y, anchoredPosition.z),
                     orientation = orientation,
                     scale = pose.uniformScale * current.placement.metersPerMathUnit,
                 )

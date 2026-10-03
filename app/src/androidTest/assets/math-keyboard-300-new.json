@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "NEW-2D-001",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/1",
+    "expected": 0.5463024898437905,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-002",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+1",
+    "expected": 1.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-003",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-1",
+    "expected": 0.04719755119659785,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-004",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*1",
+    "expected": 0.4636476090008061,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-005",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+1)",
+    "expected": 0.09691001300805642,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-006",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.1)",
+    "expected": 0.1,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-007",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.1)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-008",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+1)",
+    "expected": 0.8,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-009",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-1)^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-010",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,1*x,-x)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-011",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/2",
+    "expected": 0.27315124492189524,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-012",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+2",
+    "expected": 2.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-013",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-2",
+    "expected": -0.9528024488034021,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-014",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*2",
+    "expected": 0.9272952180016122,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-015",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+2)",
+    "expected": 0.3521825181113625,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-016",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.2)",
+    "expected": 0.2,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-017",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.2)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-018",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+2)",
+    "expected": 0.4444444444444444,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-019",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-2)^2",
+    "expected": 2.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-020",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,2*x,-x)",
+    "expected": 1.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-021",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/3",
+    "expected": 0.18210082994793017,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-022",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+3",
+    "expected": 3.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-023",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-3",
+    "expected": -1.9528024488034021,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-024",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*3",
+    "expected": 1.3909428270024182,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-025",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+3)",
+    "expected": 0.5118833609788743,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-026",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.3)",
+    "expected": 0.3,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-027",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.3)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-028",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+3)",
+    "expected": 0.3076923076923077,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-029",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-3)^2",
+    "expected": 6.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-030",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,3*x,-x)",
+    "expected": 1.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-031",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/4",
+    "expected": 0.13657562246094762,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-032",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+4",
+    "expected": 4.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-033",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-4",
+    "expected": -2.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-034",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*4",
+    "expected": 1.8545904360032244,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-035",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+4)",
+    "expected": 0.6283889300503115,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-036",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.4)",
+    "expected": 0.4,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-037",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.4)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-038",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+4)",
+    "expected": 0.23529411764705882,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-039",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-4)^2",
+    "expected": 12.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-040",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,4*x,-x)",
+    "expected": 2.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-041",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/5",
+    "expected": 0.1092604979687581,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-042",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+5",
+    "expected": 5.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-043",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-5",
+    "expected": -3.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-044",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*5",
+    "expected": 2.3182380450040303,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-045",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+5)",
+    "expected": 0.7201593034059569,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-046",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.5)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-047",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.5)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-048",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+5)",
+    "expected": 0.19047619047619047,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-049",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-5)^2",
+    "expected": 20.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-050",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,5*x,-x)",
+    "expected": 2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-051",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/6",
+    "expected": 0.09105041497396509,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-052",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+6",
+    "expected": 6.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-053",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-6",
+    "expected": -4.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-054",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*6",
+    "expected": 2.7818856540048365,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-055",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+6)",
+    "expected": 0.7958800173440752,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-056",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.6)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-057",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.6)",
+    "expected": 0.6,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-058",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+6)",
+    "expected": 0.16,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-059",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-6)^2",
+    "expected": 30.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-060",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,6*x,-x)",
+    "expected": 3.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-061",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/7",
+    "expected": 0.07804321283482721,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-062",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+7",
+    "expected": 7.523598775598299,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-063",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-7",
+    "expected": -5.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-064",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*7",
+    "expected": 3.2455332630056426,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-065",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+7)",
+    "expected": 0.8603380065709937,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-066",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.7)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-067",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.7)",
+    "expected": 0.7,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-068",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+7)",
+    "expected": 0.13793103448275862,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-069",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-7)^2",
+    "expected": 42.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-070",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,7*x,-x)",
+    "expected": 3.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-071",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/8",
+    "expected": 0.06828781123047381,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-072",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+8",
+    "expected": 8.523598775598298,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-073",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-8",
+    "expected": -6.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-074",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*8",
+    "expected": 3.7091808720064487,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-075",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+8)",
+    "expected": 0.9164539485499251,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-076",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.8)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-077",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.8)",
+    "expected": 0.8,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-078",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+8)",
+    "expected": 0.12121212121212122,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-079",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-8)^2",
+    "expected": 56.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-080",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,8*x,-x)",
+    "expected": 4.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-081",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/9",
+    "expected": 0.060700276649310055,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-082",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+9",
+    "expected": 9.523598775598298,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-083",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-9",
+    "expected": -7.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-084",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*9",
+    "expected": 4.1728284810072545,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-085",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+9)",
+    "expected": 0.9661417327390326,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-086",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,0.9)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-087",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,0.9)",
+    "expected": 0.9,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-088",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+9)",
+    "expected": 0.10810810810810811,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-089",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-9)^2",
+    "expected": 72.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-090",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,9*x,-x)",
+    "expected": 4.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-091",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=tan(x)/10",
+    "expected": 0.05463024898437905,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-092",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=asin(x)+10",
+    "expected": 10.523598775598298,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-093",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=acos(x)-10",
+    "expected": -8.952802448803402,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-094",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=atan(x)*10",
+    "expected": 4.636476090008061,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-095",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=log(x^2+10)",
+    "expected": 1.0107238653917732,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-096",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=min(x,1.0)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-097",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=max(x,1.0)",
+    "expected": 1.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-098",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=1/(x^2+10)",
+    "expected": 0.0975609756097561,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-099",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=(x-10)^2",
+    "expected": 90.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-100",
+    "dimension": 2,
+    "kind": "explicit",
+    "source": "y=if(x>0,10*x,-x)",
+    "expected": 5.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-101",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+1",
+    "expected": 0,
+    "x": 1,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-102",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/1+y^2=1",
+    "expected": 0,
+    "x": 1.0,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-103",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=1*sin(theta)",
+    "expected": 1,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-104",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=1*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-105",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+1)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-106",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+2",
+    "expected": 0,
+    "x": 2,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-107",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/2+y^2=1",
+    "expected": 0,
+    "x": 1.4142135623730951,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-108",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=2*sin(theta)",
+    "expected": 2,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-109",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=2*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-110",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+2)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-111",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+3",
+    "expected": 0,
+    "x": 3,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-112",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/3+y^2=1",
+    "expected": 0,
+    "x": 1.7320508075688772,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-113",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=3*sin(theta)",
+    "expected": 3,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-114",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=3*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-115",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+3)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-116",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+4",
+    "expected": 0,
+    "x": 4,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-117",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/4+y^2=1",
+    "expected": 0,
+    "x": 2.0,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-118",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=4*sin(theta)",
+    "expected": 4,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-119",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=4*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-120",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+4)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-121",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+5",
+    "expected": 0,
+    "x": 5,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-122",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/5+y^2=1",
+    "expected": 0,
+    "x": 2.23606797749979,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-123",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=5*sin(theta)",
+    "expected": 5,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-124",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=5*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-125",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+5)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-126",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+6",
+    "expected": 0,
+    "x": 6,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-127",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/6+y^2=1",
+    "expected": 0,
+    "x": 2.449489742783178,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-128",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=6*sin(theta)",
+    "expected": 6,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-129",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=6*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-130",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+6)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-131",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+7",
+    "expected": 0,
+    "x": 7,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-132",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/7+y^2=1",
+    "expected": 0,
+    "x": 2.6457513110645907,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-133",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=7*sin(theta)",
+    "expected": 7,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-134",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=7*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-135",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+7)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-136",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+8",
+    "expected": 0,
+    "x": 8,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-137",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/8+y^2=1",
+    "expected": 0,
+    "x": 2.8284271247461903,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-138",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=8*sin(theta)",
+    "expected": 8,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-139",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=8*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-140",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+8)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-141",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+9",
+    "expected": 0,
+    "x": 9,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-142",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/9+y^2=1",
+    "expected": 0,
+    "x": 3.0,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-143",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=9*sin(theta)",
+    "expected": 9,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-144",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=9*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-145",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+9)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-146",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x=y^2+10",
+    "expected": 0,
+    "x": 10,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-147",
+    "dimension": 2,
+    "kind": "implicit",
+    "source": "x^2/10+y^2=1",
+    "expected": 0,
+    "x": 3.1622776601683795,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-148",
+    "dimension": 2,
+    "kind": "polar",
+    "source": "r=10*sin(theta)",
+    "expected": 10,
+    "x": 1.5707963267948966,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-149",
+    "dimension": 2,
+    "kind": "parametric",
+    "source": "x(t)=10*t;y(t)=t^2",
+    "expected": 0.25,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-2D-150",
+    "dimension": 2,
+    "kind": "inequality",
+    "source": "y>sqrt(x^2+10)",
+    "expected": 0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-001",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/1",
+    "expected": 1.5574077246549023,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-002",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+1",
+    "expected": 3.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-003",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*1",
+    "expected": -0.24497866312686414,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-004",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*1",
+    "expected": 0.17609125905568124,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-005",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+1",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-006",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-1",
+    "expected": -0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-007",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+1)",
+    "expected": 0.6666666666666666,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-008",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-1)^2+y^2",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-009",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,1*x,y)",
+    "expected": 0.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-010",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/1",
+    "expected": 0.5403023058681398,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-011",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+1",
+    "expected": 2,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-012",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+1)",
+    "expected": 1.118033988749895,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-013",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/2",
+    "expected": 0.7787038623274511,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-014",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+2",
+    "expected": 4.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-015",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*2",
+    "expected": -0.4899573262537283,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-016",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*2",
+    "expected": 0.3521825181113625,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-017",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+2",
+    "expected": 1.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-018",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-2",
+    "expected": -1.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-019",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+2)",
+    "expected": 0.4,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-020",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-2)^2+y^2",
+    "expected": 2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-021",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,2*x,y)",
+    "expected": 1.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-022",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/2",
+    "expected": 0.2701511529340699,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-023",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+2",
+    "expected": 3,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-024",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+2)",
+    "expected": 1.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-025",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/3",
+    "expected": 0.5191359082183008,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-026",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+3",
+    "expected": 5.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-027",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*3",
+    "expected": -0.7349359893805925,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-028",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*3",
+    "expected": 0.5282737771670437,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-029",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+3",
+    "expected": 2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-030",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-3",
+    "expected": -2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-031",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+3)",
+    "expected": 0.2857142857142857,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-032",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-3)^2+y^2",
+    "expected": 6.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-033",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,3*x,y)",
+    "expected": 1.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-034",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/3",
+    "expected": 0.18010076862271326,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-035",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+3",
+    "expected": 4,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-036",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+3)",
+    "expected": 1.8027756377319946,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-037",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/4",
+    "expected": 0.3893519311637256,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-038",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+4",
+    "expected": 6.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-039",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*4",
+    "expected": -0.9799146525074566,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-040",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*4",
+    "expected": 0.704365036222725,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-041",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+4",
+    "expected": 3.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-042",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-4",
+    "expected": -3.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-043",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+4)",
+    "expected": 0.2222222222222222,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-044",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-4)^2+y^2",
+    "expected": 12.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-045",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,4*x,y)",
+    "expected": 2.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-046",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/4",
+    "expected": 0.13507557646703494,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-047",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+4",
+    "expected": 5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-048",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+4)",
+    "expected": 2.0615528128088303,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-049",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/5",
+    "expected": 0.31148154493098046,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-050",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+5",
+    "expected": 7.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-051",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*5",
+    "expected": -1.2248933156343207,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-052",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*5",
+    "expected": 0.8804562952784062,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-053",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+5",
+    "expected": 4.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-054",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-5",
+    "expected": -4.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-055",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+5)",
+    "expected": 0.18181818181818182,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-056",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-5)^2+y^2",
+    "expected": 20.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-057",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,5*x,y)",
+    "expected": 2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-058",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/5",
+    "expected": 0.10806046117362796,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-059",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+5",
+    "expected": 6,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-060",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+5)",
+    "expected": 2.29128784747792,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-061",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/6",
+    "expected": 0.2595679541091504,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-062",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+6",
+    "expected": 8.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-063",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*6",
+    "expected": -1.469871978761185,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-064",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*6",
+    "expected": 1.0565475543340874,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-065",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+6",
+    "expected": 5.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-066",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-6",
+    "expected": -5.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-067",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+6)",
+    "expected": 0.15384615384615385,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-068",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-6)^2+y^2",
+    "expected": 30.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-069",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,6*x,y)",
+    "expected": 3.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-070",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/6",
+    "expected": 0.09005038431135663,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-071",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+6",
+    "expected": 7,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-072",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+6)",
+    "expected": 2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-073",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/7",
+    "expected": 0.22248681780784318,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-074",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+7",
+    "expected": 9.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-075",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*7",
+    "expected": -1.714850641888049,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-076",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*7",
+    "expected": 1.2326388133897686,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-077",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+7",
+    "expected": 6.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-078",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-7",
+    "expected": -6.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-079",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+7)",
+    "expected": 0.13333333333333333,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-080",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-7)^2+y^2",
+    "expected": 42.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-081",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,7*x,y)",
+    "expected": 3.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-082",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/7",
+    "expected": 0.07718604369544854,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-083",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+7",
+    "expected": 8,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-084",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+7)",
+    "expected": 2.692582403567252,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-085",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/8",
+    "expected": 0.1946759655818628,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-086",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+8",
+    "expected": 10.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-087",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*8",
+    "expected": -1.9598293050149131,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-088",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*8",
+    "expected": 1.40873007244545,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-089",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+8",
+    "expected": 7.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-090",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-8",
+    "expected": -7.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-091",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+8)",
+    "expected": 0.11764705882352941,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-092",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-8)^2+y^2",
+    "expected": 56.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-093",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,8*x,y)",
+    "expected": 4.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-094",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/8",
+    "expected": 0.06753778823351747,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-095",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+8",
+    "expected": 9,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-096",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+8)",
+    "expected": 2.8722813232690143,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-097",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/9",
+    "expected": 0.17304530273943358,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-098",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+9",
+    "expected": 11.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-099",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*9",
+    "expected": -2.204807968141777,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-100",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*9",
+    "expected": 1.5848213315011312,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-101",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+9",
+    "expected": 8.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-102",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-9",
+    "expected": -8.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-103",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+9)",
+    "expected": 0.10526315789473684,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-104",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-9)^2+y^2",
+    "expected": 72.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-105",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,9*x,y)",
+    "expected": 4.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-106",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/9",
+    "expected": 0.06003358954090442,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-107",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+9",
+    "expected": 10,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-108",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+9)",
+    "expected": 3.0413812651491097,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-109",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=tan(x-y)/10",
+    "expected": 0.15574077246549023,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-110",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=asin(x)+acos(y)+10",
+    "expected": 12.617993877991495,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-111",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=atan(x*y)*10",
+    "expected": -2.4497866312686414,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-112",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=log(1+x^2+y^2)*10",
+    "expected": 1.7609125905568124,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-113",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=min(x,y)+10",
+    "expected": 9.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-114",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=max(x,y)-10",
+    "expected": -9.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-115",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=1/(x^2+y^2+10)",
+    "expected": 0.09523809523809523,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-116",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=(x-10)^2+y^2",
+    "expected": 90.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-117",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=if(x>y,10*x,y)",
+    "expected": 5.0,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-118",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=cos(x-y)/10",
+    "expected": 0.05403023058681398,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-119",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=exp(x+y)+10",
+    "expected": 11,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-120",
+    "dimension": 3,
+    "kind": "explicit",
+    "source": "z=sqrt(abs(x*y)+10)",
+    "expected": 3.2015621187164243,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-121",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.1",
+    "expected": 0,
+    "x": 0.1,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-122",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.1",
+    "expected": 0,
+    "x": 1.0488088481701516,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-123",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+1",
+    "expected": 1.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-124",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.2",
+    "expected": 0,
+    "x": 0.2,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-125",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.2",
+    "expected": 0,
+    "x": 1.0954451150103321,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-126",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+2",
+    "expected": 2.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-127",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.3",
+    "expected": 0,
+    "x": 0.3,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-128",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.3",
+    "expected": 0,
+    "x": 1.140175425099138,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-129",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+3",
+    "expected": 3.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-130",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.4",
+    "expected": 0,
+    "x": 0.4,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-131",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.4",
+    "expected": 0,
+    "x": 1.1832159566199232,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-132",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+4",
+    "expected": 4.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-133",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.5",
+    "expected": 0,
+    "x": 0.5,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-134",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.5",
+    "expected": 0,
+    "x": 1.224744871391589,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-135",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+5",
+    "expected": 5.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-136",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.6",
+    "expected": 0,
+    "x": 0.6,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-137",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.6",
+    "expected": 0,
+    "x": 1.2649110640673518,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-138",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+6",
+    "expected": 6.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-139",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.7",
+    "expected": 0,
+    "x": 0.7,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-140",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.7",
+    "expected": 0,
+    "x": 1.3038404810405297,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-141",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+7",
+    "expected": 7.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-142",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.8",
+    "expected": 0,
+    "x": 0.8,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-143",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.8",
+    "expected": 0,
+    "x": 1.3416407864998738,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-144",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+8",
+    "expected": 8.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-145",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+0.9",
+    "expected": 0,
+    "x": 0.9,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-146",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=1.9",
+    "expected": 0,
+    "x": 1.378404875209022,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-147",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+9",
+    "expected": 9.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-148",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x=y^2+z^2+1.0",
+    "expected": 0,
+    "x": 1.0,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-149",
+    "dimension": 3,
+    "kind": "implicit",
+    "source": "x^2+y^2=2.0",
+    "expected": 0,
+    "x": 1.4142135623730951,
+    "y": 0,
+    "z": 0
+  },
+  {
+    "id": "NEW-3D-150",
+    "dimension": 3,
+    "kind": "parametric",
+    "source": "x=u;y=v;z=u^2+v^2+10",
+    "expected": 10.5,
+    "x": 0.5,
+    "y": -0.5,
+    "z": 0
+  }
+]

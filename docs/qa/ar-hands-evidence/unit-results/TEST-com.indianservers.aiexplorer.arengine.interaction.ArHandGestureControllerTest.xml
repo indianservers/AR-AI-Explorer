@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:00:53.334Z" hostname="INDIANSERVERS" time="0.018">
+  <properties/>
+  <testcase name="ambiguousIdentityCancelsSelection" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.007"/>
+  <testcase name="twoHandsRotate" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="portraitRotationUsesPhysicalPixelAspect" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="toolSwitchEndsPriorGesture" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="leavingViewportEndsGesture" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="duplicateAndOldFramesDoNotTransform" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="pinchHysteresisAvoidsFlicker" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="malformedHandsIgnored" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="scaleIsBounded" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="pinchNeedsStableHold" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="trackingLossCancels" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="moveUsesCapturedBaseline" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="oneHandRotationOnlyRotates" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="resetAllowsNewSessionClock" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="twoHandsScaleIndependentlyOfOrdering" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <testcase name="releaseCommitsOnce" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.0"/>
+  <testcase name="staleFrameCancels" classname="com.indianservers.aiexplorer.arengine.interaction.ArHandGestureControllerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

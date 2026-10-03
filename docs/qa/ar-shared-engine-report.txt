@@ -1,0 +1,31 @@
+AR shared engine verification — 2026-10-03
+Target: OnePlus Nord CE5; no USB phone connected.
+
+Implemented:
+- AR 3D Graph now opens the same SpatialAR screen and ArCoreRuntime as 2D graph and 2D/3D geometry.
+- Source workspace determines AR launch mode; geometry starts in live floor/table mode.
+- Shared configuration enables horizontal and vertical planes, with fallback for optional depth/HDR/instant features.
+- Shared intelligence checks target orientation, tracked plane size, camera failure, motion, confidence, uncertainty, distance, polygon membership and plane identity.
+- Readiness requires 250 ms of stable distinct frames. Target changes, pause and camera restart reset readiness.
+- Repeated prepare/resume and availability checks preserve running sessions.
+- Failed anchor replacement preserves the previous anchor.
+- Floor/Table and Wall controls are visible. Camera failures are reported rather than called Camera ready.
+- Shared coordinate/vector lab placement uses the same intelligence filter.
+
+Validation:
+:app:assembleDebug SUCCESSFUL.
+146 arengine JVM tests passed, including 100 new parameterized hit cases and temporal/configuration/lifecycle tests.
+7 app navigation/adapter JVM tests passed.
+Direct ADB touchscreen taps verified workspace and floor/wall selection in all four modes.
+Opened AR graph Add panel and MathKeyboard, cleared input, entered x^(2)+y^(2) by touching x, long-press 2, +, y, long-press 2, and tapped Update surface.
+Native IME: mInputShown=false; mIsInputViewShown=false.
+Screenshots/logs are in ar-shared-engine-evidence/.
+
+Unverified:
+Real floor/wall detection, camera compositing and real-world anchoring on the phone.
+ARCore 1.56 emulator service was installed on API 35 and API 37. Both failed initialization because ARCore expected camera 0 while the emulator exposed cameras 1 and 10.
+The 100 manual camera cases are prepared, but ZERO are claimed as executed. Automated engine tests are not manual camera tests.
+
+Next required evidence:
+Connect the Nord CE5 with USB debugging enabled and run the 100 manual cases on its camera. Record Android/OxygenOS version. Fix observed device-specific failures before declaring acceptance complete.
+Official compatibility reference: https://developers.google.com/ar/devices (Nord CE5 supports Depth API).

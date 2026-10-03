@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:01:38.397Z" hostname="INDIANSERVERS" time="0.038">
+  <properties/>
+  <testcase name="faceExtrusionHonoursDirectionDistanceAndSubObjectEditing" classname="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" time="0.006"/>
+  <testcase name="rendererSelectsGpuTiersAndAlwaysHasCpuFallback" classname="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" time="0.006"/>
+  <testcase name="directAndPointBasedConstructionsResolveTypedGeometry" classname="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" time="0.004"/>
+  <testcase name="cameraPickingTolerancesAndGesturesCoverPhoneTabletAndStylus" classname="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" time="0.003"/>
+  <testcase name="sectionsProjectionIntersectionsAndMeasurementsAreGeometric" classname="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" time="0.0"/>
+  <testcase name="typedSurfaceModelMeshesExplicitImplicitAndParametricForms" classname="com.indianservers.aiexplorer.SpatialAuthoringProductionTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

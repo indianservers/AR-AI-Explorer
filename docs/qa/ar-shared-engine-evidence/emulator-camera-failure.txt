@@ -1,0 +1,139 @@
+--------- beginning of main
+10-03 12:47:24.281  3776  3776 I vers.aiexplorer: Late-enabling -Xcheck:jni
+10-03 12:47:24.301  3776  3776 I vers.aiexplorer: Using CollectorTypeCMC GC.
+10-03 12:47:24.302  3776  3776 W vers.aiexplorer: Unexpected CPU variant for x86: x86_64.
+10-03 12:47:24.302  3776  3776 W vers.aiexplorer: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, default
+10-03 12:47:24.320  3776  3776 D nativeloader: Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-03 12:47:24.370  3776  3776 D ApplicationLoaders: Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+10-03 12:47:24.370  3776  3776 D ApplicationLoaders: Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+10-03 12:47:24.372  3776  3776 W ziparchive: Unable to open '/data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/base.dm': No such file or directory
+10-03 12:47:24.373  3776  3776 W ziparchive: Unable to open '/data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/base.dm': No such file or directory
+10-03 12:47:24.754  3776  3776 D nativeloader: Configuring clns-7 for other apk /data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/lib/x86_64:/data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.indianservers.aiexplorer
+10-03 12:47:24.780  3776  3776 V GraphicsEnvironment: Currently set values for:
+10-03 12:47:24.781  3776  3776 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+10-03 12:47:24.781  3776  3776 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+10-03 12:47:24.781  3776  3776 V GraphicsEnvironment: Global.Settings values are invalid: number of packages: 0, number of values: 0
+10-03 12:47:24.781  3776  3776 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+10-03 12:47:24.842  3776  3776 I FirebaseApp: Device unlocked: initializing all Firebase APIs for app [DEFAULT]
+10-03 12:47:24.861  3776  3776 I FirebaseInitProvider: FirebaseApp initialization successful
+10-03 12:47:24.898  3776  3819 W ziparchive: Unable to open '/data/user_de/0/com.google.android.gms/app_chimera/m/00000002/DynamiteLoader.uncompressed.dm': No such file or directory
+10-03 12:47:24.898  3776  3819 W ziparchive: Unable to open '/data/user_de/0/com.google.android.gms/app_chimera/m/00000002/DynamiteLoader.uncompressed.dm': No such file or directory
+10-03 12:47:24.906  3776  3819 I DynamiteModule: Considering local module com.google.android.gms.measurement.dynamite:185 and remote module com.google.android.gms.measurement.dynamite:115
+10-03 12:47:24.907  3776  3819 I DynamiteModule: Selected local version of com.google.android.gms.measurement.dynamite
+10-03 12:47:24.998  3776  3776 W HWUI    : Unknown dataspace 0
+10-03 12:47:25.007  3776  3828 W vers.aiexplorer: Accessing hidden method Ldalvik/system/VMStack;->getStackClass2()Ljava/lang/Class; (unsupported, reflection, allowed)
+10-03 12:47:25.023  3776  3826 I FA      : App measurement initialized, version: 161000
+10-03 12:47:25.023  3776  3826 I FA      : To enable debug logging run: adb shell setprop log.tag.FA VERBOSE
+10-03 12:47:25.024  3776  3826 I FA      : To enable faster debug mode event logging run:
+10-03 12:47:25.024  3776  3826 I FA      :   adb shell setprop debug.firebase.analytics.app com.indianservers.aiexplorer
+10-03 12:47:25.031  3776  3828 D Phlogger: Application doesn't implement PhenotypeApplication interface, falling back to globally set context. See go/phenotype-flag#process-stable-init for more info.
+10-03 12:47:25.031  3776  3828 I Phlogger: Unable to retrieve flag snapshot for com.google.android.gms.measurement#com.indianservers.aiexplorer, using defaults.
+10-03 12:47:25.149  3776  3776 W vers.aiexplorer: Accessing hidden method Landroid/os/SystemProperties;->addChangeCallback(Ljava/lang/Runnable;)V (unsupported, reflection, allowed)
+10-03 12:47:25.171  3776  3826 I FA      : Tag Manager is not found and thus will not be used
+10-03 12:47:25.438  3776  3776 W WindowOnBackDispatcher: OnBackInvokedCallback is not enabled for the application.
+10-03 12:47:25.438  3776  3776 W WindowOnBackDispatcher: Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+10-03 12:47:25.603  3776  3781 I vers.aiexplorer: Compiler allocated 5174KB to compile void android.view.ViewRootImpl.performTraversals()
+10-03 12:47:25.929  3776  3822 I EGL_emulation: Opening libGLESv1_CM_emulation.so
+10-03 12:47:25.929  3776  3822 I EGL_emulation: Opening libGLESv2_emulation.so
+10-03 12:47:25.935  3776  3822 W HWUI    : Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-03 12:47:25.985  3776  3822 I Gralloc4: mapper 4.x is not supported
+10-03 12:47:27.005  3776  3855 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[GraphVerificationActivity]#0) as ready
+10-03 12:47:27.005  3776  3855 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[GraphVerificationActivity]#1) as ready
+10-03 12:47:27.340  3776  3788 I HWUI    : Davey! duration=2417ms; Flags=1, FrameTimelineVsyncId=13359, IntendedVsync=68917790260, Vsync=69001123590, InputEventId=0, HandleInputStart=69007807057, AnimationStart=69007810063, PerformTraversalsStart=69007864567, DrawStart=70004935895, FrameDeadline=68934456926, FrameInterval=69007777390, FrameStartTime=16666666, SyncQueued=70041708135, SyncStart=70041961589, IssueDrawCommandsStart=70042602120, SwapBuffers=71167959257, FrameCompleted=71335096535, DequeueBufferDuration=5464, QueueBufferDuration=329625, GpuCompleted=71335096535, SwapBuffersCompleted=71327192291, DisplayPresentTime=72904454231359566, CommandSubmissionCompleted=71167959257, 
+10-03 12:47:27.353  3776  3776 I Choreographer: Skipped 137 frames!  The application may be doing too much work on its main thread.
+10-03 12:47:27.838  3776  3788 I HWUI    : Davey! duration=2757ms; Flags=0, FrameTimelineVsyncId=13414, IntendedVsync=69067790254, Vsync=71351123496, InputEventId=0, HandleInputStart=71353915534, AnimationStart=71353916548, PerformTraversalsStart=71579674244, DrawStart=71579739824, FrameDeadline=71367790162, FrameInterval=71353272323, FrameStartTime=16666666, SyncQueued=71631208664, SyncStart=71631239148, IssueDrawCommandsStart=71631661466, SwapBuffers=71766830588, FrameCompleted=71825104459, DequeueBufferDuration=2312, QueueBufferDuration=186366, GpuCompleted=71825059587, SwapBuffersCompleted=71825104459, DisplayPresentTime=144115222452437076, CommandSubmissionCompleted=71766830588, 
+10-03 12:47:27.873  3776  3776 D nativeloader: Load /data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/base.apk!/lib/x86_64/libarcore_sdk_jni.so using ns clns-7 from class loader (caller=/data/app/~~qktA3DLi5cAFg8gXMe938A==/com.indianservers.aiexplorer-4YbdS2v_wqVi2m42rfn7zw==/base.apk!classes28.dex): ok
+10-03 12:47:27.873  3776  3776 I third_party/arcore/ar/core/android/sdk/session_create.cc: Entering ArSession_createWithFeaturesAndTrace
+10-03 12:47:27.873  3776  3776 I third_party/arcore/ar/core/android/sdk/session_create.cc: ARCore Version: SDK build name: 1.54
+10-03 12:47:27.875  3776  3776 I third_party/arcore/ar/core/android/sdk/session_create.cc: ARCore Version: APK version code: 262080393 from package com.google.ar.core
+10-03 12:47:27.879  3776  3776 D nativeloader: Configuring clns-8 for other apk /data/app/~~rU-4xNOHtT9NQLWGgDwtfA==/com.google.ar.core-FSQk03us9aLUrSua8JfLJA==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~rU-4xNOHtT9NQLWGgDwtfA==/com.google.ar.core-FSQk03us9aLUrSua8JfLJA==/lib/x86_64:/data/app/~~rU-4xNOHtT9NQLWGgDwtfA==/com.google.ar.core-FSQk03us9aLUrSua8JfLJA==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand
+10-03 12:47:27.881  3776  3776 I third_party/arcore/ar/core/android/sdk/session_create.cc: Dynamite load ok.
+10-03 12:47:27.881  3776  3776 I third_party/arcore/java/com/google/vr/dynamite/client/native/dynamite_client.cc: Attempting to load native library arcore_c from package com.google.ar.core
+10-03 12:47:27.894  3776  3776 D nativeloader: Load /data/app/~~rU-4xNOHtT9NQLWGgDwtfA==/com.google.ar.core-FSQk03us9aLUrSua8JfLJA==/lib/x86_64/libarcore_c.so using ns clns-8 from class loader (caller=/data/app/~~rU-4xNOHtT9NQLWGgDwtfA==/com.google.ar.core-FSQk03us9aLUrSua8JfLJA==/base.apk!classes2.dex): ok
+10-03 12:47:27.894  3776  3776 I third_party/arcore/java/com/google/vr/dynamite/client/native/dynamite_client.cc: Dynamite::LoadNativeRemoteLibrary handle=-4833802424659647585
+10-03 12:47:27.894  3776  3776 I third_party/arcore/ar/core/android/sdk/session_create.cc: ARCore SDK: dynamite number_of_symbols_loaded=317
+10-03 12:47:27.895  3776  3776 I native  : I0000 00:00:1791011847.895022    3776 session_create_implementation.cc:270] Entering createImplementationWithFeaturesAndSettings. ARCore SDK version: [1.54.260760000].
+10-03 12:47:27.900  3776  3776 I native  : I0000 00:00:1791011847.900109    3776 session_create_implementation.cc:231] AugmentedRegion downsample mode from Phenotype: false
+10-03 12:47:27.902  3776  3900 V third_party/redwood/infrastructure/jni_common/jni_helper.cc: JniHelper: attached thread (Called from line 368).
+10-03 12:47:27.916  3776  3776 I native  : I0000 00:00:1791011847.915788    3776 session_create_implementation_shared.cc:2580] min_apk_version_code is: 260760000, phenotype flag of enable_dual_camera_support is: false, phenotype flag of unified_data_source_status is: 1, is_dual_camera_supported based on device profile is: false
+10-03 12:47:27.916  3776  3776 I native  : I0000 00:00:1791011847.916069    3776 session_create_implementation_shared.cc:2591] Settings.camera_stack_option is not specified
+10-03 12:47:27.916  3776  3776 I native  : I0000 00:00:1791011847.916073    3776 session_create_implementation_shared.cc:2664] Datasource will be created with camera_stack_option = kUnifiedMono
+10-03 12:47:27.916  3776  3776 I native  : I0000 00:00:1791011847.916077    3776 android_camera.cc:185] [Live DS] Camera start operation timeout set to 4000 ms.
+10-03 12:47:27.917  3776  3776 E ACameraManager: getCurrentDeviceId: Failed to call getDeviceIdsForUid to determine device id for uid 10210: No error
+10-03 12:47:27.917  3776  3776 I native  : I0000 00:00:1791011847.917349    3776 android_camera.cc:2055] [Live DS] Initializing camera manager.
+10-03 12:47:27.921  3776  3776 E ACameraManager: getCurrentDeviceId: Failed to call getDeviceIdsForUid to determine device id for uid 10210: No error
+10-03 12:47:27.922  3776  3776 E ACameraManager: getCurrentDeviceId: Failed to call getDeviceIdsForUid to determine device id for uid 10210: No error
+10-03 12:47:27.922  3776  3776 I native  : I0000 00:00:1791011847.922443    3776 android_camera.cc:2092] [Live DS] Camera manager initialized successfully with 2 cameras.
+10-03 12:47:27.922  3776  3776 W native  : W0000 00:00:1791011847.922480    3776 device_profile_utils.cc:665] No default camera 0 found, live AR sessions may fail.
+10-03 12:47:27.922  3776  3776 I native  : I0000 00:00:1791011847.922486    3776 session_create_implementation_shared.cc:2677] ARCore Feature Additional Cameras and FOV enabled
+10-03 12:47:27.923  3776  3776 I native  : I0000 00:00:1791011847.923028    3776 android_camera.cc:831] [Live DS] [Camera=10; State=CLOSED] Reset cleanly got to CLOSED state.
+10-03 12:47:27.923  3776  3776 I native  : I0000 00:00:1791011847.923451    3776 android_camera.cc:831] [Live DS] [Camera=1; State=CLOSED] Reset cleanly got to CLOSED state.
+10-03 12:47:27.924  3776  3776 I native  : I0000 00:00:1791011847.924644    3776 session_create_implementation_shared.cc:2868] Persistent online recalibration is enabled by Phenotype.
+10-03 12:47:27.925  3776  3776 I tflite  : Initialized TensorFlow Lite runtime.
+10-03 12:47:27.927  3776  3776 I tflite  : Created TensorFlow Lite XNNPACK delegate for CPU.
+10-03 12:47:27.927  3776  3776 I tflite  : Replacing 2 out of 2 node(s) with delegate (TfLiteXNNPackDelegate) node, yielding 1 partitions for subgraph 0 (main).
+10-03 12:47:27.929  3776  3776 I native  : I0000 00:00:1791011847.929353    3776 online_calibration_manager.cc:94] OnlineCalibrationManager: Could not open /data/user/0/com.indianservers.aiexplorer/cache/arcore-online-recalibration for reading.
+10-03 12:47:27.939  3776  3776 W ARCore-ContextUtils: The API key for use with the Google AR service could not be obtained!
+10-03 12:47:27.954  3776  3776 I native  : I0000 00:00:1791011847.954535    3776 session_create_implementation_shared.cc:1333] semantic_segmentation enabled
+10-03 12:47:27.959  3776  3776 I CameraManagerGlobal: Connecting to camera service
+10-03 12:47:27.963  3776  3776 E native  : E0000 00:00:1791011847.963809    3776 session_create_implementation_shared.cc:1464] UNKNOWN: 
+10-03 12:47:27.963  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1464
+10-03 12:47:27.963  3776  3776 E native  : Failed to create java data source utils.
+10-03 12:47:27.963  3776  3776 E native  : ARCoreError: third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84
+10-03 12:47:27.963  3776  3776 E native  : getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+10-03 12:47:27.963  3776  3776 E native  : === Source Location Trace: ===
+10-03 12:47:27.963  3776  3776 E native  : third_party/arcore/ar/infrastructure/android/jni_util.cc:116
+10-03 12:47:27.963  3776  3776 E native  : third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84
+10-03 12:47:27.963  3776  3776 E native  : E0000 00:00:1791011847.963973    3776 session_create_implementation_shared.cc:1607] UNKNOWN: 
+10-03 12:47:27.963  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1607
+10-03 12:47:27.963  3776  3776 E native  : Failed to create cameras using image subsystem from java stack.
+10-03 12:47:27.963  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1464
+10-03 12:47:27.963  3776  3776 E native  : Failed to create java data source utils.
+10-03 12:47:27.963  3776  3776 E native  : ARCoreError: third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84
+10-03 12:47:27.963  3776  3776 E native  : getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+10-03 12:47:27.963  3776  3776 E native  : === Source Location Trace: ===
+10-03 12:47:27.963  3776  3776 E native  : third_party/arcore/ar/infrastructure/android/jni_util.cc:116
+10-03 12:47:27.963  3776  3776 E native  : third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84
+10-03 12:47:27.963  3776  3776 E native  : third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1464
+10-03 12:47:27.966  3776  3900 V third_party/redwood/infrastructure/jni_common/jni_helper.cc: ~JniHelper: about to detach thread (Called from line 368).
+10-03 12:47:27.966  3776  3900 V third_party/redwood/infrastructure/jni_common/jni_helper.cc: ~JniHelper: detached thread (Called from line 368).
+10-03 12:47:27.966  3776  3776 E native  : E0000 00:00:1791011847.966467    3776 error_policy_util.cc:263] 
+10-03 12:47:27.966  3776  3776 E native  : ################ ARCore Native Error ##################
+10-03 12:47:27.966  3776  3776 E native  : BUILD_CHANGELIST:962753208
+10-03 12:47:27.966  3776  3776 E native  : BUILD_BASELINE_CHANGELIST:953564233
+10-03 12:47:27.966  3776  3776 E native  : ################### Stack Trace Begin ################
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc?g=0&l=84
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1464	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc?g=0&l=1464
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1607	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc?g=0&l=1607
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:2984	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc?g=0&l=2984
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:3430	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc?g=0&l=3430
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation.cc:427	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/core/android/implementation/session_create_implementation.cc?g=0&l=427
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation.cc:547	https://cs.corp.google.com/piper///depot/google3/third_party/arcore/ar/core/android/implementation/session_create_implementation.cc?g=0&l=547
+10-03 12:47:27.966  3776  3776 E native  : ################### Stack Trace End #################
+10-03 12:47:27.966  3776  3776 E native  : 
+10-03 12:47:27.966  3776  3776 E native  : ################### Undecorated Trace Begin  #################
+10-03 12:47:27.966  3776  3776 E native  : UNKNOWN: 
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation.cc:427
+10-03 12:47:27.966  3776  3776 E native  : 
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:3430
+10-03 12:47:27.966  3776  3776 E native  : 
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:2984
+10-03 12:47:27.966  3776  3776 E native  : 
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1607
+10-03 12:47:27.966  3776  3776 E native  : Failed to create cameras using image subsystem from java stack.
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1464
+10-03 12:47:27.966  3776  3776 E native  : Failed to create java data source utils.
+10-03 12:47:27.966  3776  3776 E native  : ARCoreError: third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84
+10-03 12:47:27.966  3776  3776 E native  : getCameraCharacteristics:1329: Unable to retrieve camera characteristics for unknown device 0: No such file or directory (-2)
+10-03 12:47:27.966  3776  3776 E native  : === Source Location Trace: ===
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/infrastructure/android/jni_util.cc:116
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/infrastructure/android/java_data_source_utils.cc:84
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1464
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:1607
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:2984
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/core/android/implementation/session_create_implementation_shared.cc:3430
+10-03 12:47:27.966  3776  3776 E native  : third_party/arcore/ar/core/android/implementation/session_create_implementation.cc:427
+10-03 12:47:27.966  3776  3776 E native  : 
+10-03 12:47:27.966  3776  3776 E native  : ################### Undecorated Trace End  #################
+10-03 12:47:30.789  3776  3958 D ProfileInstaller: Installing profile for com.indianservers.aiexplorer
+10-03 12:47:53.323  3776  3822 D EGL_emulation: app_time_stats: avg=1444.22ms min=21.35ms max=24838.03ms count=18

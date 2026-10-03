@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.Geometry2DInteractionTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:22:06.472Z" hostname="INDIANSERVERS" time="0.194">
+  <properties/>
+  <testcase name="protocolMacrosTraceLabelsAndKeyboardShareOneInteractionPolicy" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.056"/>
+  <testcase name="dependencyAccessibilityRecoveryAndCrossViewLinksAreStructured" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.067"/>
+  <testcase name="monitoredConstraintsSurviveWorkspaceSnapshotRoundTrip" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.049"/>
+  <testcase name="constraintFeedbackDistinguishesSatisfiedNearlyAndViolatedRelations" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.004"/>
+  <testcase name="dependentPointInspectorReportsItsParents" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.004"/>
+  <testcase name="inspectorExplainsPropertiesParentsDependentsAndContextualTools" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.001"/>
+  <testcase name="selectedObjectsProduceGraphicallyApplicableConstraintSuggestions" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.003"/>
+  <testcase name="boxSelectionAndConsistentHandlesRemainDirectlyManipulable" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.007"/>
+  <testcase name="protocolTimelineUsesActualWorkspaceDependenciesAndReplayCutoff" classname="com.indianservers.aiexplorer.Geometry2DInteractionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

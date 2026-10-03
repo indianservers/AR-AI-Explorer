@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.GraphUxFoundationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:22:06.820Z" hostname="INDIANSERVERS" time="0.037">
+  <properties/>
+  <testcase name="adaptiveAxisLabelsSupportPiFractionsAndScientificNotation" classname="com.indianservers.aiexplorer.GraphUxFoundationTest" time="0.019"/>
+  <testcase name="viewHistoryMovesBackAndForwardByWholeGestures" classname="com.indianservers.aiexplorer.GraphUxFoundationTest" time="0.002"/>
+  <testcase name="transformationsAndComparisonRemainDeterministic" classname="com.indianservers.aiexplorer.GraphUxFoundationTest" time="0.004"/>
+  <testcase name="addMenuCoversGraphObjectKinds" classname="com.indianservers.aiexplorer.GraphUxFoundationTest" time="0.003"/>
+  <testcase name="domainsLabelsLayersAndMinimapHaveStableGeometry" classname="com.indianservers.aiexplorer.GraphUxFoundationTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

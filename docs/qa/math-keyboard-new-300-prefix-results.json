@@ -1,0 +1,802 @@
+[
+  {
+    "id": "NEW-2D-001",
+    "source": "y=tan(x)/1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/1",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-002",
+    "source": "y=asin(x)+1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+1",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-003",
+    "source": "y=acos(x)-1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-1",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-004",
+    "source": "y=atan(x)*1",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*1",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-005",
+    "source": "y=log(x^2+1)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+1)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-006",
+    "source": "y=min(x,0.1)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.1)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-007",
+    "source": "y=max(x,0.1)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.1)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-008",
+    "source": "y=1/(x^2+1)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+1)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-009",
+    "source": "y=(x-1)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-1)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-010",
+    "source": "y=if(x>0,1*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,1*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-011",
+    "source": "y=tan(x)/2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/2",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-012",
+    "source": "y=asin(x)+2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+2",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-013",
+    "source": "y=acos(x)-2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-2",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-014",
+    "source": "y=atan(x)*2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*2",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-015",
+    "source": "y=log(x^2+2)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-016",
+    "source": "y=min(x,0.2)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-017",
+    "source": "y=max(x,0.2)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-018",
+    "source": "y=1/(x^2+2)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-019",
+    "source": "y=(x-2)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-2)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-020",
+    "source": "y=if(x>0,2*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,2*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-021",
+    "source": "y=tan(x)/3",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/3",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-022",
+    "source": "y=asin(x)+3",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+3",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-023",
+    "source": "y=acos(x)-3",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-3",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-024",
+    "source": "y=atan(x)*3",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*3",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-025",
+    "source": "y=log(x^2+3)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+3)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-026",
+    "source": "y=min(x,0.3)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.3)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-027",
+    "source": "y=max(x,0.3)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.3)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-028",
+    "source": "y=1/(x^2+3)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+3)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-029",
+    "source": "y=(x-3)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-3)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-030",
+    "source": "y=if(x>0,3*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,3*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-031",
+    "source": "y=tan(x)/4",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/4",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-032",
+    "source": "y=asin(x)+4",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+4",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-033",
+    "source": "y=acos(x)-4",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-4",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-034",
+    "source": "y=atan(x)*4",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*4",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-035",
+    "source": "y=log(x^2+4)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+4)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-036",
+    "source": "y=min(x,0.4)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.4)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-037",
+    "source": "y=max(x,0.4)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.4)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-038",
+    "source": "y=1/(x^2+4)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+4)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-039",
+    "source": "y=(x-4)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-4)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-040",
+    "source": "y=if(x>0,4*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,4*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-041",
+    "source": "y=tan(x)/5",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/5",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-042",
+    "source": "y=asin(x)+5",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+5",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-043",
+    "source": "y=acos(x)-5",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-5",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-044",
+    "source": "y=atan(x)*5",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*5",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-045",
+    "source": "y=log(x^2+5)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+5)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-046",
+    "source": "y=min(x,0.5)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.5)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-047",
+    "source": "y=max(x,0.5)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.5)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-048",
+    "source": "y=1/(x^2+5)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+5)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-049",
+    "source": "y=(x-5)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-5)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-050",
+    "source": "y=if(x>0,5*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,5*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-051",
+    "source": "y=tan(x)/6",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/6",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-052",
+    "source": "y=asin(x)+6",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+6",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-053",
+    "source": "y=acos(x)-6",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-6",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-054",
+    "source": "y=atan(x)*6",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*6",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-055",
+    "source": "y=log(x^2+6)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+6)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-056",
+    "source": "y=min(x,0.6)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.6)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-057",
+    "source": "y=max(x,0.6)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.6)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-058",
+    "source": "y=1/(x^2+6)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+6)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-059",
+    "source": "y=(x-6)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-6)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-060",
+    "source": "y=if(x>0,6*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,6*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-061",
+    "source": "y=tan(x)/7",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/7",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-062",
+    "source": "y=asin(x)+7",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+7",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-063",
+    "source": "y=acos(x)-7",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-7",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-064",
+    "source": "y=atan(x)*7",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*7",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-065",
+    "source": "y=log(x^2+7)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+7)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-066",
+    "source": "y=min(x,0.7)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.7)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-067",
+    "source": "y=max(x,0.7)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.7)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-068",
+    "source": "y=1/(x^2+7)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+7)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-069",
+    "source": "y=(x-7)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-7)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-070",
+    "source": "y=if(x>0,7*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,7*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-071",
+    "source": "y=tan(x)/8",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/8",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-072",
+    "source": "y=asin(x)+8",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+8",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-073",
+    "source": "y=acos(x)-8",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-8",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-074",
+    "source": "y=atan(x)*8",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*8",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-075",
+    "source": "y=log(x^2+8)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+8)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-076",
+    "source": "y=min(x,0.8)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.8)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-077",
+    "source": "y=max(x,0.8)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.8)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-078",
+    "source": "y=1/(x^2+8)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+8)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-079",
+    "source": "y=(x-8)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-8)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-080",
+    "source": "y=if(x>0,8*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,8*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-081",
+    "source": "y=tan(x)/9",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/9",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-082",
+    "source": "y=asin(x)+9",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+9",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-083",
+    "source": "y=acos(x)-9",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-9",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-084",
+    "source": "y=atan(x)*9",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*9",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-085",
+    "source": "y=log(x^2+9)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+9)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-086",
+    "source": "y=min(x,0.9)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,0.9)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-087",
+    "source": "y=max(x,0.9)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,0.9)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-088",
+    "source": "y=1/(x^2+9)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+9)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-089",
+    "source": "y=(x-9)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-9)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-090",
+    "source": "y=if(x>0,9*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,9*x,-x)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-091",
+    "source": "y=tan(x)/10",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=tan(x)/10",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-092",
+    "source": "y=asin(x)+10",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=asin(x)+10",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-093",
+    "source": "y=acos(x)-10",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=acos(x)-10",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-094",
+    "source": "y=atan(x)*10",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=atan(x)*10",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-095",
+    "source": "y=log(x^2+10)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=log(x^(2)+10)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-096",
+    "source": "y=min(x,1.0)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=min(x,1.0)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-097",
+    "source": "y=max(x,1.0)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=max(x,1.0)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-098",
+    "source": "y=1/(x^2+10)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=1/(x^(2)+10)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-099",
+    "source": "y=(x-10)^2",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=(x-10)^(2)",
+    "nativeKeyboardVisible": false
+  },
+  {
+    "id": "NEW-2D-100",
+    "source": "y=if(x>0,10*x,-x)",
+    "inputMethod": "onscreen touchscreen keys",
+    "status": "PASS",
+    "submitted": "y=if(x>0,10*x,-x)",
+    "nativeKeyboardVisible": false
+  }
+]

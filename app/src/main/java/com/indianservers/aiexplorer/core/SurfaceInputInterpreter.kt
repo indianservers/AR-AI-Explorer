@@ -27,7 +27,7 @@ object SurfaceInputInterpreter {
                 }
                 pair[0].trim().lowercase() to pair[1].trim().also { require(it.isNotBlank()) }
             }
-            require(coordinates.keys == setOf("x", "y", "z")) { "Parametric form requires x, y, and z components." }
+            require(parts.size == 3 && coordinates.keys == setOf("x", "y", "z")) { "Parametric form requires exactly one x, y, and z component." }
             SurfaceInputInterpretation(
                 canonicalEquation = "x=${coordinates.getValue("x")}; y=${coordinates.getValue("y")}; z=${coordinates.getValue("z")}",
                 expression = coordinates.getValue("x"), kind = SpatialSurfaceKind.Parametric,
@@ -72,6 +72,9 @@ object SurfaceInputInterpreter {
         }.trim()
 
         require(expression.isNotBlank()) { "Enter the expression for z." }
+        require(!Regex("(?i)\\bz\\b").containsMatchIn(expression)) {
+            "An expression containing z requires an implicit surface equation."
+        }
         SurfaceInputInterpretation(
             canonicalEquation = "z = $expression",
             expression = expression,

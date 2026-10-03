@@ -7,6 +7,7 @@ import com.google.ar.core.LightEstimate
 import com.google.ar.core.Plane
 import com.google.ar.core.Session
 import com.google.ar.core.TrackingState
+import com.google.ar.core.Trackable
 import com.google.ar.core.exceptions.NotYetAvailableException
 import com.indianservers.aiexplorer.arengine.contract.ArCameraSnapshot
 import com.indianservers.aiexplorer.arengine.contract.ArDepthSnapshot
@@ -20,8 +21,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.UUID
 
-internal class ArCoreFrameMapper {
-    private val planeIds = mutableMapOf<Plane, String>()
+internal class ArCoreFrameMapper(private val trackableIds: MutableMap<Trackable, String> = mutableMapOf()) {
 
     fun map(session: Session, frame: Frame, depthEnabled: Boolean): ArFrameSnapshot {
         val camera = frame.camera
@@ -83,7 +83,7 @@ internal class ArCoreFrameMapper {
             }
         }
         return ArPlaneSnapshot(
-            id = planeIds.getOrPut(plane) { "plane-${UUID.randomUUID()}" },
+            id = trackableIds.getOrPut(plane) { "plane-${UUID.randomUUID()}" },
             centerPose = ArCorePoseMapper.map(center),
             orientation = ArCoreStateMapper.planeOrientation(plane.type),
             extentXMeters = plane.extentX.toDouble().coerceAtLeast(0.0),

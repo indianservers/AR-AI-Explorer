@@ -91,7 +91,7 @@ class ArEngineSpatialAdaptersTest {
         assertFalse(ArPlacementMode.FloorTable.accepts(wall))
         assertTrue(ArPlacementMode.Wall.accepts(wall))
         assertFalse(ArPlacementMode.Wall.accepts(floor))
-        assertTrue(ArPlacementMode.FloorTable.accepts(instant))
+        assertFalse(ArPlacementMode.FloorTable.accepts(instant))
         assertFalse(ArPlacementMode.Wall.accepts(instant))
         assertFalse(ArPlacementMode.Viewer.accepts(floor))
     }

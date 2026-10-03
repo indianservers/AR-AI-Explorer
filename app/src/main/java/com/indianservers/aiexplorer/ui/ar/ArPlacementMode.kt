@@ -1,9 +1,6 @@
 package com.indianservers.aiexplorer
 
 import com.indianservers.aiexplorer.arengine.contract.ArHitCandidate
-import com.indianservers.aiexplorer.arengine.contract.ArHitType
-import com.indianservers.aiexplorer.arengine.contract.ArVector3
-import kotlin.math.abs
 
 internal enum class ArPlacementMode(val label: String, val shortLabel: String) {
     Viewer("3D Viewer", "VIEW"),
@@ -11,23 +8,8 @@ internal enum class ArPlacementMode(val label: String, val shortLabel: String) {
     Wall("Wall", "WALL"),
 }
 
-internal fun ArPlacementMode.accepts(hit: ArHitCandidate): Boolean {
-    return when (this) {
-        ArPlacementMode.Viewer -> false
-        ArPlacementMode.FloorTable -> when (hit.type) {
-            ArHitType.InstantPlacement -> true
-            ArHitType.Plane, ArHitType.Depth, ArHitType.OrientedPoint -> {
-                val normalY = abs(hit.pose.orientation.rotate(ArVector3.Up).y)
-                normalY >= .55
-            }
-            ArHitType.Simulator -> true
-        }
-        ArPlacementMode.Wall -> when (hit.type) {
-            ArHitType.Plane, ArHitType.Depth, ArHitType.OrientedPoint -> {
-                val normalY = abs(hit.pose.orientation.rotate(ArVector3.Up).y)
-                normalY < .55
-            }
-            ArHitType.InstantPlacement, ArHitType.Simulator -> false
-        }
-    }
+internal fun ArPlacementMode.accepts(hit: ArHitCandidate): Boolean = when (this) {
+    ArPlacementMode.Viewer -> false
+    ArPlacementMode.FloorTable -> com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence.accepts(hit, com.indianservers.aiexplorer.arengine.session.ArSurfaceTarget.FloorTable)
+    ArPlacementMode.Wall -> com.indianservers.aiexplorer.arengine.session.ArSurfaceIntelligence.accepts(hit, com.indianservers.aiexplorer.arengine.session.ArSurfaceTarget.Wall)
 }

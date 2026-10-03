@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.SharedSpatialMathSchemaTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-03T08:01:38.325Z" hostname="INDIANSERVERS" time="0.062">
+  <properties/>
+  <testcase name="typedSurfaceEquationsRemainRendererIndependent" classname="com.indianservers.aiexplorer.SharedSpatialMathSchemaTest" time="0.004"/>
+  <testcase name="spaceCurvesAndPlaneIntersectionsAreSharedObjects" classname="com.indianservers.aiexplorer.SharedSpatialMathSchemaTest" time="0.005"/>
+  <testcase name="explicitImplicitAndParametricDifferentialsProduceTangentPlanes" classname="com.indianservers.aiexplorer.SharedSpatialMathSchemaTest" time="0.004"/>
+  <testcase name="unifiedSpatialSnapshotPublishesTypedSurfaceSchema" classname="com.indianservers.aiexplorer.SharedSpatialMathSchemaTest" time="0.024"/>
+  <testcase name="crossSectionCarriesWorldAndPlaneCoordinates" classname="com.indianservers.aiexplorer.SharedSpatialMathSchemaTest" time="0.023"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -149,7 +149,10 @@ enum class MathModule(val label: String) {
     DiscreteMathematics("Discrete"),
     NumberTheory("Numbers"),
     SpatialAR("AR"),
+    ARGraph2D("AR 2D Graph"),
     ARGraph3D("AR 3D Graph"),
+    ARGeometry2D("AR 2D Geometry"),
+    ARGeometry3D("AR 3D Geometry"),
     ARCoordinatePlane("AR Coordinate Plane"),
     ARVectorLab("AR Vector Lab"),
 }

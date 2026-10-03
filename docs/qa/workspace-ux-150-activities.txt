@@ -1,0 +1,606 @@
+150 UX activities — all passed on Android API 35 emulator-5556.
+38 each for 2D/3D graphs; 37 each for 2D/3D geometry.
+Method: scripted UI touch instrumentation, with Back/lifecycle simulation.
+A separate direct ADB smoke check covers the reported 2D graph flow.
+Expected: background interactions preserve mathematical objects and open controls.
+Explicit Close/Back or panel changes may close controls. Add changes object count only.
+
+GRAPH2D-UX-001 | PASS
+Activity: Add an object using the workspace add control
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-002 | PASS
+Activity: Open the equation/object controls
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-003 | PASS
+Activity: Tap empty left margin at 48% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-004 | PASS
+Activity: Tap empty left margin at 56% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-005 | PASS
+Activity: Tap empty left margin at 64% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-006 | PASS
+Activity: Tap empty left margin at 72% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-007 | PASS
+Activity: Tap empty right margin at 48% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-008 | PASS
+Activity: Tap empty right margin at 56% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-009 | PASS
+Activity: Tap empty right margin at 64% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-010 | PASS
+Activity: Tap empty right margin at 72% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-011 | PASS
+Activity: Double-tap an empty margin with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-012 | PASS
+Activity: Long-press empty space with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-013 | PASS
+Activity: Navigate empty space left by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-014 | PASS
+Activity: Navigate empty space left by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-015 | PASS
+Activity: Navigate empty space right by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-016 | PASS
+Activity: Navigate empty space right by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-017 | PASS
+Activity: Navigate empty space up by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-018 | PASS
+Activity: Navigate empty space up by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-019 | PASS
+Activity: Navigate empty space down by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-020 | PASS
+Activity: Navigate empty space down by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-021 | PASS
+Activity: Two-finger zoom with spread factor 0.8; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-022 | PASS
+Activity: Two-finger zoom with spread factor 1.2; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-023 | PASS
+Activity: Two-finger zoom with spread factor 0.6; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-024 | PASS
+Activity: Two-finger zoom with spread factor 1.5; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-025 | PASS
+Activity: Reset/fit the camera with an empty-space double tap
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-026 | PASS
+Activity: Long-press empty space after camera navigation
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-027 | PASS
+Activity: Close the inspector explicitly
+Objects after: 2 | Inspector open: False
+
+GRAPH2D-UX-028 | PASS
+Activity: Reopen the inspector for the same object
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-029 | PASS
+Activity: Tap empty space after reopening the inspector
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-030 | PASS
+Activity: Close and reopen controls without losing the active object
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-031 | PASS
+Activity: Open Add and cancel using Back/Close without adding an object
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-032 | PASS
+Activity: Open Add and cancel outside the chooser without removing existing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH2D-UX-033 | PASS
+Activity: Add a second independent object through the add UI
+Objects after: 3 | Inspector open: True
+
+GRAPH2D-UX-034 | PASS
+Activity: Tap empty space with two objects present
+Objects after: 3 | Inspector open: True
+
+GRAPH2D-UX-035 | PASS
+Activity: Background and resume; retain the object list
+Objects after: 3 | Inspector open: True
+
+GRAPH2D-UX-036 | PASS
+Activity: Navigate the camera with the inspector explicitly closed
+Objects after: 3 | Inspector open: False
+
+GRAPH2D-UX-037 | PASS
+Activity: Reopen controls after background/resume and camera navigation
+Objects after: 3 | Inspector open: True
+
+GRAPH2D-UX-038 | PASS
+Activity: Add a third graph using the MathKeyboard (y²=4 in 2D; x²+y² in 3D)
+Objects after: 4 | Inspector open: True
+
+GRAPH3D-UX-001 | PASS
+Activity: Add an object using the workspace add control
+Objects after: 2 | Inspector open: False
+
+GRAPH3D-UX-002 | PASS
+Activity: Open the equation/object controls
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-003 | PASS
+Activity: Tap empty left margin at 48% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-004 | PASS
+Activity: Tap empty left margin at 56% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-005 | PASS
+Activity: Tap empty left margin at 64% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-006 | PASS
+Activity: Tap empty left margin at 72% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-007 | PASS
+Activity: Tap empty right margin at 48% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-008 | PASS
+Activity: Tap empty right margin at 56% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-009 | PASS
+Activity: Tap empty right margin at 64% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-010 | PASS
+Activity: Tap empty right margin at 72% height with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-011 | PASS
+Activity: Double-tap an empty margin with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-012 | PASS
+Activity: Long-press empty space with controls open
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-013 | PASS
+Activity: Navigate empty space left by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-014 | PASS
+Activity: Navigate empty space left by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-015 | PASS
+Activity: Navigate empty space right by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-016 | PASS
+Activity: Navigate empty space right by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-017 | PASS
+Activity: Navigate empty space up by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-018 | PASS
+Activity: Navigate empty space up by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-019 | PASS
+Activity: Navigate empty space down by 35 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-020 | PASS
+Activity: Navigate empty space down by 70 pixels without changing objects
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-021 | PASS
+Activity: Two-finger zoom with spread factor 0.8; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-022 | PASS
+Activity: Two-finger zoom with spread factor 1.2; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-023 | PASS
+Activity: Two-finger zoom with spread factor 0.6; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-024 | PASS
+Activity: Two-finger zoom with spread factor 1.5; preserve objects and controls
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-025 | PASS
+Activity: Reset/fit the camera with an empty-space double tap
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-026 | PASS
+Activity: Long-press empty space after camera navigation
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-027 | PASS
+Activity: Close the inspector explicitly
+Objects after: 2 | Inspector open: False
+
+GRAPH3D-UX-028 | PASS
+Activity: Reopen the inspector for the same object
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-029 | PASS
+Activity: Tap empty space after reopening the inspector
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-030 | PASS
+Activity: Close and reopen controls without losing the active object
+Objects after: 2 | Inspector open: True
+
+GRAPH3D-UX-031 | PASS
+Activity: Open Add and cancel using Back/Close without adding an object
+Objects after: 2 | Inspector open: False
+
+GRAPH3D-UX-032 | PASS
+Activity: Open Add and cancel outside the chooser without removing existing objects
+Objects after: 2 | Inspector open: False
+
+GRAPH3D-UX-033 | PASS
+Activity: Add a second independent object through the add UI
+Objects after: 3 | Inspector open: False
+
+GRAPH3D-UX-034 | PASS
+Activity: Tap empty space with two objects present
+Objects after: 3 | Inspector open: False
+
+GRAPH3D-UX-035 | PASS
+Activity: Background and resume; retain the object list
+Objects after: 3 | Inspector open: False
+
+GRAPH3D-UX-036 | PASS
+Activity: Navigate the camera with the inspector explicitly closed
+Objects after: 3 | Inspector open: False
+
+GRAPH3D-UX-037 | PASS
+Activity: Reopen controls after background/resume and camera navigation
+Objects after: 3 | Inspector open: True
+
+GRAPH3D-UX-038 | PASS
+Activity: Add a third graph using the MathKeyboard (y²=4 in 2D; x²+y² in 3D)
+Objects after: 4 | Inspector open: False
+
+GEOMETRY2D-UX-001 | PASS
+Activity: Add an object using the workspace add control
+Objects after: 1 | Inspector open: False
+
+GEOMETRY2D-UX-002 | PASS
+Activity: Open the equation/object controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-003 | PASS
+Activity: Tap empty left margin at 48% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-004 | PASS
+Activity: Tap empty left margin at 56% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-005 | PASS
+Activity: Tap empty left margin at 64% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-006 | PASS
+Activity: Tap empty left margin at 72% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-007 | PASS
+Activity: Tap empty right margin at 48% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-008 | PASS
+Activity: Tap empty right margin at 56% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-009 | PASS
+Activity: Tap empty right margin at 64% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-010 | PASS
+Activity: Tap empty right margin at 72% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-011 | PASS
+Activity: Double-tap an empty margin with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-012 | PASS
+Activity: Long-press empty space with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-013 | PASS
+Activity: Navigate empty space left by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-014 | PASS
+Activity: Navigate empty space left by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-015 | PASS
+Activity: Navigate empty space right by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-016 | PASS
+Activity: Navigate empty space right by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-017 | PASS
+Activity: Navigate empty space up by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-018 | PASS
+Activity: Navigate empty space up by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-019 | PASS
+Activity: Navigate empty space down by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-020 | PASS
+Activity: Navigate empty space down by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-021 | PASS
+Activity: Two-finger zoom with spread factor 0.8; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-022 | PASS
+Activity: Two-finger zoom with spread factor 1.2; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-023 | PASS
+Activity: Two-finger zoom with spread factor 0.6; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-024 | PASS
+Activity: Two-finger zoom with spread factor 1.5; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-025 | PASS
+Activity: Reset/fit the camera with an empty-space double tap
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-026 | PASS
+Activity: Long-press empty space after camera navigation
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-027 | PASS
+Activity: Close the inspector explicitly
+Objects after: 1 | Inspector open: False
+
+GEOMETRY2D-UX-028 | PASS
+Activity: Reopen the inspector for the same object
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-029 | PASS
+Activity: Tap empty space after reopening the inspector
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-030 | PASS
+Activity: Close and reopen controls without losing the active object
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-031 | PASS
+Activity: Open Add and cancel using Back/Close without adding an object
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-032 | PASS
+Activity: Open Add and cancel outside the chooser without removing existing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY2D-UX-033 | PASS
+Activity: Add a second independent object through the add UI
+Objects after: 2 | Inspector open: False
+
+GEOMETRY2D-UX-034 | PASS
+Activity: Tap empty space with two objects present
+Objects after: 2 | Inspector open: False
+
+GEOMETRY2D-UX-035 | PASS
+Activity: Background and resume; retain the object list
+Objects after: 2 | Inspector open: False
+
+GEOMETRY2D-UX-036 | PASS
+Activity: Navigate the camera with the inspector explicitly closed
+Objects after: 2 | Inspector open: False
+
+GEOMETRY2D-UX-037 | PASS
+Activity: Reopen controls after background/resume and camera navigation
+Objects after: 2 | Inspector open: True
+
+GEOMETRY3D-UX-001 | PASS
+Activity: Add an object using the workspace add control
+Objects after: 1 | Inspector open: False
+
+GEOMETRY3D-UX-002 | PASS
+Activity: Open the equation/object controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-003 | PASS
+Activity: Tap empty left margin at 48% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-004 | PASS
+Activity: Tap empty left margin at 56% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-005 | PASS
+Activity: Tap empty left margin at 64% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-006 | PASS
+Activity: Tap empty left margin at 72% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-007 | PASS
+Activity: Tap empty right margin at 48% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-008 | PASS
+Activity: Tap empty right margin at 56% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-009 | PASS
+Activity: Tap empty right margin at 64% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-010 | PASS
+Activity: Tap empty right margin at 72% height with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-011 | PASS
+Activity: Double-tap an empty margin with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-012 | PASS
+Activity: Long-press empty space with controls open
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-013 | PASS
+Activity: Navigate empty space left by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-014 | PASS
+Activity: Navigate empty space left by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-015 | PASS
+Activity: Navigate empty space right by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-016 | PASS
+Activity: Navigate empty space right by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-017 | PASS
+Activity: Navigate empty space up by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-018 | PASS
+Activity: Navigate empty space up by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-019 | PASS
+Activity: Navigate empty space down by 35 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-020 | PASS
+Activity: Navigate empty space down by 70 pixels without changing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-021 | PASS
+Activity: Two-finger zoom with spread factor 0.8; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-022 | PASS
+Activity: Two-finger zoom with spread factor 1.2; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-023 | PASS
+Activity: Two-finger zoom with spread factor 0.6; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-024 | PASS
+Activity: Two-finger zoom with spread factor 1.5; preserve objects and controls
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-025 | PASS
+Activity: Reset/fit the camera with an empty-space double tap
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-026 | PASS
+Activity: Long-press empty space after camera navigation
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-027 | PASS
+Activity: Close the inspector explicitly
+Objects after: 1 | Inspector open: False
+
+GEOMETRY3D-UX-028 | PASS
+Activity: Reopen the inspector for the same object
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-029 | PASS
+Activity: Tap empty space after reopening the inspector
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-030 | PASS
+Activity: Close and reopen controls without losing the active object
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-031 | PASS
+Activity: Open Add and cancel using Back/Close without adding an object
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-032 | PASS
+Activity: Open Add and cancel outside the chooser without removing existing objects
+Objects after: 1 | Inspector open: True
+
+GEOMETRY3D-UX-033 | PASS
+Activity: Add a second independent object through the add UI
+Objects after: 2 | Inspector open: False
+
+GEOMETRY3D-UX-034 | PASS
+Activity: Tap empty space with two objects present
+Objects after: 2 | Inspector open: False
+
+GEOMETRY3D-UX-035 | PASS
+Activity: Background and resume; retain the object list
+Objects after: 2 | Inspector open: False
+
+GEOMETRY3D-UX-036 | PASS
+Activity: Navigate the camera with the inspector explicitly closed
+Objects after: 2 | Inspector open: False
+
+GEOMETRY3D-UX-037 | PASS
+Activity: Reopen controls after background/resume and camera navigation
+Objects after: 2 | Inspector open: True
