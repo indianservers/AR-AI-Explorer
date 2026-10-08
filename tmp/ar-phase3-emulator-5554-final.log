@@ -1,0 +1,25 @@
+
+com.indianservers.aiexplorer.ArCadPhaseThreeUiTest:.
+Error in realArSpaceGuidedParaboloidAnalysisAndPresentation(com.indianservers.aiexplorer.ArCadPhaseThreeUiTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 10000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.realArSpaceGuidedParaboloidAnalysisAndPresentation(ArCadPhaseThreeUiTest.kt:53)
+
+com.indianservers.aiexplorer.ArCadPhaseTwoUiTest:...
+com.indianservers.aiexplorer.ArGraphPhaseOneUiTest:.
+com.indianservers.aiexplorer.ArSpaceMenuUiTest:.
+com.indianservers.aiexplorer.ArHandInferenceDeviceTest:..
+
+Time: 69.356
+There was 1 failure:
+1) realArSpaceGuidedParaboloidAnalysisAndPresentation(com.indianservers.aiexplorer.ArCadPhaseThreeUiTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 10000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.realArSpaceGuidedParaboloidAnalysisAndPresentation(ArCadPhaseThreeUiTest.kt:53)
+
+FAILURES!!!
+Tests run: 9,  Failures: 1
+
+

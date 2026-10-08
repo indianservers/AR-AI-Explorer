@@ -21,6 +21,8 @@ enum class ArMathWorkspaceMode(val label: String, val shortLabel: String, val de
     Geometry3D("3D Geometry", "3D", "Place and directly manipulate the existing solids and vectors."),
     Graph2D("2D Graph", "Graph", "Lift the existing 2D functions into a readable spatial graph plane."),
     Graph3D("3D Graph", "G3D", "Explore the current explicit, implicit or parametric surface in space."),
+    CoordinatePlane("Coordinate Plane", "Coordinates", "Plot linked points and measure slope, midpoint and distance."),
+    VectorLab("Vector Lab", "Vectors", "Explore linked vectors, sums, dot products and cross products."),
     CAS("CAS Objects", "CAS", "Visualize graphable CAS and Algebra objects without flattening the notebook into a static answer."),
 }
 
@@ -61,6 +63,8 @@ object ArMathWorkspaceBridge {
         ArMathWorkspaceMode.Geometry3D -> geometry3D(workspace)
         ArMathWorkspaceMode.Graph2D -> graph2D(workspace)
         ArMathWorkspaceMode.Graph3D -> graph3D(workspace, surfaceDensity)
+        ArMathWorkspaceMode.CoordinatePlane -> geometry2D(workspace).copy(mode = mode)
+        ArMathWorkspaceMode.VectorLab -> geometry3D(workspace.copy(solids = emptyList())).copy(mode = mode)
         ArMathWorkspaceMode.CAS -> cas(universalDocument, surfaceDensity)
     }
 
@@ -150,7 +154,7 @@ object ArMathWorkspaceBridge {
             runCatching { layerGeometry(layer, density.coerceIn(12, 64)) }
                 .onFailure { diagnostics += "${layer.id}: ${it.message ?: "could not be sampled"}" }
                 .getOrNull()
-                ?.let { layer to it }
+                ?.let { layer to ArCadTopology.weld(it) }
         }
         val base = SharedSpatialSceneBuilder.build("ar-3d-graph")
         val surfaces = generatedLayers.flatMapIndexed { index, (layer, geometry) ->

@@ -3,6 +3,8 @@ package com.indianservers.aiexplorer.arengine.interaction
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Handler
 import android.os.Looper
 import com.google.mediapipe.framework.image.BitmapImageBuilder
@@ -16,13 +18,21 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 import kotlin.math.max
 
-/** Bounded on-device inference on the ARCore image stream. No CameraX session or network upload. */
+/** Bounded, pooled on-device inference shared by copied CameraX and ARCore images. */
 class ArHandLandmarker(context: Context, private val onFrame: (ArHandFrame) -> Unit, private val onStatus: (String) -> Unit) : AutoCloseable {
+    private val identities = ArHandIdentityTracker()
     private val executor = Executors.newSingleThreadExecutor()
     private val main = Handler(Looper.getMainLooper())
     private val closed = AtomicBoolean(false)
     private val busy = AtomicBoolean(false)
     private var detector: HandLandmarker? = null
+    private var reusableRaw: Bitmap? = null
+    private var reusableUpright: Bitmap? = null
+    private var reusablePixels = IntArray(0)
+    private var rawImage: com.google.mediapipe.framework.image.MPImage? = null
+    private var uprightImage: com.google.mediapipe.framework.image.MPImage? = null
+    private val rotationMatrix = Matrix()
+    private val rotationPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     @Volatile private var ready = false
     val canAcceptFrame: Boolean get() = ready && !closed.get() && !busy.get()
 
@@ -52,12 +62,25 @@ class ArHandLandmarker(context: Context, private val onFrame: (ArHandFrame) -> U
                 val rotation = if (abs(x.x-origin.x) > abs(x.y-origin.y)) {
                     if (x.x >= origin.x) 0 else 180
                 } else if (x.y >= origin.y) 90 else 270
-                upright = if (rotation == 0) raw else Bitmap.createBitmap(raw, 0, 0, raw.width, raw.height,
-                    Matrix().apply { postRotate(rotation.toFloat()) }, true)
-                val mpImage = BitmapImageBuilder(upright).build()
-                val result = try { detector?.detectForVideo(mpImage, image.timestampMillis) } finally { mpImage.close() }
+                upright = if (rotation == 0) raw else {
+                    val w = if (rotation == 90 || rotation == 270) raw.height else raw.width
+                    val h = if (rotation == 90 || rotation == 270) raw.width else raw.height
+                    if (reusableUpright?.width != w || reusableUpright?.height != h) {
+                        uprightImage?.close(); uprightImage=null
+                        reusableUpright?.takeUnless { it.isRecycled }?.recycle(); reusableUpright = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888)
+                    }
+                    rotationMatrix.reset(); rotationMatrix.postRotate(rotation.toFloat())
+                    rotationMatrix.postTranslate(if (rotation == 90 || rotation == 180) w.toFloat() else 0f, if (rotation == 180 || rotation == 270) h.toFloat() else 0f)
+                    reusableUpright!!.also { Canvas(it).drawBitmap(raw,rotationMatrix,rotationPaint) }
+                }
+                // BitmapImageBuilder owns its bitmap. Reuse the wrapper too and close it only
+                // when its buffer is resized or the detector is disposed.
+                val mpImage = if(rotation==0) rawImage ?: BitmapImageBuilder(upright).build().also { rawImage=it }
+                    else uprightImage ?: BitmapImageBuilder(upright).build().also { uprightImage=it }
+                val result = detector?.detectForVideo(mpImage, image.timestampMillis)
                 val hands = result?.landmarks()?.mapIndexed { i, landmarks ->
-                    val side = result.handedness().getOrNull(i)?.firstOrNull()?.categoryName() ?: "hand-$i"
+                    val category = result.handedness().getOrNull(i)?.firstOrNull()
+                    val side = category?.categoryName() ?: "hand-$i"
                     ArTrackedHand(side, landmarks.map { point ->
                         val original = when (rotation) {
                             90 -> ArVector2(point.y(), 1f-point.x())
@@ -66,14 +89,16 @@ class ArHandLandmarker(context: Context, private val onFrame: (ArHandFrame) -> U
                             else -> ArVector2(point.x(), point.y())
                         }
                         image.imagePointToView(original)
-                    })
+                    }, confidence = category?.score() ?: 0f, handedness = side,
+                        worldLandmarks = result.worldLandmarks().getOrNull(i)?.map { p ->
+                            com.indianservers.aiexplorer.arengine.contract.ArVector3(p.x().toDouble(), p.y().toDouble(), p.z().toDouble())
+                        }.orEmpty())
                 }.orEmpty()
-                main.post { if (!closed.get()) onFrame(ArHandFrame(image.timestampMillis, hands)) }
+                val tracked = identities.assign(hands, image.timestampMillis)
+                main.post { if (!closed.get()) onFrame(ArHandFrame(image.timestampMillis, tracked)) }
             } catch (error: Exception) {
                 status("Hand tracking paused: ${error.message ?: "could not read frame"}")
             } finally {
-                if (upright !== raw) upright?.recycle()
-                raw?.recycle()
                 busy.set(false)
             }
         } } catch (_: java.util.concurrent.RejectedExecutionException) { busy.set(false) }
@@ -83,7 +108,8 @@ class ArHandLandmarker(context: Context, private val onFrame: (ArHandFrame) -> U
         require(image.planes.size == 3 && image.width > 0 && image.height > 0)
         val divisor = max(1, (max(image.width, image.height) + 479) / 480)
         val width = image.width / divisor; val height = image.height / divisor
-        val pixels = IntArray(width * height)
+        if (reusablePixels.size != width*height) reusablePixels = IntArray(width*height)
+        val pixels = reusablePixels
         fun sample(plane: Int, x: Int, y: Int): Int {
             val p = image.planes[plane]
             return p.bytes[y*p.rowStride+x*p.pixelStride].toInt() and 255
@@ -97,13 +123,17 @@ class ArHandLandmarker(context: Context, private val onFrame: (ArHandFrame) -> U
             val blue = ((298*luminance+516*u+128) shr 8).coerceIn(0,255)
             pixels[y*width+x] = (255 shl 24) or (red shl 16) or (green shl 8) or blue
         }
-        return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
+        if (reusableRaw?.width != width || reusableRaw?.height != height) {
+            rawImage?.close(); rawImage=null
+            reusableRaw?.takeUnless { it.isRecycled }?.recycle(); reusableRaw = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
+        }
+        return reusableRaw!!.also { it.setPixels(pixels,0,width,0,0,width,height) }
     }
     private fun status(value: String) = main.post { if (!closed.get()) onStatus(value) }
     override fun close() {
         if (!closed.compareAndSet(false, true)) return
         ready = false
-        executor.execute { detector?.close(); detector = null }
+        executor.execute { detector?.close(); detector = null; rawImage?.close(); uprightImage?.close(); rawImage=null; uprightImage=null; reusableRaw?.takeUnless { it.isRecycled }?.recycle(); reusableUpright?.takeUnless { it.isRecycled }?.recycle(); reusableRaw=null; reusableUpright=null }
         executor.shutdown()
     }
 }

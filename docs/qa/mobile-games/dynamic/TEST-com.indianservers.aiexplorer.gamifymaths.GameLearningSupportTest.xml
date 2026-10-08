@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-06T10:07:00.886Z" hostname="INDIANSERVERS" time="0.436">
+  <properties/>
+  <testcase name="everyProbabilityArcadeLevelHasAValidLearningContract" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.027"/>
+  <testcase name="everyGeneralMissionHasUniqueChoicesAnswerAndTeachingExplanation" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.271"/>
+  <testcase name="guidanceCoversMajorGameConceptFamilies" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.009"/>
+  <testcase name="onlyCalculationModesAreUntaggedAndEveryDifficultyIsRepresented" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.001"/>
+  <testcase name="formerlyShortWorldsNowCoverProgressiveMultiLevelLearning" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.126"/>
+  <testcase name="coordinateGuidanceTeachesSignReasoningWithoutOnlyGivingGenericRetry" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.0"/>
+  <testcase name="expandedWorldsAreUniqueAndHaveCompleteLearningRuns" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.001"/>
+  <testcase name="everyThreeLevelsFormLearnPractiseMasterCycle" classname="com.indianservers.aiexplorer.gamifymaths.GameLearningSupportTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

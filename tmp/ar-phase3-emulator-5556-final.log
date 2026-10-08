@@ -1,0 +1,33 @@
+
+com.indianservers.aiexplorer.ArCadPhaseThreeUiTest:.
+Error in realArSpaceGuidedParaboloidAnalysisAndPresentation(com.indianservers.aiexplorer.ArCadPhaseThreeUiTest):
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'LOW' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:80)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.realArSpaceGuidedParaboloidAnalysisAndPresentation(ArCadPhaseThreeUiTest.kt:45)
+
+com.indianservers.aiexplorer.ArCadPhaseTwoUiTest:...
+com.indianservers.aiexplorer.ArGraphPhaseOneUiTest:.
+com.indianservers.aiexplorer.ArSpaceMenuUiTest:.
+com.indianservers.aiexplorer.ArHandInferenceDeviceTest:..
+
+Time: 85.391
+There was 1 failure:
+1) realArSpaceGuidedParaboloidAnalysisAndPresentation(com.indianservers.aiexplorer.ArCadPhaseThreeUiTest)
+java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'LOW' (ignoreCase: false))
+
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:80)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.realArSpaceGuidedParaboloidAnalysisAndPresentation(ArCadPhaseThreeUiTest.kt:45)
+
+FAILURES!!!
+Tests run: 9,  Failures: 1
+
+

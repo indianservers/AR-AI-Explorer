@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path(r'C:\Indian Servers\AIExplorer\arengine\src\main\java\com\indianservers\aiexplorer\handintelligence\spatial\ContactSolver.kt');s=p.read_text(encoding='utf-8').replace('                if(gap<tolerance*.7) { position=a+(b-a)*t;', '                val onEdge=a+(b-a)*t\n                if(hit!=null && (onEdge-ray.origin).dot(ray.direction)>nearest+obj.size*.03) return@forEachIndexed\n                if(gap<tolerance*.7) { position=onEdge;');p.write_text(s,encoding='utf-8')

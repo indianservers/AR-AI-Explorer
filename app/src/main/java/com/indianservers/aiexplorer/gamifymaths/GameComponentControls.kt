@@ -77,6 +77,6 @@ internal fun GameComponentControls(
                 }
             }
         }
-        Text(guidance, color = GameMuted, fontSize = 9.sp, lineHeight = 11.sp)
+        if (!LocalCompactGameLayout.current) Text(guidance, color = GameMuted, fontSize = 9.sp, lineHeight = 11.sp)
     }
 }

@@ -98,6 +98,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -545,6 +547,25 @@ internal fun GraphCanvas(
     val graph = remember { GraphAnalysis() }
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
     val typedGraphEngine = remember { TypedGraphEngine() }
+    val imageContext = androidx.compose.ui.platform.LocalContext.current
+    val imageUris = functions.map { it.appearance.imageUri }.filter { it.isNotBlank() }.distinct()
+    val fillImages by androidx.compose.runtime.produceState<Map<String, androidx.compose.ui.graphics.ImageBitmap>>(emptyMap(), imageUris) {
+        value = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            imageUris.mapNotNull { uri ->
+                runCatching {
+                    val imageUri = android.net.Uri.parse(uri)
+                    val options = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                    imageContext.contentResolver.openInputStream(imageUri)?.use { android.graphics.BitmapFactory.decodeStream(it, null, options) }
+                    options.inJustDecodeBounds = false
+                    options.inSampleSize = 1
+                    while (options.outWidth / options.inSampleSize > 1024 || options.outHeight / options.inSampleSize > 1024) options.inSampleSize *= 2
+                    imageContext.contentResolver.openInputStream(imageUri)?.use { stream ->
+                        android.graphics.BitmapFactory.decodeStream(stream, null, options)?.let { uri to it.asImageBitmap() }
+                    }
+                }.getOrNull()
+            }.toMap()
+        }
+    }
     val engine = remember { ExpressionEngine() }
     val visualEffects = LocalAppVisualEffects.current
     var cameraCenter by remember { mutableStateOf(initialView.center) }
@@ -807,11 +828,11 @@ internal fun GraphCanvas(
         val arrangedTraceLabels = GraphUxEngine.avoidLabelCollisions(traceAnchorRows.map { it.second + Vec2(.25, .35) })
         val traceLabelsById = traceAnchorRows.map { it.first }.zip(arrangedTraceLabels).toMap()
         functions.forEachIndexed { index, fn ->
-            if (!fn.visible) return@forEachIndexed
-            val color = graphColor(fn.colorKey)
+            if (!fn.visible || fn.expression.isBlank()) return@forEachIndexed
+            val color = graphColor(fn.colorKey).copy(alpha = fn.appearance.opacity)
             val selected = selectedFunctionId == fn.id
-            val strokeWidth = if (selected) 6.0f else 4.2f
-            val styleEffect = when (styles[fn.id] ?: GraphLineStyle.Solid) { GraphLineStyle.Solid -> null; GraphLineStyle.Dashed -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(16f, 9f)); GraphLineStyle.Dotted -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(3f, 8f)) }
+            val strokeWidth = fn.appearance.width + if (selected) 1.8f else 0f
+            val styleEffect = when (styles[fn.id] ?: fn.appearance.line) { GraphLineStyle.Solid -> null; GraphLineStyle.Dashed -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(16f, 9f)); GraphLineStyle.Dotted -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(3f, 8f)) }
             val typedDefinition = runCatching { TypedGraphExpressionParser.parse(fn.expression) }.getOrNull()
             if (typedDefinition is TypedGraphExpression.Inequality) {
                 val columns = 42; val rows = 42
@@ -819,23 +840,23 @@ internal fun GraphCanvas(
                 val cells = inequalitySample?.inequalityCells.orEmpty()
                 val cellSize = Size(size.width / columns, size.height / rows)
                 val fillAlpha = if (selected) .25f else if (selectedFunctionId == null) .14f else .06f
-                cells.filter { it.satisfied }.forEach { cell -> drawRect(color.copy(fillAlpha), topLeft = tx(cell.center) - Offset(cellSize.width / 2, cellSize.height / 2), size = cellSize) }
+                cells.filter { it.satisfied }.forEach { cell -> drawGraphAppearanceFill(fn, Path().apply { addRect(androidx.compose.ui.geometry.Rect(tx(cell.center) - Offset(cellSize.width / 2, cellSize.height / 2), cellSize)) }, fillImages, fillAlpha) }
                 val strict = Regex("(?<![<>=])[<>](?!=)").containsMatchIn(typedDefinition.source)
                 val boundaryEffect = if (strict) androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(10f, 7f)) else styleEffect
                 inequalitySample?.implicitSegments.orEmpty().forEach { segment ->
-                    drawLine(color.copy(alpha = if (selected || selectedFunctionId == null) .95f else .35f), tx(segment.start), tx(segment.end), if (selected) 4.5f else 2.8f, cap = StrokeCap.Round, pathEffect = boundaryEffect)
+                    drawLine(color.copy(alpha = fn.appearance.opacity * if (selected || selectedFunctionId == null) .95f else .35f), tx(segment.start), tx(segment.end), strokeWidth, cap = StrokeCap.Round, pathEffect = boundaryEffect)
                 }
                 return@forEachIndexed
             }
             val kind = graph.definitionKind(fn.expression)
             if (typedDefinition is TypedGraphExpression.Implicit) {
                 val segments = runCatching { typedGraphEngine.sample(typedDefinition, GraphDomain(minX, maxX), GraphDomain(minY, maxY, "y"), parameterValues, 520).implicitSegments }.getOrDefault(emptyList())
-                val curveColor = color.copy(alpha = if (selected || selectedFunctionId == null) 1f else .28f)
+                val curveColor = color.copy(alpha = fn.appearance.opacity * if (selected || selectedFunctionId == null) 1f else .28f)
                 segments.forEach {
                     if (selected && visualEffects.enhanced) {
                         drawLine(curveColor.copy(alpha = visualEffects.graphGlowAlpha), tx(it.start), tx(it.end), 11f, cap = StrokeCap.Round, pathEffect = styleEffect)
                     }
-                    drawLine(curveColor, tx(it.start), tx(it.end), if (selected) 5.2f else 3.2f, cap = StrokeCap.Round, pathEffect = styleEffect)
+                    drawLine(curveColor, tx(it.start), tx(it.end), strokeWidth, cap = StrokeCap.Round, pathEffect = styleEffect)
                 }
             } else {
                 val domain = domains[fn.id]
@@ -845,10 +866,18 @@ internal fun GraphCanvas(
                     typedGraphEngine.sample(typedDefinition, GraphDomain(sampleMinimum, sampleMaximum), GraphDomain(minY, maxY, "y"), parameterValues, 520)
                 }.getOrNull() else null
                 sample?.curves?.forEach { segment ->
+                    if (fn.appearance.fill != com.indianservers.aiexplorer.core.GraphFill.None && typedDefinition is TypedGraphExpression.Explicit && segment.points.size > 1) {
+                        val area = Path().apply {
+                            val first = tx(Vec2(segment.points.first().x, 0.0)); moveTo(first.x, first.y)
+                            segment.points.forEach { point -> val mapped = tx(point); lineTo(mapped.x, mapped.y) }
+                            val last = tx(Vec2(segment.points.last().x, 0.0)); lineTo(last.x, last.y); close()
+                        }
+                        drawGraphAppearanceFill(fn, area, fillImages, .28f)
+                    }
                     segment.points.zipWithNext().forEach { pair ->
                         val logValid = (!axisSettings.xLogarithmic || pair.first.x > 0 && pair.second.x > 0) && (!axisSettings.yLogarithmic || pair.first.y > 0 && pair.second.y > 0)
                         if (logValid) {
-                            val curveColor = color.copy(alpha = if (selected || selectedFunctionId == null) 1f else .28f)
+                            val curveColor = color.copy(alpha = fn.appearance.opacity * if (selected || selectedFunctionId == null) 1f else .28f)
                             if (selected && visualEffects.enhanced) {
                                 drawLine(curveColor.copy(alpha = visualEffects.graphGlowAlpha), tx(pair.first), tx(pair.second), strokeWidth + 7f, cap = StrokeCap.Round, pathEffect = styleEffect)
                             }
@@ -859,7 +888,7 @@ internal fun GraphCanvas(
                 sample?.points.orEmpty().forEach { point ->
                     val anchor = tx(point)
                     if (anchor.x.isFinite() && anchor.y.isFinite()) {
-                        drawCircle(color.copy(alpha = if (selected || selectedFunctionId == null) .95f else .35f), if (selected) 7f else 5f, anchor)
+                        drawCircle(color.copy(alpha = fn.appearance.opacity * if (selected || selectedFunctionId == null) .95f else .35f), if (selected) 7f else 5f, anchor)
                         if (selected) drawCircle(color.copy(alpha = .22f), 13f, anchor)
                     }
                 }
@@ -1511,5 +1540,36 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawTrigText(text:
             isAntiAlias = true
         }
         drawText(text, x, y, paint)
+    }
+}
+
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGraphAppearanceFill(
+    function: com.indianservers.aiexplorer.core.FunctionDefinition,
+    path: androidx.compose.ui.graphics.Path,
+    images: Map<String, androidx.compose.ui.graphics.ImageBitmap>,
+    alpha: Float,
+) {
+    val appearance = function.appearance
+    val color = graphColor(function.colorKey).copy(alpha = alpha * appearance.opacity)
+    when (appearance.fill) {
+        com.indianservers.aiexplorer.core.GraphFill.None -> Unit
+        com.indianservers.aiexplorer.core.GraphFill.Solid -> drawPath(path, color)
+        com.indianservers.aiexplorer.core.GraphFill.Gradient -> drawPath(path, Brush.verticalGradient(listOf(color, graphColor(appearance.secondaryColor).copy(alpha = color.alpha))))
+        com.indianservers.aiexplorer.core.GraphFill.Pattern -> {
+            drawPath(path, color.copy(alpha = color.alpha * .35f))
+            clipPath(path) {
+                val bounds = path.getBounds()
+                var x = kotlin.math.floor((bounds.left - bounds.bottom) / 14f) * 14f
+                while (x < bounds.right - bounds.top) {
+                    drawLine(color.copy(alpha = appearance.opacity * .5f), Offset(x + bounds.top, bounds.top), Offset(x + bounds.bottom, bounds.bottom), 2f)
+                    x += 14f
+                }
+            }
+        }
+        com.indianservers.aiexplorer.core.GraphFill.Image -> images[appearance.imageUri]?.let { bitmap ->
+            clipPath(path) {
+                drawImage(bitmap, dstSize = androidx.compose.ui.unit.IntSize(size.width.toInt().coerceAtLeast(1), size.height.toInt().coerceAtLeast(1)), alpha = appearance.opacity * .55f)
+            }
+        }
     }
 }

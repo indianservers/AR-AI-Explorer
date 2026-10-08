@@ -1,6 +1,5 @@
 package com.indianservers.aiexplorer.gamifymaths
 
-import com.indianservers.aiexplorer.gamifymaths.probability.ProbabilityArcadeGames
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -42,37 +41,26 @@ class GameLearningSupportTest {
     }
 
     @Test
-    fun everyProbabilityArcadeLevelHasAValidLearningContract() {
-        assertEquals(15, ProbabilityArcadeGames.size)
-        ProbabilityArcadeGames.forEach { game ->
-            assertEquals("${game.title} should have three progressive levels", 3, game.levels.size)
-            game.levels.forEach { level ->
-                assertTrue(level.answer in level.choices)
-                assertFalse(level.hint.isBlank())
-                assertFalse(level.explanation.isBlank())
-                assertEquals(4, level.choices.distinct().size)
-            }
+    fun allProbabilityFamiliesUseGeneratedConstructionBoards() {
+        (0 until 15).forEach { level ->
+            val challenge = generateWorkshopChallenge("chance", level, 0, 42L)
+            assertEquals(WorkshopKind.Expression, challenge.kind)
+            assertTrue(challenge.source!!.answer.isFinite())
+            assertFalse(challenge.hint.isBlank())
+            assertFalse(challenge.explanation.isBlank())
         }
     }
 
-    @Test
-    fun everyGeneralMissionHasUniqueChoicesAnswerAndTeachingExplanation() {
-        val missions = gamifyMissionAudit()
-        assertTrue(missions.size >= 110)
-        assertEquals(missions.size, missions.map { "${it.gameId}:${it.title}" }.distinct().size)
-        missions.forEach { mission ->
-            assertTrue("${mission.gameId}/${mission.title} answer must be selectable", mission.answer in mission.choices)
-            assertEquals("${mission.gameId}/${mission.title} needs four distinct choices", 4, mission.choices.distinct().size)
-            assertTrue("${mission.gameId}/${mission.title} explanation is too shallow", mission.explanation.length >= 35)
+    @Test fun catalogueAuditCoversAllLiveBoardsAndBothMasteries() {
+        val boards=gamifyWorkshopAudit()
+        assertEquals(27*122,boards.size)
+        assertEquals(boards.size,boards.map{"${it.gameId}:${it.level}"}.distinct().size)
+        boards.groupBy{it.gameId}.forEach{(_,levels)->
+            assertEquals(122,levels.size)
+            assertEquals(listOf(1,2),levels.takeLast(2).map{it.mastery})
+            assertTrue(levels.all{it.prompt.isNotBlank()})
         }
-    }
-
-    @Test
-    fun formerlyShortWorldsNowCoverProgressiveMultiLevelLearning() {
-        val byGame = gamifyMissionAudit().groupBy { it.gameId }
-        assertTrue(byGame.getValue("vectors").size >= 8)
-        assertTrue(byGame.getValue("patterns").size >= 8)
-        assertTrue(byGame.getValue("logic").size >= 8)
+        assertEquals(WorkshopKind.entries.toSet(),boards.map{it.kind}.toSet())
     }
 
     @Test

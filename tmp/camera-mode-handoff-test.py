@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path('app/src/androidTest/java/com/indianservers/aiexplorer/CameraHandModesUiTest.kt');s=p.read_text();s=s.replace('        compose.onNodeWithText("Camera + Hand gestures").performClick()', '        // Allow the delayed camera handoff to attempt AR startup before switching back.\n        Thread.sleep(1_500)\n        compose.onNodeWithText("Camera + Hand gestures").performClick()',1);p.write_text(s)

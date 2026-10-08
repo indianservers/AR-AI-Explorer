@@ -1,0 +1,200 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:preBuild UP-TO-DATE
+> Task :ar3dgraph:preDebugBuild UP-TO-DATE
+> Task :ar3dgraph:processDebugNavigationResources UP-TO-DATE
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:generateDebugResources UP-TO-DATE
+> Task :ar3dgraph:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:parseDebugLocalResources UP-TO-DATE
+> Task :ar3dgraph:generateDebugRFile UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:compileDebugKotlin UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :arengine:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :ar3dgraph:compileDebugKotlin UP-TO-DATE
+> Task :ar3dgraph:javaPreCompileDebug UP-TO-DATE
+> Task :ar3dgraph:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :ar3dgraph:generateDebugAssets UP-TO-DATE
+> Task :ar3dgraph:mergeDebugAssets UP-TO-DATE
+> Task :arengine:generateDebugAssets UP-TO-DATE
+> Task :arengine:mergeDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:generateDebugGlobalSynthetics UP-TO-DATE
+> Task :ar3dgraph:processDebugJavaRes UP-TO-DATE
+> Task :arengine:processDebugJavaRes UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :ar3dgraph:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :ar3dgraph:writeDebugAarMetadata UP-TO-DATE
+> Task :arengine:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugKotlin
+> Task :app:mergeDebugResources
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :ar3dgraph:extractDeepLinksDebug UP-TO-DATE
+> Task :ar3dgraph:processDebugManifest UP-TO-DATE
+> Task :arengine:extractDeepLinksDebug UP-TO-DATE
+> Task :arengine:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :ar3dgraph:mapDebugSourceSetPaths UP-TO-DATE
+> Task :ar3dgraph:compileDebugLibraryResources UP-TO-DATE
+> Task :arengine:mapDebugSourceSetPaths UP-TO-DATE
+> Task :arengine:compileDebugLibraryResources UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :ar3dgraph:mergeDebugJniLibFolders UP-TO-DATE
+> Task :ar3dgraph:mergeDebugNativeLibs NO-SOURCE
+> Task :ar3dgraph:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :arengine:mergeDebugJniLibFolders UP-TO-DATE
+> Task :arengine:mergeDebugNativeLibs NO-SOURCE
+> Task :arengine:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :ar3dgraph:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :app:processDebugResources
+
+> Task :app:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/ArCadAnalysisPanel.kt:36:158 Elvis operator (?:) always returns the left operand of non-nullable type 'String'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/ArCadPreviewCanvas.kt:65:37 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/ArCadPreviewCanvas.kt:73:35 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt:970:64 'fun announceForAccessibility(p0: CharSequence!): Unit' is deprecated. Deprecated in Java.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:751:57 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:756:64 Unnecessary safe call on a non-null receiver of type 'FunctionDefinition'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/KnowledgeHubUi.kt:1075:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:8618:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:9970:34 Unnecessary safe call on a non-null receiver of type 'Solid'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11040:75 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11406:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11407:107 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11411:76 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11417:140 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11417:197 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14379:49 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14384:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14432:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PointerInputChange'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14475:82 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15504:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15506:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15507:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15509:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15551:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15552:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15554:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15555:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/SolverHomeLaunch.kt:131:13 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/SolverHomeLaunch.kt:132:13 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/TrigRealWorldUi.kt:233:46 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/TrigRealWorldUi.kt:233:88 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/TrigonometryMockupScreen.kt:737:58 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/TrigonometryMockupScreen.kt:737:99 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/TrigonometryMockupScreen.kt:755:66 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/VisualProofMockupLessonScreen.kt:504:100 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/VisualProofMockupLessonScreen.kt:650:69 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/VisualProofMockupLessonScreen.kt:1768:325 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/VisualProofMockupLessonScreen.kt:1893:404 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/VisualProofMockupLessonScreen.kt:2638:241 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/VisualProofMockupLessonScreen.kt:2831:74 Redundant call of conversion method.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:109:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:109:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:109:90 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:109:107 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:109:124 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:109:145 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:114:69 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:114:105 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:115:88 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:116:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:116:50 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:116:136 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AdvancedSymbolicCas.Bound'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/AdvancedSymbolicCas.kt:262:46 No cast needed.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/NextGenerationGraphInteractions.kt:86:439 Unnecessary safe call on a non-null receiver of type 'Double'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/core/NextGenerationGraphInteractions.kt:86:460 Unnecessary safe call on a non-null receiver of type 'Double'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/AdaptiveMathKeyboard.kt:751:21 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/StructuredMathEditor.kt:241:19 Unnecessary safe call on a non-null receiver of type 'StructuredMathEditing.Region'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/StructuredMathEditor.kt:256:26 Unnecessary safe call on a non-null receiver of type 'StructuredMathEditing.Region'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/StructuredMathEditor.kt:265:26 Unnecessary safe call on a non-null receiver of type 'StructuredMathEditing.Region'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/StructuredMathEditor.kt:274:19 Unnecessary safe call on a non-null receiver of type 'StructuredMathEditing.Region'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/StructuredMathEditor.kt:291:19 Unnecessary safe call on a non-null receiver of type 'StructuredMathEditing.Region'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/input/StructuredMathEditor.kt:343:19 Unnecessary safe call on a non-null receiver of type 'StructuredMathEditing.Region'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/learningworkspace/ui/Phase2LearningWorkspace.kt:64:9 'fun ScrollableTabRow(selectedTabIndex: Int, modifier: Modifier = ..., containerColor: Color = ..., contentColor: Color = ..., edgePadding: Dp = ..., indicator: ComposableFunction1<List<TabPosition>, Unit> = ..., divider: ComposableFunction0<Unit> = ..., tabs: ComposableFunction0<Unit>): Unit' is deprecated. Replaced with PrimaryScrollableTabRow and SecondaryScrollableTabRow tab variants.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/mathworkspace/spreadsheet/DataSpreadsheetWorkspace.kt:43:20 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/phase2/mathstudio/UnifiedMathStudioScreen.kt:440:21 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/phase3/ui/Phase3PlatformWorkspace.kt:24:662 'fun ScrollableTabRow(selectedTabIndex: Int, modifier: Modifier = ..., containerColor: Color = ..., contentColor: Color = ..., edgePadding: Dp = ..., indicator: ComposableFunction1<List<TabPosition>, Unit> = ..., divider: ComposableFunction0<Unit> = ..., tabs: ComposableFunction0<Unit>): Unit' is deprecated. Replaced with PrimaryScrollableTabRow and SecondaryScrollableTabRow tab variants.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/solver/domain/practice/SolverPracticeGenerator.kt:25:69 Elvis operator (?:) always returns the left operand of non-nullable type 'String'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/spatial/SpatialRenderer.kt:294:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArDepthSnapshot'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/spatial/SpatialRenderer.kt:301:27 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArDepthSnapshot'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/workspace/ProjectInteroperability.kt:134:17 Condition is always 'false'.
+
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugJavaResource
+> Task :app:dexBuilderDebug
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+InteractiveMathChallengesTest > everyWorldAndBothMasteriesHaveGeneratedSolvableInteractiveBoards FAILED
+    java.lang.AssertionError at InteractiveMathChallengesTest.kt:23
+
+26 tests completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///C:/Indian%20Servers/AIExplorer/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 5m 38s
+81 actionable tasks: 13 executed, 68 up-to-date

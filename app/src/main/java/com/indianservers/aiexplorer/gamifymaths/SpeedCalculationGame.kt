@@ -28,11 +28,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,7 +64,7 @@ import kotlin.random.Random
 internal enum class SpeedCalculationMode { Basic, Advanced }
 
 private enum class SpeedScreen { Settings, Playing, Results }
-private enum class SpeedAnswerMode(val label: String) {
+internal enum class SpeedAnswerMode(val label: String) {
     Typed("Type answer"),
     MultipleChoice("4 choices"),
 }
@@ -84,13 +86,14 @@ internal fun SpeedCalculationGame(
     onComplete: (Int) -> Unit,
 ) {
     val accent = if (mode == SpeedCalculationMode.Basic) GameBlue else GamePurple
-    val title = if (mode == SpeedCalculationMode.Basic) "Speed Calculation" else "Advanced Speed"
+    val title = if (mode == SpeedCalculationMode.Basic) "Calculation Sprint" else "Advanced Calculation Sprint"
     var screenName by rememberSaveable { mutableStateOf(SpeedScreen.Settings.name) }
     var duration by rememberSaveable { mutableIntStateOf(45) }
+    var mastery by rememberSaveable { mutableIntStateOf(0) }
     var digits by rememberSaveable { mutableIntStateOf(1) }
     var selectedBasic by rememberSaveable { mutableStateOf(BasicOperations.toSet()) }
     var selectedAdvanced by rememberSaveable { mutableStateOf(AdvancedTopics.toSet()) }
-    var answerModeName by rememberSaveable { mutableStateOf(SpeedAnswerMode.Typed.name) }
+    var answerModeName by rememberSaveable { mutableStateOf(SpeedAnswerMode.MultipleChoice.name) }
     var secondsLeft by rememberSaveable { mutableIntStateOf(duration) }
     var correct by rememberSaveable { mutableIntStateOf(0) }
     var attempted by rememberSaveable { mutableIntStateOf(0) }
@@ -98,9 +101,9 @@ internal fun SpeedCalculationGame(
     var bestStreak by rememberSaveable { mutableIntStateOf(0) }
     var answerText by rememberSaveable { mutableStateOf("") }
     var feedback by rememberSaveable { mutableStateOf<String?>(null) }
-    val usedPrompts = remember { linkedSetOf<String>() }
-    var problem by remember {
-        mutableStateOf(nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts))
+    val usedPrompts: MutableSet<String> = rememberSaveable(saver = listSaver<MutableSet<String>, String>(save = { it.toList() }, restore = { it.toMutableSet() })) { linkedSetOf<String>() }
+    var problem by rememberSaveable(stateSaver = listSaver<SpeedProblem, String>(save = { listOf(it.prompt, it.answer, it.topic) }, restore = { SpeedProblem(it[0], it[1], it[2]) })) {
+        mutableStateOf(nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts, mastery = mastery))
     }
     val screen = SpeedScreen.valueOf(screenName)
     val answerMode = SpeedAnswerMode.valueOf(answerModeName)
@@ -113,14 +116,14 @@ internal fun SpeedCalculationGame(
         bestStreak = 0
         answerText = ""
         feedback = null
-        problem = nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts)
+        problem = nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts, mastery = mastery)
         screenName = SpeedScreen.Playing.name
     }
 
     LaunchedEffect(screenName, secondsLeft) {
         if (screen == SpeedScreen.Playing) {
             if (secondsLeft <= 0) {
-                onComplete(if (correct > 0) 1 else 0)
+                onComplete(correct)
                 screenName = SpeedScreen.Results.name
             } else {
                 delay(1_000)
@@ -150,6 +153,8 @@ internal fun SpeedCalculationGame(
             },
             onBack = onBack,
             onStart = ::startRound,
+            mastery = mastery,
+            onMastery = { mastery = it },
         )
         SpeedScreen.Playing -> {
             fun submit(candidate: String = answerText) {
@@ -166,7 +171,7 @@ internal fun SpeedCalculationGame(
                     feedback = "Answer: ${problem.answer}. ${guidance.hint}"
                 }
                 answerText = ""
-                problem = nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts)
+                problem = nextUniqueSpeedProblem(mode, digits, selectedBasic, selectedAdvanced, usedPrompts, mastery = mastery)
             }
             SpeedPlayScreen(
                 title = title,
@@ -188,6 +193,7 @@ internal fun SpeedCalculationGame(
                 },
                 onSettings = { screenName = SpeedScreen.Settings.name },
                 onBack = onBack,
+                onWrongAttempt = { attempted++; streak = 0; feedback = "Check your method and retry. The target answer remains hidden." },
             )
         }
         SpeedScreen.Results -> SpeedResultsScreen(
@@ -221,6 +227,8 @@ private fun SpeedSettingsScreen(
     onToggleAdvanced: (String) -> Unit,
     onBack: () -> Unit,
     onStart: () -> Unit,
+    mastery: Int,
+    onMastery: (Int) -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize()
@@ -233,7 +241,7 @@ private fun SpeedSettingsScreen(
             RoundGameButton("‹", accent, "Back to games", onBack)
             Column(Modifier.weight(1f)) {
                 Text(title, color = GameInk, fontSize = 22.sp, fontWeight = FontWeight.Black)
-                Text("CONFIGURE YOUR SPRINT", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                Text("PREVIOUS BEST: ${LocalPreviousGameBest.current} SOLVED", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
             }
             ScorePill("⚙", accent)
         }
@@ -287,22 +295,16 @@ private fun SpeedSettingsScreen(
         }
 
         GlossyPanel(accent) {
-            Text("ANSWER STYLE", color = GameInk, fontWeight = FontWeight.Black)
-            Text("Choose typing for recall or 4 choices for fast tap practice", color = GameMuted, fontSize = 11.sp)
-            ChoiceGrid(
-                choices = SpeedAnswerMode.entries,
-                selected = { it == answerMode },
-                label = { it.label },
-                accent = accent,
-                onClick = onAnswerMode,
-            )
+            Text("REACTOR LEVEL", color = GameInk, fontWeight = FontWeight.Bold)
+            ChoiceGrid(choices = listOf(0, 1, 2), selected = { it == mastery },
+                label = { if (it == 0) "Standard" else "Mastery $it" }, accent = accent, onClick = onMastery)
         }
+        Text("Construct and run calculations to power the timed reactor. Answers are computed offline for every new mission.", color = GameMuted, fontSize = 12.sp)
 
         val hasSelection = if (mode == SpeedCalculationMode.Basic) selectedBasic.isNotEmpty() else selectedAdvanced.isNotEmpty()
         PrimaryGameButton("Start ${formatDuration(duration)} Sprint", accent, onStart, enabled = hasSelection)
         Text(
-            if (answerMode == SpeedAnswerMode.Typed) "Solve as many as you can. Enter a decimal for fractional answers."
-            else "Solve as many as you can. Tap the correct answer from four choices.",
+            "Assemble mathematical methods to charge the reactor before time runs out.",
             color = GameMuted,
             fontSize = 10.sp,
             textAlign = TextAlign.Center,
@@ -312,7 +314,7 @@ private fun SpeedSettingsScreen(
 }
 
 @Composable
-private fun SpeedPlayScreen(
+internal fun SpeedPlayScreen(
     title: String,
     accent: Color,
     secondsLeft: Int,
@@ -329,144 +331,26 @@ private fun SpeedPlayScreen(
     onSubmitChoice: (String) -> Unit,
     onSettings: () -> Unit,
     onBack: () -> Unit,
+    onWrongAttempt: () -> Unit = {},
 ) {
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val answerChoices = remember(problem, answerMode) {
-        if (answerMode == SpeedAnswerMode.MultipleChoice) speedAnswerChoices(problem) else emptyList()
-    }
-    Column(
-        Modifier.fillMaxSize()
-            .background(Brush.radialGradient(listOf(accent.copy(.28f), GameSpace, Color(0xFF020714))))
-            .verticalScroll(rememberScrollState())
-            .imePadding()
-            .navigationBarsPadding()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    val source = GeneratedRound("Timed reactor", displayLatexFormula(problem.prompt), problem.answer.toDouble(),
+        "Your constructed calculation satisfies the generated timed mission.", "Assemble a mathematical method before checking it.", emptyList(),
+        operands = Regex("[0-9]+(?:\\.[0-9]+)?").findAll(problem.prompt).map { it.value.toDouble() }.toList())
+    val mission = WorkshopChallenge(WorkshopKind.Expression, "Timed reactor", source.prompt, source.hint, source.explanation,
+        source, numbers = (source.operands + listOf(0.0, 1.0, 2.0, 100.0)).distinct())
+    val game = gamifyGamesForAudit().first { it.id == if (title.contains("Advanced", true) || title == "speed-advanced") "speed-advanced" else "speed-basic" }
+    Column(Modifier.fillMaxSize().background(GameSpace).verticalScroll(rememberScrollState()).navigationBarsPadding().padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             RoundGameButton("‹", accent, "Exit challenge", onBack)
-            Column(Modifier.weight(1f)) {
-                Text(title, color = GameInk, fontSize = 18.sp, fontWeight = FontWeight.Black)
-                Text(problem.topic.uppercase(), color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black)
-            }
+            Text(title, color = GameInk, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
             RoundGameButton("⚙", accent, "Open challenge settings", onSettings)
         }
-
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-            StatTile("TIME", formatClock(secondsLeft), if (secondsLeft <= 10) GameRed else accent, Modifier.weight(1f))
-            StatTile("SCORE", "$correct", GameGreen, Modifier.weight(1f))
-            StatTile("STREAK", "$streak", GameGold, Modifier.weight(1f))
-        }
-        GameProgress(secondsLeft / duration.toFloat(), if (secondsLeft <= 10) GameRed else accent)
-
-        GlossyPanel(accent, Modifier.heightIn(min = 300.dp)) {
-            Text("SOLVE", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp)
-            Spacer(Modifier.height(3.dp))
-            Text(
-                displayLatexFormula(problem.prompt),
-                color = GameInk,
-                fontSize = 31.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.Black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Text(
-                "Enter the correct answer",
-                color = GameMuted,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Spacer(Modifier.height(12.dp))
-            if (answerMode == SpeedAnswerMode.Typed) {
-                Text("YOUR ANSWER", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp)
-                GameAnswerTextField(
-                    value = answer,
-                    onValueChange = onAnswer,
-                    accent = accent,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        onSubmit()
-                        focusManager.clearFocus()
-                    }),
-                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                )
-                PrimaryGameButton("Submit Answer", accent, onSubmit, enabled = answer.isNotBlank())
-            } else {
-                Text("CHOOSE ANSWER", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp)
-                SpeedAnswerChoiceGrid(
-                    choices = answerChoices,
-                    selected = answer,
-                    accent = accent,
-                    onChoose = onSubmitChoice,
-                )
-            }
-        }
-        feedback?.let {
-            Text(
-                it,
-                color = if (it.startsWith("Correct")) GameGreen else GameGold,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-        Text("$attempted attempted", color = GameMuted, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-    }
-    LaunchedEffect(problem, answerMode) {
-        if (answerMode == SpeedAnswerMode.Typed) focusRequester.requestFocus()
-        else focusManager.clearFocus()
-    }
-}
-
-@Composable
-private fun SpeedAnswerChoiceGrid(
-    choices: List<String>,
-    selected: String,
-    accent: Color,
-    onChoose: (String) -> Unit,
-) {
-    BoxWithConstraints(Modifier.fillMaxWidth()) {
-        val tileWidth = if (maxWidth < 350.dp) (maxWidth - 9.dp) / 2 else (maxWidth - 27.dp) / 4
-        FlowRow(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(9.dp),
-            verticalArrangement = Arrangement.spacedBy(9.dp),
-        ) {
-            choices.forEachIndexed { index, choice ->
-                val active = choice == selected
-                Box(
-                    Modifier
-                        .width(tileWidth)
-                        .height(54.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    if (active) accent.copy(.34f) else Color.White.copy(.08f),
-                                    GamePanel.copy(.94f),
-                                ),
-                            ),
-                        )
-                        .border(1.dp, if (active) GameGold else accent.copy(.58f), RoundedCornerShape(16.dp))
-                        .clickable { onChoose(choice) }
-                        .focusable()
-                        .semantics { contentDescription = "Answer choice ${index + 1}: $choice" },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        choice,
-                        color = if (active) GameInk else GameMuted,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Black,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
+        Text("${formatClock(secondsLeft)} • SCORE $correct • STREAK $streak • BEST ${LocalPreviousGameBest.current}", color = accent, fontSize = 12.sp)
+        GameProgress(secondsLeft / duration.toFloat(), accent)
+        Text(source.prompt, color = GameInk, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        key(problem.prompt) { MathWorkshopBoard(game, mission, false, onAttempt = { if (!it) onWrongAttempt() }) { onSubmitChoice(problem.answer) } }
+        feedback?.let { Text(it, color = GameGreen, fontSize = 11.sp) }
     }
 }
 
@@ -687,9 +571,12 @@ internal fun nextUniqueSpeedProblem(
     selectedAdvanced: Set<String>,
     usedPrompts: MutableSet<String>,
     random: Random = Random.Default,
+    mastery: Int = 0,
 ): SpeedProblem {
     repeat(512) {
-        val candidate = if (mode == SpeedCalculationMode.Basic) {
+        val candidate = if (mastery > 0) {
+            speedMasteryProblem(mode, mastery, random)
+        } else if (mode == SpeedCalculationMode.Basic) {
             basicProblem(digits, selectedBasic.ifEmpty { setOf("Addition") }, random)
         } else {
             advancedProblem(selectedAdvanced.ifEmpty { setOf("Advanced Calculation") }, random)
@@ -697,20 +584,21 @@ internal fun nextUniqueSpeedProblem(
         if (usedPrompts.add(candidate.prompt)) return candidate
     }
 
-    // A neutral term preserves the answer while guaranteeing that even an exceptionally
-    // long sprint cannot repeat a displayed question after a finite simple-question pool.
-    val candidate = if (mode == SpeedCalculationMode.Basic) {
+    // Exhausted small fact pools grow into a genuinely different calculation.
+    val candidate = if (mastery > 0) {
+            speedMasteryProblem(mode, mastery, random)
+        } else if (mode == SpeedCalculationMode.Basic) {
         basicProblem(digits, selectedBasic.ifEmpty { setOf("Addition") }, random)
     } else {
         advancedProblem(selectedAdvanced.ifEmpty { setOf("Advanced Calculation") }, random)
     }
-    var variant = usedPrompts.size + 1
+    var offset = random.nextInt(1, 1001)
     var prompt: String
     do {
-        prompt = """\left(${candidate.prompt}\right) + 0 \times $variant"""
-        variant++
+        prompt = """\left(${candidate.prompt}\right) + $offset"""
+        offset++
     } while (!usedPrompts.add(prompt))
-    return candidate.copy(prompt = prompt)
+    return candidate.copy(prompt = prompt, answer = compactNumber(candidate.answer.toDouble() + offset - 1))
 }
 
 private fun basicProblem(digits: Int, operations: Set<String>, random: Random): SpeedProblem {
@@ -746,20 +634,12 @@ private fun basicProblem(digits: Int, operations: Set<String>, random: Random): 
 private fun advancedProblem(topics: Set<String>, random: Random): SpeedProblem {
     return when (val topic = topics.random(random)) {
         "Trigonometry" -> {
-            val (expression, value) = listOf(
-                """\sin 0^\circ""" to 0.0,
-                """\sin 30^\circ""" to 0.5,
-                """\sin 90^\circ""" to 1.0,
-                """\sin 270^\circ""" to -1.0,
-                """\cos 0^\circ""" to 1.0,
-                """\cos 60^\circ""" to 0.5,
-                """\cos 90^\circ""" to 0.0,
-                """\cos 180^\circ""" to -1.0,
-                """\tan 0^\circ""" to 0.0,
-                """\tan 45^\circ""" to 1.0,
-                """\tan 135^\circ""" to -1.0,
-                """\tan 180^\circ""" to 0.0,
-            ).random(random)
+            val function = listOf("sin", "cos", "tan").random(random)
+            var angle = random.nextInt(-24, 25) * if (function == "tan") 45 else 30
+            while (function == "tan" && kotlin.math.abs(kotlin.math.cos(Math.toRadians(angle.toDouble()))) < 1e-9) angle = random.nextInt(-24, 25) * 45
+            val radians = Math.toRadians(angle.toDouble())
+            val value = when (function) { "sin" -> kotlin.math.sin(radians); "cos" -> kotlin.math.cos(radians); else -> kotlin.math.tan(radians) }
+            val expression = """\$function $angle^\circ"""
             val scale = random.nextInt(1, 13)
             val offset = random.nextInt(-20, 21)
             val scaledExpression = if (scale == 1) expression else "$scale$expression"
@@ -768,7 +648,7 @@ private fun advancedProblem(topics: Set<String>, random: Random): SpeedProblem {
                 offset < 0 -> "$scaledExpression - ${abs(offset)}"
                 else -> scaledExpression
             }
-            SpeedProblem(prompt, compactNumber(scale * value + offset), topic)
+            SpeedProblem(prompt, roundNumber(scale * value + offset), topic)
         }
         "Algebra" -> {
             val x = random.nextInt(-12, 13)
@@ -801,3 +681,16 @@ private fun advancedProblem(topics: Set<String>, random: Random): SpeedProblem {
 
 private fun compactNumber(value: Double): String =
     if (value % 1.0 == 0.0) value.toInt().toString() else value.toString()
+
+internal fun speedMasteryProblem(mode:SpeedCalculationMode,mastery:Int,random:Random):SpeedProblem {
+    require(mastery in 1..2)
+    val a=random.nextInt(3,20);val b=random.nextInt(2,14);val c=random.nextInt(2,10);val d=random.nextInt(2,10)
+    if(mode==SpeedCalculationMode.Basic) return if(mastery==1)
+        SpeedProblem("($a + $b) × $c − $d",((a+b)*c-d).toString(),"Mastery I • chained operations")
+    else SpeedProblem("(${a*20} − $b × $c) ÷ $d",roundNumber((a*20-b*c).toDouble()/d),"Mastery II • grouped division")
+    return if(mastery==1) SpeedProblem("f(x) = ${c}x² + ${b}x; find f′($a)",(2*c*a+b).toString(),"Mastery I • calculus")
+    else {
+        val x=random.nextInt(-12,13);val y=random.nextInt(-12,13)
+        SpeedProblem("x + y = ${x+y}; ${c}x − y = ${c*x-y}; find x",x.toString(),"Mastery II • simultaneous equations")
+    }
+}

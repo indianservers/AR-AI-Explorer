@@ -96,8 +96,10 @@ data class ArLocalTransform(
     val offsetMeters: ArVector3 = ArVector3.Zero,
     val orientation: ArQuaternion = ArQuaternion.Identity,
     val uniformScale: Double = 1.0,
+    val axisScale: ArVector3 = ArVector3(1.0, 1.0, 1.0),
 ) {
     init {
+        require(axisScale.x > 0.0 && axisScale.y > 0.0 && axisScale.z > 0.0)
         require(uniformScale.isFinite() && uniformScale > 0.0) { "Local scale must be finite and positive." }
     }
 }

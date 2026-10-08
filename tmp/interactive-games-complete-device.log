@@ -1,0 +1,26 @@
+
+com.indianservers.aiexplorer.gamifymaths.MobileGamesLayoutTest:.....
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+Error in questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(GeneratedGameSessionTest.kt:182)
+...
+
+Time: 86.755
+There was 1 failure:
+1) questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(GeneratedGameSessionTest.kt:182)
+
+FAILURES!!!
+Tests run: 9,  Failures: 1
+
+

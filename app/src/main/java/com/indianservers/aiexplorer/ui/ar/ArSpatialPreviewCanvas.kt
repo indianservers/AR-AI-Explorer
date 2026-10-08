@@ -34,6 +34,7 @@ internal fun SpatialPreviewCanvas(
     onGestureStart: () -> Unit,
     onGesture: (Offset, Float, Float) -> Unit,
     onGestureEnd: () -> Unit,
+    transparentBackground: Boolean = false,
 ) {
     val currentPlacement by rememberUpdatedState(placement)
     val objectCount = spatialScene.primitives.count { it.visible } + solids.size
@@ -63,7 +64,7 @@ internal fun SpatialPreviewCanvas(
                 contentDescription = "AR spatial mathematics preview with direct move, rotate and scale gestures"
             },
     ) {
-        drawRect(
+        if (!transparentBackground) drawRect(
             Brush.verticalGradient(
                 listOf(
                     Color(0xFF08131B),

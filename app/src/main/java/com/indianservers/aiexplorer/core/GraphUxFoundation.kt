@@ -6,7 +6,7 @@ import kotlin.math.round
 import kotlin.math.roundToLong
 
 enum class GraphAddKind(val label: String, val starter: String) {
-    Expression("Expression", "x"),
+    Expression("Expression", ""),
     Point("Point", "[(1,1)]"),
     Table("Table", "[(0,0),(1,1),(2,4)]"),
     Inequality("Inequality", "-2 < x < 2 and y <= x^2"),

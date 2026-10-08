@@ -3,7 +3,12 @@ package com.indianservers.aiexplorer.input
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -29,24 +33,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -57,11 +52,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntSize
@@ -317,8 +310,9 @@ fun IntentAwareMathValueField(
     val transformation = remember { IntentAwareMathVisualTransformation() }
     val healthy = analysis.validBrackets && !analysis.hasErrors
     val accent = when { !healthy -> IntentMathPalette.Error; analysis.confidence >= .85 -> IntentMathPalette.Variable; else -> IntentMathPalette.Command }
-    LaunchedEffect(value.text) {
-        if (StructuredMathCodec.toParser(structuredValue).text != value.text) {
+    LaunchedEffect(value) {
+        val serialized = StructuredMathCodec.toParser(structuredValue)
+        if (serialized.text != value.text || serialized.selection != value.selection) {
             structuredValue = StructuredMathCodec.fromParser(value)
         }
     }
@@ -435,7 +429,6 @@ private fun MathKeyboardOnlyTextField(
     editorTestTag: String? = null,
 ) {
     var focused by remember { mutableStateOf(false) }
-    var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
     var editorScale by remember { mutableStateOf(1f) }
     var editorPan by remember { mutableStateOf(Offset.Zero) }
     var editorSize by remember { mutableStateOf(IntSize.Zero) }
@@ -506,125 +499,36 @@ private fun MathKeyboardOnlyTextField(
                 .clipToBounds()
                 .onSizeChanged { editorSize = it }
                 .pointerInput(editorSize) {
-                    detectTransformGestures(panZoomLock = false) { centroid, pan, zoom, _ ->
-                        updateViewport(centroid, pan, zoom)
+                    awaitEachGesture {
+                        awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                        do {
+                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                            if (event.changes.count { it.pressed } >= 2) {
+                                updateViewport(event.calculateCentroid(), event.calculatePan(), event.calculateZoom())
+                                event.changes.forEach { it.consume() }
+                            }
+                        } while (event.changes.any { it.pressed })
                     }
                 },
         ) {
-            BasicTextField(
+            MathRenderedInput(
                 value = value,
                 onValueChange = onValueChange,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = minimumHeight)
-                    .graphicsLayer {
-                        scaleX = editorScale
-                        scaleY = editorScale
-                        translationX = editorPan.x
-                        translationY = editorPan.y
-                        transformOrigin = TransformOrigin.Center
-                    }
-                    .onFocusChanged {
-                        focused = it.isFocused
-                        onFocusChange(it.isFocused)
-                    }
-                    .then(if (editorTestTag != null) Modifier.testTag(editorTestTag) else Modifier)
-                    .semantics { contentDescription = "Editable $label" }
-                    .drawWithContent {
-                        drawContent()
-                        val transformed = transformation.filter(AnnotatedString(value.text))
-                        val activeSlot = StructuredMathEditing.activeSlot(value.text, value.selection.end)
-                        if (focused && activeSlot != null) {
-                            val visualStart = transformed.offsetMapping.originalToTransformed(activeSlot.contentStart)
-                            val mappedEnd = transformed.offsetMapping.originalToTransformed(activeSlot.contentEnd)
-                            val visualEnd = if (activeSlot.isPlaceholder) visualStart + 1 else maxOf(visualStart + 1, mappedEnd)
-                            val layout = textLayout?.takeIf { it.layoutInput.text == transformed.text }
-                            if (layout != null && transformed.text.isNotEmpty()) {
-                                var bounds: Rect? = null
-                                val last = (visualEnd - 1).coerceAtMost(transformed.text.lastIndex)
-                                val first = visualStart.coerceAtLeast(0)
-                                if (first <= last) {
-                                    for (offset in first..last) {
-                                        if (transformed.text[offset] == '\u0305') continue
-                                        val glyph = layout.getBoundingBox(offset)
-                                        bounds = bounds?.let { existing ->
-                                            Rect(
-                                                minOf(existing.left, glyph.left),
-                                                minOf(existing.top, glyph.top),
-                                                maxOf(existing.right, glyph.right),
-                                                maxOf(existing.bottom, glyph.bottom),
-                                            )
-                                        } ?: glyph
-                                    }
-                                }
-                                bounds?.let { slotBounds ->
-                                    val padding = 2.dp.toPx()
-                                    val topLeft = Offset(slotBounds.left - padding, slotBounds.top - padding)
-                                    val size = Size(slotBounds.width + padding * 2, slotBounds.height + padding * 2)
-                                    drawRoundRect(
-                                        color = IntentMathPalette.Number.copy(alpha = .09f),
-                                        topLeft = topLeft,
-                                        size = size,
-                                        cornerRadius = CornerRadius(4.dp.toPx()),
-                                    )
-                                    drawRoundRect(
-                                        color = IntentMathPalette.Number.copy(alpha = .72f),
-                                        topLeft = topLeft,
-                                        size = size,
-                                        cornerRadius = CornerRadius(4.dp.toPx()),
-                                        style = Stroke(width = 1.dp.toPx()),
-                                    )
-                                }
-                            }
-                        }
-                        if (focused && value.selection.collapsed) {
-                            val transformedOffset = transformed.offsetMapping.originalToTransformed(
-                                value.selection.start.coerceIn(0, value.text.length),
-                            )
-                            val cursor = textLayout?.takeIf { it.layoutInput.text == transformed.text }?.getCursorRect(transformedOffset)
-                            if (cursor != null) {
-                                drawLine(
-                                    color = IntentMathPalette.Number.copy(alpha = .28f),
-                                    start = cursor.topCenter,
-                                    end = cursor.bottomCenter,
-                                    strokeWidth = 5.dp.toPx(),
-                                )
-                                drawLine(
-                                    color = IntentMathPalette.Number,
-                                    start = cursor.topCenter,
-                                    end = cursor.bottomCenter,
-                                    strokeWidth = 1.6.dp.toPx(),
-                                )
-                            }
-                        }
-                    },
-                // Custom keys update the value; read-only blocks Android IME sessions
-                // while retaining touch selection and cursor positioning.
-                readOnly = true,
+                label = label,
+                placeholder = placeholder,
                 singleLine = singleLine,
-                textStyle = MaterialTheme.typography.bodyLarge.copy(
-                    color = IntentMathPalette.Ink,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Medium,
-                ),
-                cursorBrush = SolidColor(Color.Transparent),
-                visualTransformation = transformation,
-                onTextLayout = { textLayout = it },
-                keyboardOptions = KeyboardOptions(showKeyboardOnFocus = false, imeAction = imeAction),
-                keyboardActions = KeyboardActions(onDone = { onDone?.invoke() }),
-                decorationBox = { innerTextField ->
-                    Box {
-                        if (value.text.isBlank()) {
-                            Text(placeholder, color = IntentMathPalette.Muted, fontSize = 13.sp)
-                        }
-                        innerTextField()
-                    }
-                }
+                minLines = minLines,
+                minimumHeight = minimumHeight,
+                scale = editorScale,
+                pan = editorPan,
+                transformation = transformation,
+                onFocusChange = { focused = it; onFocusChange(it) },
+                editorTestTag = editorTestTag,
             )
         }
         if (focused) {
             Text(
-                "Cursor ${value.selection.end + 1} of ${value.text.length + 1}",
+                "${mathSlotLabel(StructuredMathEditing.modeAt(value.text, value.selection.end))} · Cursor ${value.selection.end + 1} of ${value.text.length + 1}",
                 color = IntentMathPalette.Number,
                 fontSize = 8.sp,
             )

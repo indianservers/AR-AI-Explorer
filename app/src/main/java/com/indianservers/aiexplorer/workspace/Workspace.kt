@@ -148,7 +148,7 @@ enum class MathModule(val label: String) {
     DataSpreadsheet("Data"),
     DiscreteMathematics("Discrete"),
     NumberTheory("Numbers"),
-    SpatialAR("AR"),
+    SpatialAR("AR Space"),
     ARGraph2D("AR 2D Graph"),
     ARGraph3D("AR 3D Graph"),
     ARGeometry2D("AR 2D Geometry"),
@@ -166,10 +166,7 @@ data class WorkspaceState(
     val pointDependencies: List<PointDependency> = emptyList(),
     val geometryConstraints: List<GeometryConstraint2D> = emptyList(),
     val geometryGroups: List<GeometryGroup2D> = emptyList(),
-    val functions: List<FunctionDefinition> = listOf(
-        FunctionDefinition("f", "f(x)", "x^2 - 4*x + 3", "cyan"),
-        FunctionDefinition("g", "g(x)", "x - 1", "violet"),
-    ),
+    val functions: List<FunctionDefinition> = emptyList(),
     val solids: List<Solid> = emptyList(),
     val vectors3D: List<Vector3D> = emptyList(),
     val points3D: List<Point3D> = emptyList(),
@@ -710,6 +707,14 @@ class CommandHistory(private val limit: Int = 80) {
     val canUndo: Boolean get() = undoStack.isNotEmpty()
     val canRedo: Boolean get() = redoStack.isNotEmpty()
     val protocol: List<String> get() = undoStack.map { it.label }
+    val timeline:List<String> get()=protocol+redoStack.reversed().map { it.label }
+    fun jump(state:WorkspaceState,index:Int):WorkspaceState {
+        require(index in 0..timeline.size)
+        var result=state
+        while(undoStack.size>index) result=undo(result)
+        while(undoStack.size<index) result=redo(result)
+        return result
+    }
 }
 
 /** Keeps Undo/Redo timelines isolated while a shared workspace state switches modules. */

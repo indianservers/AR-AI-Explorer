@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ArCadPhaseThreeTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-10-04T09:57:03.274Z" hostname="INDIANSERVERS" time="0.913">
+  <properties/>
+  <testcase name="vectorFieldArrowsUseExpressionsAndNormalization" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.057"/>
+  <testcase name="existingEquationEditorSurfaceCanBeAnalyzed" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.055"/>
+  <testcase name="implicitSphereIsFiniteAndApproximatesEquation" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.064"/>
+  <testcase name="conicClassificationUsesQuadraticDiscriminant" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.0"/>
+  <testcase name="nonuniformConeUsesWorldPlaneMetric" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.0"/>
+  <testcase name="savedAnalysisAndNodeSettingsSurviveProjectCodec" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.122"/>
+  <testcase name="timelineJumpRetainsRedoAndDivergenceClearsFuture" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.008"/>
+  <testcase name="restoreRequestsNewPlacementAndRetainsMathState" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.02"/>
+  <testcase name="torusAndAlgebraicImplicitMeshesSatisfyTheirEquationsNumerically" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.179"/>
+  <testcase name="lodOnlyReducesVisualCopy" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.043"/>
+  <testcase name="advancedMeasurementsUseRealPlanesAndLines" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.007"/>
+  <testcase name="guidedConicsActivityAddsPlaneAndConeWithSingleUndo" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.018"/>
+  <testcase name="worldTangentPassesThroughTransformedPoint" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.035"/>
+  <testcase name="labelsStayWithinScreenAndAvoidOverlap" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.005"/>
+  <testcase name="editedSurfaceDoesNotClaimAnalyticDerivative" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.109"/>
+  <testcase name="implicitEquationAcceptsBothSides" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.031"/>
+  <testcase name="scalarSliceComputesRangeAndActualContour" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.014"/>
+  <testcase name="planeIntersectionSnappingUsesFiniteVisiblePatches" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.02"/>
+  <testcase name="cornerDoesNotClaimAFalseTangentPlane" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.022"/>
+  <testcase name="pickedWorldPointUpdatesLocalAnalysisCoordinates" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.019"/>
+  <testcase name="slicesRespectObjectTransforms" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.026"/>
+  <testcase name="analyticDerivativesAndDirectionalDerivativeAreLive" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.033"/>
+  <testcase name="qualityReductionAlsoAppliesToLockedObjects" classname="com.indianservers.aiexplorer.ArCadPhaseThreeTest" time="0.02"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

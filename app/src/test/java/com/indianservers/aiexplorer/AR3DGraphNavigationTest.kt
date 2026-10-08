@@ -15,9 +15,11 @@ class AR3DGraphNavigationTest {
             MathModule.ARGraph3D to com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode.Graph3D,
             MathModule.ARGeometry2D to com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode.Geometry2D,
             MathModule.ARGeometry3D to com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode.Geometry3D,
+            MathModule.ARCoordinatePlane to com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode.CoordinatePlane,
+            MathModule.ARVectorLab to com.indianservers.aiexplorer.spatial.ArMathWorkspaceMode.VectorLab,
         )) {
             model.open(module)
-            assertEquals(module, model.state.module)
+            assertEquals(MathModule.SpatialAR, model.state.module)
             assertEquals(mode, model.arWorkspaceLaunchMode)
         }
     }
@@ -26,8 +28,8 @@ class AR3DGraphNavigationTest {
         val model = ExplorerViewModel(SavedStateHandle())
         val prior = model.state.module
         model.open(MathModule.ARGraph3D)
-        assertEquals(MathModule.ARGraph3D, model.state.module)
-        assertEquals("AR 3D Graph", model.state.module.label)
+        assertEquals(MathModule.SpatialAR, model.state.module)
+        assertEquals("AR Space", model.state.module.label)
         model.navigateBackIntent()
         assertEquals(prior, model.state.module)
     }

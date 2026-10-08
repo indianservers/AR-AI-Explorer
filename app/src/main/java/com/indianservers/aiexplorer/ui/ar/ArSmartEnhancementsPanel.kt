@@ -75,6 +75,16 @@ internal fun ArSmartEnhancementsPanel(
                 }
                 if (vm.state.solids.isEmpty() && vm.state.vectors3D.isEmpty()) Text("No 3D objects yet. Tap +.", color = Muted, fontSize = 11.sp)
             }
+            ArMathWorkspaceMode.CoordinatePlane -> {
+                vm.state.points.forEachIndexed { index, _ ->
+                    GlowButton("P${index + 1}") { vm.selectCoordinatePoint(index); onAdd() }
+                }
+            }
+            ArMathWorkspaceMode.VectorLab -> {
+                vm.state.vectors3D.forEachIndexed { index, vector ->
+                    GlowButton(vector.name) { vm.selectVector3D(index); onSelectionChange(ArSelectionState(setOf("vector-$index"), "vector-$index")); onAdd() }
+                }
+            }
             ArMathWorkspaceMode.Graph2D -> {
                 vm.state.functions.forEachIndexed { index, function ->
                     GlowButton(if (function.visible) function.name.take(10) else "Hide ${function.name.take(6)}") {
@@ -84,7 +94,7 @@ internal fun ArSmartEnhancementsPanel(
                 if (vm.state.functions.isEmpty()) Text("No graphs yet. Tap +.", color = Muted, fontSize = 11.sp)
             }
             ArMathWorkspaceMode.Graph3D -> GlowButton(vm.state.surfaceExpression.take(18), onClick = onAdd)
-            ArMathWorkspaceMode.CAS -> GlowButton("Notebook") { vm.openMathNotebook() }
+            ArMathWorkspaceMode.CAS -> GlowButton("CAS expressions", onClick = onAdd)
         }
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.gamifymaths.RescueEngineerGameTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-06T10:07:13.733Z" hostname="INDIANSERVERS" time="0.076">
+  <properties/>
+  <testcase name="correctSpanWithoutEnoughJointsFails" classname="com.indianservers.aiexplorer.gamifymaths.RescueEngineerGameTest" time="0.068"/>
+  <testcase name="connectedBridgeWithWrongSpanFails" classname="com.indianservers.aiexplorer.gamifymaths.RescueEngineerGameTest" time="0.001"/>
+  <testcase name="exactConnectedTwelveMetreTrussPasses" classname="com.indianservers.aiexplorer.gamifymaths.RescueEngineerGameTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ArCadPhaseTwoTest" tests="39" skipped="0" failures="0" errors="0" timestamp="2026-10-04T09:57:04.200Z" hostname="INDIANSERVERS" time="0.451">
+  <properties/>
+  <testcase name="legacyEquationEditRebuildsGeometryAndUndoRestoresMeshEdits" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.043"/>
+  <testcase name="lockedVerticesCannotDrift" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="fixedLengthAndParallelAreRealPersistentConstraints" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.001"/>
+  <testcase name="actualFaceHighlightContainsOnlySelectedFaceTriangles" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.011"/>
+  <testcase name="numericVectorEndpointEditRebuildsArrowheadAndKeepsUndo" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.005"/>
+  <testcase name="constraintAddRemoveAndMeshEditUndo" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="meshAndNodesRoundTrip" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="radiusHandleIsOneUndoCommandAndUpdatesEquation" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="liveDistanceMeasurementUpdatesAfterMovingPoint" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.007"/>
+  <testcase name="cachedUnchangedNodeReusesGeometry" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.009"/>
+  <testcase name="objectLockAlsoBlocksNumericAndAnalyticEdits" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.008"/>
+  <testcase name="selectionTapDoesNotCreateAnUndoEntry" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.002"/>
+  <testcase name="movingCurvePointUsesTheParameter" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.005"/>
+  <testcase name="cyclesAreRejectedWithoutChangingWorkspace" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="edgeMoveSharesVerticesAndInspectorMeasuresExactLength" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.004"/>
+  <testcase name="expressionsAreExactAndSafe" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.002"/>
+  <testcase name="opacityChangePreservesMeshEdits" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.005"/>
+  <testcase name="groupsRotateAndScaleBothDerivedPointsAndSphereRadius" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.047"/>
+  <testcase name="conflictingLockedAndLengthConstraintIsRejected" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.001"/>
+  <testcase name="liveSliderDragIsOneUndoStep" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="projectPersistenceRetainsCADRelationshipsGroupsAndMeshes" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.005"/>
+  <testcase name="perpendicularAndEqualLengthSolve" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.0"/>
+  <testcase name="extrusionUsesOutwardNormalAndPreservesClosedSolidVolume" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.018"/>
+  <testcase name="sphereAndPlaneMeasurementsTrackPose" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.018"/>
+  <testcase name="groupMovePreservesDependenciesAndUndo" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.012"/>
+  <testcase name="vectorCalculationsAndAnglesAreExact" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="dependentObjectsDisappearWhenAncestorIsDeleted" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.011"/>
+  <testcase name="invalidCollapsedFaceIsRejected" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.007"/>
+  <testcase name="pointOnPlaneAndLineConstraintsProjectExactly" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.001"/>
+  <testcase name="equalRadiusRelationshipPropagatesAndTangencyIsReal" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.018"/>
+  <testcase name="movingCurvePointDoesNotRegenerateCurveMesh" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.015"/>
+  <testcase name="snapsUseActualVertexMidpointPlaneAndIntersection" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.001"/>
+  <testcase name="exactPlaneNormalRemainsUnitLengthAfterRotation" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.003"/>
+  <testcase name="duplicateKeepsEditedMeshAndIsAtomicUndo" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.006"/>
+  <testcase name="allCorePrimitivesProduceFiniteGeometry" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.119"/>
+  <testcase name="domainsAreValidatedBeforeCommit" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.001"/>
+  <testcase name="dependenciesPropagateTransformAndDirectPointEdit" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.018"/>
+  <testcase name="wireOnlySurfaceRetainsSelectableFaces" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.014"/>
+  <testcase name="cubeFaceIsConnectedQuadAndMovesOnlySharedVertices" classname="com.indianservers.aiexplorer.ArCadPhaseTwoTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

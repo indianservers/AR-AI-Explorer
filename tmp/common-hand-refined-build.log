@@ -1,0 +1,85 @@
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:preDebugUnitTestBuild UP-TO-DATE
+> Task :arengine:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :arengine:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:preBuild UP-TO-DATE
+> Task :ar3dgraph:preDebugBuild UP-TO-DATE
+> Task :ar3dgraph:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:generateDebugResources UP-TO-DATE
+> Task :ar3dgraph:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:parseDebugLocalResources UP-TO-DATE
+> Task :ar3dgraph:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:javaPreCompileDebug UP-TO-DATE
+
+> Task :arengine:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/intelligence/HandIntelligenceEngine.kt:43:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TargetCandidate'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/intelligence/HandIntelligenceEngine.kt:46:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TargetCandidate'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/semantics/MathSemanticEngine.kt:22:131 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/spatial/ContactSolver.kt:51:75 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/intelligence/HandIntelligenceEngine.kt:43:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TargetCandidate'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/intelligence/HandIntelligenceEngine.kt:46:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TargetCandidate'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/semantics/MathSemanticEngine.kt:22:131 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/spatial/ContactSolver.kt:51:75 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :arengine:processDebugJavaRes UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToJarDebug
+> Task :arengine:bundleLibCompileToJarDebug
+> Task :ar3dgraph:compileDebugKotlin
+> Task :ar3dgraph:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :arengine:compileDebugUnitTestKotlin
+> Task :arengine:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :arengine:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :arengine:testDebugUnitTest
+
+> Task :app:compileDebugKotlin
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:10573:29 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:10573:40 Unresolved reference 'mutableLongStateOf'.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11108:72 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11798:292 Unresolved reference 'ArVector3'.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11798:456 Unresolved reference 'ArVector3'.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11798:485 Unresolved reference 'ArVector3'.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11839:30 Unresolved reference 'BuildConfig'.
+e: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:12705:24 Unresolved reference 'BuildConfig'.
+
+> Task :app:compileDebugKotlin FAILED
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin' (registered by plugin 'com.android.internal.application').
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 15s
+30 actionable tasks: 7 executed, 23 up-to-date

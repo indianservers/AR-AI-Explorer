@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path('app/src/main/java/com/indianservers/aiexplorer/HandCameraPreview.kt');s=p.read_text();s=s.replace('import androidx.compose.ui.platform.LocalContext','import androidx.compose.ui.platform.LocalContext\nimport androidx.compose.ui.semantics.semantics\nimport androidx.compose.ui.semantics.contentDescription');s=s.replace('AndroidView(modifier=modifier,','AndroidView(modifier=modifier.semantics { contentDescription = "Camera preview without AR" },');p.write_text(s)

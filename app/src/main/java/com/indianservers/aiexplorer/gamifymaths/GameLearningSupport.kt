@@ -25,6 +25,8 @@ internal object GameLearningCoach {
         val phase = phase(level)
         val normalized = "$prompt $explanation".lowercase()
         val (objective, hint, check) = when {
+            "shape" in normalized || "corner" in normalized || "blueprint" in normalized ->
+                Triple("Identify geometry using sides, corners and curves.", "Count straight sides and corners. Compare side lengths and look for curved boundaries.", "Check every defining property, rather than only the colour or orientation.")
             "quadrant" in normalized || "coordinate" in normalized ->
                 Triple("Connect coordinate signs to position on the plane.", "Read x first, then y. Quadrant II has x < 0 and y > 0.", "Check the sign pair against (+,+), (−,+), (−,−), (+,−).")
             "slope" in normalized ->

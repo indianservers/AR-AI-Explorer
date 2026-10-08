@@ -86,18 +86,24 @@ object MathInputIntelligence {
     )
 
     private val definitions = listOf(
-        InputDefinition("sin", "sin(angle)", "sin()", "angle in radians", listOf("angle"), "sin(pi/2)", setOf(MathInputContext.Graph2D, MathInputContext.Graph3D, MathInputContext.Calculus)),
-        InputDefinition("cos", "cos(angle)", "cos()", "angle in radians", listOf("angle"), "cos(x)", setOf(MathInputContext.Graph2D, MathInputContext.Graph3D, MathInputContext.Calculus)),
-        InputDefinition("tan", "tan(angle)", "tan()", "angle in radians", listOf("angle"), "tan(pi/4)", setOf(MathInputContext.Graph2D, MathInputContext.Calculus)),
+        InputDefinition("sin", "sin(angle)", "sin()", "numeric angles use degrees; expressions use radians", listOf("angle"), "sin(pi/2)", setOf(MathInputContext.Graph2D, MathInputContext.Graph3D, MathInputContext.Calculus)),
+        InputDefinition("cos", "cos(angle)", "cos()", "numeric angles use degrees; expressions use radians", listOf("angle"), "cos(x)", setOf(MathInputContext.Graph2D, MathInputContext.Graph3D, MathInputContext.Calculus)),
+        InputDefinition("tan", "tan(angle)", "tan()", "numeric angles use degrees; expressions use radians", listOf("angle"), "tan(pi/4)", setOf(MathInputContext.Graph2D, MathInputContext.Calculus)),
         InputDefinition("sqrt", "sqrt(value)", "sqrt()", "value must be non-negative for real results", listOf("value"), "sqrt(x+4)"),
+        InputDefinition("cbrt", "cbrt(value)", "cbrt()", "cube-root value", listOf("value"), "cbrt(8)"),
+        InputDefinition("nthroot", "nthroot(index, value)", "nthroot(,)", "root index, then radicand", listOf("index", "value"), "nthroot(3,8)"),
         InputDefinition("abs", "abs(value)", "abs()", "value or expression", listOf("value"), "abs(x-2)"),
         InputDefinition("ln", "ln(value)", "ln()", "value must be positive for real results", listOf("value"), "ln(x)"),
+        InputDefinition("exp", "exp(value)", "exp()", "exponent of e", listOf("value"), "exp(1)"),
+        InputDefinition("floor", "floor(value)", "floor()", "round down to an integer", listOf("value"), "floor(2.5)"),
+        InputDefinition("ceil", "ceil(value)", "ceil()", "round up to an integer", listOf("value"), "ceil(2.5)"),
         InputDefinition("log", "log(value)", "log()", "base-ten logarithm", listOf("value"), "log(100)"),
         InputDefinition("logbase", "logbase(base, value)", "logbase(,)", "base, then positive value", listOf("base", "value"), "logbase(2,8)"),
         InputDefinition("min", "min(a, b, ...)", "min(,)", "two or more comparable values", listOf("first value", "next value"), "min(2,x)"),
         InputDefinition("max", "max(a, b, ...)", "max(,)", "two or more comparable values", listOf("first value", "next value"), "max(2,x)"),
         InputDefinition("if", "if(condition, trueValue, falseValue)", "if(,,)", "condition and the two result branches", listOf("condition", "true value", "false value"), "if(x<0,-x,x)", setOf(MathInputContext.Graph2D)),
         InputDefinition("derivative", "derivative(expression, variable[, order])", "derivative(,x)", "expression and differentiation variable", listOf("expression", "variable", "order"), "derivative(x^3,x)", setOf(MathInputContext.Calculus)),
+        InputDefinition("partial", "partial(expression, variable[, order])", "partial(,x)", "expression, differentiation variable, optional order", listOf("expression", "variable", "order"), "partial(x^3,x)", setOf(MathInputContext.Calculus)),
         InputDefinition("integral", "integral(expression, variable[, lower, upper])", "integral(,x)", "expression, variable, and optional bounds", listOf("expression", "variable", "lower bound", "upper bound"), "integral(sin(x),x,0,pi)", setOf(MathInputContext.Calculus)),
         InputDefinition("limit", "limit(expression, variable, target)", "limit(,x,)", "expression, variable, and approach value", listOf("expression", "variable", "target"), "limit(sin(x)/x,x,0)", setOf(MathInputContext.Calculus)),
         InputDefinition("sum", "sum(expression, index, start, end)", "sum(,n,,)", "term, index, and inclusive bounds", listOf("expression", "index", "start", "end"), "sum(n^2,n,1,10)", setOf(MathInputContext.Calculus, MathInputContext.Statistics)),
@@ -111,7 +117,13 @@ object MathInputIntelligence {
         InputDefinition("factor", "factor expression", "factor ", "factor an algebraic expression", listOf("expression"), "factor x^2-5*x+6", command = true),
         InputDefinition("solve", "solve equation [for variable]", "solve ", "equation or system and optional target variable", listOf("equation", "variable"), "solve 2*x+3=11", command = true),
         InputDefinition("plot", "plot expression", "plot ", "expression, equation, or relation", listOf("expression"), "plot y=sin(x)", setOf(MathInputContext.Graph2D), command = true),
-    )
+    ) + listOf("sec", "csc", "cot").map { name ->
+        InputDefinition(name, "$name(angle)", "$name()", "numeric angles use degrees; expressions use radians", listOf("angle"), "$name(60)")
+    } + listOf("sinh", "cosh", "tanh", "sech", "csch", "coth", "asinh", "acosh", "atanh", "asech", "acsch", "acoth").map { name ->
+        InputDefinition(name, "$name(value)", "$name()", "hyperbolic function value", listOf("value"), "$name(1)")
+    } + listOf("asin", "acos", "atan", "asec", "acsc", "acot").map { name ->
+        InputDefinition(name, "$name(value)", "$name()", "numeric inputs return degrees; expression inputs return radians", listOf("value"), "$name(1)")
+    }
 
     val functions = setOf(
         "sin", "cos", "tan", "sec", "csc", "cot", "sinh", "cosh", "tanh", "asin", "acos", "atan",
@@ -343,21 +355,41 @@ object MathInputIntelligence {
                     while (start > 0 && (source[start - 1].isLetterOrDigit() || source[start - 1] == '_')) start--
                     frames += Frame(source.substring(start, end).lowercase())
                 }
+                '[', '{' -> frames += Frame("")
                 ',' -> frames.lastOrNull()?.let { it.argument++ }
-                ')' -> if (frames.isNotEmpty()) frames.removeAt(frames.lastIndex)
+                ')', ']', '}' -> if (frames.isNotEmpty()) frames.removeAt(frames.lastIndex)
             }
         }
         val frame = frames.lastOrNull { it.name.isNotBlank() } ?: return null
         val definition = definitions.firstOrNull { it.name == frame.name } ?: return null
-        val active = frame.argument.coerceIn(0, definition.parameters.lastIndex.coerceAtLeast(0))
+        val active = frame.argument
+        val parameter = definition.parameters.getOrElse(active) {
+            if ("..." in definition.signature || definition.name in setOf("mean", "stdev")) definition.parameters.last()
+            else "argument ${active + 1}"
+        }
         return MathFunctionHint(
             name = definition.name,
             signature = definition.signature,
-            description = definition.description,
+            description = parameterDescription(definition.name, active, definition.description),
             activeParameter = active,
-            parameterName = definition.parameters.getOrElse(active) { "argument ${active + 1}" },
+            parameterName = parameter,
             example = definition.example,
         )
+    }
+
+    private fun parameterDescription(name: String, index: Int, fallback: String): String {
+        val descriptions = when (name) {
+            "derivative", "partial" -> listOf("expression to differentiate", "differentiation variable", "positive integer order (optional)")
+            "integral" -> listOf("expression to integrate", "integration variable", "lower bound (optional)", "upper bound (optional)")
+            "limit" -> listOf("expression whose limit is needed", "approach variable", "value being approached")
+            "sum", "product" -> listOf("term or factor expression", "index variable", "inclusive first index", "inclusive last index")
+            "if" -> listOf("logical condition", "result when true", "result when false")
+            "nthroot" -> listOf("nonzero root index", "value under the root")
+            "logbase" -> listOf("positive logarithm base, different from one", "positive logarithm value")
+            "min", "max" -> return "numeric value or expression"
+            else -> emptyList()
+        }
+        return descriptions.getOrElse(index) { fallback }
     }
 
     private fun parameterActions(source: String, cursor: Int, hint: MathFunctionHint): List<MathInputAssistAction> {
@@ -370,6 +402,8 @@ object MathInputIntelligence {
             "upper bound", "end" -> listOf("1", "pi", "infinity")
             "target" -> listOf("0", "infinity", "pi")
             "name" -> listOf("P", "A", "s")
+            "order" -> listOf("1", "2", "3")
+            "base" -> listOf("2", "10", "e")
             else -> listOf("x", "0", "1", hint.example)
         }
         return values.distinct().take(4).map { value ->

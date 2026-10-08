@@ -1,0 +1,348 @@
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:preDebugUnitTestBuild UP-TO-DATE
+> Task :arengine:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :arengine:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:preBuild UP-TO-DATE
+> Task :ar3dgraph:preDebugBuild UP-TO-DATE
+> Task :ar3dgraph:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:generateDebugResources UP-TO-DATE
+> Task :ar3dgraph:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:parseDebugLocalResources UP-TO-DATE
+> Task :ar3dgraph:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:javaPreCompileDebug UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :ar3dgraph:writeDebugAarMetadata UP-TO-DATE
+> Task :arengine:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :ar3dgraph:extractDeepLinksDebug UP-TO-DATE
+> Task :ar3dgraph:processDebugManifest UP-TO-DATE
+> Task :arengine:extractDeepLinksDebug UP-TO-DATE
+> Task :arengine:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :ar3dgraph:mapDebugSourceSetPaths UP-TO-DATE
+> Task :ar3dgraph:compileDebugLibraryResources UP-TO-DATE
+> Task :arengine:mapDebugSourceSetPaths UP-TO-DATE
+> Task :arengine:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResources UP-TO-DATE
+> Task :app:packageDebugAndroidTestResources UP-TO-DATE
+> Task :app:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :app:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :app:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :app:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :ar3dgraph:generateDebugAssets UP-TO-DATE
+> Task :ar3dgraph:mergeDebugAssets UP-TO-DATE
+> Task :arengine:generateDebugAssets UP-TO-DATE
+> Task :arengine:mergeDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:generateDebugGlobalSynthetics UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :ar3dgraph:mergeDebugJniLibFolders UP-TO-DATE
+> Task :ar3dgraph:mergeDebugNativeLibs NO-SOURCE
+> Task :ar3dgraph:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :arengine:mergeDebugJniLibFolders UP-TO-DATE
+> Task :arengine:mergeDebugNativeLibs NO-SOURCE
+> Task :arengine:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses
+
+> Task :arengine:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/semantics/MathSemanticEngine.kt:23:131 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/spatial/ContactSolver.kt:51:75 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+
+> Task :app:mergeDebugNativeLibs
+
+> Task :arengine:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/intelligence/HandIntelligenceEngine.kt:43:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TargetCandidate'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/intelligence/HandIntelligenceEngine.kt:46:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TargetCandidate'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/semantics/MathSemanticEngine.kt:23:131 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+w: file:///C:/Indian%20Servers/AIExplorer/arengine/src/main/java/com/indianservers/aiexplorer/handintelligence/spatial/ContactSolver.kt:51:75 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Int'.
+
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :arengine:processDebugJavaRes UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToJarDebug
+> Task :arengine:bundleLibCompileToJarDebug
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libimage_processing_util_jni.so, libsurface_util_jni.so. Run with --info option to learn more.
+
+> Task :arengine:bundleLibRuntimeToDirDebug
+> Task :ar3dgraph:compileDebugKotlin
+> Task :ar3dgraph:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :arengine:compileDebugUnitTestKotlin
+> Task :arengine:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :arengine:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :arengine:testDebugUnitTest
+> Task :ar3dgraph:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :ar3dgraph:processDebugJavaRes UP-TO-DATE
+> Task :ar3dgraph:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :app:prepareSolverGoldenAndroidTestAssets UP-TO-DATE
+> Task :app:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :app:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :app:generateDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :app:mergeLibDexDebug
+> Task :app:checkDebugAndroidTestDuplicateClasses
+> Task :app:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :app:mergeLibDexDebugAndroidTest UP-TO-DATE
+> Task :app:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :app:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :app:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :app:mergeDebugAndroidTestManifest UP-TO-DATE
+> Task :app:processDebugAndroidTestManifest UP-TO-DATE
+> Task :app:processDebugAndroidTestResources UP-TO-DATE
+> Task :app:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugAndroidTestNativeLibs NO-SOURCE
+> Task :app:stripDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :app:mergeExtDexDebugAndroidTest
+> Task :app:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :app:mergeExtDexDebug
+> Task :app:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:8678:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:10030:34 Unnecessary safe call on a non-null receiver of type 'Solid'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11462:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11463:107 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11467:76 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11473:140 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11473:197 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14449:49 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14454:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14502:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PointerInputChange'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14545:82 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15574:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15576:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15577:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15579:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15621:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15622:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15624:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15625:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:mergeDebugJavaResource
+> Task :app:dexBuilderDebug
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:compileDebugAndroidTestKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/androidTest/java/com/indianservers/aiexplorer/ArCadPhaseThreeUiTest.kt:16:27 'fun <reified A : ComponentActivity> createAndroidComposeRule(effectContext: CoroutineContext = ...): AndroidComposeTestRule<ActivityScenarioRule<A>, A>' is deprecated. Use `androidx.compose.ui.test.junit4.v2.createAndroidComposeRule` instead. The v2 APIs use StandardTestDispatcher instead of UnconfinedTestDispatcher, which aligns with standard coroutine behavior by queuing tasks rather than executing them immediately. Tests relying on immediate execution may require explicit synchronization. Please refer to the migration guide for more details.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/androidTest/java/com/indianservers/aiexplorer/ArCadPhaseThreeUiTest.kt:27:42 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AccessibilityNodeInfo'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/androidTest/java/com/indianservers/aiexplorer/ArCadPhaseTwoUiTest.kt:19:27 'fun <reified A : ComponentActivity> createAndroidComposeRule(effectContext: CoroutineContext = ...): AndroidComposeTestRule<ActivityScenarioRule<A>, A>' is deprecated. Use `androidx.compose.ui.test.junit4.v2.createAndroidComposeRule` instead. The v2 APIs use StandardTestDispatcher instead of UnconfinedTestDispatcher, which aligns with standard coroutine behavior by queuing tasks rather than executing them immediately. Tests relying on immediate execution may require explicit synchronization. Please refer to the migration guide for more details.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/androidTest/java/com/indianservers/aiexplorer/NewMathKeyboard300EmulatorTouchTest.kt:25:29 'fun createEmptyComposeRule(effectContext: CoroutineContext = ...): ComposeTestRule' is deprecated. Use `androidx.compose.ui.test.junit4.v2.createEmptyComposeRule` instead. The v2 APIs use StandardTestDispatcher instead of UnconfinedTestDispatcher, which aligns with standard coroutine behavior by queuing tasks rather than executing them immediately. Tests relying on immediate execution may require explicit synchronization. Please refer to the migration guide for more details.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/androidTest/java/com/indianservers/aiexplorer/WorkspaceUx150TouchTest.kt:22:29 'fun createEmptyComposeRule(effectContext: CoroutineContext = ...): ComposeTestRule' is deprecated. Use `androidx.compose.ui.test.junit4.v2.createEmptyComposeRule` instead. The v2 APIs use StandardTestDispatcher instead of UnconfinedTestDispatcher, which aligns with standard coroutine behavior by queuing tasks rather than executing them immediately. Tests relying on immediate execution may require explicit synchronization. Please refer to the migration guide for more details.
+
+> Task :app:mergeProjectDexDebug
+> Task :app:testDebugUnitTest
+> Task :app:compileDebugAndroidTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugAndroidTestJavaRes UP-TO-DATE
+> Task :app:mergeDebugAndroidTestJavaResource
+> Task :app:dexBuilderDebugAndroidTest
+> Task :app:mergeProjectDexDebugAndroidTest
+> Task :app:packageDebugAndroidTest
+> Task :app:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+Starting 4 tests on Medium_Phone(AVD) - 17
+Medium_Phone(AVD) - 17 Tests 0/4 completed. (0 skipped) (0 failed)
+> Task :app:connectedDebugAndroidTest
+
+
+com.indianservers.aiexplorer.CameraHandModesUiTest > independentCameraIsDefaultAndCanReturnAfterArSelection[Medium_Phone(AVD) - 17] [31mFAILED [0m
+	androidx.compose.ui.test.junit4.android.ComposeNotIdleException: Idling resource timed out: possibly due to compose being busy.
+	IdlingResourceRegistry has the following idling resources registered:
+Medium_Phone(AVD) - 17 Tests 1/4 completed. (0 skipped) (1 failed)
+
+com.indianservers.aiexplorer.ArHandInferenceDeviceTest > twoHandsRecognizedFromCpuCameraFormat[Medium_Phone(AVD) - 17] [31mFAILED [0m
+	java.lang.AssertionError: Repeated inference failed
+	at org.junit.Assert.fail(Assert.java:89)
+Medium_Phone(AVD) - 17 Tests 2/4 completed. (0 skipped) (2 failed)
+
+com.indianservers.aiexplorer.ArHandInferenceDeviceTest > oneHandRecognizedAndOffRejectsFrames[Medium_Phone(AVD) - 17] [31mFAILED [0m
+	java.lang.AssertionError: Repeated inference failed
+	at org.junit.Assert.fail(Assert.java:89)
+Tests on Medium_Phone(AVD) - 17 failed: There was 3 failure(s).
+Finished 4 tests on Medium_Phone(AVD) - 17
+Execute com.indianservers.aiexplorer.CameraHandModesUiTest.independentCameraIsDefaultAndCanReturnAfterArSelection: FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: androidx.compose.ui.test.junit4.android.ComposeNotIdleException: Idling resource timed out: possibly due to compose being busy.
+IdlingResourceRegistry has the following idling resources registered:
+- [busy] ComposeIdlingResource is busy due to pending recompositions.
+- Note: Timeout on pending recomposition means that there are most likely infinite re-compositions happening in the tested code.
+- Debug: hadRecomposerChanges = true, hadSnapshotChanges = false, hadAwaitersOnMainClock = false
+All registered idling resources: Compose-Espresso link
+at androidx.compose.ui.test.EspressoLink_androidKt.rethrowWithMoreInfo(EspressoLink.android.kt:133)
+at androidx.compose.ui.test.EspressoLink_androidKt.runEspressoOnIdle(EspressoLink.android.kt:106)
+at androidx.compose.ui.test.EspressoLink.runUntilIdle(EspressoLink.android.kt:82)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.waitForIdle(ComposeUiTest.android.kt:709)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.access$waitForIdle(ComposeUiTest.android.kt:474)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidTestOwner.getRoots(ComposeUiTest.android.kt:952)
+at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes(TestOwner.kt:105)
+at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes$default(TestOwner.kt:98)
+at androidx.compose.ui.test.SemanticsNodeInteractionCollection.fetchSemanticsNodes(SemanticsNodeInteraction.kt:249)
+at androidx.compose.ui.test.SemanticsNodeInteractionCollection.fetchSemanticsNodes$default(SemanticsNodeInteraction.kt:245)
+at com.indianservers.aiexplorer.CameraHandModesUiTest.independentCameraIsDefaultAndCanReturnAfterArSelection$lambda$1(CameraHandModesUiTest.kt:17)
+at com.indianservers.aiexplorer.CameraHandModesUiTest$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:879)
+at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+at com.indianservers.aiexplorer.CameraHandModesUiTest.independentCameraIsDefaultAndCanReturnAfterArSelection(CameraHandModesUiTest.kt:17)
+... 64 trimmed
+Caused by: androidx.test.espresso.IdlingResourceTimeoutException: Wait for [Compose-Espresso link] to become idle timed out
+at androidx.test.espresso.IdlingPolicy.handleTimeout(IdlingPolicy.java:63)
+at androidx.test.espresso.base.UiControllerImpl$5.resourcesHaveTimedOut(UiControllerImpl.java:421)
+at androidx.test.espresso.base.IdlingResourceRegistry$Dispatcher.handleTimeout(IdlingResourceRegistry.java:536)
+at androidx.test.espresso.base.IdlingResourceRegistry$Dispatcher.handleMessage(IdlingResourceRegistry.java:469)
+at android.os.Handler.dispatchMessageImpl(Handler.java:138)
+at android.os.Handler.dispatchMessage(Handler.java:126)
+at android.os.TestLooperManager.execute(TestLooperManager.java:165)
+at androidx.test.espresso.base.TestLooperManagerCompat.execute(TestLooperManagerCompat.java:119)
+at androidx.test.espresso.base.Interrogator.loopAndInterrogate(Interrogator.java:128)
+at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:513)
+at androidx.test.espresso.base.UiControllerImpl.loopMainThreadUntilIdle(UiControllerImpl.java:434)
+at androidx.test.espresso.Espresso.lambda$onIdle$2(Espresso.java:340)
+at androidx.test.espresso.Espresso$$ExternalSyntheticLambda1.call(D8$$SyntheticClass:0)
+at java.util.concurrent.FutureTask.run(FutureTask.java:328)
+at android.os.Handler.handleCallback(Handler.java:1082)
+at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+at android.os.Handler.dispatchMessage(Handler.java:126)
+at android.os.Looper.loopOnce(Looper.java:295)
+at android.os.Looper.loop(Looper.java:398)
+at android.app.ActivityThread.main(ActivityThread.java:9569)
+at java.lang.reflect.Method.invoke(Native Method)
+at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:918)
+
+androidx.compose.ui.test.junit4.android.ComposeNotIdleException: Idling resource timed out: possibly due to compose being busy.
+IdlingResourceRegistry has the following idling resources registered:
+- [busy] ComposeIdlingResource is busy due to pending recompositions.
+- Note: Timeout on pending recomposition means that there are most likely infinite re-compositions happening in the tested code.
+- Debug: hadRecomposerChanges = true, hadSnapshotChanges = false, hadAwaitersOnMainClock = false
+All registered idling resources: Compose-Espresso link
+at androidx.compose.ui.test.EspressoLink_androidKt.rethrowWithMoreInfo(EspressoLink.android.kt:133)
+at androidx.compose.ui.test.EspressoLink_androidKt.runEspressoOnIdle(EspressoLink.android.kt:106)
+at androidx.compose.ui.test.EspressoLink.runUntilIdle(EspressoLink.android.kt:82)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.waitForIdle(ComposeUiTest.android.kt:709)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.access$waitForIdle(ComposeUiTest.android.kt:474)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidTestOwner.getRoots(ComposeUiTest.android.kt:952)
+at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes(TestOwner.kt:105)
+at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes$default(TestOwner.kt:98)
+at androidx.compose.ui.test.SemanticsNodeInteractionCollection.fetchSemanticsNodes(SemanticsNodeInteraction.kt:249)
+at androidx.compose.ui.test.SemanticsNodeInteractionCollection.fetchSemanticsNodes$default(SemanticsNodeInteraction.kt:245)
+at com.indianservers.aiexplorer.CameraHandModesUiTest.independentCameraIsDefaultAndCanReturnAfterArSelection$lambda$1(CameraHandModesUiTest.kt:17)
+at com.indianservers.aiexplorer.CameraHandModesUiTest$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)
+at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:879)
+at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+at com.indianservers.aiexplorer.CameraHandModesUiTest.independentCameraIsDefaultAndCanReturnAfterArSelection(CameraHandModesUiTest.kt:17)
+... 64 trimmed
+Caused by: androidx.test.espresso.IdlingResourceTimeoutException: Wait for [Compose-Espresso link] to become idle timed out
+at androidx.test.espresso.IdlingPolicy.handleTimeout(IdlingPolicy.java:63)
+at androidx.test.espresso.base.UiControllerImpl$5.resourcesHaveTimedOut(UiControllerImpl.java:421)
+at androidx.test.espresso.base.IdlingResourceRegistry$Dispatcher.handleTimeout(IdlingResourceRegistry.java:536)
+at androidx.test.espresso.base.IdlingResourceRegistry$Dispatcher.handleMessage(IdlingResourceRegistry.java:469)
+at android.os.Handler.dispatchMessageImpl(Handler.java:138)
+at android.os.Handler.dispatchMessage(Handler.java:126)
+at android.os.TestLooperManager.execute(TestLooperManager.java:165)
+at androidx.test.espresso.base.TestLooperManagerCompat.execute(TestLooperManagerCompat.java:119)
+at androidx.test.espresso.base.Interrogator.loopAndInterrogate(Interrogator.java:128)
+at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:513)
+at androidx.test.espresso.base.UiControllerImpl.loopMainThreadUntilIdle(UiControllerImpl.java:434)
+at androidx.test.espresso.Espresso.lambda$onIdle$2(Espresso.java:340)
+at androidx.test.espresso.Espresso$$ExternalSyntheticLambda1.call(D8$$SyntheticClass:0)
+at java.util.concurrent.FutureTask.run(FutureTask.java:328)
+at android.os.Handler.handleCallback(Handler.java:1082)
+at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+at android.os.Handler.dispatchMessage(Handler.java:126)
+at android.os.Looper.loopOnce(Looper.java:295)
+at android.os.Looper.loop(Looper.java:398)
+at android.app.ActivityThread.main(ActivityThread.java:9569)
+at java.lang.reflect.Method.invoke(Native Method)
+at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:918)
+Execute com.indianservers.aiexplorer.ArHandInferenceDeviceTest.twoHandsRecognizedFromCpuCameraFormat: FAILED
+java.lang.AssertionError: java.lang.AssertionError: Repeated inference failed
+at org.junit.Assert.fail(Assert.java:89)
+at org.junit.Assert.assertTrue(Assert.java:42)
+at org.junit.Assert.assertNotNull(Assert.java:713)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.runInference(ArHandInferenceDeviceTest.kt:61)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.twoHandsRecognizedFromCpuCameraFormat(ArHandInferenceDeviceTest.kt:16)
+
+java.lang.AssertionError: Repeated inference failed
+at org.junit.Assert.fail(Assert.java:89)
+at org.junit.Assert.assertTrue(Assert.java:42)
+at org.junit.Assert.assertNotNull(Assert.java:713)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.runInference(ArHandInferenceDeviceTest.kt:61)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.twoHandsRecognizedFromCpuCameraFormat(ArHandInferenceDeviceTest.kt:16)
+Execute com.indianservers.aiexplorer.ArHandInferenceDeviceTest.oneHandRecognizedAndOffRejectsFrames: FAILED
+java.lang.AssertionError: java.lang.AssertionError: Repeated inference failed
+at org.junit.Assert.fail(Assert.java:89)
+at org.junit.Assert.assertTrue(Assert.java:42)
+at org.junit.Assert.assertNotNull(Assert.java:713)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.runInference(ArHandInferenceDeviceTest.kt:61)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.oneHandRecognizedAndOffRejectsFrames(ArHandInferenceDeviceTest.kt:17)
+
+java.lang.AssertionError: Repeated inference failed
+at org.junit.Assert.fail(Assert.java:89)
+at org.junit.Assert.assertTrue(Assert.java:42)
+at org.junit.Assert.assertNotNull(Assert.java:713)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.runInference(ArHandInferenceDeviceTest.kt:61)
+at com.indianservers.aiexplorer.ArHandInferenceDeviceTest.oneHandRecognizedAndOffRejectsFrames(ArHandInferenceDeviceTest.kt:17)
+
+> Task :app:connectedDebugAndroidTest FAILED
+
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:connectedDebugAndroidTest' (registered by plugin 'com.android.internal.application').
+> There were failing tests. See the report at: file:///C:/Indian%20Servers/AIExplorer/app/build/reports/androidTests/connected/debug/index.html
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+118 actionable tasks: 29 executed, 89 up-to-date
+BUILD FAILED in 2m 43s

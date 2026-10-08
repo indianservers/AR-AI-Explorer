@@ -1,0 +1,27 @@
+
+com.indianservers.aiexplorer.ArCadPhaseThreeUiTest:.
+Error in realArSpaceGuidedParaboloidAnalysisAndPresentation(com.indianservers.aiexplorer.ArCadPhaseThreeUiTest):
+java.lang.AssertionError: Share chooser did not resume the app
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.cancelShareChooser(ArCadPhaseThreeUiTest.kt:38)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.realArSpaceGuidedParaboloidAnalysisAndPresentation(ArCadPhaseThreeUiTest.kt:92)
+
+com.indianservers.aiexplorer.ArCadPhaseTwoUiTest:...
+com.indianservers.aiexplorer.ArGraphPhaseOneUiTest:.
+com.indianservers.aiexplorer.ArSpaceMenuUiTest:.
+com.indianservers.aiexplorer.ArHandInferenceDeviceTest:..
+
+Time: 119.275
+There was 1 failure:
+1) realArSpaceGuidedParaboloidAnalysisAndPresentation(com.indianservers.aiexplorer.ArCadPhaseThreeUiTest)
+java.lang.AssertionError: Share chooser did not resume the app
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.cancelShareChooser(ArCadPhaseThreeUiTest.kt:38)
+	at com.indianservers.aiexplorer.ArCadPhaseThreeUiTest.realArSpaceGuidedParaboloidAnalysisAndPresentation(ArCadPhaseThreeUiTest.kt:92)
+
+FAILURES!!!
+Tests run: 9,  Failures: 1
+
+

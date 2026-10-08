@@ -163,7 +163,7 @@ object ArScenePicker {
 
     private fun ArMesh.transformed(transform: ArLocalTransform) = copy(
         vertices = vertices.map {
-            transform.offsetMeters + transform.orientation.rotate(it * transform.uniformScale)
+            transform.offsetMeters + transform.orientation.rotate(ArVector3(it.x*transform.axisScale.x, it.y*transform.axisScale.y, it.z*transform.axisScale.z) * transform.uniformScale)
         },
     )
 
@@ -313,7 +313,7 @@ object ArConstraintSnapEngine {
         add(ArSnapTarget("axis-y", ArSnapKind.Axis, ArVector3.Zero, direction = ArVector3(0.0, 1.0, 0.0)))
         add(ArSnapTarget("axis-z", ArSnapKind.Axis, ArVector3.Zero, direction = ArVector3(0.0, 0.0, 1.0)))
         scene.objects.filter(ArSceneObject::visible).forEach { objectValue ->
-            val vertices = objectValue.mesh.vertices.map { objectValue.localTransform.offsetMeters + objectValue.localTransform.orientation.rotate(it * objectValue.localTransform.uniformScale) }
+            val vertices = objectValue.mesh.vertices.map { objectValue.localTransform.offsetMeters + objectValue.localTransform.orientation.rotate(ArVector3(it.x*objectValue.localTransform.axisScale.x, it.y*objectValue.localTransform.axisScale.y, it.z*objectValue.localTransform.axisScale.z) * objectValue.localTransform.uniformScale) }
             vertices.forEachIndexed { index, vertex -> add(ArSnapTarget("${objectValue.id}:v$index", ArSnapKind.Vertex, vertex)) }
             objectValue.mesh.lineIndices.chunked(2).forEachIndexed { index, edge ->
                 if (edge.size == 2) {

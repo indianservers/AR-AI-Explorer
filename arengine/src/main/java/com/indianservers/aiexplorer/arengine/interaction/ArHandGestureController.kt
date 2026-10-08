@@ -4,7 +4,14 @@ import com.indianservers.aiexplorer.arengine.contract.ArVector2
 import kotlin.math.*
 
 enum class ArHandTool { Move, Rotate, Scale }
-data class ArTrackedHand(val id: String, val landmarks: List<ArVector2>)
+data class ArTrackedHand(
+    val id: String,
+    val landmarks: List<ArVector2>,
+    /** Handedness classification confidence, not a per-landmark confidence estimate. */
+    val confidence: Float = 1f,
+    val handedness: String = id,
+    val worldLandmarks: List<com.indianservers.aiexplorer.arengine.contract.ArVector3> = emptyList(),
+)
 data class ArHandFrame(val timestampMillis: Long, val hands: List<ArTrackedHand>)
 enum class ArHandPhase { Idle, Begin, Update, End, Cancel }
 data class ArHandAction(
@@ -16,7 +23,8 @@ data class ArHandAction(
 )
 
 /** Screen-normalized hand gestures, independent of the camera/ML provider and mathematical scene. */
-class ArHandGestureController {
+class ArHandGestureController(private val smoothing: Float = 1f, private val deadZone: Float = 0f) {
+    private var filteredCenters = emptyList<ArVector2>()
     private var lastTimestamp = -1L
     private var armedSince: Long? = null
     private var activeIds = emptyList<String>()
@@ -28,6 +36,7 @@ class ArHandGestureController {
 
     fun reset(cancel: Boolean = true): ArHandAction {
         val hadGesture = activeIds.isNotEmpty()
+        filteredCenters = emptyList()
         activeIds = emptyList(); pinchedIds = emptySet(); baseline = emptyList()
         pendingIds = emptyList(); armedSince = null; activeTool = null; lastTimestamp = -1L
         return ArHandAction(if (hadGesture) if (cancel) ArHandPhase.Cancel else ArHandPhase.End else ArHandPhase.Idle)
@@ -47,7 +56,7 @@ class ArHandGestureController {
             if (stopped.phase == ArHandPhase.Cancel) return stopped
         }
         lastTimestamp = frame.timestampMillis
-        val valid = frame.hands.filter { it.landmarks.size == 21 }
+        val valid = frame.hands.filter { it.landmarks.size == 21 && it.confidence >= .65f && it.landmarks.all { p -> p.x.isFinite() && p.y.isFinite() } }
             .groupBy { it.id }.values.filter { it.size == 1 }.map { it.single() }
             .sortedBy { it.id }.take(2)
         val pinches = valid.filter { hand ->
@@ -58,7 +67,12 @@ class ArHandGestureController {
         }
         pinchedIds = pinches.map { it.id }.toSet()
         val ids = pinches.map { it.id }
-        val centers = pinches.map { midpoint(it.landmarks[4], it.landmarks[8]) }
+        val rawCenters = pinches.map { midpoint(it.landmarks[4], it.landmarks[8]) }
+        val centers = if (ids == activeIds && filteredCenters.size == rawCenters.size) rawCenters.mapIndexed { i, p ->
+            val old = filteredCenters[i]; val alpha = smoothing.coerceIn(.05f, 1f)
+            ArVector2(old.x + alpha * (p.x-old.x), old.y + alpha * (p.y-old.y))
+        } else rawCenters
+        filteredCenters = centers
         val cursor = centers.firstOrNull() ?: valid.firstOrNull()?.landmarks?.get(8)
         if (activeIds.isNotEmpty() && (ids != activeIds || activeTool != tool)) {
             activeIds = emptyList(); baseline = emptyList(); armedSince = null; pendingIds = emptyList()
@@ -76,8 +90,8 @@ class ArHandGestureController {
             return ArHandAction(ArHandPhase.Begin, cursor)
         }
         val start = average(baseline); val now = average(centers)
-        val dx = (now.x - start.x).coerceIn(-.5f, .5f)
-        val dy = (now.y - start.y).coerceIn(-.5f, .5f)
+        val dx = (now.x - start.x).coerceIn(-.5f, .5f).let { if (abs(it) < deadZone) 0f else it }
+        val dy = (now.y - start.y).coerceIn(-.5f, .5f).let { if (abs(it) < deadZone) 0f else it }
         val rotation = if (centers.size == 2) {
             val a = angle(centers); val b = angle(baseline)
             ((a - b + 540f) % 360f - 180f)

@@ -103,6 +103,15 @@ class DurableMathStore(context: Context) {
         )
     }
 
+    suspend fun loadMathKeyboardFavorites(): List<String>? =
+        applicationContext.mathSettingsDataStore.data.first()[keyboardFavorites]?.let { value ->
+            if (value.isEmpty()) emptyList() else value.split('\n')
+        }
+
+    suspend fun saveMathKeyboardFavorites(ids: List<String>) {
+        applicationContext.mathSettingsDataStore.edit { it[keyboardFavorites] = ids.joinToString("\n") }
+    }
+
     private fun WorkspaceState.values(slot: Boolean = false) = ContentValues().apply {
         if (slot) put("slot", 1)
         put("id", id); put("name", name); put("module", module.name)
@@ -125,6 +134,7 @@ class DurableMathStore(context: Context) {
     }
 
     private companion object {
+        val keyboardFavorites = stringPreferencesKey("math_keyboard_favorites_v1")
         val columns = arrayOf("id", "name", "module", "archive", "updated_at")
         val haptics = booleanPreferencesKey("haptics")
         val snap = booleanPreferencesKey("snap")

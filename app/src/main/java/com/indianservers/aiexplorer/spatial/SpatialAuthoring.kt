@@ -45,7 +45,7 @@ class TypedSurfaceMesher(private val expressions: ExpressionEngine = ExpressionE
     fun mesh(definition: SurfaceDefinition3D, density: Int = 32): SurfaceGenerationResult {
         require(density in 4..64)
         return when (definition) {
-            is SurfaceDefinition3D.Explicit -> regular(definition.domain, density) { a, b -> Vec3(a, b, expressions.compile(strip(definition.z)).eval(mapOf("x" to a, "y" to b))) }
+            is SurfaceDefinition3D.Explicit -> { val expression=expressions.compile(strip(definition.z)); regular(definition.domain,density) { a,b -> Vec3(a,b,expression.eval(mapOf("x" to a,"y" to b))) } }
             is SurfaceDefinition3D.Parametric -> {
                 require(definition.firstParameter != definition.secondParameter)
                 val x = expressions.compile(strip(definition.x)); val y = expressions.compile(strip(definition.y)); val z = expressions.compile(strip(definition.z))
@@ -206,8 +206,10 @@ object SpatialMeshEditor {
         val mapping = selectedVertices.associateWith { mesh.vertices.size + selectedVertices.sorted().indexOf(it) }; val addedVertices = selectedVertices.sorted().map { mesh.vertices[it] + direction * distance }
         val resultTriangles = mesh.triangles.chunked(3).filterIndexed { index, _ -> index !in faceIndices }.flatten().toMutableList(); val createdFaces = linkedSetOf<Int>()
         selectedTriangles.forEach { triangle -> createdFaces += resultTriangles.size / 3; resultTriangles += triangle.map { mapping.getValue(it) } }
-        val counts = linkedMapOf<Pair<Int, Int>, Int>(); selectedTriangles.forEach { triangle -> listOf(triangle[0] to triangle[1], triangle[1] to triangle[2], triangle[2] to triangle[0]).forEach { edge -> val key = if (edge.first < edge.second) edge else edge.second to edge.first; counts[key] = counts.getOrDefault(key, 0) + 1 } }
-        counts.filterValues { it == 1 }.keys.forEach { (a, b) ->
+        val directed = linkedMapOf<Pair<Int,Int>,Pair<Int,Int>>()
+        val counts = linkedMapOf<Pair<Int, Int>, Int>(); selectedTriangles.forEach { triangle -> listOf(triangle[0] to triangle[1], triangle[1] to triangle[2], triangle[2] to triangle[0]).forEach { edge -> val key = if (edge.first < edge.second) edge else edge.second to edge.first; counts[key] = counts.getOrDefault(key, 0) + 1; directed.putIfAbsent(key,edge) } }
+        counts.filterValues { it == 1 }.keys.forEach { key ->
+            val (a,b)=directed.getValue(key)
             val aa = mapping.getValue(a); val bb = mapping.getValue(b); createdFaces += resultTriangles.size / 3; resultTriangles += listOf(a, b, bb, a, bb, aa)
         }
         val created = mapping.values.toSet(); val result = enforce(EditableSpatialMesh(mesh.vertices + addedVertices, resultTriangles, mesh.constraints))

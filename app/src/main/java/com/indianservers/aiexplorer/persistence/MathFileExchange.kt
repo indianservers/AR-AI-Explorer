@@ -50,12 +50,36 @@ object MathFileExchange {
             require(view.width > 0 && view.height > 0) { "Workspace is not ready to capture." }
             Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
         }
-        val file = withContext(Dispatchers.IO) {
+        val file = try { withContext(Dispatchers.IO) {
             shareDirectory(activity).resolve(safeName(state.name) + ".png").apply {
                 outputStream().use { stream -> check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)) }
-            }.also { bitmap.recycle() }
-        }
+            }
+        } } finally { bitmap.recycle() }
         share(activity, file, "image/png", "Share workspace image")
+    }
+
+    /** Copies the actual GL surface; View.draw cannot capture the AR camera surface. */
+    suspend fun shareArImage(activity:Activity,view:android.view.SurfaceView) {
+        require(view.width>0 && view.height>0) { "AR scene is not ready" }
+        val bitmap=Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888)
+        try {
+            withContext(kotlinx.coroutines.NonCancellable) {
+                kotlin.coroutines.suspendCoroutine<Unit> { continuation ->
+                    android.view.PixelCopy.request(view,bitmap,{ result ->
+                        if(result==android.view.PixelCopy.SUCCESS) continuation.resumeWith(Result.success(Unit))
+                        else continuation.resumeWith(Result.failure(IllegalStateException("AR image capture failed ($result)")))
+                    },android.os.Handler(android.os.Looper.getMainLooper()))
+                }
+            }
+            val file=withContext(Dispatchers.IO) {
+                shareDirectory(activity).resolve("ar-space.png").apply { outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG,100,it)) } }
+            }
+            share(activity,file,"image/png","Share AR scene image")
+        } finally { bitmap.recycle() }
+    }
+    suspend fun shareArReport(activity:Activity,report:String) {
+        val file=withContext(Dispatchers.IO) { shareDirectory(activity).resolve("ar-space-report.txt").apply { writeText(report) } }
+        share(activity,file,"text/plain","Share equations and measurements")
     }
 
     suspend fun readGeoGebra(activity: Activity, uri: Uri, base: WorkspaceState): GeoGebraImport = withContext(Dispatchers.IO) {

@@ -21,8 +21,8 @@ android {
         applicationId = "com.indianservers.aiexplorer"
         minSdk = 31
         targetSdk = 36
-        versionCode = 17
-        versionName = "1.1.7"
+        versionCode = 18
+        versionName = "1.1.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,6 +62,9 @@ tasks.matching { it.name == "mergeDebugAndroidTestAssets" }.configureEach {
 }
 
 dependencies {
+    implementation("androidx.camera:camera-camera2:1.6.1")
+    implementation("androidx.camera:camera-lifecycle:1.6.1")
+    implementation("androidx.camera:camera-view:1.6.1")
     implementation(project(":arengine"))
     implementation(project(":ar3dgraph"))
     implementation(libs.androidx.core.ktx)

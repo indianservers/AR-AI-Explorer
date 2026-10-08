@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.gamifymaths.GeneratedMathRoundsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-06T10:07:01.326Z" hostname="INDIANSERVERS" time="12.382">
+  <properties/>
+  <testcase name="constructionRejectsInventedTilesAndWrongPieceCounts" classname="com.indianservers.aiexplorer.gamifymaths.GeneratedMathRoundsTest" time="0.001"/>
+  <testcase name="generatedAnswersFollowIndependentMathematicalChecks" classname="com.indianservers.aiexplorer.gamifymaths.GeneratedMathRoundsTest" time="0.264"/>
+  <testcase name="everyLiveWorldGeneratesValidFreshReproducibleChallengesAtEveryLevel" classname="com.indianservers.aiexplorer.gamifymaths.GeneratedMathRoundsTest" time="12.077"/>
+  <testcase name="exhaustedSprintPoolAddsRealArithmeticAndUpdatesTheAnswer" classname="com.indianservers.aiexplorer.gamifymaths.GeneratedMathRoundsTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

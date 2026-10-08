@@ -522,6 +522,17 @@ data class FunctionDefinition(
     val expression: String,
     val colorKey: String,
     val visible: Boolean = true,
+    val appearance: GraphAppearance = GraphAppearance(),
+)
+
+enum class GraphFill { None, Solid, Gradient, Pattern, Image }
+data class GraphAppearance(
+    val fill: GraphFill = GraphFill.None,
+    val secondaryColor: String = "violet",
+    val width: Float = 4.2f,
+    val opacity: Float = 1f,
+    val line: GraphLineStyle = GraphLineStyle.Solid,
+    val imageUri: String = "",
 )
 
 data class CurveSample(val points: List<Vec2>, val breaks: Set<Int>)

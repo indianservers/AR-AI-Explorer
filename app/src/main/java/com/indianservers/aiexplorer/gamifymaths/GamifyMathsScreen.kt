@@ -1,6 +1,12 @@
 package com.indianservers.aiexplorer.gamifymaths
 
-import com.indianservers.aiexplorer.gamifymaths.probability.ProbabilityStatisticsArcadeGame
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import com.indianservers.aiexplorer.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -65,14 +71,6 @@ private val Coral = Color(0xFFFF668F)
 
 private enum class GameDestination { Home, Worlds, Progress, Profile }
 
-internal data class GameMission(
-    val title: String,
-    val prompt: String,
-    val tokens: List<String>,
-    val answer: String,
-    val explanation: String,
-)
-
 internal enum class GameDifficulty(val label: String) {
     Beginner("BEGINNER"),
     Intermediate("INTERMEDIATE"),
@@ -88,163 +86,82 @@ internal data class MathsGame(
     val accent: Color,
     val subtopics: List<String>,
     val mechanic: String,
-    val missions: List<GameMission>,
     val difficulty: GameDifficulty? = null,
 )
 
 private val MathsGame.levelCount: Int
-    get() = when (id) {
-        "forge", "kitchen", "fractions" -> 6
-        "balance" -> 72
-        "shapes", "potions" -> 18
-        "measure" -> 21
-        "chance", "data" -> 45
-        else -> missions.size
-    }
+    get() = if (id.startsWith("speed-")) 1 else GeneratedLevelCount
 
 private val CoreGames = listOf(
     MathsGame(
-        "speed-basic", "Speed Calculation", "Rapid Arithmetic", "30s", Cyan,
+        "speed-basic", "Calculation Sprint", "Rapid Arithmetic", "30s", Cyan,
         listOf("Addition", "Subtraction", "Multiplication", "Division", "Percentages", "1–3 digit numbers"),
         "Configure a timer and solve as many arithmetic problems as possible.",
-        listOf(
-            GameMission("Rapid arithmetic", "Solve as many calculations as possible before time runs out.", listOf("30 sec", "45 sec", "1–5 min"), "Start", "Build speed and accuracy with a configurable sprint."),
-        ),
     ),
     MathsGame(
-        "speed-advanced", "Advanced Speed", "Algebra & Trigonometry", "ƒx", Violet,
+        "speed-advanced", "Advanced Calculation Sprint", "Algebra & Trigonometry", "ƒx", Violet,
         listOf("Advanced calculation", "Trigonometry", "Algebra", "Order of operations", "Exact values"),
         "Configure advanced topics and race against the clock.",
-        listOf(
-            GameMission("Advanced sprint", "Mix algebra, trigonometry and advanced mental calculations.", listOf("Algebra", "Trigonometry", "Mixed"), "Start", "Choose your topics and solve accurately under time pressure."),
-        ),
     ),
     MathsGame(
         "forge", "Number Forge", "Prime Codes", "123", Violet,
         listOf("Place value", "Integers", "Factors", "Multiples", "Primes", "Divisibility", "Powers", "Roots"),
         "Drag number cores into the forge to construct the requested value.",
-        listOf(
-            GameMission("Prime ignition", "Drag the only prime number into the reactor.", listOf("21", "29", "39", "51"), "29", "29 has exactly two positive factors: 1 and 29."),
-            GameMission("Factor shield", "Which value is a factor of 84?", listOf("5", "7", "11", "13"), "7", "84 = 7 x 12, so 7 divides 84 exactly."),
-            GameMission("Power cell", "Select the value of 3 squared.", listOf("6", "8", "9", "12"), "9", "3 squared means 3 x 3, which equals 9."),
-        ),
     ),
     MathsGame(
         "kitchen", "Maths Kitchen", "Operation Recipes", "MIX", Amber,
         listOf("Addition", "Subtraction", "Multiplication", "Division", "Order of operations", "Estimation", "Rounding", "Units"),
         "Drag the correct quantity into the recipe chamber.",
-        listOf(
-            GameMission("Orbital recipe", "A batch needs 6 portions of 4 units. How many units?", listOf("10", "20", "24", "28"), "24", "Six groups of four make 6 x 4 = 24."),
-            GameMission("Smart estimate", "Best estimate for 198 + 304?", listOf("400", "500", "600", "700"), "500", "198 is about 200 and 304 is about 300; together they are about 500."),
-        ),
     ),
     MathsGame(
-        "fractions", "Fraction Factory", "Equivalent Parts", "1/2", Cyan,
+        "fractions", "Fraction Quest", "Equivalent Parts", "1/2", Cyan,
         listOf("Equivalent fractions", "Comparison", "Mixed numbers", "Operations", "Decimals", "Percentages", "Conversions"),
         "Drag the matching fraction segment into the assembly ring.",
-        listOf(
-            GameMission("Equivalent module", "Which fraction is equivalent to 3/4?", listOf("4/6", "6/8", "8/10", "9/16"), "6/8", "Multiplying both numerator and denominator of 3/4 by 2 preserves its value and gives 6/8."),
-            GameMission("Decimal port", "Which decimal is equal to 1/5?", listOf("0.1", "0.2", "0.25", "0.5"), "0.2", "Dividing one whole into five equal parts gives 1÷5=0.2, so each part is two tenths."),
-        ),
     ),
     MathsGame(
         "potions", "Potion Lab", "Proportions", "2:3", Coral,
         listOf("Ratios", "Unit rates", "Direct proportion", "Inverse proportion", "Percentages", "Scale", "Mixtures", "Speed"),
         "Drag the correctly mixed vial into the analyser.",
-        listOf(
-            GameMission("Neon mixture", "Blue:red = 2:3. If blue is 6 ml, how much red?", listOf("4 ml", "6 ml", "9 ml", "12 ml"), "9 ml", "The scale factor is 3, so red is 3 x 3 = 9 ml."),
-            GameMission("Unit rate", "A rover travels 24 km in 3 h. Select its unit rate.", listOf("6 km/h", "8 km/h", "12 km/h", "21 km/h"), "8 km/h", "24 divided by 3 is 8 kilometres per hour."),
-        ),
     ),
     MathsGame(
-        "balance", "Balance Vault", "Solve Equations", "x", Color(0xFF5EA4FF),
+        "balance", "Equation Escape", "Solve Equations", "x", Color(0xFF5EA4FF),
         listOf("Variables", "Expressions", "Equations", "Inequalities", "Identities", "Substitution", "Simultaneous equations"),
         "Drag the value that keeps both sides of the quantum balance equal.",
-        listOf(
-            GameMission("Vault equation", "Balance x + 5 = 12. What is x?", listOf("5", "6", "7", "17"), "7", "Subtract 5 from both sides: x = 12 - 5 = 7."),
-            GameMission("Double lock", "Balance 2x = 18. What is x?", listOf("7", "8", "9", "16"), "9", "Divide both sides into two equal groups: x=9, and checking gives 2×9=18."),
-        ),
     ),
     MathsGame(
-        "shapes", "Shape Architect", "Angles & Symmetry", "△", Green,
+        "shapes", "Geometry Builder", "Angles & Symmetry", "△", Green,
         listOf("Angles", "Triangles", "Polygons", "Circles", "Symmetry", "Congruence", "Similarity", "Transformations"),
         "Drag the correct geometric component into the holographic blueprint.",
-        listOf(
-            GameMission("Triangle core", "Two angles are 55 and 65 degrees. Select the third.", listOf("50°", "60°", "70°", "80°"), "60°", "Angles in a triangle total 180 degrees; 180 - 55 - 65 = 60."),
-            GameMission("Symmetry scan", "How many lines of symmetry does a square have?", listOf("2", "3", "4", "8"), "4", "A square has two diagonal and two midpoint symmetry lines."),
-        ),
     ),
     MathsGame(
         "measure", "Rescue Engineer", "Measurement Missions", "m²", Color(0xFFFF8C5A),
         listOf("Length", "Mass", "Time", "Perimeter", "Area", "Surface area", "Volume", "Unit conversion"),
         "Drag the correct measurement module into the construction scanner.",
-        listOf(
-            GameMission("Habitat floor", "A floor is 8 m by 5 m. Select its area.", listOf("13 m²", "26 m²", "40 m²", "80 m²"), "40 m²", "Area of a rectangle is length x width: 8 x 5 = 40 square metres."),
-            GameMission("Unit gate", "Convert 2.5 metres to centimetres.", listOf("25 cm", "250 cm", "2,500 cm", "0.25 cm"), "250 cm", "One metre is 100 centimetres, so 2.5 x 100 = 250."),
-        ),
     ),
     MathsGame(
         "vectors", "Vector Voyager", "Coordinate Routes", "(x,y)", Color(0xFF4FD1C5),
         listOf("Coordinates", "Quadrants", "Slope", "Distance", "Midpoint", "Linear graphs", "Functions", "Transformations"),
         "Drag the correct navigation coordinate into the flight computer.",
-        listOf(
-            GameMission("Quadrant jump", "Which point lies in Quadrant II?", listOf("(3,4)", "(-3,4)", "(-3,-4)", "(3,-4)"), "(-3,4)", "In Quadrant II, x is negative and y is positive."),
-            GameMission("Slope drive", "Slope from (0,0) to (3,6)?", listOf("1/2", "2", "3", "6"), "2", "Slope is vertical change divided by horizontal change: rise/run=6/3=2."),
-            GameMission("Distance beacon", "Find the distance from (1,2) to (4,6).", listOf("4", "5", "6", "7"), "5", "The horizontal and vertical changes are 3 and 4. Pythagoras gives √(3²+4²)=5."),
-            GameMission("Midpoint dock", "Find the midpoint of (−2,4) and (6,8).", listOf("(2,6)", "(4,6)", "(2,4)", "(8,12)"), "(2,6)", "Average corresponding coordinates: ((−2+6)/2,(4+8)/2)=(2,6)."),
-            GameMission("Line signal", "Which equation has slope 3 and y-intercept −2?", listOf("y=3x−2", "y=−2x+3", "y=3x+2", "y=2x−3"), "y=3x−2", "In y=mx+c, m is the slope and c is the y-intercept."),
-            GameMission("Function scanner", "For f(x)=2x²−1, find f(3).", listOf("11", "15", "17", "35"), "17", "Substitute x=3 carefully: square first, then multiply, so 2(3²)−1=18−1=17."),
-            GameMission("Translation route", "Translate (−1,3) by vector (4,−2).", listOf("(3,1)", "(−5,5)", "(3,5)", "(−3,1)"), "(3,1)", "Add vector components to the point: (−1+4,3−2)=(3,1)."),
-            GameMission("Perpendicular course", "A line has slope 2/3. What is a perpendicular slope?", listOf("−3/2", "3/2", "−2/3", "2/3"), "−3/2", "Perpendicular non-vertical slopes are negative reciprocals, so their product is −1."),
-        ),
     ),
     MathsGame(
-        "patterns", "Pattern Core", "Sequence Signals", "∞", Color(0xFFB98CFF),
+        "patterns", "Pattern Detective", "Sequence Signals", "∞", Color(0xFFB98CFF),
         listOf("Visual patterns", "Arithmetic sequences", "Geometric sequences", "Recursive rules", "Function machines"),
         "Drag the missing signal into the sequence core.",
-        listOf(
-            GameMission("Signal sequence", "Complete 4, 7, 10, 13, ...", listOf("14", "15", "16", "17"), "16", "The sequence increases by 3 each time, so 13 + 3 = 16."),
-            GameMission("Growth pulse", "Complete 3, 6, 12, 24, ...", listOf("30", "36", "48", "72"), "48", "Each term is twice the previous term, so the same rule gives 24×2=48."),
-            GameMission("Difference decoder", "Find the nth term of 5, 8, 11, 14, ...", listOf("3n+2", "3n+5", "5n−2", "n+4"), "3n+2", "The common difference is 3, so start with 3n. At n=1, add 2 to obtain 5."),
-            GameMission("Term locator", "For aₙ=4n−1, what is the 10th term?", listOf("35", "39", "40", "41"), "39", "The term number is n, so substitute n=10: a₁₀=4(10)−1=39."),
-            GameMission("Recursive relay", "Given a₁=2 and aₙ=aₙ₋₁+5, find a₄.", listOf("12", "15", "17", "22"), "17", "Build consecutive terms: 2, 7, 12, 17."),
-            GameMission("Geometric formula", "Find the nth term of 2, 6, 18, 54, ...", listOf("2·3ⁿ⁻¹", "2+3n", "3·2ⁿ⁻¹", "6·3ⁿ"), "2·3ⁿ⁻¹", "The first term is 2 and every transition multiplies by 3, repeated n−1 times."),
-            GameMission("Triangular pattern", "The pattern has 1, 3, 6, 10 dots. How many dots are in figure 5?", listOf("12", "14", "15", "16"), "15", "Successive layers add 2,3,4, then 5 dots: 10+5=15."),
-            GameMission("Sequence proof", "Which check proves 3n+1 generates 4,7,10,...?", listOf("Substitute n=1,2,3", "Check only n=1", "Add all terms", "Divide terms by 3"), "Substitute n=1,2,3", "Testing consecutive term numbers gives 4,7,10 and verifies both the start and common difference."),
-        ),
     ),
     MathsGame(
         "data", "Data Detective", "Evidence Charts", "BAR", Color(0xFF67B7FF),
         listOf("Tables", "Charts", "Mean", "Median", "Mode", "Range", "Outliers", "Misleading graphs"),
         "Drag the valid evidence card into the investigation console.",
-        listOf(
-            GameMission("Central clue", "Find the mean of 4, 6, 8, 10.", listOf("6", "7", "8", "9"), "7", "The total is 28; dividing by 4 values gives a mean of 7."),
-            GameMission("Range scan", "Find the range of 3, 11, 7, 5.", listOf("6", "7", "8", "11"), "8", "Range = maximum - minimum = 11 - 3 = 8."),
-        ),
     ),
     MathsGame(
         "chance", "Chance Reactor", "Probability Fields", "P", Color(0xFFFFD05A),
         listOf("Sample spaces", "Experimental probability", "Compound events", "Expected value", "Dependent events", "Fairness"),
         "Drag the correct probability crystal into the chance reactor.",
-        listOf(
-            GameMission("Dice field", "Probability of rolling an even number on a fair six-sided die?", listOf("1/6", "1/3", "1/2", "2/3"), "1/2", "Three of six outcomes are even: 2, 4 and 6. So 3/6 = 1/2."),
-            GameMission("Coin gate", "Probability of two heads from two fair coin flips?", listOf("1/2", "1/3", "1/4", "3/4"), "1/4", "The equally likely outcomes are HH, HT, TH and TT; only HH works."),
-        ),
     ),
     MathsGame(
         "logic", "Logic Grid", "Deduction Paths", "IQ", Color(0xFFFF719A),
         listOf("Deduction", "Classification", "Permutations", "Combinations", "Counting paths", "Spatial reasoning", "Optimisation"),
         "Drag the only logically valid command into the escape grid.",
-        listOf(
-            GameMission("Code deduction", "All Zips are Lums. No Lums are Tars. Can a Zip be a Tar?", listOf("Always", "Sometimes", "Never", "Unknown"), "Never", "Every Zip is a Lum, and no Lum can be a Tar; therefore no Zip can be a Tar."),
-            GameMission("Route count", "Two shirts and three trousers make how many outfits?", listOf("5", "6", "8", "9"), "6", "For each of 2 shirts there are 3 choices: 2 x 3 = 6."),
-            GameMission("Truth gate", "If p is true and q is false, what is p AND q?", listOf("True", "False", "Both", "Undefined"), "False", "A conjunction is true only when both statements are true."),
-            GameMission("Implication lock", "When is p → q false?", listOf("p true, q false", "p false, q true", "Both true", "Both false"), "p true, q false", "An implication fails only when its promise starts true but its conclusion is false."),
-            GameMission("Permutation bay", "How many orders can three different robots stand in?", listOf("3", "6", "8", "9"), "6", "There are 3 choices, then 2, then 1: 3!=3×2×1=6."),
-            GameMission("Combination vault", "How many pairs can be chosen from four students?", listOf("4", "6", "8", "12"), "6", "There are 4×3 ordered selections, but each pair is counted twice: 12/2=6."),
-            GameMission("Shortest path", "A grid route needs 2 right moves and 1 up move. How many shortest routes?", listOf("2", "3", "4", "6"), "3", "Arrange R,R,U. The distinct orders are RRU, RUR and URR."),
-            GameMission("Counterexample scan", "Which disproves: 'Every even number is divisible by 4'?", listOf("2", "4", "8", "12"), "2", "Two is even but not divisible by four, so one counterexample disproves the universal claim."),
-        ),
     ),
 )
 
@@ -256,6 +173,7 @@ private fun coreDifficulty(gameId: String): GameDifficulty? = when (gameId) {
 }
 
 private val Games = CoreGames.map { it.copy(difficulty = coreDifficulty(it.id)) } + expandedMathsGames()
+internal fun gamifyGamesForAudit(): List<MathsGame> = Games
 
 private val DisplayGames: List<MathsGame>
     get() {
@@ -263,15 +181,6 @@ private val DisplayGames: List<MathsGame>
             expandedMathsGameIds
         return Games.sortedBy { order.indexOf(it.id).let { index -> if (index < 0) Int.MAX_VALUE else index } }
     }
-
-internal data class GameMissionAudit(
-    val gameId: String,
-    val title: String,
-    val prompt: String,
-    val choices: List<String>,
-    val answer: String,
-    val explanation: String,
-)
 
 internal data class GameCatalogueAudit(
     val id: String,
@@ -281,11 +190,13 @@ internal data class GameCatalogueAudit(
 )
 
 internal fun gamifyCatalogueAudit(): List<GameCatalogueAudit> =
-    Games.map { GameCatalogueAudit(it.id, it.title, it.difficulty, it.missions.size) }
+    Games.map { GameCatalogueAudit(it.id, it.title, it.difficulty, it.levelCount) }
 
-internal fun gamifyMissionAudit(): List<GameMissionAudit> = Games.filterNot { it.id.startsWith("speed-") }.flatMap { game ->
-    game.missions.map { mission ->
-        GameMissionAudit(game.id, mission.title, mission.prompt, mission.tokens, mission.answer, mission.explanation)
+internal data class GameWorkshopAudit(val gameId:String,val level:Int,val kind:WorkshopKind,val prompt:String,val mastery:Int)
+internal fun gamifyWorkshopAudit():List<GameWorkshopAudit> = Games.filterNot{it.id.startsWith("speed-")}.flatMap{game->
+    (0 until GeneratedLevelCount).map{level->
+        val round=generateWorkshopChallenge(game.id,level,0,level.toLong())
+        GameWorkshopAudit(game.id,level+1,round.kind,round.prompt,round.mastery)
     }
 }
 
@@ -293,7 +204,15 @@ internal fun gamifyMissionAudit(): List<GameMissionAudit> = Games.filterNot { it
 fun GamifyMathsRoot(onExit: () -> Unit) {
     var destinationName by rememberSaveable { mutableStateOf(GameDestination.Home.name) }
     var selectedGameId by rememberSaveable { mutableStateOf<String?>(null) }
-    val completed = remember { mutableStateMapOf<String, Int>() }
+    val context = LocalContext.current
+    val preferences = remember { context.getSharedPreferences("maths_games", 0) }
+    val completed = remember { mutableStateMapOf<String, Int>().apply {
+        Games.forEach { put(it.id, preferences.getInt("progress_${it.id}", 0)) }
+    } }
+    val bestScores = remember { mutableStateMapOf<String, Int>().apply {
+        Games.forEach { put(it.id, preferences.getInt("best_${it.id}", completed[it.id] ?: 0)) }
+    } }
+    var compactPlay by remember { mutableStateOf(preferences.getBoolean("compact_play", true)) }
     val destination = GameDestination.valueOf(destinationName)
     val selectedGame = Games.firstOrNull { it.id == selectedGameId }
 
@@ -311,36 +230,35 @@ fun GamifyMathsRoot(onExit: () -> Unit) {
     ) {
         StarField()
         if (selectedGame != null) {
-            val linkedProgressKeys = if (selectedGame.id in setOf("chance", "data")) listOf("chance", "data") else listOf(selectedGame.id)
+            val previousBest = remember(selectedGame.id) { bestScores[selectedGame.id] ?: 0 }
+            val linkedProgressKeys = listOf(selectedGame.id)
             val currentCompleted = linkedProgressKeys.maxOf { completed[it] ?: 0 }
             val recordComplete: (Int) -> Unit = { value ->
-                linkedProgressKeys.forEach { key -> completed[key] = maxOf(completed[key] ?: 0, value) }
+                linkedProgressKeys.forEach { key ->
+                    bestScores[key] = maxOf(bestScores[key] ?: 0, value)
+                    completed[key] = maxOf(completed[key] ?: 0, if (key.startsWith("speed-")) minOf(value, 1) else value)
+                    preferences.edit().putInt("progress_$key", completed[key] ?: 0)
+                        .putInt("best_$key", bestScores[key] ?: 0).apply()
+                }
             }
+            CompositionLocalProvider(LocalCompactPlayPreference provides compactPlay,
+                LocalCompactGameLayout provides compactPlay,
+                LocalPreviousGameBest provides previousBest) {
             when (selectedGame.id) {
                 "speed-basic" -> SpeedCalculationGame(SpeedCalculationMode.Basic, { selectedGameId = null }, recordComplete)
                 "speed-advanced" -> SpeedCalculationGame(SpeedCalculationMode.Advanced, { selectedGameId = null }, recordComplete)
-                "forge" -> NumberForgeGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "kitchen" -> MathsKitchenGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "fractions" -> FractionFactoryGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "potions" -> PotionLabGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "balance" -> AlgebraAdventureGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "shapes" -> ShapeArchitectGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "measure" -> RescueEngineerGame(currentCompleted, { selectedGameId = null }, recordComplete)
-                "chance" -> ProbabilityStatisticsArcadeGame(currentCompleted, 0, { selectedGameId = null }, recordComplete)
-                "data" -> ProbabilityStatisticsArcadeGame(currentCompleted, 11, { selectedGameId = null }, recordComplete)
-                else -> GameMissionScreen(
-                    game = selectedGame,
-                    completedMissions = currentCompleted,
-                    onBack = { selectedGameId = null },
-                    onComplete = recordComplete,
-                )
+                else -> GeneratedMathGameScreen(selectedGame, currentCompleted, { selectedGameId = null }, recordComplete)
+            }
             }
         } else {
             when (destination) {
-                GameDestination.Home -> GameHome(completed, onExit) { selectedGameId = it.id }
-                GameDestination.Worlds -> WorldsScreen(completed) { selectedGameId = it.id }
+                GameDestination.Home -> GameHome(completed, bestScores, onExit, { destinationName = GameDestination.Profile.name }) { selectedGameId = it.id }
+                GameDestination.Worlds -> WorldsScreen(bestScores) { selectedGameId = it.id }
                 GameDestination.Progress -> ProgressScreen(completed)
-                GameDestination.Profile -> PlayerProfileScreen(completed)
+                GameDestination.Profile -> PlayerProfileScreen(bestScores, compactPlay) { value ->
+                    compactPlay = value
+                    preferences.edit().putBoolean("compact_play", value).apply()
+                }
             }
             BottomNavigation(
                 selected = destination,
@@ -365,7 +283,7 @@ private fun StarField() {
 }
 
 @Composable
-private fun GameHome(completed: Map<String, Int>, onExit: () -> Unit, onOpenGame: (MathsGame) -> Unit) {
+private fun GameHome(completed: Map<String, Int>, bestScores: Map<String, Int>, onExit: () -> Unit, onSettings: () -> Unit, onOpenGame: (MathsGame) -> Unit) {
     val continueGame = DisplayGames.firstOrNull { (completed[it.id] ?: 0) < it.levelCount } ?: DisplayGames.first()
     Column(
         Modifier
@@ -379,16 +297,17 @@ private fun GameHome(completed: Map<String, Int>, onExit: () -> Unit, onOpenGame
                 Text("GamifyMaths", color = Ink, fontSize = 30.sp, fontWeight = FontWeight.Black)
                 Text("PLAY  •  THINK  •  MASTER", color = Cyan, fontSize = 10.sp, letterSpacing = 2.sp, fontWeight = FontWeight.Bold)
             }
-            GlossyPill("EXIT", Violet, onExit)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                RoundGameButton("⚙", Cyan, "Game settings", onSettings)
+                GlossyPill("EXIT", Violet, onExit)
+            }
         }
         JourneyCard(completed.values.sum(), onClick = { onOpenGame(continueGame) })
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("Choose Your Mission", color = Ink, fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
+            Text("Choose Your Mission", color = Ink, fontSize = 17.sp, fontWeight = FontWeight.ExtraBold)
             Text("${Games.size} GAMES", color = Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
         }
-        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            DisplayGames.forEach { game -> GameCard(game, completed[game.id] ?: 0, Modifier.weight(1f), onOpenGame) }
-        }
+        GameCardGrid(bestScores, onOpenGame)
     }
 }
 
@@ -446,11 +365,24 @@ private fun DifficultyTag(difficulty: GameDifficulty, compact: Boolean = false) 
 }
 
 @Composable
+private fun GameCardGrid(completed: Map<String, Int>, onOpenGame: (MathsGame) -> Unit) {
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val cardWidth = (maxWidth - 12.dp) / 2
+        FlowRow(Modifier.fillMaxWidth(), maxItemsInEachRow = 2,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            DisplayGames.forEach { game ->
+                GameCard(game, completed[game.id] ?: 0, Modifier.width(cardWidth), onOpenGame)
+            }
+        }
+    }
+}
+
+@Composable
 private fun GameCard(game: MathsGame, completed: Int, modifier: Modifier = Modifier, onClick: (MathsGame) -> Unit) {
     Column(
         modifier
-            .width(164.dp)
-            .heightIn(min = 178.dp)
+            .aspectRatio(1f)
             .shadow(14.dp, RoundedCornerShape(22.dp), ambientColor = game.accent.copy(.35f), spotColor = game.accent.copy(.35f))
             .clip(RoundedCornerShape(22.dp))
             .background(Brush.linearGradient(listOf(game.accent.copy(.28f), Panel, Color(0xF20A0C22))))
@@ -462,20 +394,18 @@ private fun GameCard(game: MathsGame, completed: Int, modifier: Modifier = Modif
                     game.difficulty?.let { append(", ${it.label.lowercase()} difficulty") }
                 }
             }
-            .padding(13.dp),
-        verticalArrangement = Arrangement.spacedBy(7.dp),
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Box(
-            Modifier.size(56.dp).clip(RoundedCornerShape(18.dp)).background(game.accent.copy(.18f)).border(1.dp, game.accent.copy(.55f), RoundedCornerShape(18.dp)),
+            Modifier.size(42.dp).clip(RoundedCornerShape(18.dp)).background(game.accent.copy(.18f)).border(1.dp, game.accent.copy(.55f), RoundedCornerShape(18.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            Text(game.icon, color = game.accent, fontSize = 20.sp, fontWeight = FontWeight.Black)
+            Image(painterResource(gameCardArtwork(game.id)), contentDescription = null, modifier = Modifier.size(40.dp))
         }
-        Text(game.title, color = Ink, fontSize = 15.sp, fontWeight = FontWeight.ExtraBold, maxLines = 2)
-        game.difficulty?.let { DifficultyTag(it, compact = true) }
-        Text(game.currentTopic, color = game.accent, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+        Text(game.title, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.ExtraBold, maxLines = 2)
         Spacer(Modifier.weight(1f))
-        Text("${completed}/${game.levelCount} MISSIONS", color = Muted, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        Text(if (game.id.startsWith("speed-")) "BEST $completed SOLVED" else "BEST $completed/${game.levelCount} MISSIONS", color = Muted, fontSize = 9.sp, fontWeight = FontWeight.Bold)
         LinearProgressIndicator(
             progress = { (completed / game.levelCount.toFloat()).coerceIn(0f, 1f) },
             modifier = Modifier.fillMaxWidth().height(5.dp).clip(CircleShape),
@@ -493,26 +423,7 @@ private fun WorldsScreen(completed: Map<String, Int>, onOpenGame: (MathsGame) ->
     ) {
         Text("${Games.size} Maths Games", color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black)
         Text("${Games.count { it.difficulty != null }} tagged learning worlds from beginner to expert.", color = Muted, fontSize = 12.sp)
-        DisplayGames.forEach { game ->
-            Row(
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Panel)
-                    .border(1.dp, game.accent.copy(.5f), RoundedCornerShape(20.dp)).clickable { onOpenGame(game) }.padding(13.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Box(Modifier.size(50.dp).clip(RoundedCornerShape(16.dp)).background(game.accent.copy(.2f)), contentAlignment = Alignment.Center) {
-                    Text(game.icon, color = game.accent, fontWeight = FontWeight.Black)
-                }
-                Column(Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                        Text(game.title, color = Ink, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
-                        game.difficulty?.let { DifficultyTag(it, compact = true) }
-                    }
-                    Text(game.subtopics.take(4).joinToString(" • "), color = Muted, fontSize = 9.sp, maxLines = 2)
-                }
-                Text("${completed[game.id] ?: 0}/${game.levelCount}", color = game.accent, fontWeight = FontWeight.Bold)
-            }
-        }
+        GameCardGrid(completed, onOpenGame)
     }
 }
 
@@ -530,7 +441,7 @@ private fun ProgressScreen(completed: Map<String, Int>) {
                 .border(1.dp, Violet.copy(.6f), RoundedCornerShape(24.dp)).padding(18.dp),
         ) {
             Text("$earned / $total", color = Ink, fontSize = 34.sp, fontWeight = FontWeight.Black)
-            Text("missions mastered this session", color = Cyan, fontWeight = FontWeight.Bold)
+            Text("missions mastered", color = Cyan, fontWeight = FontWeight.Bold)
         }
         DisplayGames.forEach { game ->
             val value = completed[game.id] ?: 0
@@ -551,10 +462,7 @@ private fun ProgressScreen(completed: Map<String, Int>) {
 }
 
 @Composable
-private fun PlayerProfileScreen(completed: Map<String, Int>) {
-    var sound by rememberSaveable { mutableStateOf(true) }
-    var haptics by rememberSaveable { mutableStateOf(true) }
-    var highContrast by rememberSaveable { mutableStateOf(false) }
+private fun PlayerProfileScreen(completed: Map<String, Int>, compactPlay: Boolean, onCompactPlay: (Boolean) -> Unit) {
     Column(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, top = 22.dp, bottom = 94.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -566,16 +474,18 @@ private fun PlayerProfileScreen(completed: Map<String, Int>) {
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Box(Modifier.size(62.dp).clip(CircleShape).background(Brush.radialGradient(listOf(Cyan, Violet))), contentAlignment = Alignment.Center) {
-                Text("12", color = Space, fontSize = 20.sp, fontWeight = FontWeight.Black)
+                Text("∑", color = Space, fontSize = 20.sp, fontWeight = FontWeight.Black)
             }
             Column {
                 Text("Maths Explorer", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
-                Text("${completed.values.sum()} missions mastered", color = Cyan, fontSize = 11.sp)
+                Text("Your saved personal bests", color = Cyan, fontSize = 11.sp)
             }
         }
-        SettingRow("Mission sounds", "Audio feedback for moves and discoveries", sound) { sound = it }
-        SettingRow("Haptic energy", "Tactile feedback when objects snap into place", haptics) { haptics = it }
-        SettingRow("High contrast", "Stronger edges around draggable objects", highContrast) { highContrast = it }
+        SettingRow("Compact play", "Smaller boards and fewer instructions on phones", compactPlay, onCompactPlay)
+        Text("Previous best scores", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        DisplayGames.forEach { game ->
+            Text("${game.title}: ${completed[game.id] ?: 0} ${if (game.id.startsWith("speed-")) "solved" else "missions mastered"}", color = Muted, fontSize = 12.sp)
+        }
     }
 }
 
@@ -595,182 +505,8 @@ private fun SettingRow(title: String, subtitle: String, checked: Boolean, onChec
 }
 
 @Composable
-private fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: () -> Unit, onComplete: (Int) -> Unit) {
-    var missionIndex by rememberSaveable(game.id) { mutableIntStateOf(completedMissions.coerceIn(0, game.missions.lastIndex)) }
-    var selected by rememberSaveable(game.id, missionIndex) { mutableStateOf<String?>(null) }
-    var result by rememberSaveable(game.id, missionIndex) { mutableStateOf<Boolean?>(null) }
-    var showHint by rememberSaveable(game.id, missionIndex) { mutableStateOf(false) }
-    var attempts by rememberSaveable(game.id, missionIndex) { mutableIntStateOf(0) }
-    val mission = game.missions[missionIndex]
-    val guidance = GameLearningCoach.guidance(missionIndex + 1, mission.prompt, mission.explanation)
-
-    Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            GlossyPill("‹ WORLDS", game.accent, onBack)
-            Text("MISSION ${missionIndex + 1}/${game.missions.size}", color = game.accent, fontSize = 10.sp, fontWeight = FontWeight.Black)
-        }
-        Column {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-                Text(game.title, color = Ink, fontSize = 28.sp, fontWeight = FontWeight.Black, modifier = Modifier.weight(1f))
-                game.difficulty?.let { DifficultyTag(it) }
-            }
-            Text(game.mechanic, color = Muted, fontSize = 11.sp)
-        }
-        GameLearningPhaseBanner(missionIndex + 1, game.accent, mission.prompt)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            game.subtopics.forEachIndexed { index, topic ->
-                Text(
-                    topic,
-                    color = if (index == missionIndex) Space else Ink,
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clip(CircleShape).background(if (index == missionIndex) game.accent else Color.White.copy(.07f))
-                        .padding(horizontal = 9.dp, vertical = 6.dp),
-                )
-            }
-        }
-        Column(
-            Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(Brush.linearGradient(listOf(game.accent.copy(.23f), Panel)))
-                .border(1.dp, game.accent.copy(.65f), RoundedCornerShape(24.dp)).padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(mission.title.uppercase(), color = game.accent, fontSize = 11.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp)
-            Text(mission.prompt, color = Ink, fontSize = 21.sp, fontWeight = FontWeight.ExtraBold)
-            Text("Learning goal: ${guidance.objective}", color = Muted, fontSize = 11.sp)
-        }
-        SecondaryGameButton(if (showHint) "Hide learning hint" else "Show learning hint", game.accent) { showHint = !showHint }
-        if (showHint) {
-            Column(
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Amber.copy(.1f))
-                    .border(1.dp, Amber.copy(.5f), RoundedCornerShape(16.dp)).padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-            ) {
-                Text("CLUE — WITHOUT THE ANSWER", color = Amber, fontSize = 9.sp, fontWeight = FontWeight.Black)
-                Text(guidance.hint, color = Ink, fontSize = 12.sp)
-            }
-        }
-        DropReactor(game, selected, result)
-        Text("DRAG A CORE INTO THE REACTOR", color = Muted, fontSize = 10.sp, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            mission.tokens.forEach { token ->
-                DraggableAnswer(token, game.accent) {
-                    selected = token
-                    attempts += 1
-                    result = token == mission.answer
-                    if (result == true) onComplete(missionIndex + 1)
-                }
-            }
-        }
-        GameComponentControls(
-            status = selected?.let { "Core: $it" } ?: "Reactor empty",
-            accent = game.accent,
-            actions = listOf(
-                GameComponentAction("Remove core", "−", selected != null, "Remove the selected answer core") {
-                    selected = null
-                    result = null
-                },
-                GameComponentAction("Clear reactor", "×", selected != null, "Clear the answer reactor") {
-                    selected = null
-                    result = null
-                },
-            ),
-            guidance = "Tap or drag a core to add it. Adding another core replaces the one currently in the reactor.",
-        )
-        if (result != null) {
-            Column(
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp))
-                    .background((if (result == true) Green else Coral).copy(.13f))
-                    .border(1.dp, (if (result == true) Green else Coral).copy(.65f), RoundedCornerShape(20.dp)).padding(15.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(if (result == true) "CORE STABLE — CORRECT" else "ENERGY MISMATCH — TRY AGAIN", color = if (result == true) Green else Coral, fontWeight = FontWeight.Black)
-                Text(if (result == true) mission.explanation else "That answer does not satisfy the condition yet. Your choice is useful evidence—use the retry plan below.", color = Ink, fontSize = 12.sp)
-                if (result == false) {
-                    Text("RETRY PLAN", color = Amber, fontSize = 9.sp, fontWeight = FontWeight.Black)
-                    guidance.retrySteps.forEachIndexed { index, step -> Text("${index + 1}. $step", color = Ink, fontSize = 11.sp) }
-                    if (attempts >= 2) Text("Focused hint: ${guidance.hint}", color = Amber, fontSize = 11.sp)
-                } else {
-                    Text("REFLECT", color = Green, fontSize = 9.sp, fontWeight = FontWeight.Black)
-                    Text(guidance.reflection, color = Muted, fontSize = 11.sp)
-                }
-                if (result == true) {
-                    Button(
-                        onClick = {
-                            if (missionIndex < game.missions.lastIndex) {
-                                missionIndex += 1
-                                selected = null
-                                result = null
-                                attempts = 0
-                                showHint = false
-                            } else onBack()
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = game.accent, contentColor = Space),
-                    ) { Text(if (missionIndex < game.missions.lastIndex) "Next mission" else "Complete world", fontWeight = FontWeight.Black) }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun DropReactor(game: MathsGame, selected: String?, result: Boolean?) {
-    Box(
-        Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(28.dp))
-            .background(Brush.radialGradient(listOf(game.accent.copy(.28f), Color(0xFF090D26))))
-            .border(2.dp, game.accent.copy(if (selected == null) .38f else .9f), RoundedCornerShape(28.dp)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Canvas(Modifier.size(120.dp)) {
-            drawCircle(game.accent.copy(.12f), radius = size.minDimension * .47f)
-            drawCircle(game.accent.copy(.65f), radius = size.minDimension * .40f, style = androidx.compose.ui.graphics.drawscope.Stroke(5f))
-            drawArc(game.accent, 22f, 245f, false, style = androidx.compose.ui.graphics.drawscope.Stroke(8f, cap = StrokeCap.Round))
-        }
-        Text(
-            selected ?: game.icon,
-            color = when (result) { true -> Green; false -> Coral; null -> game.accent },
-            fontSize = if (selected == null) 22.sp else 28.sp,
-            fontWeight = FontWeight.Black,
-        )
-    }
-}
-
-@Composable
-private fun DraggableAnswer(label: String, accent: Color, onDropped: () -> Unit) {
-    var dragX by remember { mutableStateOf(0f) }
-    var dragY by remember { mutableStateOf(0f) }
-    Box(
-        Modifier
-            .width(78.dp)
-            .height(58.dp)
-            .graphicsLayer { translationX = dragX; translationY = dragY }
-            .shadow(8.dp, RoundedCornerShape(17.dp), ambientColor = accent.copy(.3f), spotColor = accent.copy(.3f))
-            .clip(RoundedCornerShape(17.dp))
-            .background(Brush.verticalGradient(listOf(accent.copy(.3f), Panel)))
-            .border(1.dp, accent.copy(.75f), RoundedCornerShape(17.dp))
-            .pointerInput(label) {
-                detectDragGestures(
-                    onDragEnd = {
-                        val movedUp = dragY < -35f
-                        dragX = 0f
-                        dragY = 0f
-                        if (movedUp) onDropped()
-                    },
-                    onDragCancel = { dragX = 0f; dragY = 0f },
-                ) { change, amount ->
-                    change.consume()
-                    dragX += amount.x
-                    dragY += amount.y
-                }
-            }
-            .clickable(onClick = onDropped)
-            .semantics { contentDescription = "Drag answer $label into reactor" },
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(label, color = Ink, fontWeight = FontWeight.Black, textAlign = TextAlign.Center)
-    }
+internal fun GameMissionScreen(game: MathsGame, completedMissions: Int, onBack: () -> Unit, onComplete: (Int) -> Unit) {
+    GeneratedMathGameScreen(game, completedMissions, onBack, onComplete)
 }
 
 @Composable

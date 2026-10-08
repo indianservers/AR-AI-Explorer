@@ -1,0 +1,21 @@
+
+com.indianservers.aiexplorer.gamifymaths.MobileGamesLayoutTest:
+Error in everyGameAndSpecializedLevelFitsPhoneWithLimitedScroll(com.indianservers.aiexplorer.gamifymaths.MobileGamesLayoutTest):
+java.lang.AssertionError: Excessive play scrolling: [bridge-0: 246.66667 dp, bridge-1: 246.66667 dp, bridge-2: 246.66667 dp]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.MobileGamesLayoutTest.everyGameAndSpecializedLevelFitsPhoneWithLimitedScroll(MobileGamesLayoutTest.kt:85)
+..
+
+Time: 4,156.453
+There was 1 failure:
+1) everyGameAndSpecializedLevelFitsPhoneWithLimitedScroll(com.indianservers.aiexplorer.gamifymaths.MobileGamesLayoutTest)
+java.lang.AssertionError: Excessive play scrolling: [bridge-0: 246.66667 dp, bridge-1: 246.66667 dp, bridge-2: 246.66667 dp]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.MobileGamesLayoutTest.everyGameAndSpecializedLevelFitsPhoneWithLimitedScroll(MobileGamesLayoutTest.kt:85)
+
+FAILURES!!!
+Tests run: 3,  Failures: 1
+
+

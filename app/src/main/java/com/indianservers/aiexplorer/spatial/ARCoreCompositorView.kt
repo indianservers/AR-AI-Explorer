@@ -30,6 +30,8 @@ data class SpatialCompositorScene(
     val scene: SpatialRenderScene,
     val placement: SpatialScenePlacement,
     val screenLocked: Boolean = false,
+    val quality: String = "AUTO",
+    val manipulating:Boolean=false,
 )
 
 /**
@@ -53,6 +55,7 @@ class ARCoreCompositorView(
         rotationProvider = ::currentDisplayRotation,
         wantsCameraImage = wantsCameraImage,
         onCameraImage = onCameraImage,
+        powerManager = context.getSystemService(android.os.PowerManager::class.java),
     )
 
     init {
@@ -86,6 +89,7 @@ class ARCoreCompositorView(
         private val rotationProvider: () -> Int,
         private val wantsCameraImage: () -> Boolean,
         private val onCameraImage: (com.indianservers.aiexplorer.arengine.contract.ArCameraImage) -> Unit,
+        private val powerManager: android.os.PowerManager?,
     ) : Renderer {
         private val mainHandler = Handler(Looper.getMainLooper())
         private val spatialRenderer = OpenGlEsSpatialRenderer()
@@ -102,8 +106,23 @@ class ARCoreCompositorView(
         private var viewportWidth = 0
         private var viewportHeight = 0
         private var configuredRotation = -1
-        private var released = false
+        @Volatile private var released = false
         private var lastVisionFrameMillis = 0L
+        private val lod=ArCadRenderLod()
+        private var lodSource:SpatialRenderScene?=null
+        private var lodScene:SpatialRenderScene?=null
+        private var lodTier=3
+        private var lodCandidate=3
+        private var lodCandidateSince=0L
+        private var lastCallbackMillis=0L
+        @Volatile private var latestUiFrame:ArFrameSnapshot?=null
+        private val frameDeliveryPending=java.util.concurrent.atomic.AtomicBoolean(false)
+        private var projectedDistance=1.0
+        private fun thermal():ArThermalState {
+            val status=if(android.os.Build.VERSION.SDK_INT>=29) powerManager?.currentThermalStatus ?: 0 else 0
+            return when { status>=4 -> ArThermalState.Critical; status>=3 -> ArThermalState.Severe; status>=2 -> ArThermalState.Moderate; status>=1 -> ArThermalState.Light; else -> ArThermalState.Nominal }
+        }
+
 
         override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
             released = false
@@ -134,15 +153,36 @@ class ARCoreCompositorView(
         override fun onDrawFrame(gl: GL10?) {
             if (released) return
             updateDisplayGeometry()
-            val current = sceneProvider()
-            runtime.setDepthEnabled(current.scene.depthOcclusion)
+            val original = sceneProvider()
+            val quality = ArRenderQualityController.choose(thermal(),frameAverageMillis,powerManager?.isPowerSaveMode==true,
+                when(original.quality) { "LOW" -> com.indianservers.aiexplorer.arengine.rendering.ArRenderQuality.Low; "MEDIUM" -> com.indianservers.aiexplorer.arengine.rendering.ArRenderQuality.Balanced; "HIGH" -> com.indianservers.aiexplorer.arengine.rendering.ArRenderQuality.High; else -> null })
+            val nowLod=android.os.SystemClock.uptimeMillis()
+            val qualityTier=when(quality.quality) { com.indianservers.aiexplorer.arengine.rendering.ArRenderQuality.Safety -> 0; com.indianservers.aiexplorer.arengine.rendering.ArRenderQuality.Low -> 1; com.indianservers.aiexplorer.arengine.rendering.ArRenderQuality.Balanced -> 2; else -> 3 }
+            val distanceTier=if(original.screenLocked) 3 else when { projectedDistance>8 -> 0; projectedDistance>4 -> 1; projectedDistance>2 -> 2; else -> 3 }
+            val vertexCount=original.scene.primitives.sumOf { it.geometry.vertices.size }
+            val complexityTier=when { vertexCount>250000 -> 1; vertexCount>100000 -> 2; else -> 3 }
+            val target=minOf(qualityTier,distanceTier,complexityTier,if(original.manipulating) 1 else 3)
+            if(original.manipulating) lodTier=target
+            if(target!=lodCandidate) { lodCandidate=target; lodCandidateSince=nowLod }
+            if(nowLod-lodCandidateSince>=1500) lodTier=target
+            if(lodSource!==original.scene || lodScene==null || lodScene?.id!="${original.scene.id}:lod:$lodTier") {
+                lodSource=original.scene
+                lodScene=lod.scene(original.scene,lodTier).copy(id="${original.scene.id}:lod:$lodTier")
+            }
+            val current=original.copy(scene=lodScene ?: original.scene)
+            runtime.setDepthEnabled(current.scene.depthOcclusion && quality.depthOcclusion)
             val frame = runtime.updateFrame().getOrElse { error ->
                 mainHandler.post { onError(error.message ?: "AR frame failed") }
                 return
             }
-            updateFrameTime(frame.timestampNanos)
+            updateFrameTime(System.nanoTime())
+            val anchor=runtime.anchors().firstOrNull { it.id==original.placement.anchorId }
+            val position=original.placement.anchoredPosition(anchor)
+            val camera=frame.camera.pose.positionMeters
+            projectedDistance=(ArVector3(position.x,position.y,position.z)-camera).magnitude()/maxOf(.1,original.placement.pose.uniformScale)
+
             val now = android.os.SystemClock.uptimeMillis()
-            if (wantsCameraImage() && now-lastVisionFrameMillis >= 100) {
+            if (wantsCameraImage() && now-lastVisionFrameMillis >= if(quality.targetFramesPerSecond<=24) 42 else 33) {
                 lastVisionFrameMillis = now
                 runCatching { runtime.acquireCameraImage()?.let(onCameraImage) }
                     .onFailure { error -> mainHandler.post { onError(error.message ?: "Camera image unavailable") } }
@@ -152,7 +192,13 @@ class ARCoreCompositorView(
             if (!current.screenLocked) drawTrackedPlanes(frame)
 
             val plan = if (uploadedScene !== current.scene) {
-                SharedGpuSceneCompiler.compile(current.scene).also {
+                val previous = uploadedScene
+                val sameBuffers = previous != null && previous.primitives.size == current.scene.primitives.size && previous.primitives.zip(current.scene.primitives).all { (a,b) -> a.id == b.id && a.geometry === b.geometry && a.material == b.material && a.visible == b.visible }
+                if (sameBuffers) {
+                    spatialRenderer.updateTransforms(current.scene)
+                    uploadedScene = current.scene
+                    uploadedPlan
+                } else SharedGpuSceneCompiler.compile(current.scene).also {
                     spatialRenderer.upload(it)
                     uploadedScene = current.scene
                     uploadedPlan = it
@@ -183,11 +229,7 @@ class ARCoreCompositorView(
                 }
                 Matrix.multiplyMM(mvp, 0, frame.camera.projectionMatrix.values.toFloatArray(), 0, viewModel, 0)
                 val bounds = plan.boundingSphere()
-                if (bounds == null || ArFrustumCuller.visible(ArMatrix4(mvp.toList()), bounds)) {
-                    val quality = ArRenderQualityController.choose(
-                        thermalState = ArThermalState.Nominal,
-                        averageFrameMillis = frameAverageMillis,
-                    )
+                if (current.scene.primitives.any { it.localTransform != com.indianservers.aiexplorer.arengine.contract.ArLocalTransform() } || bounds == null || ArFrustumCuller.visible(ArMatrix4(mvp.toList()), bounds)) {
                     val light = ArLightingNormalizer.normalize(frame.lighting)
                     spatialRenderer.render(
                         viewProjection = mvp,
@@ -201,7 +243,13 @@ class ARCoreCompositorView(
                     )
                 }
             }
-            mainHandler.post { onFrame(frame) }
+            if(now-lastCallbackMillis>=33) {
+                lastCallbackMillis=now
+                latestUiFrame=frame
+                if(frameDeliveryPending.compareAndSet(false,true)) mainHandler.post {
+                    try { if(!released) latestUiFrame?.let(onFrame) } finally { frameDeliveryPending.set(false) }
+                }
+            }
         }
 
         fun release() {
@@ -217,6 +265,9 @@ class ARCoreCompositorView(
             cameraProgram = 0
             uploadedScene = null
             uploadedPlan = null
+            latestUiFrame=null
+            lodSource=null
+            lodScene=null
             environmentSignature = 0
             lastTextureCoordinates = emptyList()
         }

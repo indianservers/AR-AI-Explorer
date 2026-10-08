@@ -64,6 +64,8 @@ internal val GameBlue = Color(0xFF2489EB)
 internal val GameGreen = Color(0xFF54BE24)
 internal val GameGold = Color(0xFFFFB620)
 internal val GameRed = Color(0xFFFF503B)
+internal val LocalCompactPlayPreference = staticCompositionLocalOf { true }
+internal val LocalPreviousGameBest = staticCompositionLocalOf { 0 }
 internal val LocalCompactGameLayout = staticCompositionLocalOf { false }
 
 internal data class GameLevel(
@@ -93,7 +95,7 @@ internal fun GameScreen(
     ) {
         // Phone play areas should use the condensed layout even on tall screens.
         // Height alone made modern narrow phones render tablet-sized game boards.
-        val compact = maxHeight < 900.dp || maxWidth < 600.dp
+        val compact = LocalCompactPlayPreference.current && (maxHeight < 900.dp || maxWidth < 600.dp)
         CompositionLocalProvider(LocalCompactGameLayout provides compact) {
             Column(
                 Modifier.fillMaxSize().verticalScroll(rememberScrollState())
@@ -103,7 +105,7 @@ internal fun GameScreen(
                 verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 12.dp),
             ) {
                 GameTopBar(title, level, hearts, accent, onBack, onHint)
-                GameLearningPhaseBanner(level, accent)
+                if (!compact) GameLearningPhaseBanner(level, accent)
                 content()
                 Spacer(Modifier.height(if (compact) 2.dp else 8.dp))
             }
@@ -145,10 +147,10 @@ internal fun GameTopBar(
             contentAlignment = Alignment.Center,
         ) { Text(level.toString(), color = GameInk, fontWeight = FontWeight.Black, fontSize = if (compact) 16.sp else 18.sp) }
         Column(Modifier.weight(1f)) {
-            Text(title, color = GameInk, fontSize = if (compact) 16.sp else 18.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1)
-            Text("LEVEL $level", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+            Text(title, color = GameInk, fontSize = if (compact) 14.sp else 18.sp, fontWeight = FontWeight.ExtraBold, maxLines = 2)
+            Text("LEVEL $level • BEST ${LocalPreviousGameBest.current}", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
         }
-        Text((1..3).joinToString("") { if (it <= hearts) "♥" else "♡" }, color = GameRed, fontSize = if (compact) 17.sp else 20.sp, fontWeight = FontWeight.Black)
+        if (!compact) Text((1..3).joinToString("") { if (it <= hearts) "♥" else "♡" }, color = GameRed, fontSize = 20.sp, fontWeight = FontWeight.Black)
         RoundGameButton("?", GameGold, "Show hint", onHint)
     }
 }
@@ -174,8 +176,8 @@ internal fun GameIntroScreen(
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             RoundGameButton("‹", accent, "Back to GamifyMaths", onBack)
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                ScorePill("◆ 1250", GamePurple)
-                ScorePill("★ 48", GameGold)
+                ScorePill("$completed/$total", GamePurple)
+                ScorePill("BEST ${LocalPreviousGameBest.current}", GameGold)
             }
         }
         Column(
@@ -269,8 +271,8 @@ internal fun GlossyPanel(accent: Color, modifier: Modifier = Modifier, content: 
     Column(
         modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp))
             .background(Brush.linearGradient(listOf(Color.White.copy(.09f), accent.copy(.1f), GamePanel)))
-            .border(1.dp, accent.copy(.55f), RoundedCornerShape(22.dp)).padding(if (compact) 10.dp else 14.dp),
-        verticalArrangement = Arrangement.spacedBy(if (compact) 7.dp else 10.dp),
+            .border(1.dp, accent.copy(.55f), RoundedCornerShape(22.dp)).padding(if (compact) 8.dp else 14.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 10.dp),
         content = content,
     )
 }
@@ -287,7 +289,7 @@ internal fun ScorePill(label: String, accent: Color) {
 internal fun RoundGameButton(label: String, accent: Color, description: String, onClick: () -> Unit) {
     val compact = LocalCompactGameLayout.current
     Box(
-        Modifier.size(if (compact) 38.dp else 42.dp).shadow(8.dp, CircleShape).clip(CircleShape).background(Brush.radialGradient(listOf(accent, accent.copy(.55f))))
+        Modifier.size(48.dp).shadow(8.dp, CircleShape).clip(CircleShape).background(Brush.radialGradient(listOf(accent, accent.copy(.55f))))
             .border(1.dp, Color.White.copy(.4f), CircleShape).clickable(onClick = onClick).focusable().semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) { Text(label, color = GameInk, fontSize = if (compact) 17.sp else 19.sp, fontWeight = FontWeight.Black) }

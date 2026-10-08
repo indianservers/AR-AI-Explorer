@@ -47,7 +47,7 @@ object WorkspaceSnapshotCodec {
             }
             state.geometryGroups.forEach { group -> add(listOf("G", pack(group.id), pack(group.name), group.locked, group.visible, group.shapeIds.joinToString(",") { pack(it) }).joinToString("|")) }
             state.functions.forEach { function ->
-                add(listOf("F", pack(function.id), pack(function.name), pack(function.expression), pack(function.colorKey), function.visible).joinToString("|"))
+                add(listOf("F", pack(function.id), pack(function.name), pack(function.expression), pack(function.colorKey), function.visible, function.appearance.fill.name, pack(function.appearance.secondaryColor), function.appearance.width, function.appearance.opacity, function.appearance.line.name, pack(function.appearance.imageUri)).joinToString("|"))
             }
             state.graphRowMetadata.toSortedMap().forEach { (id, metadata) ->
                 add(listOf("R", pack(id), metadata.collapsed, pack(metadata.note), pack(metadata.folder)).joinToString("|"))
@@ -136,7 +136,14 @@ object WorkspaceSnapshotCodec {
                         "D" -> dependencies += PointDependency(f[1].toInt(), f[2].csvInts(), PointDependencyType.valueOf(f[3]), unpack(f[4]), f.getOrElse(5) { "" }.csvDoubles())
                         "C" -> constraints += GeometryConstraint2D(unpack(f[1]), GeometryConstraint2DType.valueOf(f[2]), f[3].csvInts(), f[4].csvPackedStrings(), f.getOrNull(5)?.toDoubleOrNull())
                         "G" -> groups += GeometryGroup2D(unpack(f[1]), unpack(f[2]), f[5].csvPackedStrings().toSet(), f[3].toBoolean(), f[4].toBoolean())
-                        "F" -> functions += FunctionDefinition(unpack(f[1]), unpack(f[2]), unpack(f[3]), unpack(f[4]), f[5].toBoolean())
+                        "F" -> functions += FunctionDefinition(unpack(f[1]), unpack(f[2]), unpack(f[3]), unpack(f[4]), f[5].toBoolean(), com.indianservers.aiexplorer.core.GraphAppearance(
+                            fill = f.getOrNull(6)?.let { runCatching { com.indianservers.aiexplorer.core.GraphFill.valueOf(it) }.getOrNull() } ?: com.indianservers.aiexplorer.core.GraphFill.None,
+                            secondaryColor = f.getOrNull(7)?.let(::unpack) ?: "violet",
+                            width = f.getOrNull(8)?.toFloatOrNull()?.coerceIn(1f, 12f) ?: 4.2f,
+                            opacity = f.getOrNull(9)?.toFloatOrNull()?.coerceIn(.1f, 1f) ?: 1f,
+                            line = f.getOrNull(10)?.let { runCatching { com.indianservers.aiexplorer.core.GraphLineStyle.valueOf(it) }.getOrNull() } ?: com.indianservers.aiexplorer.core.GraphLineStyle.Solid,
+                            imageUri = f.getOrNull(11)?.let(::unpack).orEmpty(),
+                        ))
                         "R" -> rows[unpack(f[1])] = GraphRowMetadataState(f[2].toBoolean(), unpack(f[3]), unpack(f[4]))
                         "L" -> sliders[unpack(f[1])] = GraphSliderMetadataState(f[2].toDouble(), GraphSliderPlaybackMode.valueOf(f[3]), f[4].toInt(), f.getOrNull(5)?.toDoubleOrNull())
                         "O" -> solids += Solid(SolidType.valueOf(f[1]), f[2].toDouble(), f[3].toDouble(), f[4].toDouble(), f[5].toDouble(), f[6].toDouble(), Vec3(f[7].toDouble(), f[8].toDouble(), f[9].toDouble()), Vec3(f[10].toDouble(), f[11].toDouble(), f[12].toDouble()))

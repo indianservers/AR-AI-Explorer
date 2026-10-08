@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ArGraphPhaseOneTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-04T09:57:04.662Z" hostname="INDIANSERVERS" time="0.027">
+  <properties/>
+  <testcase name="axisScaleAndUnicodeLabelsRoundTrip" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.003"/>
+  <testcase name="cancelRestoresAllObjectAndPointEdits" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.004"/>
+  <testcase name="movingEditedGraphReusesItsGeometry" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.008"/>
+  <testcase name="graphTransformIsIndependentAndOneUndoPerGesture" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.002"/>
+  <testcase name="undoDuringPreviewCancelsGestureBeforeApplyingPreviousCommand" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.002"/>
+  <testcase name="lockedObjectCannotBeTransformedAndVisibilityHasUndo" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.002"/>
+  <testcase name="projectAndActivityStatePreserveObjectPresentation" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.003"/>
+  <testcase name="toolbarHasOnlyThreeStatesAndTransitionsRetainNoSceneReferences" classname="com.indianservers.aiexplorer.ArGraphPhaseOneTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

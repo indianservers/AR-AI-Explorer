@@ -23,6 +23,17 @@ import com.indianservers.aiexplorer.arengine.interaction.ArSelectionEngine
 import com.indianservers.aiexplorer.arengine.interaction.ArSelectionState
 
 object ArPhase4SpatialBridge {
+    private val meshCache = java.util.IdentityHashMap<SpatialGeometry, ArMesh>()
+    @Synchronized private fun mesh(geometry: SpatialGeometry): ArMesh {
+        meshCache[geometry]?.let { return it }
+        if (meshCache.size >= 64) meshCache.clear()
+        return ArMesh(
+            vertices = geometry.vertices.map { ArVector3(it.x,it.y,it.z) },
+            triangleIndices = geometry.triangles,
+            lineIndices = ArCadTopology.edges(geometry).flatMap { listOf(it.first,it.second) },
+            pointRadiusUnits = geometry.pointRadius,
+        ).also { meshCache[geometry] = it }
+    }
     fun scene(
         source: SpatialRenderScene,
         placement: SpatialScenePlacement,
@@ -51,12 +62,8 @@ object ArPhase4SpatialBridge {
                     id = primitive.id,
                     kind = primitive.kind.toArKind(),
                     label = primitive.label,
-                    mesh = ArMesh(
-                        vertices = primitive.geometry.vertices.map { ArVector3(it.x, it.y, it.z) },
-                        triangleIndices = primitive.geometry.triangles,
-                        lineIndices = primitive.geometry.lines.flatMap { listOf(it.first, it.second) },
-                        pointRadiusUnits = primitive.geometry.pointRadius,
-                    ),
+                    mesh = mesh(primitive.geometry),
+                    localTransform = primitive.localTransform,
                     material = ArMaterial(
                         color = if (selected) ArColor(1f, .72f, .12f, 1f) else ArColor(
                             color.getOrElse(0) { 1f }.coerceIn(0f, 1f),
@@ -75,7 +82,8 @@ object ArPhase4SpatialBridge {
                     ),
                     visible = visible,
                     selectable = primitive.selectable,
-                    metadata = mapOf("spatialKind" to primitive.kind.name),
+                    dependencyIds = primitive.dependencyIds,
+                    metadata = primitive.metadata + ("spatialKind" to primitive.kind.name),
                 )
             },
             placement = ArScenePlacement(

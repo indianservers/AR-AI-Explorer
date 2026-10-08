@@ -563,6 +563,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     val savedGraphView = vm.state.graph2DView
     var graphViewport by remember { mutableStateOf(GraphViewState(Vec2(savedGraphView.centerX, savedGraphView.centerY), savedGraphView.zoom)) }
     var graphAxisSettings by remember { mutableStateOf(GraphAxisSettings(savedGraphView.xName, savedGraphView.yName, savedGraphView.xUnit, savedGraphView.yUnit, runCatching { AxisNumberFormat.valueOf(savedGraphView.numberFormat) }.getOrDefault(AxisNumberFormat.Adaptive), savedGraphView.gridVisible, savedGraphView.xLogarithmic, savedGraphView.yLogarithmic)) }
+    var appearanceTarget by remember { mutableStateOf<String?>(null) }
     var showAxisSheet by remember { mutableStateOf(false) }
     var showMiniMap by remember { mutableStateOf(false) }
     var comparisonMode by remember { mutableStateOf(false) }
@@ -983,7 +984,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
         ) {
             AddShapeTarget(
                 onAdd = {
-                    vm.addFunction("x")
+                    vm.addFunction("")
                     selectedGraphRowId = vm.state.functions.lastOrNull()?.id
                     equationEditorExpanded = true
                     graphAddMenuExpanded = false
@@ -1104,7 +1105,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 if (kind == GraphAddKind.Regression) graphTool = GraphTool.Data
             },
             onAdd = {
-                vm.addFunction("x")
+                vm.addFunction("")
                 selectedGraphRowId = vm.state.functions.lastOrNull()?.id
                 equationEditorExpanded = true
             },
@@ -1128,9 +1129,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 }
             },
             onColor = { id ->
-                vm.state.functions.indexOfFirst { it.id == id }.takeIf { it >= 0 }?.let { index ->
-                    vm.updateFunction(index) { function -> function.copy(colorKey = nextGraphColorKey(function.colorKey)) }
-                }
+                appearanceTarget = id
             },
             activeTool = graphTool,
             onTool = { graphTool = it },
@@ -1144,6 +1143,13 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 }
             },
         )
+        appearanceTarget?.let { id ->
+            vm.state.functions.firstOrNull { it.id == id }?.let { function ->
+                GraphAppearanceDialog(function, { appearanceTarget = null }) { next ->
+                    vm.state.functions.indexOfFirst { it.id == id }.takeIf { it >= 0 }?.let { index -> vm.updateFunction(index) { next } }
+                }
+            }
+        }
         if (showAxisSheet) {
             DimmedWorkspaceScrim { showAxisSheet = false }
         }
@@ -1176,7 +1182,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                         "Edit" -> { contextMenuFunctionId?.let { selectedGraphRowId = it }; equationEditorExpanded = true }
                         "Trace" -> graphTool = GraphTool.Trace; "Tangent" -> graphTool = GraphTool.Tangent; "Derivative" -> graphTool = GraphTool.Derivative; "Integral" -> graphTool = GraphTool.Integral
                         "Domain" -> contextMenuFunctionId?.let { graphDomains = graphDomains + (it to (graphDomains[it] ?: GraphDomainSelection())) }
-                        "Style" -> contextMenuFunctionId?.let { id -> val old = graphStyles[id] ?: GraphLineStyle.Solid; graphStyles = graphStyles + (id to GraphLineStyle.entries[(old.ordinal + 1) % GraphLineStyle.entries.size]) }
+                        "Style" -> contextMenuFunctionId?.let { appearanceTarget = it }
                         "Duplicate" -> contextMenuFunctionId?.let { id -> vm.state.functions.indexOfFirst { it.id == id }.takeIf { it >= 0 }?.let(vm::duplicateFunction) }
                         "Hide" -> contextMenuFunctionId?.let { id -> vm.state.functions.indexOfFirst { it.id == id }.takeIf { it >= 0 }?.let { index -> vm.updateFunction(index) { it.copy(visible = false) } } }
                         "Delete" -> contextMenuFunctionId?.let { id -> vm.state.functions.indexOfFirst { it.id == id }.takeIf { it >= 0 }?.let(vm::deleteFunction) }
@@ -1227,7 +1233,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                     onFolderChange = { folder ->
                         vm.updateGraphRowMetadata(row.id) { it.copy(folder = folder.take(32)) }
                     },
-                    onColor = { key -> vm.updateFunction(index) { function -> function.copy(colorKey = key) } },
+                    onColor = { appearanceTarget = row.id },
                 )
             }
             if (objectGraphSnapshot.parameterRows.isNotEmpty()) {
@@ -1484,8 +1490,6 @@ private fun DesmosExpressionRow(
     onColor: (String) -> Unit,
 ) {
     val accent = graphColor(row.metadata.colorKey)
-    var showColorPicker by remember(row.id) { mutableStateOf(false) }
-    var customColor by remember(row.id) { mutableStateOf(row.metadata.colorKey.takeIf { it.startsWith("#") } ?: "#30D9FF") }
     Column(
         Modifier
             .fillMaxWidth()
@@ -1544,40 +1548,11 @@ private fun DesmosExpressionRow(
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             GlowButton(if (uiState.collapsed) "Expand" else "Collapse", onClick = onToggleCollapsed)
             GlowButton(if (row.metadata.visible) "Hide" else "Show", onClick = onToggleVisible)
-            GlowButton("Color") { showColorPicker = !showColorPicker }
+            GlowButton("Color") { onColor(row.metadata.colorKey) }
             GlowButton("Duplicate", onClick = onDuplicate)
             DestructiveGlowButton("Delete", onClick = onDelete)
         }
-        AnimatedVisibility(showColorPicker) {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                    graphColorKeys.forEach { key ->
-                        Box(
-                            Modifier
-                                .size(28.dp)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(graphColor(key))
-                                .border(if (row.metadata.colorKey == key) 2.dp else 1.dp, Ink.copy(alpha = .8f), RoundedCornerShape(6.dp))
-                                .semantics { contentDescription = "Use $key graph color" }
-                                .clickable { onColor(key); showColorPicker = false },
-                        )
-                    }
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(
-                        value = customColor,
-                        onValueChange = { customColor = it.take(7) },
-                        label = { Text("Hex color") },
-                        singleLine = true,
-                        modifier = Modifier.weight(1f),
-                    )
-                    GlowButton("Apply", enabled = customColor.matches(Regex("#[0-9A-Fa-f]{6}"))) {
-                        onColor(customColor.uppercase())
-                        showColorPicker = false
-                    }
-                }
-            }
-        }
+
     }
 }
 

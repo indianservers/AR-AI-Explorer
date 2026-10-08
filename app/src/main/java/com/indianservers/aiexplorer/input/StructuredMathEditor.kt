@@ -109,17 +109,56 @@ data class MathEditorState(
  */
 object StructuredMathCodec {
     fun fromParser(value: TextFieldValue): TextFieldValue {
-        val converted = convertLogCallsToEditor(value.text)
-        if (converted == value.text) return value
-        return TextFieldValue(converted, TextRange(converted.length))
+        return convertWithSelection(value, ::convertLogCallsToEditor)
     }
 
     fun toParser(value: TextFieldValue): TextFieldValue {
-        val converted = convertNthRootsToParser(
-            convertCubeRootsToParser(convertLogBaseToParser(value.text)),
-        )
+        return convertWithSelection(value) { source ->
+            convertNthRootsToParser(convertCubeRootsToParser(convertLogBaseToParser(source)))
+        }
+    }
+
+    /** Track a cursor marker through argument reordering without altering the wire syntax. */
+    private fun convertWithSelection(value: TextFieldValue, convert: (String) -> String): TextFieldValue {
+        val converted = convert(value.text)
         if (converted == value.text) return value
-        return TextFieldValue(converted, TextRange(converted.length))
+        var marker = '\uE000'
+        while (marker in value.text && marker < '\uF8FF') marker++
+        if (marker in value.text) return TextFieldValue(converted, TextRange(converted.length))
+        fun map(offset: Int): Int {
+            val candidates = buildList {
+                add(offset)
+                for (distance in 1..16) {
+                    if (offset + distance <= value.text.length) add(offset + distance)
+                    if (offset - distance >= 0) add(offset - distance)
+                }
+                add(0); add(value.text.length)
+            }
+            for (anchor in candidates.distinct()) {
+                val marked = convert(value.text.substring(0, anchor) + marker + value.text.substring(anchor))
+                val position = marked.indexOf(marker)
+                if (position >= 0 && marked.replace(marker.toString(), "") == converted) {
+                    return (position + offset - anchor).coerceIn(0, converted.length)
+                }
+            }
+            return offset.coerceIn(0, converted.length)
+        }
+        val selection = if (value.selection.collapsed) TextRange(map(value.selection.end)) else {
+            val boundaries = mutableListOf(value.selection.min, value.selection.max)
+            value.text.indices.filter { value.text.startsWith("log(", it) || value.text.startsWith("logbase(", it) }.forEach { index ->
+                val open = value.text.indexOf('(', index)
+                val close = matchingParen(value.text, open)
+                if (close >= 0) topLevelArgumentRanges(value.text, open + 1, close).forEach { (start, end) ->
+                    if (start in value.selection.min..value.selection.max) boundaries += start
+                    if (end in value.selection.min..value.selection.max) boundaries += end
+                }
+            }
+            val mapped = boundaries.map(::map)
+            val start = mapped.min()
+            val end = mapped.max()
+            if (value.selection.start <= value.selection.end) TextRange(start, end) else TextRange(end, start)
+        }
+        return TextFieldValue(converted, selection)
     }
 
     fun state(value: TextFieldValue): MathEditorState {
@@ -363,7 +402,7 @@ object StructuredMathEditing {
     private fun structuralRegions(source: String): List<Region> {
         val result = mutableListOf<Region>()
         var index = 0
-        while (index < source.length - 1) {
+        while (index < source.length) {
             val mode = when {
                 source.startsWith("^(", index) -> MathInputMode.SUPERSCRIPT
                 source.startsWith("_(", index) -> MathInputMode.SUBSCRIPT
@@ -371,16 +410,16 @@ object StructuredMathEditing {
             }
             if (mode != null) {
                 val open = index + 1
-                val close = matchingParen(source, open)
+                val close = matchingParen(source, open).takeIf { it >= 0 } ?: source.length
                 if (close >= 0) {
-                    result += Region(mode, open + 1, close, close + 1, "script:$index")
+                    result += Region(mode, open + 1, close, (close + 1).coerceAtMost(source.length), "script:$index")
                     index = open + 1
                     continue
                 }
             }
             if (source.startsWith("logbase(", index)) {
                 val open = index + 7
-                val close = matchingParen(source, open)
+                val close = matchingParen(source, open).takeIf { it >= 0 } ?: source.length
                 if (close >= 0) {
                     val comma = topLevelComma(source, open + 1, close)
                     if (comma >= 0) {
@@ -392,21 +431,21 @@ object StructuredMathEditing {
             }
             if (source.startsWith("sqrt(", index)) {
                 val open = index + 4
-                val close = matchingParen(source, open)
+                val close = matchingParen(source, open).takeIf { it >= 0 } ?: source.length
                 if (close >= 0) {
                     result += Region(MathInputMode.RADICAND, open + 1, close, close + 1, "sqrt:$index")
                 }
             }
             if (source.startsWith("cbrt(", index)) {
                 val open = index + 4
-                val close = matchingParen(source, open)
+                val close = matchingParen(source, open).takeIf { it >= 0 } ?: source.length
                 if (close >= 0) {
                     result += Region(MathInputMode.RADICAND, open + 1, close, close + 1, "cbrt:$index")
                 }
             }
             if (source.startsWith("nthroot(", index)) {
                 val open = index + 7
-                val close = matchingParen(source, open)
+                val close = matchingParen(source, open).takeIf { it >= 0 } ?: source.length
                 if (close >= 0) {
                     val comma = topLevelComma(source, open + 1, close)
                     if (comma >= 0) {
@@ -417,9 +456,9 @@ object StructuredMathEditing {
                 }
             }
             val functionName = functionNameAt(source, index)
-            if (functionName in structuredMultiArgumentFunctions) {
+            if (functionName != null && functionName !in setOf("sqrt", "cbrt", "nthroot", "logbase")) {
                 val open = index + functionName.orEmpty().length
-                val close = matchingParen(source, open)
+                val close = matchingParen(source, open).takeIf { it >= 0 } ?: source.length
                 if (close >= 0) {
                     topLevelArgumentRanges(source, open + 1, close).forEachIndexed { argumentIndex, range ->
                         result += Region(
@@ -458,28 +497,31 @@ object StructuredMathEditing {
                         )
                     }
                 }
-                val close = numeratorClose
+                val close = numeratorClose.takeIf { it >= 0 } ?: source.length
                 val functionName = functionNameBefore(source, index)
                 val ownedByStructure =
                     source.getOrNull(index - 1) in setOf('^', '_') ||
-                        functionName in setOf("sqrt", "cbrt", "nthroot", "logbase") ||
-                        functionName in structuredMultiArgumentFunctions ||
+                        functionName != null ||
                         fractionStartsAt(source, index) ||
                         source.getOrNull(index - 1) == '/'
                 if (close >= 0 && !ownedByStructure) {
                     result += Region(
-                        mode = if (functionName != null) MathInputMode.FUNCTION_ARGUMENT else MathInputMode.BRACKET_CONTENT,
+                        mode = MathInputMode.BRACKET_CONTENT,
                         contentStart = index + 1,
                         contentEnd = close,
                         sourceEnd = close + 1,
-                        owner = if (functionName != null) "function:$functionName:$index" else "bracket:$index",
+                        owner = "bracket:$index",
                     )
                 }
+            }
+            if (source[index] == '{') {
+                val close = matchingMathBrackets(source, index)?.second ?: source.length
+                result += Region(MathInputMode.BRACKET_CONTENT, index + 1, close, (close + 1).coerceAtMost(source.length), "bracket:$index")
             }
             index++
         }
         result += matrixCellRegions(source)
-        return result
+        return result.map { it.copy(sourceEnd = it.sourceEnd.coerceAtMost(source.length)) }
     }
 
     private fun activeRegion(value: TextFieldValue): Region =
@@ -520,8 +562,8 @@ object StructuredMathEditing {
                 rowStart++
                 continue
             }
-            val rowEnd = matchingSquareBracket(source, rowStart)
-            if (rowEnd < 0 || source.substring(rowStart + 1, rowEnd).contains('[')) {
+            val rowEnd = matchingSquareBracket(source, rowStart).takeIf { it >= 0 } ?: source.length
+            if (source.substring(rowStart + 1, rowEnd).contains('[')) {
                 rowStart++
                 continue
             }
@@ -547,6 +589,7 @@ object StructuredMathEditing {
                 }
                 cursor++
             }
+            if (cellStart <= rowEnd) regions += Region(MathInputMode.MATRIX_CELL, cellStart, rowEnd, rowEnd, "$owner:$cellStart")
             rowStart = rowEnd + 1
         }
         return regions
@@ -935,7 +978,15 @@ object StructuredMathVisualLayout {
                 continue
             }
             if ((source[index] == '[' || source[index] == ',') &&
-                source.getOrNull(index + 1) in setOf(',', ']')
+                source.getOrNull(index + 1) in setOf(',', ']', ')')
+            ) {
+                output.appendReplacement(index, index + 1, source[index].toString(), inheritedStyle)
+                output.appendReplacement(index + 1, index + 1, "□", slotStyle)
+                index++
+                continue
+            }
+            if (source[index] == '(' && source.getOrNull(index + 1) == ',' ||
+                source[index] in setOf('(', '[', ',') && index == source.lastIndex
             ) {
                 output.appendReplacement(index, index + 1, source[index].toString(), inheritedStyle)
                 output.appendReplacement(index + 1, index + 1, "□", slotStyle)
@@ -1275,10 +1326,10 @@ object StructuredMathVisualLayout {
                 originalToVisual[original] = visualIndex.coerceIn(0, visual.length)
             }
             val visualToOriginal = IntArray(visual.length + 1)
-            visualToOriginal[0] = 0
             for (index in origins.indices) {
-                visualToOriginal[index + 1] = visualEnds[index]
+                visualToOriginal[index] = origins[index]
             }
+            visualToOriginal[visual.length] = visualEnds.lastOrNull() ?: 0
             return TransformedText(
                 visual,
                 object : OffsetMapping {
@@ -1312,7 +1363,13 @@ private val structuredMultiArgumentFunctions = structuredCalculusFunctions
 private fun knownFunctionAt(source: String, index: Int): String? =
     structuredFunctions.firstOrNull { source.startsWith("$it(", index) }
 
-private fun functionNameAt(source: String, index: Int): String? = knownFunctionAt(source, index)
+private fun functionNameAt(source: String, index: Int): String? {
+    if (index > 0 && (source[index - 1].isLetterOrDigit() || source[index - 1] == '_')) return null
+    if (source.getOrNull(index)?.isLetter() != true) return null
+    var end = index
+    while (source.getOrNull(end)?.let { it.isLetterOrDigit() || it == '_' } == true) end++
+    return source.substring(index, end).takeIf { source.getOrNull(end) == '(' && source.getOrNull(end - 1) != '_' }
+}
 
 internal fun matchingParen(source: String, open: Int): Int {
     if (source.getOrNull(open) != '(') return -1
@@ -1333,8 +1390,8 @@ private fun topLevelComma(source: String, start: Int, end: Int): Int {
     var depth = 0
     for (index in start until end) {
         when (source[index]) {
-            '(' -> depth++
-            ')' -> depth--
+            '(', '[', '{' -> depth++
+            ')', ']', '}' -> depth--
             ',' -> if (depth == 0) return index
         }
     }
@@ -1347,8 +1404,8 @@ private fun topLevelArgumentRanges(source: String, start: Int, end: Int): List<P
     var depth = 0
     for (index in start until end) {
         when (source[index]) {
-            '(' -> depth++
-            ')' -> depth--
+            '(', '[', '{' -> depth++
+            ')', ']', '}' -> depth--
             ',' -> if (depth == 0) {
                 result += argumentStart to index
                 argumentStart = index + 1

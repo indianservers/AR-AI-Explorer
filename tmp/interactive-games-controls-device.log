@@ -1,0 +1,23 @@
+
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:..
+Error in allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.allTenMechanicsCanBeSolvedUsingTheirTouchControls$tap(GeneratedGameSessionTest.kt:43)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.allTenMechanicsCanBeSolvedUsingTheirTouchControls(GeneratedGameSessionTest.kt:60)
+.
+
+Time: 19.294
+There was 1 failure:
+1) allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.allTenMechanicsCanBeSolvedUsingTheirTouchControls$tap(GeneratedGameSessionTest.kt:43)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.allTenMechanicsCanBeSolvedUsingTheirTouchControls(GeneratedGameSessionTest.kt:60)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1
+
+
