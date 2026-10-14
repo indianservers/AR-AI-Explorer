@@ -10563,6 +10563,9 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
 
 @Composable
 private fun SpatialARScreen(vm: ExplorerViewModel, initialMode: ArMathWorkspaceMode = vm.arWorkspaceLaunchMode) {
+    if (com.indianservers.aiexplorer.ar3dgraph.presentation.awaitARSafetyAcknowledgement(
+            initialMode.name, vm::returnToMathMenu,
+        )) return
     val context = LocalContext.current
     val activity = context as? ComponentActivity
     val arExportScope=rememberCoroutineScope()

@@ -60,6 +60,7 @@ class AR3DGraphScreenTest {
             }
         }
 
+        compose.onNodeWithText("Continue safely").performClick()
         compose.onNodeWithTag("ar3dgraph-equation-input").assertIsDisplayed()
             .performTextReplacement("z=x+2*y")
         compose.onNodeWithTag("ar3dgraph-plot").performClick()
@@ -85,11 +86,14 @@ class AR3DGraphScreenTest {
         }
 
         repeat(25) {
+            compose.onNodeWithText("AR safety warning").assertIsDisplayed()
+            compose.onNodeWithText("Continue safely").performClick()
             compose.onNodeWithTag("ar3dgraph-screen").assertIsDisplayed()
             compose.runOnUiThread { visible = false }
             compose.onNodeWithText("Host screen").assertIsDisplayed()
             compose.runOnUiThread { visible = true }
         }
+        compose.onNodeWithText("Continue safely").performClick()
         compose.onNodeWithTag("ar3dgraph-screen").assertIsDisplayed()
     }
 
@@ -114,6 +118,7 @@ class AR3DGraphScreenTest {
             }
         }
 
+        compose.onNodeWithText("Continue safely").performClick()
         repeat(25) { cycle ->
             val valid = "z=x+${cycle % 5}*y"
             compose.onNodeWithTag("ar3dgraph-equation-input").performTextReplacement(valid)
@@ -147,6 +152,7 @@ class AR3DGraphScreenTest {
         val model = AR3DGraphViewModel(SavedStateHandle(), DirectExecutor()) { it() }
         compose.setContent { MaterialTheme { AR3DGraphScreen(onBack = {}, model = model) } }
 
+        compose.onNodeWithText("Continue safely").performClick()
         repeat(10) {
             compose.onNodeWithTag("ar3dgraph-help").performClick()
             compose.onNodeWithTag("ar3dgraph-help-dialog").assertIsDisplayed()
@@ -180,6 +186,7 @@ class AR3DGraphScreenTest {
             }
         }
 
+        compose.onNodeWithText("Continue safely").performClick()
         repeat(5) { index ->
             compose.runOnUiThread { profile = index }
             compose.waitForIdle()

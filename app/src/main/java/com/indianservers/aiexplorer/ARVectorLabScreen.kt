@@ -93,6 +93,7 @@ private enum class VectorOperation(val label: String, val formula: String) {
 
 @Composable
 fun ARVectorLabScreen(onBack: () -> Unit) {
+    if (com.indianservers.aiexplorer.ar3dgraph.presentation.awaitARSafetyAcknowledgement("vector-lab", onBack)) return
     var operation by remember { mutableStateOf(VectorOperation.Addition) }
     var vectorA by remember { mutableStateOf(ArVector(2f, 1f, 1f)) }
     var vectorB by remember { mutableStateOf(ArVector(-1f, 2f, 1f)) }

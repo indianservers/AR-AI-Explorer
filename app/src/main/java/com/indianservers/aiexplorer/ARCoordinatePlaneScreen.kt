@@ -99,6 +99,7 @@ private val initialCoordinatePoints = listOf(
 
 @Composable
 fun ARCoordinatePlaneScreen(onBack: () -> Unit) {
+    if (com.indianservers.aiexplorer.ar3dgraph.presentation.awaitARSafetyAcknowledgement("coordinate-plane", onBack)) return
     var points by remember { mutableStateOf(initialCoordinatePoints) }
     var history by remember { mutableStateOf<List<List<CoordinatePoint>>>(emptyList()) }
     var selectedId by remember { mutableStateOf<Int?>(null) }

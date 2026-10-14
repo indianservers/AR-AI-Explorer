@@ -119,6 +119,7 @@ fun AR3DGraphScreen(
     graphEngine: GraphEngineContract = DisconnectedGraphEngineContract,
     model: AR3DGraphViewModel = viewModel(),
 ) {
+    if (awaitARSafetyAcknowledgement("3d-graph", onBack)) return
     val context = LocalContext.current
     val activity = LocalActivity.current
     val lifecycleOwner = LocalLifecycleOwner.current
