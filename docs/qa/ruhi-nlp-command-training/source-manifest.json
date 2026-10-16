@@ -1,0 +1,16 @@
+{
+  "scripts/train_ruhi_graph_nlp.py": "76be6e33a6e868ea8e41622a8ba51e56d94f2b372d9f630a5d423dd243b26b66",
+  "scripts/evaluate_ruhi_requested_nlp.py": "6654fe8ca342c82f1721be79b3e5c6a4469348945df202e129b04fc3d5a57688",
+  "scripts/build_ruhi_nlp_training_report.py": "458ce1d1e08f936252c05b206d3d2e8c1f44954e972e11bc7af691b216827f99",
+  "scripts/ruhi-nlp-requirements.txt": "a088720abd985b22e21d6d3042dc5012337f5fca795ff9345fcbf532c1abcf54",
+  "app/src/androidTest/java/com/indianservers/aiexplorer/RuhiGraphRenderingTest.kt": "34bfd6c924963015c29cde532c5b613f3acd8d6d3a8ea0240a83a486f0ec1bf9",
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/TensorFlowGraphNlp.kt": "336b24c33945104af59d0f94e5220e105f86a783a33bb30b5a8d08c77642a9e6",
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/GraphLanguageRouter.kt": "9ed531ca2fc2a8a38a5b0f76ca7bb632963af77985c049732453c63606a0ddcd",
+  "docs/qa/RUHI_NLP_MODEL_CARD.md": "85878a0617a877babf534eda5457c36dca0b450e1805b8bfec4570b3a090371e",
+  "app/src/main/assets/ruhi_nlp/command_examples.json": "c4adbfd859b6a739abda17dbbce50a08a070c4e4cb878fb8b7795082b653e309",
+  "app/src/main/assets/ruhi_nlp/graph_intent.tflite": "782fa1398227e8dde6c2b5d6a1e0af3d3b2ba07641400a49511316af4ef55ffa",
+  "app/src/main/assets/ruhi_nlp/metadata.json": "da623557194201d2fb19e8c765ac0c6e80f686020411245224a9656ac7cbc54d",
+  "app/src/main/assets/ruhi_nlp/model.tflite": "782fa1398227e8dde6c2b5d6a1e0af3d3b2ba07641400a49511316af4ef55ffa",
+  "app/build/outputs/apk/debug/app-debug.apk": "92574db8b82f4092f9bf634129bb50b1db5b7e222902378be3574cb0b2f18234",
+  "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk": "5aa1218595a1030679348efcaeba6f3b16224f773775b21ba82c2ef3a97f3059"
+}

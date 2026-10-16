@@ -1,0 +1,63 @@
+{
+  "model_training_occurred": true,
+  "training_source": "Authored synthetic intent templates, explicitly requested offline TensorFlow training",
+  "correction_records_used_for_training": false,
+  "student_data_used_for_training": false,
+  "corrections": [
+    {
+      "version": 1,
+      "command": "Remove the highlight",
+      "intent": "HIGHLIGHT",
+      "failure_category": "NLP",
+      "root_cause": "Generic remove handler preceded specific appearance removal",
+      "expected_result": "Restore the selected layer's prior color without deleting it",
+      "verified": true,
+      "evidence_test_id": 89,
+      "administrator_approved_for_training": false,
+      "promoted_to_shared_training": false,
+      "state_verified": true,
+      "verification_scope": "Scene/geometry and central canvas pixel assertion"
+    },
+    {
+      "version": 1,
+      "command": "Plot z = 1 / (x² + y²)",
+      "intent": "PLOT",
+      "failure_category": "GEOMETRY",
+      "root_cause": "Non-finite samples were replaced by nearby averages or zero",
+      "expected_result": "Omit cells incident to the pole; retain finite topology",
+      "verified": true,
+      "evidence_test_id": 144,
+      "administrator_approved_for_training": false,
+      "promoted_to_shared_training": false,
+      "state_verified": true,
+      "verification_scope": "Scene/geometry and central canvas pixel assertion"
+    },
+    {
+      "version": 1,
+      "command": "Duplicate the selected object",
+      "intent": "DUPLICATE",
+      "failure_category": "RENDERING",
+      "root_cause": "An identical overlapping copy cannot establish a visible change",
+      "expected_result": "Create a unique layer with the same shape/material and a visible translation",
+      "verified": true,
+      "evidence_test_id": 119,
+      "administrator_approved_for_training": false,
+      "promoted_to_shared_training": false,
+      "state_verified": true,
+      "verification_scope": "Scene/geometry and central canvas pixel assertion"
+    },
+    {
+      "version": 1,
+      "command": "Plot y+z=0.13; plot the grid-aligned plane z=0",
+      "intent": "PLOT",
+      "failure_category": "GEOMETRY",
+      "root_cause": "Four edge hits were not cyclically ordered; zero edges introduced extra midpoints and adjacent cells emitted coincident faces",
+      "expected_result": "Single coverage, correct plane area, and consistent outward winding",
+      "state_verified": true,
+      "verified": false,
+      "verification_scope": "Independent native mesh tests; rendering pending",
+      "administrator_approved_for_training": false,
+      "promoted_to_shared_training": false
+    }
+  ]
+}

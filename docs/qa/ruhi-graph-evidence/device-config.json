@@ -1,0 +1,18 @@
+{
+  "serial": "emulator-5556",
+  "avd": "Codex_AR_Review",
+  "api": 35,
+  "full_run": {
+    "size": "1080x2400",
+    "density": 420
+  },
+  "render_capture": "Android UiAutomation display screenshot cropped to measured canvas bounds; central plot ROI",
+  "symmetry_policy": "Sphere/cylinder/cone symmetry rotations may preserve silhouette or change triangulation; numeric orientation and transformed vertices checked independently",
+  "jvm_regression_tests": 61,
+  "jvm_failures": 0,
+  "model_runtime": "LiteRT 2.1.0 CPU Interpreter",
+  "model_training_framework": "TensorFlow 2.20.0; authored synthetic data only",
+  "model_sha256": "0de8c6a631a9bfe76828eb61d637be1d1389b6c9a62cc34f55e67eadfa4841f5",
+  "instrumentation_methods": 7,
+  "engine_model_sha256": "476da8e9133abbb1c2a5b6db956f85978bb0986804da095270f943bb77f35a8f"
+}

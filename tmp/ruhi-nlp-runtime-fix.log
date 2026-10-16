@@ -1,0 +1,18 @@
+Collecting numpy==1.26.4
+  Downloading numpy-1.26.4-cp311-cp311-win_amd64.whl (15.8 MB)
+Collecting protobuf==5.29.5
+  Using cached protobuf-5.29.5-cp310-abi3-win_amd64.whl (434 kB)
+Installing collected packages: protobuf, numpy
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 7.36.2
+    Uninstalling protobuf-7.36.2:
+      Successfully uninstalled protobuf-7.36.2
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.4.6
+    Uninstalling numpy-2.4.6:
+      Successfully uninstalled numpy-2.4.6
+Successfully installed numpy-1.26.4 protobuf-5.29.5
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+ml-dtypes 0.6.0 requires numpy>=2.0.0, but you have numpy 1.26.4 which is incompatible.
+WARNING: You are using pip version 21.2.3; however, version 26.2.1 is available.
+You should consider upgrading via the 'C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining\Scripts\python.exe -m pip install --upgrade pip' command.

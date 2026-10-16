@@ -1,0 +1,104 @@
+Collecting tensorflow==2.20.0
+  Downloading tensorflow-2.20.0-cp312-cp312-win_amd64.whl.metadata (4.6 kB)
+Collecting protobuf==5.29.5
+  Downloading protobuf-5.29.5-cp310-abi3-win_amd64.whl.metadata (592 bytes)
+Collecting ml-dtypes==0.5.4
+  Downloading ml_dtypes-0.5.4-cp312-cp312-win_amd64.whl.metadata (9.2 kB)
+Requirement already satisfied: absl-py>=1.0.0 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (2.4.0)
+Collecting astunparse>=1.6.0 (from tensorflow==2.20.0)
+  Downloading astunparse-1.6.3-py2.py3-none-any.whl.metadata (4.4 kB)
+Requirement already satisfied: flatbuffers>=24.3.25 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (25.12.19)
+Collecting gast!=0.5.0,!=0.5.1,!=0.5.2,>=0.2.1 (from tensorflow==2.20.0)
+  Downloading gast-0.7.0-py3-none-any.whl.metadata (1.5 kB)
+Collecting google_pasta>=0.1.1 (from tensorflow==2.20.0)
+  Downloading google_pasta-0.2.0-py3-none-any.whl.metadata (814 bytes)
+Collecting libclang>=13.0.0 (from tensorflow==2.20.0)
+  Downloading libclang-18.1.1-py2.py3-none-win_amd64.whl.metadata (5.3 kB)
+Collecting opt_einsum>=2.3.2 (from tensorflow==2.20.0)
+  Downloading opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
+Requirement already satisfied: packaging in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (24.1)
+Requirement already satisfied: requests<3,>=2.21.0 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (2.32.3)
+Collecting setuptools (from tensorflow==2.20.0)
+  Downloading setuptools-84.0.0-py3-none-any.whl.metadata (6.6 kB)
+Requirement already satisfied: six>=1.12.0 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (1.16.0)
+Collecting termcolor>=1.1.0 (from tensorflow==2.20.0)
+  Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+Requirement already satisfied: typing_extensions>=3.6.6 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (4.12.2)
+Collecting wrapt>=1.11.0 (from tensorflow==2.20.0)
+  Downloading wrapt-2.5.1-cp312-cp312-win_amd64.whl.metadata (7.7 kB)
+Collecting grpcio<2.0,>=1.24.3 (from tensorflow==2.20.0)
+  Downloading grpcio-1.84.0-cp312-cp312-win_amd64.whl.metadata (3.9 kB)
+Collecting tensorboard~=2.20.0 (from tensorflow==2.20.0)
+  Downloading tensorboard-2.20.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting keras>=3.10.0 (from tensorflow==2.20.0)
+  Downloading keras-3.15.1-py3-none-any.whl.metadata (6.4 kB)
+Requirement already satisfied: numpy>=1.26.0 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorflow==2.20.0) (2.4.4)
+Collecting h5py>=3.11.0 (from tensorflow==2.20.0)
+  Downloading h5py-3.16.0-cp312-cp312-win_amd64.whl.metadata (3.1 kB)
+Collecting wheel<1.0,>=0.23.0 (from astunparse>=1.6.0->tensorflow==2.20.0)
+  Downloading wheel-0.48.0-py3-none-any.whl.metadata (2.3 kB)
+Requirement already satisfied: rich in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from keras>=3.10.0->tensorflow==2.20.0) (13.7.1)
+Collecting namex (from keras>=3.10.0->tensorflow==2.20.0)
+  Downloading namex-0.1.0-py3-none-any.whl.metadata (322 bytes)
+Collecting optree (from keras>=3.10.0->tensorflow==2.20.0)
+  Downloading optree-0.20.0-cp312-cp312-win_amd64.whl.metadata (33 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from requests<3,>=2.21.0->tensorflow==2.20.0) (3.3.2)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from requests<3,>=2.21.0->tensorflow==2.20.0) (3.7)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from requests<3,>=2.21.0->tensorflow==2.20.0) (2.2.1)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from requests<3,>=2.21.0->tensorflow==2.20.0) (2024.6.2)
+Collecting markdown>=2.6.8 (from tensorboard~=2.20.0->tensorflow==2.20.0)
+  Downloading markdown-3.11.1-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: pillow in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from tensorboard~=2.20.0->tensorflow==2.20.0) (10.3.0)
+Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard~=2.20.0->tensorflow==2.20.0)
+  Downloading tensorboard_data_server-0.7.2-py3-none-any.whl.metadata (1.1 kB)
+Collecting werkzeug>=1.0.1 (from tensorboard~=2.20.0->tensorflow==2.20.0)
+  Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+Requirement already satisfied: markupsafe>=2.1.1 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from werkzeug>=1.0.1->tensorboard~=2.20.0->tensorflow==2.20.0) (2.1.5)
+Requirement already satisfied: markdown-it-py>=2.2.0 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from rich->keras>=3.10.0->tensorflow==2.20.0) (3.0.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from rich->keras>=3.10.0->tensorflow==2.20.0) (2.18.0)
+Requirement already satisfied: mdurl~=0.1 in c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages (from markdown-it-py>=2.2.0->rich->keras>=3.10.0->tensorflow==2.20.0) (0.1.2)
+Downloading tensorflow-2.20.0-cp312-cp312-win_amd64.whl (331.9 MB)
+   ---------------------------------------- 331.9/331.9 MB 9.1 MB/s eta 0:00:00
+Downloading protobuf-5.29.5-cp310-abi3-win_amd64.whl (434 kB)
+   --------------------------------------- 434.8/434.8 kB 13.3 MB/s eta 0:00:00
+Downloading ml_dtypes-0.5.4-cp312-cp312-win_amd64.whl (212 kB)
+   --------------------------------------- 212.2/212.2 kB 13.5 MB/s eta 0:00:00
+Downloading astunparse-1.6.3-py2.py3-none-any.whl (12 kB)
+Downloading gast-0.7.0-py3-none-any.whl (22 kB)
+Downloading google_pasta-0.2.0-py3-none-any.whl (57 kB)
+   ---------------------------------------- 57.5/57.5 kB ? eta 0:00:00
+Downloading grpcio-1.84.0-cp312-cp312-win_amd64.whl (5.3 MB)
+   ---------------------------------------- 5.3/5.3 MB 14.0 MB/s eta 0:00:00
+Downloading h5py-3.16.0-cp312-cp312-win_amd64.whl (3.2 MB)
+   ---------------------------------------- 3.2/3.2 MB 14.5 MB/s eta 0:00:00
+Downloading keras-3.15.1-py3-none-any.whl (2.4 MB)
+   ---------------------------------------- 2.4/2.4 MB 13.9 MB/s eta 0:00:00
+Downloading libclang-18.1.1-py2.py3-none-win_amd64.whl (26.4 MB)
+   ---------------------------------------- 26.4/26.4 MB 13.4 MB/s eta 0:00:00
+Downloading opt_einsum-3.4.0-py3-none-any.whl (71 kB)
+   ---------------------------------------- 71.9/71.9 kB 3.9 MB/s eta 0:00:00
+Downloading tensorboard-2.20.0-py3-none-any.whl (5.5 MB)
+   ---------------------------------------- 5.5/5.5 MB 12.6 MB/s eta 0:00:00
+Downloading setuptools-84.0.0-py3-none-any.whl (818 kB)
+   ---------------------------------------- 818.2/818.2 kB 5.2 MB/s eta 0:00:00
+Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+Downloading wrapt-2.5.1-cp312-cp312-win_amd64.whl (106 kB)
+   ---------------------------------------- 106.0/106.0 kB 6.4 MB/s eta 0:00:00
+Downloading markdown-3.11.1-py3-none-any.whl (116 kB)
+   ---------------------------------------- 116.8/116.8 kB 6.7 MB/s eta 0:00:00
+Downloading tensorboard_data_server-0.7.2-py3-none-any.whl (2.4 kB)
+Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+   --------------------------------------- 228.7/228.7 kB 13.7 MB/s eta 0:00:00
+Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+Downloading namex-0.1.0-py3-none-any.whl (5.9 kB)
+Downloading optree-0.20.0-cp312-cp312-win_amd64.whl (567 kB)
+   --------------------------------------- 567.0/567.0 kB 11.8 MB/s eta 0:00:00
+Installing collected packages: namex, libclang, wrapt, wheel, werkzeug, termcolor, tensorboard-data-server, setuptools, protobuf, optree, opt_einsum, ml-dtypes, markdown, h5py, grpcio, google_pasta, gast, tensorboard, astunparse, keras, tensorflow
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 5.27.1
+    Not uninstalling protobuf at c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages, outside environment C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312
+    Can't uninstall 'protobuf'. No files were found to uninstall.
+Successfully installed astunparse-1.6.3 gast-0.7.0 google_pasta-0.2.0 grpcio-1.84.0 h5py-3.16.0 keras-3.15.1 libclang-18.1.1 markdown-3.11.1 ml-dtypes-0.5.4 namex-0.1.0 opt_einsum-3.4.0 optree-0.20.0 protobuf-5.29.5 setuptools-84.0.0 tensorboard-2.20.0 tensorboard-data-server-0.7.2 tensorflow-2.20.0 termcolor-3.3.0 werkzeug-3.1.9 wheel-0.48.0 wrapt-2.5.1
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312\Scripts\python.exe -m pip install --upgrade pip

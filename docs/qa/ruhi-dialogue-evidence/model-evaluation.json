@@ -1,0 +1,102 @@
+{
+  "model_sha256": "349bc9a0be6ae034bba8b9f13bae4c33f3c38e4feea8cfa07ef4f6f45463ac34",
+  "scenarios": 1100,
+  "unique_training_turns": 533,
+  "description": "Narrow authored held-out sentences, related templates remain; model proposes only, deterministic dialogue policy governs execution.",
+  "correct": 10,
+  "total": 10,
+  "accepted": 7,
+  "accepted_errors": 0,
+  "results": [
+    {
+      "text": "pending equation y = sin(x) + 7",
+      "expected": "ANSWER_SLOT",
+      "actual": "ANSWER_SLOT",
+      "confidence": 0.9770911335945129,
+      "margin": 0.9670443534851074,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "idle create a cylinder with radius 3 and height 8",
+      "expected": "EXECUTE",
+      "actual": "EXECUTE",
+      "confidence": 0.7528071999549866,
+      "margin": 0.5405191779136658,
+      "correct": true,
+      "accepted": false
+    },
+    {
+      "text": "idle make the height 39",
+      "expected": "MODIFY_SCENE",
+      "actual": "MODIFY_SCENE",
+      "confidence": 0.992695689201355,
+      "margin": 0.9890305399894714,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "pending compare please resume",
+      "expected": "RESUME_PENDING",
+      "actual": "RESUME_PENDING",
+      "confidence": 0.9356540441513062,
+      "margin": 0.9123796820640564,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "pending equation cancel it",
+      "expected": "CANCEL_PENDING",
+      "actual": "CANCEL_PENDING",
+      "confidence": 0.9756386280059814,
+      "margin": 0.9655352234840393,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "idle show its angles",
+      "expected": "ANSWER_QUESTION",
+      "actual": "ANSWER_QUESTION",
+      "confidence": 0.9861664772033691,
+      "margin": 0.9829890131950378,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "pending compare first explain quadratic equations",
+      "expected": "EXPLAIN",
+      "actual": "EXPLAIN",
+      "confidence": 0.8831164836883545,
+      "margin": 0.8087784051895142,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "idle undo the last action",
+      "expected": "UNDO",
+      "actual": "UNDO",
+      "confidence": 0.6903380751609802,
+      "margin": 0.6122815608978271,
+      "correct": true,
+      "accepted": false
+    },
+    {
+      "text": "idle redo the last action",
+      "expected": "REDO",
+      "actual": "REDO",
+      "confidence": 0.9766516089439392,
+      "margin": 0.9707174897193909,
+      "correct": true,
+      "accepted": true
+    },
+    {
+      "text": "pending target sphere 3",
+      "expected": "ANSWER_SLOT",
+      "actual": "ANSWER_SLOT",
+      "confidence": 0.37079209089279175,
+      "margin": 0.13962231576442719,
+      "correct": true,
+      "accepted": false
+    }
+  ]
+}

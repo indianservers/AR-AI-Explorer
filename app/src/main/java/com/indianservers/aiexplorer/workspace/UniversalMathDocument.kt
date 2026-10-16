@@ -487,12 +487,12 @@ object UniversalWorkspaceBridge {
 
     private fun SpatialSurfaceLayer.universalStyle(): String = listOf(
         material.name, quality.name, opacity, domain.uMin, domain.uMax, domain.vMin, domain.vMax,
-        colorIndex, textureKey, glow, renderMode.name, kind.name, expressionY, expressionZ,
+        colorIndex, textureKey, glow, renderMode.name, kind.name, expressionY, expressionZ, colorHex, graphTransform.encode(), graphGroup,
     ).joinToString(";")
 
     private fun SpatialSurfaceLayer.withUniversalStyle(style: String): SpatialSurfaceLayer {
         val values = style.split(';')
-        if (values.size !in setOf(11, 14)) return this
+        if (values.size !in setOf(11, 14, 17)) return this
         return runCatching {
             copy(
                 material = SpatialMaterial.valueOf(values[0]),
@@ -503,6 +503,9 @@ object UniversalWorkspaceBridge {
                 renderMode = SpatialSurfaceRenderMode.valueOf(values[10]),
                 kind = values.getOrNull(11)?.let(SpatialSurfaceKind::valueOf) ?: kind,
                 expressionY = values.getOrNull(12).orEmpty(), expressionZ = values.getOrNull(13).orEmpty(),
+                colorHex = values.getOrNull(14).orEmpty(),
+                graphTransform = values.getOrNull(15)?.let(com.indianservers.aiexplorer.core.GraphTransform::decode) ?: com.indianservers.aiexplorer.core.GraphTransform(),
+                graphGroup = values.getOrNull(16).orEmpty(),
             )
         }.getOrDefault(this)
     }

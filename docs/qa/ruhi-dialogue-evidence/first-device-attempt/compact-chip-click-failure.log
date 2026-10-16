@@ -1,0 +1,23 @@
+
+com.indianservers.aiexplorer.RuhiDialogueRenderingTest:.
+Error in incompletePromptChipDrawsRealCurveThenConversationalEditChangesIt(com.indianservers.aiexplorer.RuhiDialogueRenderingTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiDialogueRenderingTest.incompletePromptChipDrawsRealCurveThenConversationalEditChangesIt(RuhiDialogueRenderingTest.kt:56)
+
+com.indianservers.aiexplorer.RuhiSharedRenderingTest:....
+com.indianservers.aiexplorer.RuhiGraphRenderingTest:..
+
+Time: 57.035
+There was 1 failure:
+1) incompletePromptChipDrawsRealCurveThenConversationalEditChangesIt(com.indianservers.aiexplorer.RuhiDialogueRenderingTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiDialogueRenderingTest.incompletePromptChipDrawsRealCurveThenConversationalEditChangesIt(RuhiDialogueRenderingTest.kt:56)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+
+

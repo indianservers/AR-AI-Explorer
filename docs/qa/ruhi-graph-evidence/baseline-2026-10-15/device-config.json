@@ -1,0 +1,22 @@
+{
+  "serial": "emulator-5556",
+  "avd": "Codex_AR_Review",
+  "api": 35,
+  "full_run": {
+    "size": "1080x2400",
+    "density": 420
+  },
+  "stress_retry": {
+    "case_ids": [
+      19,
+      146
+    ],
+    "size": "720x1280",
+    "density": 240,
+    "outcome": "Both case 19 after-capture and case 146 before-capture exhausted bounded Compose redraw retries; state and mesh assertions passed."
+  },
+  "render_capture": "Compose canvas capture; up to 3 bounded redraw attempts",
+  "jvm_regression_tests": 42,
+  "jvm_failures": 0,
+  "emulator_display_restored": true
+}

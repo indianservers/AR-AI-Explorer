@@ -1,0 +1,540 @@
+{
+  "version": 2,
+  "purpose": "User-requested developer training examples. Recognition does not grant execution support. Statuses describe existing Graph3D audit preconditions only.",
+  "commands": [
+    {
+      "id": 10,
+      "text": "Create a tetrahedron.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 12,
+      "text": "Create a dodecahedron.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 13,
+      "text": "Create an icosahedron.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 15,
+      "text": "Draw a 3D triangle.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 16,
+      "text": "Create a line segment.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 17,
+      "text": "Plot a point at (2, 3, 4).",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 18,
+      "text": "Create a vector from (0, 0, 0) to (3, 4, 5).",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 29,
+      "text": "Delete objects inside the selected group.",
+      "intent": "DELETE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 31,
+      "text": "Move the cube to (3, 2, 1).",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 32,
+      "text": "Shift the sphere 5 units right.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 33,
+      "text": "Move the cube 2 units upward.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 34,
+      "text": "Move the cone backward by 3 units.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 35,
+      "text": "Place the cylinder at the origin.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 36,
+      "text": "Move all cubes 2 units left.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 37,
+      "text": "Position the sphere above the cube.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 38,
+      "text": "Put the cone next to the cylinder.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 39,
+      "text": "Move the selected object to (0, 0, 0).",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 40,
+      "text": "Translate the cube by vector (2, 3, 4).",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 41,
+      "text": "Move the sphere along the X-axis.",
+      "intent": "MOVE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 42,
+      "text": "Align all objects along the Y-axis.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 43,
+      "text": "Place three cubes in a row.",
+      "intent": "ARRANGE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 44,
+      "text": "Distribute five spheres evenly.",
+      "intent": "ARRANGE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 45,
+      "text": "Move all objects to the positive X region.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 46,
+      "text": "Double the cube's size.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 47,
+      "text": "Reduce the sphere to half its size.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 48,
+      "text": "Make the cylinder taller.",
+      "intent": "SCALE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 49,
+      "text": "Set the cube's side length to 5 units.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 50,
+      "text": "Increase the cone's height to 8 units.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 51,
+      "text": "Scale all objects by 1.5.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 52,
+      "text": "Make the cube twice as wide.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 53,
+      "text": "Change the sphere radius to 3.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 54,
+      "text": "Set the cylinder radius to 2.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 55,
+      "text": "Stretch the cube along the Z-axis.",
+      "intent": "SCALE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 56,
+      "text": "Make the pyramid smaller.",
+      "intent": "SCALE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 57,
+      "text": "Resize the selected shape to 4 × 5 × 6.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 58,
+      "text": "Make all cubes the same size.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 59,
+      "text": "Restore the selected object's original size.",
+      "intent": "SCALE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 61,
+      "text": "Rotate the cube 45 degrees.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 62,
+      "text": "Rotate the sphere around the X-axis by 90 degrees.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 63,
+      "text": "Turn the cylinder upside down.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 64,
+      "text": "Rotate all cubes 30 degrees around the Y-axis.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 65,
+      "text": "Spin the selected object continuously.",
+      "intent": "ANIMATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 66,
+      "text": "Stop the rotation.",
+      "intent": "STOP_ANIMATION",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 67,
+      "text": "Tilt the cube 15 degrees.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 68,
+      "text": "Rotate the cone clockwise by 90 degrees.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 69,
+      "text": "Align the cylinder with the Z-axis.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 70,
+      "text": "Reset the cube's rotation.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 71,
+      "text": "Rotate the selected object around its own center.",
+      "intent": "ROTATE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 72,
+      "text": "Rotate the cube around the world origin.",
+      "intent": "ROTATE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 73,
+      "text": "Animate one complete rotation.",
+      "intent": "ANIMATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 74,
+      "text": "Rotate the sphere 180 degrees about the Y-axis.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 75,
+      "text": "Rotate the grouped objects together.",
+      "intent": "ROTATE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 83,
+      "text": "Apply different colors to all five cubes.",
+      "intent": "COLOR",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 96,
+      "text": "Draw a 3D helix.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 99,
+      "text": "Plot the parametric curve x = cos(t), y = sin(t), z = t for 0 ≤ t ≤ 10.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 100,
+      "text": "Plot 100 random points in 3D.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 101,
+      "text": "Display the X, Y and Z axes.",
+      "intent": "AXES",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 104,
+      "text": "Label the coordinate axes.",
+      "intent": "AXES",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 105,
+      "text": "Change the graph range to −10 through 10 on all three axes.",
+      "intent": "RANGE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 106,
+      "text": "Place a sphere inside a cube.",
+      "intent": "RELATION",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 107,
+      "text": "Put a cube on top of a cylinder.",
+      "intent": "RELATION",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 108,
+      "text": "Stack three cubes vertically.",
+      "intent": "ARRANGE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 109,
+      "text": "Arrange six spheres in a circle.",
+      "intent": "ARRANGE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 110,
+      "text": "Create a pyramid using four points.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 111,
+      "text": "Connect two selected points with a line.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 112,
+      "text": "Draw a vector between the two points.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 113,
+      "text": "Find the midpoint of the selected line.",
+      "intent": "MEASURE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 114,
+      "text": "Measure the distance between two points.",
+      "intent": "MEASURE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 115,
+      "text": "Create a plane through three non-collinear points.",
+      "intent": "CREATE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 116,
+      "text": "Find the intersection of two planes.",
+      "intent": "MEASURE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 117,
+      "text": "Group the selected cubes.",
+      "intent": "GROUP",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 118,
+      "text": "Ungroup the selected objects.",
+      "intent": "UNGROUP",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 120,
+      "text": "Mirror the cube across the YZ-plane.",
+      "intent": "MIRROR",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 122,
+      "text": "Create two spheres and move them apart.",
+      "intent": "BATCH",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 123,
+      "text": "Make another cube just like the previous one.",
+      "intent": "DUPLICATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 125,
+      "text": "Make the last object bigger.",
+      "intent": "SCALE",
+      "graph_execution_status": "CLARIFICATION"
+    },
+    {
+      "id": 126,
+      "text": "Move it 3 units higher.",
+      "intent": "MOVE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 128,
+      "text": "Rotate that same object by 45 degrees.",
+      "intent": "ROTATE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 130,
+      "text": "Create five cubes and color the third one green.",
+      "intent": "BATCH",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 131,
+      "text": "Select the smallest sphere.",
+      "intent": "SELECT",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 132,
+      "text": "Delete all objects except the red cube.",
+      "intent": "DELETE",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 135,
+      "text": "Restore the scene to its last saved state.",
+      "intent": "RESTORE",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 138,
+      "text": "Move the cube to (abc, 2, 3).",
+      "intent": "MOVE",
+      "graph_execution_status": "INVALID"
+    },
+    {
+      "id": 139,
+      "text": "Rotate the cube by 999999 degrees.",
+      "intent": "ROTATE",
+      "graph_execution_status": "INVALID"
+    },
+    {
+      "id": 142,
+      "text": "Make the cube infinitely large.",
+      "intent": "SCALE",
+      "graph_execution_status": "INVALID"
+    },
+    {
+      "id": 147,
+      "text": "Repeat the previous command five times.",
+      "intent": "REPEAT",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 148,
+      "text": "Create two cubes, delete one, then restore it.",
+      "intent": "BATCH",
+      "graph_execution_status": "UNSUPPORTED"
+    },
+    {
+      "id": 149,
+      "text": "Reset everything, create a sphere, and move it to (5, 5, 5).",
+      "intent": "BATCH",
+      "graph_execution_status": "APPLIED"
+    },
+    {
+      "id": 150,
+      "text": "Create five cubes, group them, rotate the group, ungroup them, and delete only the first cube.",
+      "intent": "BATCH",
+      "graph_execution_status": "CLARIFICATION"
+    }
+  ]
+}

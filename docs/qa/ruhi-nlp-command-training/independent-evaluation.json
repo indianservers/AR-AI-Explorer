@@ -1,0 +1,244 @@
+{
+  "model_sha256": "782fa1398227e8dde6c2b5d6a1e0af3d3b2ba07641400a49511316af4ef55ffa",
+  "description": "Frozen independent authored sentence replay, excluded from training and development examples. Small related-domain benchmark, not unrestricted NLP accuracy.",
+  "correct": 26,
+  "total": 26,
+  "accepted": 23,
+  "accepted_errors": 0,
+  "results": [
+    {
+      "text": "construct a dodecahedron please",
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "correct": true,
+      "confidence": 0.5967819690704346,
+      "margin": 0.4637187719345093,
+      "accepted": false
+    },
+    {
+      "text": "plot a spatial point at (7, 8, 9)",
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "correct": true,
+      "confidence": 0.9860602617263794,
+      "margin": 0.9786190390586853,
+      "accepted": true
+    },
+    {
+      "text": "translate the cone by vector (7, 2, 9)",
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "correct": true,
+      "confidence": 0.988283634185791,
+      "margin": 0.9829997420310974,
+      "accepted": true
+    },
+    {
+      "text": "double the selected sphere size",
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "correct": true,
+      "confidence": 0.7706966400146484,
+      "margin": 0.7322773933410645,
+      "accepted": false
+    },
+    {
+      "text": "turn the cone by 35 degrees around the z axis",
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "correct": true,
+      "confidence": 0.9972085356712341,
+      "margin": 0.9946029186248779,
+      "accepted": true
+    },
+    {
+      "text": "keep the first cylinder spinning continuously",
+      "expected": "ANIMATE",
+      "actual": "ANIMATE",
+      "correct": true,
+      "confidence": 0.9927787184715271,
+      "margin": 0.9920995831489563,
+      "accepted": true
+    },
+    {
+      "text": "stop the spinning animation",
+      "expected": "STOP_ANIMATION",
+      "actual": "STOP_ANIMATION",
+      "correct": true,
+      "confidence": 0.9473962187767029,
+      "margin": 0.9306001663208008,
+      "accepted": true
+    },
+    {
+      "text": "arrange eight spheres in a circle",
+      "expected": "ARRANGE",
+      "actual": "ARRANGE",
+      "correct": true,
+      "confidence": 0.9929701685905457,
+      "margin": 0.9904725551605225,
+      "accepted": true
+    },
+    {
+      "text": "display labels on all three coordinate axes",
+      "expected": "AXES",
+      "actual": "AXES",
+      "correct": true,
+      "confidence": 0.9959491491317749,
+      "margin": 0.9955024719238281,
+      "accepted": true
+    },
+    {
+      "text": "set the graph range from -12 to 12",
+      "expected": "RANGE",
+      "actual": "RANGE",
+      "correct": true,
+      "confidence": 0.9946229457855225,
+      "margin": 0.9911105632781982,
+      "accepted": true
+    },
+    {
+      "text": "place the first pyramid on top of the cylinder",
+      "expected": "RELATION",
+      "actual": "RELATION",
+      "correct": true,
+      "confidence": 0.9922224879264832,
+      "margin": 0.9907619953155518,
+      "accepted": true
+    },
+    {
+      "text": "calculate the distance between points p and q",
+      "expected": "MEASURE",
+      "actual": "MEASURE",
+      "correct": true,
+      "confidence": 0.8976231813430786,
+      "margin": 0.8886924386024475,
+      "accepted": true
+    },
+    {
+      "text": "mirror the first cylinder across the yz plane",
+      "expected": "MIRROR",
+      "actual": "MIRROR",
+      "correct": true,
+      "confidence": 0.9971501231193542,
+      "margin": 0.9968900680541992,
+      "accepted": true
+    },
+    {
+      "text": "make a copy of the selected pyramid",
+      "expected": "DUPLICATE",
+      "actual": "DUPLICATE",
+      "correct": true,
+      "confidence": 0.993370771408081,
+      "margin": 0.9912334084510803,
+      "accepted": true
+    },
+    {
+      "text": "choose the first cylinder",
+      "expected": "SELECT",
+      "actual": "SELECT",
+      "correct": true,
+      "confidence": 0.9715427160263062,
+      "margin": 0.9686920046806335,
+      "accepted": true
+    },
+    {
+      "text": "load my previously saved scene",
+      "expected": "RESTORE",
+      "actual": "RESTORE",
+      "correct": true,
+      "confidence": 0.9649307131767273,
+      "margin": 0.9570780396461487,
+      "accepted": true
+    },
+    {
+      "text": "repeat the last command eight times",
+      "expected": "REPEAT",
+      "actual": "REPEAT",
+      "correct": true,
+      "confidence": 0.9410836696624756,
+      "margin": 0.9345024228096008,
+      "accepted": true
+    },
+    {
+      "text": "create two spheres and move them farther apart",
+      "expected": "BATCH",
+      "actual": "BATCH",
+      "correct": true,
+      "confidence": 0.9888420104980469,
+      "margin": 0.9863908290863037,
+      "accepted": true
+    },
+    {
+      "text": "group the last cylinders",
+      "expected": "GROUP",
+      "actual": "GROUP",
+      "correct": true,
+      "confidence": 0.9373106360435486,
+      "margin": 0.9299790859222412,
+      "accepted": true
+    },
+    {
+      "text": "ungroup the selected spheres please",
+      "expected": "UNGROUP",
+      "actual": "UNGROUP",
+      "correct": true,
+      "confidence": 0.9864330887794495,
+      "margin": 0.9849070310592651,
+      "accepted": true
+    },
+    {
+      "text": "erase the first cylinder",
+      "expected": "DELETE",
+      "actual": "DELETE",
+      "correct": true,
+      "confidence": 0.9573076963424683,
+      "margin": 0.9534429907798767,
+      "accepted": true
+    },
+    {
+      "text": "color the last pyramid blue",
+      "expected": "COLOR",
+      "actual": "COLOR",
+      "correct": true,
+      "confidence": 0.8675420880317688,
+      "margin": 0.8518715500831604,
+      "accepted": true
+    },
+    {
+      "text": "undo the last two actions",
+      "expected": "UNDO",
+      "actual": "UNDO",
+      "correct": true,
+      "confidence": 0.9776970148086548,
+      "margin": 0.9730901718139648,
+      "accepted": true
+    },
+    {
+      "text": "do not rotate either of the spheres",
+      "expected": "OTHER",
+      "actual": "OTHER",
+      "correct": true,
+      "confidence": 0.9822017550468445,
+      "margin": 0.9741219282150269,
+      "accepted": true
+    },
+    {
+      "text": "explain how to measure distances",
+      "expected": "OTHER",
+      "actual": "OTHER",
+      "correct": true,
+      "confidence": 0.9511790871620178,
+      "margin": 0.946610152721405,
+      "accepted": true
+    },
+    {
+      "text": "teach me why a sphere has volume",
+      "expected": "OTHER",
+      "actual": "OTHER",
+      "correct": true,
+      "confidence": 0.7122437953948975,
+      "margin": 0.5846768021583557,
+      "accepted": false
+    }
+  ]
+}

@@ -2311,6 +2311,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             .map { shape -> shape.copy(pointIndices = shape.pointIndices.map { if (it > index) it - 1 else it }) }
         val survivingShapeIds = survivingShapes.mapTo(hashSetOf()) { it.id }
         val next = state.copy(
+            labSessionValues=com.indianservers.aiexplorer.workspace.StudioReferenceMetadata.remapPoints(state.labSessionValues,state.points.indices.filter{it!=index}.mapIndexed{new,old->old to new}.toMap()),
             points = state.points.filterIndexed { pointIndex, _ -> pointIndex != index },
             shapes = survivingShapes,
             pointDependencies = state.pointDependencies
@@ -2331,6 +2332,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             modifiedAt = System.currentTimeMillis(),
         )
         state = history.execute(state, ReplaceWorkspaceCommand(state, next, "Delete coordinate point ${index + 1}"))
+        restoreLabSession(state.labSessionValues)
         selectedPoint = -1
         selectedShape = -1
         selectedShapes = emptySet()
@@ -2680,7 +2682,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         if (indices.isEmpty()) return
         val names = indices.mapNotNull(state.shapes::getOrNull).map { it.name }
         val anchor = indices.minOrNull() ?: 0
-        state = history.execute(state, DeleteShapesCommand(indices, state.shapes, state.points, state.pointDependencies, state.geometryGroups, state.geometryConstraints))
+        state = history.execute(state, DeleteShapesCommand(indices, state.shapes, state.points, state.pointDependencies, state.geometryGroups, state.geometryConstraints,state.labSessionValues))
+        restoreLabSession(state.labSessionValues)
         selectedShape = (anchor - 1).coerceAtMost(state.shapes.lastIndex)
         selectedShapes = selectedShape.takeIf { it >= 0 }?.let(::setOf) ?: emptySet()
         selectedPoint = -1
@@ -2810,13 +2813,24 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         if (valid.isEmpty()) return
         val names = valid.mapNotNull(state.solids::getOrNull).map { it.type.name }
         val anchor = valid.minOrNull() ?: 0
-        state = history.execute(state, DeleteSolidsCommand(valid, state.solids))
+        val before=state
+        val transactionBefore=ruhiMotionGestureBefore?.takeIf { it.module==state.module } ?: before
+        if(state.labSessionValues.keys.any { it.startsWith("ruhi.studio.") }) {
+            try { com.indianservers.aiexplorer.workspace.StudioReferenceMetadata.requireSafeSolidRemoval(before,valid) } catch(error:RuntimeException) { status=error.message ?: "Deletion blocked";return }
+            val keep=before.solids.indices.filter { it !in valid }
+            var values=before.labSessionValues.filterKeys { !it.startsWith(com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.PREFIX) }-"ruhi.studio.selected.solid"
+            keep.forEachIndexed { next,old -> before.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.PREFIX+old]?.let { values=values+(com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.PREFIX+next to it) } }
+            values=com.indianservers.aiexplorer.workspace.StudioReferenceMetadata.remapSolidAppearance(values,keep)
+            val next=DeleteSolidsCommand(valid,before.solids).apply(before).copy(labSessionValues=values)
+            state=try { history.execute(before,com.indianservers.aiexplorer.workspace.GraphWorkspaceCommand(transactionBefore,next,"Delete selected solids")) } catch(error:RuntimeException) { status=error.message ?: "Deletion blocked";return }
+            restoreLabSession(state.labSessionValues)
+        } else state = history.execute(state, DeleteSolidsCommand(valid, state.solids))
         selectedSolid = when {
             state.solids.isEmpty() -> -1
             anchor <= state.solids.lastIndex -> anchor
             else -> state.solids.lastIndex
         }
-        solidGesture = null
+        solidGesture = null;solidGroupGesture=null;ruhiMotionGestureBefore=null
         status = "Deleted ${names.joinToString()}"
     }
 
@@ -2834,12 +2848,14 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     }
 
     fun beginSolidDrag(index: Int) {
+        freezeRuhiMotion(setOf(index))
         val solid = state.solids.getOrNull(index) ?: return
         solidGesture = SolidGesture(index, solid)
         selectSolid(index)
     }
 
     fun beginSolidGroupDrag(indices: Set<Int>) {
+        freezeRuhiMotion(indices)
         val valid = indices.filterTo(linkedSetOf()) { it in state.solids.indices }
         if (valid.isEmpty()) return
         solidGroupGesture = SolidGroupGesture(valid, state.solids)
@@ -2863,13 +2879,13 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun endSolidGroupDrag() {
         val gesture = solidGroupGesture ?: return
-        if (state.solids != gesture.from) history.recordApplied(ReplaceSolidsCommand(gesture.from, state.solids, "Transform 3D group"))
+        if (!finishRuhiMotionGesture(false,"Transform animated 3D group") && state.solids != gesture.from) history.recordApplied(ReplaceSolidsCommand(gesture.from, state.solids, "Transform 3D group"))
         solidGroupGesture = null; status = "Transformed ${gesture.indices.size} objects"
     }
 
     fun cancelSolidGroupDrag() {
         val gesture = solidGroupGesture ?: return
-        state = state.copy(solids = gesture.from); solidGroupGesture = null; status = "Group transform cancelled"
+        if(!finishRuhiMotionGesture(true,"Cancel animated group transform")) state = state.copy(solids = gesture.from); solidGroupGesture = null; status = "Group transform cancelled"
     }
 
     /** Apply all inferred channels against one retained baseline and one undo transaction. */
@@ -3007,14 +3023,14 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
     fun endSolidDrag() {
         val gesture = solidGesture ?: return
         val final = state.solids.getOrNull(gesture.index)
-        if (final != null && final != gesture.from) history.recordApplied(TransformSolidCommand(gesture.index, gesture.from, final))
+        if (!finishRuhiMotionGesture(false,"Transform animated solid") && final != null && final != gesture.from) history.recordApplied(TransformSolidCommand(gesture.index, gesture.from, final))
         solidGesture = null
         status = "Moved ${gesture.from.type.name}"
     }
 
     fun cancelSolidDrag() {
         val gesture = solidGesture ?: return
-        state = state.copy(solids = state.solids.mapIndexed { i, old -> if (i == gesture.index) gesture.from else old })
+        if(!finishRuhiMotionGesture(true,"Cancel animated solid transform")) state = state.copy(solids = state.solids.mapIndexed { i, old -> if (i == gesture.index) gesture.from else old })
         solidGesture = null
         status = "Move cancelled"
     }
@@ -3247,13 +3263,115 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         val values=after.labSessionValues.filterKeys { key -> changed.none { id -> key=="arCad.mesh.$id" || key=="arCad.constraintBaseline.$id" || key.startsWith("arGraph.vertex.$id.") } }
         return after.copy(labSessionValues=values)
     }
+    private val graphAssistant = com.indianservers.aiexplorer.assistant.workspace.GraphAssistant()
+
+    val graphAssistantWorkspaceVisible: Boolean get() = state.module in setOf(MathModule.Graph2D, MathModule.Graph3D) && ruhiStudioWorkspaceVisible
+    val ruhiStudioWorkspaceVisible: Boolean get() = state.module in setOf(MathModule.Graph2D, MathModule.Graph3D, MathModule.Geometry2D, MathModule.Geometry3D) &&
+        !showSubjectHub && !showLearningIntelligence && !showMathLanding && !showShapesExplorer &&
+        !showUnifiedMathStudio && !showAdaptiveMathLearning && !showMathsLearnAll && !showGamifyMaths &&
+        !showMathNotebook && !showSolver && !showProblemSolver && !showScientificCalculator &&
+        !showSetLogicVisualizer && !showProbabilityLab && !showConceptLibrary && !showMathDictionary && !showKnowledgeHub && !showMathMenu
+
+    fun executeGraphAssistant(text: String): com.indianservers.aiexplorer.assistant.workspace.GraphCommandResult {
+        val result = graphAssistant.execute(state, text, history)
+        state = result.state
+        restoreLabSession(state.labSessionValues)
+        status = result.message
+        return result
+    }
+
+    suspend fun submitGraphAssistant(text: String): com.indianservers.aiexplorer.assistant.workspace.GraphCommandResult {
+        if (Regex("(?i)^\\s*(?:(?:please|can you|could you)\\s+)?(undo|redo)\\b").containsMatchIn(text)) return executeGraphAssistant(text)
+        val before = state
+        // Generate and validate geometry off the UI thread; only the final snapshot commits here.
+        val prepared = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
+            graphAssistant.execute(before, text, CommandHistory())
+        }
+        if (state != before) return com.indianservers.aiexplorer.assistant.workspace.GraphCommandResult(
+            state, com.indianservers.aiexplorer.assistant.workspace.GraphCommandStatus.CLARIFICATION,
+            "The workspace changed while I prepared this command. Submit it again against the current graph.", prepared.actions,
+        )
+        val result = if (prepared.status == com.indianservers.aiexplorer.assistant.workspace.GraphCommandStatus.APPLIED)
+            prepared.copy(state = history.execute(before, com.indianservers.aiexplorer.workspace.GraphWorkspaceCommand(before, prepared.state, "Ruhi: ${text.take(100)}"))) else prepared
+        state = result.state
+        restoreLabSession(state.labSessionValues)
+        status = result.message
+        return result
+    }
+
+    private val studioAssistant = com.indianservers.aiexplorer.assistant.workspace.RuhiStudioAssistant()
+    private val ruhiDialogue = com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueManager(studioAssistant)
+    var ruhiDialoguePresentation by mutableStateOf<com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueView?>(null)
+        private set
+    fun acceptsRuhiDialogue(text:String)=ruhiDialogue.accepts(state,text)
+    val ruhiAnswerChips get()=(ruhiDialoguePresentation ?: ruhiDialogue.restoredView(state))?.suggestions.orEmpty()
+    private fun ruhiContext() = com.indianservers.aiexplorer.assistant.workspace.RuhiSceneContext(
+        state.shapes.getOrNull(selectedShape)?.id, selectedSolid.takeIf { it in state.solids.indices })
+    private fun acceptRuhiResult(result:com.indianservers.aiexplorer.assistant.workspace.RuhiExecutionResult) {
+        state=result.state; restoreLabSession(state.labSessionValues);status=result.message
+        ruhiDialoguePresentation=result.dialogue
+        if(state.module==MathModule.Geometry2D) {
+            selectedShape=state.shapes.indexOfFirst { it.id==result.context.selectedShapeId }
+            selectedShapes=selectedShape.takeIf { it>=0 }?.let(::setOf) ?: emptySet()
+        }
+        if(state.module==MathModule.Geometry3D) {
+            selectedSolid=result.context.selectedSolidIndex?.takeIf { it in state.solids.indices } ?: -1
+            if(selectedSolid>=0) { selectedVector3D=-1;selectedPoint3D=-1 }
+        }
+    }
+    fun executeRuhiAssistant(text:String,modality:com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality=com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality.TEXT):com.indianservers.aiexplorer.assistant.workspace.RuhiExecutionResult {
+        val result=ruhiDialogue.execute(state,text,workspaceHistories,ruhiContext(),modality);acceptRuhiResult(result);return result
+    }
+    suspend fun submitRuhiAssistant(text:String,modality:com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality=com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality.TEXT):com.indianservers.aiexplorer.assistant.workspace.RuhiExecutionResult {
+        val normalized=com.indianservers.aiexplorer.assistant.workspace.RuhiMathLanguage.normalize(text)
+        if(Regex("\\b(?:undo|redo)\\b").containsMatchIn(normalized)) return executeRuhiAssistant(text,modality)
+        val before=state;val context=ruhiContext();val wasVisible=ruhiStudioWorkspaceVisible
+        val prepared=kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
+            ruhiDialogue.execute(before,text,com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule(),context,modality)
+        }
+        if(state!=before || ruhiContext()!=context || ruhiStudioWorkspaceVisible!=wasVisible) return prepared.copy(state=state,status=com.indianservers.aiexplorer.assistant.workspace.GraphCommandStatus.CLARIFICATION,message="The scene or selection changed while I prepared the command. Submit it again.",context=ruhiContext())
+        val result=if(prepared.status==com.indianservers.aiexplorer.assistant.workspace.GraphCommandStatus.APPLIED && prepared.state!=before.copy(module=prepared.state.module)) {
+            val scene=before.copy(module=prepared.state.module)
+            val key=com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueMemory.KEY
+            val staged=prepared.state.copy(labSessionValues=(prepared.state.labSessionValues-key)+before.labSessionValues.filterKeys{it==key})
+            val committed=if(staged==scene) scene else workspaceHistories.forModule(scene.module).execute(scene,com.indianservers.aiexplorer.workspace.GraphWorkspaceCommand(scene,staged,"Ruhi: ${text.take(100)}"))
+            prepared.copy(state=committed.copy(labSessionValues=committed.labSessionValues+prepared.state.labSessionValues.filterKeys{it==key}))
+        } else prepared
+        acceptRuhiResult(result);return result
+    }
+    private var ruhiMotionGestureBefore:WorkspaceState?=null
+    private fun finishRuhiMotionGesture(cancel:Boolean,label:String):Boolean {
+        val before=ruhiMotionGestureBefore ?: return false
+        val command=com.indianservers.aiexplorer.workspace.GraphWorkspaceCommand(before,state,label)
+        if(cancel) state=command.undo(state) else if(state!=before) history.recordApplied(command)
+        ruhiMotionGestureBefore=null;restoreLabSession(state.labSessionValues);return true
+    }
+    private fun freezeRuhiMotion(indices:Set<Int>) {
+        if(solidGesture==null && solidGroupGesture==null) ruhiMotionGestureBefore=null
+        val keys=indices.filter { it in state.solids.indices }.map { com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.PREFIX+it }
+        if(keys.none { it in state.labSessionValues }) return
+        if(ruhiMotionGestureBefore==null) ruhiMotionGestureBefore=state
+        val poses=com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.solids(state,System.nanoTime()/1_000_000)
+        state=state.copy(solids=state.solids.mapIndexed { i,solid->if(i in indices) poses[i] else solid },labSessionValues=state.labSessionValues-keys.toSet())
+        restoreLabSession(state.labSessionValues)
+    }
+
+    fun selectGraphAssistantLayer(id: String?) {
+        val key = com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.selectionKey(state.module)
+        val values = state.labSessionValues.toMutableMap()
+        if (id == null) values.remove(key) else values[key] = id
+        state = state.copy(labSessionValues = values)
+        restoreLabSession(state.labSessionValues)
+    }
+
     fun setSurfaceExpression(value: String) {
         val before = state
         when (val mutation = unifiedSpatialController.stageSurface(unifiedSpatialController.snapshot(state), value)) {
             is UnifiedSpatialMutation.Applied -> {
                 val staged = mutation.snapshot.document.objects["surface-main"]?.valueState?.status == com.indianservers.aiexplorer.workspace.UniversalMathValueStatus.ParseError
                 val rebuilt=if(staged) mutation.snapshot.state else rebuildEditedSurfaceGeometry(before,mutation.snapshot.state) ?: return
-                state = history.execute(before, ReplaceWorkspaceCommand(before, rebuilt, "Edit 3D surface"))
+                val rebound = com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.rebindSurfaceContext(before.surfaceLayers, rebuilt)
+                state = history.execute(before, ReplaceWorkspaceCommand(before, rebound, "Edit 3D surface"))
                 restoreLabSession(state.labSessionValues)
                 status = if (staged) "Surface draft saved; complete it to resume mesh analysis" else "Surface, parameter table and linked 3D views updated"
             }
@@ -3269,7 +3387,8 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
         return when (val mutation = unifiedSpatialController.replaceSurfaceLayers(unifiedSpatialController.snapshot(state), layers)) {
             is UnifiedSpatialMutation.Applied -> {
                 val rebuilt=rebuildEditedSurfaceGeometry(before,mutation.snapshot.state) ?: return Result.failure(IllegalArgumentException(status))
-                state = history.execute(before, ReplaceWorkspaceCommand(before, rebuilt, label))
+                val rebound = com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.rebindSurfaceContext(layers, rebuilt)
+                state = history.execute(before, ReplaceWorkspaceCommand(before, rebound, label))
                 restoreLabSession(state.labSessionValues)
                 status = "Updated ${layers.size} linked 3D surface layer${if (layers.size == 1) "" else "s"}"
                 Result.success(Unit)
@@ -3514,9 +3633,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun undo() {
         endArGraphObjectGesture(cancel = true)
-        state = history.undo(state)
+        state = try { history.undo(state) } catch (error: RuntimeException) { status = "Undo blocked: ${error.message}"; return }
         if (state.labSessionValues.keys.any { it.startsWith("arGraph.") || it.startsWith("arCad.") || it.startsWith("arAnalysis.") } || labSessionValues.keys.any { it.startsWith("arGraph.") || it.startsWith("arCad.") || it.startsWith("arAnalysis.") }) restoreLabSession(state.labSessionValues)
         status = "Undo"
+        if (state.labSessionValues.keys.any { it.startsWith("ruhi.") } || labSessionValues.keys.any { it.startsWith("ruhi.") }) restoreLabSession(state.labSessionValues)
     }
 
     val canUndo: Boolean get() = history.canUndo
@@ -3557,12 +3677,15 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun redo() {
         endArGraphObjectGesture(cancel = true)
-        state = history.redo(state)
+        state = try { history.redo(state) } catch (error: RuntimeException) { status = "Redo blocked: ${error.message}"; return }
         if (state.labSessionValues.keys.any { it.startsWith("arGraph.") || it.startsWith("arCad.") || it.startsWith("arAnalysis.") } || labSessionValues.keys.any { it.startsWith("arGraph.") || it.startsWith("arCad.") || it.startsWith("arAnalysis.") }) restoreLabSession(state.labSessionValues)
         status = "Redo"
+        if (state.labSessionValues.keys.any { it.startsWith("ruhi.") } || labSessionValues.keys.any { it.startsWith("ruhi.") }) restoreLabSession(state.labSessionValues)
     }
 
     fun clearCurrentWorkspace() {
+        val beforeClear=state
+        solidGesture=null;solidGroupGesture=null;ruhiMotionGestureBefore=null
         clearLabSession(state.module)
         val cleared = when (state.module) {
             MathModule.Geometry2D, MathModule.CoordinatePlane -> state.copy(
@@ -3600,10 +3723,21 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             MathModule.ARCoordinatePlane,
             MathModule.ARVectorLab -> state
         }
-        state = history.execute(
-            state,
-            com.indianservers.aiexplorer.workspace.ReplaceWorkspaceCommand(state, cleared),
-        )
+        val activeGraphIds=if(beforeClear.module==MathModule.Graph2D) beforeClear.functions.map{it.id}.toSet() else if(beforeClear.module==MathModule.Graph3D) beforeClear.surfaceLayers.map{it.id}.toSet() else emptySet()
+        val values=cleared.labSessionValues.filterKeys { key ->
+            when(beforeClear.module) {
+                MathModule.Geometry2D,MathModule.CoordinatePlane -> !key.startsWith("ruhi.studio.point.") && key!="ruhi.studio.selected.shape"
+                MathModule.Geometry3D,MathModule.SpatialAR -> !key.startsWith(com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.PREFIX) && !key.startsWith("ruhi.studio.appearance.") && key!="ruhi.studio.selected.solid"
+                MathModule.Graph2D,MathModule.Graph3D -> key!=com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.selectionKey(beforeClear.module) && activeGraphIds.none { id -> key=="ruhi.graph.type.$id" || key=="ruhi.graph.dimension.$id" || key=="ruhi.graph2d.vertex.$id" || key.startsWith("ruhi.graph.highlight.$id.") }
+                else -> true
+            }
+        }
+        val clean=cleared.copy(labSessionValues=values)
+        if(beforeClear.labSessionValues.keys.any { it.startsWith("ruhi.") }) {
+            state=try { history.execute(beforeClear,com.indianservers.aiexplorer.workspace.GraphWorkspaceCommand(beforeClear,clean,"Clear ${beforeClear.module.label}")) }
+                catch(error:RuntimeException) { state=beforeClear;restoreLabSession(beforeClear.labSessionValues);status=error.message ?: "Clear blocked by linked objects";return }
+        } else state = history.execute(state,com.indianservers.aiexplorer.workspace.ReplaceWorkspaceCommand(state,clean))
+        restoreLabSession(state.labSessionValues)
         selectedShape = -1
         selectedShapes = emptySet()
         selectedPoint = -1
@@ -3757,6 +3891,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 fun AIExplorerApp(vm: ExplorerViewModel = viewModel(), durableStateEnabled: Boolean = true) {
+    com.indianservers.aiexplorer.assistant.workspace.TensorFlowGraphNlp.install(androidx.compose.ui.platform.LocalContext.current)
     var menuOffset by remember { mutableStateOf(Offset.Zero) }
     val showSplash = false
     var showSettings by rememberSaveable { mutableStateOf(false) }
@@ -4071,6 +4206,7 @@ private fun GlobalAiAssistantOverlay(
     val context = LocalContext.current
     val repository = remember { MathsLearnAllRepository(context) }
     val solverTutor = remember { MathSolverTutor() }
+    val ruhiKeyboard=androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     var prompt by rememberSaveable { mutableStateOf("") }
     var response by remember { mutableStateOf<OfflineLearningCoachResponse?>(null) }
@@ -4087,10 +4223,28 @@ private fun GlobalAiAssistantOverlay(
             Regex("""\d+\s*[+\-*/^]\s*\d+""").containsMatchIn(text)
     }
 
-    fun runAssistant(text: String = prompt) {
+    fun runAssistant(text: String = prompt, modality:com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality=com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality.TEXT) {
         val query = text.trim()
-        if (query.isBlank()) return
+        if (query.isBlank() || busy) return
         prompt = query
+        if (vm.ruhiStudioWorkspaceVisible && vm.acceptsRuhiDialogue(query)) {
+            ruhiKeyboard?.hide()
+            busy = true
+            scope.launch {
+                try {
+                    val result = vm.submitRuhiAssistant(query,modality)
+                    response = OfflineLearningCoachResponse(
+                        title = "Ruhi — ${result.status.name.lowercase().replaceFirstChar(Char::uppercase)}",
+                        message = result.message,
+                        suggestedQuery = query,
+                        suggestedLessonId = null,
+                    )
+                    results = emptyList()
+                    solverGuidance = null
+                } finally { busy = false }
+            }
+            return
+        }
         busy = true
         scope.launch {
             val search = runCatching { repository.homeSearch(query, limit = 8) }.getOrDefault(emptyList())
@@ -4103,6 +4257,14 @@ private fun GlobalAiAssistantOverlay(
         }
     }
 
+    val ruhiVoiceCapture=rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode==Activity.RESULT_OK) result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()?.let { runAssistant(it,com.indianservers.aiexplorer.assistant.workspace.RuhiInputModality.VOICE_TRANSCRIPT) }
+    }
+    LaunchedEffect(expanded,vm.state.id) {
+        if(expanded && response==null && vm.ruhiStudioWorkspaceVisible) com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueMemory.read(vm.state).turns.lastOrNull()?.let {
+            response=OfflineLearningCoachResponse(title="Ruhi",message=it.assistant,suggestedQuery=it.user,suggestedLessonId=null)
+        }
+    }
     fun openResult(result: MathsHomeSearchResult) {
         when {
             result.lessonId != null -> vm.openMathLesson(result.lessonId, result.title)
@@ -4121,7 +4283,7 @@ private fun GlobalAiAssistantOverlay(
             assistantOffsetX = assistantOffsetX.coerceIn(-maxDragX, 0f)
             assistantOffsetY = assistantOffsetY.coerceIn(-maxDragY, 0f)
         }
-        if (expanded) {
+        if (expanded && !vm.ruhiStudioWorkspaceVisible) {
             Box(
                 Modifier
                     .fillMaxSize()
@@ -4142,21 +4304,21 @@ private fun GlobalAiAssistantOverlay(
             GlassPanel(
                 Modifier
                     .widthIn(min = 292.dp, max = 380.dp)
-                    .heightIn(max = 520.dp)
+                    .heightIn(max = if(vm.ruhiStudioWorkspaceVisible) 420.dp else 520.dp)
                     .background(Color(0xFA08111F), RoundedCornerShape(18.dp)),
             ) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         RobotAssistantIcon(Modifier.size(34.dp), Cyan)
                         Column {
-                            Text("AI Assistant", color = Ink, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
-                            Text("Offline Genie - lessons, search, solver", color = Ink.copy(.82f), fontSize = 9.sp)
+                            Text(if(vm.ruhiStudioWorkspaceVisible) "Ruhi" else "AI Assistant", color = Ink, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
+                            Text(if(vm.ruhiStudioWorkspaceVisible) "Draw, explore, and ask follow-up questions" else "Offline Genie - lessons, search, solver", color = Ink.copy(.82f), fontSize = 9.sp)
                         }
                     }
                     GlowButton("Close", icon = "X", iconOnly = true) { onExpandedChange(false) }
                 }
                 Text(
-                    "Ask for a lesson, concept, formula, next step, or practice idea. Online LLM memory can plug into this same local learner schema later.",
+                    if(vm.ruhiStudioWorkspaceVisible) "Tell me what to draw or change. I’ll ask only when I need more information." else "Ask for a lesson, concept, formula, next step, or practice idea. Online LLM memory can plug into this same local learner schema later.",
                     color = Muted,
                     fontSize = 10.sp,
                     lineHeight = 13.sp,
@@ -4166,15 +4328,20 @@ private fun GlobalAiAssistantOverlay(
                     onValueChange = { prompt = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Ask anything in maths") },
-                    placeholder = { Text("Example: teach quadratic equations") },
+                    placeholder = { Text(if(vm.ruhiStudioWorkspaceVisible) "Example: draw a circle with radius 5" else "Example: teach quadratic equations") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = { runAssistant() }),
                 )
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    listOf("Resume", "Solve 2x+3=11", "Factor x^2-5x+6", "Matrix inverse", "Probability").forEach { sample ->
+                    if(vm.ruhiStudioWorkspaceVisible) GlowButton("Speak",icon="Mic",enabled=!busy) {
+                        runCatching { ruhiVoiceCapture.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM).putExtra(RecognizerIntent.EXTRA_PROMPT,"Tell Ruhi what to draw or change")) }.onFailure {
+                            response=OfflineLearningCoachResponse(title="Ruhi",message="Speech recognition is unavailable on this device. Type your answer here.",suggestedQuery=prompt,suggestedLessonId=null)
+                        }
+                    }
+                    (if(vm.ruhiStudioWorkspaceVisible) listOfNotNull("Resume".takeIf{com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueMemory.read(vm.state).pending!=null}) else listOf("Resume", "Solve 2x+3=11", "Factor x^2-5x+6", "Matrix inverse", "Probability")).forEach { sample ->
                         GlowButton(sample, icon = "AI") {
-                            if (sample == "Resume") {
+                            if (sample == "Resume" && !vm.ruhiStudioWorkspaceVisible) {
                                 vm.openMathsLearnAll()
                                 onExpandedChange(false)
                             } else {
@@ -4185,6 +4352,10 @@ private fun GlobalAiAssistantOverlay(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
                     GlowButton(if (busy) "Thinking..." else "Ask", icon = "AI", enabled = !busy && prompt.isNotBlank()) { runAssistant() }
+                    if(vm.ruhiStudioWorkspaceVisible) {
+                        GlowButton("Undo",icon="↶",enabled=!busy) { runAssistant("Undo") }
+                        GlowButton("Redo",icon="↷",enabled=!busy) { runAssistant("Redo") }
+                    } else {
                     GlowButton("Dictionary", icon = "A-Z") {
                         vm.openMathDictionary()
                         onExpandedChange(false)
@@ -4192,6 +4363,7 @@ private fun GlobalAiAssistantOverlay(
                     GlowButton("Solver", icon = "sum") {
                         vm.openProblemSolver()
                         onExpandedChange(false)
+                    }
                     }
                 }
                 solverGuidance?.let { guided ->
@@ -4249,6 +4421,20 @@ private fun GlobalAiAssistantOverlay(
                     ) {
                         Text(answer.title, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                         Text(answer.message, color = Ink.copy(.86f), fontSize = 10.sp, lineHeight = 13.sp)
+                        if(vm.ruhiStudioWorkspaceVisible && vm.ruhiAnswerChips.isNotEmpty()) {
+                            FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                                vm.ruhiAnswerChips.take(5).forEach { chip -> GlowButton(chip.label) { runAssistant(chip.answer) } }
+                            }
+                        }
+                        if(vm.ruhiStudioWorkspaceVisible) {
+                            val previous=com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueMemory.read(vm.state).turns.dropLast(1).takeLast(2)
+                            if(previous.isNotEmpty()) Column(Modifier.fillMaxWidth().heightIn(max=78.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                                previous.forEach { turn ->
+                                    Text("You: ${turn.user}",color=Cyan,fontSize=10.sp,modifier=Modifier.fillMaxWidth().background(Cyan.copy(.07f),RoundedCornerShape(8.dp)).padding(5.dp))
+                                    Text("Ruhi: ${turn.assistant}",color=Muted,fontSize=10.sp,modifier=Modifier.fillMaxWidth().background(Violet.copy(.07f),RoundedCornerShape(8.dp)).padding(5.dp))
+                                }
+                            }
+                        }
                         answer.suggestedLessonId?.let { lessonId ->
                             GlowButton("Open suggested lesson", icon = "L") {
                                 vm.openMathLesson(lessonId, answer.title)
@@ -9601,8 +9787,16 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
     val visibleSolidIndices = remember(vm.state.solids.size, hiddenSolidIndices, isolatedSolidIndices) {
         (vm.state.solids.indices).filterTo(linkedSetOf()) { it !in hiddenSolidIndices && (isolatedSolidIndices == null || it in isolatedSolidIndices.orEmpty()) }
     }
-    val renderedSolids = remember(vm.state.solids, explodeAmount, extrusionPreview) {
-        val values = extrusionPreview?.let { preview -> vm.state.solids.mapIndexed { index, solid -> if (index == preview.solidIndex) preview.preview else solid } } ?: vm.state.solids
+    val ruhiMotionValues=vm.state.labSessionValues.filterKeys { it.startsWith(com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.PREFIX) }
+    var ruhiFrameMillis by remember { androidx.compose.runtime.mutableLongStateOf(System.nanoTime()/1_000_000) }
+    LaunchedEffect(ruhiMotionValues) {
+        if(ruhiMotionValues.isNotEmpty()) while(true) androidx.compose.runtime.withFrameNanos { ruhiFrameMillis=System.nanoTime()/1_000_000 }
+    }
+    val ruhiPoses=remember(vm.state.solids,ruhiMotionValues,ruhiFrameMillis) {
+        com.indianservers.aiexplorer.assistant.workspace.RuhiMotionEngine.solids(vm.state,ruhiFrameMillis)
+    }
+    val renderedSolids = remember(ruhiPoses, explodeAmount, extrusionPreview) {
+        val values = extrusionPreview?.let { preview -> ruhiPoses.mapIndexed { index, solid -> if (index == preview.solidIndex) preview.preview else solid } } ?: ruhiPoses
         AdvancedSpatialInteractionEngine.exploded(values, explodeAmount.toDouble())
     }
     val collisions = remember(renderedSolids) { AdvancedSpatialInteractionEngine.collisions(renderedSolids) }
@@ -9681,7 +9875,11 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
             showGrid = showWorkspaceGrid,
             gridSize = workspaceGridSize,
             visualMode = visualMode,
-            solidAppearances = solidAppearances,
+            solidAppearances = solidAppearances + vm.state.solids.indices.mapNotNull { i ->
+                vm.state.labSessionValues["ruhi.studio.appearance.$i"]?.let { style -> i to (solidAppearances[i] ?: sceneAppearance.copy(colorIndex=i)).let { appearance ->
+                    when(style) { "glass"->appearance.copy(material=com.indianservers.aiexplorer.core.SpatialMaterial.Glass);"solid"->appearance.copy(material=com.indianservers.aiexplorer.core.SpatialMaterial.Gloss);else->appearance.copy(colorHex=when(style){"red"->"#FF0000";"blue"->"#0000FF";else->"#008000"}) }
+                } }
+            }.toMap(),
             defaultAppearance = sceneAppearance,
             axisStyle = sceneAxisStyle,
             perspective = projection == CameraProjection.Perspective,
@@ -12802,17 +13000,7 @@ private fun com.indianservers.aiexplorer.core.SpatialSurfaceLayer.surfaceDefinit
 }
 
 private fun com.indianservers.aiexplorer.core.SpatialSurfaceLayer.productionMesh(density: Int): com.indianservers.aiexplorer.core.SurfaceMesh =
-    when (kind) {
-        com.indianservers.aiexplorer.core.SpatialSurfaceKind.Explicit -> Graph3D().mesh(expression, density = density)
-        else -> com.indianservers.aiexplorer.spatial.TypedSurfaceMesher().mesh(surfaceDefinition(), density.coerceIn(4, 64)).geometry.let { geometry ->
-            com.indianservers.aiexplorer.core.SurfaceMesh(
-                vertices = geometry.vertices,
-                rows = 1,
-                columns = geometry.vertices.size.coerceAtLeast(1),
-                triangleIndices = geometry.triangles,
-            )
-        }
-    }
+    com.indianservers.aiexplorer.core.GraphSurfaceGeometry.mesh(this, density.coerceIn(4, 64))
 
 private fun com.indianservers.aiexplorer.core.SpatialSurfaceLayer.displayEquation(): String = when (kind) {
     com.indianservers.aiexplorer.core.SpatialSurfaceKind.Explicit -> if ('=' in expression) expression else "z=$expression"
@@ -12850,9 +13038,21 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     var activeTool by remember { mutableStateOf(runCatching { SurfaceTool.valueOf(savedView.activeTool) }.getOrDefault(SurfaceTool.Surface)) }
     var graphSceneAppearance by remember { mutableStateOf(WorkspaceAppearance()) }
     var graphAxisStyle by remember { mutableStateOf(WorkspaceVisualStyles.Spectral.axes) }
+    LaunchedEffect(vm.state.graph3DView) {
+        val view = vm.state.graph3DView
+        density = view.density; rotation = view.rotation; tilt = view.tilt; roll = view.roll
+        zoom = view.zoom; cameraPan = Offset(view.panX, view.panY)
+        showContours = view.showContours; showSlice = view.showSlice; showGradient = view.showGradient; showBox = view.showBox
+    }
     val surfaceLayers = vm.state.surfaceLayers
     var selectedSurfaceLayerIndex by remember { mutableIntStateOf(-1) }
     var selectedSurfaceLayerIndices by remember { mutableStateOf(emptySet<Int>()) }
+    LaunchedEffect(vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.SELECTION], surfaceLayers) {
+        val id = vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.SELECTION]
+        selectedSurfaceLayerIndex = surfaceLayers.indexOfFirst { it.id == id }
+        selectedSurfaceLayerIndices = selectedSurfaceLayerIndex.takeIf { it >= 0 }?.let(::setOf).orEmpty()
+    }
+
     var gradientPlayback by remember { mutableStateOf(com.indianservers.aiexplorer.core.GradientPlayback3D(emptyList())) }
     var viewPreset by remember { mutableStateOf(runCatching { SurfaceViewPreset.valueOf(savedView.viewPreset) }.getOrDefault(SurfaceViewPreset.Isometric)) }
     var surfaceDraft by rememberSaveable { mutableStateOf(vm.state.surfaceExpression) }
@@ -12923,8 +13123,8 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
     }
 
     val primaryLayer = surfaceLayers.firstOrNull()
-    val mesh = remember(primaryLayer, resolvedPrimaryExpression, density) {
-        runCatching { primaryLayer?.copy(expression = resolvedPrimaryExpression)?.productionMesh(density.toInt().coerceIn(8, 56)) }
+    val mesh = remember(primaryLayer, resolvedPrimaryExpression, density, surfaceLayers.count { it.visible }) {
+        runCatching { primaryLayer?.copy(expression = resolvedPrimaryExpression)?.productionMesh(com.indianservers.aiexplorer.core.GraphSurfaceGeometry.sceneDensity(density.toInt().coerceIn(8, 56), surfaceLayers.count { it.visible })) }
             .getOrNull()
             ?.takeIf { candidate ->
                 (candidate.triangleIndices.isNotEmpty() || candidate.vertices.size == candidate.rows * candidate.columns) &&
@@ -12942,7 +13142,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
                 com.indianservers.aiexplorer.core.SpatialQuality.High -> 36
                 com.indianservers.aiexplorer.core.SpatialQuality.Ultra -> 52
             }
-            runCatching { layer.productionMesh(qualityDensity) }.getOrNull()
+            runCatching { layer.productionMesh(com.indianservers.aiexplorer.core.GraphSurfaceGeometry.sceneDensity(qualityDensity, surfaceLayers.count { it.visible })) }.getOrNull()
                 ?.takeIf { candidate -> candidate.vertices.all { point -> point.x.isFinite() && point.y.isFinite() && point.z.isFinite() } }
                 ?.let { surfaceMesh ->
                     Triple(
@@ -13048,6 +13248,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
 
     fun selectSurfaceLayer(index: Int, additive: Boolean = false) {
         if (index !in surfaceLayers.indices) return
+        vm.selectGraphAssistantLayer(surfaceLayers[index].id)
         val nextSelection = if (additive) {
             if (index in selectedSurfaceLayerIndices) selectedSurfaceLayerIndices - index else selectedSurfaceLayerIndices + index
         } else {
@@ -13121,6 +13322,7 @@ private fun Graph3DScreen(vm: ExplorerViewModel) {
             showSlice = showSlice,
             showGradient = showGradient,
             showBox = showBox,
+            gridVisible = vm.state.labSessionValues["ruhi.graph.grid"] != "false",
             activeTool = activeTool,
             onRotate = { delta -> rotation = (rotation + delta).coerceIn(-180f, 180f); persistView() },
             onTilt = { delta -> tilt = (tilt + delta).coerceIn(-89f, 89f); persistView() },

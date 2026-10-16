@@ -1147,33 +1147,44 @@ data class SurfaceInsight(val classification: String, val vertex: Vec3?, val ran
 
 class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {
     fun mesh(expression: String, min: Double = -3.0, max: Double = 3.0, density: Int = 32): SurfaceMesh {
-        val compiled = engine.compile(stripEquation(expression).replace("y", "yy"))
-        val vertices = mutableListOf<Vec3>()
+        require(min.isFinite() && max.isFinite() && min < max) { "A finite increasing domain is required." }
+        require(density in 4..64) { "Surface density must be between 4 and 64." }
+        val compiled = engine.compile(stripEquation(expression).replace(Regex("\\bxy\\b"), "(x*y)"))
         val step = (max - min) / density
+        fun evaluate(x: Double, y: Double): Double = runCatching { compiled.eval(mapOf("x" to x, "y" to y)) }.getOrDefault(Double.NaN)
         fun sample(x: Double, y: Double): Double {
-            val direct = runCatching { compiled.eval(mapOf("x" to x, "yy" to y)) }.getOrDefault(Double.NaN)
-            if (direct.isFinite()) return direct
-            val epsilon = step * .125
-            return listOf(
-                x + epsilon to y,
-                x - epsilon to y,
-                x to y + epsilon,
-                x to y - epsilon,
-            ).mapNotNull { (sx, sy) ->
-                runCatching { compiled.eval(mapOf("x" to sx, "yy" to sy)) }
-                    .getOrNull()
-                    ?.takeIf(Double::isFinite)
-            }.average().takeIf(Double::isFinite) ?: 0.0
+            val value = evaluate(x, y)
+            if (value.isFinite()) return value
+            // Fill only a numerically convergent removable hole. A pole or a domain boundary
+            // remains undefined, and incident cells are removed rather than inventing geometry.
+            fun neighbours(epsilon: Double) = listOf(
+                evaluate(x+epsilon,y), evaluate(x-epsilon,y), evaluate(x,y+epsilon), evaluate(x,y-epsilon),
+                evaluate(x+epsilon,y+epsilon), evaluate(x+epsilon,y-epsilon), evaluate(x-epsilon,y+epsilon), evaluate(x-epsilon,y-epsilon),
+            )
+            val outer = neighbours(step * 1e-3)
+            val inner = neighbours(step * 1e-4)
+            if ((outer + inner).any { !it.isFinite() }) return Double.NaN
+            val limit = inner.average()
+            val tolerance = 1e-6 * maxOf(1.0, abs(limit))
+            return limit.takeIf { (outer + inner).all { abs(it - limit) <= tolerance } } ?: Double.NaN
         }
-        for (i in 0..density) {
-            val x = min + (max - min) * i / density
-            for (j in 0..density) {
-                val y = min + (max - min) * j / density
-                val z = sample(x, y)
-                vertices += Vec3(x, y, z)
-            }
+        val grid = List((density + 1) * (density + 1)) { index ->
+            val x = min + (max - min) * (index / (density + 1)) / density
+            val y = min + (max - min) * (index % (density + 1)) / density
+            Vec3(x, y, sample(x, y))
         }
-        return SurfaceMesh(vertices, density + 1, density + 1)
+        if (grid.all { it.z.isFinite() }) return SurfaceMesh(grid, density + 1, density + 1)
+        val vertices = mutableListOf<Vec3>()
+        val triangles = mutableListOf<Int>()
+        for (row in 0 until density) for (column in 0 until density) {
+            val i = row * (density + 1) + column
+            val cell = listOf(grid[i], grid[i+1], grid[i+density+1], grid[i+density+2])
+            if (cell.any { !it.z.isFinite() }) continue
+            val base = vertices.size
+            vertices += cell
+            triangles += listOf(base,base+2,base+1,base+1,base+2,base+3)
+        }
+        return SurfaceMesh(vertices, 1, vertices.size.coerceAtLeast(1), triangles)
     }
 
     fun insight(expression: String): SurfaceInsight {

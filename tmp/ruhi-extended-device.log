@@ -1,0 +1,21 @@
+
+com.indianservers.aiexplorer.RuhiGraphRenderingTest:.
+Error in original150RunThroughRealViewModelAndCanvas(com.indianservers.aiexplorer.RuhiGraphRenderingTest):
+java.lang.AssertionError: 149: [] pixels=0: Updated 3D Graph: 3 action(s).
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.RuhiGraphRenderingTest.original150RunThroughRealViewModelAndCanvas(RuhiGraphRenderingTest.kt:139)
+.
+
+Time: 181.301
+There was 1 failure:
+1) original150RunThroughRealViewModelAndCanvas(com.indianservers.aiexplorer.RuhiGraphRenderingTest)
+java.lang.AssertionError: 149: [] pixels=0: Updated 3D Graph: 3 action(s).
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.RuhiGraphRenderingTest.original150RunThroughRealViewModelAndCanvas(RuhiGraphRenderingTest.kt:139)
+
+FAILURES!!!
+Tests run: 3,  Failures: 1
+
+

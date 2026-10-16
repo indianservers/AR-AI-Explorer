@@ -1,0 +1,654 @@
+{"text": "plot the function y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "please plot the function y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "could you plot the function y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "plot the function y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "please plot the function y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "could you plot the function y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "plot the function y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "please plot the function y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "could you plot the function y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "plot the function y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "please plot the function y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "could you plot the function y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "plot the function y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "please plot the function y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "could you plot the function y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:0", "split": "train"}
+{"text": "draw y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "please draw y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "could you draw y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "draw y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "please draw y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "could you draw y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "draw y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "please draw y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "could you draw y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "draw y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "please draw y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "could you draw y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "draw y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "please draw y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "could you draw y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:1", "split": "train"}
+{"text": "graph y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "please graph y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "could you graph y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "graph y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "please graph y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "could you graph y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "graph y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "please graph y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "could you graph y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "graph y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "please graph y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "could you graph y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "graph y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "please graph y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "could you graph y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:2", "split": "train"}
+{"text": "plot a 2d graph of y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "please plot a 2d graph of y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "could you plot a 2d graph of y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "plot a 2d graph of y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "please plot a 2d graph of y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "could you plot a 2d graph of y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "plot a 2d graph of y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "please plot a 2d graph of y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "could you plot a 2d graph of y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "plot a 2d graph of y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "please plot a 2d graph of y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "could you plot a 2d graph of y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "plot a 2d graph of y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "please plot a 2d graph of y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "could you plot a 2d graph of y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:train:3", "split": "train"}
+{"text": "sketch y = x^2 on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "please sketch y = x^2 on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "could you sketch y = x^2 on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "sketch y = sin(x) on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "please sketch y = sin(x) on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "could you sketch y = sin(x) on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "sketch y = 2*x+3 on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "please sketch y = 2*x+3 on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "could you sketch y = 2*x+3 on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "sketch y = x*y on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "please sketch y = x*y on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "could you sketch y = x*y on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "sketch y = sin(x)*cos(y) on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "please sketch y = sin(x)*cos(y) on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "could you sketch y = sin(x)*cos(y) on cartesian axes", "engine": "GRAPH_2D", "group": "GRAPH_2D:validation:0", "split": "validation"}
+{"text": "display the curve y = x^2 in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "please display the curve y = x^2 in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "could you display the curve y = x^2 in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "display the curve y = sin(x) in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "please display the curve y = sin(x) in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "could you display the curve y = sin(x) in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "display the curve y = 2*x+3 in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "please display the curve y = 2*x+3 in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "could you display the curve y = 2*x+3 in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "display the curve y = x*y in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "please display the curve y = x*y in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "could you display the curve y = x*y in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "display the curve y = sin(x)*cos(y) in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "please display the curve y = sin(x)*cos(y) in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "could you display the curve y = sin(x)*cos(y) in the graph studio", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:0", "split": "test"}
+{"text": "i want to see a graph of y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "please i want to see a graph of y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "could you i want to see a graph of y = x^2", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "i want to see a graph of y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "please i want to see a graph of y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "could you i want to see a graph of y = sin(x)", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "i want to see a graph of y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "please i want to see a graph of y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "could you i want to see a graph of y = 2*x+3", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "i want to see a graph of y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "please i want to see a graph of y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "could you i want to see a graph of y = x*y", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "i want to see a graph of y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "please i want to see a graph of y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "could you i want to see a graph of y = sin(x)*cos(y)", "engine": "GRAPH_2D", "group": "GRAPH_2D:test:1", "split": "test"}
+{"text": "plot the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "please plot the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "could you plot the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "plot the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "please plot the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "could you plot the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "plot the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "please plot the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "could you plot the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "plot the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "please plot the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "could you plot the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "plot the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "please plot the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "could you plot the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:0", "split": "train"}
+{"text": "draw a 3d graph of z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "please draw a 3d graph of z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d graph of z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "draw a 3d graph of z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "please draw a 3d graph of z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d graph of z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "draw a 3d graph of z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "please draw a 3d graph of z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d graph of z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "draw a 3d graph of z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "please draw a 3d graph of z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d graph of z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "draw a 3d graph of z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "please draw a 3d graph of z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d graph of z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:1", "split": "train"}
+{"text": "graph z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "please graph z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "could you graph z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "graph z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "please graph z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "could you graph z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "graph z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "please graph z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "could you graph z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "graph z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "please graph z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "could you graph z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "graph z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "please graph z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "could you graph z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:2", "split": "train"}
+{"text": "draw the plane z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "please draw the plane z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "could you draw the plane z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "draw the plane z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "please draw the plane z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "could you draw the plane z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "draw the plane z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "please draw the plane z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "could you draw the plane z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "draw the plane z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "please draw the plane z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "could you draw the plane z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "draw the plane z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "please draw the plane z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "could you draw the plane z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:train:3", "split": "train"}
+{"text": "visualize the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "please visualize the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "could you visualize the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "visualize the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "please visualize the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "could you visualize the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "visualize the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "please visualize the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "could you visualize the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "visualize the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "please visualize the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "could you visualize the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "visualize the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "please visualize the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "could you visualize the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:validation:0", "split": "validation"}
+{"text": "display z = x^2 as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "please display z = x^2 as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "could you display z = x^2 as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "display z = sin(x) as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "please display z = sin(x) as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "could you display z = sin(x) as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "display z = 2*x+3 as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "please display z = 2*x+3 as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "could you display z = 2*x+3 as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "display z = x*y as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "please display z = x*y as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "could you display z = x*y as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "display z = sin(x)*cos(y) as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "please display z = sin(x)*cos(y) as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "could you display z = sin(x)*cos(y) as a 3d surface", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:0", "split": "test"}
+{"text": "i want a graph of the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "please i want a graph of the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "could you i want a graph of the surface z = x^2", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "i want a graph of the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "please i want a graph of the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "could you i want a graph of the surface z = sin(x)", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "i want a graph of the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "please i want a graph of the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "could you i want a graph of the surface z = 2*x+3", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "i want a graph of the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "please i want a graph of the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "could you i want a graph of the surface z = x*y", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "i want a graph of the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "please i want a graph of the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "could you i want a graph of the surface z = sin(x)*cos(y)", "engine": "GRAPH_3D", "group": "GRAPH_3D:test:1", "split": "test"}
+{"text": "create a square with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a square with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a square with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a circle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a circle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a circle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a triangle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a triangle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a triangle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a rectangle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a rectangle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a rectangle with side length 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a square with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a square with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a square with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a circle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a circle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a circle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a triangle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a triangle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a triangle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a rectangle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a rectangle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a rectangle with side length 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a square with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a square with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a square with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a circle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a circle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a circle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a triangle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a triangle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a triangle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a rectangle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a rectangle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a rectangle with side length 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a square with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a square with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a square with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a circle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a circle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a circle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a triangle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a triangle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a triangle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "create a rectangle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "please create a rectangle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "could you create a rectangle with side length 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:0", "split": "train"}
+{"text": "draw a square in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "please draw a square in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "could you draw a square in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "draw a circle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "please draw a circle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "could you draw a circle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "draw a triangle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "please draw a triangle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "could you draw a triangle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "draw a rectangle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "please draw a rectangle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "could you draw a rectangle in 2d geometry", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:1", "split": "train"}
+{"text": "construct a square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "please construct a square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "could you construct a square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "construct a circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "please construct a circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "could you construct a circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "construct a triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "please construct a triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "could you construct a triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "construct a rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "please construct a rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "could you construct a rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:2", "split": "train"}
+{"text": "calculate the area of the square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "please calculate the area of the square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "could you calculate the area of the square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "calculate the area of the circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "please calculate the area of the circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "could you calculate the area of the circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "calculate the area of the triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "please calculate the area of the triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "could you calculate the area of the triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "calculate the area of the rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "please calculate the area of the rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "could you calculate the area of the rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:3", "split": "train"}
+{"text": "create point a at (2, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "please create point a at (2, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "could you create point a at (2, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "create point a at (3, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "please create point a at (3, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "could you create point a at (3, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "create point a at (5, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "please create point a at (5, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "could you create point a at (5, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "create point a at (7, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "please create point a at (7, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "could you create point a at (7, 3)", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:4", "split": "train"}
+{"text": "connect points a and b with a segment", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:5", "split": "train"}
+{"text": "please connect points a and b with a segment", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:5", "split": "train"}
+{"text": "could you connect points a and b with a segment", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:train:5", "split": "train"}
+{"text": "make a geometric square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "please make a geometric square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "could you make a geometric square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "make a geometric circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "please make a geometric circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "could you make a geometric circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "make a geometric triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "please make a geometric triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "could you make a geometric triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "make a geometric rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "please make a geometric rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "could you make a geometric rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:validation:0", "split": "validation"}
+{"text": "build a square construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "please build a square construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "could you build a square construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "build a circle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "please build a circle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "could you build a circle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "build a triangle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "please build a triangle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "could you build a triangle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "build a rectangle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "please build a rectangle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "could you build a rectangle construction in the geometry studio", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:0", "split": "test"}
+{"text": "show the perimeter of the square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "please show the perimeter of the square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "could you show the perimeter of the square", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "show the perimeter of the circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "please show the perimeter of the circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "could you show the perimeter of the circle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "show the perimeter of the triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "please show the perimeter of the triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "could you show the perimeter of the triangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "show the perimeter of the rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "please show the perimeter of the rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "could you show the perimeter of the rectangle", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:1", "split": "test"}
+{"text": "draw a circle centered at the origin with radius 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "please draw a circle centered at the origin with radius 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "could you draw a circle centered at the origin with radius 2", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "draw a circle centered at the origin with radius 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "please draw a circle centered at the origin with radius 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "could you draw a circle centered at the origin with radius 3", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "draw a circle centered at the origin with radius 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "please draw a circle centered at the origin with radius 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "could you draw a circle centered at the origin with radius 5", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "draw a circle centered at the origin with radius 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "please draw a circle centered at the origin with radius 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "could you draw a circle centered at the origin with radius 7", "engine": "GEOMETRY_2D", "group": "GEOMETRY_2D:test:2", "split": "test"}
+{"text": "create a cube with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cube with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cube with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a sphere with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a sphere with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a sphere with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cone with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cone with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cone with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cylinder with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cylinder with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cylinder with radius 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cube with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cube with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cube with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a sphere with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a sphere with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a sphere with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cone with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cone with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cone with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cylinder with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cylinder with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cylinder with radius 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cube with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cube with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cube with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a sphere with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a sphere with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a sphere with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cone with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cone with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cone with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cylinder with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cylinder with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cylinder with radius 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cube with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cube with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cube with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a sphere with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a sphere with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a sphere with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cone with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cone with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cone with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "create a cylinder with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "please create a cylinder with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "could you create a cylinder with radius 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:0", "split": "train"}
+{"text": "draw a 3d cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "please draw a 3d cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "draw a 3d sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "please draw a 3d sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "draw a 3d cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "please draw a 3d cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "draw a 3d cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "please draw a 3d cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "could you draw a 3d cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:1", "split": "train"}
+{"text": "make a cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "please make a cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "could you make a cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "make a sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "please make a sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "could you make a sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "make a cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "please make a cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "could you make a cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "make a cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "please make a cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "could you make a cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:2", "split": "train"}
+{"text": "create a rotating 3d cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "please create a rotating 3d cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "could you create a rotating 3d cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "create a rotating 3d sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "please create a rotating 3d sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "could you create a rotating 3d sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "create a rotating 3d cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "please create a rotating 3d cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "could you create a rotating 3d cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "create a rotating 3d cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "please create a rotating 3d cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "could you create a rotating 3d cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:3", "split": "train"}
+{"text": "calculate the volume of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "please calculate the volume of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "could you calculate the volume of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "calculate the volume of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "please calculate the volume of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "could you calculate the volume of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "calculate the volume of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "please calculate the volume of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "could you calculate the volume of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "calculate the volume of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "please calculate the volume of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "could you calculate the volume of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:4", "split": "train"}
+{"text": "find the surface area of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "please find the surface area of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "could you find the surface area of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "find the surface area of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "please find the surface area of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "could you find the surface area of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "find the surface area of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "please find the surface area of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "could you find the surface area of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "find the surface area of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "please find the surface area of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "could you find the surface area of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:train:5", "split": "train"}
+{"text": "build a solid cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "please build a solid cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "could you build a solid cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "build a solid sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "please build a solid sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "could you build a solid sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "build a solid cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "please build a solid cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "could you build a solid cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "build a solid cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "please build a solid cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "could you build a solid cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:validation:0", "split": "validation"}
+{"text": "generate a cube solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cube solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cube solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a sphere solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a sphere solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a sphere solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cone solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cone solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cone solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cylinder solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cylinder solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cylinder solid with height 2", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cube solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cube solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cube solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a sphere solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a sphere solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a sphere solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cone solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cone solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cone solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cylinder solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cylinder solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cylinder solid with height 3", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cube solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cube solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cube solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a sphere solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a sphere solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a sphere solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cone solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cone solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cone solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cylinder solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cylinder solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cylinder solid with height 5", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cube solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cube solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cube solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a sphere solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a sphere solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a sphere solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cone solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cone solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cone solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "generate a cylinder solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "please generate a cylinder solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "could you generate a cylinder solid with height 7", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:0", "split": "test"}
+{"text": "display the volume of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "please display the volume of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "could you display the volume of the cube", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "display the volume of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "please display the volume of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "could you display the volume of the sphere", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "display the volume of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "please display the volume of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "could you display the volume of the cone", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "display the volume of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "please display the volume of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "could you display the volume of the cylinder", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:1", "split": "test"}
+{"text": "create a cylinder with radius 2 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "please create a cylinder with radius 2 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "could you create a cylinder with radius 2 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "create a cylinder with radius 3 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "please create a cylinder with radius 3 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "could you create a cylinder with radius 3 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "create a cylinder with radius 5 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "please create a cylinder with radius 5 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "could you create a cylinder with radius 5 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "create a cylinder with radius 7 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "please create a cylinder with radius 7 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "could you create a cylinder with radius 7 and height 8", "engine": "GEOMETRY_3D", "group": "GEOMETRY_3D:test:2", "split": "test"}
+{"text": "make it red", "engine": "CONTEXT", "group": "CONTEXT:train:0", "split": "train"}
+{"text": "please make it red", "engine": "CONTEXT", "group": "CONTEXT:train:0", "split": "train"}
+{"text": "could you make it red", "engine": "CONTEXT", "group": "CONTEXT:train:0", "split": "train"}
+{"text": "move it 2 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "please move it 2 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "could you move it 2 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "move it 3 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "please move it 3 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "could you move it 3 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "move it 5 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "please move it 5 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "could you move it 5 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "move it 7 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "please move it 7 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "could you move it 7 units right", "engine": "CONTEXT", "group": "CONTEXT:train:1", "split": "train"}
+{"text": "rotate the selected object 2 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "please rotate the selected object 2 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "could you rotate the selected object 2 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "rotate the selected object 3 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "please rotate the selected object 3 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "could you rotate the selected object 3 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "rotate the selected object 5 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "please rotate the selected object 5 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "could you rotate the selected object 5 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "rotate the selected object 7 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "please rotate the selected object 7 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "could you rotate the selected object 7 degrees", "engine": "CONTEXT", "group": "CONTEXT:train:2", "split": "train"}
+{"text": "undo the last action", "engine": "CONTEXT", "group": "CONTEXT:train:3", "split": "train"}
+{"text": "please undo the last action", "engine": "CONTEXT", "group": "CONTEXT:train:3", "split": "train"}
+{"text": "could you undo the last action", "engine": "CONTEXT", "group": "CONTEXT:train:3", "split": "train"}
+{"text": "redo", "engine": "CONTEXT", "group": "CONTEXT:train:4", "split": "train"}
+{"text": "please redo", "engine": "CONTEXT", "group": "CONTEXT:train:4", "split": "train"}
+{"text": "could you redo", "engine": "CONTEXT", "group": "CONTEXT:train:4", "split": "train"}
+{"text": "delete the selected object", "engine": "CONTEXT", "group": "CONTEXT:train:5", "split": "train"}
+{"text": "please delete the selected object", "engine": "CONTEXT", "group": "CONTEXT:train:5", "split": "train"}
+{"text": "could you delete the selected object", "engine": "CONTEXT", "group": "CONTEXT:train:5", "split": "train"}
+{"text": "explain this", "engine": "CONTEXT", "group": "CONTEXT:train:6", "split": "train"}
+{"text": "please explain this", "engine": "CONTEXT", "group": "CONTEXT:train:6", "split": "train"}
+{"text": "could you explain this", "engine": "CONTEXT", "group": "CONTEXT:train:6", "split": "train"}
+{"text": "show the vertex", "engine": "CONTEXT", "group": "CONTEXT:train:7", "split": "train"}
+{"text": "please show the vertex", "engine": "CONTEXT", "group": "CONTEXT:train:7", "split": "train"}
+{"text": "could you show the vertex", "engine": "CONTEXT", "group": "CONTEXT:train:7", "split": "train"}
+{"text": "color the object i selected blue", "engine": "CONTEXT", "group": "CONTEXT:validation:0", "split": "validation"}
+{"text": "please color the object i selected blue", "engine": "CONTEXT", "group": "CONTEXT:validation:0", "split": "validation"}
+{"text": "could you color the object i selected blue", "engine": "CONTEXT", "group": "CONTEXT:validation:0", "split": "validation"}
+{"text": "scale it by 2", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "please scale it by 2", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "could you scale it by 2", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "scale it by 3", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "please scale it by 3", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "could you scale it by 3", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "scale it by 5", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "please scale it by 5", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "could you scale it by 5", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "scale it by 7", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "please scale it by 7", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "could you scale it by 7", "engine": "CONTEXT", "group": "CONTEXT:validation:1", "split": "validation"}
+{"text": "change its color to purple", "engine": "CONTEXT", "group": "CONTEXT:test:0", "split": "test"}
+{"text": "please change its color to purple", "engine": "CONTEXT", "group": "CONTEXT:test:0", "split": "test"}
+{"text": "could you change its color to purple", "engine": "CONTEXT", "group": "CONTEXT:test:0", "split": "test"}
+{"text": "make this twice as large", "engine": "CONTEXT", "group": "CONTEXT:test:1", "split": "test"}
+{"text": "please make this twice as large", "engine": "CONTEXT", "group": "CONTEXT:test:1", "split": "test"}
+{"text": "could you make this twice as large", "engine": "CONTEXT", "group": "CONTEXT:test:1", "split": "test"}
+{"text": "remove the currently selected object", "engine": "CONTEXT", "group": "CONTEXT:test:2", "split": "test"}
+{"text": "please remove the currently selected object", "engine": "CONTEXT", "group": "CONTEXT:test:2", "split": "test"}
+{"text": "could you remove the currently selected object", "engine": "CONTEXT", "group": "CONTEXT:test:2", "split": "test"}
+{"text": "undo my previous command", "engine": "CONTEXT", "group": "CONTEXT:test:3", "split": "test"}
+{"text": "please undo my previous command", "engine": "CONTEXT", "group": "CONTEXT:test:3", "split": "test"}
+{"text": "could you undo my previous command", "engine": "CONTEXT", "group": "CONTEXT:test:3", "split": "test"}
+{"text": "teach me quadratic equations", "engine": "OTHER", "group": "OTHER:train:0", "split": "train"}
+{"text": "please teach me quadratic equations", "engine": "OTHER", "group": "OTHER:train:0", "split": "train"}
+{"text": "could you teach me quadratic equations", "engine": "OTHER", "group": "OTHER:train:0", "split": "train"}
+{"text": "what is the weather", "engine": "OTHER", "group": "OTHER:train:1", "split": "train"}
+{"text": "please what is the weather", "engine": "OTHER", "group": "OTHER:train:1", "split": "train"}
+{"text": "could you what is the weather", "engine": "OTHER", "group": "OTHER:train:1", "split": "train"}
+{"text": "hello ruhi", "engine": "OTHER", "group": "OTHER:train:2", "split": "train"}
+{"text": "please hello ruhi", "engine": "OTHER", "group": "OTHER:train:2", "split": "train"}
+{"text": "could you hello ruhi", "engine": "OTHER", "group": "OTHER:train:2", "split": "train"}
+{"text": "explain photosynthesis", "engine": "OTHER", "group": "OTHER:train:3", "split": "train"}
+{"text": "please explain photosynthesis", "engine": "OTHER", "group": "OTHER:train:3", "split": "train"}
+{"text": "could you explain photosynthesis", "engine": "OTHER", "group": "OTHER:train:3", "split": "train"}
+{"text": "solve 2 + 2", "engine": "OTHER", "group": "OTHER:train:4", "split": "train"}
+{"text": "please solve 2 + 2", "engine": "OTHER", "group": "OTHER:train:4", "split": "train"}
+{"text": "could you solve 2 + 2", "engine": "OTHER", "group": "OTHER:train:4", "split": "train"}
+{"text": "do not delete anything", "engine": "OTHER", "group": "OTHER:train:5", "split": "train"}
+{"text": "please do not delete anything", "engine": "OTHER", "group": "OTHER:train:5", "split": "train"}
+{"text": "could you do not delete anything", "engine": "OTHER", "group": "OTHER:train:5", "split": "train"}
+{"text": "send an email", "engine": "OTHER", "group": "OTHER:train:6", "split": "train"}
+{"text": "please send an email", "engine": "OTHER", "group": "OTHER:train:6", "split": "train"}
+{"text": "could you send an email", "engine": "OTHER", "group": "OTHER:train:6", "split": "train"}
+{"text": "tell me a joke", "engine": "OTHER", "group": "OTHER:validation:0", "split": "validation"}
+{"text": "please tell me a joke", "engine": "OTHER", "group": "OTHER:validation:0", "split": "validation"}
+{"text": "could you tell me a joke", "engine": "OTHER", "group": "OTHER:validation:0", "split": "validation"}
+{"text": "teach me biology", "engine": "OTHER", "group": "OTHER:validation:1", "split": "validation"}
+{"text": "please teach me biology", "engine": "OTHER", "group": "OTHER:validation:1", "split": "validation"}
+{"text": "could you teach me biology", "engine": "OTHER", "group": "OTHER:validation:1", "split": "validation"}
+{"text": "what is the capital of france", "engine": "OTHER", "group": "OTHER:test:0", "split": "test"}
+{"text": "please what is the capital of france", "engine": "OTHER", "group": "OTHER:test:0", "split": "test"}
+{"text": "could you what is the capital of france", "engine": "OTHER", "group": "OTHER:test:0", "split": "test"}
+{"text": "send a message to my teacher", "engine": "OTHER", "group": "OTHER:test:1", "split": "test"}
+{"text": "please send a message to my teacher", "engine": "OTHER", "group": "OTHER:test:1", "split": "test"}
+{"text": "could you send a message to my teacher", "engine": "OTHER", "group": "OTHER:test:1", "split": "test"}
+{"text": "explain the history of science", "engine": "OTHER", "group": "OTHER:test:2", "split": "test"}
+{"text": "please explain the history of science", "engine": "OTHER", "group": "OTHER:test:2", "split": "test"}
+{"text": "could you explain the history of science", "engine": "OTHER", "group": "OTHER:test:2", "split": "test"}

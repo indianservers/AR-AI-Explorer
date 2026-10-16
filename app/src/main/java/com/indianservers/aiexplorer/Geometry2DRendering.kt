@@ -39,7 +39,7 @@ fun DrawScope.drawStoredShapes(
         "violet" -> RenderViolet
         "green" -> RenderBlue
         "accent" -> RenderYellow
-        else -> objectPalette[shape.id.hashCode().ushr(1) % objectPalette.size]
+        else -> if (Regex("#[0-9A-Fa-f]{6}").matches(shape.styleKey)) Color(android.graphics.Color.parseColor(shape.styleKey)) else objectPalette[shape.id.hashCode().ushr(1) % objectPalette.size]
     }
     shapes.forEachIndexed { index, shape ->
         if (!shape.visible) return@forEachIndexed

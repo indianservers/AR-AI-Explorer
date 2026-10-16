@@ -1,0 +1,629 @@
+{
+  "model_sha256": "782fa1398227e8dde6c2b5d6a1e0af3d3b2ba07641400a49511316af4ef55ffa",
+  "benchmark": "Training-fit recognition replay; does not certify engine execution or unseen-language accuracy",
+  "results": [
+    {
+      "id": 10,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.9498641,
+      "margin": 0.94076717
+    },
+    {
+      "id": 12,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.9498641,
+      "margin": 0.94076717
+    },
+    {
+      "id": 13,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.6800408,
+      "margin": 0.6126273
+    },
+    {
+      "id": 15,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.99681646,
+      "margin": 0.9963046
+    },
+    {
+      "id": 16,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.9720283,
+      "margin": 0.96654475
+    },
+    {
+      "id": 17,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.99049944,
+      "margin": 0.9855338
+    },
+    {
+      "id": 18,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.99373007,
+      "margin": 0.99125236
+    },
+    {
+      "id": 29,
+      "expected": "DELETE",
+      "actual": "DELETE",
+      "confidence": 0.9443062,
+      "margin": 0.9255552
+    },
+    {
+      "id": 31,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.9943487,
+      "margin": 0.9905794
+    },
+    {
+      "id": 32,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.96712756,
+      "margin": 0.9525071
+    },
+    {
+      "id": 33,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.9966461,
+      "margin": 0.99569166
+    },
+    {
+      "id": 34,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.98307574,
+      "margin": 0.96971405
+    },
+    {
+      "id": 35,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.9072882,
+      "margin": 0.88587105
+    },
+    {
+      "id": 36,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.9892007,
+      "margin": 0.9867187
+    },
+    {
+      "id": 37,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.71006835,
+      "margin": 0.672745
+    },
+    {
+      "id": 38,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.35772285,
+      "margin": 0.19286083
+    },
+    {
+      "id": 39,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.98232067,
+      "margin": 0.9695651
+    },
+    {
+      "id": 40,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.99416405,
+      "margin": 0.99135906
+    },
+    {
+      "id": 41,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.7214426,
+      "margin": 0.6300881
+    },
+    {
+      "id": 42,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.31176594,
+      "margin": 0.15238854
+    },
+    {
+      "id": 43,
+      "expected": "ARRANGE",
+      "actual": "ARRANGE",
+      "confidence": 0.9840607,
+      "margin": 0.97761005
+    },
+    {
+      "id": 44,
+      "expected": "ARRANGE",
+      "actual": "ARRANGE",
+      "confidence": 0.9721843,
+      "margin": 0.968133
+    },
+    {
+      "id": 45,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.7265334,
+      "margin": 0.6788492
+    },
+    {
+      "id": 46,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.7982119,
+      "margin": 0.7750825
+    },
+    {
+      "id": 47,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.94682306,
+      "margin": 0.93857086
+    },
+    {
+      "id": 48,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.6995112,
+      "margin": 0.48260164
+    },
+    {
+      "id": 49,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.9849819,
+      "margin": 0.97187257
+    },
+    {
+      "id": 50,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.9482225,
+      "margin": 0.9002351
+    },
+    {
+      "id": 51,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.89995825,
+      "margin": 0.8681079
+    },
+    {
+      "id": 52,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.9413003,
+      "margin": 0.9073795
+    },
+    {
+      "id": 53,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.98146665,
+      "margin": 0.97428554
+    },
+    {
+      "id": 54,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.991089,
+      "margin": 0.9881059
+    },
+    {
+      "id": 55,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.85786456,
+      "margin": 0.82366896
+    },
+    {
+      "id": 56,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.7124545,
+      "margin": 0.49983746
+    },
+    {
+      "id": 57,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.87784916,
+      "margin": 0.7853597
+    },
+    {
+      "id": 58,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.78074044,
+      "margin": 0.69222695
+    },
+    {
+      "id": 59,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.5992413,
+      "margin": 0.54929245
+    },
+    {
+      "id": 61,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.995644,
+      "margin": 0.99385226
+    },
+    {
+      "id": 62,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.999385,
+      "margin": 0.99900234
+    },
+    {
+      "id": 63,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.92330813,
+      "margin": 0.9156311
+    },
+    {
+      "id": 64,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.99814284,
+      "margin": 0.9974935
+    },
+    {
+      "id": 65,
+      "expected": "ANIMATE",
+      "actual": "ANIMATE",
+      "confidence": 0.97414565,
+      "margin": 0.9711621
+    },
+    {
+      "id": 66,
+      "expected": "STOP_ANIMATION",
+      "actual": "STOP_ANIMATION",
+      "confidence": 0.99045336,
+      "margin": 0.98874724
+    },
+    {
+      "id": 67,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.98816,
+      "margin": 0.98332185
+    },
+    {
+      "id": 68,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.99378234,
+      "margin": 0.9896322
+    },
+    {
+      "id": 69,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.5087785,
+      "margin": 0.34998775
+    },
+    {
+      "id": 70,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.8491348,
+      "margin": 0.83206576
+    },
+    {
+      "id": 71,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.8163508,
+      "margin": 0.79552484
+    },
+    {
+      "id": 72,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.8423752,
+      "margin": 0.80969876
+    },
+    {
+      "id": 73,
+      "expected": "ANIMATE",
+      "actual": "ANIMATE",
+      "confidence": 0.88800055,
+      "margin": 0.8657656
+    },
+    {
+      "id": 74,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.99742943,
+      "margin": 0.9963438
+    },
+    {
+      "id": 75,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.6293423,
+      "margin": 0.57986695
+    },
+    {
+      "id": 83,
+      "expected": "COLOR",
+      "actual": "COLOR",
+      "confidence": 0.93173563,
+      "margin": 0.9241986
+    },
+    {
+      "id": 96,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.99681646,
+      "margin": 0.9963046
+    },
+    {
+      "id": 99,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.9969247,
+      "margin": 0.9961843
+    },
+    {
+      "id": 100,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.99112517,
+      "margin": 0.9901533
+    },
+    {
+      "id": 101,
+      "expected": "AXES",
+      "actual": "AXES",
+      "confidence": 0.9961188,
+      "margin": 0.99576116
+    },
+    {
+      "id": 104,
+      "expected": "AXES",
+      "actual": "AXES",
+      "confidence": 0.98918855,
+      "margin": 0.98836315
+    },
+    {
+      "id": 105,
+      "expected": "RANGE",
+      "actual": "RANGE",
+      "confidence": 0.999619,
+      "margin": 0.9994368
+    },
+    {
+      "id": 106,
+      "expected": "RELATION",
+      "actual": "RELATION",
+      "confidence": 0.9703977,
+      "margin": 0.96199524
+    },
+    {
+      "id": 107,
+      "expected": "RELATION",
+      "actual": "RELATION",
+      "confidence": 0.99242026,
+      "margin": 0.9888489
+    },
+    {
+      "id": 108,
+      "expected": "ARRANGE",
+      "actual": "ARRANGE",
+      "confidence": 0.95558125,
+      "margin": 0.95152974
+    },
+    {
+      "id": 109,
+      "expected": "ARRANGE",
+      "actual": "ARRANGE",
+      "confidence": 0.9953589,
+      "margin": 0.99376786
+    },
+    {
+      "id": 110,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.98385507,
+      "margin": 0.98064387
+    },
+    {
+      "id": 111,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.962777,
+      "margin": 0.9564309
+    },
+    {
+      "id": 112,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.9550505,
+      "margin": 0.9423796
+    },
+    {
+      "id": 113,
+      "expected": "MEASURE",
+      "actual": "MEASURE",
+      "confidence": 0.990445,
+      "margin": 0.9891093
+    },
+    {
+      "id": 114,
+      "expected": "MEASURE",
+      "actual": "MEASURE",
+      "confidence": 0.99106383,
+      "margin": 0.9903132
+    },
+    {
+      "id": 115,
+      "expected": "CREATE",
+      "actual": "CREATE",
+      "confidence": 0.98754054,
+      "margin": 0.9855097
+    },
+    {
+      "id": 116,
+      "expected": "MEASURE",
+      "actual": "MEASURE",
+      "confidence": 0.983082,
+      "margin": 0.9815527
+    },
+    {
+      "id": 117,
+      "expected": "GROUP",
+      "actual": "GROUP",
+      "confidence": 0.9779473,
+      "margin": 0.9736106
+    },
+    {
+      "id": 118,
+      "expected": "UNGROUP",
+      "actual": "UNGROUP",
+      "confidence": 0.9922665,
+      "margin": 0.99080384
+    },
+    {
+      "id": 120,
+      "expected": "MIRROR",
+      "actual": "MIRROR",
+      "confidence": 0.9974717,
+      "margin": 0.99715024
+    },
+    {
+      "id": 122,
+      "expected": "BATCH",
+      "actual": "BATCH",
+      "confidence": 0.991935,
+      "margin": 0.99018896
+    },
+    {
+      "id": 123,
+      "expected": "DUPLICATE",
+      "actual": "DUPLICATE",
+      "confidence": 0.9645373,
+      "margin": 0.95636606
+    },
+    {
+      "id": 125,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.7551932,
+      "margin": 0.59541
+    },
+    {
+      "id": 126,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.9510982,
+      "margin": 0.9436583
+    },
+    {
+      "id": 128,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.98324674,
+      "margin": 0.9756033
+    },
+    {
+      "id": 130,
+      "expected": "BATCH",
+      "actual": "BATCH",
+      "confidence": 0.98361844,
+      "margin": 0.9693765
+    },
+    {
+      "id": 131,
+      "expected": "SELECT",
+      "actual": "SELECT",
+      "confidence": 0.9894392,
+      "margin": 0.9884189
+    },
+    {
+      "id": 132,
+      "expected": "DELETE",
+      "actual": "DELETE",
+      "confidence": 0.96940494,
+      "margin": 0.96226025
+    },
+    {
+      "id": 135,
+      "expected": "RESTORE",
+      "actual": "RESTORE",
+      "confidence": 0.9989774,
+      "margin": 0.99871206
+    },
+    {
+      "id": 138,
+      "expected": "MOVE",
+      "actual": "MOVE",
+      "confidence": 0.99575365,
+      "margin": 0.99429786
+    },
+    {
+      "id": 139,
+      "expected": "ROTATE",
+      "actual": "ROTATE",
+      "confidence": 0.99186486,
+      "margin": 0.98667973
+    },
+    {
+      "id": 142,
+      "expected": "SCALE",
+      "actual": "SCALE",
+      "confidence": 0.89235204,
+      "margin": 0.8255416
+    },
+    {
+      "id": 147,
+      "expected": "REPEAT",
+      "actual": "REPEAT",
+      "confidence": 0.9946749,
+      "margin": 0.994036
+    },
+    {
+      "id": 148,
+      "expected": "BATCH",
+      "actual": "BATCH",
+      "confidence": 0.9946966,
+      "margin": 0.99295616
+    },
+    {
+      "id": 149,
+      "expected": "BATCH",
+      "actual": "BATCH",
+      "confidence": 0.9975425,
+      "margin": 0.9962359
+    },
+    {
+      "id": 150,
+      "expected": "BATCH",
+      "actual": "BATCH",
+      "confidence": 0.9951082,
+      "margin": 0.99225634
+    }
+  ]
+}

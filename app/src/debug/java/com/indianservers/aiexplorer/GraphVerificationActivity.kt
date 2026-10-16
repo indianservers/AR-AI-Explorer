@@ -20,9 +20,10 @@ class GraphVerificationActivity : ComponentActivity() {
         val expression = decodeExpression()
         val arMode = intent.getStringExtra("verify_ar_workspace").orEmpty()
         val uxMode = intent.getStringExtra("verify_ux_workspace").orEmpty()
+        val ruhiCommand = intent.getStringExtra("verify_ruhi_command").orEmpty()
         setContent {
             val vm = remember { verificationViewModel }
-            LaunchedEffect(mode, expression, arMode) {
+            LaunchedEffect(mode, expression, arMode,ruhiCommand) {
                 if (uxMode.isNotBlank()) {
                     vm.openGraphVerification("2d", "x^2")
                     vm.open(when (uxMode) {
@@ -49,6 +50,7 @@ class GraphVerificationActivity : ComponentActivity() {
                 if (mode.isNotBlank() && expression.isNotBlank()) {
                     vm.openGraphVerification(mode, expression)
                 }
+                if(ruhiCommand.isNotBlank()) vm.executeRuhiAssistant(ruhiCommand)
             }
             AIExplorerApp(vm, durableStateEnabled = false)
         }

@@ -929,6 +929,7 @@ internal fun SurfaceCanvas3D(
     showSlice: Boolean,
     showGradient: Boolean,
     showBox: Boolean,
+    gridVisible: Boolean = true,
     activeTool: SurfaceTool,
     onRotate: (Float) -> Unit,
     onTilt: (Float) -> Unit,
@@ -1039,8 +1040,8 @@ internal fun SurfaceCanvas3D(
         val scale = 104f * zoom
         fun camera(v: Vec3) = rotate(v, tilt, rotation, roll)
         fun map(v: Vec3) = project(camera(v), center, scale)
-        drawPerspectiveGrid(center, effects = visualEffects, axisStyle = axisStyle)
-        drawCoordinatePlanes3D(::map, axisStyle)
+        if (gridVisible) drawPerspectiveGrid(center, effects = visualEffects, axisStyle = axisStyle)
+        drawCoordinatePlanes3D(::map, if (gridVisible) axisStyle else axisStyle.copy(grid = Color.Transparent))
         if (showBox) drawSurfaceBox(::map, axisStyle)
         mesh?.let { drawStyledSurface(it, ::map, ::camera, appearance, surfaceOpacity, renderMode) }
         additionalMeshes.forEach { styled ->
@@ -1085,9 +1086,18 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStyledSurface(
     val zMin = zValues.minOrNull() ?: return
     val zRange = ((zValues.maxOrNull() ?: zMin) - zMin).coerceAtLeast(1e-9)
     triangles.forEach { triangle ->
-        val color = appearance.palette.sample(((triangle.map(Vec3::z).average() - zMin) / zRange).toFloat())
+        val baseColor = appearance.tint ?: appearance.palette.sample(((triangle.map(Vec3::z).average() - zMin) / zRange).toFloat())
+        val normal = AnalyticGeometry3D.cross(triangle[1] - triangle[0], triangle[2] - triangle[0]).normalized()
+        val diffuse = kotlin.math.abs(camera(normal).normalized().dot(Vec3(-.35, -.45, .82).normalized())).toFloat()
+        val color = if (appearance.material == com.indianservers.aiexplorer.core.SpatialMaterial.Metal) androidx.compose.ui.graphics.lerp(Color.Black, baseColor, .55f + .4f * diffuse) else baseColor
+        val materialAlpha = when (appearance.material) {
+            com.indianservers.aiexplorer.core.SpatialMaterial.Glass -> .34f
+            com.indianservers.aiexplorer.core.SpatialMaterial.XRay -> .16f
+            else -> .72f
+        }
+        val finish = if (appearance.material == com.indianservers.aiexplorer.core.SpatialMaterial.Metal) androidx.compose.ui.graphics.lerp(color, Color.White, diffuse * .25f) else color
         val path = Path().apply { moveTo(map(triangle[0]).x, map(triangle[0]).y); lineTo(map(triangle[1]).x, map(triangle[1]).y); lineTo(map(triangle[2]).x, map(triangle[2]).y); close() }
-        if (renderMode != SpatialSurfaceRenderMode.Wireframe) drawPath(path, color.copy(alpha = (.72f * opacity).coerceIn(0f, 1f)))
+        if (renderMode != SpatialSurfaceRenderMode.Wireframe) drawPath(path, finish.copy(alpha = (materialAlpha * opacity).coerceIn(0f, 1f)))
         if (renderMode != SpatialSurfaceRenderMode.Surface) {
             drawPath(path, appearance.color.copy(alpha = (.88f * opacity).coerceIn(0f, 1f)), style = Stroke(width = 1.15f))
         }
@@ -1171,7 +1181,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStyledSurface(
                     row.toFloat() / (rowCount - 1).coerceAtLeast(1) * .04f +
                     column.toFloat() / (columnCount - 1).coerceAtLeast(1) * .04f
                 ).coerceIn(0f, 1f)
-            val paletteColor = appearance.palette.sample(sweep)
+            val paletteColor = appearance.tint ?: appearance.palette.sample(sweep)
             val cameraNormal = camera(normal).normalized()
             val diffuse = kotlin.math.max(0.0, cameraNormal.dot(light)).toFloat()
             val facing = kotlin.math.abs(cameraNormal.z).toFloat()

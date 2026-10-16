@@ -552,6 +552,11 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     var graphParameterValues by remember { mutableStateOf<Map<String, Double>>(emptyMap()) }
     var playingParameters by remember { mutableStateOf<Set<String>>(emptySet()) }
     var selectedGraphRowId by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(selectedGraphRowId) { if (selectedGraphRowId != null) vm.selectGraphAssistantLayer(selectedGraphRowId) }
+    LaunchedEffect(vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.selectionKey(com.indianservers.aiexplorer.workspace.MathModule.Graph2D)]) {
+        selectedGraphRowId = vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.GraphAssistant.selectionKey(com.indianservers.aiexplorer.workspace.MathModule.Graph2D)]
+    }
+
     var equationEditorExpanded by remember { mutableStateOf(false) }
     var graphTypingMode by remember { mutableStateOf(false) }
     var graphAddMenuExpanded by remember { mutableStateOf(false) }
@@ -563,6 +568,11 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     val savedGraphView = vm.state.graph2DView
     var graphViewport by remember { mutableStateOf(GraphViewState(Vec2(savedGraphView.centerX, savedGraphView.centerY), savedGraphView.zoom)) }
     var graphAxisSettings by remember { mutableStateOf(GraphAxisSettings(savedGraphView.xName, savedGraphView.yName, savedGraphView.xUnit, savedGraphView.yUnit, runCatching { AxisNumberFormat.valueOf(savedGraphView.numberFormat) }.getOrDefault(AxisNumberFormat.Adaptive), savedGraphView.gridVisible, savedGraphView.xLogarithmic, savedGraphView.yLogarithmic)) }
+    LaunchedEffect(vm.state.graph2DView) {
+        val view = vm.state.graph2DView
+        graphViewport = GraphViewState(Vec2(view.centerX, view.centerY), view.zoom)
+        graphAxisSettings = graphAxisSettings.copy(gridVisible = view.gridVisible)
+    }
     var appearanceTarget by remember { mutableStateOf<String?>(null) }
     var showAxisSheet by remember { mutableStateOf(false) }
     var showMiniMap by remember { mutableStateOf(false) }
@@ -834,7 +844,12 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 ?: selectedFunction?.let { graphTransformationPreview(it.expression, vm.showBottomPanel || animateGraphTransform, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
             brushInterval = brushInterval,
             sketchPoints = sketchPoints,
-            pinnedTracePoints = pinnedTracePoints,
+            pinnedTracePoints = (pinnedTracePoints + com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueMath.markers(vm.state) + vm.state.functions.mapNotNull { row ->
+                val pin=vm.state.labSessionValues["ruhi.graph2d.vertex.${row.id}"]?.split('\t') ?: return@mapNotNull null
+                if(pin.size!=2 || pin[0]!=row.expression) return@mapNotNull null
+                val coordinates=pin[1].split(',').mapNotNull(String::toDoubleOrNull)
+                if(coordinates.size==2 && coordinates.all(Double::isFinite)) Vec2(coordinates[0],coordinates[1]) else null
+            }).distinct().takeLast(8),
             showResidualPlot = showResidualPlot,
             splitComparison = splitComparison,
             snapshotExpressions = graphSnapshotOverlay?.expressions.orEmpty(),

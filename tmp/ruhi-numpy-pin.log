@@ -1,0 +1,16 @@
+Collecting numpy==2.2.6
+  Downloading numpy-2.2.6-cp312-cp312-win_amd64.whl.metadata (60 kB)
+     -------------------------------------- 60.8/60.8 kB 538.3 kB/s eta 0:00:00
+Downloading numpy-2.2.6-cp312-cp312-win_amd64.whl (12.6 MB)
+   ---------------------------------------- 12.6/12.6 MB 13.9 MB/s eta 0:00:00
+Installing collected packages: numpy
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.4.4
+    Not uninstalling numpy at c:\users\saisa\appdata\local\programs\python\python312\lib\site-packages, outside environment C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312
+    Can't uninstall 'numpy'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+Successfully installed numpy-2.2.6
+numba 0.60.0 requires numpy<2.1,>=1.22, but you have numpy 2.2.6 which is incompatible.
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312\Scripts\python.exe -m pip install --upgrade pip

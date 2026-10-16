@@ -397,6 +397,7 @@ data class DeleteShapesCommand(
     val beforePointDependencies: List<PointDependency>,
     val beforeGroups: List<GeometryGroup2D>,
     val beforeConstraints: List<GeometryConstraint2D>,
+    val beforeReferenceValues:Map<String,String>?=null,
 ) : WorkspaceCommand {
     override val label = "Delete ${indices.size} selected 2D object${if (indices.size == 1) "" else "s"}"
     override fun apply(state: WorkspaceState): WorkspaceState {
@@ -417,6 +418,7 @@ data class DeleteShapesCommand(
             dependency.copy(outputIndex = output, inputIndices = inputs).takeIf { inputs.size == dependency.inputIndices.size }
         }
         return state.copy(
+            labSessionValues=StudioReferenceMetadata.remapPoints(state.labSessionValues,remap),
             points = state.points.filterIndexed { index, _ -> index !in removedPoints },
             pointDependencies = remappedDependencies,
             shapes = remappedShapes,
@@ -430,6 +432,7 @@ data class DeleteShapesCommand(
         )
     }
     override fun undo(state: WorkspaceState) = state.copy(
+        labSessionValues=beforeReferenceValues?.let { StudioReferenceMetadata.restorePointReferences(state.labSessionValues,it) } ?: state.labSessionValues,
         shapes = beforeShapes,
         points = beforePoints,
         pointDependencies = beforePointDependencies,
@@ -681,8 +684,9 @@ class CommandHistory(private val limit: Int = 80) {
     private val redoStack = ArrayDeque<WorkspaceCommand>()
 
     fun execute(state: WorkspaceState, command: WorkspaceCommand): WorkspaceState {
+        val next = command.apply(state)
         recordApplied(command)
-        return command.apply(state)
+        return next
     }
 
     /** Records a gesture command after its live preview has already reached [WorkspaceState]. */
@@ -692,16 +696,21 @@ class CommandHistory(private val limit: Int = 80) {
         redoStack.clear()
     }
 
-    fun undo(state: WorkspaceState): WorkspaceState {
-        val command = undoStack.removeLastOrNull() ?: return state
-        redoStack.addLast(command)
-        return command.undo(state)
+    fun undo(state: WorkspaceState): WorkspaceState = if (canUndo) undoMany(state, 1) else state
+    fun redo(state: WorkspaceState): WorkspaceState = if (canRedo) redoMany(state, 1) else state
+    fun undoMany(state: WorkspaceState, count: Int): WorkspaceState {
+        require(count in 1..undoStack.size)
+        var next = state
+        undoStack.takeLast(count).reversed().forEach { next = it.undo(next) }
+        repeat(count) { redoStack.addLast(undoStack.removeLast()) }
+        return next
     }
-
-    fun redo(state: WorkspaceState): WorkspaceState {
-        val command = redoStack.removeLastOrNull() ?: return state
-        undoStack.addLast(command)
-        return command.apply(state)
+    fun redoMany(state: WorkspaceState, count: Int): WorkspaceState {
+        require(count in 1..redoStack.size)
+        var next = state
+        redoStack.takeLast(count).reversed().forEach { next = it.apply(next) }
+        repeat(count) { undoStack.addLast(redoStack.removeLast()) }
+        return next
     }
 
     val canUndo: Boolean get() = undoStack.isNotEmpty()

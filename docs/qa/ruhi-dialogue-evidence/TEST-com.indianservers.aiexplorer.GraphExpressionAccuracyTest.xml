@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-16T11:14:24.403Z" hostname="INDIANSERVERS" time="0.099">
+  <properties/>
+  <testcase name="graph2dTypedModesRemainAccurate" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.024"/>
+  <testcase name="graphConstantsRetainExpectedExactValues" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.001"/>
+  <testcase name="graph3dEvaluatesMoreThanTwentyRepresentativeSurfaces" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.01"/>
+  <testcase name="graph2dEvaluatesMoreThanTwentyRepresentativeExpressions" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.011"/>
+  <testcase name="graph2dNormalizesGeoGebraStyleTrigPowers" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.001"/>
+  <testcase name="graph3dEvaluatesOneHundredPlusComplexSurfaces" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.023"/>
+  <testcase name="graph2dEvaluatesOneHundredPlusComplexExpressions" classname="com.indianservers.aiexplorer.GraphExpressionAccuracyTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

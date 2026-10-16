@@ -1,0 +1,4 @@
+tensorflow==2.20.0
+numpy==2.2.6
+protobuf==5.29.5
+ml-dtypes==0.5.4

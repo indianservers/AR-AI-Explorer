@@ -87,30 +87,54 @@ class TypedSurfaceMesher(private val expressions: ExpressionEngine = ExpressionE
         val corners = arrayOf(intArrayOf(0, 0, 0), intArrayOf(1, 0, 0), intArrayOf(1, 1, 0), intArrayOf(0, 1, 0), intArrayOf(0, 0, 1), intArrayOf(1, 0, 1), intArrayOf(1, 1, 1), intArrayOf(0, 1, 1))
         val tetrahedra = arrayOf(intArrayOf(0, 5, 1, 6), intArrayOf(0, 1, 2, 6), intArrayOf(0, 2, 3, 6), intArrayOf(0, 3, 7, 6), intArrayOf(0, 7, 4, 6), intArrayOf(0, 4, 5, 6))
         val vertices = mutableListOf<Vec3>(); val triangles = mutableListOf<Int>(); var discarded = 0
+        val seenTriangles = hashSetOf<String>()
         for (ix in 0 until density) for (iy in 0 until density) for (iz in 0 until density) {
             val ids = corners.map { index(ix + it[0], iy + it[1], iz + it[2]) }
             if (ids.any { !values[it].isFinite() }) { discarded++; continue }
-            tetrahedra.forEach { tetra -> polygoniseTetra(tetra.map { ids[it] }, points, values, vertices, triangles) }
+            tetrahedra.forEach { tetra -> polygoniseTetra(tetra.map { ids[it] }, points, values, vertices, triangles, seenTriangles) }
         }
         return SurfaceGenerationResult(SpatialGeometry(vertices, triangles), values.size, discarded, watertightCandidate = discarded == 0)
     }
 
-    private fun polygoniseTetra(ids: List<Int>, points: Array<Vec3>, values: DoubleArray, vertices: MutableList<Vec3>, triangles: MutableList<Int>) {
+    private fun polygoniseTetra(ids: List<Int>, points: Array<Vec3>, values: DoubleArray, vertices: MutableList<Vec3>, triangles: MutableList<Int>, seen: MutableSet<String>) {
+        if (ids.all { values[it] == 0.0 }) return // Identically zero samples do not define a unique surface.
         val edges = arrayOf(0 to 1, 0 to 2, 0 to 3, 1 to 2, 1 to 3, 2 to 3); val hits = mutableListOf<Vec3>()
         edges.forEach { (a, b) ->
             val ia = ids[a]; val ib = ids[b]; val va = values[ia]; val vb = values[ib]
-            if ((va <= 0 && vb >= 0) || (va >= 0 && vb <= 0)) {
+            if (va == 0.0 && vb == 0.0) {
+                hits += points[ia]; hits += points[ib]
+            } else if ((va <= 0 && vb >= 0) || (va >= 0 && vb <= 0)) {
                 val denominator = va - vb; val t = if (abs(denominator) < 1e-14) .5 else va / denominator
                 hits += points[ia] + (points[ib] - points[ia]) * t.coerceIn(0.0, 1.0)
             }
         }
         val unique = hits.distinctBy(::quantized)
-        if (unique.size == 3) addTriangle(unique[0], unique[1], unique[2], vertices, triangles)
-        else if (unique.size == 4) { addTriangle(unique[0], unique[1], unique[2], vertices, triangles); addTriangle(unique[0], unique[2], unique[3], vertices, triangles) }
+        if (unique.size !in 3..4) return
+        fun center(group: List<Int>) = group.map { points[it] }.reduce { a,b -> a+b } * (1.0/group.size)
+        val negative = ids.filter { values[it] < 0 }.ifEmpty { ids.filter { values[it] <= 0 } }
+        val positive = ids.filter { values[it] > 0 }.ifEmpty { ids.filter { values[it] >= 0 } }
+        val outward = if (negative.isNotEmpty() && positive.isNotEmpty()) center(positive)-center(negative) else Vec3(0.0,0.0,0.0)
+        fun oriented(a: Vec3,b: Vec3,c: Vec3) {
+            if (AnalyticGeometry3D.cross(b-a,c-a).dot(outward)<0) addTriangle(a,c,b,vertices,triangles,seen)
+            else addTriangle(a,b,c,vertices,triangles,seen)
+        }
+        if (unique.size == 3) oriented(unique[0],unique[1],unique[2])
+        else {
+            // Edge-discovery order is not a polygon cycle. Sorting in the intersection plane
+            // prevents overlapping triangles and the matching uncovered wedge of a quad.
+            val centroid=unique.reduce { a,b -> a+b } * .25
+            val normal=AnalyticGeometry3D.cross(unique[1]-unique[0],unique[2]-unique[0]).normalized()
+            val u=(unique[0]-centroid).normalized()
+            val v=AnalyticGeometry3D.cross(normal,u).normalized()
+            val cycle=unique.sortedBy { point -> val delta=point-centroid; atan2(delta.dot(v),delta.dot(u)) }
+            oriented(cycle[0],cycle[1],cycle[2]); oriented(cycle[0],cycle[2],cycle[3])
+        }
     }
 
-    private fun addTriangle(a: Vec3, b: Vec3, c: Vec3, vertices: MutableList<Vec3>, triangles: MutableList<Int>) {
+    private fun addTriangle(a: Vec3, b: Vec3, c: Vec3, vertices: MutableList<Vec3>, triangles: MutableList<Int>, seen: MutableSet<String>) {
         if (AnalyticGeometry3D.triangleArea(a, b, c) < 1e-12) return
+        val key=listOf(quantized(a).toString(),quantized(b).toString(),quantized(c).toString()).sorted().joinToString("|")
+        if (!seen.add(key)) return
         val base = vertices.size; vertices += listOf(a, b, c); triangles += listOf(base, base + 1, base + 2)
     }
 

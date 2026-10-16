@@ -45,7 +45,7 @@ object SurfaceInputInterpreter {
     }
 
     fun explicit(rawInput: String): Result<SurfaceInputInterpretation> = runCatching {
-        val normalized = MathExpressionNormalizer.normalize(rawInput)
+        val normalized = MathExpressionNormalizer.normalize(rawInput).replace(Regex("\\bxy\\b"), "(x*y)")
             .replace(Regex("\\s+"), " ")
         require(normalized.isNotBlank()) {
             "Enter a surface equation, for example z = x^2 + y^2."

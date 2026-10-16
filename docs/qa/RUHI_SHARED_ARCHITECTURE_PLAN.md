@@ -1,0 +1,14 @@
+# Ruhi shared architecture implementation plan
+
+The user selected extending the current application's shared architecture, with attachments as reference. Preserve existing layouts, lessons, working engines, and the verified 150-command suite. This is not a replacement app or a commitment to implement all 250 reference features in this increment.
+
+1. Define a versioned sealed command contract: engine destination, typed intent/parameters, source modality, proposal confidence, explicit context/target, validation result and deterministic explanation.
+2. Normalize typed/spoken mathematics without evaluating executable input. Add a learned engine proposal alongside the existing TensorFlow intent proposal. Explicit engine instructions and valid active scene context govern final dispatch; ambiguous proposals request clarification.
+3. Dispatch to existing graph and geometry models. Reuse GraphAssistant for graph actions. Add bounded geometry adapters for representative point/shape/solid creation, selected edits and exact/native numerical measurements. Keep immutable preparation, stale-commit rejection and module-scoped undo/redo.
+4. Connect the existing assistant overlay to the shared dispatcher in all four studio modes. Lessons and unrelated panels keep their current routing. Reuse existing rendering and input surfaces.
+5. Train/export the engine classifier from authored semantic families with disjoint template-group evaluation, record measured accuracy, and verify actual Android inference. Do not claim attachment acceptance targets or 250-feature coverage.
+6. Test representative multi-turn conversations across all four modes, invalid/ambiguous inputs, cross-engine history, actual meshes/numerics, and native canvas evidence. Rerun the original 150 cases plus regression tests. Save source/model hashes, logs, APK location and honest remaining limitations.
+
+TensorFlow selects actions/engine proposals; entities and mathematical values pass deterministic parsing and validation. Models never predict pixels, volumes, derivatives, or geometry coordinates. The existing CPU-projected 3D canvas remains in place in this increment; a GPU renderer can implement the same mesh boundary separately without coupling it to NLP. Voice transcripts can use the same normalized command path; adding microphone controls or changing speech UI is outside this UI-preserving increment.
+
+Implementation is complete for this bounded increment. Verification: 61 JVM regressions pass; earlier combined seven-method Android run and subsequent four-method cleanup smoke pass. A fresh final emulator replay is incomplete because the emulator developed startup ANRs and inaccessible test storage; see the recorded report. The full 250-command reference scope and general NLP accuracy targets remain outside this increment.

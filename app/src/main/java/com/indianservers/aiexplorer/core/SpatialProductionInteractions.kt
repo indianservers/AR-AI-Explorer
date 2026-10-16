@@ -27,6 +27,9 @@ data class SpatialSurfaceLayer(
     val textureKey: String = "mesh",
     val glow: Boolean = true,
     val renderMode: SpatialSurfaceRenderMode = SpatialSurfaceRenderMode.SurfaceMesh,
+    val colorHex: String = "",
+    val graphTransform: GraphTransform = GraphTransform(),
+    val graphGroup: String = "",
 )
 
 data class SpatialObjectGroup(val id: String, val name: String, val solidIndices: Set<Int>) { init { require(solidIndices.isNotEmpty()) } }

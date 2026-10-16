@@ -128,7 +128,9 @@ class AR3DGraphEngineParityTest {
         val bridge = Existing3DGraphEngineBridge()
         requiredExplicitEquations.forEachIndexed { index, equation ->
             val request = request(listOf(equation))
-            val engineOutput = bridge.generate(request) as EngineGraphResult.Success
+            val generated = bridge.generate(request)
+            assertTrue("$equation: $generated", generated is EngineGraphResult.Success)
+            val engineOutput = generated as EngineGraphResult.Success
             val interpretation = SurfaceInputInterpreter.explicit(equation).getOrThrow()
             val direct = Graph3D().mesh(interpretation.expression, -3.0, 3.0, 8)
             val snapshot = engineOutput.meshes.single()

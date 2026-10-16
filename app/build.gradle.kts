@@ -21,7 +21,7 @@ android {
         applicationId = "com.indianservers.aiexplorer"
         minSdk = 31
         targetSdk = 36
-        versionCode = 18
+        versionCode = 19
         versionName = "1.1.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -62,6 +62,7 @@ tasks.matching { it.name == "mergeDebugAndroidTestAssets" }.configureEach {
 }
 
 dependencies {
+    implementation("com.google.ai.edge.litert:litert:2.1.0")
     implementation("androidx.camera:camera-camera2:1.6.1")
     implementation("androidx.camera:camera-lifecycle:1.6.1")
     implementation("androidx.camera:camera-view:1.6.1")

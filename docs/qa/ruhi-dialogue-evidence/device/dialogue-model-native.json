@@ -1,0 +1,34 @@
+{
+  "model_sha256": "349bc9a0be6ae034bba8b9f13bae4c33f3c38e4feea8cfa07ef4f6f45463ac34",
+  "results": [
+    {
+      "text": "pending equation y = sin(x) + 7",
+      "expected": "ANSWER_SLOT",
+      "actual": "ANSWER_SLOT",
+      "confidence": 0.97709113,
+      "margin": 0.96704435
+    },
+    {
+      "text": "idle make the height 39",
+      "expected": "MODIFY_SCENE",
+      "actual": "MODIFY_SCENE",
+      "confidence": 0.9926957,
+      "margin": 0.98903054
+    },
+    {
+      "text": "pending equation cancel it",
+      "expected": "CANCEL_PENDING",
+      "actual": "CANCEL_PENDING",
+      "confidence": 0.9756386,
+      "margin": 0.9655352
+    },
+    {
+      "text": "pending compare first explain quadratic equations",
+      "expected": "EXPLAIN",
+      "actual": "EXPLAIN",
+      "confidence": 0.8831165,
+      "margin": 0.8087784
+    }
+  ],
+  "passed": true
+}

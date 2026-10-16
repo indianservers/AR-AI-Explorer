@@ -1,0 +1,1 @@
+{"results":[{"engine":"GRAPH_2D","changed_pixels":46698,"passed":true}, {"engine":"GRAPH_3D","changed_pixels":22592,"passed":true}, {"engine":"GEOMETRY_2D","changed_pixels":394523,"passed":true}, {"engine":"GEOMETRY_3D","changed_pixels":376141,"passed":true}]}

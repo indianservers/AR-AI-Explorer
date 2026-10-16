@@ -1,0 +1,21 @@
+C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312\Lib\site-packages\tensorflow\python\keras\engine\training_arrays_v1.py:37: UserWarning: A NumPy version >=1.22.4 and <2.3.0 is required for this version of SciPy (detected version 2.4.4)
+  from scipy.sparse import issparse  # pylint: disable=g-import-not-at-top
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+W0000 00:00:1792140856.844603   20160 tf_tfl_flatbuffer_helpers.cc:364] Ignored output_format.
+W0000 00:00:1792140856.844732   20160 tf_tfl_flatbuffer_helpers.cc:367] Ignored drop_control_dependency.
+I0000 00:00:1792140856.847993   20160 mlir_graph_optimization_pass.cc:437] MLIR V1 optimization pass is not enabled
+C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312\Lib\site-packages\tensorflow\lite\python\interpreter.py:457: UserWarning:     Warning: tf.lite.Interpreter is deprecated and is scheduled for deletion in
+    TF 2.20. Please use the LiteRT interpreter from the ai_edge_litert package.
+    See the [migration guide](https://ai.google.dev/edge/litert/migration)
+    for details.
+    
+  warnings.warn(_INTERPRETER_DELETION_WARNING)
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+{
+  "model_sha256": "d536e246d3b95eb23b45ed46c2a499e280f0e4677c700c89531fcdbe734f357f",
+  "training_examples": 7488,
+  "unique_training_sentences": 2073,
+  "holdout_description": "Authored paraphrases held out as complete sentences; related templates remain in training. This is a narrow intent benchmark, not general language understanding.",
+  "correct": 17,
+  "total": 17
+}

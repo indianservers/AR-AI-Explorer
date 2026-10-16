@@ -70,9 +70,11 @@ internal data class WorkspaceAppearance(
     val material: SpatialMaterial = SpatialMaterial.Gloss,
     val texture: WorkspaceTexture = WorkspaceTexture.Mesh,
     val glow: Boolean = true,
+    val colorHex: String = "",
 ) {
     val palette: WorkspacePalette get() = WorkspaceVisualStyles.palette(paletteId)
-    val color: Color get() = palette.colors[colorIndex.mod(palette.colors.size)]
+    val tint: Color? = if (colorHex.isEmpty()) null else colorHex.removePrefix("#").takeIf { it.matches(Regex("[0-9a-fA-F]{6}")) }?.toLongOrNull(16)?.let { Color(it or 0xFF000000L) }
+    val color: Color get() = tint ?: palette.colors[colorIndex.mod(palette.colors.size)]
 }
 
 internal data class StyledSurfaceMesh(
@@ -235,6 +237,7 @@ internal fun WorkspaceAppearance.switchPalette(palette: WorkspacePalette): Works
     material = palette.defaultMaterial,
     texture = palette.defaultTexture,
     glow = palette.defaultGlow,
+    colorHex = "",
 )
 
 internal fun SpatialSurfaceLayer.workspaceAppearance(): WorkspaceAppearance {
@@ -255,7 +258,7 @@ internal fun SpatialSurfaceLayer.workspaceAppearance(): WorkspaceAppearance {
         "faceted" -> WorkspaceTexture.Faceted
         else -> WorkspaceTexture.Mesh
     }
-    return WorkspaceAppearance(paletteId, colorIndex, material, texture, glow)
+    return WorkspaceAppearance(paletteId, colorIndex, material, texture, glow, colorHex)
 }
 
 internal fun SpatialSurfaceLayer.withWorkspaceAppearance(appearance: WorkspaceAppearance): SpatialSurfaceLayer = copy(
@@ -264,6 +267,7 @@ internal fun SpatialSurfaceLayer.withWorkspaceAppearance(appearance: WorkspaceAp
     material = appearance.material,
     textureKey = appearance.texture.name.lowercase(),
     glow = appearance.glow,
+    colorHex = appearance.colorHex,
 )
 
 @Composable
@@ -297,7 +301,7 @@ internal fun WorkspaceAppearancePicker(
                             if (index == appearance.colorIndex) Color.White else color.copy(alpha = .45f),
                             CircleShape,
                         )
-                        .clickable { onChange(appearance.copy(colorIndex = index)) }
+                        .clickable { onChange(appearance.copy(colorIndex = index, colorHex = "")) }
                         .semantics { contentDescription = "Object color ${index + 1}" },
                 )
             }

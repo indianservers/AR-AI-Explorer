@@ -72,7 +72,7 @@ object WorkspaceSnapshotCodec {
                     layer.domain.uMin, layer.domain.uMax, layer.domain.vMin, layer.domain.vMax,
                     layer.quality.name, layer.opacity, pack(layer.paletteKey), layer.colorIndex,
                     pack(layer.textureKey), layer.glow, layer.renderMode.name,
-                    layer.kind.name, pack(layer.expressionY), pack(layer.expressionZ),
+                    layer.kind.name, pack(layer.expressionY), pack(layer.expressionZ), pack(layer.colorHex), pack(layer.graphTransform.encode()), pack(layer.graphGroup),
                 ).joinToString("|"))
             }
             state.graph3DView.let { view ->
@@ -159,6 +159,9 @@ object WorkspaceSnapshotCodec {
                             kind = f.getOrNull(16)?.let(SpatialSurfaceKind::valueOf) ?: SpatialSurfaceKind.Explicit,
                             expressionY = f.getOrNull(17)?.let(::unpack).orEmpty(),
                             expressionZ = f.getOrNull(18)?.let(::unpack).orEmpty(),
+                            colorHex = f.getOrNull(19)?.let(::unpack).orEmpty(),
+                            graphTransform = f.getOrNull(20)?.let { com.indianservers.aiexplorer.core.GraphTransform.decode(unpack(it)) } ?: com.indianservers.aiexplorer.core.GraphTransform(),
+                            graphGroup = f.getOrNull(21)?.let(::unpack).orEmpty(),
                         )
                         "J" -> graph3DView = Graph3DViewState(
                             density = f[1].toFloat(), rotation = f[2].toFloat(), tilt = f[3].toFloat(), roll = f[4].toFloat(),

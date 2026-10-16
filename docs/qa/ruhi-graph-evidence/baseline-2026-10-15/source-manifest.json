@@ -1,0 +1,23 @@
+{
+  "app/src/androidTest/java/com/indianservers/aiexplorer/RuhiGraphRenderingTest.kt": "610d5083e0ae550c1a366b5b495014bafeac959f65df41afebe652c53371f747",
+  "app/src/debug/AndroidManifest.xml": "497e7a6e2392cde3c4df2af362e0a1c40e25f0307e04710cec2588d22229d99a",
+  "app/src/debug/java/com/indianservers/aiexplorer/GraphAssistantAuditActivity.kt": "d29fbc2fbc6139a332ef8b8653cb4a6bd82bcbc7563e96281d900eac12565aea",
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/GraphAuditCases.kt": "7e25ec6514589c7cbc588718eed06b350b4d90c3d4da57e63bd9765ab8e4c1cb",
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/GraphAuditRunner.kt": "b891372b7499961335e7bb60c729ef4da3feac3ab4762e3e61fe2d7491ba71d4",
+  "app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt": "d30082be4446cade080708ce4556715aa51c7a8b5685016111144b43b5d18628",
+  "app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt": "7a6c0d5d930b4a5e49aae747f36f7b6c4c489f160b64eb2b6eec1a927a7648f1",
+  "app/src/main/java/com/indianservers/aiexplorer/Spatial3DRendering.kt": "d1655ce98823e9c20ee0d37a3374f80d2318376869b9785bc21d2893a4bf23a6",
+  "app/src/main/java/com/indianservers/aiexplorer/WorkspaceVisualStyles.kt": "d8f0da0c7d36463958eb63ab400595f58e510ee7cd0bd1914df9afd760eaba41",
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/GraphAssistant.kt": "0f3771ad95c50abf0ae1a267b32589d43eeede674c29b34863bba42031952fca",
+  "app/src/main/java/com/indianservers/aiexplorer/core/GraphSurfaceGeometry.kt": "d5f677014ea9fd1c78f58d69b7a9ec395396b3c206688eb3505badb5bed72fd2",
+  "app/src/main/java/com/indianservers/aiexplorer/core/MathModels.kt": "04e38b1028c958b1b3418f9ba64be4b4798f2560c0d8d831cb01a7cfcc5290b9",
+  "app/src/main/java/com/indianservers/aiexplorer/core/SpatialProductionInteractions.kt": "08cae17f66ed941492793eb3a3f112c6faff68c7e577b9fc9263706ee06d2408",
+  "app/src/main/java/com/indianservers/aiexplorer/core/SurfaceInputInterpreter.kt": "06dfddf9c03daac84ceb8361d40bb820ba90f43d545576553703222c79c43f28",
+  "app/src/main/java/com/indianservers/aiexplorer/spatial/SpatialAuthoring.kt": "b7817998b6b93f454cbb99e4580fb028eb55cf643353ee388caf889ded7c8124",
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/GraphWorkspaceCommand.kt": "9436acc4f2baa8ad38485b3afe1fa39d0a7e9b363562e3a38b3d0e11c0fb71e1",
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/Workspace.kt": "47e746d9e6c137fc63a953d4d9328ded41251515de0a299263428304fafc974d",
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/WorkspaceProjectCodec.kt": "12580e898c511eaaabc9d6b4e7fe012738d3b75c8b9e3001e37e934bbfaa30d6",
+  "app/src/test/java/com/indianservers/aiexplorer/AR3DGraphEngineParityTest.kt": "f1116c16eab91d1b67abb3375319b5fb3be039f21e38cc21fbdd83fcd550c1cb",
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiGraphAssistantTest.kt": "1add4621bf66717b870389837986a9b4959f90627943c600fb54fe3c87a39d45",
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiImplicitSurfaceTopologyTest.kt": "2c6b13f4f2e703e5a4750d27d8107cbfc44cdc079bee708f09f41c15c7b8c316"
+}
