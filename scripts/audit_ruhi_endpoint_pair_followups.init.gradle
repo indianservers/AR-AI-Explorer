@@ -1,0 +1,41 @@
+// Read-only compiled follow-up probe for original midpoint/slope endpoint questions.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiEndpointPairFollowUps') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiDialogueSeedFixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def records=[
+                    [id:151,text:'Find the midpoint of AB',intent:'FIND_MIDPOINT',expected:'Native dependent midpoint (3,4), with actual Sun907/Moon811 endpoint roles and one reversible construction.'],
+                    [id:176,text:'Find the slope of AB',intent:'CALCULATE_SLOPE',expected:'Slope 4/3, rise 8 and run 6 for actual Sun907/Moon811, no scene/history edit.']
+                ].collect{input->
+                    def manager=managerClass.getDeclaredConstructor().newInstance();def setup=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def s=fixture.state(488,0);def c=fixture.context(s)
+                    s=manager.execute(s,'Create point Sun907 at (0,0)',setup,c,modality).state
+                    s=manager.execute(s,'Create point Moon811 at (6,8)',setup,c,modality).state
+                    if(s.points.size()!=2)throw new GradleException('Two-point prerequisite failed.')
+                    def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def q=manager.execute(s,input.text,h,c,modality)
+                    def r=manager.execute(q.state,'Sun907 and Moon811',h,c,modality)
+                    def actual=r.state.points.collect{[it.x,it.y]}
+                    def historyEntries=h.forModule(s.module).protocol.size()
+                    def slopeMatch=r.message =~ /Slope = ([-+0-9.eE]+)/
+                    def actualSlope=slopeMatch.find()?Double.parseDouble(slopeMatch.group(1)):null
+                    def verified=r.status.name()=='APPLIED'&&r.semanticFrame?.intent==input.intent&&r.semanticFrame?.parameters?.a=='Sun907'&&r.semanticFrame?.parameters?.b=='Moon811'
+                    if(input.id==151)verified=verified&&r.state.points.size()==3&&Math.abs(r.state.points.last().x-3)<1e-8&&Math.abs(r.state.points.last().y-4)<1e-8&&r.state.pointDependencies.size()==1&&historyEntries==1
+                    else verified=verified&&r.state.points==s.points&&historyEntries==0&&actualSlope!=null&&Math.abs(actualSlope-4.0d/3)<1e-8&&(r.message.contains('rise = 8.0')&&r.message.contains('run = 6.0'))
+                    [source_row:input.id,input:input.text,clarification_reply:'Sun907 and Moon811',expected:input.expected,question_status:q.status.name(),question_reply:q.message,question_suggestions:q.dialogue?.suggestions?.collect{it.label} ?: [],actual_status:r.status.name(),actual_intent:r.semanticFrame?.intent,actual_reply:r.message,actual_points:actual,actual_slope:actualSlope,history_entries:historyEntries,behavior_verified:verified]
+                }
+                def sources=['RuhiPointLanguage.kt','RuhiGeometry2DLanguage.kt','RuhiSlopeLanguage.kt','RuhiDialogue.kt','RuhiEndpointConversation.kt'].collectEntries{name->def path='app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/'+name;[(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]}
+                def result=[cases:records.size(),verified:records.count{it.behavior_verified},source_sha256:sources,results:records,scope:'Original rows 151/176 with absent AB and two current uniquely named native endpoints; response to the assistant-requested endpoint clarification. Independent midpoint and slope expectations. Compiled parser/engine probe without Android TensorFlow or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/endpoint-pair-follow-up-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result))
+                records.each{println(it.source_row.toString()+': '+it.actual_status+' '+it.actual_reply)}
+            }finally{loader.close()}
+        }
+    }
+}

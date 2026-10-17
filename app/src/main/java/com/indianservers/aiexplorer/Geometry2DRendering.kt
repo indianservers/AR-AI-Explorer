@@ -24,12 +24,68 @@ private val RenderCoral = WorkspaceVisualStyles.ReferenceCoral
 private val RenderOrange = WorkspaceVisualStyles.ReferenceOrange
 private val RenderYellow = WorkspaceVisualStyles.ReferenceYellow
 
+/** Keep labels readable for visible anchors without pinning offscreen objects to the edge. */
+private fun DrawScope.drawGeometryLabel(text:String,anchor:Offset,position:Offset,color:Color) {
+    if(anchor.x !in 0f..size.width||anchor.y !in 0f..size.height)return
+    val paint=android.graphics.Paint().apply{textSize=24f;isAntiAlias=true}
+    val width=(paint.measureText(text)+24f).coerceAtLeast(190f).coerceAtMost((size.width-8f).coerceAtLeast(1f))
+    val x=position.x.coerceIn(4f,(size.width-width-4f).coerceAtLeast(4f));val y=position.y.coerceIn(4f,(size.height-46f).coerceAtLeast(4f));val top=Offset(x,y)
+    drawRoundRect(SurfaceA,topLeft=top,size=Size(width,42f),cornerRadius=androidx.compose.ui.geometry.CornerRadius(12f,12f))
+    drawRoundRect(color.copy(.75f),topLeft=top,size=Size(width,42f),cornerRadius=androidx.compose.ui.geometry.CornerRadius(12f,12f),style=Stroke(1.4f))
+    drawTrigText(text,x+12f,y+27f,color)
+}
+
+private fun DrawScope.drawMeasuredAngle(p:List<Vec2>,value:Double,tx:(Vec2)->Offset,oriented:Boolean=false,exterior:Boolean=false) {
+        val center=tx(p[1]);val a=tx(p[0]);val b=tx(p[2]);val radius=minOf(48f,(a-center).getDistance()*.3f,(b-center).getDistance()*.3f)
+        if(radius<2f)return
+        val start=kotlin.math.atan2(a.y-center.y,a.x-center.x)
+        var sweep=kotlin.math.atan2(b.y-center.y,b.x-center.x)-start
+        while(sweep>PI)sweep-=(2*PI).toFloat();while(sweep< -PI)sweep+=(2*PI).toFloat()
+        if(oriented)sweep=-Math.toRadians(value).toFloat()
+        if(!oriented&&!exterior&&value>180)sweep=if(sweep>=0)sweep-(2*PI).toFloat()else sweep+(2*PI).toFloat()
+        if(exterior)sweep=if(sweep>=0)sweep-PI.toFloat() else sweep+PI.toFloat()
+        val path=Path();for(i in 0..48){val angle=start+sweep*i/48;val q=center+Offset(cos(angle)*radius,sin(angle)*radius);if(i==0)path.moveTo(q.x,q.y)else path.lineTo(q.x,q.y)}
+        drawPath(path,RenderYellow,style=Stroke(3f))
+        val degrees=value
+        drawGeometryLabel("%.4g°".format(java.util.Locale.US,degrees),center,center+Offset(16f,20f),RenderYellow)
+}
+internal fun DrawScope.drawRuhiAngleMarks(state:com.indianservers.aiexplorer.workspace.WorkspaceState,tx:(Vec2)->Offset) {
+    val language=com.indianservers.aiexplorer.assistant.workspace.RuhiAngleLanguage
+    language.marks(state).forEach{mark->
+        val value=runCatching{language.markDegrees(state,mark)}.getOrNull() ?: return@forEach
+        drawMeasuredAngle(mark.indices.map{state.points[it]},value,tx,mark.oriented,mark.exterior)
+    }
+    val reference=com.indianservers.aiexplorer.assistant.workspace.RuhiReferenceAngleLanguage
+    reference.marks(state).forEach{mark->
+        val measured=runCatching{reference.measure(state,mark)}.getOrNull() ?: return@forEach
+        drawMeasuredAngle(measured.arms,measured.degrees,tx)
+    }
+}
+
+internal fun DrawScope.drawRuhiSlopeMarks(state:com.indianservers.aiexplorer.workspace.WorkspaceState,tx:(Vec2)->Offset) {
+    com.indianservers.aiexplorer.assistant.workspace.RuhiSlopeLanguage.marks(state).forEach{mark->
+        val a=state.points[mark.first];val b=state.points[mark.second]
+        if(!listOf(a.x,a.y,b.x,b.y).all{it.isFinite()})return@forEach
+        val corner=Vec2(b.x,a.y);val run=b.x-a.x;val rise=b.y-a.y
+        val value=if(run==0.0)"undefined" else "%.4g".format(java.util.Locale.US,rise/run)
+        if(mark.triangle) {
+            val path=Path().apply{val p=tx(a);moveTo(p.x,p.y);val q=tx(corner);lineTo(q.x,q.y);val r=tx(b);lineTo(r.x,r.y);close()}
+            drawPath(path,RenderCyan.copy(alpha=.10f));drawLine(RenderYellow,tx(a),tx(corner),3f);drawLine(RenderOrange,tx(corner),tx(b),3f)
+            val runAnchor=tx((a+corner)*.5);val riseAnchor=tx((corner+b)*.5)
+            drawGeometryLabel("run = %.4g".format(java.util.Locale.US,run),runAnchor,runAnchor+Offset(-60f,48f),RenderYellow)
+            drawGeometryLabel("rise = %.4g".format(java.util.Locale.US,rise),riseAnchor,riseAnchor+Offset(12f,-16f),RenderOrange)
+        }
+        val anchor=tx((a+b)*.5);drawGeometryLabel("slope = $value",anchor,anchor+Offset(-85f,-70f),RenderCyan)
+    }
+}
+
 fun DrawScope.drawStoredShapes(
     points: List<Vec2>,
     shapes: List<Shape2D>,
     selectedShapes: Set<Int>,
     selectedShape: Int,
     tx: (Vec2) -> Offset,
+    pointLabels: Map<Int,String> = emptyMap(),
 ) {
     val objectPalette = listOf(
         RenderCyan, RenderBlue, RenderViolet, RenderMagenta, RenderCoral, RenderOrange, RenderYellow,
@@ -51,6 +107,7 @@ fun DrawScope.drawStoredShapes(
     }
     val visibleJunctions = shapes.filter { it.visible }.flatMap { it.pointIndices }.distinct()
     val selectedJunctions = shapes.getOrNull(selectedShape)?.pointIndices.orEmpty().toSet()
+    val selectedTop = selectedShapes.flatMap{shapes.getOrNull(it)?.pointIndices.orEmpty()}.mapNotNull(points::getOrNull).minOfOrNull{tx(it).y}
     visibleJunctions.forEach { pointIndex ->
         val point = points.getOrNull(pointIndex) ?: return@forEach
         val selected = pointIndex in selectedJunctions
@@ -61,6 +118,12 @@ fun DrawScope.drawStoredShapes(
         drawCircle(accent.copy(alpha = if (dimmed) .07f else if (selected) .28f else .15f), if (selected) 22f else 16f, tx(point))
         drawCircle(accent.copy(alpha = if (dimmed) .28f else .95f), if (selected) 8f else 6f, tx(point))
         drawCircle(accent.copy(alpha = if (dimmed) .35f else 1f), if (selected) 5f else 3.5f, tx(point))
+        pointLabels[pointIndex]?.let {
+            val anchor=tx(point)
+            // The selection measurement occupies the row above the uppermost selected controls.
+            val below = selected && selectedTop?.let{top->kotlin.math.abs(anchor.y-top)<1f}==true
+            drawGeometryLabel(it,anchor,anchor+Offset(12f,if(below||anchor.y<60f)12f else -56f),accent)
+        }
     }
 }
 

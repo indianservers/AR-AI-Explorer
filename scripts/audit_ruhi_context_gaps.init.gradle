@@ -1,0 +1,40 @@
+// Read-only audit of compiled production behavior; does not change app source or APKs.
+gradle.projectsEvaluated {
+    def appProject = gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiContextGaps') {
+        doLast {
+            def runtime = appProject.tasks.named('testDebugUnitTest').get().classpath
+            def loader = new URLClassLoader(runtime.files.collect { it.toURI().toURL() } as URL[], ClassLoader.getSystemClassLoader())
+            try {
+                def prefix = 'com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture = loader.loadClass(prefix+'RuhiDialogueSeedFixture').getField('INSTANCE').get(null)
+                def manager = loader.loadClass(prefix+'RuhiDialogueManager').getDeclaredConstructor().newInstance()
+                def historyClass = loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality = loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def evidence = []
+                def s = fixture.state(482,0)
+                def c = fixture.context(s)
+                def h = historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                def applied = manager.execute(s,'Choose the first suggested answer',h,c,modality)
+                if(applied.status.name()!='APPLIED')throw new GradleException('Could not establish the applied-target prerequisite.')
+                def correction = manager.execute(applied.state,'Actually I meant the blue one',h,applied.context,modality)
+                def blueVerified=correction.status.name()=='APPLIED' && correction.state.solids[0]==s.solids[0] && correction.state.solids[1].position==applied.state.solids[0].position && correction.state.solids[1].width==s.solids[1].width
+                evidence << [source_row:482,case_name:'blue_target_after_applied_action',behavior_verified:blueVerified,prerequisite_status:applied.status.name(),actual_status:correction.status.name(),actual_reply:correction.message,expected:'Atomically restore the wrongly targeted edit and apply it to the actual blue object when the validated prior operation and unique target exist.']
+                s = fixture.state(497,0);c = fixture.context(s);h = historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                def query = 'Find the distance between Anchor_0 and End_0'
+                def distance = manager.execute(s,query,h,c,modality)
+                def units = manager.execute(distance.state,'Use centimeters instead',h,distance.context,modality)
+                if(distance.status.name()!='APPLIED'||units.status.name()!='APPLIED')throw new GradleException('Could not establish the physical point-distance prerequisite.')
+                def measured = manager.execute(units.state,query,h,distance.context,modality)
+                def expectedCm=Math.hypot(s.points[1].x-s.points[0].x,s.points[1].y-s.points[0].y)*100
+                def match=measured.message =~ /(?:=|≈)\s*([-+]?[0-9]+(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?)\s+cm\b/
+                def immediate=units.message =~ /(?:=|≈)\s*([-+]?[0-9]+(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?)\s+cm\b/
+                def unitVerified=measured.status.name()=='APPLIED' && measured.state.points==s.points && match.find() && Math.abs(Double.parseDouble(match.group(1))-expectedCm)<1e-8 && immediate.find() && Math.abs(Double.parseDouble(immediate.group(1))-expectedCm)<1e-8
+                evidence << [source_row:497,case_name:'point_distance_after_centimeter_display',behavior_verified:unitVerified,expected_distance_cm:expectedCm,prerequisite_status:distance.status.name(),unit_status:units.status.name(),unit_reply:units.message,actual_status:measured.status.name(),actual_reply:measured.message,expected:'Native points stay (0,0)/(6,0) meters; immediate conversion and the next point-distance answer display 600 cm. Existing segment annotations should agree.']
+                def file = new File(appProject.rootDir,'docs/qa/ruhi-500/context-gap-counterexamples.json')
+                file.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(evidence))
+                evidence.each { println(it.case_name+': '+it.actual_status+' — '+it.actual_reply) }
+            } finally { loader.close() }
+        }
+    }
+}

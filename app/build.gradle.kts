@@ -61,6 +61,13 @@ tasks.matching { it.name == "mergeDebugAndroidTestAssets" }.configureEach {
     dependsOn(prepareSolverGoldenAndroidTestAssets)
 }
 
+// Every requested Ruhi audit cycle must execute and write its own evidence.
+tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+    val ruhiAuditCycle = providers.environmentVariable("RUHI_AUDIT_CYCLE").orElse("current")
+    inputs.property("ruhiAuditCycle", ruhiAuditCycle)
+    environment("RUHI_AUDIT_CYCLE", ruhiAuditCycle.get())
+}
+
 dependencies {
     implementation("com.google.ai.edge.litert:litert:2.1.0")
     implementation("androidx.camera:camera-camera2:1.6.1")

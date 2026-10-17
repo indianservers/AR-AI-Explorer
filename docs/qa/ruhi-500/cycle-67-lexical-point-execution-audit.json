@@ -1,0 +1,300 @@
+{
+  "passed": true,
+  "cases": 32,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPointLanguage.kt": "c282a53f337eaeef07b2df026a513edd22e9835a17ace957f6d11a96f4b992a2",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "0b34ff6d2c187093b664cf6c978a9177c7c0308a261390802e3d6157cfff3150",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "d5c0ee3c9cd5614967f73837c422d9282d0d9925f13543326b64ba5996b3624b"
+  },
+  "results": [
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between Vertex907 and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance Vertex907 to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is Vertex907 from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance Vertex907 to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between distance and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance distance to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is distance from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance distance to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between point and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance point to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is point from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance point to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between line and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance line to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is line from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance line to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between slope and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance slope to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is slope from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance slope to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between and and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance and to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is and from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance and to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between from and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance from to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is from from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance from to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "distance between alpha and Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance alpha to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_2D",
+      "input": "how far is alpha from Omega811",
+      "expected_distance": 5.0,
+      "status": "APPLIED",
+      "actual_distance": 5.0,
+      "passed": true,
+      "reply": "Distance alpha to Omega811 = 5.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between Vertex907 and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance Vertex907 to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is Vertex907 from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance Vertex907 to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between distance and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance distance to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is distance from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance distance to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between point and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance point to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is point from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance point to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between line and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance line to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is line from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance line to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between slope and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance slope to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is slope from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance slope to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between and and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance and to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is and from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance and to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between from and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance from to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is from from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance from to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "distance between alpha and Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance alpha to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    },
+    {
+      "engine": "GEOMETRY_3D",
+      "input": "how far is alpha from Omega811",
+      "expected_distance": 13.0,
+      "status": "APPLIED",
+      "actual_distance": 13.0,
+      "passed": true,
+      "reply": "Distance alpha to Omega811 = 13.0 units. \u221a((3.0)\u00b2 + (4.0)\u00b2 + (12.0)\u00b2)."
+    }
+  ],
+  "scope": "Compiled dialogue-manager/parser/engine with restored actual scene points; no Android TensorFlow installation or UI. Separate from the model-head probe and full installed-assistant integration."
+}

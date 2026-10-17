@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "existing_graphs": 2,
+  "reordered_and_renamed": true,
+  "first_difference": -4,
+  "live_difference": -8,
+  "identities_preserved": true,
+  "no_replacement_graphs": true
+}

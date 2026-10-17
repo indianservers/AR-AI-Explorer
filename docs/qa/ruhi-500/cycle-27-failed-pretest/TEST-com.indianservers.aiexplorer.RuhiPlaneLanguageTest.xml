@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:27:01.888Z" hostname="INDIANSERVERS" time="0.065">
+  <properties/>
+  <testcase name="nativeDefinitionsAndCanonicalDependenciesFollowPointEditsAcrossSaveLoad" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.03"/>
+  <testcase name="source221MatchesOriginalSlotsAndIndependentPlaneEquations" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.014"/>
+  <testcase name="olderNativeWorkspaceSnapshotsLoadWithoutInventingPlanes" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.001"/>
+  <testcase name="deletingAParentCascadesPlanesAndUndoRestoresTheSameStableDefinitions" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.006"/>
+  <testcase name="invalidPlanesAndNameCollisionsNeverChangeTheSceneWhileParallelPlanesMeasureZero" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.001"/>
+  <testcase name="stalePairAnswersAndCancellationDoNotMeasureChangedPlanes" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.007"/>
+  <testcase name="missingPairResumesAfterChipSaveLoadAndUsesOneHistoryEntry" classname="com.indianservers.aiexplorer.RuhiPlaneLanguageTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

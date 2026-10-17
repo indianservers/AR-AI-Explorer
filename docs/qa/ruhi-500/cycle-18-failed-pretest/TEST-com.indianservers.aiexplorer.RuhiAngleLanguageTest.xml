@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiAngleLanguageTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:46:29.937Z" hostname="INDIANSERVERS" time="0.118">
+  <properties/>
+  <testcase name="staleVertexAnswersAndCancellationNeverApplyAnnotations" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.031"/>
+  <testcase name="deletingParentsRemapsOrRemovesAngleMarks" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.006"/>
+  <testcase name="namedWorkbookAnglesSatisfyOriginalSlotsAndIndependentOracle" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.045"/>
+  <testcase name="bisectorUsesLiveParentReferencesAndHasOneUndoableConstruction" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.019"/>
+  <testcase name="missingAmbiguousAndDegenerateReferencesDoNotChangeGeometry" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.001"/>
+  <testcase name="vertexInferenceAsksInsteadOfGuessingWhenSeveralPolygonsContainTheVertex" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.001"/>
+  <testcase name="nativeUnlabelledPointsCanBeReferencedByTheirDisplayedPointNames" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.001"/>
+  <testcase name="selectedVertexQuestionResumesFromAChipAfterSaveLoadAndHasOneUndoEntry" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.004"/>
+  <testcase name="concavePolygonMarksUseTheInteriorAndRemainLiveWhenConcavityChanges" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.001"/>
+  <testcase name="arbitraryRayNamesAndCounterclockwiseOrientationUseGeometryNotPointLetters" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.001"/>
+  <testcase name="notationVertexAndExtremaSelectTheActualCorner" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.003"/>
+  <testcase name="arbitraryNamesUseCurrentCoordinatesAndAnnotationsSurviveHistoryAndPersistence" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

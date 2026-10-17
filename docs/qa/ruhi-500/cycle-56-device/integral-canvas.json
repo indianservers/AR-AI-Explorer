@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "bounds_chip_resumed": true,
+  "shading_pixels": 6704,
+  "parent_edit_pixels": 154635,
+  "live_function": true,
+  "intersection_bounds": true,
+  "split_sign_pixels": true,
+  "riemann_trapezoid_panels": true,
+  "accumulation": true,
+  "persistence": true
+}

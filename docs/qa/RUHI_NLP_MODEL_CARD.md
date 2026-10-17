@@ -1,5 +1,9 @@
 # Ruhi TensorFlow intent model, version 2
 
+The 500-row workbook loop now adds a separate 15-intent semantic head and a learned point-role head. Label values are masked from intent features; slot training uses context rather than memorized point names. Both heads run in the Android interpreter. See [the active loop report](ruhi-500/REPORT.md) for seed fit, held-out slot checks, arbitrary-label/current-coordinate tests and the remaining behavior gaps. The full 500-row engine/follow-up goal is still active; intent recognition does not certify those operations.
+
+An additional native 3D geometry head is trained on the 300 supplied kid-style requests. It proposes geometry intents; deterministic validation handles mathematical validity, targets, dimensions and results. See [the 300-request report](ruhi-geometry3d-300/REPORT.md) for training-fit versus held-out development results, exact supported/clarification/invalid/unsupported outcomes, and emulator evidence. The older model weights below remain unchanged.
+
 Ruhi now also has a separate contextual dialogue head and deterministic pending-command manager. See [conversation architecture](RUHI_CONVERSATION_ARCHITECTURE.md) and [dialogue evidence](ruhi-dialogue-evidence/REPORT.md). The intent and engine-selection models described below retain their existing weights.
 
 The app bundles a TensorFlow 2.20-trained linear softmax classifier with 26 intent labels. LiteRT 2.1.0 performs real on-device CPU inference. `ruhi_nlp/model.tflite` and `graph_intent.tflite` contain identical model bytes; vocabulary, labels and SHA-256 are stored in metadata.json.

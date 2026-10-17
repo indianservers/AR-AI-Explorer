@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "initial_area": 9,
+  "edited_area": 15,
+  "actual_dependency_steps": true,
+  "measurement_pixels": 19720,
+  "copy_center": [
+    8,
+    4
+  ],
+  "independent_copy": true,
+  "undo_restored": true
+}

@@ -1,0 +1,42 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:...
+Error in intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 2000 ms
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.waitUntil(WindowCapture.android.kt:178)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.forceRedraw(WindowCapture.android.kt:124)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0$0(WindowCapture.android.kt:49)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.$r8$lambda$iHid2j_FY4377TREZHs4ymdKCqs(Unknown Source:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda0.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.withDrawingEnabled(WindowCapture.android.kt:89)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0(WindowCapture.android.kt:47)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda4.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.runWithRetryWhenNoData(WindowCapture.android.kt:64)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage(WindowCapture.android.kt:45)
+	at androidx.compose.ui.test.AndroidImageHelpers_androidKt.captureToImage(AndroidImageHelpers.android.kt:101)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$capture(RuhiSeed500RenderingTest.kt:91)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(RuhiSeed500RenderingTest.kt:127)
+.........
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 392.855
+There was 1 failure:
+1) intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 2000 ms
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.waitUntil(WindowCapture.android.kt:178)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.forceRedraw(WindowCapture.android.kt:124)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0$0(WindowCapture.android.kt:49)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.$r8$lambda$iHid2j_FY4377TREZHs4ymdKCqs(Unknown Source:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda0.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.withDrawingEnabled(WindowCapture.android.kt:89)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0(WindowCapture.android.kt:47)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda4.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.runWithRetryWhenNoData(WindowCapture.android.kt:64)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage(WindowCapture.android.kt:45)
+	at androidx.compose.ui.test.AndroidImageHelpers_androidKt.captureToImage(AndroidImageHelpers.android.kt:101)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$capture(RuhiSeed500RenderingTest.kt:91)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(RuhiSeed500RenderingTest.kt:127)
+
+FAILURES!!!
+Tests run: 15,  Failures: 1
+
+

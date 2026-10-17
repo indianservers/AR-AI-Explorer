@@ -125,6 +125,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.AnnotatedString
@@ -543,6 +544,12 @@ internal fun GraphCanvas(
     onDataPointMove: (Int, Vec2) -> Unit,
     onViewportChange: (GraphViewState) -> Unit,
     onContextMenu: (String?, Vec2) -> Unit,
+    intersectionDrawing: com.indianservers.aiexplorer.assistant.workspace.RuhiIntersectionLanguage.Drawing? = null,
+    onViewportAspect: (Double) -> Unit = {},
+    derivativeDrawing: com.indianservers.aiexplorer.assistant.workspace.RuhiIntersectionLanguage.Drawing? = null,
+    integralDrawing: com.indianservers.aiexplorer.assistant.workspace.RuhiIntegralLanguage.Drawing? = null,
+    sceneAxesVisible:Boolean = true,
+    sceneGridContrast:Float = 1f,
 ) {
     val graph = remember { GraphAnalysis() }
     val advancedGraphEngine = remember { AdvancedGraphEngine() }
@@ -570,10 +577,13 @@ internal fun GraphCanvas(
     val visualEffects = LocalAppVisualEffects.current
     var cameraCenter by remember { mutableStateOf(initialView.center) }
     var cameraZoom by remember { mutableFloatStateOf(initialView.zoom) }
+    var lastReportedView by remember { mutableStateOf(initialView) }
     var lastTapAt by remember { mutableStateOf(0L) }
     var gestureMode by remember { mutableStateOf(GestureMode.Idle) }
     val viewHistory = remember { com.indianservers.aiexplorer.core.GraphViewHistory(initialView) }
     val currentFunctions by rememberUpdatedState(functions)
+    var viewportExtent by remember{mutableStateOf(androidx.compose.ui.unit.IntSize.Zero)}
+    androidx.compose.runtime.SideEffect{if(viewportExtent.width>0&&viewportExtent.height>0)onViewportAspect(viewportExtent.height.toDouble()/viewportExtent.width)}
     LaunchedEffect(homeRequest) {
         if (homeRequest > 0) {
             val fitPoints = functions.filter { it.visible }.flatMap { function ->
@@ -587,9 +597,23 @@ internal fun GraphCanvas(
     }
     LaunchedEffect(backRequest) { if (backRequest > 0) viewHistory.back().let { cameraCenter = it.center; cameraZoom = it.zoom } }
     LaunchedEffect(forwardRequest) { if (forwardRequest > 0) viewHistory.forward().let { cameraCenter = it.center; cameraZoom = it.zoom } }
-    LaunchedEffect(cameraCenter, cameraZoom) { onViewportChange(GraphViewState(cameraCenter, cameraZoom)) }
+    // Scene imports and assistant viewport commands can change the persisted view while this
+    // canvas remains mounted. Gesture acknowledgements must not reset the local camera.
+    LaunchedEffect(initialView) {
+        if(initialView!=lastReportedView){
+            cameraCenter=initialView.center
+            cameraZoom=initialView.zoom
+            viewHistory.commit(initialView)
+        }
+    }
+    LaunchedEffect(cameraCenter, cameraZoom) {
+        val view=GraphViewState(cameraCenter,cameraZoom)
+        lastReportedView=view
+        onViewportChange(view)
+    }
     Canvas(
         modifier
+            .onSizeChanged{viewportExtent=it}
             .onPreviewKeyEvent { event ->
                 if (event.type != KeyEventType.KeyDown) false else when (event.key) {
                     Key.DirectionLeft -> { cameraCenter = cameraCenter.copy(x = cameraCenter.x - 1.0 / cameraZoom); true }
@@ -799,7 +823,12 @@ internal fun GraphCanvas(
                     gestureMode = GestureMode.Idle
                 }
             }
-            .semantics { contentDescription = "Interactive graphing canvas with axes, curves, trace point, and annotations" },
+            .semantics {
+                contentDescription = "Interactive graphing canvas with axes, curves, trace point, and annotations"
+                derivativeDrawing?.let { drawing ->
+                    stateDescription=if(drawing.diagnostic.isNotEmpty())"Derivative unavailable: ${drawing.diagnostic}"else "Derivative points: "+drawing.points.joinToString { "(${it.x}, ${it.y})" }
+                }
+            },
     ) {
         val scale = size.width / 14f * cameraZoom
         val origin = Offset(size.width / 2f - cameraCenter.x.toFloat() * scale, size.height / 2f + cameraCenter.y.toFloat() * scale)
@@ -808,7 +837,7 @@ internal fun GraphCanvas(
             val displayY = if (axisSettings.yLogarithmic && it.y > 0) log10(it.y) else if (axisSettings.yLogarithmic) Double.NaN else it.y
             Offset(origin.x + displayX.toFloat() * scale, origin.y - displayY.toFloat() * scale)
         }
-        drawGrid(origin, scale, axisSettings, visualEffects)
+        drawGrid(origin, scale, axisSettings, visualEffects,axesVisible=sceneAxesVisible,contrast=sceneGridContrast)
         if (parameterHandleEnabled) parameterValues.entries.forEachIndexed { index, entry ->
             val columns = maxOf(1, ((size.width - 80f) / 92f).toInt())
             val anchor = Offset(80f + (index % columns) * 92f, 120f + (index / columns) * 54f)
@@ -830,7 +859,7 @@ internal fun GraphCanvas(
         functions.forEachIndexed { index, fn ->
             if (!fn.visible || fn.expression.isBlank()) return@forEachIndexed
             val color = graphColor(fn.colorKey).copy(alpha = fn.appearance.opacity)
-            val selected = selectedFunctionId == fn.id
+            val selected = selectedFunctionId == fn.id || fn.id in intersectionDrawing?.functionIds.orEmpty()
             val strokeWidth = fn.appearance.width + if (selected) 1.8f else 0f
             val styleEffect = when (styles[fn.id] ?: fn.appearance.line) { GraphLineStyle.Solid -> null; GraphLineStyle.Dashed -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(16f, 9f)); GraphLineStyle.Dotted -> androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(3f, 8f)) }
             val typedDefinition = runCatching { TypedGraphExpressionParser.parse(fn.expression) }.getOrNull()
@@ -951,6 +980,9 @@ internal fun GraphCanvas(
             drawLine(Amber.copy(.8f), Offset(size.width / 2f, 96f), Offset(size.width / 2f, size.height - 70f), 2f)
             drawGraphLabel("A", Offset(size.width * .25f, 130f), Cyan); drawGraphLabel("B", Offset(size.width * .75f, 130f), Violet)
         }
+        intersectionDrawing?.let{drawRuhiIntersectionOverlay(it,tx,minX,maxX,minY,maxY)}
+        derivativeDrawing?.let{drawRuhiIntersectionOverlay(it,tx,minX,maxX,minY,maxY)}
+        integralDrawing?.let{drawRuhiIntegralOverlay(it,tx,minX,maxX,minY,maxY)}
         if (showResidualPlot && dataPoints.size >= 3) {
             StatisticsEngine.summarize(dataPoints).regression?.let { regression ->
                 val top = size.height * .76f

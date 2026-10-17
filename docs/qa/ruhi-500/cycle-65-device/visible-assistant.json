@@ -1,0 +1,11 @@
+{
+  "first_distance": 5,
+  "changed_coordinate_distance": 10,
+  "same_utterance": true,
+  "missing_point_chip": true,
+  "coordinate_answer_resumed_distance": true,
+  "current_turn_verified": true,
+  "committed_capture": true,
+  "no_extra_points": true,
+  "passed": true
+}

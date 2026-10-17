@@ -1,0 +1,25 @@
+--------- beginning of crash
+10-17 18:37:34.030   155   155 F libc    : crash_dump helper failed to exec, or was killed
+10-17 18:37:37.151   168   168 F libc    : crash_dump helper failed to exec, or was killed
+10-17 18:37:46.598  1013  1364 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-17 18:37:46.598  1013  1364 E AndroidRuntime: Process: com.google.android.gms, PID: 1013
+10-17 18:37:46.598  1013  1364 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:47.622  1082  1082 E AndroidRuntime: FATAL EXCEPTION: main
+10-17 18:37:47.622  1082  1082 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 1082
+10-17 18:37:47.622  1082  1082 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:47.684  1082  1653 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-17 18:37:47.684  1082  1653 E AndroidRuntime: Process: com.google.android.inputmethod.latin, PID: 1082
+10-17 18:37:47.684  1082  1653 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:47.862  1508  1508 E AndroidRuntime: FATAL EXCEPTION: main
+10-17 18:37:47.862  1508  1508 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:search, PID: 1508
+10-17 18:37:47.862  1508  1508 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:47.926   936   936 E AndroidRuntime: FATAL EXCEPTION: main
+10-17 18:37:47.926   936   936 E AndroidRuntime: Process: com.android.phone, PID: 936
+10-17 18:37:47.926   936   936 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:48.005  1204  1204 E AndroidRuntime: FATAL EXCEPTION: main
+10-17 18:37:48.005  1204  1204 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:interactor, PID: 1204
+10-17 18:37:48.005  1204  1204 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:48.332  1204  1757 E AndroidRuntime: FATAL EXCEPTION: GoogleApiHandler
+10-17 18:37:48.332  1204  1757 E AndroidRuntime: Process: com.google.android.googlequicksearchbox:interactor, PID: 1204
+10-17 18:37:48.332  1204  1757 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-17 18:37:48.695  7259  7259 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 7259 (aiexplorer.test), pid 7259 (aiexplorer.test)

@@ -1,0 +1,54 @@
+{
+    "cases": 2,
+    "verified": 2,
+    "source_sha256": {
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralLanguage.kt": "99c6b2c1d3228c5b7563591a0b6202dbce6de933aed7206fa37abdb4c5b6f78a",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralMath.kt": "ab8c1703de4188bb96cbeeed0d4dab7bc0f27b281e469fbd4790458a0b48e113",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "7f12dd8e405c2d9e30c1b3743cc9ddf520b64852ecda110e75d88dcc8d7818b5"
+    },
+    "results": [
+        {
+            "source_row": 364,
+            "input": "Integrate the selected function",
+            "formula": "y=x^2",
+            "bounds": "0 to 2",
+            "expected_integral": 2.6666666666666665,
+            "question_status": "CLARIFICATION",
+            "question_reply": "Which explicit function should I integrate? Give an equation such as y=x^2.",
+            "question_suggestions": [
+                "y=x^2",
+                "y=x^3",
+                "y=sin(x)"
+            ],
+            "formula_status": "CLARIFICATION",
+            "formula_reply": "What lower and upper x bounds should I use?",
+            "actual_status": "APPLIED",
+            "actual_intent": "INTEGRATE",
+            "actual_reply": "Signed integral = 2.6666666666666665; absolute area = 2.6666666666666665; positive area = 2.6666666666666665; negative area = 0.0; numerical error estimate = 2.459783678826488E-19.",
+            "actual_integral": 2.6666666666666665,
+            "behavior_verified": true
+        },
+        {
+            "source_row": 372,
+            "input": "Shade area under the currently selected curve between 1 and 4",
+            "formula": "y=x^2",
+            "bounds": null,
+            "expected_integral": 21.0,
+            "question_status": "CLARIFICATION",
+            "question_reply": "Which explicit function should I integrate? Give an equation such as y=x^2.",
+            "question_suggestions": [
+                "y=x^2",
+                "y=x^3",
+                "y=sin(x)"
+            ],
+            "formula_status": "APPLIED",
+            "formula_reply": "Signed integral = 21.0; absolute area = 21.0; positive area = 21.0; negative area = 0.0; numerical error estimate = 0.0.",
+            "actual_status": "APPLIED",
+            "actual_intent": "INTEGRATE",
+            "actual_reply": "Signed integral = 21.0; absolute area = 21.0; positive area = 21.0; negative area = 0.0; numerical error estimate = 0.0.",
+            "actual_integral": 21.0,
+            "behavior_verified": true
+        }
+    ],
+    "scope": "Original rows 364 and 372 with no visible source curve, formula reply and required bounds; independent integral x^2 expectations. Compiled parser/engine probe, without Android TensorFlow or UI."
+}

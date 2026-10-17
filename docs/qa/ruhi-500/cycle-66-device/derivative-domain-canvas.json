@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "undefined_x_reasked": true,
+  "positive_log_examples": true,
+  "restored_curve": "domain,\/811",
+  "log_x": 2,
+  "log_slope": 0.5,
+  "corner_zero_excluded": true,
+  "corner_x": -1,
+  "corner_slope": -1,
+  "source_geometry_preserved": true
+}

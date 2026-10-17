@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.UniversalGeometryGraphSchemaTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:35.255Z" hostname="INDIANSERVERS" time="0.002">
+  <properties/>
+  <testcase name="invalidSymbolicInputHasExplicitValueState" classname="com.indianservers.aiexplorer.UniversalGeometryGraphSchemaTest" time="0.0"/>
+  <testcase name="bridgePreservesGraphAndGeometryDefinitionsAndPresentation" classname="com.indianservers.aiexplorer.UniversalGeometryGraphSchemaTest" time="0.0"/>
+  <testcase name="dependencyIdsAndConstructionArgumentsWithDelimitersRoundTripWithoutSplitting" classname="com.indianservers.aiexplorer.UniversalGeometryGraphSchemaTest" time="0.0"/>
+  <testcase name="currentSchemaRoundTripPersistsAuthorityFields" classname="com.indianservers.aiexplorer.UniversalGeometryGraphSchemaTest" time="0.0"/>
+  <testcase name="schemaThreeRawDependenciesAndLegacyConstructionArgumentsStillLoad" classname="com.indianservers.aiexplorer.UniversalGeometryGraphSchemaTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:11.309Z" hostname="INDIANSERVERS" time="0.208">
+  <properties/>
+  <testcase name="plainAndSpokenCoordinatesAreEntityValuesRatherThanTheZeroTemplate" classname="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" time="0.1"/>
+  <testcase name="explicitCoordinatesCorrectTheFalsePremiseAndUseTheirOwnMarker" classname="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" time="0.028"/>
+  <testcase name="invalidCoordinatesAndCancellationLeaveAnalysisAndHistoryUntouched" classname="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" time="0.017"/>
+  <testcase name="savedExplanationAndUndoRedoRetainTheRequestedCoordinate" classname="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" time="0.026"/>
+  <testcase name="originalZeroExplanationKeepsUnequalOneSidedSlopesAndSavedMarker" classname="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" time="0.005"/>
+  <testcase name="missingCoordinateAsksOneQuestionAndRestoredNumericRepliesUseLiteralAbs" classname="com.indianservers.aiexplorer.RuhiAbsoluteValueExplanationTest" time="0.031"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

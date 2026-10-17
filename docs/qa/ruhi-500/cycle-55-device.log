@@ -1,0 +1,22 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:......................
+Error in nativeThreeDimensionalPointDistanceConvertsAllComponentsAndLiveParentEdit(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+java.lang.AssertionError: Assert failed: The component with (Text + InputText + EditableText contains 'Distance Left_907 to Right_811 = 700.0 cm' (ignoreCase: false) as substring).last is not displayed!
+	at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.captureDistanceReply(RuhiSeed500RenderingTest.kt:39)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.nativeThreeDimensionalPointDistanceConvertsAllComponentsAndLiveParentEdit(RuhiSeed500RenderingTest.kt:82)
+.........
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 630.418
+There was 1 failure:
+1) nativeThreeDimensionalPointDistanceConvertsAllComponentsAndLiveParentEdit(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+java.lang.AssertionError: Assert failed: The component with (Text + InputText + EditableText contains 'Distance Left_907 to Right_811 = 700.0 cm' (ignoreCase: false) as substring).last is not displayed!
+	at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.captureDistanceReply(RuhiSeed500RenderingTest.kt:39)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.nativeThreeDimensionalPointDistanceConvertsAllComponentsAndLiveParentEdit(RuhiSeed500RenderingTest.kt:82)
+
+FAILURES!!!
+Tests run: 34,  Failures: 1
+
+

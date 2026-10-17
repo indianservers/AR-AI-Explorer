@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.SymbolicCasTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-17T17:28:06.139Z" hostname="INDIANSERVERS" time="0.064">
+  <properties/>
+  <testcase name="solvesExactLinearSystemsAndInequalityIntersections" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.013"/>
+  <testcase name="supportsForwardInverseLaplaceAndZTransforms" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.003"/>
+  <testcase name="computesAndVerifiesMatrixDecompositions" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.007"/>
+  <testcase name="performsExactMatrixWorkflows" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.005"/>
+  <testcase name="simplifyNormalizesExactFractionsAndDecimalAgreement" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.004"/>
+  <testcase name="solvesVerifiedNonlinearSystemsBySubstitution" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.008"/>
+  <testcase name="assumptionsGuardSignAndCancellationIdentities" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.006"/>
+  <testcase name="solvesAndChecksInitialLinearOdes" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.001"/>
+  <testcase name="unsupportedOperationsRefuseSafely" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.0"/>
+  <testcase name="expandAndSubstituteUseSameTypedAst" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.004"/>
+  <testcase name="differentiatesIntegratesAndEvaluatesRemovableLimits" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.003"/>
+  <testcase name="complexAndVectorHelpersAreExact" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.002"/>
+  <testcase name="solvesSecondOrderOdesWithInitialConditions" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.001"/>
+  <testcase name="factorFindsSmallRationalRoots" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.002"/>
+  <testcase name="decomposesRationalFunctionsIntoVerifiedPartialFractions" classname="com.indianservers.aiexplorer.SymbolicCasTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

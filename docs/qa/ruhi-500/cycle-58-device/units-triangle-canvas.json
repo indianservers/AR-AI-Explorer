@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "base_unit": "m",
+  "display_unit": "cm",
+  "area": 60000,
+  "perimeter": 1200,
+  "edited_area": 75000,
+  "label": "Selected measurements: area 60000 cm² - perimeter 1200 cm",
+  "coordinates_unchanged": true,
+  "undo_restored": true,
+  "changed_pixels": 9598
+}

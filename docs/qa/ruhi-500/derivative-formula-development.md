@@ -1,0 +1,11 @@
+# Empty-workspace derivative follow-up, cycle 69
+
+The original workbook and labels remain unchanged. Original selected-curve derivative and gradient requests had an unresumable empty-scene path: plot a function first, no formula suggestions, and no pending formula reply. Five of six initial focused tests failed; the retained before-fix log records those failures.
+
+A new derivative_formula pending role asks one essential equation question and offers three valid explicit examples. Plain equations or saved example chips supply a native function. The original derivative/stationary/slider action and x/selected-point roles survive. Function and analysis commit together in one history command after validation. If a proposed formula makes an earlier x undefined, its formula/opaque curve ID remain in pending slots and x is asked again; no curve/history edit is committed until a valid answer. Invalid/non-explicit/parameterized formulas preserve the question and scene. New requests, cancellation and scene changes do not reuse abandoned slots.
+
+Seven JVM methods cover original rows 330/335/337/342/345, independent slope identities, invalid formulas, restore, one-step undo/redo, changed domains, distant valid domains, cancellation and stale scenes. The combined derivative/pending/domain batch has 28 passing methods. Full pre-training regression has 572 passing methods. Fixed sample coordinates are not used as proof that an arbitrary domain is empty: ln(x-100) remains accepted and is independently checked at 102.
+
+Focused emulator test: OK (1 test), 21.594 seconds. It clicks a saved cubic suggestion, checks native creation and atomic undo/redo, then restores x=0 plus ln(x), asks for a positive replacement coordinate and renders the correct x=2 slope 0.5. Committed question/curve/answer captures and actual rendered-coordinate semantics are retained. The assistant panel covers the low marker in its answer capture; actual full-canvas placement is not certified by that panel image alone.
+
+Cycle 69 full pipeline is running; do not treat the focused result as full terminal success. Broader interrupted/cross-intent/domain and engine requirements remain open. No UI layout or lessons were changed.

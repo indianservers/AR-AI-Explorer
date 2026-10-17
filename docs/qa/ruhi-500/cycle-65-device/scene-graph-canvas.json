@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "graph_pixel_checks": [
+    14782,
+    19282,
+    11751,
+    17686,
+    40090,
+    111313
+  ],
+  "mesh_opacity_pixels": 247981,
+  "same_formulas_and_ids": true,
+  "solo_preserves_layers": true
+}

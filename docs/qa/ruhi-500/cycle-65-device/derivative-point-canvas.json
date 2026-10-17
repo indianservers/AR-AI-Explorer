@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "restored_binding": true,
+  "live_point": [
+    3,
+    9
+  ],
+  "live_slope": 6,
+  "off_curve_rejected": true,
+  "stale_overlay_suppressed": true,
+  "rendered_live_state": "Derivative points: (3.0, 9.0)",
+  "rendered_off_curve_state": "Derivative unavailable: The selected point is not on the current curve.",
+  "restored_clarification": true,
+  "explicit_x": 2,
+  "source_geometry_preserved": true,
+  "changed_pixels": 1875
+}

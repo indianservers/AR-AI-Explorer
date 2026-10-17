@@ -1,0 +1,82 @@
+{
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCommandContract.kt": {
+    "bytes": 4288,
+    "sha256": "255b5f333dab3c94a5f26211423a9bab8536e3ed4a7bb0828b7cc2f29d58e1a6"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": {
+    "bytes": 25537,
+    "sha256": "fb4a81fc2abd56bacc6f180e9f1063020a1d81d47ce34fa508a1815d26fe7d23"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogueMath.kt": {
+    "bytes": 9886,
+    "sha256": "7259cc4c77938e4d0e1d002179b5f3dfc760a20284cc89db03d7437cb61e282b"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry3DLanguage.kt": {
+    "bytes": 39868,
+    "sha256": "b21300c5719a6f8b1cf772212444f84d80a939bc3f366a1843fbf081c64cccc4"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiMathLanguage.kt": {
+    "bytes": 1993,
+    "sha256": "16323bacd60c8c15a467aa214c00b2a44bfc5d75d3ed7d0c1cea680c1e5804c7"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiStudioAssistant.kt": {
+    "bytes": 30058,
+    "sha256": "3d864e3fd7db0976ece45fd169fb9843ab5a726d764c0f7be180022c0a5bf058"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/TensorFlowGraphNlp.kt": {
+    "bytes": 4335,
+    "sha256": "5198a9d33287e6324c986626d2a04a784a71b66091d47d5f6e16e67e343586c3"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt": {
+    "bytes": 994405,
+    "sha256": "eac1d523f8d96355104e5449d952ae0c0dac4eb1d06ebec32e1a2918f4d03f50"
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometryKidAudit.kt": {
+    "bytes": 12021,
+    "sha256": "5622dce87d63689055a318aeab0bda657238f93c00b2bf4c6f6dea6d92282301"
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiGeometryKidCommandsTest.kt": {
+    "bytes": 5647,
+    "sha256": "0e10dcdfd6e620624c46cde7484d09bd6eb16c4c923c5e6fea930b1c90972d79"
+  },
+  "app/src/androidTest/java/com/indianservers/aiexplorer/RuhiGeometryKidRenderingTest.kt": {
+    "bytes": 6040,
+    "sha256": "3878ae5256d8c4fbc92e87985ca5d5def1e9d42e7956c56f34395a93b6c53f76"
+  },
+  "app/src/main/assets/ruhi_geometry3d_nlp/command_examples.json": {
+    "bytes": 43338,
+    "sha256": "38f3dd7646e6dcc28a63ebc58424de42d398202499fa37dbf6c2a4d5cc810dda"
+  },
+  "app/src/main/assets/ruhi_geometry3d_nlp/metadata.json": {
+    "bytes": 24026,
+    "sha256": "daac417cbcefeb1538a20ca0a62e9260ee23aadbc66ec7b53a6bda1602971bee"
+  },
+  "app/src/main/assets/ruhi_geometry3d_nlp/model.tflite": {
+    "bytes": 109352,
+    "sha256": "fb04323dc618bbe18c60b0b3e9383313e9836b4c21366aaa255faa7f45f0221e"
+  },
+  "scripts/train_ruhi_geometry3d_nlp.py": {
+    "bytes": 9178,
+    "sha256": "d9c4086ac2b45342b8deed3d1dddf99042b12502a881c20e97f9dfe9ded623cd"
+  },
+  "scripts/run_ruhi_geometry3d_audit.ps1": {
+    "bytes": 2925,
+    "sha256": "fd171416035399aaa0a72226c160486b041e6b99d66fcd97ca4c1ca05a536a48"
+  },
+  "scripts/build_ruhi_geometry3d_report.py": {
+    "bytes": 7993,
+    "sha256": "f998a3aa9799ea3abc3c205748d1f134016bbf5b03b6d0f34414bff209704833"
+  },
+  "app/build/outputs/apk/debug/app-debug.apk": {
+    "bytes": 263271716,
+    "sha256": "0b9d0cd1ae8fbecace7bda58e444b0b18031a7c2fdfcaff49a7c9e6818340413"
+  },
+  "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk": {
+    "bytes": 5101071,
+    "sha256": "4ed2dabd7e7cdab7dcb4f2fa58118564e933eed089fd7383697b6226ead59a4c"
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/StudioReferenceMetadata.kt": {
+    "bytes": 1916,
+    "sha256": "6deb66184c50598adf02f4c1613a7152c361e9ffe11ecd75a144b9688fc7853b"
+  }
+}

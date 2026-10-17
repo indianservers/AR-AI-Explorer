@@ -1,0 +1,7 @@
+Pre-training tests failed; fix the implementation before retraining.
+At C:\Indian Servers\AIExplorer\scripts\run_ruhi_seed500_cycle.ps1:24 char:24
++ ... Exit -ne 0){throw 'Pre-training tests failed; fix the implementation  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Pre-training te...ore retraining.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Pre-training tests failed; fix the implementation before retraining.
+ 

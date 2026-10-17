@@ -1,0 +1,60 @@
+{
+  "heldout_slot_templates": [
+    {
+      "text": "Could you calculate the distance from point Vertex_907 to point Omega_811?",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "What is the straight-line distance from Vertex_907 to Omega_811?",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "Find the Euclidean distance between Vertex_907 and Omega_811",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "What is the separation between Vertex_907 and Omega_811?",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "Find the length between Vertex_907 and Omega_811",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "distance from Vertex_907 to Omega_811 now",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "Kindly measure the distance from Vertex_907 to Omega_811 in units",
+      "point1": "Vertex_907",
+      "point2": "Omega_811"
+    },
+    {
+      "text": "What are the midpoint coordinates of UnseenEdge_917?",
+      "roles": {
+        "UnseenEdge_917": "SEGMENT"
+      }
+    },
+    {
+      "text": "Which point is halfway between UnseenLeft_907 and UnseenRight_811?",
+      "roles": {
+        "UnseenLeft_907": "POINT_1",
+        "UnseenRight_811": "POINT_2"
+      }
+    },
+    {
+      "text": "Place a marker at the center of UnseenEdge_917",
+      "roles": {
+        "UnseenEdge_917": "SEGMENT"
+      }
+    }
+  ],
+  "scene_cases": 600,
+  "passed": true
+}

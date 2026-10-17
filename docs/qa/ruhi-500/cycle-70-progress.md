@@ -1,0 +1,7 @@
+# Cycle 70 complete
+
+Controller session 75164 exited 0. Original workbook fidelity check passed before all 500 source executions and 579 regression methods; all passed. Compiled original empty-integral counterexamples verify 2/2 with unchanged area expectations. Context/coordinate/lexical/critical audits passed. Intent and point-role TensorFlow heads retrained; 500/500 seed fit, 10/10 inspected held-out slot templates and 34/34 lexical-label probes. Post-training tests/build and installed app/test hash verification passed. Full native instrumentation: OK (46 tests), 750.582 seconds, no failed/ignored methods. Required artifacts pulled, report generated and source fields independently rechecked at report generation.
+
+Fresh captures opened and inspected in cycle-70-visual-review.md. New integration workflow proves restored formula click, bounds preservation, native shading (117628 changed pixels against the same unshaded curve), atomic undo/redo, edited area 63 and saved valid bounds recovery to 8/3.
+
+Full goal remains incomplete. Four current mathematical-word formula-reply failures remain in LOOP_STATE.json and cycle-70-formula-reply-language-audit.json; both formal controls pass. Next work is shared normalization/recognition for y equals x squared and x squared in selected derivative/integration pending replies. Original 300-request outcomes remain 188 APPLIED, 23 CLARIFICATION, 6 INVALID and 83 UNSUPPORTED.

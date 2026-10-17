@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:46:39.504Z" hostname="INDIANSERVERS" time="0.099">
+  <properties/>
+  <testcase name="smartEditorPairsWrapsMultipliesAndDeletesStructuralTokens" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.01"/>
+  <testcase name="interpretsDefiniteIntegralAndReturnsAlternatives" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.065"/>
+  <testcase name="supportsGradianAngleMode" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.0"/>
+  <testcase name="solvesAndVerifiesAnEquation" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.001"/>
+  <testcase name="branchingHistoryPreservesOriginalInput" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.011"/>
+  <testcase name="naturalInputVariablesAndFunctionsShareOneSession" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.008"/>
+  <testcase name="diagnosticsTokensTemplatesAndEditorHistoryAreDeterministic" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase1Test" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

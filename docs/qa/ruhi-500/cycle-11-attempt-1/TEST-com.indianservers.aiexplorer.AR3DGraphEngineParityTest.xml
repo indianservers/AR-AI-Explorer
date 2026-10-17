@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-16T14:22:57.208Z" hostname="INDIANSERVERS" time="0.564">
+  <properties/>
+  <testcase name="requiredEquationSetPreservesExactExplicitEngineVerticesAndSettings" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.191"/>
+  <testcase name="phase2cFiveCompositeGoldenCasesPreserveOrderTopologyAndIdentity" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.091"/>
+  <testcase name="customDomainResolutionColourTransparencyAxesGridAndBoundsRemainConsistent" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.003"/>
+  <testcase name="invalidEmptyAndExtremeSettingsAreControlled" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.017"/>
+  <testcase name="parametricSurfacePreservesTypedMesherGeometryAndTopologyExactly" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.002"/>
+  <testcase name="phase3cOneHundredCaseGoldenCertificationPreservesEngineAdapterParity" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.207"/>
+  <testcase name="implicitSurfacePreservesTypedMesherGeometryAndTopologyExactly" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.018"/>
+  <testcase name="multipleEquationsPreserveOrderIdentityColoursAndIndependentMeshes" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.002"/>
+  <testcase name="phase2cFortyFiveCategorizedExplicitGoldenCasesPreserveExactGeometryAndRenderIdentity" classname="com.indianservers.aiexplorer.AR3DGraphEngineParityTest" time="0.025"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

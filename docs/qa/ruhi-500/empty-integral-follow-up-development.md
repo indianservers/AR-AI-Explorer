@@ -1,0 +1,9 @@
+# Empty selected-integral follow-up: reproduced counterexamples
+
+The read-only compiled audit executes original workbook rows 364 and 372 in an empty Graph2D workspace after cancelling unrelated pending state. Each correctly asks which curve, but offers no examples. A plain y=x^2 reply executes only PLOT_FUNCTION_2D. For row 364, the subsequent 0 to 2 reply is unsupported; for row 372, the already supplied [1,4] bounds and shading action are lost. No integral annotation exists in either final scene.
+
+Independent expected signed/absolute values for nonnegative x^2 are 8/3 on [0,2] and 21 on [1,4]. The original workbook parameters/expectations were not changed. Both compiled cases remain failing; this audit is not Android TensorFlow or UI verification. Integral language, math and dialogue source hashes establish the exact implementation inspected.
+
+Next: retain selected action plus supplied bounds through an explicit formula question, persist formula/role slots, ask only remaining essential bounds, atomically create the native curve and shaded analysis after all validation, and independently check live edits, invalid domain/bounds, save/restore and undo/redo. Preserve literal integral and existing-curve cases. Run all 500 before training and the complete native suite after the implementation.
+
+Cycle 70 resolution: both original compiled counterexamples now pass (2/2); seven new JVM methods and the full 579-method regression pass. All 46 native methods pass, including restored formula-chip click, exact retained [1,4] bounds with area 21, one-step undo/redo, actual shading pixel comparison, edited current curve with area 63, invalid-bound rejection without creation and saved 0 to 2 recovery to 8/3. Fresh captures reviewed in cycle-70-visual-review.md. Four mathematical-word formula-reply failures are separately retained in formula-reply-language-development.md; the whole goal remains incomplete.

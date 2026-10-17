@@ -1,0 +1,67 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:........
+Error in intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+java.lang.IllegalStateException: No compose hierarchies found in the app. Possible reasons include: (1) the Activity that calls setContent did not launch; (2) setContent was not called; (3) setContent was called before the ComposeTestRule ran. If setContent is called by the Activity, make sure the Activity is launched after the ComposeTestRule runs
+	at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes(TestOwner.kt:106)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNodes$ui_test(SemanticsNodeInteraction.kt:64)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:157)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:124)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:119)
+	at androidx.compose.ui.test.TextActionsKt.performTextReplacement(TextActions.kt:82)
+	at androidx.compose.ui.test.TextActionsKt.performTextClearance(TextActions.kt:29)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$type(RuhiSeed500RenderingTest.kt:335)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$ask(RuhiSeed500RenderingTest.kt:337)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(RuhiSeed500RenderingTest.kt:368)
+.
+Error in graphSceneStylesSoloAxesAndMeshOpacityChangeTheNativeCanvas(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+java.lang.IllegalStateException: No compose hierarchies found in the app. Possible reasons include: (1) the Activity that calls setContent did not launch; (2) setContent was not called; (3) setContent was called before the ComposeTestRule ran. If setContent is called by the Activity, make sure the Activity is launched after the ComposeTestRule runs
+	at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes(TestOwner.kt:106)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNodes$ui_test(SemanticsNodeInteraction.kt:64)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:157)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:124)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:119)
+	at androidx.compose.ui.test.TextActionsKt.performTextReplacement(TextActions.kt:82)
+	at androidx.compose.ui.test.TextActionsKt.performTextClearance(TextActions.kt:29)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.graphSceneStylesSoloAxesAndMeshOpacityChangeTheNativeCanvas$lambda$0$ask(RuhiSeed500RenderingTest.kt:169)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.graphSceneStylesSoloAxesAndMeshOpacityChangeTheNativeCanvas(RuhiSeed500RenderingTest.kt:171)
+..........
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 468.317
+There were 2 failures:
+1) intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+java.lang.IllegalStateException: No compose hierarchies found in the app. Possible reasons include: (1) the Activity that calls setContent did not launch; (2) setContent was not called; (3) setContent was called before the ComposeTestRule ran. If setContent is called by the Activity, make sure the Activity is launched after the ComposeTestRule runs
+	at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes(TestOwner.kt:106)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNodes$ui_test(SemanticsNodeInteraction.kt:64)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:157)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:124)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:119)
+	at androidx.compose.ui.test.TextActionsKt.performTextReplacement(TextActions.kt:82)
+	at androidx.compose.ui.test.TextActionsKt.performTextClearance(TextActions.kt:29)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$type(RuhiSeed500RenderingTest.kt:335)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$ask(RuhiSeed500RenderingTest.kt:337)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(RuhiSeed500RenderingTest.kt:368)
+2) graphSceneStylesSoloAxesAndMeshOpacityChangeTheNativeCanvas(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+java.lang.IllegalStateException: No compose hierarchies found in the app. Possible reasons include: (1) the Activity that calls setContent did not launch; (2) setContent was not called; (3) setContent was called before the ComposeTestRule ran. If setContent is called by the Activity, make sure the Activity is launched after the ComposeTestRule runs
+	at androidx.compose.ui.test.TestOwnerKt.getAllSemanticsNodes(TestOwner.kt:106)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNodes$ui_test(SemanticsNodeInteraction.kt:64)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:157)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+	at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:124)
+	at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:119)
+	at androidx.compose.ui.test.TextActionsKt.performTextReplacement(TextActions.kt:82)
+	at androidx.compose.ui.test.TextActionsKt.performTextClearance(TextActions.kt:29)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.graphSceneStylesSoloAxesAndMeshOpacityChangeTheNativeCanvas$lambda$0$ask(RuhiSeed500RenderingTest.kt:169)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.graphSceneStylesSoloAxesAndMeshOpacityChangeTheNativeCanvas(RuhiSeed500RenderingTest.kt:171)
+
+FAILURES!!!
+Tests run: 23,  Failures: 2
+
+

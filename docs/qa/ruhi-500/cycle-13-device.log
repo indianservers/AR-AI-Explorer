@@ -1,0 +1,24 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:...
+Error in circleConstructionsRenderAndFollowTheirParentPointsAndRelations(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.circleConstructionsRenderAndFollowTheirParentPointsAndRelations$lambda$0$ask(RuhiSeed500RenderingTest.kt:61)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.circleConstructionsRenderAndFollowTheirParentPointsAndRelations(RuhiSeed500RenderingTest.kt:78)
+.....
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 354.268
+There was 1 failure:
+1) circleConstructionsRenderAndFollowTheirParentPointsAndRelations(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.circleConstructionsRenderAndFollowTheirParentPointsAndRelations$lambda$0$ask(RuhiSeed500RenderingTest.kt:61)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.circleConstructionsRenderAndFollowTheirParentPointsAndRelations(RuhiSeed500RenderingTest.kt:78)
+
+FAILURES!!!
+Tests run: 11,  Failures: 1
+
+

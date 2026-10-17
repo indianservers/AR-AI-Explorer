@@ -1,0 +1,46 @@
+{
+  "cases": 2,
+  "verified": 0,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralLanguage.kt": "5fec795b402225e2cf15a6ab779a4babca0bbf5254cf318ec2098439933f283d",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralMath.kt": "ab8c1703de4188bb96cbeeed0d4dab7bc0f27b281e469fbd4790458a0b48e113",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "8859932c99ed5ee2473fecb8f91ce700315d0dc0603e0c6c6341c5661c702cd3"
+  },
+  "results": [
+    {
+      "source_row": 364,
+      "input": "Integrate the selected function",
+      "formula": "y=x^2",
+      "bounds": "0 to 2",
+      "expected_integral": 2.6666666666666665,
+      "question_status": "CLARIFICATION",
+      "question_reply": "Which curve should I integrate?",
+      "question_suggestions": [],
+      "formula_status": "APPLIED",
+      "formula_reply": "Plotted f(x): y=x^2. Finite sampled segments preserve domain gaps. ",
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete/select/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces.",
+      "actual_integral": null,
+      "behavior_verified": false
+    },
+    {
+      "source_row": 372,
+      "input": "Shade area under the currently selected curve between 1 and 4",
+      "formula": "y=x^2",
+      "bounds": null,
+      "expected_integral": 21.0,
+      "question_status": "CLARIFICATION",
+      "question_reply": "Which curve should I integrate?",
+      "question_suggestions": [],
+      "formula_status": "APPLIED",
+      "formula_reply": "Plotted f(x): y=x^2. Finite sampled segments preserve domain gaps. ",
+      "actual_status": "APPLIED",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "actual_reply": "Plotted f(x): y=x^2. Finite sampled segments preserve domain gaps. ",
+      "actual_integral": null,
+      "behavior_verified": false
+    }
+  ],
+  "scope": "Original rows 364 and 372 with no visible source curve, formula reply and required bounds; independent integral x^2 expectations. Compiled parser/engine probe, without Android TensorFlow or UI."
+}

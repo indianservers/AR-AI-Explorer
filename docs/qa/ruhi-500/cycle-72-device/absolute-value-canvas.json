@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "explicit_positive_x": 2,
+  "explicit_positive_slope": 1,
+  "spoken_negative_x": -3,
+  "negative_slope": -1,
+  "restored_missing_x": 2,
+  "zero_cusp_preserved": true,
+  "actual_rendered_coordinates": true,
+  "unrelated_curve_preserved": true,
+  "committed_capture": true
+}

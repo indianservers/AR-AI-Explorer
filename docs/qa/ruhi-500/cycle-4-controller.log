@@ -1,0 +1,10 @@
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/seed500-native.json: 1 file pulled, 0 skipped. 4.8 MB/s (159772 bytes in 0.032s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/unseen-labels-native.json: 1 file pulled, 0 skipped. 0.1 MB/s (1107 bytes in 0.019s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/visible-assistant.json: 1 file pulled, 0 skipped. 0.0 MB/s (209 bytes in 0.012s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/named-point-answer.png: 1 file pulled, 0 skipped. 12.9 MB/s (435172 bytes in 0.032s)
+{"goal_complete": false, "cycle": 4, "source_rows": 500, "native_correct_intents": 500, "behavior_verified": 150, "behavior_unverified": 350}
+Cycle finished. Check the behavior gaps in REPORT.md before changing code and starting the next cycle. Seed intent fit is not full goal completion.

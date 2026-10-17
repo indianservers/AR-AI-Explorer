@@ -1,0 +1,8 @@
+adb.exe: device 'emulator-5556' not found
+App install failed.
+At C:\Indian Servers\AIExplorer\scripts\run_ruhi_seed500_cycle.ps1:35 char:25
++ if($LASTEXITCODE -ne 0){throw 'App install failed.'}
++                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (App install failed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : App install failed.
+ 

@@ -1,0 +1,130 @@
+{
+  "source_row": 344,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeLanguage.kt": "d63ed0ec889b17628215cd070648efd5654b48f56d20784dedf7410b22232009",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeMath.kt": "fe75e8edf404f393a1e774833b3c599699220c2ef9edfb9cc4895fde3670543d",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeBranches.kt": "6331b6b4bf46310c40bbf16594b7a3c9361b60d1b5604b66ce95b2f1752911bd",
+    "app/src/main/java/com/indianservers/aiexplorer/core/SymbolicCalculus.kt": "56fff2aeb699d6e4a2297d3513824dc9b1de0d03bf24fbdc68a0f52ec4c5c23e"
+  },
+  "cases": 6,
+  "verified": 6,
+  "results": [
+    {
+      "source_row": 344,
+      "input": "Find critical points of y = x^4 - 2*x^2",
+      "expected_points": [
+        [
+          -1.0,
+          -1.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          -1.0
+        ]
+      ],
+      "actual_points": [
+        [
+          -1.0,
+          -1.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          -1.0
+        ]
+      ],
+      "reason": "Original row 344 polynomial; derivative 4x(x^2-1) vanishes at -1, 0 and 1.",
+      "status": "APPLIED",
+      "reply": "Critical points in the visible x range: (-1.0, -1.0), (0.0, 0.0), (1.0, -1.0). Includes stationary points and verified absolute-value branch points; other domain boundaries require separate analysis.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 344,
+      "input": "Find critical points of y = abs(x)",
+      "expected_points": [
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "actual_points": [
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "reason": "Function finite at zero, unequal one-sided slopes -1/+1.",
+      "status": "APPLIED",
+      "reply": "Critical points in the visible x range: (0.0, 0.0). Includes stationary points and verified absolute-value branch points; other domain boundaries require separate analysis.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 344,
+      "input": "Find critical points of y = abs(x-2)+2*x",
+      "expected_points": [
+        [
+          2.0,
+          4.0
+        ]
+      ],
+      "actual_points": [
+        [
+          2.0,
+          4.0
+        ]
+      ],
+      "reason": "Finite corner at x=2; one-sided slopes +1/+3. Critical does not require a local extremum.",
+      "status": "APPLIED",
+      "reply": "Critical points in the visible x range: (2.0, 4.0). Includes stationary points and verified absolute-value branch points; other domain boundaries require separate analysis.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 344,
+      "input": "Find critical points of y = abs(x^2)",
+      "expected_points": [
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "actual_points": [
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "reason": "abs(x^2)=x^2; smooth stationary critical point at zero.",
+      "status": "APPLIED",
+      "reply": "Critical points in the visible x range: (0.0, 0.0). Includes stationary points and verified absolute-value branch points; other domain boundaries require separate analysis.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 344,
+      "input": "Find the stationary points of abs(x)",
+      "expected_points": [],
+      "actual_points": [],
+      "reason": "No differentiable point has slope zero; the corner is not stationary.",
+      "status": "APPLIED",
+      "reply": "Stationary points in the visible x range: none.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 344,
+      "input": "Find critical points of y = 1/x",
+      "expected_points": [],
+      "actual_points": [],
+      "reason": "Derivative -1/x^2 is nonzero on its domain; x=0 is outside that domain.",
+      "status": "APPLIED",
+      "reply": "Critical points in the visible x range: none. Includes stationary points and verified absolute-value branch points; other domain boundaries require separate analysis.",
+      "behavior_verified": true
+    }
+  ],
+  "scope": "Original critical-point pattern and five supported-expression development variations, with independent elementary-calculus expectations; compiled parser/engine only, no Android TensorFlow or UI."
+}

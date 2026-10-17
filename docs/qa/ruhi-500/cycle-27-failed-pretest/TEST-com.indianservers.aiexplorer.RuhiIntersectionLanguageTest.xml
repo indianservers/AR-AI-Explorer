@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:27:01.129Z" hostname="INDIANSERVERS" time="0.586">
+  <properties/>
+  <testcase name="tangenciesPolesEmptySetsAndCoincidentCurvesAreNotInventedCrossings" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.054"/>
+  <testcase name="implicitCandidatesMustSatisfyOriginalEquationsAndContinuousDomains" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.045"/>
+  <testcase name="all25OriginalRowsMeetUnchangedSlotsCoordinatesAndMarkerPoliciesWithPersistenceAndHistory" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.343"/>
+  <testcase name="aMissingSingleGraphAndMissingGeometryAskOnlyRelevantQuestionsWithoutMutation" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.032"/>
+  <testcase name="namedNativeCirclesAndFullLinesFollowParentCoordinatesWithoutDuplicatingObjects" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.001"/>
+  <testcase name="renamedCurveIdsAndNewNumericCoefficientsGiveNewComputedIntersections" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.063"/>
+  <testcase name="missingPairRestoresRealChoicesResumesStableIdsAndRejectsAStaleReply" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.008"/>
+  <testcase name="implicitVerticalIntersectionsUseTheVisibleYRangeAndDeduplicateTangency" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.006"/>
+  <testcase name="liveQueriesFollowCurrentParentsViewportVisibilityAndAnExpandingAllGraphScope" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.017"/>
+  <testcase name="implicitEquationsIntersectCurrentExplicitCurvesWithoutCreatingObjects" classname="com.indianservers.aiexplorer.RuhiIntersectionLanguageTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

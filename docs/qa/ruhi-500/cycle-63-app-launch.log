@@ -1,0 +1,7 @@
+Starting: Intent { cmp=com.indianservers.aiexplorer/.GraphVerificationActivity (has extras) }
+Status: ok
+LaunchState: COLD
+Activity: com.indianservers.aiexplorer/.GraphVerificationActivity
+TotalTime: 3740
+WaitTime: 3744
+Complete

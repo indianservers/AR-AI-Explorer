@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiDerivativeLanguageTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:16.341Z" hostname="INDIANSERVERS" time="0.114">
+  <properties/>
+  <testcase name="stableCurveChoicesRestoreResumeAndRejectStaleReplies" classname="com.indianservers.aiexplorer.RuhiDerivativeLanguageTest" time="0.019"/>
+  <testcase name="changedCoefficientsAndDomainsProduceComputedSlopesAndNormals" classname="com.indianservers.aiexplorer.RuhiDerivativeLanguageTest" time="0.005"/>
+  <testcase name="originalRowsKeepSourceSlotsAndIndependentDerivativeIdentities" classname="com.indianservers.aiexplorer.RuhiDerivativeLanguageTest" time="0.085"/>
+  <testcase name="annotationsPersistAndUndoWithoutChangingOtherObjects" classname="com.indianservers.aiexplorer.RuhiDerivativeLanguageTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

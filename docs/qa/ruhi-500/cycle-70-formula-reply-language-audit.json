@@ -1,0 +1,98 @@
+{
+  "cases": 6,
+  "verified": 2,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralLanguage.kt": "f63edeb36a49af110b920142628e042b9283d589868f98901807b398bb445e27",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeLanguage.kt": "090c2d5d0436440397bf1752051ae4b0561946da91a6424d359cdf6b574e5f44",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFunctionLanguage.kt": "124ee137172565f7779835a7b05ccc132974fa1596d283cec789ef2bfb4b7033",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiMathLanguage.kt": "16323bacd60c8c15a467aa214c00b2a44bfc5d75d3ed7d0c1cea680c1e5804c7",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "f2d6b734d54bd460288ac450ba5f7bda074cf2f11c8409c854c98e7264b2ba5b"
+  },
+  "results": [
+    {
+      "source_row": 364,
+      "intent": "INTEGRATE",
+      "input": "Integrate the selected function",
+      "formula_reply": "y=x^2",
+      "expected_value": 2.6666666666666665,
+      "actual_value": 2.6666666666666665,
+      "formula_status": "CLARIFICATION",
+      "formula_reply_message": "What lower and upper x bounds should I use?",
+      "actual_status": "APPLIED",
+      "actual_intent": "INTEGRATE",
+      "actual_reply": "Signed integral = 2.6666666666666665; absolute area = 2.6666666666666665; positive area = 2.6666666666666665; negative area = 0.0; numerical error estimate = 2.459783678826488E-19.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 364,
+      "intent": "INTEGRATE",
+      "input": "Integrate the selected function",
+      "formula_reply": "y equals x squared",
+      "expected_value": 2.6666666666666665,
+      "actual_value": null,
+      "formula_status": "APPLIED",
+      "formula_reply_message": "Updated 2D Graph: 1 action(s).",
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete/select/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces.",
+      "behavior_verified": false
+    },
+    {
+      "source_row": 364,
+      "intent": "INTEGRATE",
+      "input": "Integrate the selected function",
+      "formula_reply": "x squared",
+      "expected_value": 2.6666666666666665,
+      "actual_value": null,
+      "formula_status": "INVALID",
+      "formula_reply_message": "Choose an explicit function with numeric parameters for integration.",
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete/select/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces.",
+      "behavior_verified": false
+    },
+    {
+      "source_row": 330,
+      "intent": "DIFFERENTIATE",
+      "input": "Plot the derivative of the selected curve",
+      "formula_reply": "y=x^2",
+      "expected_value": 4.0,
+      "actual_value": 4.0,
+      "formula_status": "APPLIED",
+      "formula_reply_message": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+      "actual_status": "APPLIED",
+      "actual_intent": "DIFFERENTIATE",
+      "actual_reply": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+      "behavior_verified": true
+    },
+    {
+      "source_row": 330,
+      "intent": "DIFFERENTIATE",
+      "input": "Plot the derivative of the selected curve",
+      "formula_reply": "y equals x squared",
+      "expected_value": 4.0,
+      "actual_value": null,
+      "formula_status": "APPLIED",
+      "formula_reply_message": "Updated 2D Graph: 1 action(s).",
+      "actual_status": "APPLIED",
+      "actual_intent": null,
+      "actual_reply": "Updated 2D Graph: 1 action(s).",
+      "behavior_verified": false
+    },
+    {
+      "source_row": 330,
+      "intent": "DIFFERENTIATE",
+      "input": "Plot the derivative of the selected curve",
+      "formula_reply": "x squared",
+      "expected_value": 4.0,
+      "actual_value": null,
+      "formula_status": "INVALID",
+      "formula_reply_message": "Choose an explicit function with numeric parameters for differentiation.",
+      "actual_status": "INVALID",
+      "actual_intent": "DIFFERENTIATE",
+      "actual_reply": "Choose an explicit function with numeric parameters for differentiation.",
+      "behavior_verified": false
+    }
+  ],
+  "scope": "Original selected-analysis rows 330 and 364 with formal/control and mathematical-word formula replies. Independent derivative at x=2 and definite integral on [0,2]. Compiled parser/engine development probe, without Android TensorFlow, microphone or UI."
+}

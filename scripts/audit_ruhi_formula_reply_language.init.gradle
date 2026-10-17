@@ -1,0 +1,41 @@
+// Read-only compiled development probe for natural formula replies to original selected analyses.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiFormulaReplyLanguage') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiDialogueSeedFixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def integral=loader.loadClass(prefix+'RuhiIntegralLanguage').getField('INSTANCE').get(null)
+                def derivative=loader.loadClass(prefix+'RuhiDerivativeLanguage').getField('INSTANCE').get(null)
+                def math=loader.loadClass(prefix+'RuhiDerivativeMath').getField('INSTANCE').get(null)
+                def records=[]
+                ['INTEGRATE','DIFFERENTIATE'].each{intent->['y=x^2','y equals x squared','x squared'].each{formula->
+                    def manager=managerClass.getDeclaredConstructor().newInstance();def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def initial=fixture.state(491,0);def c=fixture.context(initial)
+                    def state=manager.execute(initial,'Cancel that',h,c,modality).state
+                    if(!state.functions.isEmpty())throw new GradleException('Empty workspace prerequisite failed.')
+                    def command=intent=='INTEGRATE'?'Integrate the selected function':'Plot the derivative of the selected curve'
+                    def question=manager.execute(state,command,h,c,modality)
+                    def reply=manager.execute(question.state,formula,h,c,modality)
+                    def last=intent=='INTEGRATE'?manager.execute(reply.state,'0 to 2',h,c,modality):reply
+                    def actual=null
+                    if(intent=='INTEGRATE')actual=integral.drawing(last.state)?.values?.signed
+                    else if(last.state.labSessionValues.containsKey(derivative.MARK)) {
+                        def q=derivative.decode(last.state.labSessionValues[derivative.MARK]);actual=math.slope(derivative.resolve(last.state,q),2.0d).value
+                    }
+                    def expected=intent=='INTEGRATE'?8.0d/3:4.0d
+                    records<<[source_row:intent=='INTEGRATE'?364:330,intent:intent,input:command,formula_reply:formula,expected_value:expected,actual_value:actual,formula_status:reply.status.name(),formula_reply_message:reply.message,actual_status:last.status.name(),actual_intent:last.semanticFrame?.intent,actual_reply:last.message,behavior_verified:last.status.name()=='APPLIED'&&last.semanticFrame?.intent==intent&&actual!=null&&Math.abs(actual-expected)<1e-7]
+                }}
+                def sources=['RuhiIntegralLanguage.kt','RuhiDerivativeLanguage.kt','RuhiFunctionLanguage.kt','RuhiMathLanguage.kt','RuhiDialogue.kt','RuhiFormulaReply.kt'].collectEntries{name->def path='app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/'+name;[(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]}
+                def result=[cases:records.size(),verified:records.count{it.behavior_verified},source_sha256:sources,results:records,scope:'Original selected-analysis rows 330 and 364 with formal/control and mathematical-word formula replies. Independent derivative at x=2 and definite integral on [0,2]. Compiled parser/engine development probe, without Android TensorFlow, microphone or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/formula-reply-language-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result))
+                records.each{println(it.intent+' '+it.formula_reply+': '+it.behavior_verified)}
+            }finally{loader.close()}
+        }
+    }
+}

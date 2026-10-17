@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-16T14:23:09.241Z" hostname="INDIANSERVERS" time="0.138">
+  <properties/>
+  <testcase name="typedRedefinitionRebuildsPayloadRejectsSelfCyclesAndPreservesIdentity" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.036"/>
+  <testcase name="redefinitionPreviewReportsImpactAndRejectsCycles" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.002"/>
+  <testcase name="universalAlgebraObjectsSurviveWorkspaceProjectRoundTrip" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.016"/>
+  <testcase name="boundFunctionAndSequenceVariablesDoNotBecomeDocumentDependencies" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.001"/>
+  <testcase name="projectionIncludesGeometryThreeDimensionalAndAlgebraObjects" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.001"/>
+  <testcase name="requestedTypedSyntaxInfersLineCircleBooleanAndUnicodePowers" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.001"/>
+  <testcase name="objectAwareCommandSuggestionsExposeSignaturesAndCompatibility" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.004"/>
+  <testcase name="sortingFilteringStylingSelectionAndBulkConstructionAreLive" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.004"/>
+  <testcase name="dependencyRedefinitionCanDetachReplaceAndDuplicateAsFreeWithoutLosingStyle" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.009"/>
+  <testcase name="keyboardAndBulkObjectOperationsAreDeterministic" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.004"/>
+  <testcase name="casTransformsBecomeDependentAlgebraObjects" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.009"/>
+  <testcase name="equationsSystemsParametricFormsAndRelationsArePersistentAndActionable" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.011"/>
+  <testcase name="typedInputCreatesFirstClassObjectsInsteadOfFlatteningToFunctions" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.001"/>
+  <testcase name="geometryConstructionsImmediatelyBecomeEditableAlgebraRowsAndStaySynchronized" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.034"/>
+  <testcase name="universalListHasExplicitKindsForEveryRequestedAlgebraFamily" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.003"/>
+  <testcase name="displayModesIncludeValueDefinitionCommandExactDecimalMixedAndSpokenMath" classname="com.indianservers.aiexplorer.UniversalAlgebraExperienceTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

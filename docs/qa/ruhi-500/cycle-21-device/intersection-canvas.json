@@ -1,0 +1,14 @@
+{
+  "marker_pixels": 57861,
+  "curve_edit_pixels": 32907,
+  "circle_edit_pixels": 28292,
+  "pan_pixels": 66572,
+  "pair_question_resumed": true,
+  "polite_instruction_alias": true,
+  "live_curve_and_circle_dependencies": true,
+  "tangency_deduplicated": true,
+  "actual_canvas_aspect": true,
+  "viewport_hides_outside_markers": true,
+  "persistence": true,
+  "passed": true
+}

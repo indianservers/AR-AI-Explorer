@@ -1,0 +1,162 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:preBuild UP-TO-DATE
+> Task :ar3dgraph:preDebugBuild UP-TO-DATE
+> Task :ar3dgraph:processDebugNavigationResources UP-TO-DATE
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:generateDebugResources UP-TO-DATE
+> Task :ar3dgraph:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:parseDebugLocalResources UP-TO-DATE
+> Task :ar3dgraph:generateDebugRFile UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:compileDebugKotlin UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :arengine:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :ar3dgraph:compileDebugKotlin UP-TO-DATE
+> Task :ar3dgraph:javaPreCompileDebug UP-TO-DATE
+> Task :ar3dgraph:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :ar3dgraph:writeDebugAarMetadata UP-TO-DATE
+> Task :arengine:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :ar3dgraph:extractDeepLinksDebug UP-TO-DATE
+> Task :ar3dgraph:processDebugManifest UP-TO-DATE
+> Task :arengine:extractDeepLinksDebug UP-TO-DATE
+> Task :arengine:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :ar3dgraph:mapDebugSourceSetPaths UP-TO-DATE
+> Task :ar3dgraph:compileDebugLibraryResources UP-TO-DATE
+> Task :arengine:mapDebugSourceSetPaths UP-TO-DATE
+> Task :arengine:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :ar3dgraph:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :ar3dgraph:processDebugJavaRes UP-TO-DATE
+> Task :arengine:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :arengine:processDebugJavaRes UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:8908:15 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:10292:23 Unnecessary safe call on a non-null receiver of type 'Solid'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11719:21 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11720:53 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11724:33 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11730:242 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11731:52 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14720:94 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14725:19 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14772:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PointerInputChange'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14816:21 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15844:29 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15847:70 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15848:68 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15850:69 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15891:37 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15893:69 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15895:70 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15896:69 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt:85:160 Unnecessary safe call on a non-null receiver of type 'RuhiCircleLanguage.Circle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt:91:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt:96:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt:97:161 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt:112:168 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiCircleLanguage.Circle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt:130:74 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiAngleLanguageTest.kt:13:133 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiAngleLanguageTest.kt:15:32 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiCircleLanguageTest.kt:15:269 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiCircleLanguageTest.kt:15:333 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiCircleLanguageTest.kt:48:213 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativeLanguageTest.kt:32:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativeLanguageTest.kt:34:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiDialogueFollowUpTest.kt:36:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiDialogueScenarioTest.kt:49:66 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiDialogueTest.kt:22:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiDialogueTest.kt:24:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiFunctionLanguageTest.kt:16:232 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiFunctionLanguageTest.kt:31:164 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiFunctionLanguageTest.kt:32:133 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntegralLanguageTest.kt:33:44 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntegralLanguageTest.kt:46:44 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt:59:226 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt:59:279 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt:70:193 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt:71:132 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt:72:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt:101:298 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPlaneLanguageTest.kt:12:199 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPlaneLanguageTest.kt:28:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPlaneLanguageTest.kt:28:144 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPlaneLanguageTest.kt:31:92 Unnecessary non-null assertion (!!) on a non-null receiver of type 'UniversalMathDocument'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPlaneLanguageTest.kt:37:121 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPointLanguageTest.kt:26:111 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiSemanticFrame'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiPointLanguageTest.kt:56:52 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSceneEditLanguageTest.kt:29:212 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSceneEditLanguageTest.kt:30:73 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSolidMeasureLanguageTest.kt:29:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSolidMeasureLanguageTest.kt:30:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSolidMeasureLanguageTest.kt:31:73 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSpatialAngleLanguageTest.kt:29:123 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiSpatialAngleLanguageTest.kt:30:193 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiTransform3DLanguageTest.kt:41:210 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiTransform3DLanguageTest.kt:43:152 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiDialogueView'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiTriangleLanguageTest.kt:17:232 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/test/java/com/indianservers/aiexplorer/RuhiTriangleLanguageTest.kt:17:293 Unnecessary non-null assertion (!!) on a non-null receiver of type 'WorkspaceState'.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+RuhiDialogueFollowUpTest > canonicalChoiceKeepsStableOpaqueTargetAndDoesNotLeakIntoHistory FAILED
+    java.lang.AssertionError at RuhiDialogueFollowUpTest.kt:47
+
+24 tests completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///C:/Indian%20Servers/AIExplorer/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 50s
+55 actionable tasks: 5 executed, 50 up-to-date

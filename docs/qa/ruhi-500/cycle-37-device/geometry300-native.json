@@ -1,0 +1,2707 @@
+{
+  "total": 300,
+  "passed": 300,
+  "rendering": "separate representative canvas test",
+  "results": [
+    {
+      "id": 1,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9707057476043701,
+      "margin": 0.9638432860374451,
+      "errors": [],
+      "message": "Created 1 Cube. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 2,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9712236523628235,
+      "margin": 0.9666467308998108,
+      "errors": [],
+      "message": "Created 1 Sphere. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 3,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9750619530677795,
+      "margin": 0.967333197593689,
+      "errors": [],
+      "message": "Created 1 Cone. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 4,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9623485803604126,
+      "margin": 0.9566161036491394,
+      "errors": [],
+      "message": "Created 1 Cylinder. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 5,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9949393272399902,
+      "margin": 0.9936645030975342,
+      "errors": [],
+      "message": "Created 1 Cuboid. Default unspecified dimensions: 3.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 6,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9948275685310364,
+      "margin": 0.993084192276001,
+      "errors": [],
+      "message": "Created 1 Pyramid. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 7,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9892085194587708,
+      "margin": 0.9812408089637756,
+      "errors": [],
+      "message": "Created 1 TriangularPyramid. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 8,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9813910722732544,
+      "margin": 0.9748041033744812,
+      "errors": [],
+      "message": "Created 1 TriangularPrism. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 9,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9835110902786255,
+      "margin": 0.9809309244155884,
+      "errors": [],
+      "message": "Created 1 Torus. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 0.5."
+    },
+    {
+      "id": 10,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9693023562431335,
+      "margin": 0.9626498222351074,
+      "errors": [],
+      "message": "Created 1 Hemisphere. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 11,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.964388370513916,
+      "margin": 0.957973837852478,
+      "errors": [],
+      "message": "Created 1 Ellipsoid. Default unspecified dimensions: 2.0 × 3.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 12,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9736360907554626,
+      "margin": 0.9659491181373596,
+      "errors": [],
+      "message": "Created 1 Capsule. Default unspecified dimensions: 2.0 × 4.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 13,
+      "status": "UNSUPPORTED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9781342148780823,
+      "margin": 0.9703719019889832,
+      "errors": [],
+      "message": "A hollow tube is not available in the native solid engine yet."
+    },
+    {
+      "id": 14,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9954908490180969,
+      "margin": 0.9946947693824768,
+      "errors": [],
+      "message": "Created 1 Frustum. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 15,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.99528568983078,
+      "margin": 0.9936402440071106,
+      "errors": [],
+      "message": "Created 1 Cube. Default unspecified dimensions: 4.0 × 4.0 × 4.0; radius 2.0."
+    },
+    {
+      "id": 16,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9963809847831726,
+      "margin": 0.9953136444091797,
+      "errors": [],
+      "message": "Created 1 Sphere. Default unspecified dimensions: 6.0 × 6.0 × 6.0; radius 3.0."
+    },
+    {
+      "id": 17,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9962561130523682,
+      "margin": 0.9939499497413635,
+      "errors": [],
+      "message": "Created 1 Cylinder. Default unspecified dimensions: 2.0 × 5.0 × 2.0; radius 2.0."
+    },
+    {
+      "id": 18,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9960737228393555,
+      "margin": 0.9939248561859131,
+      "errors": [],
+      "message": "Created 1 Cone. Default unspecified dimensions: 2.0 × 6.0 × 2.0; radius 3.0."
+    },
+    {
+      "id": 19,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.994188666343689,
+      "margin": 0.9925593137741089,
+      "errors": [],
+      "message": "Created 1 Cuboid. Default unspecified dimensions: 6.0 × 2.0 × 4.0; radius 1.0."
+    },
+    {
+      "id": 20,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9948810338973999,
+      "margin": 0.9928461909294128,
+      "errors": [],
+      "message": "Created 1 Pyramid. Default unspecified dimensions: 4.0 × 7.0 × 4.0; radius 1.0."
+    },
+    {
+      "id": 21,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9970985651016235,
+      "margin": 0.996566116809845,
+      "errors": [],
+      "message": "Created 1 TriangularPrism. Default unspecified dimensions: 2.0 × 2.0 × 5.0; radius 1.0."
+    },
+    {
+      "id": 22,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9937043786048889,
+      "margin": 0.9912490248680115,
+      "errors": [],
+      "message": "Created 1 Sphere. Default unspecified dimensions: 10.0 × 10.0 × 10.0; radius 5.0."
+    },
+    {
+      "id": 23,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9957348704338074,
+      "margin": 0.9934276342391968,
+      "errors": [],
+      "message": "Created 1 Cube. Default unspecified dimensions: 2.5 × 2.5 × 2.5; radius 1.25."
+    },
+    {
+      "id": 24,
+      "status": "APPLIED",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.994961142539978,
+      "margin": 0.9938107132911682,
+      "errors": [],
+      "message": "Created 1 Cylinder. Default unspecified dimensions: 2.0 × 8.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 25,
+      "status": "APPLIED",
+      "intent": "CREATE_POINT",
+      "confidence": 0.9923601746559143,
+      "margin": 0.9884359240531921,
+      "errors": [],
+      "message": "Created point P1 at Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 26,
+      "status": "APPLIED",
+      "intent": "CREATE_POINT",
+      "confidence": 0.9935634136199951,
+      "margin": 0.9911752343177795,
+      "errors": [],
+      "message": "Created point P1 at Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 27,
+      "status": "APPLIED",
+      "intent": "CREATE_POINT",
+      "confidence": 0.9989882111549377,
+      "margin": 0.9987660646438599,
+      "errors": [],
+      "message": "Created point A at (2.0, 0.0, 0.0)."
+    },
+    {
+      "id": 28,
+      "status": "APPLIED",
+      "intent": "CREATE_POINT",
+      "confidence": 0.9982911944389343,
+      "margin": 0.9974037408828735,
+      "errors": [],
+      "message": "Created point B at (0.0, 3.0, 0.0)."
+    },
+    {
+      "id": 29,
+      "status": "APPLIED",
+      "intent": "CREATE_POINT",
+      "confidence": 0.9986186027526855,
+      "margin": 0.9980679154396057,
+      "errors": [],
+      "message": "Created point C at (0.0, 0.0, 4.0)."
+    },
+    {
+      "id": 30,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.985273540019989,
+      "margin": 0.9783122539520264,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 31,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9866467714309692,
+      "margin": 0.9801815152168274,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 32,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9913928508758545,
+      "margin": 0.9876279830932617,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 33,
+      "status": "APPLIED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9901236891746521,
+      "margin": 0.9869389533996582,
+      "errors": [],
+      "message": "Created vector with components Vec3(x=2.0, y=3.0, z=4.0)."
+    },
+    {
+      "id": 34,
+      "status": "APPLIED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9663785099983215,
+      "margin": 0.9427680373191833,
+      "errors": [],
+      "message": "Created plane Plane1 through A, B, C. Its displayed patch follows all three points."
+    },
+    {
+      "id": 35,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9648649096488953,
+      "margin": 0.9572537541389465,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 36,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9887816309928894,
+      "margin": 0.9828671813011169,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 37,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9887815117835999,
+      "margin": 0.9837104678153992,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 38,
+      "status": "UNSUPPORTED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9850324392318726,
+      "margin": 0.9768345952033997,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 39,
+      "status": "APPLIED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9870309233665466,
+      "margin": 0.9829190969467163,
+      "errors": [],
+      "message": "Created 2 Cube. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 40,
+      "status": "APPLIED",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9832120537757874,
+      "margin": 0.9786592125892639,
+      "errors": [],
+      "message": "Created 3 Sphere. Default unspecified dimensions: 2.0 × 2.0 × 2.0; radius 1.0."
+    },
+    {
+      "id": 41,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9908787608146667,
+      "margin": 0.9884456992149353,
+      "errors": [],
+      "message": "There are 8 solids."
+    },
+    {
+      "id": 42,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9763195514678955,
+      "margin": 0.9692215323448181,
+      "errors": [],
+      "message": "There are 1 matching solids."
+    },
+    {
+      "id": 43,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9798455834388733,
+      "margin": 0.9747690558433533,
+      "errors": [],
+      "message": "There are 1 matching solids."
+    },
+    {
+      "id": 44,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9479432702064514,
+      "margin": 0.9375377893447876,
+      "errors": [],
+      "message": "Cube."
+    },
+    {
+      "id": 45,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.972604513168335,
+      "margin": 0.9576092958450317,
+      "errors": [],
+      "message": "Matching solids: Sphere 3."
+    },
+    {
+      "id": 46,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9776735305786133,
+      "margin": 0.9714555740356445,
+      "errors": [],
+      "message": "Matching solids: Cone 5, Pyramid 6, Tetrahedron 8."
+    },
+    {
+      "id": 47,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9682546854019165,
+      "margin": 0.9584927558898926,
+      "errors": [],
+      "message": "Matching solids: Cylinder 4."
+    },
+    {
+      "id": 48,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9925580024719238,
+      "margin": 0.9910696744918823,
+      "errors": [],
+      "message": "Matching solids: Cube 1, Cuboid 2, Pyramid 6, TriangularPrism 7, Tetrahedron 8."
+    },
+    {
+      "id": 49,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9878925085067749,
+      "margin": 0.9853113889694214,
+      "errors": [],
+      "message": "Matching solids: Sphere 3, Cylinder 4, Cone 5."
+    },
+    {
+      "id": 50,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9935389161109924,
+      "margin": 0.9919214248657227,
+      "errors": [],
+      "message": "Matching solids: Cylinder 4, Cone 5."
+    },
+    {
+      "id": 51,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9989860653877258,
+      "margin": 0.9986467957496643,
+      "errors": [],
+      "message": "Cube: 6 faces\/surfaces. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 52,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9971469044685364,
+      "margin": 0.996184766292572,
+      "errors": [],
+      "message": "Cube: 12 edges. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 53,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.997936487197876,
+      "margin": 0.9971935749053955,
+      "errors": [],
+      "message": "Cube: 8 vertices. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 54,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9965032339096069,
+      "margin": 0.9941556453704834,
+      "errors": [],
+      "message": "Cuboid: 6 faces\/surfaces. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 55,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9968917965888977,
+      "margin": 0.9955900311470032,
+      "errors": [],
+      "message": "TriangularPrism: 9 edges. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 56,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9973803162574768,
+      "margin": 0.9964495301246643,
+      "errors": [],
+      "message": "Pyramid: 5 vertices. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 57,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9988019466400146,
+      "margin": 0.9984499216079712,
+      "errors": [],
+      "message": "Tetrahedron: 4 faces\/surfaces. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 58,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9801784157752991,
+      "margin": 0.9716629385948181,
+      "errors": [],
+      "message": "Sphere: 0 vertices. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 59,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9846891164779663,
+      "margin": 0.9786891937255859,
+      "errors": [],
+      "message": "Cylinder: 0 vertices. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 60,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9754104614257812,
+      "margin": 0.9694053530693054,
+      "errors": [],
+      "message": "Cuboid."
+    },
+    {
+      "id": 61,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9626702070236206,
+      "margin": 0.9524575471878052,
+      "errors": [],
+      "message": "Yes. A cube has six equal square faces."
+    },
+    {
+      "id": 62,
+      "status": "CLARIFICATION",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9655362367630005,
+      "margin": 0.956991970539093,
+      "errors": [],
+      "message": "Choose exactly two solids."
+    },
+    {
+      "id": 63,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9701790809631348,
+      "margin": 0.9647323489189148,
+      "errors": [],
+      "message": "Matching solids: Cube 1, Cuboid 2."
+    },
+    {
+      "id": 64,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9941430687904358,
+      "margin": 0.9924341440200806,
+      "errors": [],
+      "message": "Matching solids: Cylinder 4, Cone 5."
+    },
+    {
+      "id": 65,
+      "status": "APPLIED",
+      "intent": "DESCRIBE_SOLID",
+      "confidence": 0.9555606245994568,
+      "margin": 0.9381274580955505,
+      "errors": [],
+      "message": "Cube."
+    },
+    {
+      "id": 66,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9475139379501343,
+      "margin": 0.9379251003265381,
+      "errors": [],
+      "message": "A = Vec3(x=2.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 67,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9670155048370361,
+      "margin": 0.9555614590644836,
+      "errors": [],
+      "message": "B = Vec3(x=0.0, y=3.0, z=0.0)."
+    },
+    {
+      "id": 68,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.980853259563446,
+      "margin": 0.9681181907653809,
+      "errors": [],
+      "message": "Matching points: none."
+    },
+    {
+      "id": 69,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9945382475852966,
+      "margin": 0.9934405088424683,
+      "errors": [],
+      "message": "Matching points: C."
+    },
+    {
+      "id": 70,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9836776256561279,
+      "margin": 0.9784777164459229,
+      "errors": [],
+      "message": "At the origin: none."
+    },
+    {
+      "id": 71,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.976901113986969,
+      "margin": 0.9684691429138184,
+      "errors": [],
+      "message": "Distance A to B = 3.605551275463989 units. √((-2.0)² + (3.0)² + (0.0)²)."
+    },
+    {
+      "id": 72,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9912952184677124,
+      "margin": 0.9884665608406067,
+      "errors": [],
+      "message": "Distance C to origin = 4.0 units. √((0.0)² + (0.0)² + (-4.0)²)."
+    },
+    {
+      "id": 73,
+      "status": "CLARIFICATION",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9642944931983948,
+      "margin": 0.9525583982467651,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 74,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9386622905731201,
+      "margin": 0.9117499589920044,
+      "errors": [],
+      "message": "Midpoint = Vec3(x=1.0, y=1.5, z=0.0)."
+    },
+    {
+      "id": 75,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9745154976844788,
+      "margin": 0.9670938849449158,
+      "errors": [],
+      "message": "Midpoint = Vec3(x=1.0, y=0.0, z=2.0)."
+    },
+    {
+      "id": 76,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.990898847579956,
+      "margin": 0.98838871717453,
+      "errors": [],
+      "message": "Points: C."
+    },
+    {
+      "id": 77,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9761402010917664,
+      "margin": 0.9707615971565247,
+      "errors": [],
+      "message": "Points: B, C."
+    },
+    {
+      "id": 78,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9937897324562073,
+      "margin": 0.9897969961166382,
+      "errors": [],
+      "message": "Points: A, B."
+    },
+    {
+      "id": 79,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9710854291915894,
+      "margin": 0.9622253775596619,
+      "errors": [],
+      "message": "Answer: false."
+    },
+    {
+      "id": 80,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9960208535194397,
+      "margin": 0.9949638843536377,
+      "errors": [],
+      "message": "Answer: false."
+    },
+    {
+      "id": 81,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9821785092353821,
+      "margin": 0.9780631065368652,
+      "errors": [],
+      "message": "Answer: true."
+    },
+    {
+      "id": 82,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9164167642593384,
+      "margin": 0.8932523131370544,
+      "errors": [],
+      "message": "Points: A, B."
+    },
+    {
+      "id": 83,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9904849529266357,
+      "margin": 0.9857227206230164,
+      "errors": [],
+      "message": "Answer: 0.0 units."
+    },
+    {
+      "id": 84,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9897822141647339,
+      "margin": 0.9832398295402527,
+      "errors": [],
+      "message": "Answer: 0.0 units."
+    },
+    {
+      "id": 85,
+      "status": "APPLIED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.980674684047699,
+      "margin": 0.9713175892829895,
+      "errors": [],
+      "message": "Answer: false."
+    },
+    {
+      "id": 86,
+      "status": "CLARIFICATION",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9728988409042358,
+      "margin": 0.959467351436615,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 87,
+      "status": "UNSUPPORTED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9617018699645996,
+      "margin": 0.9504926204681396,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 88,
+      "status": "UNSUPPORTED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9780047535896301,
+      "margin": 0.9612606167793274,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 89,
+      "status": "UNSUPPORTED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9556330442428589,
+      "margin": 0.9343559741973877,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 90,
+      "status": "UNSUPPORTED",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9783881306648254,
+      "margin": 0.9713692665100098,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 91,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9985746145248413,
+      "margin": 0.9981106519699097,
+      "errors": [],
+      "message": "Cube volume = 8 ≈ 8.00000000000 cubic units."
+    },
+    {
+      "id": 92,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9727507829666138,
+      "margin": 0.9530975818634033,
+      "errors": [],
+      "message": "V = lwh; A = 2(lw + lh + wh); d = √(l^2 + w^2 + h^2); dimensions 6.0, 2.0, 4.0, r=3.0; Volume = 48.0 cubic units"
+    },
+    {
+      "id": 93,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9871518611907959,
+      "margin": 0.9808279871940613,
+      "errors": [],
+      "message": "Sphere volume = 36*pi ≈ 113.097335529 cubic units."
+    },
+    {
+      "id": 94,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9960107803344727,
+      "margin": 0.9952202439308167,
+      "errors": [],
+      "message": "Cylinder volume = 20*pi ≈ 62.8318530718 cubic units."
+    },
+    {
+      "id": 95,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9813585877418518,
+      "margin": 0.9752428531646729,
+      "errors": [],
+      "message": "V = πr^2h\/3; A = πr(r + s); A_c = πrs; s = √(r^2 + h^2); dimensions 6.0, 6.0, 6.0, r=3.0; Volume = 56.548667764616276 cubic units"
+    },
+    {
+      "id": 96,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9983447790145874,
+      "margin": 0.9979093670845032,
+      "errors": [],
+      "message": "Pyramid volume = 112\/3 ≈ 37.3333333333 cubic units."
+    },
+    {
+      "id": 97,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9917353987693787,
+      "margin": 0.9898185729980469,
+      "errors": [],
+      "message": "Cube volume = 8 ≈ 8.00000000000 cubic units."
+    },
+    {
+      "id": 98,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9990090131759644,
+      "margin": 0.9986881613731384,
+      "errors": [],
+      "message": "Cube surface area = 24 ≈ 24.0000000000 square units."
+    },
+    {
+      "id": 99,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9853799939155579,
+      "margin": 0.9822381734848022,
+      "errors": [],
+      "message": "88.0 square units"
+    },
+    {
+      "id": 100,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9852775931358337,
+      "margin": 0.9785876274108887,
+      "errors": [],
+      "message": "Sphere surface area = 36*pi ≈ 113.097335529 square units."
+    },
+    {
+      "id": 101,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9972521662712097,
+      "margin": 0.996688723564148,
+      "errors": [],
+      "message": "Cylinder surface area = 28*pi ≈ 87.9645943005 square units."
+    },
+    {
+      "id": 102,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.999485969543457,
+      "margin": 0.9993447065353394,
+      "errors": [],
+      "message": "Cylinder lateral area = 20*pi ≈ 62.8318530718 square units."
+    },
+    {
+      "id": 103,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9969044327735901,
+      "margin": 0.9961859583854675,
+      "errors": [],
+      "message": "Cone lateral area = 3*pi*sqrt(45) ≈ 63.2233325794 square units."
+    },
+    {
+      "id": 104,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9996283054351807,
+      "margin": 0.9995293617248535,
+      "errors": [],
+      "message": "Cone surface area = 3*pi*(3 + sqrt(45)) ≈ 91.4976664617 square units."
+    },
+    {
+      "id": 105,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.988595187664032,
+      "margin": 0.9840729236602783,
+      "errors": [],
+      "message": "16.0 square units"
+    },
+    {
+      "id": 106,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9774527549743652,
+      "margin": 0.9689069986343384,
+      "errors": [],
+      "message": "4.0 square units"
+    },
+    {
+      "id": 107,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.990359902381897,
+      "margin": 0.9868736267089844,
+      "errors": [],
+      "message": "12.566370614359172 square units"
+    },
+    {
+      "id": 108,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.980734646320343,
+      "margin": 0.9688190817832947,
+      "errors": [],
+      "message": "2.0 units"
+    },
+    {
+      "id": 109,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9899213314056396,
+      "margin": 0.9870840311050415,
+      "errors": [],
+      "message": "Cone height = 6 ≈ 6.00000000000 units."
+    },
+    {
+      "id": 110,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9409779906272888,
+      "margin": 0.9090794324874878,
+      "errors": [],
+      "message": "Sphere radius = 3 ≈ 3.00000000000 units."
+    },
+    {
+      "id": 111,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9862923622131348,
+      "margin": 0.9826343059539795,
+      "errors": [],
+      "message": "Cylinder diameter = 4 ≈ 4.00000000000 units."
+    },
+    {
+      "id": 112,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9609988331794739,
+      "margin": 0.9496645331382751,
+      "errors": [],
+      "message": "Cube height = 2 ≈ 2.00000000000 units."
+    },
+    {
+      "id": 113,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9901009798049927,
+      "margin": 0.9829756021499634,
+      "errors": [],
+      "message": "Cube space diagonal = sqrt(12) ≈ 3.46410161514 units."
+    },
+    {
+      "id": 114,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9709720611572266,
+      "margin": 0.9614604711532593,
+      "errors": [],
+      "message": "Cube space diagonal = sqrt(12) ≈ 3.46410161514 units."
+    },
+    {
+      "id": 115,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.989078938961029,
+      "margin": 0.9803369641304016,
+      "errors": [],
+      "message": "6.708203932499369 units"
+    },
+    {
+      "id": 116,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9746968150138855,
+      "margin": 0.9640424847602844,
+      "errors": [],
+      "message": "Vec3(x=3.0, y=2.0, z=1.0)"
+    },
+    {
+      "id": 117,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9936463832855225,
+      "margin": 0.9909014105796814,
+      "errors": [],
+      "message": "Vec3(x=0.0, y=0.0, z=0.0)"
+    },
+    {
+      "id": 118,
+      "status": "CLARIFICATION",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9648663401603699,
+      "margin": 0.9563087821006775,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 119,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9558154344558716,
+      "margin": 0.930508553981781,
+      "errors": [],
+      "message": "Matching solids: Sphere 3."
+    },
+    {
+      "id": 120,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9649289846420288,
+      "margin": 0.9475420713424683,
+      "errors": [],
+      "message": "Matching solids: Tetrahedron 8."
+    },
+    {
+      "id": 121,
+      "status": "CLARIFICATION",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9713837504386902,
+      "margin": 0.9548392295837402,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 122,
+      "status": "CLARIFICATION",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9541811347007751,
+      "margin": 0.9446285367012024,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 123,
+      "status": "CLARIFICATION",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.992374837398529,
+      "margin": 0.9905460476875305,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 124,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9897000789642334,
+      "margin": 0.9874279499053955,
+      "errors": [],
+      "message": "Yes, when radius and height match: cone πr²h\/3, cylinder πr²h."
+    },
+    {
+      "id": 125,
+      "status": "APPLIED",
+      "intent": "MEASURE_SOLID",
+      "confidence": 0.9818273186683655,
+      "margin": 0.9775350689888,
+      "errors": [],
+      "message": "Cube volume = 8 ≈ 8.00000000000 cubic units."
+    },
+    {
+      "id": 126,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9979562759399414,
+      "margin": 0.9973853826522827,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=3.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 127,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9977867603302002,
+      "margin": 0.9966578483581543,
+      "errors": [],
+      "message": "Updated 1 solid. Sphere center Vec3(x=3.0, y=2.0, z=4.0)."
+    },
+    {
+      "id": 128,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9871987700462341,
+      "margin": 0.9794711470603943,
+      "errors": [],
+      "message": "Updated 1 solid. Cone center Vec3(x=0.0, y=4.0, z=0.0)."
+    },
+    {
+      "id": 129,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9948387742042542,
+      "margin": 0.993218719959259,
+      "errors": [],
+      "message": "Updated 1 solid. Cylinder center Vec3(x=-2.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 130,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.988784670829773,
+      "margin": 0.9858015179634094,
+      "errors": [],
+      "message": "Updated 1 solid. Sphere center Vec3(x=3.0, y=2.0, z=1.0)."
+    },
+    {
+      "id": 131,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.964731752872467,
+      "margin": 0.9575784802436829,
+      "errors": [],
+      "message": "Moved A to Vec3(x=4.0, y=5.0, z=6.0)."
+    },
+    {
+      "id": 132,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9825873970985413,
+      "margin": 0.9723673462867737,
+      "errors": [],
+      "message": "Moved B to Vec3(x=0.0, y=3.0, z=0.0)."
+    },
+    {
+      "id": 133,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9803431630134583,
+      "margin": 0.9750669002532959,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 134,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9967526197433472,
+      "margin": 0.9958279728889465,
+      "errors": [],
+      "message": "Updated 2 solids. Sphere center Vec3(x=2.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 135,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9945758581161499,
+      "margin": 0.9926789999008179,
+      "errors": [],
+      "message": "Updated 2 solids. Cube center Vec3(x=0.0, y=0.0, z=3.0)."
+    },
+    {
+      "id": 136,
+      "status": "CLARIFICATION",
+      "intent": "TRANSLATE",
+      "confidence": 0.9534905552864075,
+      "margin": 0.9291920065879822,
+      "errors": [],
+      "message": "How far and in which direction should I move the solid(s)?"
+    },
+    {
+      "id": 137,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.975790798664093,
+      "margin": 0.9700698256492615,
+      "errors": [],
+      "message": "Updated 1 solid. Cuboid center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 138,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9751344919204712,
+      "margin": 0.9649283289909363,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 139,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9876960515975952,
+      "margin": 0.9788318276405334,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 140,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9823645353317261,
+      "margin": 0.9763564467430115,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 141,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9811868667602539,
+      "margin": 0.9766377806663513,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 142,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9831353425979614,
+      "margin": 0.9753018617630005,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 143,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9714807271957397,
+      "margin": 0.9578877091407776,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 144,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.8456510305404663,
+      "margin": 0.8062400221824646,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 145,
+      "status": "APPLIED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9970203042030334,
+      "margin": 0.9962556958198547,
+      "errors": [],
+      "message": "Updated 8 solids. Tetrahedron center Vec3(x=0.0, y=0.0, z=5.0)."
+    },
+    {
+      "id": 146,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9995182752609253,
+      "margin": 0.9993157386779785,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 147,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9998729228973389,
+      "margin": 0.9998371005058289,
+      "errors": [],
+      "message": "Updated 1 solid. Cuboid center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 148,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9965105652809143,
+      "margin": 0.9944179058074951,
+      "errors": [],
+      "message": "Updated 1 solid. Cone center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 149,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9922696352005005,
+      "margin": 0.9897367358207703,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 150,
+      "status": "CLARIFICATION",
+      "intent": "ROTATE",
+      "confidence": 0.9898999333381653,
+      "margin": 0.9864761829376221,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 151,
+      "status": "UNSUPPORTED",
+      "intent": "ROTATE",
+      "confidence": 0.9886714220046997,
+      "margin": 0.98663330078125,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 152,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9986244440078735,
+      "margin": 0.9979702234268188,
+      "errors": [],
+      "message": "Moved A to Vec3(x=-0.0, y=2.0, z=0.0)."
+    },
+    {
+      "id": 153,
+      "status": "UNSUPPORTED",
+      "intent": "ROTATE",
+      "confidence": 0.9881141781806946,
+      "margin": 0.9846664071083069,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 154,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9935503005981445,
+      "margin": 0.9916931986808777,
+      "errors": [],
+      "message": "Updated 1 solid. Cylinder center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 155,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9520073533058167,
+      "margin": 0.9210932850837708,
+      "errors": [],
+      "message": "Updated 1 solid. Cone center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 156,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9703081250190735,
+      "margin": 0.9641993045806885,
+      "errors": [],
+      "message": "Updated 1 solid. Pyramid center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 157,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.98685222864151,
+      "margin": 0.984190046787262,
+      "errors": [],
+      "message": "Updated 1 solid. Cuboid center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 158,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9867231249809265,
+      "margin": 0.9822171926498413,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 159,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9923740029335022,
+      "margin": 0.9908487200737,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 160,
+      "status": "APPLIED",
+      "intent": "ROTATE",
+      "confidence": 0.9768285751342773,
+      "margin": 0.9699124693870544,
+      "errors": [],
+      "message": "No. Rotation preserves all lengths, so the volume stays the same."
+    },
+    {
+      "id": 161,
+      "status": "APPLIED",
+      "intent": "REFLECT",
+      "confidence": 0.9956951141357422,
+      "margin": 0.9942995309829712,
+      "errors": [],
+      "message": "Moved A to Vec3(x=2.0, y=0.0, z=-0.0)."
+    },
+    {
+      "id": 162,
+      "status": "APPLIED",
+      "intent": "REFLECT",
+      "confidence": 0.9948208332061768,
+      "margin": 0.9933722019195557,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=-1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 163,
+      "status": "UNSUPPORTED",
+      "intent": "REFLECT",
+      "confidence": 0.9980712532997131,
+      "margin": 0.9977911710739136,
+      "errors": [],
+      "message": "Native triangle reflection is not connected yet."
+    },
+    {
+      "id": 164,
+      "status": "UNSUPPORTED",
+      "intent": "REFLECT",
+      "confidence": 0.996669590473175,
+      "margin": 0.9958109855651855,
+      "errors": [],
+      "message": "Mirror-copy composition is not implemented yet."
+    },
+    {
+      "id": 165,
+      "status": "APPLIED",
+      "intent": "REFLECT",
+      "confidence": 0.9938116073608398,
+      "margin": 0.9916414618492126,
+      "errors": [],
+      "message": "Updated 1 solid. Sphere center Vec3(x=-3.0, y=-2.0, z=-1.0)."
+    },
+    {
+      "id": 166,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.988324761390686,
+      "margin": 0.9845333695411682,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 167,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9814314842224121,
+      "margin": 0.9749090671539307,
+      "errors": [],
+      "message": "Updated 1 solid. Sphere center Vec3(x=3.0, y=2.0, z=1.0)."
+    },
+    {
+      "id": 168,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9801369309425354,
+      "margin": 0.9685180187225342,
+      "errors": [],
+      "message": "Updated 1 solid. Cylinder center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 169,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9895864725112915,
+      "margin": 0.9838268160820007,
+      "errors": [],
+      "message": "Updated 1 solid. Cuboid center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 170,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9907011985778809,
+      "margin": 0.9870656728744507,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 171,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9889624714851379,
+      "margin": 0.9852713942527771,
+      "errors": [],
+      "message": "Updated 1 solid. Sphere center Vec3(x=3.0, y=2.0, z=1.0)."
+    },
+    {
+      "id": 172,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9933180809020996,
+      "margin": 0.9911460280418396,
+      "errors": [],
+      "message": "Updated 1 solid. Cylinder center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 173,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9703283309936523,
+      "margin": 0.956454336643219,
+      "errors": [],
+      "message": "Updated 1 solid. Cone center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 174,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9848551154136658,
+      "margin": 0.9785416126251221,
+      "errors": [],
+      "message": "Updated 1 solid. Cuboid center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 175,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9849360585212708,
+      "margin": 0.9800300002098083,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 176,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9863142967224121,
+      "margin": 0.9797259569168091,
+      "errors": [],
+      "message": "Updated 2 solids. Sphere center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 177,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9867727160453796,
+      "margin": 0.9838148951530457,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 178,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.995668888092041,
+      "margin": 0.9943400621414185,
+      "errors": [],
+      "message": "Updated 1 solid. Cylinder center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 179,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9930253028869629,
+      "margin": 0.9909011721611023,
+      "errors": [],
+      "message": "Volume multiplies by 2³ = 8."
+    },
+    {
+      "id": 180,
+      "status": "APPLIED",
+      "intent": "RESIZE",
+      "confidence": 0.9976212382316589,
+      "margin": 0.9962353110313416,
+      "errors": [],
+      "message": "Surface area multiplies by 2² = 4."
+    },
+    {
+      "id": 181,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9645348787307739,
+      "margin": 0.9561129212379456,
+      "errors": [],
+      "message": "Colored 1 solid(s) red."
+    },
+    {
+      "id": 182,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.950208306312561,
+      "margin": 0.9381133913993835,
+      "errors": [],
+      "message": "Colored 1 solid(s) blue."
+    },
+    {
+      "id": 183,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9694375395774841,
+      "margin": 0.9598316550254822,
+      "errors": [],
+      "message": "Colored 1 solid(s) green."
+    },
+    {
+      "id": 184,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9814821481704712,
+      "margin": 0.9781938791275024,
+      "errors": [],
+      "message": "Colored 1 solid(s) orange."
+    },
+    {
+      "id": 185,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9755600690841675,
+      "margin": 0.9699804186820984,
+      "errors": [],
+      "message": "Colored 1 solid(s) purple."
+    },
+    {
+      "id": 186,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9932692646980286,
+      "margin": 0.9911590814590454,
+      "errors": [],
+      "message": "Colored 1 solid(s) yellow."
+    },
+    {
+      "id": 187,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9673439860343933,
+      "margin": 0.9595925211906433,
+      "errors": [],
+      "message": "That outline or slicing operation is not connected to the native assistant yet."
+    },
+    {
+      "id": 188,
+      "status": "APPLIED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9638686776161194,
+      "margin": 0.9503841400146484,
+      "errors": [],
+      "message": "Applied the native translucent glass material."
+    },
+    {
+      "id": 189,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9734030961990356,
+      "margin": 0.9602778553962708,
+      "errors": [],
+      "message": "Full invisibility is not supported by the native glass material."
+    },
+    {
+      "id": 190,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9785447120666504,
+      "margin": 0.97210294008255,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 191,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9847132563591003,
+      "margin": 0.9798272252082825,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 192,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9733101725578308,
+      "margin": 0.96365886926651,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 193,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9846689105033875,
+      "margin": 0.9822893142700195,
+      "errors": [],
+      "message": "That outline or slicing operation is not connected to the native assistant yet."
+    },
+    {
+      "id": 194,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9046891331672668,
+      "margin": 0.8707805275917053,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 195,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9652800559997559,
+      "margin": 0.9582286477088928,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 196,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9509018659591675,
+      "margin": 0.9406615495681763,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 197,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.966447651386261,
+      "margin": 0.9573313593864441,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 198,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9874182939529419,
+      "margin": 0.9821160435676575,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 199,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.9739187955856323,
+      "margin": 0.9610556364059448,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 200,
+      "status": "UNSUPPORTED",
+      "intent": "APPEARANCE",
+      "confidence": 0.961921751499176,
+      "margin": 0.9549846649169922,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 201,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9809157252311707,
+      "margin": 0.9783159494400024,
+      "errors": [],
+      "message": "Renamed the selected solid."
+    },
+    {
+      "id": 202,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9757468700408936,
+      "margin": 0.9703515768051147,
+      "errors": [],
+      "message": "Renamed the selected solid."
+    },
+    {
+      "id": 203,
+      "status": "UNSUPPORTED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9843957424163818,
+      "margin": 0.9762717485427856,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 204,
+      "status": "UNSUPPORTED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9702114462852478,
+      "margin": 0.953007161617279,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 205,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9820059537887573,
+      "margin": 0.9749583005905151,
+      "errors": [],
+      "message": "Selected 2 solid(s)."
+    },
+    {
+      "id": 206,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9878734946250916,
+      "margin": 0.9837808012962341,
+      "errors": [],
+      "message": "Selected 1 solid(s)."
+    },
+    {
+      "id": 207,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9853891730308533,
+      "margin": 0.9797003269195557,
+      "errors": [],
+      "message": "Selected 1 solid(s)."
+    },
+    {
+      "id": 208,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9850223660469055,
+      "margin": 0.9826372861862183,
+      "errors": [],
+      "message": "Selected 2 solid(s)."
+    },
+    {
+      "id": 209,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9757545590400696,
+      "margin": 0.9727730751037598,
+      "errors": [],
+      "message": "Selection cleared."
+    },
+    {
+      "id": 210,
+      "status": "APPLIED",
+      "intent": "SELECT_COPY",
+      "confidence": 0.9803920388221741,
+      "margin": 0.9742454886436462,
+      "errors": [],
+      "message": "Created an independent copy beside the original."
+    },
+    {
+      "id": 211,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9887899160385132,
+      "margin": 0.9845948815345764,
+      "errors": [],
+      "message": "Length = 3.605551275463989 units."
+    },
+    {
+      "id": 212,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9896620512008667,
+      "margin": 0.9868314266204834,
+      "errors": [],
+      "message": "Components = Vec3(x=-2.0, y=3.0, z=0.0)."
+    },
+    {
+      "id": 213,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9867956638336182,
+      "margin": 0.9817161560058594,
+      "errors": [],
+      "message": "Components = Vec3(x=-2.0, y=3.0, z=0.0)."
+    },
+    {
+      "id": 214,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9784279465675354,
+      "margin": 0.9688146114349365,
+      "errors": [],
+      "message": "Length = 3.605551275463989 units."
+    },
+    {
+      "id": 215,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.988243043422699,
+      "margin": 0.9839545488357544,
+      "errors": [],
+      "message": "Unit vector = Vec3(x=-0.5547001962252291, y=0.8320502943378437, z=0.0)."
+    },
+    {
+      "id": 216,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9833916425704956,
+      "margin": 0.9804891347885132,
+      "errors": [],
+      "message": "Result = Vec3(x=-4.0, y=3.0, z=4.0)."
+    },
+    {
+      "id": 217,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9936989545822144,
+      "margin": 0.9929094910621643,
+      "errors": [],
+      "message": "Result = Vec3(x=0.0, y=3.0, z=-4.0)."
+    },
+    {
+      "id": 218,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9706085920333862,
+      "margin": 0.9521670341491699,
+      "errors": [],
+      "message": "Result = 75.6366973259296 degrees."
+    },
+    {
+      "id": 219,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.984039843082428,
+      "margin": 0.9769412279129028,
+      "errors": [],
+      "message": "Result = false."
+    },
+    {
+      "id": 220,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9788999557495117,
+      "margin": 0.9688757061958313,
+      "errors": [],
+      "message": "Result = false."
+    },
+    {
+      "id": 221,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9960979223251343,
+      "margin": 0.9949820637702942,
+      "errors": [],
+      "message": "Result = 4.0."
+    },
+    {
+      "id": 222,
+      "status": "APPLIED",
+      "intent": "VECTOR_MATH",
+      "confidence": 0.9927148222923279,
+      "margin": 0.9916791915893555,
+      "errors": [],
+      "message": "Result = Vec3(x=12.0, y=8.0, z=6.0)."
+    },
+    {
+      "id": 223,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9815738797187805,
+      "margin": 0.9755896329879761,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 224,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9765917658805847,
+      "margin": 0.9676876664161682,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 225,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9705131649971008,
+      "margin": 0.9639227986335754,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 226,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9802356958389282,
+      "margin": 0.9706570506095886,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 227,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9689903855323792,
+      "margin": 0.9614005088806152,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 228,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9871653318405151,
+      "margin": 0.9810488820075989,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 229,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9808799624443054,
+      "margin": 0.9647119641304016,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 230,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9729958772659302,
+      "margin": 0.9591710567474365,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 231,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9856882095336914,
+      "margin": 0.9782875776290894,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 232,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9997084736824036,
+      "margin": 0.9995779991149902,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 233,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9889388084411621,
+      "margin": 0.9802021384239197,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 234,
+      "status": "APPLIED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9663785099983215,
+      "margin": 0.9427680373191833,
+      "errors": [],
+      "message": "Created plane Plane1 through A, B, C. Its displayed patch follows all three points."
+    },
+    {
+      "id": 235,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9554969668388367,
+      "margin": 0.9248217344284058,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 236,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.986862301826477,
+      "margin": 0.9782187342643738,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 237,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9834092855453491,
+      "margin": 0.9689257144927979,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 238,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9817490577697754,
+      "margin": 0.9655757546424866,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 239,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9793805480003357,
+      "margin": 0.9615457057952881,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 240,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.97251296043396,
+      "margin": 0.962731122970581,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 241,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9561052918434143,
+      "margin": 0.9364913702011108,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 242,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9657747149467468,
+      "margin": 0.9534131288528442,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 243,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9417939782142639,
+      "margin": 0.9022647142410278,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 244,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9952341914176941,
+      "margin": 0.994073748588562,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 245,
+      "status": "UNSUPPORTED",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9904264807701111,
+      "margin": 0.9859505295753479,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 246,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9904283285140991,
+      "margin": 0.9881395101547241,
+      "errors": [],
+      "message": "That outline or slicing operation is not connected to the native assistant yet."
+    },
+    {
+      "id": 247,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9740892052650452,
+      "margin": 0.9636818170547485,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 248,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9837697744369507,
+      "margin": 0.9798475503921509,
+      "errors": [],
+      "message": "That outline or slicing operation is not connected to the native assistant yet."
+    },
+    {
+      "id": 249,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9602499604225159,
+      "margin": 0.9405718445777893,
+      "errors": [],
+      "message": "That outline or slicing operation is not connected to the native assistant yet."
+    },
+    {
+      "id": 250,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9796441793441772,
+      "margin": 0.9665419459342957,
+      "errors": [],
+      "message": "That outline or slicing operation is not connected to the native assistant yet."
+    },
+    {
+      "id": 251,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9843851327896118,
+      "margin": 0.9764887094497681,
+      "errors": [],
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 252,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9801298379898071,
+      "margin": 0.9735985398292542,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 253,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9847636818885803,
+      "margin": 0.9767900109291077,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 254,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9906332492828369,
+      "margin": 0.9873917102813721,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 255,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9861288070678711,
+      "margin": 0.9798055291175842,
+      "errors": [],
+      "message": "This construction is not available in the native geometry assistant yet."
+    },
+    {
+      "id": 256,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9680419564247131,
+      "margin": 0.9589006900787354,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 257,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9572563767433167,
+      "margin": 0.9471626281738281,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 258,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9814069271087646,
+      "margin": 0.9739063382148743,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 259,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.971322238445282,
+      "margin": 0.9614543914794922,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 260,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9763914942741394,
+      "margin": 0.9665462374687195,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 261,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9901047348976135,
+      "margin": 0.9880964159965515,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 262,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9791572690010071,
+      "margin": 0.9716410040855408,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 263,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.980564296245575,
+      "margin": 0.9695947170257568,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 264,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9740639925003052,
+      "margin": 0.9676230549812317,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 265,
+      "status": "UNSUPPORTED",
+      "intent": "INTERSECTION",
+      "confidence": 0.9610736966133118,
+      "margin": 0.9531583786010742,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 266,
+      "status": "APPLIED",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.978488564491272,
+      "margin": 0.9729107618331909,
+      "errors": [],
+      "message": "Created an independent copy beside the original."
+    },
+    {
+      "id": 267,
+      "status": "APPLIED",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.97038334608078,
+      "margin": 0.9622727036476135,
+      "errors": [],
+      "message": "Updated 1 solid. Cube center Vec3(x=1.0, y=2.0, z=3.0)."
+    },
+    {
+      "id": 268,
+      "status": "APPLIED",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9783610105514526,
+      "margin": 0.9720728993415833,
+      "errors": [],
+      "message": "Selected the requested solid; state the change to apply."
+    },
+    {
+      "id": 269,
+      "status": "APPLIED",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9837369322776794,
+      "margin": 0.9803999662399292,
+      "errors": [],
+      "message": "Colored 1 solid(s) red."
+    },
+    {
+      "id": 270,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9559251070022583,
+      "margin": 0.9435721039772034,
+      "errors": [],
+      "message": "How far and in which direction should I move the solid(s)?"
+    },
+    {
+      "id": 271,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9847238063812256,
+      "margin": 0.9820923209190369,
+      "errors": [],
+      "message": "Other objects stay fixed. Specify the movement for the target."
+    },
+    {
+      "id": 272,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9834096431732178,
+      "margin": 0.9781014323234558,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 273,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9725396633148193,
+      "margin": 0.9631053805351257,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 274,
+      "status": "APPLIED",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9751687049865723,
+      "margin": 0.9692882895469666,
+      "errors": [],
+      "message": "V = a^3; A = 6a^2; d_f = a√2; d = a√3; dimensions 2.0, 2.0, 2.0, r=1.0; Volume = 8.0 cubic units"
+    },
+    {
+      "id": 275,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9891858696937561,
+      "margin": 0.9838505983352661,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 276,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9877235889434814,
+      "margin": 0.9816057682037354,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 277,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.980449378490448,
+      "margin": 0.9779133200645447,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 278,
+      "status": "APPLIED",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9801381230354309,
+      "margin": 0.9707856178283691,
+      "errors": [],
+      "message": "Current target: Cube 1."
+    },
+    {
+      "id": 279,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9894260168075562,
+      "margin": 0.9869087338447571,
+      "errors": [],
+      "message": "Specify the exact objects and the calculation or change you want. I have not changed the scene."
+    },
+    {
+      "id": 280,
+      "status": "CLARIFICATION",
+      "intent": "FOLLOW_UP",
+      "confidence": 0.9836281538009644,
+      "margin": 0.979997992515564,
+      "errors": [],
+      "message": "Other objects stay fixed. Specify the movement for the target."
+    },
+    {
+      "id": 281,
+      "status": "INVALID",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9969044327735901,
+      "margin": 0.9951632022857666,
+      "errors": [],
+      "message": "Use positive dimensions no larger than 50 units."
+    },
+    {
+      "id": 282,
+      "status": "INVALID",
+      "intent": "CREATE_SOLID",
+      "confidence": 0.9933235049247742,
+      "margin": 0.9899944067001343,
+      "errors": [],
+      "message": "Use positive dimensions no larger than 50 units."
+    },
+    {
+      "id": 283,
+      "status": "INVALID",
+      "intent": "LINE_PLANE",
+      "confidence": 0.9953746199607849,
+      "margin": 0.9935486912727356,
+      "errors": [],
+      "message": "Three collinear points cannot define a unique plane."
+    },
+    {
+      "id": 284,
+      "status": "INVALID",
+      "intent": "CONSTRUCT",
+      "confidence": 0.9926168322563171,
+      "margin": 0.9910030364990234,
+      "errors": [],
+      "message": "A line needs two distinct points."
+    },
+    {
+      "id": 285,
+      "status": "CLARIFICATION",
+      "intent": "POINT_QUERY",
+      "confidence": 0.9967922568321228,
+      "margin": 0.9957494139671326,
+      "errors": [],
+      "message": "Point Z is missing or ambiguous. Create it with coordinates, or choose a uniquely named point."
+    },
+    {
+      "id": 286,
+      "status": "CLARIFICATION",
+      "intent": "APPEARANCE",
+      "confidence": 0.9907275438308716,
+      "margin": 0.9869348406791687,
+      "errors": [],
+      "message": "There are no matching solids. Create one first."
+    },
+    {
+      "id": 287,
+      "status": "CLARIFICATION",
+      "intent": "APPEARANCE",
+      "confidence": 0.9900822043418884,
+      "margin": 0.987525999546051,
+      "errors": [],
+      "message": "Select the solid first."
+    },
+    {
+      "id": 288,
+      "status": "UNSUPPORTED",
+      "intent": "TRANSLATE",
+      "confidence": 0.9952351450920105,
+      "margin": 0.9939234256744385,
+      "errors": [],
+      "message": "Solid locking is not connected to the native touch tools yet; no movement was made."
+    },
+    {
+      "id": 289,
+      "status": "INVALID",
+      "intent": "RESIZE",
+      "confidence": 0.9830636382102966,
+      "margin": 0.9771087765693665,
+      "errors": [],
+      "message": "Use positive dimensions no larger than 50 units."
+    },
+    {
+      "id": 290,
+      "status": "INVALID",
+      "intent": "CREATE_POINT",
+      "confidence": 0.9978343844413757,
+      "margin": 0.9967600703239441,
+      "errors": [],
+      "message": "Use three coordinates within 10000 units."
+    },
+    {
+      "id": 291,
+      "status": "CLARIFICATION",
+      "intent": "RESIZE",
+      "confidence": 0.9834563136100769,
+      "margin": 0.979203999042511,
+      "errors": [],
+      "message": "By what positive scale factor?"
+    },
+    {
+      "id": 292,
+      "status": "CLARIFICATION",
+      "intent": "ROTATE",
+      "confidence": 0.9864518642425537,
+      "margin": 0.9836069941520691,
+      "errors": [],
+      "message": "Which axis: X, Y, or Z? I will use 45° unless you specify an angle."
+    },
+    {
+      "id": 293,
+      "status": "APPLIED",
+      "intent": "HISTORY",
+      "confidence": 0.996536374092102,
+      "margin": 0.9950856566429138,
+      "errors": [],
+      "message": "Undid 1 action(s)."
+    },
+    {
+      "id": 294,
+      "status": "APPLIED",
+      "intent": "HISTORY",
+      "confidence": 0.9911503791809082,
+      "margin": 0.9863227009773254,
+      "errors": [],
+      "message": "Redid 1 action(s)."
+    },
+    {
+      "id": 295,
+      "status": "UNSUPPORTED",
+      "intent": "HISTORY",
+      "confidence": 0.997467041015625,
+      "margin": 0.9960453510284424,
+      "errors": [],
+      "message": "Selective color undo is not available; ordinary Undo restores the last complete change."
+    },
+    {
+      "id": 296,
+      "status": "APPLIED",
+      "intent": "DELETE",
+      "confidence": 0.9941710829734802,
+      "margin": 0.9921464920043945,
+      "errors": [],
+      "message": "Deleted 1 selected sphere(s)."
+    },
+    {
+      "id": 297,
+      "status": "APPLIED",
+      "intent": "DELETE",
+      "confidence": 0.997979462146759,
+      "margin": 0.9971352219581604,
+      "errors": [],
+      "message": "Cleared solids; kept points and vectors."
+    },
+    {
+      "id": 298,
+      "status": "APPLIED",
+      "intent": "SAVE_LOAD",
+      "confidence": 0.9968733191490173,
+      "margin": 0.9964990019798279,
+      "errors": [],
+      "message": "Saved this scene in the workspace, including sizes, positions, colors, points and vectors."
+    },
+    {
+      "id": 299,
+      "status": "APPLIED",
+      "intent": "SAVE_LOAD",
+      "confidence": 0.9985187649726868,
+      "margin": 0.9982061982154846,
+      "errors": [],
+      "message": "Restored the saved 3D scene, colors and dimensions."
+    },
+    {
+      "id": 300,
+      "status": "UNSUPPORTED",
+      "intent": "CAMERA",
+      "confidence": 0.9991357922554016,
+      "margin": 0.9987536072731018,
+      "errors": [],
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    }
+  ]
+}

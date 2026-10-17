@@ -1,0 +1,13 @@
+{
+  "planes_created_through_assistant": 2,
+  "plane_changed_pixels": 94819,
+  "arc_changed_pixels": 18912,
+  "pair_chip_resumed": true,
+  "initial_degrees": 90,
+  "edited_degrees": 45,
+  "same_point_ids": true,
+  "canonical_dependencies": true,
+  "persistence": true,
+  "no_helper_points": true,
+  "passed": true
+}

@@ -1,0 +1,27 @@
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Initialization script 'C:\Indian Servers\AIExplorer\scripts\audit_ruhi_midpoint_label_followup.init.gradle' line: 2
+
+* What went wrong:
+Groovy DSL script compilation problem
+  Could not compile initialization script 'C:\Indian Servers\AIExplorer\scripts\audit_ruhi_midpoint_label_followup.init.gradle'.
+    Location: C:\Indian Servers\AIExplorer\scripts\audit_ruhi_midpoint_label_followup.init.gradle line 2
+> startup failed:
+  initialization script 'C:\Indian Servers\AIExplorer\scripts\audit_ruhi_midpoint_label_followup.init.gradle': 2: Unexpected input: '{' @ line 2, column 26.
+     gradle.projectsEvaluated {
+                              ^
+  
+  1 error
+
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1s

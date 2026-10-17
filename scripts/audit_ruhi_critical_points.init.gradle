@@ -1,0 +1,42 @@
+// Read-only source-linked critical/stationary semantics audit of compiled code.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiCriticalPointSemantics') {
+        doLast {
+            def runtime=appProject.tasks.named('testDebugUnitTest').get().classpath
+            def loader=new URLClassLoader(runtime.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def derivative=loader.loadClass(prefix+'RuhiDerivativeLanguage').getField('INSTANCE').get(null)
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def cases=[
+                    [text:'Find critical points of y = x^4 - 2*x^2',expected:[[-1.0d,-1.0d],[0.0d,0.0d],[1.0d,-1.0d]],reason:'Original row 344 polynomial; derivative 4x(x^2-1) vanishes at -1, 0 and 1.'],
+                    [text:'Find critical points of y = abs(x)',expected:[[0.0d,0.0d]],reason:'Function finite at zero, unequal one-sided slopes -1/+1.'],
+                    [text:'Find critical points of y = abs(x-2)+2*x',expected:[[2.0d,4.0d]],reason:'Finite corner at x=2; one-sided slopes +1/+3. Critical does not require a local extremum.'],
+                    [text:'Find critical points of y = abs(x^2)',expected:[[0.0d,0.0d]],reason:'abs(x^2)=x^2; smooth stationary critical point at zero.'],
+                    [text:'Find the stationary points of abs(x)',expected:[],reason:'No differentiable point has slope zero; the corner is not stationary.'],
+                    [text:'Find critical points of y = 1/x',expected:[],reason:'Derivative -1/x^2 is nonzero on its domain; x=0 is outside that domain.']
+                ]
+                def records=cases.collect{input->
+                    def s=fixture.state('GRAPH_2D',344);def c=fixture.context(344,s)
+                    def manager=managerClass.getDeclaredConstructor().newInstance();def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def r=manager.execute(s,input.text,h,c,modality)
+                    def drawing=derivative.drawing(r.state,2.0d)
+                    def points=drawing?.points?.collect{[it.x,it.y]} ?: []
+                    def matched=r.status.name()=='APPLIED' && points.size()==input.expected.size() && input.expected.every{expected->points.any{actual->Math.abs(actual[0]-expected[0])<1e-6 && Math.abs(actual[1]-expected[1])<1e-6}}
+                    [source_row:344,input:input.text,expected_points:input.expected,actual_points:points,reason:input.reason,status:r.status.name(),reply:r.message,behavior_verified:matched]
+                }
+                def sources=['assistant/workspace/RuhiDerivativeLanguage.kt','assistant/workspace/RuhiDerivativeMath.kt','assistant/workspace/RuhiDerivativeBranches.kt','core/SymbolicCalculus.kt'].collectEntries{name->
+                    def path='app/src/main/java/com/indianservers/aiexplorer/'+name
+                    [(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]
+                }
+                def report=[source_row:344,source_sha256:sources,cases:records.size(),verified:records.count{it.behavior_verified},results:records,scope:'Original critical-point pattern and five supported-expression development variations, with independent elementary-calculus expectations; compiled parser/engine only, no Android TensorFlow or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/critical-point-semantics-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(report))
+                records.each{println(it.behavior_verified.toString()+': '+it.input+' -> '+it.actual_points)}
+            } finally {loader.close()}
+        }
+    }
+}

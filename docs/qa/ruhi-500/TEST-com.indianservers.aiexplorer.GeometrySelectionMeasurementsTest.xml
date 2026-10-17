@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:06.620Z" hostname="INDIANSERVERS" time="0.014">
+  <properties/>
+  <testcase name="unboundedLinesDoNotClaimAFiniteTotalLength" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.004"/>
+  <testcase name="verticalSlopeIsUndefinedAndNearVerticalSlopeIsFinite" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.003"/>
+  <testcase name="groupsDescribeTheDrawnControlBoxInsteadOfAnArbitraryCrossObjectSegment" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.001"/>
+  <testcase name="displayRoundingDoesNotTurnNonzeroDeltasIntoZeroOrFiniteValuesIntoInfinity" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.002"/>
+  <testcase name="segmentDeltasLengthAndSlopeAllUseTheSameOrderedEndpoints" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.0"/>
+  <testcase name="undefinedCirclesAndMissingControlsDoNotProduceInventedMeasurements" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.002"/>
+  <testcase name="quantitiesFollowEditedControlsAndAreInvariantUnderTranslation" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.0"/>
+  <testcase name="circlesUseTheirNativeRadiusAndThreePointCircumcenter" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.001"/>
+  <testcase name="triangleLabelUsesAreaAndPerimeterRatherThanAnUnrelatedEdge" classname="com.indianservers.aiexplorer.GeometrySelectionMeasurementsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:27.352Z" hostname="INDIANSERVERS" time="0.039">
+  <properties/>
+  <testcase name="cancellationStudioChangesAndNewOperationsDoNotReuseAbandonedPurpose" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.011"/>
+  <testcase name="originalMidpointQuestionResumesSavedEndpointNamesWithOneDependentUndoableConstruction" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.003"/>
+  <testcase name="originalSlopeReplyReadsCurrentCoordinatesAndLeavesSceneAndHistoryUnchanged" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.001"/>
+  <testcase name="lexicalAndUnicodePointNamesDoNotChangeTheRetainedOperation" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.015"/>
+  <testcase name="missingAmbiguousAndRepeatedNativePointRepliesDoNotCommitAndCanBeCorrected" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.003"/>
+  <testcase name="twoUnresolvedComparedSegmentsRetainEachPairAcrossSavedQuestions" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.002"/>
+  <testcase name="customLabelAndSplitOperationSurviveEndpointClarification" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.003"/>
+  <testcase name="currentContextualChipIsBoundedExecutableAndTracksLiveMidpointParents" classname="com.indianservers.aiexplorer.RuhiEndpointClarificationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

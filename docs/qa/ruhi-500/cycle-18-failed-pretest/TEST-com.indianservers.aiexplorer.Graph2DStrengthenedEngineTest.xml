@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.Graph2DStrengthenedEngineTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:46:27.838Z" hostname="INDIANSERVERS" time="0.107">
+  <properties/>
+  <testcase name="restrictionsAndCompoundChainedInequalitiesAreEvaluated" classname="com.indianservers.aiexplorer.Graph2DStrengthenedEngineTest" time="0.043"/>
+  <testcase name="robustAnalysisFindsCrossingAndTouchingRootsWithEvidence" classname="com.indianservers.aiexplorer.Graph2DStrengthenedEngineTest" time="0.017"/>
+  <testcase name="extremaTangentsIntegralsAndAreasCarryConfidenceAndError" classname="com.indianservers.aiexplorer.Graph2DStrengthenedEngineTest" time="0.029"/>
+  <testcase name="sequencesRecursionListsAndRegressionsShareTheTypedSampler" classname="com.indianservers.aiexplorer.Graph2DStrengthenedEngineTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

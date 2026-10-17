@@ -1,0 +1,11 @@
+{
+  "changed_pixels": 18227,
+  "initial_degrees": 90,
+  "edited_degrees": 45,
+  "same_marker": true,
+  "native_bisector": true,
+  "bisector_parent_references": true,
+  "oriented_degrees": 270,
+  "oriented_edited_degrees": 90,
+  "passed": true
+}

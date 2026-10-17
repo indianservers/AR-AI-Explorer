@@ -1,0 +1,23 @@
+
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:
+Error in geometrySceneEditsRenderLabelsHighlightsViewChangesAndSaveThroughTheProjectLibrary(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.geometrySceneEditsRenderLabelsHighlightsViewChangesAndSaveThroughTheProjectLibrary$lambda$0$ask(RuhiSeed500RenderingTest.kt:106)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.geometrySceneEditsRenderLabelsHighlightsViewChangesAndSaveThroughTheProjectLibrary(RuhiSeed500RenderingTest.kt:118)
+
+
+Time: 86.005
+There was 1 failure:
+1) geometrySceneEditsRenderLabelsHighlightsViewChangesAndSaveThroughTheProjectLibrary(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.geometrySceneEditsRenderLabelsHighlightsViewChangesAndSaveThroughTheProjectLibrary$lambda$0$ask(RuhiSeed500RenderingTest.kt:106)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.geometrySceneEditsRenderLabelsHighlightsViewChangesAndSaveThroughTheProjectLibrary(RuhiSeed500RenderingTest.kt:118)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

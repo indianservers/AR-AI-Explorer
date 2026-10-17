@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "base_unit": "m",
+  "display_unit": "cm",
+  "surface_area": 240000,
+  "volume": 8000000,
+  "side": 200,
+  "edited_volume": 27000000,
+  "label": "Cube surface area = 240000.0 cm²; Cube volume = 8000000 cm³; w = 200 cm; h = 200 cm; d = 200 cm",
+  "native_geometry_unchanged": true,
+  "undo_restored": true,
+  "changed_pixels": 24829
+}

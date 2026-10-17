@@ -184,7 +184,8 @@ object TypedGraphExpressionParser {
     }
 
     private fun parameters(expressions: List<String>): Set<String> = expressions.flatMap { source ->
-        Regex("[A-Za-z][A-Za-z0-9_]*").findAll(source).map { it.value.lowercase() }.toList()
+        val withoutNumbers=source.replace(Regex("(?<![A-Za-z_0-9])(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][-+]?[0-9]+)?")," ")
+        Regex("[A-Za-z][A-Za-z0-9_]*").findAll(withoutNumbers).map { it.value.lowercase() }.toList()
     }.filterNot { it in reserved }.toSortedSet()
 
     private fun hasTopLevelInequality(source: String): Boolean {
@@ -211,7 +212,7 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
         is TypedGraphExpression.Explicit -> {
             if (definition.restriction == null) {
                 val curve = AdvancedGraphEngine(expressions).adaptiveExplicit(
-                    AdvancedGraphDefinition(definition.expression, AdvancedGraphKind.Explicit, xDomain, parameterValues), seedIntervals = samples.coerceIn(24, 256) / 4,
+                    AdvancedGraphDefinition("y=${definition.expression}", AdvancedGraphKind.Explicit, xDomain, parameterValues), seedIntervals = samples.coerceIn(24, 256) / 4,
                 )
                 TypedGraphSample(definition, curves = curve.segments)
             } else TypedGraphSample(definition, curves = sampleRestricted(definition, xDomain, parameterValues, samples))
@@ -256,17 +257,31 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
     }
 
     private fun sampleRestricted(definition: TypedGraphExpression.Explicit, domain: GraphDomain, parameters: Map<String, Double>, count: Int): List<GraphSegment> {
-        val expression = expressions.compile(definition.expression); val predicate = expressions.compile(definition.restriction!!)
-        val segments = mutableListOf<GraphSegment>(); var current = mutableListOf<Vec2>()
-        (0..count.coerceIn(64, 5000)).forEach { index ->
-            val x = domain.minimum + (domain.maximum - domain.minimum) * index / count.coerceIn(64, 5000)
-            val variables = parameters + ("x" to x)
-            val y = runCatching { expression.eval(variables) }.getOrNull()?.takeIf(Double::isFinite)
-            val allowed = runCatching { predicate.eval(variables) != 0.0 }.getOrDefault(false)
-            if (y == null || !allowed) { if (current.size > 1) segments += GraphSegment(current); current = mutableListOf() } else current += Vec2(x, y)
+        val expression=expressions.compile(definition.expression);val predicate=expressions.compile(definition.restriction!!)
+        fun allowed(x:Double)=runCatching{predicate.eval(parameters+("x" to x))!=0.0}.getOrDefault(false)
+        val interval=Regex("^x>=([^&]+)&&x<=([^&]+)$").matchEntire(definition.restriction.replace(" ",""))?.groupValues?.drop(1)?.map{it.toDoubleOrNull()}
+        val low=max(domain.minimum,interval?.getOrNull(0) ?: domain.minimum);val high=min(domain.maximum,interval?.getOrNull(1) ?: domain.maximum)
+        if(low>=high)return emptyList()
+        val base=AdvancedGraphEngine(expressions).adaptiveExplicit(AdvancedGraphDefinition("y=${definition.expression}",AdvancedGraphKind.Explicit,GraphDomain(low,high),parameters),seedIntervals=count.coerceIn(24,256)/4)
+        val output=mutableListOf<GraphSegment>()
+        for(segment in base.segments) {
+            var current=mutableListOf<Vec2>();var previous:Vec2?=null;var wasAllowed=false
+            fun flush(){if(current.size>1)output+=GraphSegment(current);current=mutableListOf()}
+            for(point in segment.points) {
+                val isAllowed=allowed(point.x);val old=previous
+                if(old!=null&&isAllowed!=wasAllowed) {
+                    var a=old.x;var b=point.x
+                    repeat(48){val mid=(a+b)/2;if(allowed(mid)==wasAllowed)a=mid else b=mid}
+                    val x=if(wasAllowed)a else b
+                    val y=runCatching{expression.eval(parameters+("x" to x))}.getOrNull()?.takeIf(Double::isFinite)
+                    if(wasAllowed){if(y!=null)current+=Vec2(x,y);flush()}else{flush();if(y!=null)current+=Vec2(x,y)}
+                }
+                if(isAllowed)current+=point else flush()
+                previous=point;wasAllowed=isAllowed
+            }
+            flush()
         }
-        if (current.size > 1) segments += GraphSegment(current)
-        return segments
+        return output
     }
 
     private fun recursive(definition: TypedGraphExpression.Recursive, parameters: Map<String, Double>): List<Vec2> {
@@ -335,14 +350,9 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
     }
 
     private fun samplePiecewise(definition: TypedGraphExpression.Piecewise, domain: GraphDomain, parameters: Map<String, Double>, count: Int): List<GraphSegment> {
-        val segments = mutableListOf<GraphSegment>(); var current = mutableListOf<Vec2>()
-        (0..count.coerceIn(32, 5000)).forEach { index ->
-            val x = domain.minimum + (domain.maximum - domain.minimum) * index / count.coerceIn(32, 5000)
-            val point = evaluate(definition, x, parameters)
-            if (point == null) { if (current.size > 1) segments += GraphSegment(current); current = mutableListOf() } else current += point
-        }
-        if (current.size > 1) segments += GraphSegment(current)
-        return segments
+        // Lazy native conditions preserve undefined domains and expose branch jumps to adaptive refinement.
+        val conditional=definition.branches.asReversed().fold("sqrt(-1)"){tail,branch->"if((${branch.condition}),(${branch.expression}),($tail))"}
+        return AdvancedGraphEngine(expressions).adaptiveExplicit(AdvancedGraphDefinition("y=$conditional",AdvancedGraphKind.Explicit,domain,parameters),seedIntervals=count.coerceIn(24,256)/4).segments
     }
 
     private fun marchingSquares(definition: TypedGraphExpression.Implicit, xDomain: GraphDomain, yDomain: GraphDomain, parameters: Map<String, Double>, cells: Int): List<ImplicitSegment> {
@@ -361,12 +371,14 @@ class TypedGraphEngine(private val expressions: ExpressionEngine = ExpressionEng
                 val corners = listOf(point(column, row), point(column + 1, row), point(column + 1, row + 1), point(column, row + 1))
                 val values = corners.map(::residual)
                 if (values.any { !it.isFinite() }) continue
+                val zeroEdges=(0..3).filter{edge->values[edge]==0.0&&values[(edge+1)%4]==0.0}
+                zeroEdges.forEach{edge->add(ImplicitSegment(corners[edge],corners[(edge+1)%4]))}
                 val intersections = (0..3).mapNotNull { edge ->
                     val next = (edge + 1) % 4; val a = values[edge]; val b = values[next]
-                    if (a == 0.0 || b == 0.0 || a.sign() != b.sign()) crossing(corners[edge], corners[next], a, b) else null
-                }
-                if (intersections.size == 2) add(ImplicitSegment(intersections[0], intersections[1]))
-                else if (intersections.size == 4) { add(ImplicitSegment(intersections[0], intersections[1])); add(ImplicitSegment(intersections[2], intersections[3])) }
+                    when {a==0.0&&b==0.0->null;a==0.0->corners[edge];b==0.0->corners[next];a.sign()!=b.sign()->crossing(corners[edge],corners[next],a,b);else->null}
+                }.distinct()
+                if (zeroEdges.isEmpty()&&intersections.size == 2) add(ImplicitSegment(intersections[0], intersections[1]))
+                else if (zeroEdges.isEmpty()&&intersections.size == 4) { add(ImplicitSegment(intersections[0], intersections[1])); add(ImplicitSegment(intersections[2], intersections[3])) }
             }
         }
     }

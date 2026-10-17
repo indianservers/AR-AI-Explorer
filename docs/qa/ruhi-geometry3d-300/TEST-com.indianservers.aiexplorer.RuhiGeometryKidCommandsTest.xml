@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiGeometryKidCommandsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-16T11:50:05.266Z" hostname="INDIANSERVERS" time="0.481">
+  <properties/>
+  <testcase name="kidConversationKeepsTargetsAndOtherObjectsUnchanged" classname="com.indianservers.aiexplorer.RuhiGeometryKidCommandsTest" time="0.166"/>
+  <testcase name="requestedScaleAndAxisQuestionsWaitForAnswersAndRejectStaleScenes" classname="com.indianservers.aiexplorer.RuhiGeometryKidCommandsTest" time="0.009"/>
+  <testcase name="invalidDimensionsNeverBecomeDefaultShapesAndQuestionsHaveNoUndoEntry" classname="com.indianservers.aiexplorer.RuhiGeometryKidCommandsTest" time="0.012"/>
+  <testcase name="nativeDeletionCompactsNamesAndSelectionWithTheirObjects" classname="com.indianservers.aiexplorer.RuhiGeometryKidCommandsTest" time="0.004"/>
+  <testcase name="all300ReviewedRequestsHaveExpectedSceneOutcomes" classname="com.indianservers.aiexplorer.RuhiGeometryKidCommandsTest" time="0.286"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

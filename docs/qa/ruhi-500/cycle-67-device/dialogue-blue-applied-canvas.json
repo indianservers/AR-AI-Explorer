@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "restored_completed_action": true,
+  "red_restored_exactly": true,
+  "blue_position": [
+    3,
+    2,
+    1
+  ],
+  "blue_original_size": 1.25,
+  "appearance_preserved": true,
+  "atomic_undo_redo": true,
+  "changed_pixels": 78853
+}

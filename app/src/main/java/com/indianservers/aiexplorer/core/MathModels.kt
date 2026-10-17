@@ -135,6 +135,22 @@ class ExpressionEngine {
 
 class Expression internal constructor(private val root: Node, val source: String) {
     fun eval(variables: Map<String, Double> = emptyMap()): Double = root.eval(variables)
+    /** Denominator values let mesh topology reject cells that cross a zero between finite samples. */
+    fun denominators(variables:Map<String,Double>):List<Double> = root.denominatorValues(variables)
+}
+
+private fun Node.denominatorValues(v:Map<String,Double>):List<Double> = when(this) {
+    is UnaryNode->node.denominatorValues(v)
+    is BinaryNode->left.denominatorValues(v)+right.denominatorValues(v)+when {
+        op=='/'->listOf(right.eval(v))
+        op=='^'&&runCatching{right.eval(emptyMap())<0}.getOrDefault(false)->listOf(left.eval(v))
+        else->emptyList()
+    }
+    is FunctionNode->if(name.equals("if",true)&&args.size==3)args[0].denominatorValues(v)+args[if(args[0].eval(v)!=0.0)1 else 2].denominatorValues(v)else args.flatMap{it.denominatorValues(v)}+if(name.equals("tan",true))listOf(kotlin.math.cos(args.first().eval(v)))else emptyList()
+    is ComparisonNode->left.denominatorValues(v)+right.denominatorValues(v)
+    is LogicalNode->left.denominatorValues(v)+right.denominatorValues(v)
+    is ChainedComparisonNode->operands.flatMap{it.denominatorValues(v)}
+    else->emptyList()
 }
 
 internal sealed interface Node {
@@ -463,6 +479,13 @@ private class Parser(private val input: String) {
     private fun parseNumber(): Node {
         val start = index
         while (peek()?.isDigit() == true || peek() == '.') index++
+        if(peek()=='e'||peek()=='E') {
+            var cursor=index+1
+            if(input.getOrNull(cursor)=='+'||input.getOrNull(cursor)=='-')cursor++
+            val digits=cursor
+            while(input.getOrNull(cursor)?.isDigit()==true)cursor++
+            if(cursor>digits)index=cursor
+        }
         return NumberNode(input.substring(start, index).toDouble())
     }
 
@@ -810,6 +833,7 @@ data class Solid(
     val topRadius: Double = radius / 2.0,
     val position: Vec3 = Vec3(0.0, 0.0, 0.0),
     val rotation: Vec3 = Vec3(0.0, 0.0, 0.0),
+    val mirrorX: Boolean = false,
 )
 
 data class SolidMeasurements(val volume: Double, val surfaceArea: Double, val faces: Int, val edges: Int, val vertices: Int)
@@ -923,7 +947,23 @@ data class SolidMesh(
 
 /** Renderer-neutral solid geometry used by Canvas today and GPU/AR renderers later. */
 object SolidMeshFactory {
-    fun create(solid: Solid, segments: Int = 24): SolidMesh = when (solid.type) {
+    fun create(solid: Solid, segments: Int = 24): SolidMesh {
+        val mesh=createNative(solid,segments)
+        return if(!solid.mirrorX)mesh else mesh.copy(vertices=mesh.vertices.map{it.copy(x=-it.x)},faces=mesh.faces.map{it.reversed()})
+    }
+    /** Separate each logical face along its outward centroid direction without changing the solid. */
+    fun exploded(solid:Solid,amount:Double,segments:Int=24):SolidMesh {
+        require(amount.isFinite()&&amount in 0.0..3.0)
+        val original=create(solid,segments);if(amount==0.0)return original
+        val vertices=mutableListOf<Vec3>();val faces=mutableListOf<List<Int>>();val edges=mutableListOf<Pair<Int,Int>>()
+        original.faces.forEach{face->
+            val centroid=face.map{original.vertices[it]}.reduce{a,b->a+b}*(1.0/face.size)
+            val delta=centroid.normalized()*(amount*maxOf(solid.width,solid.height,solid.depth)*.25)
+            val start=vertices.size;face.forEach{vertices+=original.vertices[it]+delta}
+            val ids=face.indices.map{start+it};faces+=ids;ids.indices.forEach{i->edges+=ids[i] to ids[(i+1)%ids.size]}
+        };return SolidMesh(vertices,edges,faces)
+    }
+    private fun createNative(solid: Solid, segments: Int): SolidMesh = when (solid.type) {
         SolidType.Cube, SolidType.Cuboid -> box(solid.width, solid.height, solid.depth)
         SolidType.Pyramid -> pyramid(solid)
         SolidType.TriangularPrism -> triangularPrism(solid)
@@ -1146,15 +1186,14 @@ data class SurfaceMesh(
 data class SurfaceInsight(val classification: String, val vertex: Vec3?, val range: String, val symmetry: String)
 
 class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {
-    fun mesh(expression: String, min: Double = -3.0, max: Double = 3.0, density: Int = 32): SurfaceMesh {
+    fun mesh(expression: String, min: Double = -3.0, max: Double = 3.0, density: Int = 32, yMin:Double=min, yMax:Double=max): SurfaceMesh {
         require(min.isFinite() && max.isFinite() && min < max) { "A finite increasing domain is required." }
+        require(yMin.isFinite()&&yMax.isFinite()&&yMin<yMax){"A finite increasing y domain is required."}
         require(density in 4..64) { "Surface density must be between 4 and 64." }
         val compiled = engine.compile(stripEquation(expression).replace(Regex("\\bxy\\b"), "(x*y)"))
-        val step = (max - min) / density
+        val step = minOf(max-min,yMax-yMin) / density
         fun evaluate(x: Double, y: Double): Double = runCatching { compiled.eval(mapOf("x" to x, "y" to y)) }.getOrDefault(Double.NaN)
-        fun sample(x: Double, y: Double): Double {
-            val value = evaluate(x, y)
-            if (value.isFinite()) return value
+        fun continuation(x: Double, y: Double): Double {
             // Fill only a numerically convergent removable hole. A pole or a domain boundary
             // remains undefined, and incident cells are removed rather than inventing geometry.
             fun neighbours(epsilon: Double) = listOf(
@@ -1168,18 +1207,69 @@ class Graph3D(private val engine: ExpressionEngine = ExpressionEngine()) {
             val tolerance = 1e-6 * maxOf(1.0, abs(limit))
             return limit.takeIf { (outer + inner).all { abs(it - limit) <= tolerance } } ?: Double.NaN
         }
+        fun sample(x:Double,y:Double):Double=evaluate(x,y).takeIf{it.isFinite()} ?: continuation(x,y)
         val grid = List((density + 1) * (density + 1)) { index ->
             val x = min + (max - min) * (index / (density + 1)) / density
-            val y = min + (max - min) * (index % (density + 1)) / density
+            val y = yMin + (yMax - yMin) * (index % (density + 1)) / density
             Vec3(x, y, sample(x, y))
         }
-        if (grid.all { it.z.isFinite() }) return SurfaceMesh(grid, density + 1, density + 1)
+        fun validCell(cell:List<Vec3>):Boolean {
+            if(cell.any{!it.z.isFinite()})return false
+            val centerX=cell.map{it.x}.average();val centerY=cell.map{it.y}.average()
+            if(!sample(centerX,centerY).isFinite())return false
+            val denominators=cell.map{runCatching{compiled.denominators(mapOf("x" to it.x,"y" to it.y))}.getOrElse{return false}}
+            val centerDenominators=runCatching{compiled.denominators(mapOf("x" to centerX,"y" to centerY))}.getOrElse{return false}
+            val count=denominators.maxOfOrNull{it.size} ?: 0
+            for(i in 0 until count){val values=denominators.mapNotNull{it.getOrNull(i)};if(values.any{!it.isFinite()}||values.any{it<0}&&values.any{it>0})return false
+                val scale=values.maxOfOrNull{abs(it)} ?: 0.0
+                cell.forEachIndexed{j,p->if(abs(denominators[j].getOrNull(i) ?: return@forEachIndexed)<=scale*1e-12&&!continuation(p.x,p.y).isFinite())return false}
+                val center=centerDenominators.getOrNull(i);if(center!=null&&abs(center)<=scale*1e-12&&!continuation(centerX,centerY).isFinite())return false
+            }
+            return true
+        }
+        val valid=BooleanArray(density*density){index->val row=index/density;val column=index%density;val i=row*(density+1)+column;validCell(listOf(grid[i],grid[i+1],grid[i+density+1],grid[i+density+2]))}
+        if (grid.all { it.z.isFinite() }&&valid.all{it}) return SurfaceMesh(grid, density + 1, density + 1)
         val vertices = mutableListOf<Vec3>()
         val triangles = mutableListOf<Int>()
+        fun isolatedHole(p:Vec3):Boolean {
+            if(p.z.isFinite())return false
+            val epsilon=step*1e-4
+            return listOf(1.0 to 0.0,-1.0 to 0.0,0.0 to 1.0,0.0 to -1.0,1.0 to 1.0,1.0 to -1.0,-1.0 to 1.0,-1.0 to -1.0).all{(dx,dy)->evaluate(p.x+dx*epsilon,p.y+dy*epsilon).isFinite()}
+        }
+        fun boundary(inside:Vec3,outside:Vec3):Vec3? {
+            var a=0.0;var b=1.0
+            fun point(t:Double):Vec3 {val x=inside.x+(outside.x-inside.x)*t;val y=inside.y+(outside.y-inside.y)*t;return Vec3(x,y,evaluate(x,y))}
+            repeat(54){val mid=(a+b)/2;if(point(mid).z.isFinite())a=mid else b=mid}
+            val p=point(a);val near=point((a-1e-10).coerceAtLeast(0.0));val nearer=point((a-1e-12).coerceAtLeast(0.0))
+            // Finite domain edges may converge (sqrt's rim); divergent poles must not gain caps.
+            if(!p.z.isFinite()||!near.z.isFinite()||!nearer.z.isFinite())return null
+            val tolerance=1e-4*maxOf(1.0,abs(near.z),abs(nearer.z))
+            if(abs(near.z-nearer.z)>tolerance||abs(p.z-nearer.z)>tolerance)return null
+            val ds=runCatching{compiled.denominators(mapOf("x" to p.x,"y" to p.y))}.getOrElse{return null}
+            val insideDs=runCatching{compiled.denominators(mapOf("x" to inside.x,"y" to inside.y))}.getOrElse{return null}
+            if(ds.indices.any{i->abs(ds[i])<=abs(insideDs.getOrElse(i){1.0})*1e-12}&&!continuation(p.x,p.y).isFinite())return null
+            return p
+        }
+        fun clippedTriangle(triangle:List<Vec3>) {
+            val polygon=mutableListOf<Vec3>()
+            for(i in triangle.indices){val p=triangle[i];val q=triangle[(i+1)%3]
+                if(p.z.isFinite())polygon+=p
+                if(p.z.isFinite()!=q.z.isFinite()){val edge=if(p.z.isFinite())boundary(p,q)else boundary(q,p);if(edge==null)return;polygon+=edge}
+            }
+            val unique=polygon.fold(mutableListOf<Vec3>()){out,p->if(out.none{(it-p).magnitude()<1e-10})out+=p;out}
+            if(unique.size<3)return
+            val base=vertices.size;vertices+=unique
+            for(i in 1 until unique.lastIndex)triangles+=listOf(base,base+i,base+i+1)
+        }
         for (row in 0 until density) for (column in 0 until density) {
             val i = row * (density + 1) + column
             val cell = listOf(grid[i], grid[i+1], grid[i+density+1], grid[i+density+2])
-            if (cell.any { !it.z.isFinite() }) continue
+            if (!valid[row*density+column]) {
+                if(cell.any{!it.z.isFinite()}&&cell.any{it.z.isFinite()}&&cell.none(::isolatedHole)) {
+                    clippedTriangle(listOf(cell[0],cell[2],cell[1]));clippedTriangle(listOf(cell[1],cell[2],cell[3]))
+                }
+                continue
+            }
             val base = vertices.size
             vertices += cell
             triangles += listOf(base,base+2,base+1,base+1,base+2,base+3)

@@ -17,7 +17,7 @@ object GraphSurfaceGeometry {
     }
     private fun localMesh(layer: SpatialSurfaceLayer, density: Int): SurfaceMesh {
         val domain = SurfaceDomain(layer.domain.uMin..layer.domain.uMax, layer.domain.vMin..layer.domain.vMax, layer.domain.uMin..layer.domain.uMax)
-        if (layer.kind == SpatialSurfaceKind.Explicit) return Graph3D().mesh(layer.expression, layer.domain.uMin, layer.domain.uMax, density)
+        if (layer.kind == SpatialSurfaceKind.Explicit) return Graph3D().mesh(layer.expression, layer.domain.uMin, layer.domain.uMax, density,layer.domain.vMin,layer.domain.vMax)
         val definition = if (layer.kind == SpatialSurfaceKind.Implicit) SurfaceDefinition3D.Implicit(layer.id, layer.expression, domain)
             else SurfaceDefinition3D.Parametric(layer.id, layer.expression, layer.expressionY, layer.expressionZ, domain = domain)
         val geometry = TypedSurfaceMesher().mesh(definition, density.coerceIn(4, 64)).geometry

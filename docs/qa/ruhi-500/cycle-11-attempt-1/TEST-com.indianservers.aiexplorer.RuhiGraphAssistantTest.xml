@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiGraphAssistantTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-16T14:23:07.068Z" hostname="INDIANSERVERS" time="0.839">
+  <properties/>
+  <testcase name="commandRoutingDoesNotCaptureLessonOrSolverQuestions" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <testcase name="compoundCommandsRollbackAndNeverPolluteHistoryOnFailure" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.031"/>
+  <testcase name="twoDCommandsProduceRealSampledCurvesAndRestoreAppearanceOnUndo" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.005"/>
+  <testcase name="ambiguousReferencesAskForOneTargetAndHistoryDoesNotPartiallyUndo" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <testcase name="supplied150CommandsHaveHonestSceneAndMeshOutcomes" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.773"/>
+  <testcase name="graphUndoPreservesOtherModuleEditsAndSelection" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.002"/>
+  <testcase name="singularitiesHaveNoFabricatedCellsAndRemovableHolesRemainContinuous" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.005"/>
+  <testcase name="editsRetainUnrelatedAuthoritativeLinkedObjects" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.002"/>
+  <testcase name="parametricSurfacesUseNativeGeometryAndColorSurvivesProjectRoundTrip" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.005"/>
+  <testcase name="nativeLayerEditsPreserveAssistantSemanticReferences" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.013"/>
+  <testcase name="failedHistoryBatchDoesNotChangeStacks" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+{
+  "changed_pixels": 17487,
+  "intersection_initial_degrees": 90,
+  "intersection_edited_degrees": 63.43494882292201,
+  "intersection_edited_x": 2,
+  "virtual_origin_ignores_named_O": true,
+  "axis_degrees": 123.69006752597979,
+  "no_helper_points": true,
+  "passed": true
+}

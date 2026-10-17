@@ -1,0 +1,11 @@
+{
+  "created_pixels": 262570,
+  "pan_pixels": 9692,
+  "missing_equation_chip_resumed": true,
+  "restricted_domain_persists": true,
+  "vertical_line_on_sampling_grid": true,
+  "polar_parametric_piecewise_and_floor": true,
+  "piecewise_jump_and_restricted_pole": true,
+  "interactive_axes_preserve_functions": true,
+  "passed": true
+}

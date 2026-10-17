@@ -1,0 +1,398 @@
+Command: Save the current construction
+Printing with useUnmergedTree = 'true'
+Node #1 at (l=0.0, t=0.0, r=1080.0, b=2400.0)px
+ |-Node #2 at (l=0.0, t=0.0, r=1080.0, b=2400.0)px
+   IsContainer = 'true'
+   Shape = 'RectangleShape'
+    |-Node #4 at (l=21.0, t=84.0, r=1059.0, b=2316.0)px
+      Shape = 'RectangleShape'
+       |-Node #11 at (l=21.0, t=84.0, r=1059.0, b=2316.0)px
+       | ContentDescription = '[Interactive coordinate geometry canvas. Roof_811. Parents none. Dependents edge,/907, orb,/662. Use Tab to change objects and arrow keys to move the selection.]'
+       | Focused = 'false'
+       | Shape = 'RectangleShape'
+       | Actions = [RequestFocus]
+       |-Node #21 at (l=58.0, t=284.0, r=351.0, b=394.0)px
+       | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 16.0.dp), topEnd = CornerSize(size = 16.0.dp), bottomEnd = CornerSize(size = 16.0.dp), bottomStart = CornerSize(size = 16.0.dp))'
+       |  |-Node #22 at (l=58.0, t=284.0, r=351.0, b=394.0)px
+       |    Focused = 'false'
+       |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |    Actions = [OnClick, RequestFocus]
+       |    MergeDescendants = 'true'
+       |     |-Node #23 at (l=79.0, t=302.0, r=153.0, b=376.0)px
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |     |  |-Node #24 at (l=104.0, t=308.0, r=129.0, b=371.0)px
+       |     |    Text = '[V]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #25 at (l=171.0, t=308.0, r=330.0, b=371.0)px
+       |       Text = '[View tools]'
+       |       Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |-Node #26 at (l=58.0, t=1839.0, r=1022.0, b=2282.0)px
+       | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 18.0.dp), topEnd = CornerSize(size = 18.0.dp), bottomEnd = CornerSize(size = 18.0.dp), bottomStart = CornerSize(size = 18.0.dp))'
+       |  |-Node #27 at (l=58.0, t=1839.0, r=1022.0, b=1991.0)px
+       |  | ContentDescription = '[Expand 2D geometry tools]'
+       |  | Focused = 'false'
+       |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 12.0.dp), topEnd = CornerSize(size = 12.0.dp), bottomEnd = CornerSize(size = 12.0.dp), bottomStart = CornerSize(size = 12.0.dp))'
+       |  | Actions = [OnClick, RequestFocus]
+       |  | MergeDescendants = 'true'
+       |  |  |-Node #29 at (l=84.0, t=1852.0, r=231.0, b=1915.0)px
+       |  |  | Text = '[Select tool]'
+       |  |  | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #30 at (l=84.0, t=1915.0, r=303.0, b=1978.0)px
+       |  |  | Text = '[Tap to open controls]'
+       |  |  | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #31 at (l=530.0, t=1863.0, r=730.0, b=1968.0)px
+       |  |  | ContentDescription = '[+ Add]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #32 at (l=597.0, t=1884.0, r=664.0, b=1947.0)px
+       |  |  |    Text = '[+ Add]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #33 at (l=730.0, t=1863.0, r=956.0, b=1968.0)px
+       |  |  | ContentDescription = '[Clear all]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #34 at (l=796.0, t=1884.0, r=891.0, b=1947.0)px
+       |  |  |    Text = '[Clear all]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #35 at (l=956.0, t=1884.0, r=996.0, b=1947.0)px
+       |  |    Text = '[  v]'
+       |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |-Node #59 at (l=58.0, t=2004.0, r=1022.0, b=2088.0)px
+       |  |  |-Node #61 at (l=58.0, t=2004.0, r=209.0, b=2088.0)px
+       |  |  | ContentDescription = '[Move selected 2D object]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #62 at (l=105.0, t=2015.0, r=162.0, b=2078.0)px
+       |  |  |    Text = '[Move]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #63 at (l=220.0, t=2004.0, r=371.0, b=2088.0)px
+       |  |  | ContentDescription = '[Size selected 2D object]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #64 at (l=273.0, t=2015.0, r=319.0, b=2078.0)px
+       |  |  |    Text = '[Size]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #65 at (l=382.0, t=2004.0, r=533.0, b=2088.0)px
+       |  |  | ContentDescription = '[Rot selected 2D object]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #66 at (l=440.0, t=2015.0, r=476.0, b=2078.0)px
+       |  |  |    Text = '[Rot]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #67 at (l=544.0, t=2004.0, r=696.0, b=2088.0)px
+       |  |  | ContentDescription = '[Copy selected 2D object]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #68 at (l=593.0, t=2015.0, r=647.0, b=2078.0)px
+       |  |  |    Text = '[Copy]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #69 at (l=707.0, t=2004.0, r=859.0, b=2088.0)px
+       |  |  | ContentDescription = '[Lock selected 2D object]'
+       |  |  | Focused = 'false'
+       |  |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |  |  | Actions = [OnClick, RequestFocus]
+       |  |  | MergeDescendants = 'true'
+       |  |  |  |-Node #70 at (l=758.0, t=2015.0, r=808.0, b=2078.0)px
+       |  |  |    Text = '[Lock]'
+       |  |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |  |-Node #71 at (l=870.0, t=2004.0, r=1022.0, b=2088.0)px
+       |  |    ContentDescription = '[Del selected 2D object]'
+       |  |    Focused = 'false'
+       |  |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |  |    Actions = [OnClick, RequestFocus]
+       |  |    MergeDescendants = 'true'
+       |  |     |-Node #72 at (l=929.0, t=2015.0, r=964.0, b=2078.0)px
+       |  |       Text = '[Del]'
+       |  |       Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |-Node #73 at (l=58.0, t=2101.0, r=1022.0, b=2282.0)px
+       |     |-Node #76 at (l=58.0, t=2101.0, r=193.0, b=2185.0)px
+       |     | ContentDescription = '[← selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #77 at (l=115.0, t=2112.0, r=137.0, b=2175.0)px
+       |     |    Text = '[←]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #78 at (l=204.0, t=2101.0, r=340.0, b=2185.0)px
+       |     | ContentDescription = '[↑ selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #79 at (l=266.0, t=2112.0, r=278.0, b=2175.0)px
+       |     |    Text = '[↑]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #80 at (l=351.0, t=2101.0, r=487.0, b=2185.0)px
+       |     | ContentDescription = '[↓ selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #81 at (l=413.0, t=2112.0, r=425.0, b=2175.0)px
+       |     |    Text = '[↓]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #82 at (l=498.0, t=2101.0, r=634.0, b=2185.0)px
+       |     | ContentDescription = '[→ selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #83 at (l=555.0, t=2112.0, r=577.0, b=2175.0)px
+       |     |    Text = '[→]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #84 at (l=645.0, t=2101.0, r=828.0, b=2185.0)px
+       |     | ContentDescription = '[- Size selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #85 at (l=706.0, t=2112.0, r=768.0, b=2175.0)px
+       |     |    Text = '[- Size]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #86 at (l=839.0, t=2101.0, r=1022.0, b=2185.0)px
+       |     | ContentDescription = '[+ Size selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #87 at (l=898.0, t=2112.0, r=963.0, b=2175.0)px
+       |     |    Text = '[+ Size]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #89 at (l=58.0, t=2198.0, r=290.0, b=2282.0)px
+       |     | ContentDescription = '[-15° selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #90 at (l=152.0, t=2209.0, r=197.0, b=2272.0)px
+       |     |    Text = '[-15°]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #91 at (l=301.0, t=2198.0, r=534.0, b=2282.0)px
+       |     | ContentDescription = '[+15° selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #92 at (l=394.0, t=2209.0, r=442.0, b=2272.0)px
+       |     |    Text = '[+15°]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #93 at (l=545.0, t=2198.0, r=778.0, b=2282.0)px
+       |     | ContentDescription = '[Free selected 2D object]'
+       |     | Focused = 'false'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #94 at (l=638.0, t=2209.0, r=685.0, b=2272.0)px
+       |     |    Text = '[Free]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #95 at (l=789.0, t=2198.0, r=1022.0, b=2282.0)px
+       |       ContentDescription = '[Clear selected 2D object]'
+       |       Focused = 'false'
+       |       Shape = 'RoundedCornerShape(topStart = CornerSize(size = 9.0.dp), topEnd = CornerSize(size = 9.0.dp), bottomEnd = CornerSize(size = 9.0.dp), bottomStart = CornerSize(size = 9.0.dp))'
+       |       Actions = [OnClick, RequestFocus]
+       |       MergeDescendants = 'true'
+       |        |-Node #96 at (l=877.0, t=2209.0, r=934.0, b=2272.0)px
+       |          Text = '[Clear]'
+       |          Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |-Node #97 at (l=21.0, t=1502.0, r=1059.0, b=1607.0)px
+       | Focused = 'false'
+       | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 15.0.dp), topEnd = CornerSize(size = 15.0.dp), bottomEnd = CornerSize(size = 15.0.dp), bottomStart = CornerSize(size = 15.0.dp))'
+       | Actions = [OnClick, RequestFocus]
+       | MergeDescendants = 'true'
+       |  |-Node #99 at (l=42.0, t=1523.0, r=374.0, b=1586.0)px
+       |  | Text = '[CONSTRUCTION - ROOF_811]'
+       |  | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |  |-Node #100 at (l=958.0, t=1523.0, r=1038.0, b=1586.0)px
+       |    Text = '[6 tools]'
+       |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |-Node #36 at (l=32.0, t=92.0, r=1048.0, b=219.0)px
+       | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 18.0.dp), topEnd = CornerSize(size = 18.0.dp), bottomEnd = CornerSize(size = 18.0.dp), bottomStart = CornerSize(size = 18.0.dp))'
+       |  |-Node #38 at (l=32.0, t=101.0, r=184.0, b=211.0)px
+       |  | ContentDescription = '[Back to previous screen]'
+       |  | Focused = 'false'
+       |  | Role = 'Button'
+       |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |  | Actions = [OnClick, RequestFocus]
+       |  | MergeDescendants = 'true'
+       |  |  |-Node #40 at (l=71.0, t=119.0, r=145.0, b=193.0)px
+       |  |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |  |-Node #42 at (l=192.0, t=101.0, r=344.0, b=211.0)px
+       |  | ContentDescription = '[Open Maths menu]'
+       |  | Focused = 'false'
+       |  | Role = 'Button'
+       |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |  | Actions = [OnClick, RequestFocus]
+       |  | MergeDescendants = 'true'
+       |  |  |-Node #44 at (l=231.0, t=119.0, r=305.0, b=193.0)px
+       |  |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |  |-Node #46 at (l=463.0, t=92.0, r=929.0, b=219.0)px
+       |    ContentDescription = '[Breadcrumb Maths → 2D geometry]'
+       |    Focused = 'false'
+       |    Actions = [OnClick, RequestFocus]
+       |    MergeDescendants = 'true'
+       |     |-Node #47 at (l=476.0, t=92.0, r=916.0, b=156.0)px
+       |     | Text = '[AI Maths Explorer ⌄]'
+       |     | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #48 at (l=568.0, t=156.0, r=825.0, b=219.0)px
+       |       Text = '[Maths → 2D geometry]'
+       |       Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |-Node #55 at (l=875.0, t=124.0, r=1027.0, b=234.0)px
+       | ContentDescription = '[Settings]'
+       | Focused = 'false'
+       | Role = 'Button'
+       | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       | Actions = [OnClick, RequestFocus]
+       | MergeDescendants = 'true'
+       |  |-Node #57 at (l=914.0, t=142.0, r=988.0, b=216.0)px
+       |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |-Node #816 at (l=29.0, t=1034.0, r=1027.0, b=2137.0)px
+       |  |-Node #817 at (l=50.0, t=1055.0, r=1006.0, b=2116.0)px
+       |    IsTraversalGroup = 'true'
+       |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 18.0.dp), topEnd = CornerSize(size = 18.0.dp), bottomEnd = CornerSize(size = 18.0.dp), bottomStart = CornerSize(size = 18.0.dp))'
+       |    VerticalScrollAxisRange = 'ScrollAxisRange(value=0.0, maxValue=159.0, reverseScrolling=false)'
+       |    Actions = [ScrollBy, ScrollByOffset]
+       |     |-Node #822 at (l=189.0, t=1084.0, r=280.0, b=1147.0)px
+       |     | Text = '[Ruhi]'
+       |     | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #823 at (l=189.0, t=1147.0, r=682.0, b=1210.0)px
+       |     | Text = '[Draw, explore, and ask follow-up questions]'
+       |     | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #824 at (l=825.0, t=1092.0, r=977.0, b=1202.0)px
+       |     | ContentDescription = '[Close]'
+       |     | Focused = 'false'
+       |     | Role = 'Button'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #826 at (l=864.0, t=1110.0, r=938.0, b=1184.0)px
+       |     |    Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |     |-Node #828 at (l=79.0, t=1236.0, r=977.0, b=1306.0)px
+       |     | Text = '[Tell me what to draw or change. I’ll ask only when I need more information.]'
+       |     | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #829 at (l=79.0, t=1332.0, r=977.0, b=1500.0)px
+       |     | ContentDataType = 'AndroidContentDataType(androidAutofillType=1)'
+       |     | EditableText = 'Save the current construction'
+       |     | FillableData = 'androidx.compose.ui.autofill.AndroidFillableData@ce0683b'
+       |     | Focused = 'true'
+       |     | ImeAction = 'Search'
+       |     | InputText = 'Save the current construction'
+       |     | IsEditable = 'true'
+       |     | TextSelectionRange = 'TextRange(29, 29)'
+       |     | Actions = [GetTextLayoutResult, InsertTextAtCursor, OnClick, OnFillData, OnLongClick, PasteText, PerformImeAction, RequestFocus, SetSelection, SetText]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #833 at (l=79.0, t=1353.0, r=977.0, b=1500.0)px
+       |     |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 4.0.dp), topEnd = CornerSize(size = 4.0.dp), bottomEnd = CornerSize(size = 4.0.dp), bottomStart = CornerSize(size = 4.0.dp))'
+       |     |  |-Node #838 at (l=121.0, t=1332.0, r=449.0, b=1374.0)px
+       |     |  | Text = '[Ask anything in maths]'
+       |     |  | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |  |-Node #835 at (l=121.0, t=1395.0, r=935.0, b=1458.0)px
+       |     |    Shape = 'RectangleShape'
+       |     |    Actions = [MagnifierPositionInRoot]
+       |     |-Node #841 at (l=79.0, t=1534.0, r=303.0, b=1644.0)px
+       |     | ContentDescription = '[Speak]'
+       |     | Focused = 'false'
+       |     | Role = 'Button'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #843 at (l=103.0, t=1552.0, r=177.0, b=1626.0)px
+       |     |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |     |  |  |-Node #844 at (l=109.0, t=1563.0, r=172.0, b=1616.0)px
+       |     |  |    Text = '[Mic]'
+       |     |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |  |-Node #846 at (l=190.0, t=1563.0, r=279.0, b=1616.0)px
+       |     |    Text = '[Speak]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #848 at (l=79.0, t=1686.0, r=269.0, b=1796.0)px
+       |     | ContentDescription = '[Ask]'
+       |     | Focused = 'false'
+       |     | Role = 'Button'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #850 at (l=103.0, t=1704.0, r=177.0, b=1778.0)px
+       |     |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |     |  |  |-Node #851 at (l=122.0, t=1715.0, r=159.0, b=1768.0)px
+       |     |  |    Text = '[AI]'
+       |     |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |  |-Node #853 at (l=190.0, t=1715.0, r=245.0, b=1768.0)px
+       |     |    Text = '[Ask]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #854 at (l=287.0, t=1686.0, r=496.0, b=1796.0)px
+       |     | ContentDescription = '[Undo]'
+       |     | Focused = 'false'
+       |     | Role = 'Button'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #856 at (l=311.0, t=1704.0, r=385.0, b=1778.0)px
+       |     |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |     |  |  |-Node #857 at (l=330.0, t=1715.0, r=367.0, b=1768.0)px
+       |     |  |    Text = '[↶]'
+       |     |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |  |-Node #859 at (l=398.0, t=1715.0, r=472.0, b=1768.0)px
+       |     |    Text = '[Undo]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #860 at (l=514.0, t=1686.0, r=723.0, b=1796.0)px
+       |     | ContentDescription = '[Redo]'
+       |     | Focused = 'false'
+       |     | Role = 'Button'
+       |     | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |     | Actions = [OnClick, RequestFocus]
+       |     | MergeDescendants = 'true'
+       |     |  |-Node #862 at (l=538.0, t=1704.0, r=612.0, b=1778.0)px
+       |     |  | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 10.0.dp), topEnd = CornerSize(size = 10.0.dp), bottomEnd = CornerSize(size = 10.0.dp), bottomStart = CornerSize(size = 10.0.dp))'
+       |     |  |  |-Node #863 at (l=557.0, t=1715.0, r=594.0, b=1768.0)px
+       |     |  |    Text = '[↷]'
+       |     |  |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |  |-Node #865 at (l=625.0, t=1715.0, r=699.0, b=1768.0)px
+       |     |    Text = '[Redo]'
+       |     |    Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |     |-Node #866 at (l=105.0, t=1856.0, r=951.0, b=2220.0)px
+       |       Shape = 'RoundedCornerShape(topStart = CornerSize(size = 14.0.dp), topEnd = CornerSize(size = 14.0.dp), bottomEnd = CornerSize(size = 14.0.dp), bottomStart = CornerSize(size = 14.0.dp))'
+       |        |-Node #867 at (l=105.0, t=1856.0, r=428.0, b=1919.0)px
+       |        | Text = '[Ruhi — Clarification]'
+       |        | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |        |-Node #868 at (l=105.0, t=1932.0, r=951.0, b=2002.0)px
+       |        | Text = '[The scene or selection changed while I prepared the command. Submit it again.]'
+       |        | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |        |-Node #869 at (l=105.0, t=2015.0, r=951.0, b=2220.0)px
+       |          IsTraversalGroup = 'true'
+       |          Shape = 'androidx.compose.foundation.VerticalScrollableClipShape@a57ecfc'
+       |          VerticalScrollAxisRange = 'ScrollAxisRange(value=0.0, maxValue=184.0, reverseScrolling=false)'
+       |          Actions = [ScrollBy, ScrollByOffset]
+       |           |-Node #870 at (l=118.0, t=2028.0, r=938.0, b=2091.0)px
+       |           | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 8.0.dp), topEnd = CornerSize(size = 8.0.dp), bottomEnd = CornerSize(size = 8.0.dp), bottomStart = CornerSize(size = 8.0.dp))'
+       |           | Text = '[You: Reset zoom to fit all objects]'
+       |           | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |           |-Node #871 at (l=118.0, t=2128.0, r=938.0, b=2191.0)px
+       |           | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 8.0.dp), topEnd = CornerSize(size = 8.0.dp), bottomEnd = CornerSize(size = 8.0.dp), bottomStart = CornerSize(size = 8.0.dp))'
+       |           | Text = '[Ruhi: Applied scene fit.]'
+       |           | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |           |-Node #872 at (l=118.0, t=2228.0, r=938.0, b=2291.0)px
+       |           | Shape = 'RoundedCornerShape(topStart = CornerSize(size = 8.0.dp), topEnd = CornerSize(size = 8.0.dp), bottomEnd = CornerSize(size = 8.0.dp), bottomStart = CornerSize(size = 8.0.dp))'
+       |           | Text = '[You: Duplicate the selected circle]'
+       |           | Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |           |-Node #873 at (l=118.0, t=2328.0, r=938.0, b=2391.0)px
+       |             Shape = 'RoundedCornerShape(topStart = CornerSize(size = 8.0.dp), topEnd = CornerSize(size = 8.0.dp), bottomEnd = CornerSize(size = 8.0.dp), bottomStart = CornerSize(size = 8.0.dp))'
+       |             Text = '[Ruhi: Applied scene duplicate.]'
+       |             Actions = [ClearTextSubstitution, GetTextLayoutResult, SetTextSubstitution, ShowTextSubstitution]
+       |-Node #52 at (l=906.0, t=2158.0, r=1027.0, b=2279.0)px
+         ContentDescription = '[Close AI Assistant]'
+         Focused = 'false'
+         Shape = 'RoundedCornerShape(topStart = CornerSize(size = 16.0.dp), topEnd = CornerSize(size = 16.0.dp), bottomEnd = CornerSize(size = 16.0.dp), bottomStart = CornerSize(size = 16.0.dp))'
+         Actions = [OnClick, RequestFocus]
+         MergeDescendants = 'true'

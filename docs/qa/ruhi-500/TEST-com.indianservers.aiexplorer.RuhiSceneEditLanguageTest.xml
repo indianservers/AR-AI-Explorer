@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:33.011Z" hostname="INDIANSERVERS" time="0.101">
+  <properties/>
+  <testcase name="layoutOnlyPreparationChangesNeverHideRealSceneOrSelectionMutations" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.001"/>
+  <testcase name="nativeGridAndLabelsCanBeRestoredAndFitUsesCurrentCircleExtentAndAspect" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.005"/>
+  <testcase name="duplicateCirclesHaveIndependentControlsAndLabelsUseActualOpaqueNames" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.003"/>
+  <testcase name="transparencyPercentMeansTheComplementOfOpacityForNewNumericValues" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.004"/>
+  <testcase name="renameSaveAndClearPersistAndUndoRestoresTheWholeConstruction" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.004"/>
+  <testcase name="original25RowsPreserveSlotsAndHaveIndependentNativeSceneChecks" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.08"/>
+  <testcase name="ambiguityUsesCurrentObjectChipsAndStaleAnswersNeverEditAnotherObject" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.002"/>
+  <testcase name="redLineSelectionRejectsCurvedGraphsAndFindsImplicitVerticalLines" classname="com.indianservers.aiexplorer.RuhiSceneEditLanguageTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

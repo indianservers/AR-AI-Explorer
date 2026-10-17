@@ -10,10 +10,13 @@ enum class RuhiEngine(val module: MathModule) {
 enum class RuhiInputModality { TEXT, VOICE_TRANSCRIPT }
 data class RuhiEnginePrediction(val engine: RuhiEngine?, val confidence: Float, val margin: Float, val contextual: Boolean = false)
 fun interface RuhiEngineClassifier { fun predict(text:String):RuhiEnginePrediction }
-object RuhiLanguageServices { @Volatile var engineClassifier:RuhiEngineClassifier?=null; @Volatile var dialogueClassifier:GraphIntentClassifier?=null }
-data class RuhiSceneContext(val selectedShapeId:String?=null,val selectedSolidIndex:Int?=null)
+object RuhiLanguageServices { @Volatile var engineClassifier:RuhiEngineClassifier?=null; @Volatile var dialogueClassifier:GraphIntentClassifier?=null; @Volatile var geometryClassifier:GraphIntentClassifier?=null; @Volatile var semanticClassifier:GraphIntentClassifier?=null; @Volatile var pointSlotClassifier:RuhiPointSlotClassifier?=null }
+data class RuhiSceneContext(val selectedShapeId:String?=null,val selectedSolidIndex:Int?=null,val selectedPointIndex:Int?=null,val selectedVectorIds:List<String> = emptyList(),val selectedPlaneIds:List<String> = emptyList(),val selectedFunctionIds:List<String> = emptyList())
 enum class RuhiMeasure { AREA, PERIMETER, VOLUME, SURFACE_AREA, EXPLAIN }
 sealed interface RuhiOperation {
+    data class PointQuery(val frame:RuhiSemanticFrame):RuhiOperation
+    /** A reviewed native language transaction; dimensions are validated by the geometry adapter. */
+    data class NativeGeometry(val intent:String):RuhiOperation
     data object ShowVertex:RuhiOperation
     data class GraphProgram(val actions:List<GraphAction>):RuhiOperation
     data class CreatePoint(val name:String,val position:Vec2):RuhiOperation
@@ -37,7 +40,7 @@ data class RuhiCommand(
     val modality:RuhiInputModality=RuhiInputModality.TEXT,val targetObjectId:String?=null,
     val engineProposal:RuhiEnginePrediction?=null,val intentProposal:GraphIntentPrediction?=null,val routingReason:String="active scene context",
 ) { init { require(schemaVersion==1) { "Unsupported Ruhi command schema." } } }
-data class RuhiExecutionResult(val state:WorkspaceState,val status:GraphCommandStatus,val message:String,val command:RuhiCommand?=null,val context:RuhiSceneContext=RuhiSceneContext(),val dialogue:RuhiDialogueView?=null)
+data class RuhiExecutionResult(val state:WorkspaceState,val status:GraphCommandStatus,val message:String,val command:RuhiCommand?=null,val context:RuhiSceneContext=RuhiSceneContext(),val dialogue:RuhiDialogueView?=null,val semanticFrame:RuhiSemanticFrame?=null)
 
 /** Time and angular velocity determine pose. No learned pixels or per-frame history entries. */
 data class RuhiAngularMotion(val axis:String="y",val degreesPerSecond:Double=30.0,val startMillis:Long=0L) {
@@ -48,8 +51,11 @@ data class RuhiAngularMotion(val axis:String="y",val degreesPerSecond:Double=30.
 }
 object RuhiMotionEngine {
     const val PREFIX="ruhi.studio.motion.solid."
-    fun solids(state:WorkspaceState,nowMillis:Long):List<Solid> = state.solids.mapIndexed { index,solid ->
+    fun solids(state:WorkspaceState,nowMillis:Long):List<Solid> {
+        val poses=state.solids.mapIndexed { index,solid ->
         val motion=state.labSessionValues[PREFIX+index]?.let { runCatching { RuhiAngularMotion.decode(it) }.getOrNull() } ?: return@mapIndexed solid
         val angle=motion.angle(nowMillis);solid.copy(rotation=solid.rotation+when(motion.axis){"x"->Vec3(angle,0.0,0.0);"y"->Vec3(0.0,angle,0.0);else->Vec3(0.0,0.0,angle)})
+        }
+        return RuhiTransform3DLanguage.groupPoses(state,poses,nowMillis)
     }
 }

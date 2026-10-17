@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:46:27.183Z" hostname="INDIANSERVERS" time="0.126">
+  <properties/>
+  <testcase name="cubicReportsMonotonicityConcavityAndSingleInflection" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.048"/>
+  <testcase name="rationalFunctionDetectsDomainSplitAndAsymptotes" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.015"/>
+  <testcase name="tangentNormalAndVerticalNormalAreExplicit" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.007"/>
+  <testcase name="areaBetweenCurvesReturnsSignedAndGeometricEvidence" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.007"/>
+  <testcase name="sharedMathGraphCarriesAdvancedFeatures" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

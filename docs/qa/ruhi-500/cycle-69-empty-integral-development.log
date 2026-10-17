@@ -1,0 +1,16 @@
+
+> Task :app:auditRuhiEmptyIntegralFollowUps
+364: UNSUPPORTED This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete/select/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces.
+372: APPLIED Plotted f(x): y=x^2. Finite sampled segments preserve domain gaps. 
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 3s
+1 actionable task: 1 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html

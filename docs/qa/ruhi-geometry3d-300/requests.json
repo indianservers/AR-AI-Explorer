@@ -1,0 +1,1802 @@
+[
+  {
+    "id": 1,
+    "text": "Can you draw a cube for me?",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 2,
+    "text": "Make a ball.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 3,
+    "text": "Draw a cone like an ice cream cone.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 4,
+    "text": "Can you make a cylinder like a tin can?",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 5,
+    "text": "Draw a box that is longer than it is tall.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 6,
+    "text": "Make a pyramid with a square bottom.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 7,
+    "text": "Draw a pyramid with a triangle bottom.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 8,
+    "text": "Can you draw a triangular prism?",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 9,
+    "text": "Make a ring like a doughnut.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 10,
+    "text": "Draw half a ball.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 11,
+    "text": "Make an egg-shaped solid.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 12,
+    "text": "Can you draw a capsule shape?",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 13,
+    "text": "Draw a hollow tube.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 14,
+    "text": "Make a cone with its top cut off.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 15,
+    "text": "Draw a cube with sides of 4 units.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 16,
+    "text": "Make a sphere with radius 3.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 17,
+    "text": "Draw a cylinder with radius 2 and height 5.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 18,
+    "text": "Make a cone with radius 3 and height 6.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 19,
+    "text": "Draw a box that is 6 long, 4 wide, and 2 high.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 20,
+    "text": "Make a square pyramid with base side 4 and height 7.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 21,
+    "text": "Draw a triangular prism that is 5 units long.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 22,
+    "text": "Make a sphere with diameter 10.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 23,
+    "text": "Draw a cube with side length 2.5.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 24,
+    "text": "Make a cylinder that is 8 units tall.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 25,
+    "text": "Draw a point at (1, 2, 3).",
+    "intent": "CREATE_POINT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 26,
+    "text": "Put a point at the origin.",
+    "intent": "CREATE_POINT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 27,
+    "text": "Add a point called A at (2, 0, 0).",
+    "intent": "CREATE_POINT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 28,
+    "text": "Add a point called B at (0, 3, 0).",
+    "intent": "CREATE_POINT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 29,
+    "text": "Add a point called C at (0, 0, 4).",
+    "intent": "CREATE_POINT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 30,
+    "text": "Draw a line from A to B.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 31,
+    "text": "Join B and C with a segment.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 32,
+    "text": "Draw a ray starting at A and going through C.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 33,
+    "text": "Make an arrow from the origin to (2, 3, 4).",
+    "intent": "CONSTRUCT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 34,
+    "text": "Draw a plane through A, B, and C.",
+    "intent": "LINE_PLANE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 35,
+    "text": "Show me the xy-plane.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 36,
+    "text": "Draw a plane parallel to the floor at z = 3.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 37,
+    "text": "Draw a triangle using A, B, and C.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 38,
+    "text": "Make a tetrahedron using four points.",
+    "intent": "CONSTRUCT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 39,
+    "text": "Draw two cubes next to each other.",
+    "intent": "CONSTRUCT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 40,
+    "text": "Make three spheres with different sizes.",
+    "intent": "CONSTRUCT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 41,
+    "text": "How many solids are on my screen?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 42,
+    "text": "How many cubes did I draw?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 43,
+    "text": "How many spheres are there?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 44,
+    "text": "What is this shape called?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 45,
+    "text": "Which shape looks like a ball?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 46,
+    "text": "Which solid has a pointy top?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 47,
+    "text": "Which solid has two circular ends?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 48,
+    "text": "Which objects have only flat faces?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 49,
+    "text": "Which objects have curved surfaces?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 50,
+    "text": "Which objects have both flat and curved surfaces?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 51,
+    "text": "How many faces does this cube have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 52,
+    "text": "How many edges does this cube have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 53,
+    "text": "How many corners does this cube have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 54,
+    "text": "How many faces does this box have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 55,
+    "text": "How many edges does this triangular prism have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 56,
+    "text": "How many corners does this square pyramid have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 57,
+    "text": "How many faces does this tetrahedron have?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 58,
+    "text": "Does a sphere have any corners?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 59,
+    "text": "Does a cylinder have any vertices?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 60,
+    "text": "Is this object a cube or a cuboid?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 61,
+    "text": "Are all the faces of this cube squares?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 62,
+    "text": "Are these two solids the same kind of shape?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 63,
+    "text": "Which object has the most vertices?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 64,
+    "text": "Which objects have a circular base?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 65,
+    "text": "What is the name of the selected object?",
+    "intent": "DESCRIBE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 66,
+    "text": "What are A’s coordinates?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 67,
+    "text": "Where is point B?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 68,
+    "text": "Which point is at (1, 2, 3)?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 69,
+    "text": "Which point is closest to (2, 3, 4)?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 70,
+    "text": "Is any point exactly at the origin?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 71,
+    "text": "What is the distance from A to B?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 72,
+    "text": "How far is C from the origin?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 73,
+    "text": "How far apart are these two points?",
+    "intent": "POINT_QUERY",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 74,
+    "text": "What is the midpoint of AB?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 75,
+    "text": "Mark the halfway point between A and C.",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 76,
+    "text": "Which point is highest?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 77,
+    "text": "Which point has the smallest x-coordinate?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 78,
+    "text": "Which point is closest to the xy-plane?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 79,
+    "text": "Is A above the xy-plane?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 80,
+    "text": "Is B on the z-axis?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 81,
+    "text": "Do A and B have the same height?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 82,
+    "text": "Which points have z equal to zero?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 83,
+    "text": "How far is A from the x-axis?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 84,
+    "text": "How far is B from the yz-plane?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 85,
+    "text": "Are A, B, and C on one straight line?",
+    "intent": "POINT_QUERY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 86,
+    "text": "Are these four points on the same plane?",
+    "intent": "POINT_QUERY",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 87,
+    "text": "Is A inside this sphere?",
+    "intent": "POINT_QUERY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 88,
+    "text": "Is B on the surface of this sphere?",
+    "intent": "POINT_QUERY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 89,
+    "text": "Is C inside this box?",
+    "intent": "POINT_QUERY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 90,
+    "text": "Which points are outside the selected solid?",
+    "intent": "POINT_QUERY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 91,
+    "text": "What is the volume of this cube?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 92,
+    "text": "How much space is inside this box?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 93,
+    "text": "What is the volume of the sphere?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 94,
+    "text": "Find the volume of this cylinder.",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 95,
+    "text": "How much space does this cone take up?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 96,
+    "text": "What is the volume of this square pyramid?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 97,
+    "text": "Find the volume of this triangular prism.",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 98,
+    "text": "What is the total surface area of this cube?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 99,
+    "text": "How much wrapping paper would cover this box?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 100,
+    "text": "What is the surface area of the sphere?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 101,
+    "text": "Find the total surface area of this cylinder.",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 102,
+    "text": "What is the curved surface area of this cylinder?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 103,
+    "text": "Find the curved surface area of this cone.",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 104,
+    "text": "What is the total surface area of this cone?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 105,
+    "text": "What is the area of the pyramid’s base?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 106,
+    "text": "How big is one face of this cube?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 107,
+    "text": "What is the area of the cylinder’s circular base?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 108,
+    "text": "How long is the edge of this cube?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 109,
+    "text": "What is the height of this cone?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 110,
+    "text": "What is the radius of this sphere?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 111,
+    "text": "What is the diameter of this cylinder?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 112,
+    "text": "What are this box’s length, width, and height?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 113,
+    "text": "How long is the diagonal across this box?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 114,
+    "text": "What is the diagonal across one cube face?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 115,
+    "text": "How long is the sloping side of this cone?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 116,
+    "text": "Where is the center of this sphere?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 117,
+    "text": "Where is the center of this box?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 118,
+    "text": "What is the distance between the centers of these spheres?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 119,
+    "text": "Which solid has the biggest volume?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 120,
+    "text": "Which solid has the smallest surface area?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 121,
+    "text": "Is this cube bigger than that sphere by volume?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 122,
+    "text": "Do these two boxes have the same volume?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 123,
+    "text": "How much bigger is this cylinder than that cone?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 124,
+    "text": "If their bases and heights match, is the cone one-third of the cylinder?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 125,
+    "text": "Can you show the volume formula using this solid’s numbers?",
+    "intent": "MEASURE_SOLID",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 126,
+    "text": "Move the cube 2 units to the right.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 127,
+    "text": "Move the sphere 3 units up the z-axis.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 128,
+    "text": "Push the cone 4 units along the y-axis.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 129,
+    "text": "Move the cylinder 2 units in the negative x direction.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 130,
+    "text": "Put the sphere’s center at (3, 2, 1).",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 131,
+    "text": "Move point A to (4, 5, 6).",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 132,
+    "text": "Move B one unit closer to the xy-plane.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 133,
+    "text": "Put the cube’s center at the origin.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 134,
+    "text": "Move all spheres 2 units along the x-axis.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 135,
+    "text": "Move both cubes up by 3 units.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 136,
+    "text": "Move only the selected solid.",
+    "intent": "TRANSLATE",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 137,
+    "text": "Move the box by (1, 2, 3).",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 138,
+    "text": "Bring the cone back to where it was.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 139,
+    "text": "Put the two spheres next to each other without overlap.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 140,
+    "text": "Move this sphere until it just touches that sphere.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 141,
+    "text": "Put the cube on the xy-plane.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 142,
+    "text": "Put the cone on top of the box.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 143,
+    "text": "Line up the centers of these three spheres.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 144,
+    "text": "Leave an equal gap between these cubes.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 145,
+    "text": "Move everything 5 units along the z-axis.",
+    "intent": "TRANSLATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 146,
+    "text": "Rotate the cube 90 degrees around the z-axis.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 147,
+    "text": "Turn the box 45 degrees around the x-axis.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 148,
+    "text": "Spin the cone 180 degrees around the y-axis.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 149,
+    "text": "Rotate the selected solid by 30 degrees.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 150,
+    "text": "Turn the cube around its own center.",
+    "intent": "ROTATE",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 151,
+    "text": "Rotate the triangle around line AB.",
+    "intent": "ROTATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 152,
+    "text": "Rotate point A 90 degrees around the z-axis.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 153,
+    "text": "Rotate both cubes together around the origin.",
+    "intent": "ROTATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 154,
+    "text": "Turn the cylinder so it lies along the x-axis.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 155,
+    "text": "Make the cone point downward.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 156,
+    "text": "Flip the pyramid upside down.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 157,
+    "text": "Rotate the box one full turn.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 158,
+    "text": "Turn it another 15 degrees.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 159,
+    "text": "Turn it back by 15 degrees.",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 160,
+    "text": "Does rotating this solid change its volume?",
+    "intent": "ROTATE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 161,
+    "text": "Reflect A across the xy-plane.",
+    "intent": "REFLECT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 162,
+    "text": "Flip the cube across the yz-plane.",
+    "intent": "REFLECT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 163,
+    "text": "Reflect the triangle across the xz-plane.",
+    "intent": "REFLECT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 164,
+    "text": "Make a mirror copy of this cone across the xy-plane.",
+    "intent": "REFLECT",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 165,
+    "text": "Reflect the sphere’s center through the origin.",
+    "intent": "REFLECT",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 166,
+    "text": "Make this cube twice as big in every direction.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 167,
+    "text": "Shrink the sphere to half its size.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 168,
+    "text": "Make the cylinder twice as tall.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 169,
+    "text": "Make the box wider without changing its height.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 170,
+    "text": "Change the cube’s side length to 5.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 171,
+    "text": "Change the sphere’s radius to 4.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 172,
+    "text": "Set the cylinder’s diameter to 6.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 173,
+    "text": "Make the cone’s height 10.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 174,
+    "text": "Set the box dimensions to 8 by 5 by 3.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 175,
+    "text": "Enlarge the selected solid by a factor of 1.5.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 176,
+    "text": "Make every sphere twice its current radius.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 177,
+    "text": "Give all cubes a side length of 3.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 178,
+    "text": "Keep the cylinder’s radius the same and halve its height.",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 179,
+    "text": "If I double this cube’s sides, what happens to its volume?",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 180,
+    "text": "If I double this sphere’s radius, what happens to its surface area?",
+    "intent": "RESIZE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 181,
+    "text": "Color the cube red.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 182,
+    "text": "Make the sphere blue.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 183,
+    "text": "Change all spheres to green.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 184,
+    "text": "Paint every cube orange.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 185,
+    "text": "Make only the selected cone purple.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 186,
+    "text": "Change all blue solids to yellow.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 187,
+    "text": "Give the box a pink outline.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 188,
+    "text": "Make the cylinder partly transparent.",
+    "intent": "APPEARANCE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 189,
+    "text": "Make the sphere completely see-through.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 190,
+    "text": "Show only the edges of the cube.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 191,
+    "text": "Show the cube’s faces again.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 192,
+    "text": "Make the selected object’s edges thicker.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 193,
+    "text": "Change all solid outlines to black.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 194,
+    "text": "Hide the cone.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 195,
+    "text": "Show the cone again.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 196,
+    "text": "Hide every sphere.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 197,
+    "text": "Show all hidden solids.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 198,
+    "text": "Hide everything except the selected cube.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 199,
+    "text": "Lock the box so I cannot move it.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 200,
+    "text": "Unlock every cube.",
+    "intent": "APPEARANCE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 201,
+    "text": "Rename this sphere Ball.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 202,
+    "text": "Call this cube MyCube.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 203,
+    "text": "Show the names of all points.",
+    "intent": "SELECT_COPY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 204,
+    "text": "Hide the object labels.",
+    "intent": "SELECT_COPY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 205,
+    "text": "Select all spheres.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 206,
+    "text": "Select the smallest cube.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 207,
+    "text": "Select the red cone.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 208,
+    "text": "Select both boxes.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 209,
+    "text": "Clear my selection.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 210,
+    "text": "Make a copy of the selected pyramid.",
+    "intent": "SELECT_COPY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 211,
+    "text": "How long is segment AB?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 212,
+    "text": "Which way does vector AB point?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 213,
+    "text": "What are the three components of this vector?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 214,
+    "text": "How long is this arrow?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 215,
+    "text": "Make a unit vector pointing the same way.",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 216,
+    "text": "Add these two vectors.",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 217,
+    "text": "Subtract vector AC from vector AB.",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 218,
+    "text": "What is the angle between these two arrows?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 219,
+    "text": "Are these vectors perpendicular?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 220,
+    "text": "Are these vectors parallel?",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 221,
+    "text": "Find the dot product of these vectors.",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 222,
+    "text": "Find a vector perpendicular to both arrows.",
+    "intent": "VECTOR_MATH",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 223,
+    "text": "Does point C lie on line AB?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 224,
+    "text": "Are these two 3D lines parallel?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 225,
+    "text": "Do these two lines meet?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 226,
+    "text": "Where do these lines cross?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 227,
+    "text": "Are these lines skew?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 228,
+    "text": "What is the shortest distance between these lines?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 229,
+    "text": "How far is point A from this line?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 230,
+    "text": "Mark the closest point on the line to A.",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 231,
+    "text": "Draw a line through A parallel to BC.",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 232,
+    "text": "Draw a line through A perpendicular to this plane.",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 233,
+    "text": "Draw a plane through A parallel to the xy-plane.",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 234,
+    "text": "Draw a plane through A, B, and C.",
+    "intent": "LINE_PLANE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 235,
+    "text": "What is the equation of this plane?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 236,
+    "text": "Is point D on this plane?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 237,
+    "text": "Is this line parallel to the plane?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 238,
+    "text": "Where does this line go through the plane?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 239,
+    "text": "How far is A from this plane?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 240,
+    "text": "Drop a perpendicular from A to the plane.",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 241,
+    "text": "Are these two planes perpendicular?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 242,
+    "text": "Are these two planes parallel?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 243,
+    "text": "What is the angle between these planes?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 244,
+    "text": "Draw the line where these planes meet.",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 245,
+    "text": "Which direction is straight out from this plane?",
+    "intent": "LINE_PLANE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 246,
+    "text": "Slice the cube with a horizontal plane.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 247,
+    "text": "What shape is this cube’s cross-section?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 248,
+    "text": "Slice the sphere through its center.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 249,
+    "text": "What is the radius of that circular slice?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 250,
+    "text": "Move the slicing plane upward by one unit.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 251,
+    "text": "Can a tilted slice through this cylinder make an ellipse?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 252,
+    "text": "Cut the cone with a plane parallel to its base.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 253,
+    "text": "Show the sphere and plane’s intersection.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 254,
+    "text": "Does this plane touch the sphere at just one point?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 255,
+    "text": "Draw a tangent plane at this point on the sphere.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 256,
+    "text": "Are these two spheres touching?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 257,
+    "text": "Are these spheres overlapping?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 258,
+    "text": "Is the small sphere completely inside the big sphere?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 259,
+    "text": "Where do these two spheres intersect?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 260,
+    "text": "Does this line pass through the sphere?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 261,
+    "text": "Mark where the line enters and leaves the sphere.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 262,
+    "text": "Is this line tangent to the sphere?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 263,
+    "text": "Is the cube completely inside the sphere?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 264,
+    "text": "Are the box and the plane intersecting?",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 265,
+    "text": "Show me a net of this cube.",
+    "intent": "INTERSECTION",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 266,
+    "text": "Draw another one like that.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 267,
+    "text": "Make the new one smaller.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 268,
+    "text": "No, I meant the first sphere.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 269,
+    "text": "Change that one to red too.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 270,
+    "text": "Move them together.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 271,
+    "text": "Keep the other objects where they are.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 272,
+    "text": "Do the same thing to the second cube.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 273,
+    "text": "What about the blue sphere?",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 274,
+    "text": "Tell me its volume now.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 275,
+    "text": "Why did that answer change?",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 276,
+    "text": "Show me the steps for that answer.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 277,
+    "text": "Can you explain that more simply?",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 278,
+    "text": "Which object did you just change?",
+    "intent": "FOLLOW_UP",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 279,
+    "text": "Did you change both cubes or only one?",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 280,
+    "text": "Keep A fixed while moving B.",
+    "intent": "FOLLOW_UP",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 281,
+    "text": "Draw a sphere with radius minus 3.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "INVALID"
+  },
+  {
+    "id": 282,
+    "text": "Make a cube with side length zero.",
+    "intent": "CREATE_SOLID",
+    "expected_status": "INVALID"
+  },
+  {
+    "id": 283,
+    "text": "Draw a plane through these three points on one straight line.",
+    "intent": "LINE_PLANE",
+    "expected_status": "INVALID"
+  },
+  {
+    "id": 284,
+    "text": "Draw a line using the same point twice.",
+    "intent": "CONSTRUCT",
+    "expected_status": "INVALID"
+  },
+  {
+    "id": 285,
+    "text": "Find the distance from A to Z when Z is not on the board.",
+    "intent": "POINT_QUERY",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 286,
+    "text": "Change all cones to red when there are no cones.",
+    "intent": "APPEARANCE",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 287,
+    "text": "Color the selected solid blue when I have selected nothing.",
+    "intent": "APPEARANCE",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 288,
+    "text": "Move the locked cube 2 units right.",
+    "intent": "TRANSLATE",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 289,
+    "text": "Give this box a height of 1000000000.",
+    "intent": "RESIZE",
+    "expected_status": "INVALID"
+  },
+  {
+    "id": 290,
+    "text": "Put a 3D point at (2, 3).",
+    "intent": "CREATE_POINT",
+    "expected_status": "INVALID"
+  },
+  {
+    "id": 291,
+    "text": "Make it bigger, but ask me how much first.",
+    "intent": "RESIZE",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 292,
+    "text": "Rotate it, but ask me which axis first.",
+    "intent": "ROTATE",
+    "expected_status": "CLARIFICATION"
+  },
+  {
+    "id": 293,
+    "text": "Undo the last thing you did.",
+    "intent": "HISTORY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 294,
+    "text": "Redo that change.",
+    "intent": "HISTORY",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 295,
+    "text": "Undo only the last color change.",
+    "intent": "HISTORY",
+    "expected_status": "UNSUPPORTED"
+  },
+  {
+    "id": 296,
+    "text": "Delete the selected sphere.",
+    "intent": "DELETE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 297,
+    "text": "Clear all solids but keep my points and lines.",
+    "intent": "DELETE",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 298,
+    "text": "Save this 3D scene.",
+    "intent": "SAVE_LOAD",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 299,
+    "text": "Load my saved scene and keep the colors and sizes.",
+    "intent": "SAVE_LOAD",
+    "expected_status": "APPLIED"
+  },
+  {
+    "id": 300,
+    "text": "Reset the camera so I can see all my objects.",
+    "intent": "CAMERA",
+    "expected_status": "UNSUPPORTED"
+  }
+]

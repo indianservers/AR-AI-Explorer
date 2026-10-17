@@ -1,0 +1,12 @@
+{
+  "crc_valid": true,
+  "models_match_sources": true,
+  "models": {
+    "ruhi_nlp": "782fa1398227e8dde6c2b5d6a1e0af3d3b2ba07641400a49511316af4ef55ffa",
+    "ruhi_engine_nlp": "476da8e9133abbb1c2a5b6db956f85978bb0986804da095270f943bb77f35a8f",
+    "ruhi_dialogue_nlp": "349bc9a0be6ae034bba8b9f13bae4c33f3c38e4feea8cfa07ef4f6f45463ac34",
+    "ruhi_geometry3d_nlp": "fb04323dc618bbe18c60b0b3e9383313e9836b4c21366aaa255faa7f45f0221e",
+    "ruhi_semantic_nlp": "9f61ff43d68f2b9ca8d9c3971a83f1eead9d370961da23f36e76f5f867ce3a78",
+    "ruhi_point_slots": "e68423020086154decd15e7befd84d2555935e41acdb387a87a3903cc4fc285f"
+  }
+}

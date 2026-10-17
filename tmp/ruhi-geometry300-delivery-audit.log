@@ -1,0 +1,9 @@
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-geometry3d-300/native-300.json: 1 file pulled, 0 skipped. 8.2 MB/s (82699 bytes in 0.010s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-geometry3d-300/canvas-result.json: 1 file pulled, 0 skipped. 0.0 MB/s (129 bytes in 0.020s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-geometry3d-300/empty.png: 1 file pulled, 0 skipped. 7.9 MB/s (233287 bytes in 0.028s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-geometry3d-300/red-cube-transformed.png: 1 file pulled, 0 skipped. 15.2 MB/s (314433 bytes in 0.020s)
+{"passed": true, "jvm": 300, "native": 300, "unit_tests": 78, "outcomes": {"APPLIED": 186, "UNSUPPORTED": 85, "CLARIFICATION": 23, "INVALID": 6}}

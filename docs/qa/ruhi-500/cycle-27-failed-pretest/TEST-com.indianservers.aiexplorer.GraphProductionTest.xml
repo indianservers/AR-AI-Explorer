@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.GraphProductionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:26:47.499Z" hostname="INDIANSERVERS" time="0.425">
+  <properties/>
+  <testcase name="regressionFamiliesExposeResidualsBandsAndModelGuidance" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.307"/>
+  <testcase name="transformationsFoldersNotesAndAudioSummariesReuseGraphState" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.026"/>
+  <testcase name="pointsOfInterestAreDeterministicSortedAndKeyboardReachable" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.01"/>
+  <testcase name="canvasHandlesCoverEveryFreeAndLinkedParameter" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.004"/>
+  <testcase name="everyGraphFormUsesOneTypedExpressionModel" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.031"/>
+  <testcase name="professionalTablesAcceptThousandsOfCsvTsvRowsAndCalculatedColumns" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.046"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

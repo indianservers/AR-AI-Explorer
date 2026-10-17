@@ -1,0 +1,56 @@
+{
+    "source_row": 350,
+    "source_sha256": "090c2d5d0436440397bf1752051ae4b0561946da91a6424d359cdf6b574e5f44",
+    "scope": "Original zero-coordinate utterance and three explicit-coordinate variations; development counterexamples, not a held-out NLP benchmark.",
+    "source_files_unchanged": true,
+    "results": [
+        {
+            "source_row": 350,
+            "input": "Explain why absolute value is not differentiable at zero",
+            "expected_x": 0.0,
+            "actual_x": 0.0,
+            "expected_differentiable": false,
+            "expected_slope": null,
+            "coordinate_matched": true,
+            "status": "APPLIED",
+            "reply": "abs(x) is not differentiable at zero: its left-hand slope is -1 and its right-hand slope is 1, so no single tangent slope exists.",
+            "note": "Independent abs(x) rule: derivative is +1 for x>0, -1 for x<0, undefined at zero. Coordinate agreement is a necessary check, not a complete explanation oracle."
+        },
+        {
+            "source_row": 350,
+            "input": "Explain why absolute value is not differentiable at x = 2",
+            "expected_x": 2.0,
+            "actual_x": 2.0,
+            "expected_differentiable": true,
+            "expected_slope": 1.0,
+            "coordinate_matched": true,
+            "status": "APPLIED",
+            "reply": "abs(x) is differentiable at x=2.0: both one-sided slopes are 1.0, so its derivative is 1.0.",
+            "note": "Independent abs(x) rule: derivative is +1 for x>0, -1 for x<0, undefined at zero. Coordinate agreement is a necessary check, not a complete explanation oracle."
+        },
+        {
+            "source_row": 350,
+            "input": "Explain why absolute value is not differentiable at x = -3",
+            "expected_x": -3.0,
+            "actual_x": -3.0,
+            "expected_differentiable": true,
+            "expected_slope": -1.0,
+            "coordinate_matched": true,
+            "status": "APPLIED",
+            "reply": "abs(x) is differentiable at x=-3.0: both one-sided slopes are -1.0, so its derivative is -1.0.",
+            "note": "Independent abs(x) rule: derivative is +1 for x>0, -1 for x<0, undefined at zero. Coordinate agreement is a necessary check, not a complete explanation oracle."
+        },
+        {
+            "source_row": 350,
+            "input": "Explain why absolute value is not differentiable at 2",
+            "expected_x": 2.0,
+            "actual_x": 2.0,
+            "expected_differentiable": true,
+            "expected_slope": 1.0,
+            "coordinate_matched": true,
+            "status": "APPLIED",
+            "reply": "abs(x) is differentiable at x=2.0: both one-sided slopes are 1.0, so its derivative is 1.0.",
+            "note": "Independent abs(x) rule: derivative is +1 for x>0, -1 for x<0, undefined at zero. Coordinate agreement is a necessary check, not a complete explanation oracle."
+        }
+    ]
+}

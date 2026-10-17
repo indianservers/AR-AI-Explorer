@@ -1,0 +1,68 @@
+ACTIVITY MANAGER PROCESS EXIT INFO (dumpsys activity exit-info)
+Last Timestamp of Persistence Into Persistent Storage: 2026-10-17 17:07:25.958
+  package: com.indianservers.aiexplorer
+    Historical Process Exit for uid=10210
+        ApplicationExitInfo #0:
+          timestamp=2026-10-17 17:21:05.492 pid=2901 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=6 (ANR) subreason=0 (UNKNOWN) status=0
+          importance=400 pss=0.00 rss=0.00 description=bg anr: Process ProcessRecord{fbcdfd2 2901:com.indianservers.aiexplorer/u0a210} failed to complete startup state=empty trace=/data/system/procexitstore/anr_2026-10-17-17-21-04-848.gz
+        ApplicationExitInfo #1:
+          timestamp=2026-10-17 16:30:45.616 pid=19312 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=444MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #2:
+          timestamp=2026-10-17 16:12:00.609 pid=17998 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=432MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #3:
+          timestamp=2026-10-17 15:58:05.752 pid=16722 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=407MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #4:
+          timestamp=2026-10-17 15:40:35.052 pid=15399 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=430MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #5:
+          timestamp=2026-10-17 15:20:25.630 pid=14112 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=443MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #6:
+          timestamp=2026-10-17 15:07:21.079 pid=12863 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=443MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #7:
+          timestamp=2026-10-17 14:29:11.325 pid=11493 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=428MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #8:
+          timestamp=2026-10-17 13:57:16.576 pid=10154 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=437MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #9:
+          timestamp=2026-10-17 13:27:09.089 pid=8720 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=453MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #10:
+          timestamp=2026-10-17 12:49:08.847 pid=7476 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=451MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #11:
+          timestamp=2026-10-17 12:30:07.131 pid=6202 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=433MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #12:
+          timestamp=2026-10-17 12:04:45.902 pid=4934 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=435MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #13:
+          timestamp=2026-10-17 10:16:13.840 pid=31157 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=398MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #14:
+          timestamp=2026-10-17 10:07:35.280 pid=30191 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=459MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null
+        ApplicationExitInfo #15:
+          timestamp=2026-10-17 09:51:26.393 pid=29231 realUid=10210 packageUid=10210 definingUid=10210 user=0
+          process=com.indianservers.aiexplorer reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=125 pss=0.00 rss=437MB description=stop com.indianservers.aiexplorer due to finished inst state=empty trace=null

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "source_curve_count": 1,
+  "derivative_pixels": 17596,
+  "parent_edit_pixels": 66154,
+  "live_function": true,
+  "tangent_slider": true,
+  "tangent_normal": true,
+  "absolute_corner_explained": true,
+  "persistence": true
+}

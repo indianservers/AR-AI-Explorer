@@ -1,0 +1,8297 @@
+{
+  "cycle": 46,
+  "pre_training_test": "docs\\qa\\ruhi-500\\pre-cycle-46-scene-results.json",
+  "pre_training_test_sha256": "1158504ecff6991c93c8e5b05b2a229cd447461f74558998200fade15d3b9d6f",
+  "intent_model": {
+    "version": 46,
+    "labels": [
+      "CALCULATE_SLOPE",
+      "CREATE_CIRCLE",
+      "CREATE_TRIANGLE",
+      "DIALOGUE_CONTEXT",
+      "DIFFERENTIATE",
+      "EDIT_SCENE",
+      "FIND_INTERSECTION",
+      "FIND_MIDPOINT",
+      "INTEGRATE",
+      "MEASURE_ANGLE",
+      "MEASURE_DISTANCE",
+      "MEASURE_SOLID",
+      "PLOT_FUNCTION_2D",
+      "PLOT_SURFACE_3D",
+      "TRANSFORM_3D"
+    ],
+    "vocabulary": [
+      "a",
+      "a blank",
+      "a circle",
+      "a concentric",
+      "a cone",
+      "a cube",
+      "a darker",
+      "a entity",
+      "a fraction",
+      "a graph",
+      "a hemisphere",
+      "a label",
+      "a marker",
+      "a num",
+      "a paraboloid",
+      "a point",
+      "a radius",
+      "a rectangular",
+      "a red",
+      "a right",
+      "a scalene",
+      "a second",
+      "a sine",
+      "a small",
+      "a sphere",
+      "a tangent",
+      "a triangle",
+      "a unit",
+      "about",
+      "about the",
+      "about z",
+      "above",
+      "above the",
+      "absolute",
+      "absolute area",
+      "absolute value",
+      "accumulation",
+      "accumulation from",
+      "across",
+      "across the",
+      "actually",
+      "actually entity",
+      "acute",
+      "acute or",
+      "acute triangle",
+      "add",
+      "add a",
+      "add the",
+      "again",
+      "again with",
+      "all",
+      "all angles",
+      "all intersections",
+      "all objects",
+      "all points",
+      "along",
+      "along entity",
+      "along the",
+      "an",
+      "an acute",
+      "an arc",
+      "an equilateral",
+      "an isometric",
+      "an isosceles",
+      "an obtuse",
+      "and",
+      "and centered",
+      "and cosine",
+      "and entity",
+      "and height",
+      "and m",
+      "and negative",
+      "and num",
+      "and one",
+      "and pi",
+      "and point",
+      "and right",
+      "and run",
+      "and shift",
+      "and so",
+      "and sphere",
+      "and the",
+      "and v",
+      "and vertices",
+      "and volume",
+      "and x",
+      "and y",
+      "and z",
+      "angle",
+      "angle acute",
+      "angle at",
+      "angle between",
+      "angle bisector",
+      "angle entity",
+      "angle formed",
+      "angle from",
+      "angle in",
+      "angle num",
+      "angles",
+      "angles inside",
+      "angles num",
+      "another",
+      "another circle",
+      "answer",
+      "antiderivative",
+      "antiderivative of",
+      "apart",
+      "approximation",
+      "approximation of",
+      "arc",
+      "arc showing",
+      "are",
+      "are entity",
+      "are the",
+      "are viewing",
+      "area",
+      "area and",
+      "area beneath",
+      "area between",
+      "area enclosed",
+      "area for",
+      "area num",
+      "area of",
+      "area separately",
+      "area under",
+      "around",
+      "around the",
+      "around x",
+      "around z",
+      "as",
+      "as a",
+      "as before",
+      "as entity",
+      "as tall",
+      "as wireframe",
+      "as x",
+      "at",
+      "at all",
+      "at coordinates",
+      "at entity",
+      "at num",
+      "at origin",
+      "at scale",
+      "at the",
+      "at vertex",
+      "at x",
+      "at zero",
+      "axes",
+      "axis",
+      "axis and",
+      "axis centered",
+      "axis from",
+      "back",
+      "back together",
+      "base",
+      "base area",
+      "base num",
+      "before",
+      "beneath",
+      "beneath y",
+      "between",
+      "between entity",
+      "between intersecting",
+      "between num",
+      "between point",
+      "between points",
+      "between sin",
+      "between the",
+      "between these",
+      "between two",
+      "between x",
+      "between y",
+      "big",
+      "big one",
+      "bisect",
+      "bisect line",
+      "bisecting",
+      "bisecting point",
+      "bisector",
+      "bisector of",
+      "blank",
+      "blank canvas",
+      "blue",
+      "blue curve",
+      "blue line",
+      "blue one",
+      "both",
+      "both of",
+      "both solids",
+      "build",
+      "build an",
+      "by",
+      "by num",
+      "by points",
+      "by step",
+      "by vectors",
+      "by y",
+      "calculate",
+      "calculate angle",
+      "calculate cube",
+      "calculate derivative",
+      "calculate integral",
+      "calculate pyramid",
+      "calculate rise",
+      "calculate sphere",
+      "calculate surface",
+      "calculate the",
+      "camera",
+      "camera num",
+      "camera to",
+      "can",
+      "can we",
+      "can you",
+      "cancel",
+      "cancel that",
+      "canvas",
+      "center",
+      "center of",
+      "center point",
+      "center the",
+      "center to",
+      "centered",
+      "centered at",
+      "centered on",
+      "centimeters",
+      "centimeters instead",
+      "change",
+      "change in",
+      "change of",
+      "change the",
+      "changes",
+      "changes as",
+      "check",
+      "check whether",
+      "choices",
+      "choices do",
+      "choose",
+      "choose the",
+      "circle",
+      "circle around",
+      "circle as",
+      "circle at",
+      "circle centered",
+      "circle entity",
+      "circle inside",
+      "circle of",
+      "circle passing",
+      "circle radius",
+      "circle tangent",
+      "circle through",
+      "circle with",
+      "circle x",
+      "circles",
+      "circles centered",
+      "circles that",
+      "circumcircle",
+      "circumcircle of",
+      "clear",
+      "clear the",
+      "clockwise",
+      "closer",
+      "closer to",
+      "closest",
+      "closest to",
+      "colors",
+      "compare",
+      "compare left",
+      "compare slopes",
+      "compare the",
+      "compare this",
+      "compute",
+      "compute crossing",
+      "compute d",
+      "compute the",
+      "compute volume",
+      "concentric",
+      "concentric circle",
+      "cone",
+      "cone num",
+      "cone radius",
+      "cone with",
+      "cone z",
+      "congruent",
+      "congruent to",
+      "connecting",
+      "connecting entity",
+      "connecting the",
+      "constant",
+      "constant function",
+      "construct",
+      "construct a",
+      "construct an",
+      "construct the",
+      "construction",
+      "continue",
+      "continue where",
+      "convex",
+      "convex polyhedron",
+      "coordinate",
+      "coordinate grid",
+      "coordinates",
+      "coordinates for",
+      "coordinates num",
+      "coordinates of",
+      "coordinates to",
+      "corner",
+      "corner of",
+      "cos",
+      "cos num",
+      "cos t",
+      "cos x",
+      "cos y",
+      "cosine",
+      "cosine intersect",
+      "could",
+      "could you",
+      "counterclockwise",
+      "create",
+      "create a",
+      "create an",
+      "create the",
+      "create triangle",
+      "create two",
+      "create z",
+      "critical",
+      "critical points",
+      "cross",
+      "cross the",
+      "crossing",
+      "crossing of",
+      "crossing points",
+      "cube",
+      "cube and",
+      "cube back",
+      "cube by",
+      "cube edge",
+      "cube from",
+      "cube have",
+      "cube num",
+      "cube orientation",
+      "cube towards",
+      "cube whose",
+      "cube with",
+      "cubed",
+      "cubic",
+      "cubic y",
+      "cuboid",
+      "cuboid along",
+      "cuboid diagonal",
+      "cuboid enclose",
+      "current",
+      "current construction",
+      "current graph",
+      "current scene",
+      "current triangle",
+      "current viewport",
+      "currently",
+      "currently selected",
+      "curve",
+      "curve between",
+      "curve dashed",
+      "curve r",
+      "curves",
+      "curves intersect",
+      "cylinder",
+      "cylinder radius",
+      "cylinder twice",
+      "d",
+      "d dx",
+      "d ripple",
+      "d rotation",
+      "d surface",
+      "d vectors",
+      "darker",
+      "darker graph",
+      "dashed",
+      "decimals",
+      "decreasing",
+      "default",
+      "default scene",
+      "defined",
+      "defined by",
+      "degree",
+      "degree angle",
+      "degrees",
+      "degrees about",
+      "degrees around",
+      "degrees clockwise",
+      "degrees is",
+      "delete",
+      "delete the",
+      "derivative",
+      "derivative at",
+      "derivative of",
+      "diagonal",
+      "diagonal for",
+      "diagonal of",
+      "diameter",
+      "diameter entity",
+      "diameter given",
+      "diameter num",
+      "did",
+      "did that",
+      "differentiable",
+      "differentiable at",
+      "differentiate",
+      "differentiate sqrt",
+      "differentiate y",
+      "dihedral",
+      "dihedral angle",
+      "display",
+      "display all",
+      "display the",
+      "display z",
+      "distance",
+      "distance between",
+      "distance from",
+      "divide",
+      "divide equally",
+      "do",
+      "do entity",
+      "do not",
+      "do the",
+      "do y",
+      "does",
+      "does segment",
+      "does the",
+      "does this",
+      "does y",
+      "double",
+      "double the",
+      "down",
+      "down from",
+      "draw",
+      "draw a",
+      "draw an",
+      "draw another",
+      "draw it",
+      "draw saddle",
+      "draw tangents",
+      "draw the",
+      "draw triangle",
+      "draw two",
+      "draw y",
+      "draw z",
+      "drawing",
+      "drawing step",
+      "drew",
+      "duplicate",
+      "duplicate the",
+      "dx",
+      "dx for",
+      "dx from",
+      "dx of",
+      "dy",
+      "dy dx",
+      "e",
+      "e to",
+      "e x",
+      "each",
+      "each intersection",
+      "edge",
+      "edge total",
+      "edges",
+      "edges and",
+      "enclose",
+      "enclosed",
+      "enclosed by",
+      "endpoints",
+      "endpoints of",
+      "entity",
+      "entity and",
+      "entity apart",
+      "entity as",
+      "entity at",
+      "entity counterclockwise",
+      "entity distance",
+      "entity divide",
+      "entity entity",
+      "entity equals",
+      "entity fixed",
+      "entity formula",
+      "entity from",
+      "entity have",
+      "entity hill",
+      "entity if",
+      "entity in",
+      "entity increasing",
+      "entity into",
+      "entity is",
+      "entity just",
+      "entity meant",
+      "entity now",
+      "entity num",
+      "entity passing",
+      "entity please",
+      "entity slope",
+      "entity sum",
+      "entity sums",
+      "entity the",
+      "entity theorem",
+      "entity this",
+      "entity through",
+      "entity to",
+      "entity with",
+      "entity x",
+      "entity y",
+      "equal",
+      "equal segments",
+      "equal sides",
+      "equal to",
+      "equally",
+      "equals",
+      "equals num",
+      "equation",
+      "equilateral",
+      "equilateral triangle",
+      "estimate",
+      "estimate integral",
+      "evaluate",
+      "evaluate the",
+      "excluding",
+      "excluding singularities",
+      "existing",
+      "existing cube",
+      "existing points",
+      "exp",
+      "exp x",
+      "explain",
+      "explain the",
+      "explain why",
+      "explode",
+      "explode the",
+      "exploded",
+      "exploded cube",
+      "exterior",
+      "exterior angle",
+      "externally",
+      "externally tangent",
+      "f",
+      "f prime",
+      "f x",
+      "faces",
+      "faces edges",
+      "faces of",
+      "fail",
+      "far",
+      "far are",
+      "far is",
+      "find",
+      "find angle",
+      "find area",
+      "find base",
+      "find critical",
+      "find intersection",
+      "find intersections",
+      "find solutions",
+      "find surface",
+      "find the",
+      "find volume",
+      "find x",
+      "first",
+      "first one",
+      "fit",
+      "fit all",
+      "five",
+      "five units",
+      "fixed",
+      "fixed at",
+      "floor",
+      "floor x",
+      "for",
+      "for base",
+      "for entity",
+      "for f",
+      "for num",
+      "for segment",
+      "for side",
+      "for sin",
+      "for the",
+      "for this",
+      "for x",
+      "for y",
+      "for z",
+      "formed",
+      "formed by",
+      "formula",
+      "formula on",
+      "four",
+      "four decimals",
+      "fraction",
+      "fraction for",
+      "from",
+      "from above",
+      "from all",
+      "from an",
+      "from entity",
+      "from num",
+      "from point",
+      "from x",
+      "from zero",
+      "full",
+      "full line",
+      "function",
+      "function f",
+      "function y",
+      "give",
+      "give intersection",
+      "give me",
+      "give the",
+      "given",
+      "given radius",
+      "gradient",
+      "gradient here",
+      "gradient of",
+      "graph",
+      "graph blue",
+      "graph grid",
+      "graph the",
+      "graph touch",
+      "graph x",
+      "graph y",
+      "graph z",
+      "graphs",
+      "green",
+      "grid",
+      "half",
+      "half of",
+      "halfway",
+      "halfway along",
+      "halfway between",
+      "halfway point",
+      "halfway position",
+      "have",
+      "have positive",
+      "height",
+      "height num",
+      "height of",
+      "hemisphere",
+      "hemisphere radius",
+      "hemisphere z",
+      "here",
+      "hide",
+      "hide measurements",
+      "hide the",
+      "highlight",
+      "highlight positive",
+      "highlight the",
+      "hill",
+      "horizontal",
+      "how",
+      "how far",
+      "how many",
+      "how much",
+      "how steep",
+      "how the",
+      "hypotenuse",
+      "hypotenuse num",
+      "if",
+      "if entity",
+      "if x",
+      "in",
+      "in degrees",
+      "in the",
+      "in this",
+      "in triangle",
+      "in units",
+      "in y",
+      "incircle",
+      "incircle of",
+      "increasing",
+      "increasing or",
+      "inside",
+      "inside the",
+      "inside triangle",
+      "instantaneous",
+      "instantaneous gradient",
+      "instead",
+      "integral",
+      "integral accumulation",
+      "integral cos",
+      "integral num",
+      "integral of",
+      "integrate",
+      "integrate e",
+      "integrate the",
+      "integrate x",
+      "intercepts",
+      "intercepts of",
+      "interior",
+      "interior angles",
+      "intersect",
+      "intersect at",
+      "intersecting",
+      "intersecting lines",
+      "intersection",
+      "intersection coordinates",
+      "intersection entity",
+      "intersection is",
+      "intersection nearest",
+      "intersection of",
+      "intersection points",
+      "intersections",
+      "intersections in",
+      "intersections of",
+      "into",
+      "into two",
+      "is",
+      "is closest",
+      "is entity",
+      "is halfway",
+      "is horizontal",
+      "is lateral",
+      "is not",
+      "is num",
+      "is segment",
+      "is the",
+      "is this",
+      "isometric",
+      "isometric angle",
+      "isosceles",
+      "isosceles triangle",
+      "it",
+      "it larger",
+      "it num",
+      "it over",
+      "just",
+      "just drew",
+      "just the",
+      "just undid",
+      "kindly",
+      "kindly measure",
+      "l",
+      "l and",
+      "label",
+      "label each",
+      "label next",
+      "label the",
+      "labels",
+      "labels from",
+      "larger",
+      "largest",
+      "largest angle",
+      "last",
+      "last change",
+      "last graph",
+      "last line",
+      "last num",
+      "last object",
+      "last segment",
+      "last two",
+      "lateral",
+      "lateral area",
+      "left",
+      "left and",
+      "leg",
+      "leg num",
+      "legs",
+      "legs num",
+      "length",
+      "length between",
+      "line",
+      "line cross",
+      "line distance",
+      "line entity",
+      "line have",
+      "line segment",
+      "line slope",
+      "line through",
+      "line to",
+      "line x",
+      "lines",
+      "lines l",
+      "ln",
+      "ln x",
+      "locate",
+      "locate the",
+      "logarithm",
+      "logarithm function",
+      "look",
+      "look down",
+      "m",
+      "make",
+      "make a",
+      "make an",
+      "make it",
+      "make the",
+      "make this",
+      "many",
+      "many degrees",
+      "many faces",
+      "mark",
+      "mark all",
+      "mark intersections",
+      "mark midpoint",
+      "mark the",
+      "marker",
+      "marker at",
+      "me",
+      "me the",
+      "meant",
+      "meant the",
+      "measure",
+      "measure angle",
+      "measure the",
+      "measured",
+      "measured angle",
+      "measurements",
+      "measurements on",
+      "meet",
+      "mesh",
+      "mesh num",
+      "middle",
+      "middle of",
+      "midpoint",
+      "midpoint between",
+      "midpoint coordinates",
+      "midpoint of",
+      "midpoint without",
+      "move",
+      "move the",
+      "moves",
+      "much",
+      "much volume",
+      "natural",
+      "natural logarithm",
+      "nearest",
+      "nearest x",
+      "negative",
+      "negative area",
+      "net",
+      "net integral",
+      "new",
+      "new one",
+      "newest",
+      "newest segment",
+      "newest solid",
+      "next",
+      "next to",
+      "no",
+      "no make",
+      "normal",
+      "normal to",
+      "not",
+      "not change",
+      "not differentiable",
+      "now",
+      "now show",
+      "num",
+      "num and",
+      "num at",
+      "num by",
+      "num circle",
+      "num cos",
+      "num cylinder",
+      "num d",
+      "num degree",
+      "num degrees",
+      "num dx",
+      "num entity",
+      "num equals",
+      "num for",
+      "num from",
+      "num have",
+      "num height",
+      "num instead",
+      "num meet",
+      "num num",
+      "num on",
+      "num only",
+      "num otherwise",
+      "num percent",
+      "num pi",
+      "num sin",
+      "num sphere",
+      "num theta",
+      "num to",
+      "num together",
+      "num units",
+      "num where",
+      "num with",
+      "num within",
+      "num x",
+      "num xy",
+      "num y",
+      "object",
+      "object across",
+      "object around",
+      "objects",
+      "obtuse",
+      "obtuse triangle",
+      "of",
+      "of a",
+      "of angle",
+      "of change",
+      "of circles",
+      "of cylinder",
+      "of diameter",
+      "of e",
+      "of entity",
+      "of line",
+      "of ln",
+      "of num",
+      "of radius",
+      "of segment",
+      "of side",
+      "of sin",
+      "of tan",
+      "of the",
+      "of them",
+      "of these",
+      "of this",
+      "of triangle",
+      "of x",
+      "of y",
+      "on",
+      "on entity",
+      "on num",
+      "on point",
+      "on sin",
+      "on the",
+      "on this",
+      "on y",
+      "one",
+      "one leg",
+      "one over",
+      "one right",
+      "only",
+      "only for",
+      "only positive",
+      "only the",
+      "opacity",
+      "or",
+      "or decreasing",
+      "or obtuse",
+      "orbit",
+      "orbit the",
+      "orientation",
+      "origin",
+      "origin between",
+      "other",
+      "other one",
+      "otherwise",
+      "otherwise x",
+      "out",
+      "out the",
+      "over",
+      "over num",
+      "over run",
+      "over there",
+      "over x",
+      "parabola",
+      "parabola y",
+      "paraboloid",
+      "paraboloid z",
+      "passing",
+      "passing through",
+      "per",
+      "per x",
+      "percent",
+      "percent opacity",
+      "percent see",
+      "pi",
+      "pi num",
+      "piecewise",
+      "piecewise function",
+      "place",
+      "place a",
+      "plane",
+      "plane z",
+      "planes",
+      "please",
+      "please find",
+      "plot",
+      "plot f",
+      "plot the",
+      "plot y",
+      "plot z",
+      "plotted",
+      "plotted curve",
+      "plotted curves",
+      "point",
+      "point between",
+      "point entity",
+      "point for",
+      "point halfway",
+      "point is",
+      "point of",
+      "points",
+      "points entity",
+      "points of",
+      "polar",
+      "polar curve",
+      "polygon",
+      "polyhedron",
+      "position",
+      "position on",
+      "positive",
+      "positive and",
+      "positive slope",
+      "positive x",
+      "positive y",
+      "previous",
+      "previous graph",
+      "prime",
+      "prime for",
+      "prism",
+      "prism num",
+      "put",
+      "put a",
+      "put circle",
+      "put the",
+      "pyramid",
+      "pyramid to",
+      "pyramid volume",
+      "quadrilateral",
+      "r",
+      "r num",
+      "radius",
+      "radius as",
+      "radius equal",
+      "radius num",
+      "radius of",
+      "radius with",
+      "rate",
+      "rate of",
+      "rectangular",
+      "rectangular prism",
+      "red",
+      "red circle",
+      "red line",
+      "redo",
+      "redo what",
+      "region",
+      "region between",
+      "remove",
+      "remove labels",
+      "rename",
+      "rename the",
+      "render",
+      "render a",
+      "replace",
+      "replace the",
+      "reset",
+      "reset the",
+      "reset zoom",
+      "restore",
+      "restore the",
+      "right",
+      "right angle",
+      "right entity",
+      "right triangle",
+      "ripple",
+      "ripple z",
+      "rise",
+      "rise and",
+      "rise over",
+      "root",
+      "root of",
+      "roots",
+      "roots of",
+      "rotate",
+      "rotate both",
+      "rotate camera",
+      "rotate that",
+      "rotate the",
+      "rotated",
+      "rotated num",
+      "rotation",
+      "rule",
+      "rule approximation",
+      "run",
+      "run from",
+      "run separately",
+      "saddle",
+      "saddle z",
+      "same",
+      "same radius",
+      "save",
+      "save the",
+      "scale",
+      "scale num",
+      "scale the",
+      "scalene",
+      "scalene triangle",
+      "scene",
+      "scene colors",
+      "scene to",
+      "second",
+      "second derivative",
+      "second graph",
+      "second suggested",
+      "second triangle",
+      "see",
+      "see through",
+      "segment",
+      "segment entity",
+      "segments",
+      "selected",
+      "selected circle",
+      "selected convex",
+      "selected corner",
+      "selected cube",
+      "selected curve",
+      "selected curves",
+      "selected cylinder",
+      "selected function",
+      "selected graph",
+      "selected line",
+      "selected object",
+      "selected planes",
+      "selected point",
+      "selected segment",
+      "selected sphere",
+      "selected triangle",
+      "separately",
+      "separately for",
+      "separately on",
+      "separation",
+      "separation between",
+      "shade",
+      "shade area",
+      "shade the",
+      "shade under",
+      "shape",
+      "shape we",
+      "shift",
+      "shift the",
+      "show",
+      "show a",
+      "show angle",
+      "show cuboid",
+      "show derivative",
+      "show dy",
+      "show how",
+      "show integral",
+      "show me",
+      "show midpoint",
+      "show only",
+      "show rise",
+      "show slope",
+      "show surface",
+      "show the",
+      "show two",
+      "show where",
+      "show y",
+      "show z",
+      "showing",
+      "showing entity",
+      "showing the",
+      "side",
+      "side entity",
+      "side is",
+      "side num",
+      "sides",
+      "sides num",
+      "signed",
+      "signed area",
+      "similar",
+      "similar to",
+      "sin",
+      "sin num",
+      "sin sqrt",
+      "sin t",
+      "sin x",
+      "sin xy",
+      "sin y",
+      "sine",
+      "sine and",
+      "sine curve",
+      "sine wave",
+      "singularities",
+      "singularity",
+      "size",
+      "size of",
+      "sketch",
+      "sketch the",
+      "slant",
+      "slant height",
+      "slide",
+      "slide the",
+      "slope",
+      "slope as",
+      "slope at",
+      "slope between",
+      "slope connecting",
+      "slope does",
+      "slope from",
+      "slope of",
+      "slope on",
+      "slope triangle",
+      "slope undefined",
+      "slope value",
+      "slope zero",
+      "slopes",
+      "slopes of",
+      "small",
+      "small circle",
+      "smallest",
+      "smallest corner",
+      "so",
+      "so on",
+      "solid",
+      "solid five",
+      "solids",
+      "solids together",
+      "solutions",
+      "solutions to",
+      "sphere",
+      "sphere and",
+      "sphere diameter",
+      "sphere num",
+      "sphere radius",
+      "sphere transparent",
+      "spin",
+      "spin the",
+      "split",
+      "split entity",
+      "sqrt",
+      "sqrt num",
+      "sqrt x",
+      "square",
+      "square num",
+      "square root",
+      "squared",
+      "squared for",
+      "start",
+      "start again",
+      "stationary",
+      "stationary points",
+      "steep",
+      "steep is",
+      "step",
+      "step by",
+      "stopped",
+      "straight",
+      "straight line",
+      "stretch",
+      "stretch the",
+      "suggested",
+      "suggested answer",
+      "sum",
+      "sum for",
+      "sums",
+      "sums for",
+      "surface",
+      "surface area",
+      "surface for",
+      "surface z",
+      "surfaces",
+      "surfaces z",
+      "t",
+      "t y",
+      "tall",
+      "tan",
+      "tan x",
+      "tangent",
+      "tangent changes",
+      "tangent circles",
+      "tangent slope",
+      "tangent to",
+      "tangents",
+      "tangents at",
+      "tell",
+      "tell me",
+      "that",
+      "that fail",
+      "that intersect",
+      "that last",
+      "the",
+      "the absolute",
+      "the angle",
+      "the antiderivative",
+      "the area",
+      "the big",
+      "the bisecting",
+      "the blue",
+      "the camera",
+      "the canvas",
+      "the center",
+      "the change",
+      "the circle",
+      "the circumcircle",
+      "the cone",
+      "the constant",
+      "the coordinate",
+      "the crossing",
+      "the cube",
+      "the cubic",
+      "the cuboid",
+      "the current",
+      "the currently",
+      "the default",
+      "the derivative",
+      "the diagonal",
+      "the dihedral",
+      "the distance",
+      "the drawing",
+      "the endpoints",
+      "the entity",
+      "the equation",
+      "the existing",
+      "the exploded",
+      "the exterior",
+      "the faces",
+      "the first",
+      "the full",
+      "the function",
+      "the gradient",
+      "the graph",
+      "the halfway",
+      "the height",
+      "the incircle",
+      "the instantaneous",
+      "the integral",
+      "the intersection",
+      "the intersections",
+      "the largest",
+      "the last",
+      "the length",
+      "the line",
+      "the measured",
+      "the measurements",
+      "the mesh",
+      "the middle",
+      "the midpoint",
+      "the natural",
+      "the net",
+      "the new",
+      "the newest",
+      "the normal",
+      "the origin",
+      "the other",
+      "the parabola",
+      "the piecewise",
+      "the plane",
+      "the plotted",
+      "the polar",
+      "the polygon",
+      "the previous",
+      "the pyramid",
+      "the quadrilateral",
+      "the radius",
+      "the rate",
+      "the red",
+      "the region",
+      "the right",
+      "the roots",
+      "the same",
+      "the second",
+      "the selected",
+      "the separation",
+      "the shape",
+      "the signed",
+      "the sine",
+      "the singularity",
+      "the size",
+      "the slant",
+      "the slope",
+      "the smallest",
+      "the sphere",
+      "the square",
+      "the stationary",
+      "the straight",
+      "the surface",
+      "the tangent",
+      "the torus",
+      "the total",
+      "the triangle",
+      "the two",
+      "the upper",
+      "the viewport",
+      "the volume",
+      "the volumes",
+      "the x",
+      "the y",
+      "the yz",
+      "the z",
+      "them",
+      "theorem",
+      "there",
+      "these",
+      "these plotted",
+      "these two",
+      "theta",
+      "thicken",
+      "thicken the",
+      "this",
+      "this angle",
+      "this cone",
+      "this cuboid",
+      "this curve",
+      "this cylinder",
+      "this line",
+      "this object",
+      "this sphere",
+      "this triangle",
+      "this vertical",
+      "this with",
+      "three",
+      "through",
+      "through entity",
+      "through num",
+      "through the",
+      "to",
+      "to e",
+      "to entity",
+      "to fit",
+      "to four",
+      "to green",
+      "to look",
+      "to num",
+      "to pi",
+      "to point",
+      "to sin",
+      "to the",
+      "to this",
+      "to three",
+      "to wireframe",
+      "to x",
+      "to y",
+      "together",
+      "together around",
+      "together for",
+      "torus",
+      "torus center",
+      "total",
+      "total area",
+      "total for",
+      "touch",
+      "touch the",
+      "towards",
+      "towards positive",
+      "transparent",
+      "trapezoid",
+      "trapezoid rule",
+      "triangle",
+      "triangle above",
+      "triangle centered",
+      "triangle congruent",
+      "triangle defined",
+      "triangle entity",
+      "triangle equilateral",
+      "triangle of",
+      "triangle red",
+      "triangle rotated",
+      "triangle showing",
+      "triangle similar",
+      "triangle using",
+      "triangle visible",
+      "triangle with",
+      "turn",
+      "turn the",
+      "twice",
+      "twice as",
+      "twice the",
+      "two",
+      "two circles",
+      "two equal",
+      "two externally",
+      "two graphs",
+      "two num",
+      "two segments",
+      "two selected",
+      "two surfaces",
+      "u",
+      "u and",
+      "undefined",
+      "under",
+      "under sin",
+      "under the",
+      "under y",
+      "undid",
+      "undo",
+      "undo that",
+      "undo the",
+      "unit",
+      "unit circle",
+      "unit for",
+      "units",
+      "units left",
+      "units up",
+      "up",
+      "upper",
+      "upper half",
+      "use",
+      "use a",
+      "use centimeters",
+      "use the",
+      "use x",
+      "using",
+      "using entity",
+      "v",
+      "value",
+      "value graph",
+      "value is",
+      "value next",
+      "vectors",
+      "vectors u",
+      "verify",
+      "verify entity",
+      "vertex",
+      "vertex entity",
+      "vertical",
+      "vertical line",
+      "vertices",
+      "vertices does",
+      "viewing",
+      "viewport",
+      "viewport on",
+      "visible",
+      "visible on",
+      "visualize",
+      "visualize trapezoid",
+      "visualize y",
+      "volume",
+      "volume does",
+      "volume for",
+      "volume of",
+      "volume together",
+      "volumes",
+      "volumes of",
+      "wave",
+      "wave surface",
+      "we",
+      "we are",
+      "we make",
+      "we stopped",
+      "what",
+      "what about",
+      "what are",
+      "what choices",
+      "what entity",
+      "what is",
+      "what slope",
+      "where",
+      "where defined",
+      "where do",
+      "where does",
+      "where is",
+      "where num",
+      "where sine",
+      "where we",
+      "whether",
+      "whether angle",
+      "which",
+      "which intersection",
+      "which point",
+      "whose",
+      "whose side",
+      "why",
+      "why absolute",
+      "why did",
+      "why is",
+      "wireframe",
+      "with",
+      "with a",
+      "with base",
+      "with circle",
+      "with diameter",
+      "with entity",
+      "with equal",
+      "with hypotenuse",
+      "with interior",
+      "with legs",
+      "with num",
+      "with radius",
+      "with side",
+      "with sides",
+      "with the",
+      "with twice",
+      "with y",
+      "within",
+      "within num",
+      "without",
+      "without connecting",
+      "without showing",
+      "work",
+      "work out",
+      "x",
+      "x and",
+      "x axis",
+      "x between",
+      "x cos",
+      "x cubed",
+      "x dx",
+      "x excluding",
+      "x for",
+      "x from",
+      "x if",
+      "x intercepts",
+      "x intersection",
+      "x moves",
+      "x num",
+      "x over",
+      "x sin",
+      "x squared",
+      "x unit",
+      "x where",
+      "x with",
+      "x x",
+      "x y",
+      "xy",
+      "xy num",
+      "y",
+      "y as",
+      "y axes",
+      "y axis",
+      "y by",
+      "y cos",
+      "y e",
+      "y floor",
+      "y num",
+      "y one",
+      "y per",
+      "y sin",
+      "y sqrt",
+      "y square",
+      "y tan",
+      "y without",
+      "y x",
+      "you",
+      "you calculate",
+      "you graph",
+      "you measure",
+      "yz",
+      "yz plane",
+      "z",
+      "z axis",
+      "z cos",
+      "z exp",
+      "z ln",
+      "z num",
+      "z sin",
+      "z sqrt",
+      "z x",
+      "z xy",
+      "zero",
+      "zero on",
+      "zero to",
+      "zoom",
+      "zoom closer",
+      "zoom to"
+    ],
+    "model_sha256": "9f61ff43d68f2b9ca8d9c3971a83f1eead9d370961da23f36e76f5f867ce3a78",
+    "confidence_threshold": 0.9,
+    "margin_threshold": 0.4,
+    "source_workbook_sha256": "8f28a5ede4bf60a8f5bc8ced55a1f932178431eba6fb214a9b674d043251f144",
+    "normalize_source_sha256": "608131cd9ef7b9f619e90cd4f99c3aabdfa91119c81906fd6492893de1417ede",
+    "training_records": 374,
+    "tensorflow_version": "2.20.0"
+  },
+  "point_slot_model": {
+    "version": 46,
+    "labels": [
+      "OTHER",
+      "POINT_1",
+      "POINT_2",
+      "SEGMENT"
+    ],
+    "vocabulary": [
+      "add",
+      "add after",
+      "add before",
+      "add later",
+      "after",
+      "after along",
+      "after and",
+      "after apart",
+      "after are",
+      "after as",
+      "after at",
+      "after between",
+      "after bisecting",
+      "after blue",
+      "after boundary",
+      "after center",
+      "after coordinates",
+      "after distance",
+      "after divide",
+      "after drawing",
+      "after drew",
+      "after earlier",
+      "after entity",
+      "after equal",
+      "after equally",
+      "after far",
+      "after find",
+      "after for",
+      "after from",
+      "after full",
+      "after halfway",
+      "after into",
+      "after is",
+      "after just",
+      "after last",
+      "after line",
+      "after me",
+      "after measure",
+      "after middle",
+      "after midpoint",
+      "after of",
+      "after on",
+      "after out",
+      "after point",
+      "after points",
+      "after segment",
+      "after segments",
+      "after selected",
+      "after showing",
+      "after the",
+      "after to",
+      "after two",
+      "after without",
+      "after you",
+      "along",
+      "along after",
+      "along before",
+      "along earlier",
+      "and",
+      "and after",
+      "and before",
+      "and earlier",
+      "and later",
+      "apart",
+      "apart after",
+      "apart before",
+      "apart earlier",
+      "are",
+      "are after",
+      "are before",
+      "are earlier",
+      "are later",
+      "as",
+      "as after",
+      "as before",
+      "as earlier",
+      "at",
+      "at after",
+      "at before",
+      "at earlier",
+      "at later",
+      "before",
+      "before add",
+      "before along",
+      "before and",
+      "before apart",
+      "before are",
+      "before as",
+      "before at",
+      "before between",
+      "before bisect",
+      "before bisecting",
+      "before blue",
+      "before boundary",
+      "before calculate",
+      "before can",
+      "before center",
+      "before compute",
+      "before construct",
+      "before coordinates",
+      "before distance",
+      "before divide",
+      "before draw",
+      "before entity",
+      "before equal",
+      "before equally",
+      "before far",
+      "before find",
+      "before for",
+      "before from",
+      "before full",
+      "before give",
+      "before halfway",
+      "before how",
+      "before into",
+      "before is",
+      "before just",
+      "before label",
+      "before last",
+      "before line",
+      "before locate",
+      "before mark",
+      "before me",
+      "before measure",
+      "before middle",
+      "before midpoint",
+      "before of",
+      "before on",
+      "before out",
+      "before please",
+      "before point",
+      "before points",
+      "before put",
+      "before segment",
+      "before selected",
+      "before show",
+      "before showing",
+      "before tell",
+      "before the",
+      "before to",
+      "before two",
+      "before what",
+      "before where",
+      "before without",
+      "before work",
+      "before you",
+      "between",
+      "between after",
+      "between before",
+      "between earlier",
+      "between later",
+      "bisect",
+      "bisect after",
+      "bisect before",
+      "bisect later",
+      "bisecting",
+      "bisecting after",
+      "bisecting before",
+      "bisecting earlier",
+      "bisecting later",
+      "blue",
+      "blue after",
+      "blue before",
+      "blue earlier",
+      "boundary",
+      "boundary after",
+      "boundary earlier",
+      "boundary later",
+      "calculate",
+      "calculate after",
+      "calculate before",
+      "calculate later",
+      "can",
+      "can after",
+      "can before",
+      "can later",
+      "center",
+      "center after",
+      "center before",
+      "center earlier",
+      "center later",
+      "compute",
+      "compute after",
+      "compute before",
+      "compute later",
+      "construct",
+      "construct after",
+      "construct before",
+      "construct later",
+      "coordinates",
+      "coordinates after",
+      "coordinates before",
+      "coordinates earlier",
+      "coordinates later",
+      "current",
+      "current add",
+      "current along",
+      "current and",
+      "current apart",
+      "current are",
+      "current as",
+      "current at",
+      "current before",
+      "current between",
+      "current bisect",
+      "current bisecting",
+      "current blue",
+      "current calculate",
+      "current can",
+      "current center",
+      "current compute",
+      "current construct",
+      "current coordinates",
+      "current distance",
+      "current divide",
+      "current draw",
+      "current drawing",
+      "current drew",
+      "current entity",
+      "current equal",
+      "current equally",
+      "current far",
+      "current find",
+      "current for",
+      "current from",
+      "current full",
+      "current give",
+      "current halfway",
+      "current how",
+      "current into",
+      "current is",
+      "current just",
+      "current label",
+      "current last",
+      "current line",
+      "current locate",
+      "current mark",
+      "current me",
+      "current measure",
+      "current middle",
+      "current midpoint",
+      "current of",
+      "current on",
+      "current out",
+      "current please",
+      "current point",
+      "current points",
+      "current put",
+      "current segment",
+      "current segments",
+      "current selected",
+      "current show",
+      "current showing",
+      "current tell",
+      "current the",
+      "current to",
+      "current two",
+      "current what",
+      "current where",
+      "current without",
+      "current work",
+      "current you",
+      "distance",
+      "distance after",
+      "distance before",
+      "distance earlier",
+      "distance later",
+      "divide",
+      "divide after",
+      "divide before",
+      "divide earlier",
+      "divide later",
+      "draw",
+      "draw after",
+      "draw before",
+      "draw later",
+      "drawing",
+      "drawing before",
+      "drawing earlier",
+      "drew",
+      "drew before",
+      "drew earlier",
+      "earlier",
+      "earlier add",
+      "earlier and",
+      "earlier are",
+      "earlier at",
+      "earlier between",
+      "earlier bisect",
+      "earlier bisecting",
+      "earlier boundary",
+      "earlier calculate",
+      "earlier can",
+      "earlier center",
+      "earlier compute",
+      "earlier construct",
+      "earlier coordinates",
+      "earlier distance",
+      "earlier divide",
+      "earlier draw",
+      "earlier entity",
+      "earlier far",
+      "earlier find",
+      "earlier for",
+      "earlier from",
+      "earlier give",
+      "earlier halfway",
+      "earlier how",
+      "earlier into",
+      "earlier is",
+      "earlier label",
+      "earlier line",
+      "earlier locate",
+      "earlier mark",
+      "earlier me",
+      "earlier measure",
+      "earlier middle",
+      "earlier midpoint",
+      "earlier of",
+      "earlier out",
+      "earlier please",
+      "earlier point",
+      "earlier points",
+      "earlier put",
+      "earlier segment",
+      "earlier show",
+      "earlier showing",
+      "earlier tell",
+      "earlier the",
+      "earlier to",
+      "earlier two",
+      "earlier what",
+      "earlier where",
+      "earlier without",
+      "earlier work",
+      "earlier you",
+      "entity",
+      "entity after",
+      "entity before",
+      "entity earlier",
+      "entity later",
+      "equal",
+      "equal after",
+      "equal before",
+      "equal earlier",
+      "equally",
+      "equally after",
+      "equally before",
+      "equally earlier",
+      "far",
+      "far after",
+      "far before",
+      "far earlier",
+      "far later",
+      "find",
+      "find after",
+      "find before",
+      "find earlier",
+      "find later",
+      "for",
+      "for after",
+      "for before",
+      "for earlier",
+      "for later",
+      "from",
+      "from after",
+      "from before",
+      "from earlier",
+      "from later",
+      "full",
+      "full after",
+      "full before",
+      "full earlier",
+      "give",
+      "give after",
+      "give before",
+      "give later",
+      "halfway",
+      "halfway after",
+      "halfway before",
+      "halfway earlier",
+      "halfway later",
+      "how",
+      "how after",
+      "how before",
+      "how later",
+      "into",
+      "into after",
+      "into before",
+      "into earlier",
+      "into later",
+      "is",
+      "is after",
+      "is before",
+      "is earlier",
+      "is later",
+      "just",
+      "just after",
+      "just before",
+      "just earlier",
+      "label",
+      "label after",
+      "label before",
+      "label later",
+      "last",
+      "last after",
+      "last before",
+      "last earlier",
+      "later",
+      "later along",
+      "later and",
+      "later apart",
+      "later are",
+      "later as",
+      "later at",
+      "later between",
+      "later bisecting",
+      "later blue",
+      "later boundary",
+      "later center",
+      "later coordinates",
+      "later distance",
+      "later divide",
+      "later drawing",
+      "later drew",
+      "later entity",
+      "later equal",
+      "later equally",
+      "later for",
+      "later from",
+      "later full",
+      "later halfway",
+      "later into",
+      "later is",
+      "later just",
+      "later last",
+      "later line",
+      "later measure",
+      "later middle",
+      "later midpoint",
+      "later of",
+      "later on",
+      "later point",
+      "later points",
+      "later segment",
+      "later segments",
+      "later selected",
+      "later showing",
+      "later the",
+      "later to",
+      "later two",
+      "later without",
+      "line",
+      "line after",
+      "line before",
+      "line earlier",
+      "line later",
+      "locate",
+      "locate after",
+      "locate before",
+      "locate later",
+      "mark",
+      "mark after",
+      "mark before",
+      "mark later",
+      "me",
+      "me after",
+      "me before",
+      "me earlier",
+      "me later",
+      "measure",
+      "measure after",
+      "measure before",
+      "measure earlier",
+      "measure later",
+      "middle",
+      "middle after",
+      "middle before",
+      "middle earlier",
+      "middle later",
+      "midpoint",
+      "midpoint after",
+      "midpoint before",
+      "midpoint earlier",
+      "midpoint later",
+      "of",
+      "of after",
+      "of before",
+      "of earlier",
+      "of later",
+      "on",
+      "on after",
+      "on before",
+      "on earlier",
+      "out",
+      "out after",
+      "out before",
+      "out earlier",
+      "out later",
+      "please",
+      "please after",
+      "please before",
+      "please later",
+      "point",
+      "point after",
+      "point before",
+      "point earlier",
+      "point later",
+      "points",
+      "points after",
+      "points before",
+      "points earlier",
+      "points later",
+      "put",
+      "put after",
+      "put before",
+      "put later",
+      "segment",
+      "segment after",
+      "segment before",
+      "segment earlier",
+      "segment later",
+      "segments",
+      "segments before",
+      "segments earlier",
+      "selected",
+      "selected after",
+      "selected before",
+      "selected earlier",
+      "show",
+      "show after",
+      "show before",
+      "show later",
+      "showing",
+      "showing after",
+      "showing before",
+      "showing earlier",
+      "showing later",
+      "tell",
+      "tell after",
+      "tell before",
+      "tell later",
+      "the",
+      "the after",
+      "the before",
+      "the earlier",
+      "the later",
+      "to",
+      "to after",
+      "to before",
+      "to earlier",
+      "to later",
+      "two",
+      "two after",
+      "two before",
+      "two earlier",
+      "two later",
+      "what",
+      "what after",
+      "what before",
+      "what later",
+      "where",
+      "where after",
+      "where before",
+      "where later",
+      "without",
+      "without after",
+      "without before",
+      "without earlier",
+      "without later",
+      "work",
+      "work after",
+      "work before",
+      "work later",
+      "you",
+      "you after",
+      "you before",
+      "you earlier",
+      "you later"
+    ],
+    "model_sha256": "e68423020086154decd15e7befd84d2555935e41acdb387a87a3903cc4fc285f",
+    "confidence_threshold": 0.9,
+    "margin_threshold": 0.4,
+    "source_workbook_sha256": "8f28a5ede4bf60a8f5bc8ced55a1f932178431eba6fb214a9b674d043251f144",
+    "normalize_source_sha256": "608131cd9ef7b9f619e90cd4f99c3aabdfa91119c81906fd6492893de1417ede",
+    "training_records": 234,
+    "tensorflow_version": "2.20.0"
+  },
+  "seed_intent_fit": {
+    "total": 500,
+    "correct": 500,
+    "results": [
+      {
+        "id": 1,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9658553004264832,
+        "margin": 0.9529513716697693
+      },
+      {
+        "id": 2,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.996669352054596,
+        "margin": 0.9953490495681763
+      },
+      {
+        "id": 3,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9945396780967712,
+        "margin": 0.9927986264228821
+      },
+      {
+        "id": 4,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920861124992371,
+        "margin": 0.9899312853813171
+      },
+      {
+        "id": 5,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9913294315338135,
+        "margin": 0.988900363445282
+      },
+      {
+        "id": 6,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      {
+        "id": 7,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977796673774719,
+        "margin": 0.9971998333930969
+      },
+      {
+        "id": 8,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932327270507812,
+        "margin": 0.9916571974754333
+      },
+      {
+        "id": 9,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742338061332703,
+        "margin": 0.9621034264564514
+      },
+      {
+        "id": 10,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9929335117340088,
+        "margin": 0.9902788400650024
+      },
+      {
+        "id": 11,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      {
+        "id": 12,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9456958770751953,
+        "margin": 0.9304990768432617
+      },
+      {
+        "id": 13,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899722337722778,
+        "margin": 0.9859504699707031
+      },
+      {
+        "id": 14,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9934670329093933,
+        "margin": 0.9906795024871826
+      },
+      {
+        "id": 15,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9842946529388428,
+        "margin": 0.9780225157737732
+      },
+      {
+        "id": 16,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932788014411926,
+        "margin": 0.9902873635292053
+      },
+      {
+        "id": 17,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9942757487297058,
+        "margin": 0.9921159744262695
+      },
+      {
+        "id": 18,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9954996705055237,
+        "margin": 0.9939594864845276
+      },
+      {
+        "id": 19,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9778127670288086,
+        "margin": 0.9645658731460571
+      },
+      {
+        "id": 20,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9859719276428223,
+        "margin": 0.9772940278053284
+      },
+      {
+        "id": 21,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9864034652709961,
+        "margin": 0.9807016253471375
+      },
+      {
+        "id": 22,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9343861937522888,
+        "margin": 0.9153106808662415
+      },
+      {
+        "id": 23,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.8997344970703125,
+        "margin": 0.8576889038085938
+      },
+      {
+        "id": 24,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742050766944885,
+        "margin": 0.9647705554962158
+      },
+      {
+        "id": 25,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920929074287415,
+        "margin": 0.9884709119796753
+      },
+      {
+        "id": 26,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9658553004264832,
+        "margin": 0.9529513716697693
+      },
+      {
+        "id": 27,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.996669352054596,
+        "margin": 0.9953490495681763
+      },
+      {
+        "id": 28,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9945396780967712,
+        "margin": 0.9927986264228821
+      },
+      {
+        "id": 29,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920861124992371,
+        "margin": 0.9899312853813171
+      },
+      {
+        "id": 30,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9913294315338135,
+        "margin": 0.988900363445282
+      },
+      {
+        "id": 31,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      {
+        "id": 32,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977796673774719,
+        "margin": 0.9971998333930969
+      },
+      {
+        "id": 33,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932327270507812,
+        "margin": 0.9916571974754333
+      },
+      {
+        "id": 34,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742338061332703,
+        "margin": 0.9621034264564514
+      },
+      {
+        "id": 35,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9929335117340088,
+        "margin": 0.9902788400650024
+      },
+      {
+        "id": 36,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      {
+        "id": 37,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9456958770751953,
+        "margin": 0.9304990768432617
+      },
+      {
+        "id": 38,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899722337722778,
+        "margin": 0.9859504699707031
+      },
+      {
+        "id": 39,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9934670329093933,
+        "margin": 0.9906795024871826
+      },
+      {
+        "id": 40,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9842946529388428,
+        "margin": 0.9780225157737732
+      },
+      {
+        "id": 41,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932788014411926,
+        "margin": 0.9902873635292053
+      },
+      {
+        "id": 42,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9942757487297058,
+        "margin": 0.9921159744262695
+      },
+      {
+        "id": 43,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9954996705055237,
+        "margin": 0.9939594864845276
+      },
+      {
+        "id": 44,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9778127670288086,
+        "margin": 0.9645658731460571
+      },
+      {
+        "id": 45,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9859719276428223,
+        "margin": 0.9772940278053284
+      },
+      {
+        "id": 46,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9864034652709961,
+        "margin": 0.9807016253471375
+      },
+      {
+        "id": 47,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9343861937522888,
+        "margin": 0.9153106808662415
+      },
+      {
+        "id": 48,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.8997344970703125,
+        "margin": 0.8576889038085938
+      },
+      {
+        "id": 49,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742050766944885,
+        "margin": 0.9647705554962158
+      },
+      {
+        "id": 50,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920929074287415,
+        "margin": 0.9884709119796753
+      },
+      {
+        "id": 51,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9658553004264832,
+        "margin": 0.9529513716697693
+      },
+      {
+        "id": 52,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.996669352054596,
+        "margin": 0.9953490495681763
+      },
+      {
+        "id": 53,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9945396780967712,
+        "margin": 0.9927986264228821
+      },
+      {
+        "id": 54,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920861124992371,
+        "margin": 0.9899312853813171
+      },
+      {
+        "id": 55,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9913294315338135,
+        "margin": 0.988900363445282
+      },
+      {
+        "id": 56,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      {
+        "id": 57,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977796673774719,
+        "margin": 0.9971998333930969
+      },
+      {
+        "id": 58,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932327270507812,
+        "margin": 0.9916571974754333
+      },
+      {
+        "id": 59,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742338061332703,
+        "margin": 0.9621034264564514
+      },
+      {
+        "id": 60,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9929335117340088,
+        "margin": 0.9902788400650024
+      },
+      {
+        "id": 61,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      {
+        "id": 62,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9456958770751953,
+        "margin": 0.9304990768432617
+      },
+      {
+        "id": 63,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899722337722778,
+        "margin": 0.9859504699707031
+      },
+      {
+        "id": 64,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9934670329093933,
+        "margin": 0.9906795024871826
+      },
+      {
+        "id": 65,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9842946529388428,
+        "margin": 0.9780225157737732
+      },
+      {
+        "id": 66,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932788014411926,
+        "margin": 0.9902873635292053
+      },
+      {
+        "id": 67,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9942757487297058,
+        "margin": 0.9921159744262695
+      },
+      {
+        "id": 68,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9954996705055237,
+        "margin": 0.9939594864845276
+      },
+      {
+        "id": 69,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9778127670288086,
+        "margin": 0.9645658731460571
+      },
+      {
+        "id": 70,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9859719276428223,
+        "margin": 0.9772940278053284
+      },
+      {
+        "id": 71,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9864034652709961,
+        "margin": 0.9807016253471375
+      },
+      {
+        "id": 72,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9343861937522888,
+        "margin": 0.9153106808662415
+      },
+      {
+        "id": 73,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.8997344970703125,
+        "margin": 0.8576889038085938
+      },
+      {
+        "id": 74,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742050766944885,
+        "margin": 0.9647705554962158
+      },
+      {
+        "id": 75,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920929074287415,
+        "margin": 0.9884709119796753
+      },
+      {
+        "id": 76,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9658553004264832,
+        "margin": 0.9529513716697693
+      },
+      {
+        "id": 77,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.996669352054596,
+        "margin": 0.9953490495681763
+      },
+      {
+        "id": 78,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9945396780967712,
+        "margin": 0.9927986264228821
+      },
+      {
+        "id": 79,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920861124992371,
+        "margin": 0.9899312853813171
+      },
+      {
+        "id": 80,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9913294315338135,
+        "margin": 0.988900363445282
+      },
+      {
+        "id": 81,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      {
+        "id": 82,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977796673774719,
+        "margin": 0.9971998333930969
+      },
+      {
+        "id": 83,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932327270507812,
+        "margin": 0.9916571974754333
+      },
+      {
+        "id": 84,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742338061332703,
+        "margin": 0.9621034264564514
+      },
+      {
+        "id": 85,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9929335117340088,
+        "margin": 0.9902788400650024
+      },
+      {
+        "id": 86,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      {
+        "id": 87,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9456958770751953,
+        "margin": 0.9304990768432617
+      },
+      {
+        "id": 88,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899722337722778,
+        "margin": 0.9859504699707031
+      },
+      {
+        "id": 89,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9934670329093933,
+        "margin": 0.9906795024871826
+      },
+      {
+        "id": 90,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9842946529388428,
+        "margin": 0.9780225157737732
+      },
+      {
+        "id": 91,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932788014411926,
+        "margin": 0.9902873635292053
+      },
+      {
+        "id": 92,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9942757487297058,
+        "margin": 0.9921159744262695
+      },
+      {
+        "id": 93,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9954996705055237,
+        "margin": 0.9939594864845276
+      },
+      {
+        "id": 94,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9778127670288086,
+        "margin": 0.9645658731460571
+      },
+      {
+        "id": 95,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9859719276428223,
+        "margin": 0.9772940278053284
+      },
+      {
+        "id": 96,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9864034652709961,
+        "margin": 0.9807016253471375
+      },
+      {
+        "id": 97,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9343861937522888,
+        "margin": 0.9153106808662415
+      },
+      {
+        "id": 98,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.8997344970703125,
+        "margin": 0.8576889038085938
+      },
+      {
+        "id": 99,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742050766944885,
+        "margin": 0.9647705554962158
+      },
+      {
+        "id": 100,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920929074287415,
+        "margin": 0.9884709119796753
+      },
+      {
+        "id": 101,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9658553004264832,
+        "margin": 0.9529513716697693
+      },
+      {
+        "id": 102,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.996669352054596,
+        "margin": 0.9953490495681763
+      },
+      {
+        "id": 103,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9945396780967712,
+        "margin": 0.9927986264228821
+      },
+      {
+        "id": 104,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920861124992371,
+        "margin": 0.9899312853813171
+      },
+      {
+        "id": 105,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9913294315338135,
+        "margin": 0.988900363445282
+      },
+      {
+        "id": 106,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      {
+        "id": 107,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977796673774719,
+        "margin": 0.9971998333930969
+      },
+      {
+        "id": 108,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932327270507812,
+        "margin": 0.9916571974754333
+      },
+      {
+        "id": 109,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742338061332703,
+        "margin": 0.9621034264564514
+      },
+      {
+        "id": 110,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9929335117340088,
+        "margin": 0.9902788400650024
+      },
+      {
+        "id": 111,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      {
+        "id": 112,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9456958770751953,
+        "margin": 0.9304990768432617
+      },
+      {
+        "id": 113,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899722337722778,
+        "margin": 0.9859504699707031
+      },
+      {
+        "id": 114,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9934670329093933,
+        "margin": 0.9906795024871826
+      },
+      {
+        "id": 115,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9842946529388428,
+        "margin": 0.9780225157737732
+      },
+      {
+        "id": 116,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932788014411926,
+        "margin": 0.9902873635292053
+      },
+      {
+        "id": 117,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9942757487297058,
+        "margin": 0.9921159744262695
+      },
+      {
+        "id": 118,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9954996705055237,
+        "margin": 0.9939594864845276
+      },
+      {
+        "id": 119,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9778127670288086,
+        "margin": 0.9645658731460571
+      },
+      {
+        "id": 120,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9859719276428223,
+        "margin": 0.9772940278053284
+      },
+      {
+        "id": 121,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9864034652709961,
+        "margin": 0.9807016253471375
+      },
+      {
+        "id": 122,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9343861937522888,
+        "margin": 0.9153106808662415
+      },
+      {
+        "id": 123,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.8997344970703125,
+        "margin": 0.8576889038085938
+      },
+      {
+        "id": 124,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742050766944885,
+        "margin": 0.9647705554962158
+      },
+      {
+        "id": 125,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920929074287415,
+        "margin": 0.9884709119796753
+      },
+      {
+        "id": 126,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9658553004264832,
+        "margin": 0.9529513716697693
+      },
+      {
+        "id": 127,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.996669352054596,
+        "margin": 0.9953490495681763
+      },
+      {
+        "id": 128,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9945396780967712,
+        "margin": 0.9927986264228821
+      },
+      {
+        "id": 129,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920861124992371,
+        "margin": 0.9899312853813171
+      },
+      {
+        "id": 130,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9913294315338135,
+        "margin": 0.988900363445282
+      },
+      {
+        "id": 131,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      {
+        "id": 132,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977796673774719,
+        "margin": 0.9971998333930969
+      },
+      {
+        "id": 133,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932327270507812,
+        "margin": 0.9916571974754333
+      },
+      {
+        "id": 134,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742338061332703,
+        "margin": 0.9621034264564514
+      },
+      {
+        "id": 135,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9929335117340088,
+        "margin": 0.9902788400650024
+      },
+      {
+        "id": 136,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      {
+        "id": 137,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9456958770751953,
+        "margin": 0.9304990768432617
+      },
+      {
+        "id": 138,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899722337722778,
+        "margin": 0.9859504699707031
+      },
+      {
+        "id": 139,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9934670329093933,
+        "margin": 0.9906795024871826
+      },
+      {
+        "id": 140,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9842946529388428,
+        "margin": 0.9780225157737732
+      },
+      {
+        "id": 141,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9932788014411926,
+        "margin": 0.9902873635292053
+      },
+      {
+        "id": 142,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9942757487297058,
+        "margin": 0.9921159744262695
+      },
+      {
+        "id": 143,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9954996705055237,
+        "margin": 0.9939594864845276
+      },
+      {
+        "id": 144,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9778127670288086,
+        "margin": 0.9645658731460571
+      },
+      {
+        "id": 145,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9859719276428223,
+        "margin": 0.9772940278053284
+      },
+      {
+        "id": 146,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9864034652709961,
+        "margin": 0.9807016253471375
+      },
+      {
+        "id": 147,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9343861937522888,
+        "margin": 0.9153106808662415
+      },
+      {
+        "id": 148,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.8997344970703125,
+        "margin": 0.8576889038085938
+      },
+      {
+        "id": 149,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9742050766944885,
+        "margin": 0.9647705554962158
+      },
+      {
+        "id": 150,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9920929074287415,
+        "margin": 0.9884709119796753
+      },
+      {
+        "id": 151,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9868313074111938,
+        "margin": 0.9808971285820007
+      },
+      {
+        "id": 152,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9697238802909851,
+        "margin": 0.9584470391273499
+      },
+      {
+        "id": 153,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9360741376876831,
+        "margin": 0.901554524898529
+      },
+      {
+        "id": 154,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.8861207365989685,
+        "margin": 0.8235539197921753
+      },
+      {
+        "id": 155,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9515116810798645,
+        "margin": 0.9319452047348022
+      },
+      {
+        "id": 156,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.965251088142395,
+        "margin": 0.9429048299789429
+      },
+      {
+        "id": 157,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9356369972229004,
+        "margin": 0.9172041416168213
+      },
+      {
+        "id": 158,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9986501336097717,
+        "margin": 0.9981645941734314
+      },
+      {
+        "id": 159,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9858384728431702,
+        "margin": 0.9816293120384216
+      },
+      {
+        "id": 160,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9109004735946655,
+        "margin": 0.8975867033004761
+      },
+      {
+        "id": 161,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9722145199775696,
+        "margin": 0.9543095231056213
+      },
+      {
+        "id": 162,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9790497422218323,
+        "margin": 0.9715749025344849
+      },
+      {
+        "id": 163,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9756640195846558,
+        "margin": 0.969882071018219
+      },
+      {
+        "id": 164,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.981195330619812,
+        "margin": 0.9755783081054688
+      },
+      {
+        "id": 165,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.931992769241333,
+        "margin": 0.8889934420585632
+      },
+      {
+        "id": 166,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9173253178596497,
+        "margin": 0.8921889066696167
+      },
+      {
+        "id": 167,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9894004464149475,
+        "margin": 0.9853407740592957
+      },
+      {
+        "id": 168,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9002330303192139,
+        "margin": 0.8478824496269226
+      },
+      {
+        "id": 169,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9584994316101074,
+        "margin": 0.9446729421615601
+      },
+      {
+        "id": 170,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.946086585521698,
+        "margin": 0.931084394454956
+      },
+      {
+        "id": 171,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9922389984130859,
+        "margin": 0.9888933300971985
+      },
+      {
+        "id": 172,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9439751505851746,
+        "margin": 0.927604079246521
+      },
+      {
+        "id": 173,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9465177059173584,
+        "margin": 0.9355540871620178
+      },
+      {
+        "id": 174,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9686099886894226,
+        "margin": 0.9612352252006531
+      },
+      {
+        "id": 175,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9347012042999268,
+        "margin": 0.912070095539093
+      },
+      {
+        "id": 176,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9917243123054504,
+        "margin": 0.9880673289299011
+      },
+      {
+        "id": 177,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9473832845687866,
+        "margin": 0.9340527057647705
+      },
+      {
+        "id": 178,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9179380536079407,
+        "margin": 0.879581093788147
+      },
+      {
+        "id": 179,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.973202109336853,
+        "margin": 0.9681525230407715
+      },
+      {
+        "id": 180,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.905625581741333,
+        "margin": 0.8917370438575745
+      },
+      {
+        "id": 181,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9773926138877869,
+        "margin": 0.9716252088546753
+      },
+      {
+        "id": 182,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9518807530403137,
+        "margin": 0.9333388805389404
+      },
+      {
+        "id": 183,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9838578104972839,
+        "margin": 0.9800959825515747
+      },
+      {
+        "id": 184,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9533332586288452,
+        "margin": 0.9273510575294495
+      },
+      {
+        "id": 185,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9785301089286804,
+        "margin": 0.973416268825531
+      },
+      {
+        "id": 186,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9267524480819702,
+        "margin": 0.900485634803772
+      },
+      {
+        "id": 187,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9194074273109436,
+        "margin": 0.8656168580055237
+      },
+      {
+        "id": 188,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9502201676368713,
+        "margin": 0.9383161067962646
+      },
+      {
+        "id": 189,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.8976414799690247,
+        "margin": 0.881649374961853
+      },
+      {
+        "id": 190,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.977246880531311,
+        "margin": 0.9676622152328491
+      },
+      {
+        "id": 191,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.8742737770080566,
+        "margin": 0.8115936517715454
+      },
+      {
+        "id": 192,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9701817035675049,
+        "margin": 0.9624907970428467
+      },
+      {
+        "id": 193,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9282884001731873,
+        "margin": 0.8806242942810059
+      },
+      {
+        "id": 194,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9214909672737122,
+        "margin": 0.8915758728981018
+      },
+      {
+        "id": 195,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.869031548500061,
+        "margin": 0.8093606233596802
+      },
+      {
+        "id": 196,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9559536576271057,
+        "margin": 0.9372013211250305
+      },
+      {
+        "id": 197,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9512040019035339,
+        "margin": 0.93906569480896
+      },
+      {
+        "id": 198,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9487128257751465,
+        "margin": 0.9170884490013123
+      },
+      {
+        "id": 199,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9288491010665894,
+        "margin": 0.9072089791297913
+      },
+      {
+        "id": 200,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9647510647773743,
+        "margin": 0.9542416930198669
+      },
+      {
+        "id": 201,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9666585922241211,
+        "margin": 0.9600307941436768
+      },
+      {
+        "id": 202,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9952641725540161,
+        "margin": 0.9935112595558167
+      },
+      {
+        "id": 203,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9773544669151306,
+        "margin": 0.9723169803619385
+      },
+      {
+        "id": 204,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.947817325592041,
+        "margin": 0.9109382629394531
+      },
+      {
+        "id": 205,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.980838418006897,
+        "margin": 0.975513219833374
+      },
+      {
+        "id": 206,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.8998197317123413,
+        "margin": 0.8787005543708801
+      },
+      {
+        "id": 207,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9891079664230347,
+        "margin": 0.9867945313453674
+      },
+      {
+        "id": 208,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.8929749727249146,
+        "margin": 0.857582688331604
+      },
+      {
+        "id": 209,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9506551027297974,
+        "margin": 0.9404232501983643
+      },
+      {
+        "id": 210,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9777154326438904,
+        "margin": 0.9718737602233887
+      },
+      {
+        "id": 211,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9854947328567505,
+        "margin": 0.9810322523117065
+      },
+      {
+        "id": 212,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9581854343414307,
+        "margin": 0.9462054371833801
+      },
+      {
+        "id": 213,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9743572473526001,
+        "margin": 0.9685166478157043
+      },
+      {
+        "id": 214,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9144503474235535,
+        "margin": 0.876499593257904
+      },
+      {
+        "id": 215,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9666585922241211,
+        "margin": 0.9600307941436768
+      },
+      {
+        "id": 216,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9702178239822388,
+        "margin": 0.9634665846824646
+      },
+      {
+        "id": 217,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9847562909126282,
+        "margin": 0.9791470170021057
+      },
+      {
+        "id": 218,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9200600385665894,
+        "margin": 0.9040889739990234
+      },
+      {
+        "id": 219,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9806201457977295,
+        "margin": 0.9735597968101501
+      },
+      {
+        "id": 220,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9797629714012146,
+        "margin": 0.9734775424003601
+      },
+      {
+        "id": 221,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9907166361808777,
+        "margin": 0.9885997772216797
+      },
+      {
+        "id": 222,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.979141891002655,
+        "margin": 0.9750053286552429
+      },
+      {
+        "id": 223,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9536330103874207,
+        "margin": 0.9450544118881226
+      },
+      {
+        "id": 224,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9729570746421814,
+        "margin": 0.9656143188476562
+      },
+      {
+        "id": 225,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9837213158607483,
+        "margin": 0.9767719507217407
+      },
+      {
+        "id": 226,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9516260027885437,
+        "margin": 0.9250561594963074
+      },
+      {
+        "id": 227,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9898641705513,
+        "margin": 0.9830231666564941
+      },
+      {
+        "id": 228,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9959155917167664,
+        "margin": 0.9947785139083862
+      },
+      {
+        "id": 229,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9835984706878662,
+        "margin": 0.9771363735198975
+      },
+      {
+        "id": 230,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9936830997467041,
+        "margin": 0.9924135208129883
+      },
+      {
+        "id": 231,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9888850450515747,
+        "margin": 0.9864708185195923
+      },
+      {
+        "id": 232,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9861059188842773,
+        "margin": 0.9826437830924988
+      },
+      {
+        "id": 233,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9261500835418701,
+        "margin": 0.8986047506332397
+      },
+      {
+        "id": 234,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9365295171737671,
+        "margin": 0.8912176489830017
+      },
+      {
+        "id": 235,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.993107795715332,
+        "margin": 0.9896001219749451
+      },
+      {
+        "id": 236,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9805338382720947,
+        "margin": 0.9761986136436462
+      },
+      {
+        "id": 237,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.8501354455947876,
+        "margin": 0.8224844932556152
+      },
+      {
+        "id": 238,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9149433970451355,
+        "margin": 0.8897099494934082
+      },
+      {
+        "id": 239,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9739260077476501,
+        "margin": 0.9662582278251648
+      },
+      {
+        "id": 240,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9649196267127991,
+        "margin": 0.9411364197731018
+      },
+      {
+        "id": 241,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9900826811790466,
+        "margin": 0.9877600073814392
+      },
+      {
+        "id": 242,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9916312098503113,
+        "margin": 0.9899393916130066
+      },
+      {
+        "id": 243,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.94883131980896,
+        "margin": 0.9348526000976562
+      },
+      {
+        "id": 244,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.8835863471031189,
+        "margin": 0.8370338678359985
+      },
+      {
+        "id": 245,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9010353088378906,
+        "margin": 0.874364972114563
+      },
+      {
+        "id": 246,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9886232614517212,
+        "margin": 0.9832558035850525
+      },
+      {
+        "id": 247,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9712390303611755,
+        "margin": 0.9647164940834045
+      },
+      {
+        "id": 248,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9269234538078308,
+        "margin": 0.9034658670425415
+      },
+      {
+        "id": 249,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9607727527618408,
+        "margin": 0.9401395320892334
+      },
+      {
+        "id": 250,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9133520722389221,
+        "margin": 0.8778095841407776
+      },
+      {
+        "id": 251,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.8686335682868958,
+        "margin": 0.7703126072883606
+      },
+      {
+        "id": 252,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9704405069351196,
+        "margin": 0.9627532958984375
+      },
+      {
+        "id": 253,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9940690994262695,
+        "margin": 0.9920266270637512
+      },
+      {
+        "id": 254,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9417735934257507,
+        "margin": 0.9271565675735474
+      },
+      {
+        "id": 255,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9943799376487732,
+        "margin": 0.9930657148361206
+      },
+      {
+        "id": 256,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9847455620765686,
+        "margin": 0.9755937457084656
+      },
+      {
+        "id": 257,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9284929633140564,
+        "margin": 0.9057517051696777
+      },
+      {
+        "id": 258,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9514963626861572,
+        "margin": 0.9336267709732056
+      },
+      {
+        "id": 259,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9809220433235168,
+        "margin": 0.9717760682106018
+      },
+      {
+        "id": 260,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9160053133964539,
+        "margin": 0.8851043581962585
+      },
+      {
+        "id": 261,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9900053143501282,
+        "margin": 0.9859428405761719
+      },
+      {
+        "id": 262,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9831185936927795,
+        "margin": 0.9796764254570007
+      },
+      {
+        "id": 263,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9717013239860535,
+        "margin": 0.9519490599632263
+      },
+      {
+        "id": 264,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9960311055183411,
+        "margin": 0.994697630405426
+      },
+      {
+        "id": 265,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.967387318611145,
+        "margin": 0.9461401104927063
+      },
+      {
+        "id": 266,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9555424451828003,
+        "margin": 0.9413079619407654
+      },
+      {
+        "id": 267,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9496064782142639,
+        "margin": 0.9260490536689758
+      },
+      {
+        "id": 268,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.993863582611084,
+        "margin": 0.9900298118591309
+      },
+      {
+        "id": 269,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.8545496463775635,
+        "margin": 0.7677727341651917
+      },
+      {
+        "id": 270,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9467057585716248,
+        "margin": 0.929636538028717
+      },
+      {
+        "id": 271,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9854517579078674,
+        "margin": 0.9777868390083313
+      },
+      {
+        "id": 272,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9365101456642151,
+        "margin": 0.9183905124664307
+      },
+      {
+        "id": 273,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9639363884925842,
+        "margin": 0.9439810514450073
+      },
+      {
+        "id": 274,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9628494381904602,
+        "margin": 0.9461190700531006
+      },
+      {
+        "id": 275,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9829498529434204,
+        "margin": 0.9708318114280701
+      },
+      {
+        "id": 276,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9514477252960205,
+        "margin": 0.9348945021629333
+      },
+      {
+        "id": 277,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9360884428024292,
+        "margin": 0.9160228967666626
+      },
+      {
+        "id": 278,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8473961353302002,
+        "margin": 0.8105316162109375
+      },
+      {
+        "id": 279,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8669202327728271,
+        "margin": 0.8023748993873596
+      },
+      {
+        "id": 280,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.957412600517273,
+        "margin": 0.9408302307128906
+      },
+      {
+        "id": 281,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8859347701072693,
+        "margin": 0.846296489238739
+      },
+      {
+        "id": 282,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9733407497406006,
+        "margin": 0.9595738649368286
+      },
+      {
+        "id": 283,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8873721957206726,
+        "margin": 0.8613878488540649
+      },
+      {
+        "id": 284,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9588203430175781,
+        "margin": 0.9398130774497986
+      },
+      {
+        "id": 285,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9581342339515686,
+        "margin": 0.9481906890869141
+      },
+      {
+        "id": 286,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8960068821907043,
+        "margin": 0.8634748458862305
+      },
+      {
+        "id": 287,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.854455292224884,
+        "margin": 0.812076210975647
+      },
+      {
+        "id": 288,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8848337531089783,
+        "margin": 0.8246971368789673
+      },
+      {
+        "id": 289,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.959799587726593,
+        "margin": 0.9470222592353821
+      },
+      {
+        "id": 290,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9513072967529297,
+        "margin": 0.9399097561836243
+      },
+      {
+        "id": 291,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9687042832374573,
+        "margin": 0.9632082581520081
+      },
+      {
+        "id": 292,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9652246236801147,
+        "margin": 0.946287989616394
+      },
+      {
+        "id": 293,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9360884428024292,
+        "margin": 0.9160228967666626
+      },
+      {
+        "id": 294,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9251173734664917,
+        "margin": 0.8771433234214783
+      },
+      {
+        "id": 295,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.934187114238739,
+        "margin": 0.9019190669059753
+      },
+      {
+        "id": 296,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.946300208568573,
+        "margin": 0.9223071336746216
+      },
+      {
+        "id": 297,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9630200862884521,
+        "margin": 0.9549614191055298
+      },
+      {
+        "id": 298,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9736904501914978,
+        "margin": 0.965131938457489
+      },
+      {
+        "id": 299,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9058148264884949,
+        "margin": 0.8790119290351868
+      },
+      {
+        "id": 300,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9933723211288452,
+        "margin": 0.9907817840576172
+      },
+      {
+        "id": 301,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.962329089641571,
+        "margin": 0.9476119875907898
+      },
+      {
+        "id": 302,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9466026425361633,
+        "margin": 0.9264519214630127
+      },
+      {
+        "id": 303,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9210508465766907,
+        "margin": 0.9065693020820618
+      },
+      {
+        "id": 304,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9314061403274536,
+        "margin": 0.9164626598358154
+      },
+      {
+        "id": 305,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9889187216758728,
+        "margin": 0.9850254654884338
+      },
+      {
+        "id": 306,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.8680294752120972,
+        "margin": 0.7815885543823242
+      },
+      {
+        "id": 307,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9313045144081116,
+        "margin": 0.8971612453460693
+      },
+      {
+        "id": 308,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9279609322547913,
+        "margin": 0.8914377093315125
+      },
+      {
+        "id": 309,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9016969799995422,
+        "margin": 0.8436794877052307
+      },
+      {
+        "id": 310,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.8978018760681152,
+        "margin": 0.859178900718689
+      },
+      {
+        "id": 311,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.8651291728019714,
+        "margin": 0.8333500027656555
+      },
+      {
+        "id": 312,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9309161901473999,
+        "margin": 0.9063054919242859
+      },
+      {
+        "id": 313,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9661583304405212,
+        "margin": 0.9541613459587097
+      },
+      {
+        "id": 314,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9589159488677979,
+        "margin": 0.9501662254333496
+      },
+      {
+        "id": 315,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9481801986694336,
+        "margin": 0.9249804019927979
+      },
+      {
+        "id": 316,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.913579523563385,
+        "margin": 0.8849667906761169
+      },
+      {
+        "id": 317,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9363473057746887,
+        "margin": 0.9241548180580139
+      },
+      {
+        "id": 318,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9283825755119324,
+        "margin": 0.9074890613555908
+      },
+      {
+        "id": 319,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9409376978874207,
+        "margin": 0.9239757061004639
+      },
+      {
+        "id": 320,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9403553009033203,
+        "margin": 0.9289435744285583
+      },
+      {
+        "id": 321,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.928652286529541,
+        "margin": 0.9111086130142212
+      },
+      {
+        "id": 322,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9788291454315186,
+        "margin": 0.9722031950950623
+      },
+      {
+        "id": 323,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9330205917358398,
+        "margin": 0.8892462849617004
+      },
+      {
+        "id": 324,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9347366690635681,
+        "margin": 0.9168115258216858
+      },
+      {
+        "id": 325,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9268384575843811,
+        "margin": 0.911417543888092
+      },
+      {
+        "id": 326,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.8580407500267029,
+        "margin": 0.796575129032135
+      },
+      {
+        "id": 327,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9626449942588806,
+        "margin": 0.9485671520233154
+      },
+      {
+        "id": 328,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9554567933082581,
+        "margin": 0.9339518547058105
+      },
+      {
+        "id": 329,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9816752076148987,
+        "margin": 0.9755114912986755
+      },
+      {
+        "id": 330,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9047483801841736,
+        "margin": 0.8886843323707581
+      },
+      {
+        "id": 331,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9251822233200073,
+        "margin": 0.9108526706695557
+      },
+      {
+        "id": 332,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9222350716590881,
+        "margin": 0.8918566107749939
+      },
+      {
+        "id": 333,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9846854209899902,
+        "margin": 0.9792999029159546
+      },
+      {
+        "id": 334,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9376975893974304,
+        "margin": 0.8867596983909607
+      },
+      {
+        "id": 335,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9333783388137817,
+        "margin": 0.911668598651886
+      },
+      {
+        "id": 336,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9428727626800537,
+        "margin": 0.9191612601280212
+      },
+      {
+        "id": 337,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9267550706863403,
+        "margin": 0.8806769847869873
+      },
+      {
+        "id": 338,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9014914631843567,
+        "margin": 0.8380013704299927
+      },
+      {
+        "id": 339,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.7824019193649292,
+        "margin": 0.6675578951835632
+      },
+      {
+        "id": 340,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9650883674621582,
+        "margin": 0.9554683566093445
+      },
+      {
+        "id": 341,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9270252585411072,
+        "margin": 0.8953021764755249
+      },
+      {
+        "id": 342,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9429776072502136,
+        "margin": 0.9272991418838501
+      },
+      {
+        "id": 343,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9908599853515625,
+        "margin": 0.98699551820755
+      },
+      {
+        "id": 344,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.8934732675552368,
+        "margin": 0.8109081387519836
+      },
+      {
+        "id": 345,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.8471094369888306,
+        "margin": 0.8209630250930786
+      },
+      {
+        "id": 346,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9365108609199524,
+        "margin": 0.9055638909339905
+      },
+      {
+        "id": 347,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9181994795799255,
+        "margin": 0.8842511773109436
+      },
+      {
+        "id": 348,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9708080887794495,
+        "margin": 0.9641855359077454
+      },
+      {
+        "id": 349,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9742952585220337,
+        "margin": 0.9578825235366821
+      },
+      {
+        "id": 350,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9654162526130676,
+        "margin": 0.9546944499015808
+      },
+      {
+        "id": 351,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9683694839477539,
+        "margin": 0.9553307294845581
+      },
+      {
+        "id": 352,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9842224717140198,
+        "margin": 0.9794185161590576
+      },
+      {
+        "id": 353,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9851740002632141,
+        "margin": 0.9789285063743591
+      },
+      {
+        "id": 354,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9452905058860779,
+        "margin": 0.9260615110397339
+      },
+      {
+        "id": 355,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9965906143188477,
+        "margin": 0.995741069316864
+      },
+      {
+        "id": 356,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9841142892837524,
+        "margin": 0.9789333939552307
+      },
+      {
+        "id": 357,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9575051665306091,
+        "margin": 0.941266655921936
+      },
+      {
+        "id": 358,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9566376209259033,
+        "margin": 0.9429628849029541
+      },
+      {
+        "id": 359,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9916451573371887,
+        "margin": 0.9891082644462585
+      },
+      {
+        "id": 360,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9338701367378235,
+        "margin": 0.9158584475517273
+      },
+      {
+        "id": 361,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.948390543460846,
+        "margin": 0.9336026906967163
+      },
+      {
+        "id": 362,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9880164265632629,
+        "margin": 0.9835006594657898
+      },
+      {
+        "id": 363,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9440009593963623,
+        "margin": 0.9290285110473633
+      },
+      {
+        "id": 364,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.7336283922195435,
+        "margin": 0.6506256461143494
+      },
+      {
+        "id": 365,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.8594129085540771,
+        "margin": 0.7675274014472961
+      },
+      {
+        "id": 366,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9856405258178711,
+        "margin": 0.9799228310585022
+      },
+      {
+        "id": 367,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9241684079170227,
+        "margin": 0.8865727186203003
+      },
+      {
+        "id": 368,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9856281280517578,
+        "margin": 0.9773514866828918
+      },
+      {
+        "id": 369,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9881550073623657,
+        "margin": 0.9838558435440063
+      },
+      {
+        "id": 370,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9934902191162109,
+        "margin": 0.9894993305206299
+      },
+      {
+        "id": 371,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9453911781311035,
+        "margin": 0.9305894374847412
+      },
+      {
+        "id": 372,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9840126037597656,
+        "margin": 0.9807294011116028
+      },
+      {
+        "id": 373,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9873316884040833,
+        "margin": 0.9818922877311707
+      },
+      {
+        "id": 374,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9945204854011536,
+        "margin": 0.9920055866241455
+      },
+      {
+        "id": 375,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9996516704559326,
+        "margin": 0.999561071395874
+      },
+      {
+        "id": 376,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9903280138969421,
+        "margin": 0.984218180179596
+      },
+      {
+        "id": 377,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9868797063827515,
+        "margin": 0.9794129729270935
+      },
+      {
+        "id": 378,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9965012073516846,
+        "margin": 0.9947409629821777
+      },
+      {
+        "id": 379,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9152863621711731,
+        "margin": 0.8515544533729553
+      },
+      {
+        "id": 380,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.7782257795333862,
+        "margin": 0.7331518530845642
+      },
+      {
+        "id": 381,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9687683582305908,
+        "margin": 0.9467172622680664
+      },
+      {
+        "id": 382,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9443848729133606,
+        "margin": 0.932030975818634
+      },
+      {
+        "id": 383,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9983103275299072,
+        "margin": 0.9978082776069641
+      },
+      {
+        "id": 384,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9964812994003296,
+        "margin": 0.9952937364578247
+      },
+      {
+        "id": 385,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9760748744010925,
+        "margin": 0.958746612071991
+      },
+      {
+        "id": 386,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9593565464019775,
+        "margin": 0.9372732639312744
+      },
+      {
+        "id": 387,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9761926531791687,
+        "margin": 0.9666256904602051
+      },
+      {
+        "id": 388,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9808160662651062,
+        "margin": 0.9737114906311035
+      },
+      {
+        "id": 389,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.968612015247345,
+        "margin": 0.9513705372810364
+      },
+      {
+        "id": 390,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9911778569221497,
+        "margin": 0.9860248565673828
+      },
+      {
+        "id": 391,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9983866214752197,
+        "margin": 0.99791020154953
+      },
+      {
+        "id": 392,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9835270047187805,
+        "margin": 0.9709758162498474
+      },
+      {
+        "id": 393,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.942848265171051,
+        "margin": 0.9275641441345215
+      },
+      {
+        "id": 394,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9928425550460815,
+        "margin": 0.9908493161201477
+      },
+      {
+        "id": 395,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9854475855827332,
+        "margin": 0.9811018109321594
+      },
+      {
+        "id": 396,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9804487824440002,
+        "margin": 0.969408392906189
+      },
+      {
+        "id": 397,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9797973036766052,
+        "margin": 0.9719903469085693
+      },
+      {
+        "id": 398,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9889844655990601,
+        "margin": 0.9836124181747437
+      },
+      {
+        "id": 399,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9764784574508667,
+        "margin": 0.9716494083404541
+      },
+      {
+        "id": 400,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9927839040756226,
+        "margin": 0.9899418354034424
+      },
+      {
+        "id": 401,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9895663261413574,
+        "margin": 0.9863923192024231
+      },
+      {
+        "id": 402,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.99631667137146,
+        "margin": 0.9950330853462219
+      },
+      {
+        "id": 403,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9485589861869812,
+        "margin": 0.9314226508140564
+      },
+      {
+        "id": 404,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9870229363441467,
+        "margin": 0.9840356707572937
+      },
+      {
+        "id": 405,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.990806519985199,
+        "margin": 0.9885805249214172
+      },
+      {
+        "id": 406,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9773004055023193,
+        "margin": 0.9726649522781372
+      },
+      {
+        "id": 407,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9967958331108093,
+        "margin": 0.9959363341331482
+      },
+      {
+        "id": 408,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.997281551361084,
+        "margin": 0.9963349103927612
+      },
+      {
+        "id": 409,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9558534622192383,
+        "margin": 0.9454701542854309
+      },
+      {
+        "id": 410,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9811509251594543,
+        "margin": 0.9772595167160034
+      },
+      {
+        "id": 411,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.927693247795105,
+        "margin": 0.907189130783081
+      },
+      {
+        "id": 412,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9168068766593933,
+        "margin": 0.8678582906723022
+      },
+      {
+        "id": 413,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9530801177024841,
+        "margin": 0.9390608668327332
+      },
+      {
+        "id": 414,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9969101548194885,
+        "margin": 0.995684802532196
+      },
+      {
+        "id": 415,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9892515540122986,
+        "margin": 0.9854575991630554
+      },
+      {
+        "id": 416,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.914875328540802,
+        "margin": 0.8970704674720764
+      },
+      {
+        "id": 417,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9841285943984985,
+        "margin": 0.9770291447639465
+      },
+      {
+        "id": 418,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9175317883491516,
+        "margin": 0.8586961627006531
+      },
+      {
+        "id": 419,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9830260872840881,
+        "margin": 0.9785007238388062
+      },
+      {
+        "id": 420,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.94092857837677,
+        "margin": 0.9240971803665161
+      },
+      {
+        "id": 421,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9742352962493896,
+        "margin": 0.9668605923652649
+      },
+      {
+        "id": 422,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9916895627975464,
+        "margin": 0.9886336922645569
+      },
+      {
+        "id": 423,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9566987156867981,
+        "margin": 0.9457801580429077
+      },
+      {
+        "id": 424,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.948712944984436,
+        "margin": 0.9241792559623718
+      },
+      {
+        "id": 425,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.8949278593063354,
+        "margin": 0.8530625700950623
+      },
+      {
+        "id": 426,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9857175350189209,
+        "margin": 0.9830753803253174
+      },
+      {
+        "id": 427,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9377821087837219,
+        "margin": 0.9148154854774475
+      },
+      {
+        "id": 428,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9857714176177979,
+        "margin": 0.98313307762146
+      },
+      {
+        "id": 429,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9315020442008972,
+        "margin": 0.8990606069564819
+      },
+      {
+        "id": 430,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9563542604446411,
+        "margin": 0.9373571872711182
+      },
+      {
+        "id": 431,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9496569037437439,
+        "margin": 0.9315226078033447
+      },
+      {
+        "id": 432,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9462867975234985,
+        "margin": 0.9303342700004578
+      },
+      {
+        "id": 433,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8922964930534363,
+        "margin": 0.8514900803565979
+      },
+      {
+        "id": 434,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9772025942802429,
+        "margin": 0.9703637957572937
+      },
+      {
+        "id": 435,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8748824000358582,
+        "margin": 0.821915328502655
+      },
+      {
+        "id": 436,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8654019832611084,
+        "margin": 0.7985624670982361
+      },
+      {
+        "id": 437,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.926627516746521,
+        "margin": 0.8987728357315063
+      },
+      {
+        "id": 438,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9240010380744934,
+        "margin": 0.8999785780906677
+      },
+      {
+        "id": 439,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9163563251495361,
+        "margin": 0.8889835476875305
+      },
+      {
+        "id": 440,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9537038207054138,
+        "margin": 0.9414329528808594
+      },
+      {
+        "id": 441,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9445696473121643,
+        "margin": 0.9235954880714417
+      },
+      {
+        "id": 442,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9338862299919128,
+        "margin": 0.9167413711547852
+      },
+      {
+        "id": 443,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9444255828857422,
+        "margin": 0.9308077096939087
+      },
+      {
+        "id": 444,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9479854702949524,
+        "margin": 0.9361913204193115
+      },
+      {
+        "id": 445,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9337199330329895,
+        "margin": 0.9057320952415466
+      },
+      {
+        "id": 446,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9426562190055847,
+        "margin": 0.9270948171615601
+      },
+      {
+        "id": 447,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9042738676071167,
+        "margin": 0.8582409620285034
+      },
+      {
+        "id": 448,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9118170142173767,
+        "margin": 0.8729648590087891
+      },
+      {
+        "id": 449,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9417409896850586,
+        "margin": 0.9235508441925049
+      },
+      {
+        "id": 450,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8988032341003418,
+        "margin": 0.8692095279693604
+      },
+      {
+        "id": 451,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9404083490371704,
+        "margin": 0.9025900363922119
+      },
+      {
+        "id": 452,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8775271773338318,
+        "margin": 0.8485657572746277
+      },
+      {
+        "id": 453,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9311348795890808,
+        "margin": 0.9108797907829285
+      },
+      {
+        "id": 454,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8214669227600098,
+        "margin": 0.7601578235626221
+      },
+      {
+        "id": 455,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8812302350997925,
+        "margin": 0.8316736817359924
+      },
+      {
+        "id": 456,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.882866382598877,
+        "margin": 0.8590819835662842
+      },
+      {
+        "id": 457,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9046651721000671,
+        "margin": 0.8602235913276672
+      },
+      {
+        "id": 458,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.92222660779953,
+        "margin": 0.8950444459915161
+      },
+      {
+        "id": 459,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8708822727203369,
+        "margin": 0.8246102333068848
+      },
+      {
+        "id": 460,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8288031816482544,
+        "margin": 0.7735540270805359
+      },
+      {
+        "id": 461,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8308071494102478,
+        "margin": 0.7691391110420227
+      },
+      {
+        "id": 462,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9190735816955566,
+        "margin": 0.8898021578788757
+      },
+      {
+        "id": 463,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8168558478355408,
+        "margin": 0.7321631908416748
+      },
+      {
+        "id": 464,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9385054111480713,
+        "margin": 0.9232557415962219
+      },
+      {
+        "id": 465,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.871818482875824,
+        "margin": 0.8402597904205322
+      },
+      {
+        "id": 466,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9240995645523071,
+        "margin": 0.8973351716995239
+      },
+      {
+        "id": 467,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8717657923698425,
+        "margin": 0.8368013501167297
+      },
+      {
+        "id": 468,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.917462944984436,
+        "margin": 0.8967737555503845
+      },
+      {
+        "id": 469,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9270927906036377,
+        "margin": 0.892420768737793
+      },
+      {
+        "id": 470,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9228046536445618,
+        "margin": 0.8960380554199219
+      },
+      {
+        "id": 471,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8879375457763672,
+        "margin": 0.8367576599121094
+      },
+      {
+        "id": 472,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.887557327747345,
+        "margin": 0.8629927039146423
+      },
+      {
+        "id": 473,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9080823659896851,
+        "margin": 0.8656630516052246
+      },
+      {
+        "id": 474,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8768826723098755,
+        "margin": 0.8190073370933533
+      },
+      {
+        "id": 475,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9302860498428345,
+        "margin": 0.9086577296257019
+      },
+      {
+        "id": 476,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.7650328874588013,
+        "margin": 0.7146403789520264
+      },
+      {
+        "id": 477,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9454182386398315,
+        "margin": 0.9325050115585327
+      },
+      {
+        "id": 478,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8354215621948242,
+        "margin": 0.7890178561210632
+      },
+      {
+        "id": 479,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.932356595993042,
+        "margin": 0.9095887541770935
+      },
+      {
+        "id": 480,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9385138154029846,
+        "margin": 0.918049156665802
+      },
+      {
+        "id": 481,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9592970013618469,
+        "margin": 0.9490442276000977
+      },
+      {
+        "id": 482,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9038307070732117,
+        "margin": 0.8762527704238892
+      },
+      {
+        "id": 483,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8130950331687927,
+        "margin": 0.7857086062431335
+      },
+      {
+        "id": 484,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8865033388137817,
+        "margin": 0.8453789353370667
+      },
+      {
+        "id": 485,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8587859869003296,
+        "margin": 0.8366526365280151
+      },
+      {
+        "id": 486,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9299264550209045,
+        "margin": 0.9140191674232483
+      },
+      {
+        "id": 487,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9003382325172424,
+        "margin": 0.8721596598625183
+      },
+      {
+        "id": 488,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.5854976177215576,
+        "margin": 0.23233476281166077
+      },
+      {
+        "id": 489,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9266640543937683,
+        "margin": 0.9128963947296143
+      },
+      {
+        "id": 490,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9110589623451233,
+        "margin": 0.889094889163971
+      },
+      {
+        "id": 491,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8951613306999207,
+        "margin": 0.8467003107070923
+      },
+      {
+        "id": 492,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9485589861869812,
+        "margin": 0.9307307600975037
+      },
+      {
+        "id": 493,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9126999378204346,
+        "margin": 0.8885056376457214
+      },
+      {
+        "id": 494,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9510931372642517,
+        "margin": 0.9421219229698181
+      },
+      {
+        "id": 495,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8983420133590698,
+        "margin": 0.8564513921737671
+      },
+      {
+        "id": 496,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8152825832366943,
+        "margin": 0.7230020761489868
+      },
+      {
+        "id": 497,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9258854985237122,
+        "margin": 0.9140005707740784
+      },
+      {
+        "id": 498,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9124176502227783,
+        "margin": 0.8730533123016357
+      },
+      {
+        "id": 499,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9431357979774475,
+        "margin": 0.9347059726715088
+      },
+      {
+        "id": 500,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9266262054443359,
+        "margin": 0.9009227752685547
+      }
+    ]
+  },
+  "seed_point_slots": {
+    "total": 150,
+    "correct": 150,
+    "results": [
+      {
+        "id": 1,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 2,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 5,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 6,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 9,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 10,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 11,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 12,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 13,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 14,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 15,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 16,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 17,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 18,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 19,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 20,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 21,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 23,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 24,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 25,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "C"
+          ],
+          "POINT_2": [
+            "D"
+          ]
+        }
+      },
+      {
+        "id": 26,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 27,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 28,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 29,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 30,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 32,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 34,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 35,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 36,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 37,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 38,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 39,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 40,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 41,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 42,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 43,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 44,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 45,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 46,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 47,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 48,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 49,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 50,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A"
+          ],
+          "POINT_2": [
+            "B"
+          ]
+        }
+      },
+      {
+        "id": 51,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 52,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 53,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 54,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 55,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 56,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 57,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 58,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 59,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 60,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 61,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 62,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 63,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 64,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 65,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 66,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 67,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 68,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 69,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 70,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 71,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 72,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 73,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 74,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 75,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "D"
+          ],
+          "POINT_2": [
+            "C"
+          ]
+        }
+      },
+      {
+        "id": 76,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 77,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 78,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 79,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 80,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 81,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 82,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 83,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 84,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 85,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 86,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 87,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 88,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 89,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 90,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 91,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 92,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 93,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 94,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 95,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 96,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 97,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 98,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 99,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 100,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "P"
+          ],
+          "POINT_2": [
+            "Q"
+          ]
+        }
+      },
+      {
+        "id": 101,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 102,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 103,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 104,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 105,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 106,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 107,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 108,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 109,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 110,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 111,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 112,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 113,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 114,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 115,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 116,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 117,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 118,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 119,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 120,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 121,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 122,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 123,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 124,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 125,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "A1"
+          ],
+          "POINT_2": [
+            "B2"
+          ]
+        }
+      },
+      {
+        "id": 126,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 127,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 128,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 129,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 130,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 131,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 132,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 133,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 134,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 135,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 136,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 137,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 138,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 139,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 140,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 141,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 142,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 143,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 144,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 145,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 146,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 147,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 148,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 149,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      },
+      {
+        "id": 150,
+        "correct": true,
+        "actual": {
+          "POINT_1": [
+            "M"
+          ],
+          "POINT_2": [
+            "N"
+          ]
+        }
+      }
+    ]
+  },
+  "unseen_labels": {
+    "total": 150,
+    "correct": 150,
+    "feature_invariant": true
+  },
+  "heldout_slot_templates": {
+    "total": 10,
+    "correct": 10,
+    "results": [
+      {
+        "text": "Could you calculate the distance from point Vertex_907 to point Omega_811?",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Could",
+            "intent": "OTHER",
+            "confidence": 0.9974074959754944,
+            "margin": 0.99567711353302
+          },
+          {
+            "token": "you",
+            "intent": "OTHER",
+            "confidence": 0.9975142478942871,
+            "margin": 0.9954563975334167
+          },
+          {
+            "token": "calculate",
+            "intent": "OTHER",
+            "confidence": 0.998432457447052,
+            "margin": 0.9975975155830383
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9985114932060242,
+            "margin": 0.9974024295806885
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9951295852661133,
+            "margin": 0.9907137155532837
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.9982097148895264,
+            "margin": 0.9964971542358398
+          },
+          {
+            "token": "point",
+            "intent": "OTHER",
+            "confidence": 0.9571509957313538,
+            "margin": 0.9164133071899414
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.7861955165863037,
+            "margin": 0.6206930875778198
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9970836043357849,
+            "margin": 0.9946498274803162
+          },
+          {
+            "token": "point",
+            "intent": "OTHER",
+            "confidence": 0.9911596179008484,
+            "margin": 0.9824414253234863
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9632781147956848,
+            "margin": 0.9480942487716675
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.9861680865287781,
+            "margin": 0.9735927581787109
+          }
+        ]
+      },
+      {
+        "text": "What is the straight-line distance from Vertex_907 to Omega_811?",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "What",
+            "intent": "OTHER",
+            "confidence": 0.9989199638366699,
+            "margin": 0.9980947971343994
+          },
+          {
+            "token": "is",
+            "intent": "OTHER",
+            "confidence": 0.9990002512931824,
+            "margin": 0.998312771320343
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9971056580543518,
+            "margin": 0.9949608445167542
+          },
+          {
+            "token": "straight",
+            "intent": "OTHER",
+            "confidence": 0.9980327486991882,
+            "margin": 0.9973379373550415
+          },
+          {
+            "token": "-",
+            "intent": "OTHER",
+            "confidence": 0.9994751811027527,
+            "margin": 0.999175488948822
+          },
+          {
+            "token": "line",
+            "intent": "OTHER",
+            "confidence": 0.987247109413147,
+            "margin": 0.9773926734924316
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.969959557056427,
+            "margin": 0.9406139254570007
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.997654914855957,
+            "margin": 0.9957624077796936
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9925380349159241,
+            "margin": 0.9895622134208679
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9996956586837769,
+            "margin": 0.9994970560073853
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9964534044265747,
+            "margin": 0.9939223527908325
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.9877020716667175,
+            "margin": 0.9780303239822388
+          }
+        ]
+      },
+      {
+        "text": "Find the Euclidean distance between Vertex_907 and Omega_811",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Find",
+            "intent": "OTHER",
+            "confidence": 0.9995185136795044,
+            "margin": 0.999180018901825
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9996272325515747,
+            "margin": 0.9993799924850464
+          },
+          {
+            "token": "Euclidean",
+            "intent": "OTHER",
+            "confidence": 0.9986140727996826,
+            "margin": 0.9975684881210327
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9986525774002075,
+            "margin": 0.9973886609077454
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9982996582984924,
+            "margin": 0.996759295463562
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9989651441574097,
+            "margin": 0.9980563521385193
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9997311234474182,
+            "margin": 0.999578058719635
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9879481196403503,
+            "margin": 0.9795702695846558
+          }
+        ]
+      },
+      {
+        "text": "What is the separation between Vertex_907 and Omega_811?",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "What",
+            "intent": "OTHER",
+            "confidence": 0.9989199638366699,
+            "margin": 0.9980947971343994
+          },
+          {
+            "token": "is",
+            "intent": "OTHER",
+            "confidence": 0.9990002512931824,
+            "margin": 0.998312771320343
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9941052198410034,
+            "margin": 0.9887897968292236
+          },
+          {
+            "token": "separation",
+            "intent": "OTHER",
+            "confidence": 0.9973970651626587,
+            "margin": 0.9949820041656494
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9998369216918945,
+            "margin": 0.9997052550315857
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9950522780418396,
+            "margin": 0.9910531640052795
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9992596507072449,
+            "margin": 0.9985625743865967
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9962049126625061,
+            "margin": 0.9929282069206238
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.9830586910247803,
+            "margin": 0.96828693151474
+          }
+        ]
+      },
+      {
+        "text": "Find the length between Vertex_907 and Omega_811",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Find",
+            "intent": "OTHER",
+            "confidence": 0.9995185136795044,
+            "margin": 0.999180018901825
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.999446451663971,
+            "margin": 0.9991154074668884
+          },
+          {
+            "token": "length",
+            "intent": "OTHER",
+            "confidence": 0.9982524514198303,
+            "margin": 0.9967013001441956
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9998369216918945,
+            "margin": 0.9997052550315857
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9950522780418396,
+            "margin": 0.9910531640052795
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9997311234474182,
+            "margin": 0.999578058719635
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9879481196403503,
+            "margin": 0.9795702695846558
+          }
+        ]
+      },
+      {
+        "text": "distance from Vertex_907 to Omega_811 now",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9965423941612244,
+            "margin": 0.9934634566307068
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.9993977546691895,
+            "margin": 0.9991200566291809
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9925380349159241,
+            "margin": 0.9895622134208679
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9996956586837769,
+            "margin": 0.9994970560073853
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9858103394508362,
+            "margin": 0.9751753211021423
+          },
+          {
+            "token": "now",
+            "intent": "OTHER",
+            "confidence": 0.9812528491020203,
+            "margin": 0.9664539098739624
+          }
+        ]
+      },
+      {
+        "text": "Kindly measure the distance from Vertex_907 to Omega_811 in units",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Kindly",
+            "intent": "OTHER",
+            "confidence": 0.9988299012184143,
+            "margin": 0.9978892207145691
+          },
+          {
+            "token": "measure",
+            "intent": "OTHER",
+            "confidence": 0.9993392825126648,
+            "margin": 0.9988898634910583
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9984613656997681,
+            "margin": 0.9973158836364746
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9960967898368835,
+            "margin": 0.9923242926597595
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.9997448325157166,
+            "margin": 0.9995468258857727
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9925380349159241,
+            "margin": 0.9895622134208679
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9996956586837769,
+            "margin": 0.9994970560073853
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9335201978683472,
+            "margin": 0.8857415318489075
+          },
+          {
+            "token": "in",
+            "intent": "OTHER",
+            "confidence": 0.9935629367828369,
+            "margin": 0.9897557497024536
+          },
+          {
+            "token": "units",
+            "intent": "OTHER",
+            "confidence": 0.9422098398208618,
+            "margin": 0.8948646187782288
+          }
+        ]
+      },
+      {
+        "text": "What are the midpoint coordinates of UnseenEdge_917?",
+        "expected": {
+          "UnseenEdge_917": "SEGMENT"
+        },
+        "actual": {
+          "UnseenEdge_917": "SEGMENT"
+        },
+        "correct": true,
+        "predictions": [
+          {
+            "token": "What",
+            "intent": "OTHER",
+            "confidence": 0.9988287091255188,
+            "margin": 0.9979023933410645
+          },
+          {
+            "token": "are",
+            "intent": "OTHER",
+            "confidence": 0.9991810917854309,
+            "margin": 0.9985621571540833
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9990560412406921,
+            "margin": 0.9985175132751465
+          },
+          {
+            "token": "midpoint",
+            "intent": "OTHER",
+            "confidence": 0.9989055395126343,
+            "margin": 0.998054563999176
+          },
+          {
+            "token": "coordinates",
+            "intent": "OTHER",
+            "confidence": 0.9995560050010681,
+            "margin": 0.9993217587471008
+          },
+          {
+            "token": "of",
+            "intent": "OTHER",
+            "confidence": 0.9991414546966553,
+            "margin": 0.9984575510025024
+          },
+          {
+            "token": "UnseenEdge_917",
+            "intent": "SEGMENT",
+            "confidence": 0.9399983286857605,
+            "margin": 0.9067862629890442
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.9583034515380859,
+            "margin": 0.9170380234718323
+          }
+        ]
+      },
+      {
+        "text": "Which point is halfway between UnseenLeft_907 and UnseenRight_811?",
+        "expected": {
+          "UnseenLeft_907": "POINT_1",
+          "UnseenRight_811": "POINT_2"
+        },
+        "actual": {
+          "UnseenLeft_907": "POINT_1",
+          "UnseenRight_811": "POINT_2"
+        },
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Which",
+            "intent": "OTHER",
+            "confidence": 0.7808160781860352,
+            "margin": 0.6314268112182617
+          },
+          {
+            "token": "point",
+            "intent": "OTHER",
+            "confidence": 0.9992406368255615,
+            "margin": 0.9985883831977844
+          },
+          {
+            "token": "is",
+            "intent": "OTHER",
+            "confidence": 0.9758493900299072,
+            "margin": 0.957190752029419
+          },
+          {
+            "token": "halfway",
+            "intent": "OTHER",
+            "confidence": 0.8923035264015198,
+            "margin": 0.7861964702606201
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9988107681274414,
+            "margin": 0.9977524876594543
+          },
+          {
+            "token": "UnseenLeft_907",
+            "intent": "POINT_1",
+            "confidence": 0.9933674931526184,
+            "margin": 0.9887470602989197
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9992596507072449,
+            "margin": 0.9985625743865967
+          },
+          {
+            "token": "UnseenRight_811",
+            "intent": "POINT_2",
+            "confidence": 0.9962049126625061,
+            "margin": 0.9929282069206238
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.9830586910247803,
+            "margin": 0.96828693151474
+          }
+        ]
+      },
+      {
+        "text": "Place a marker at the center of UnseenEdge_917",
+        "expected": {
+          "UnseenEdge_917": "SEGMENT"
+        },
+        "actual": {
+          "UnseenEdge_917": "SEGMENT"
+        },
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Place",
+            "intent": "OTHER",
+            "confidence": 0.977112889289856,
+            "margin": 0.9584529995918274
+          },
+          {
+            "token": "a",
+            "intent": "OTHER",
+            "confidence": 0.8217499852180481,
+            "margin": 0.64974045753479
+          },
+          {
+            "token": "marker",
+            "intent": "OTHER",
+            "confidence": 0.9999099969863892,
+            "margin": 0.999843180179596
+          },
+          {
+            "token": "at",
+            "intent": "OTHER",
+            "confidence": 0.9992663264274597,
+            "margin": 0.9987825751304626
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9991098046302795,
+            "margin": 0.9984127879142761
+          },
+          {
+            "token": "center",
+            "intent": "OTHER",
+            "confidence": 0.9995046854019165,
+            "margin": 0.9992250800132751
+          },
+          {
+            "token": "of",
+            "intent": "OTHER",
+            "confidence": 0.9998836517333984,
+            "margin": 0.9997947216033936
+          },
+          {
+            "token": "UnseenEdge_917",
+            "intent": "SEGMENT",
+            "confidence": 0.9911578297615051,
+            "margin": 0.9860618710517883
+          }
+        ]
+      }
+    ]
+  },
+  "full_engine_completion": false,
+  "note": "All 500 seeds train intent recognition. Distance slot templates 19\u201325 and midpoint rows 159, 165, 173 are excluded from slot training; held-out entity/segment names never enter input features. Recognizing an intent does not prove execution or follow-up handling."
+}

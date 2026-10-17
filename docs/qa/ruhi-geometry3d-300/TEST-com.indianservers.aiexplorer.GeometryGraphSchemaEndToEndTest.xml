@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.GeometryGraphSchemaEndToEndTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-16T11:50:06.508Z" hostname="INDIANSERVERS" time="0.032">
+  <properties/>
+  <testcase name="persistedWorkspaceRebuildsShared2dAnd3dAnalysisWithoutDivergence" classname="com.indianservers.aiexplorer.GeometryGraphSchemaEndToEndTest" time="0.03"/>
+  <testcase name="spatialSelectionHandsTheSamePersistedDefinitionToSolver" classname="com.indianservers.aiexplorer.GeometryGraphSchemaEndToEndTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

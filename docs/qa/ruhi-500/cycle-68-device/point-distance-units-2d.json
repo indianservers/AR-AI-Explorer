@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "restored_pair": true,
+  "immediate_display_distance": 600,
+  "edited_distance": 500,
+  "segment_label": "Selected measurements: Δx 600 cm - Δy 0 cm - length 600 cm - slope 0",
+  "edited_segment_label": "Selected measurements: Δx 300 cm - Δy 400 cm - length 500 cm - slope 1.333333",
+  "conversion_preserved_coordinates": true,
+  "query_did_not_add_undo": true
+}

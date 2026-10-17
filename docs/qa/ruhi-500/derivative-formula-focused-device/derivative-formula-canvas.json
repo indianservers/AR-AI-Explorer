@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "restored_formula_chip": true,
+  "native_function_created": true,
+  "atomic_undo_redo": true,
+  "undefined_x_reasked_before_creation": true,
+  "actual_rendered_coordinates": true,
+  "restored_x": 2,
+  "log_slope": 0.5,
+  "committed_capture": true
+}

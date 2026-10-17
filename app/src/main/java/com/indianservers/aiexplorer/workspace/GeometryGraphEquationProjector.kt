@@ -75,6 +75,10 @@ object GeometryGraphEquationProjector {
             PointDependencyType.Rotate -> "Rotate"
             PointDependencyType.ReflectX -> "Reflect"
             PointDependencyType.Dilate -> "Dilate"
+            PointDependencyType.CircleRadius -> "CircleRadius"
+            PointDependencyType.CircleOffset -> "CircleOffset"
+            PointDependencyType.CircleAxisTangent -> "CircleAxisTangent"
+            PointDependencyType.TriangleVertex -> "TriangleVertex"
         }
         val arguments = inputIds + dependency.parameters.map(::number)
         val relation = "point-${dependency.outputIndex} = $command(${arguments.joinToString()})"

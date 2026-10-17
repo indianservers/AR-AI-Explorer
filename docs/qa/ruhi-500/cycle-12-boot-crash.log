@@ -1,0 +1,17 @@
+--------- beginning of crash
+10-16 20:22:34.257   159   159 F libc    : crash_dump helper failed to exec, or was killed
+10-16 20:23:04.550   159   159 F libc    : crash_dump helper failed to exec, or was killed
+10-16 20:23:05.775   173   173 F libc    : crash_dump helper failed to exec, or was killed
+10-16 20:23:16.330  1537  1537 E AndroidRuntime: FATAL EXCEPTION: main
+10-16 20:23:16.330  1537  1537 E AndroidRuntime: PID: 1537
+10-16 20:23:16.330  1537  1537 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-16 20:23:16.333  1205  1205 E AndroidRuntime: FATAL EXCEPTION: main
+10-16 20:23:16.333  1205  1205 E AndroidRuntime: Process: com.android.phone, PID: 1205
+10-16 20:23:16.333  1205  1205 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-16 20:23:16.367  1377  1377 E AndroidRuntime: FATAL EXCEPTION: main
+10-16 20:23:16.367  1377  1377 E AndroidRuntime: Process: com.google.android.gms, PID: 1377
+10-16 20:23:16.367  1377  1377 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-16 20:23:16.437  1026  1200 E AndroidRuntime: FATAL EXCEPTION: SystemUIBg-2
+10-16 20:23:16.437  1026  1200 E AndroidRuntime: Process: com.android.systemui, PID: 1026
+10-16 20:23:16.437  1026  1200 E AndroidRuntime: DeadSystemException: The system died; earlier logs will point to the root cause
+10-16 20:24:12.867  1998  2088 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 2088 (bt_stack_manage), pid 1998 (droid.bluetooth)

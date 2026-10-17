@@ -1,0 +1,27 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+W0000 00:00:1792150582.041007   12812 tf_tfl_flatbuffer_helpers.cc:364] Ignored output_format.
+W0000 00:00:1792150582.051682   12812 tf_tfl_flatbuffer_helpers.cc:367] Ignored drop_control_dependency.
+I0000 00:00:1792150582.097084   12812 mlir_graph_optimization_pass.cc:437] MLIR V1 optimization pass is not enabled
+C:\Users\saisa\AppData\Local\Codex\RuhiNlpTraining312\Lib\site-packages\tensorflow\lite\python\interpreter.py:457: UserWarning:     Warning: tf.lite.Interpreter is deprecated and is scheduled for deletion in
+    TF 2.20. Please use the LiteRT interpreter from the ai_edge_litert package.
+    See the [migration guide](https://ai.google.dev/edge/litert/migration)
+    for details.
+    
+  warnings.warn(_INTERPRETER_DELETION_WARNING)
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+{
+  "model_sha256": "fb04323dc618bbe18c60b0b3e9383313e9836b4c21366aaa255faa7f45f0221e",
+  "supplied_training_fit": {
+    "total": 300,
+    "correct": 300,
+    "accepted": 300,
+    "accepted_errors": 0
+  },
+  "heldout": {
+    "total": 20,
+    "correct": 17,
+    "accepted": 11,
+    "accepted_errors": 0
+  },
+  "note": "Small related-template holdout; not broad NLP accuracy. All 300 supplied examples were training data. Unsupported operations remain unsupported."
+}

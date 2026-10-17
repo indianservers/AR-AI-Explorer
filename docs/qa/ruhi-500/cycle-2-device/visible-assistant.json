@@ -1,0 +1,7 @@
+{
+  "first_distance": 5,
+  "changed_coordinate_distance": 10,
+  "same_utterance": true,
+  "no_extra_points": true,
+  "passed": true
+}

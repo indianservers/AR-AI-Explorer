@@ -1,0 +1,9 @@
+# Cycle 59 selected-point derivative review
+
+The full pre-test/train/post-test/build/emulator cycle passed: 519 JVM methods and 36 Android tests. All 500 original source cases passed in their declared contexts; the earlier 300-request replay still has 188 applied, 23 clarifications, 6 invalid and 83 unsupported outcomes. Seed recognition fit is not a generalization benchmark. All six bundled model assets match their trained source files.
+
+Reviewed the four `derivative-point-*` captures. The initial D1 marker is at (1,1). The moved capture now places D1 at (3,9), unlike cycle 58's stale image. The existing extremum summary chip partly covers the moved marker, so these captures do not certify unobstructed annotation placement. The off-curve question capture has removed the stale D1/derivative overlay and visibly asks for one x coordinate, with three valid example chips. The explicit-x capture places D1 at (2,4) while preserving the native off-curve point (3,8).
+
+The canvas's actual drawing payload is independently asserted as `Derivative points: (3.0, 9.0)` after the native move and `Derivative unavailable: The selected point is not on the current curve.` after the off-curve move. This supplements the visual review and numerical slope-6 check. Canvas pixels changed by 11,567; this threshold alone is not the coordinate oracle.
+
+The schema-2 point binding survives save/load and native point-index remapping. Schema-1 annotations remain fixed-coordinate annotations. Source functions and points are not recreated or projected by the assistant. The two original reproduction tests failed before implementation; cycle 58's visual failure remains retained. Broader conditional follow-ups, derivative domains/critical points, other engine requirements and unsupported constructions remain open.

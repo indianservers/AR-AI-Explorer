@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiPointLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:06:59.414Z" hostname="INDIANSERVERS" time="0.134">
+  <properties/>
+  <testcase name="standaloneNamedPointRequestWaitsForCoordinatesAndCanBeCancelled" classname="com.indianservers.aiexplorer.RuhiPointLanguageTest" time="0.002"/>
+  <testcase name="everyDistanceTemplateUsesUnseenLabelsAndChangedCoordinatesInBothStudios" classname="com.indianservers.aiexplorer.RuhiPointLanguageTest" time="0.119"/>
+  <testcase name="missingAndCaseAmbiguousPointsAskWithoutInventingEntities" classname="com.indianservers.aiexplorer.RuhiPointLanguageTest" time="0.001"/>
+  <testcase name="slotFeatureInputsNeverContainThePointNames" classname="com.indianservers.aiexplorer.RuhiPointLanguageTest" time="0.008"/>
+  <testcase name="missingPointFollowupCreatesTheRequestedNamedPointThenResumesTheDistance" classname="com.indianservers.aiexplorer.RuhiPointLanguageTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

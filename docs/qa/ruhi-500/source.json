@@ -1,0 +1,24 @@
+{
+  "source": "C:\\Users\\saisa\\Downloads\\Ruhi_500_NLP_Commands.xlsx",
+  "sha256": "8f28a5ede4bf60a8f5bc8ced55a1f932178431eba6fb214a9b674d043251f144",
+  "sheet": "500 NLP Commands",
+  "rows": 500,
+  "intents": {
+    "MEASURE_DISTANCE": 150,
+    "FIND_MIDPOINT": 25,
+    "CALCULATE_SLOPE": 25,
+    "MEASURE_ANGLE": 25,
+    "CREATE_CIRCLE": 25,
+    "CREATE_TRIANGLE": 25,
+    "PLOT_FUNCTION_2D": 25,
+    "FIND_INTERSECTION": 25,
+    "DIFFERENTIATE": 25,
+    "INTEGRATE": 25,
+    "PLOT_SURFACE_3D": 25,
+    "MEASURE_SOLID": 25,
+    "TRANSFORM_3D": 25,
+    "EDIT_SCENE": 25,
+    "DIALOGUE_CONTEXT": 25
+  },
+  "source_fields_preserved": true
+}

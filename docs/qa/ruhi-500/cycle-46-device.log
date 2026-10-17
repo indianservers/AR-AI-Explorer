@@ -1,0 +1,22 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:...............
+Error in conversationalSixtyDegreeEditMovesNativeArmAndKeepsArcLive(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.conversationalSixtyDegreeEditMovesNativeArmAndKeepsArcLive(RuhiSeed500RenderingTest.kt:41)
+......
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 677.233
+There was 1 failure:
+1) conversationalSixtyDegreeEditMovesNativeArmAndKeepsArcLive(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.conversationalSixtyDegreeEditMovesNativeArmAndKeepsArcLive(RuhiSeed500RenderingTest.kt:41)
+
+FAILURES!!!
+Tests run: 24,  Failures: 1
+
+

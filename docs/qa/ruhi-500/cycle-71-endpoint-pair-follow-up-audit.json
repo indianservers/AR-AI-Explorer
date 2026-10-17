@@ -1,0 +1,63 @@
+{
+  "cases": 2,
+  "verified": 0,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPointLanguage.kt": "c282a53f337eaeef07b2df026a513edd22e9835a17ace957f6d11a96f4b992a2",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "0b34ff6d2c187093b664cf6c978a9177c7c0308a261390802e3d6157cfff3150",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": "9ff03fb3814b4ee97f1e7b98411f4654e9d3d5566a47319063a8ee9114413b27",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "f2d6b734d54bd460288ac450ba5f7bda074cf2f11c8409c854c98e7264b2ba5b"
+  },
+  "results": [
+    {
+      "source_row": 151,
+      "input": "Find the midpoint of AB",
+      "clarification_reply": "Sun907 and Moon811",
+      "expected": "Native dependent midpoint (3,4), with actual Sun907/Moon811 endpoint roles and one reversible construction.",
+      "question_status": "CLARIFICATION",
+      "question_reply": "Which two endpoints define AB? Write their names separated by \u2018and\u2019.",
+      "question_suggestions": [],
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "actual_points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          8.0
+        ]
+      ],
+      "actual_slope": null,
+      "history_entries": 0,
+      "behavior_verified": false
+    },
+    {
+      "source_row": 176,
+      "input": "Find the slope of AB",
+      "clarification_reply": "Sun907 and Moon811",
+      "expected": "Slope 4/3, rise 8 and run 6 for actual Sun907/Moon811, no scene/history edit.",
+      "question_status": "CLARIFICATION",
+      "question_reply": "Which two endpoints define AB? Write their names separated by \u2018and\u2019.",
+      "question_suggestions": [],
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "actual_points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          8.0
+        ]
+      ],
+      "actual_slope": null,
+      "history_entries": 0,
+      "behavior_verified": false
+    }
+  ],
+  "scope": "Original rows 151/176 with absent AB and two current uniquely named native endpoints; response to the assistant-requested endpoint clarification. Independent midpoint and slope expectations. Compiled parser/engine probe without Android TensorFlow or UI."
+}

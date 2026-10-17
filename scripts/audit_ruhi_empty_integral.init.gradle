@@ -1,0 +1,38 @@
+// Read-only compiled probe of original selected-integral rows with missing source curves.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiEmptyIntegralFollowUps') {
+        doLast {
+            def runtime=appProject.tasks.named('testDebugUnitTest').get().classpath
+            def loader=new URLClassLoader(runtime.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiDialogueSeedFixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def integral=loader.loadClass(prefix+'RuhiIntegralLanguage').getField('INSTANCE').get(null)
+                def records=[
+                    [id:364,text:'Integrate the selected function',bounds:'0 to 2',expected:8.0d/3],
+                    [id:372,text:'Shade area under the currently selected curve between 1 and 4',bounds:null,expected:21.0d]
+                ].collect{input->
+                    def manager=managerClass.getDeclaredConstructor().newInstance();def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def initial=fixture.state(491,0);def c=fixture.context(initial)
+                    def state=manager.execute(initial,'Cancel that',h,c,modality).state
+                    if(!state.functions.isEmpty())throw new GradleException('Empty workspace prerequisite failed.')
+                    def question=manager.execute(state,input.text,h,c,modality)
+                    def reply=manager.execute(question.state,'y=x^2',h,c,modality)
+                    def last=reply
+                    if(input.bounds!=null)last=manager.execute(reply.state,input.bounds,h,c,modality)
+                    def drawing=integral.drawing(last.state)
+                    def verified=last.status.name()=='APPLIED' && last.semanticFrame?.intent=='INTEGRATE' && drawing!=null && Math.abs(drawing.values.signed-input.expected)<1e-7
+                    [source_row:input.id,input:input.text,formula:'y=x^2',bounds:input.bounds,expected_integral:input.expected,question_status:question.status.name(),question_reply:question.message,question_suggestions:question.dialogue?.suggestions?.collect{it.label} ?: [],formula_status:reply.status.name(),formula_reply:reply.message,actual_status:last.status.name(),actual_intent:last.semanticFrame?.intent,actual_reply:last.message,actual_integral:drawing?.values?.signed,behavior_verified:verified]
+                }
+                def sources=['assistant/workspace/RuhiIntegralLanguage.kt','assistant/workspace/RuhiIntegralMath.kt','assistant/workspace/RuhiDialogue.kt'].collectEntries{name->def path='app/src/main/java/com/indianservers/aiexplorer/'+name;[(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]}
+                def report=[cases:records.size(),verified:records.count{it.behavior_verified},source_sha256:sources,results:records,scope:'Original rows 364 and 372 with no visible source curve, formula reply and required bounds; independent integral x^2 expectations. Compiled parser/engine probe, without Android TensorFlow or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/empty-integral-follow-up-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(report))
+                records.each{println(it.source_row.toString()+': '+it.actual_status+' '+it.actual_reply)}
+            } finally {loader.close()}
+        }
+    }
+}

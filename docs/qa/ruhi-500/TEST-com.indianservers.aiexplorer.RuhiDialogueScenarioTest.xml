@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiDialogueScenarioTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:16.662Z" hostname="INDIANSERVERS" time="7.997">
+  <properties/>
+  <testcase name="all1100GeneratedConversationsExecuteAgainstRealSceneModels" classname="com.indianservers.aiexplorer.RuhiDialogueScenarioTest" time="7.997"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

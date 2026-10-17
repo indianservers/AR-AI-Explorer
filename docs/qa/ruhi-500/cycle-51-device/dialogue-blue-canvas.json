@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "restored_pending": true,
+  "blue_position": [
+    3,
+    2,
+    1
+  ],
+  "red_unchanged": true,
+  "undo_restored": true,
+  "changed_pixels": 241654
+}

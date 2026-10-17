@@ -1,0 +1,41 @@
+// Read-only original-row label-collision follow-up audit, including composed endpoint recovery.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiMidpointLabelFollowUp') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def dialogueFixture=loader.loadClass(prefix+'RuhiDialogueSeedFixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def records=['original_valid_control','existing_label','endpoint_then_label'].collect{mode->
+                    def manager=managerClass.getDeclaredConstructor().newInstance();def setup=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def s=mode=='original_valid_control'?fixture.state('GEOMETRY_2D',168):mode=='existing_label'?fixture.state('GEOMETRY_2D',null):dialogueFixture.state(488,0)
+                    def c=fixture.context(168,s)
+                    if(mode=='endpoint_then_label') {
+                        ['Create point Sun907 at (0,0)','Create point Moon811 at (6,8)','Create point M at (4,4)'].each{source->def r=manager.execute(s,source,setup,c,modality);if(r.status.name()!='APPLIED')throw new GradleException('Point fixture creation failed.');s=r.state}
+                    }
+                    def before=s.points;def priorM=s.labSessionValues['ruhi.studio.point.M']
+                    def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def q=manager.execute(s,'Label the middle of AB as M',h,c,modality)
+                    if(mode=='endpoint_then_label')q=manager.execute(q.state,'Sun907 and Moon811',h,c,modality)
+                    def r=mode=='original_valid_control'?q:manager.execute(q.state,'Center907',h,c,modality)
+                    def expected=mode=='endpoint_then_label' ? [3.0d,4.0d]:[0.5d,0.5d]
+                    def name=mode=='original_valid_control'?'M':'Center907'
+                    def index=r.state.labSessionValues['ruhi.studio.point.'+name]?.toInteger()
+                    def actual=index!=null&&index<r.state.points.size() ? [r.state.points[index].x,r.state.points[index].y]:null
+                    def verified=r.status.name()=='APPLIED'&&r.semanticFrame?.intent=='FIND_MIDPOINT'&&r.semanticFrame?.parameters?.label==name&&actual!=null&&Math.abs(actual[0]-expected[0])<1e-8&&Math.abs(actual[1]-expected[1])<1e-8&&r.state.points.size()==before.size()+1&&r.state.points.take(before.size())==before&&h.forModule(s.module).protocol.size()==1
+                    if(priorM!=null)verified=verified&&r.state.labSessionValues['ruhi.studio.point.M']==priorM
+                    [source_row:168,case_name:mode,input:'Label the middle of AB as M',label_reply:mode=='original_valid_control'?null:'Center907',expected_label:name,expected_point:expected,actual_point:actual,question_status:q.status.name(),question_reply:q.message,question_suggestions:q.dialogue?.suggestions?.collect{it.label} ?: [],actual_status:r.status.name(),actual_intent:r.semanticFrame?.intent,actual_reply:r.message,history_entries:h.forModule(s.module).protocol.size(),behavior_verified:verified]
+                }
+                def sources=['RuhiGeometry2DLanguage.kt','RuhiPointLanguage.kt','RuhiEndpointConversation.kt','RuhiDialogue.kt'].collectEntries{name->def path='app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/'+name;[(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]}
+                def result=[cases:records.size(),verified:records.count{it.behavior_verified},source_sha256:sources,results:records,scope:'Original row 168 valid control and existing-label clarification, including a preceding unresolved-endpoint answer. Independent coordinates and preservation/history checks. Compiled parser/engine probe without Android TensorFlow or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/midpoint-label-follow-up-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result))
+                records.each{println(it.case_name+': '+it.behavior_verified+' '+it.actual_status+' '+it.actual_reply)}
+            }finally{loader.close()}
+        }
+    }
+}

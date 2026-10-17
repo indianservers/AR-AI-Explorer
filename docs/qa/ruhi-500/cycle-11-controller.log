@@ -1,0 +1,37 @@
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/seed500-native.json: 1 file pulled, 0 skipped. 30.8 MB/s (190357 bytes in 0.006s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/unseen-labels-native.json: 1 file pulled, 0 skipped. 0.3 MB/s (1585 bytes in 0.005s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/visible-assistant.json: 1 file pulled, 0 skipped. 0.0 MB/s (209 bytes in 0.005s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/named-point-answer.png: 1 file pulled, 0 skipped. 42.5 MB/s (434988 bytes in 0.010s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/midpoint-slope-canvas.json: 1 file pulled, 0 skipped. 0.0 MB/s (164 bytes in 0.003s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/midpoint-before.png: 1 file pulled, 0 skipped. 18.1 MB/s (121826 bytes in 0.006s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/midpoint-marker.png: 1 file pulled, 0 skipped. 15.5 MB/s (126117 bytes in 0.008s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/slope-triangle.png: 1 file pulled, 0 skipped. 24.6 MB/s (135487 bytes in 0.005s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/midpoint-after-parent-drag.png: 1 file pulled, 0 skipped. 19.9 MB/s (139090 bytes in 0.007s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-canvas.json: 1 file pulled, 0 skipped. 0.1 MB/s (339 bytes in 0.003s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-before.png: 1 file pulled, 0 skipped. 31.8 MB/s (137660 bytes in 0.004s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-right.png: 1 file pulled, 0 skipped. 25.8 MB/s (140076 bytes in 0.005s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-after-parent-drag.png: 1 file pulled, 0 skipped. 16.8 MB/s (139440 bytes in 0.008s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-bisector.png: 1 file pulled, 0 skipped. 27.8 MB/s (142424 bytes in 0.005s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-bisector-after-parent-drag.png: 1 file pulled, 0 skipped. 17.9 MB/s (153403 bytes in 0.008s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-counterclockwise.png: 1 file pulled, 0 skipped. 18.7 MB/s (140714 bytes in 0.007s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-counterclockwise-after-parent-drag.png: 1 file pulled, 0 skipped. 29.5 MB/s (141002 bytes in 0.005s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-selected-vertex.png: 1 file pulled, 0 skipped. 28.7 MB/s (203378 bytes in 0.007s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-reflex.png: 1 file pulled, 0 skipped. 18.3 MB/s (128916 bytes in 0.007s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/angle-reflex-after-parent-drag.png: 1 file pulled, 0 skipped. 15.1 MB/s (140571 bytes in 0.009s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/reference-angle-canvas.json: 1 file pulled, 0 skipped. 0.0 MB/s (275 bytes in 0.006s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/reference-angle-before.png: 1 file pulled, 0 skipped. 12.7 MB/s (118681 bytes in 0.009s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/reference-angle-intersection.png: 1 file pulled, 0 skipped. 26.0 MB/s (121097 bytes in 0.004s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/reference-angle-intersection-after-parent-drag.png: 1 file pulled, 0 skipped. 21.9 MB/s (131390 bytes in 0.006s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/reference-angle-origin.png: 1 file pulled, 0 skipped. 15.6 MB/s (127104 bytes in 0.008s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/reference-angle-axis.png: 1 file pulled, 0 skipped. 16.8 MB/s (127534 bytes in 0.007s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/spatial-angle-canvas.json: 1 file pulled, 0 skipped. 0.0 MB/s (227 bytes in 0.009s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/spatial-angle-selected.png: 1 file pulled, 0 skipped. 24.0 MB/s (248665 bytes in 0.010s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/spatial-angle-question.png: 1 file pulled, 0 skipped. 15.6 MB/s (483594 bytes in 0.030s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/spatial-angle-right.png: 1 file pulled, 0 skipped. 34.5 MB/s (249827 bytes in 0.007s)
+/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/spatial-angle-after-vector-edit.png: 1 file pulled, 0 skipped. 26.1 MB/s (248611 bytes in 0.009s)
+{"goal_complete": false, "cycle": 11, "source_rows": 500, "native_correct_intents": 500, "behavior_verified": 224, "behavior_unverified": 276}
+Cycle finished. Check the behavior gaps in REPORT.md before changing code and starting the next cycle. Seed intent fit is not full goal completion.

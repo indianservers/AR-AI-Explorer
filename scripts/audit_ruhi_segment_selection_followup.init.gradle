@@ -1,0 +1,43 @@
+// Read-only selected-segment clarification audit of original midpoint/slope rows.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiSegmentSelectionFollowUp') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def contextClass=loader.loadClass(prefix+'RuhiSceneContext')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def records=[]
+                [[id:162,text:'Mark the midpoint of the selected segment',intent:'FIND_MIDPOINT'],[id:179,text:'Measure the slope of the selected line',intent:'CALCULATE_SLOPE']].each{input->
+                    ['valid_selected_control','missing_selection_reply'].each{mode->
+                        def manager=managerClass.getDeclaredConstructor().newInstance();def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                        def s=fixture.state('GEOMETRY_2D',input.id)
+                        def c=mode=='valid_selected_control'?fixture.context(input.id,s):contextClass.getDeclaredConstructor().newInstance()
+                        def q=manager.execute(s,input.text,h,c,modality)
+                        def r=mode=='valid_selected_control'?q:manager.execute(q.state,'AB',h,c,modality)
+                        def historyEntries=h.forModule(s.module).protocol.size()
+                        def target=input.id==162?'selected_segment':'selected_line'
+                        def verified=r.status.name()=='APPLIED'&&r.semanticFrame?.intent==input.intent&&r.semanticFrame?.parameters?.target==target
+                        def actualPoint=null;def actualSlope=null
+                        if(input.id==162) {
+                            if(r.state.points.size()==s.points.size()+1)actualPoint=[r.state.points.last().x,r.state.points.last().y]
+                            verified=verified&&actualPoint!=null&&Math.abs(actualPoint[0]-0.5d)<1e-8&&Math.abs(actualPoint[1]-0.5d)<1e-8&&r.state.pointDependencies.size()==1&&historyEntries==1&&r.state.points.take(s.points.size())==s.points
+                        }else{
+                            def match=r.message =~ /Slope = ([-+0-9.eE]+)/;actualSlope=match.find()?Double.parseDouble(match.group(1)):null
+                            verified=verified&&actualSlope!=null&&Math.abs(actualSlope-1.0d)<1e-8&&r.state.points==s.points&&r.state.shapes==s.shapes&&historyEntries==0
+                        }
+                        records<<[source_row:input.id,case_name:mode,input:input.text,selection_reply:mode=='valid_selected_control'?null:'AB',expected_point:input.id==162 ? [0.5d,0.5d]:null,expected_slope:input.id==179?1.0d:null,expected_target:target,question_status:q.status.name(),question_reply:q.message,question_suggestions:q.dialogue?.suggestions?.collect{it.label} ?: [],actual_status:r.status.name(),actual_intent:r.semanticFrame?.intent,actual_reply:r.message,actual_point:actualPoint,actual_slope:actualSlope,history_entries:historyEntries,behavior_verified:verified]
+                    }
+                }
+                def sources=['RuhiGeometry2DLanguage.kt','RuhiSlopeLanguage.kt','RuhiEndpointConversation.kt','RuhiDialogue.kt'].collectEntries{name->def path='app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/'+name;[(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]}
+                def result=[cases:records.size(),verified:records.count{it.behavior_verified},source_sha256:sources,results:records,scope:'Original selected-segment midpoint/slope rows 162 and 179, valid selected controls and missing-selection AB-label replies. Current native segment AB exists. Independent values, original target roles and history checks. Compiled parser/engine probe without Android TensorFlow or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/segment-selection-follow-up-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result))
+                records.each{println(it.source_row.toString()+' '+it.case_name+': '+it.behavior_verified+' '+it.actual_status+' '+it.actual_reply)}
+            }finally{loader.close()}
+        }
+    }
+}

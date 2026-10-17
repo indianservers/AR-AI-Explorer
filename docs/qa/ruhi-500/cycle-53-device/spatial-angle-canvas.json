@@ -1,0 +1,11 @@
+{
+  "changed_pixels": 17506,
+  "pair_chip_resumed": true,
+  "initial_degrees": 90,
+  "edited_degrees": 45,
+  "edited_z_component": 3,
+  "stable_ids": true,
+  "persistence": true,
+  "no_helper_geometry": true,
+  "passed": true
+}

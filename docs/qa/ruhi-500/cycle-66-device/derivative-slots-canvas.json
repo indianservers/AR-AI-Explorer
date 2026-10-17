@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "restored_x": 2,
+  "curve_id": "curve,\/811",
+  "computed_slope": 12,
+  "natural_numeric_reply": true,
+  "natural_curve_name_reply": true,
+  "restored_point_index": 0,
+  "point_slope": 4,
+  "point_binding_preserved": true,
+  "source_geometry_preserved": true
+}

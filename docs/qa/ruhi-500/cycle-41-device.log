@@ -1,0 +1,22 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:................
+Error in angleArcAppearsAndUsesEditedCoordinates(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.angleArcAppearsAndUsesEditedCoordinates(RuhiSeed500RenderingTest.kt:531)
+..
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 20,352.676
+There was 1 failure:
+1) angleArcAppearsAndUsesEditedCoordinates(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 30000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:887)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:482)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.angleArcAppearsAndUsesEditedCoordinates(RuhiSeed500RenderingTest.kt:531)
+
+FAILURES!!!
+Tests run: 21,  Failures: 1
+
+

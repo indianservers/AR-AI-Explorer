@@ -1,0 +1,7 @@
+Post-training tests or APK build failed.
+At C:\Indian Servers\AIExplorer\scripts\run_ruhi_seed500_cycle.ps1:37 char:22
++ ... f($buildExit -ne 0){throw 'Post-training tests or APK build failed.'}
++                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Post-training tests or APK build failed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Post-training tests or APK build failed.
+ 

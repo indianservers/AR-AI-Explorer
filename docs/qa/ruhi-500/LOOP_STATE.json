@@ -1,0 +1,174 @@
+{
+  "goal_complete": false,
+  "cycle": 72,
+  "source_rows": 500,
+  "native_correct_intents": 500,
+  "behavior_verified": 500,
+  "behavior_unverified": 0,
+  "unverified_by_intent": {},
+  "requirements": [
+    {
+      "requirement": "Import all 500 original rows and preserve every label, parameter, expected behavior, follow-up and suggestion",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-source-fields-verification.json; verify_ruhi_seed500_source.py compares the original pinned workbook with all nine seed/Android fields and every replay column."
+    },
+    {
+      "requirement": "Execute every source row before training",
+      "state": "VERIFIED",
+      "evidence": "baseline-scene-results.json"
+    },
+    {
+      "requirement": "Train and run TensorFlow intent recognition on all 500 seeds",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-model.json and cycle-72-device/seed500-native.json"
+    },
+    {
+      "requirement": "Learn point roles without relying on A/B/C/D names and recompute from arbitrary current coordinates",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-device/unseen-labels-native.json and RuhiPointLanguageTest"
+    },
+    {
+      "requirement": "Execute all 500 workbook mathematical actions and structured parameters correctly",
+      "state": "REQUIRES_COMPLETION_AUDIT",
+      "remaining": 0,
+      "evidence": "behavior-gaps.json; APPLIED alone is not verified behavior"
+    },
+    {
+      "requirement": "Follow all workbook clarification and suggestion policies",
+      "state": "INCOMPLETE",
+      "evidence": "Point-creation/distance follow-up verified separately; remaining intent policies need independent tests"
+    },
+    {
+      "requirement": "Verify the installed models and visible assistant in Android emulator",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-device.log and cycle-72-device/visible-assistant.json"
+    },
+    {
+      "requirement": "Complete contextual intersection support and independent tests for polar/parametric and other implicit graph types",
+      "state": "INCOMPLETE",
+      "evidence": "Current query solver additionally handles implicit equations against explicit curves and vertical lines. Implicit/implicit, implicit/native-circle, polar/parametric and restricted implicit contexts still require implementation and independent verification."
+    },
+    {
+      "requirement": "Complete derivative context, selected-point dependencies, general critical-point domains and follow-up coverage",
+      "state": "INCOMPLETE",
+      "evidence": "derivative-context-audit.md; valid-context identities do not prove every domain, context or conversation."
+    },
+    {
+      "requirement": "Complete integration domains, improper integrals, generalized named-curve contexts and full conditional follow-up coverage",
+      "state": "INCOMPLETE",
+      "evidence": "Original valid integrals and two required missing-bounds conversations are checked separately; broader domains, curve types and language generalization remain."
+    },
+    {
+      "requirement": "Replace positional solid measurement references with stable identities and complete all measurement follow-up/context policies",
+      "state": "INCOMPLETE",
+      "evidence": "solid-measure-context-audit.md; annotations conservatively invalidate on scene-size, referenced-type and other-object changes. Same-type referenced-solid reorder remains ambiguous without stable IDs. Selected-geometry, solid and point-distance unit display are verified separately; literal input-unit parsing and full contextual policies remain incomplete."
+    },
+    {
+      "requirement": "Complete transformation identity, hierarchy, picking, history dependencies and cross-engine camera policies",
+      "state": "INCOMPLETE",
+      "evidence": "transform3d-context-audit.md; all original valid-context source actions are checked independently, while broader structural and interaction cases remain."
+    },
+    {
+      "requirement": "Complete scene editing across compatible object types, linked deletion, camera bounds, rendering and all follow-up policies",
+      "state": "INCOMPLETE",
+      "evidence": "scene-edit-context-audit.md; the ALL-labeled source rows run in declared compatible active workspaces, not every possible engine/object combination."
+    },
+    {
+      "requirement": "Resume original selected derivative, stationary and tangent-slider requests from an empty graph workspace through saved formula replies",
+      "state": "VERIFIED",
+      "evidence": "RuhiDerivativeFormulaFollowUpTest: seven methods; cycle-72-device/derivative-formula-canvas.json. Native creation and linked analysis are atomic; invalid saved x reasks before creation. Broader interrupted/domain policies remain separate requirements."
+    },
+    {
+      "requirement": "Resume original selected integration/shading rows 364 and 372 from an empty graph workspace through saved formula and required-bounds replies",
+      "state": "VERIFIED",
+      "evidence": "RuhiIntegralFormulaFollowUpTest: seven methods; pre-cycle-72-empty-integral-follow-up-audit.json and cycle-72-device/integral-formula-canvas.json. Native function and shaded analysis are atomic; invalid intervals do not create a curve. Broader integration/domain policies remain separate requirements."
+    },
+    {
+      "requirement": "Normalize mathematical-word formula replies for original selected derivative/integration analyses while preserving context and invalid-input boundaries",
+      "state": "VERIFIED",
+      "evidence": "RuhiFormulaReplyLanguageTest: seven methods; pre-cycle-72-formula-reply-language-audit.json and cycle-72-device/formula-word-canvas.json. Six formal/word native tuples plus varied-coefficient visible answers; text input, not microphone certification."
+    },
+    {
+      "requirement": "Resume original midpoint/slope endpoint clarification replies with actual named current points, saved operation and correct scene/history behavior",
+      "state": "VERIFIED",
+      "evidence": "RuhiEndpointClarificationTest: eight methods; pre-cycle-72-endpoint-pair-follow-up-audit.json and cycle-72-device/endpoint-pair-canvas.json. Scope includes unknown segment references, saved multi-segment comparisons, current-coordinate replies and live native midpoint dependencies."
+    },
+    {
+      "requirement": "Resolve the two reproduced contextual counterexamples beyond the declared source replay",
+      "state": "VERIFIED",
+      "evidence": "pre-cycle-72-context-gap-counterexamples.json and cycle-72-device point-distance/completed-blue evidence; scope is the two retained cycle-54 counterexamples, not every possible context."
+    },
+    {
+      "requirement": "Verify creation-based missing-point recovery, invalid-input cancellation and renamed endpoints for all 150 distance rows in both geometry studios",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-device/distance-policy-matrix.json: exact 1200 row/module/scenario tuples; RuhiDistancePolicyMatrixTest. This scope does not include choosing another existing point."
+    },
+    {
+      "requirement": "Complete and independently verify the Choose point alternative in the original 150 distance rows",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-device/choose-point-matrix.json and choose-point-canvas.json: 900 original-row/module/scenario workflows and visible restored chip/current-coordinate proof for uniquely named existing points. Ambiguous names ask for unique names."
+    },
+    {
+      "requirement": "Verify confidence-gated TensorFlow endpoint roles for valid point labels colliding with lexical words",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-lexical-point-label-audit.json; head-level development probe, not whole-assistant failure or held-out NLP accuracy."
+    },
+    {
+      "requirement": "Verify that valid named-point lexical values do not change mathematical dispatch",
+      "state": "VERIFIED",
+      "evidence": "cycle-72-lexical-point-execution-audit.json: restored 2D/3D parser/engine replay; Android integration is separate."
+    }
+  ],
+  "next_work": [
+    "Fix original row 168 replacement-label clarification: retain midpoint purpose and any resolved endpoint bindings when M already exists, offer unused valid labels, accept Center907 across saves, preserve the existing M point and commit one dependent construction. Verify the composed endpoint-then-label workflow independently.",
+    "Extend intersection context-type coverage to polar/parametric and other implicit curves; retain this as an explicit gap while progressing the original workbook families.",
+    "Complete nonsmooth critical-point/domain analysis and all derivative contextual and follow-up policies; maintain independent tests against unchanged source constraints.",
+    "Finish the remaining missing-context, literal-unit-input and engine/scene policies; the original dialogue rows have declared valid-context fixtures, not exhaustive context coverage.",
+    "Expand conditional clarification/reply tests across all intents; a successful action in a valid fixture does not certify every missing-context conversation.",
+    "After each implementation change, execute all 500 rows, train only from labeled data, rerun regression and emulator checks, and retain failures."
+  ],
+  "dialogue_source_contexts_verified": 25,
+  "behavior_verification_scope": "Declared valid source contexts, not exhaustive context or conditional follow-up coverage",
+  "known_context_counterexamples": [
+    {
+      "source_row": 168,
+      "case_name": "existing_label",
+      "input": "Label the middle of AB as M",
+      "label_reply": "Center907",
+      "expected_label": "Center907",
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "actual_point": null,
+      "actual_status": "UNSUPPORTED",
+      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "behavior_verified": false,
+      "scope": "Original row 168 valid control and existing-label clarification, including a preceding unresolved-endpoint answer. Independent coordinates and preservation/history checks. Compiled parser/engine probe without Android TensorFlow or UI."
+    },
+    {
+      "source_row": 168,
+      "case_name": "endpoint_then_label",
+      "input": "Label the middle of AB as M",
+      "label_reply": "Center907",
+      "expected_label": "Center907",
+      "expected_point": [
+        3.0,
+        4.0
+      ],
+      "actual_point": null,
+      "actual_status": "UNSUPPORTED",
+      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "behavior_verified": false,
+      "scope": "Original row 168 valid control and existing-label clarification, including a preceding unresolved-endpoint answer. Independent coordinates and preservation/history checks. Compiled parser/engine probe without Android TensorFlow or UI."
+    }
+  ],
+  "absolute_value_coordinate_audit_current": true,
+  "lexical_point_label_head_probe": {
+    "cases": 34,
+    "correct_intents": 34,
+    "correct_slots": 34,
+    "correct_confidence_gated_slots": 34,
+    "scope": "Inspected lexical/Unicode point-label development probe with current training/inference feature logic; not a held-out language benchmark or whole-assistant execution verdict."
+  }
+}

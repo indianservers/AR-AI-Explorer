@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiAngleLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-16T13:36:45.942Z" hostname="INDIANSERVERS" time="0.094">
+  <properties/>
+  <testcase name="deletingParentsRemapsOrRemovesAngleMarks" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.028"/>
+  <testcase name="namedWorkbookAnglesSatisfyOriginalSlotsAndIndependentOracle" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.032"/>
+  <testcase name="missingAmbiguousAndDegenerateReferencesDoNotChangeGeometry" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.004"/>
+  <testcase name="notationVertexAndExtremaSelectTheActualCorner" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.006"/>
+  <testcase name="arbitraryNamesUseCurrentCoordinatesAndAnnotationsSurviveHistoryAndPersistence" classname="com.indianservers.aiexplorer.RuhiAngleLanguageTest" time="0.022"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

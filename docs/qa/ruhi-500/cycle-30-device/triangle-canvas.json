@@ -1,0 +1,13 @@
+{
+  "created_pixels": 2316816,
+  "parent_edit_pixels": 85980,
+  "equilateral_side": 5,
+  "right_legs": [
+    3,
+    4
+  ],
+  "missing_point_resumed_triangle": true,
+  "congruent_copy_follows_parent": true,
+  "persistence": true,
+  "passed": true
+}

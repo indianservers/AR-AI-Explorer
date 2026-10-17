@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:27:03.209Z" hostname="INDIANSERVERS" time="0.299">
+  <properties/>
+  <testcase name="explicitCoordinatesRespectLabelsAndOrdinaryQuestionsDoNotConstructTriangles" classname="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" time="0.003"/>
+  <testcase name="invalidTrianglesDoNotMutateAnySceneOrHistory" classname="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" time="0.005"/>
+  <testcase name="missingVertexAsksOneEssentialQuestionAndResumesAtomically" classname="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" time="0.002"/>
+  <testcase name="selectedEquilateralAndSimilarCopiesFollowTheirParentsAndKeepUnrelatedObjects" classname="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" time="0.002"/>
+  <testcase name="allOriginalTriangleRowsMeetTheirUnchangedConstraintsAndPersistWithUndoRedo" classname="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" time="0.284"/>
+  <testcase name="arbitraryLabelsUseExistingIndicesAndUpdatedCoordinates" classname="com.indianservers.aiexplorer.RuhiTriangleLanguageTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

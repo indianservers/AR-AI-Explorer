@@ -1,0 +1,109 @@
+{
+  "passed": true,
+  "cases": 6,
+  "results": [
+    {
+      "input": "Find critical points of y = x^4 - 2*x^2",
+      "expected_points": [
+        [
+          -1,
+          -1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "actual_points": [
+        [
+          -1,
+          -1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = abs(x)",
+      "expected_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "actual_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = abs(x-2)+2*x",
+      "expected_points": [
+        [
+          2,
+          4
+        ]
+      ],
+      "actual_points": [
+        [
+          2,
+          4
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = abs(x^2)",
+      "expected_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "actual_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find the stationary points of abs(x)",
+      "expected_points": [],
+      "actual_points": [],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = 1\/x",
+      "expected_points": [],
+      "actual_points": [],
+      "passed": true
+    }
+  ],
+  "actual_rendered_coordinates": true,
+  "saved_current_curve": true,
+  "committed_capture": true,
+  "initial_point": [
+    0,
+    0
+  ],
+  "edited_point": [
+    2,
+    4
+  ]
+}

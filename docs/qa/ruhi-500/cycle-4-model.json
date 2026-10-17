@@ -1,0 +1,5983 @@
+{
+  "cycle": 4,
+  "pre_training_test": "docs\\qa\\ruhi-500\\pre-cycle-4-scene-results.json",
+  "pre_training_test_sha256": "e5895fa7c5cb4ca043589d15a77d06f3d17d0960ba7ab1aeaeb35f8d28807791",
+  "intent_model": {
+    "version": 4,
+    "labels": [
+      "CALCULATE_SLOPE",
+      "CREATE_CIRCLE",
+      "CREATE_TRIANGLE",
+      "DIALOGUE_CONTEXT",
+      "DIFFERENTIATE",
+      "EDIT_SCENE",
+      "FIND_INTERSECTION",
+      "FIND_MIDPOINT",
+      "INTEGRATE",
+      "MEASURE_ANGLE",
+      "MEASURE_DISTANCE",
+      "MEASURE_SOLID",
+      "PLOT_FUNCTION_2D",
+      "PLOT_SURFACE_3D",
+      "TRANSFORM_3D"
+    ],
+    "vocabulary": [
+      "a",
+      "a and",
+      "a at",
+      "a blank",
+      "a circle",
+      "a concentric",
+      "a cone",
+      "a cube",
+      "a darker",
+      "a entity",
+      "a fraction",
+      "a graph",
+      "a hemisphere",
+      "a label",
+      "a marker",
+      "a num",
+      "a paraboloid",
+      "a point",
+      "a radius",
+      "a rectangular",
+      "a red",
+      "a right",
+      "a scalene",
+      "a second",
+      "a sine",
+      "a small",
+      "a sphere",
+      "a tangent",
+      "a triangle",
+      "a unit",
+      "about",
+      "about the",
+      "about z",
+      "above",
+      "above the",
+      "absolute",
+      "absolute area",
+      "absolute value",
+      "accumulation",
+      "accumulation from",
+      "across",
+      "across the",
+      "actually",
+      "actually i",
+      "acute",
+      "acute or",
+      "acute triangle",
+      "add",
+      "add a",
+      "add the",
+      "again",
+      "again with",
+      "all",
+      "all angles",
+      "all intersections",
+      "all objects",
+      "all points",
+      "along",
+      "along entity",
+      "along the",
+      "an",
+      "an acute",
+      "an arc",
+      "an equilateral",
+      "an isometric",
+      "an isosceles",
+      "an obtuse",
+      "and",
+      "and centered",
+      "and cosine",
+      "and entity",
+      "and height",
+      "and m",
+      "and negative",
+      "and num",
+      "and one",
+      "and pi",
+      "and point",
+      "and right",
+      "and run",
+      "and shift",
+      "and so",
+      "and sphere",
+      "and the",
+      "and v",
+      "and vertices",
+      "and volume",
+      "and x",
+      "and y",
+      "and z",
+      "angle",
+      "angle acute",
+      "angle at",
+      "angle between",
+      "angle bisector",
+      "angle entity",
+      "angle formed",
+      "angle from",
+      "angle in",
+      "angle num",
+      "angles",
+      "angles inside",
+      "angles num",
+      "another",
+      "another circle",
+      "answer",
+      "antiderivative",
+      "antiderivative of",
+      "apart",
+      "approximation",
+      "approximation of",
+      "arc",
+      "arc showing",
+      "are",
+      "are entity",
+      "are the",
+      "are viewing",
+      "area",
+      "area and",
+      "area beneath",
+      "area between",
+      "area enclosed",
+      "area for",
+      "area num",
+      "area of",
+      "area separately",
+      "area under",
+      "around",
+      "around the",
+      "around x",
+      "around z",
+      "as",
+      "as a",
+      "as before",
+      "as entity",
+      "as tall",
+      "as wireframe",
+      "as x",
+      "at",
+      "at a",
+      "at all",
+      "at coordinates",
+      "at entity",
+      "at num",
+      "at origin",
+      "at scale",
+      "at the",
+      "at vertex",
+      "at x",
+      "at zero",
+      "axes",
+      "axis",
+      "axis and",
+      "axis centered",
+      "axis from",
+      "back",
+      "back together",
+      "base",
+      "base area",
+      "base num",
+      "before",
+      "beneath",
+      "beneath y",
+      "between",
+      "between a",
+      "between entity",
+      "between intersecting",
+      "between num",
+      "between point",
+      "between points",
+      "between sin",
+      "between the",
+      "between these",
+      "between two",
+      "between x",
+      "between y",
+      "big",
+      "big one",
+      "bisect",
+      "bisect line",
+      "bisecting",
+      "bisecting point",
+      "bisector",
+      "bisector of",
+      "blank",
+      "blank canvas",
+      "blue",
+      "blue curve",
+      "blue line",
+      "blue one",
+      "both",
+      "both of",
+      "both solids",
+      "build",
+      "build an",
+      "by",
+      "by num",
+      "by points",
+      "by step",
+      "by vectors",
+      "by y",
+      "calculate",
+      "calculate angle",
+      "calculate cube",
+      "calculate derivative",
+      "calculate integral",
+      "calculate pyramid",
+      "calculate rise",
+      "calculate sphere",
+      "calculate surface",
+      "calculate the",
+      "camera",
+      "camera num",
+      "camera to",
+      "can",
+      "can we",
+      "can you",
+      "cancel",
+      "cancel that",
+      "canvas",
+      "center",
+      "center of",
+      "center point",
+      "center the",
+      "center to",
+      "centered",
+      "centered at",
+      "centered on",
+      "centimeters",
+      "centimeters instead",
+      "change",
+      "change in",
+      "change of",
+      "change the",
+      "changes",
+      "changes as",
+      "check",
+      "check whether",
+      "choices",
+      "choices do",
+      "choose",
+      "choose the",
+      "circle",
+      "circle around",
+      "circle as",
+      "circle at",
+      "circle centered",
+      "circle entity",
+      "circle inside",
+      "circle of",
+      "circle passing",
+      "circle radius",
+      "circle tangent",
+      "circle through",
+      "circle with",
+      "circle x",
+      "circles",
+      "circles centered",
+      "circles that",
+      "circumcircle",
+      "circumcircle of",
+      "clear",
+      "clear the",
+      "clockwise",
+      "closer",
+      "closer to",
+      "closest",
+      "closest to",
+      "colors",
+      "compare",
+      "compare left",
+      "compare slopes",
+      "compare the",
+      "compare this",
+      "compute",
+      "compute crossing",
+      "compute d",
+      "compute the",
+      "compute volume",
+      "concentric",
+      "concentric circle",
+      "cone",
+      "cone num",
+      "cone radius",
+      "cone with",
+      "cone z",
+      "congruent",
+      "congruent to",
+      "connecting",
+      "connecting entity",
+      "connecting the",
+      "constant",
+      "constant function",
+      "construct",
+      "construct a",
+      "construct an",
+      "construct the",
+      "construction",
+      "continue",
+      "continue where",
+      "convex",
+      "convex polyhedron",
+      "coordinate",
+      "coordinate grid",
+      "coordinates",
+      "coordinates for",
+      "coordinates num",
+      "coordinates of",
+      "coordinates to",
+      "corner",
+      "corner of",
+      "cos",
+      "cos num",
+      "cos t",
+      "cos x",
+      "cos y",
+      "cosine",
+      "cosine intersect",
+      "could",
+      "could you",
+      "counterclockwise",
+      "create",
+      "create a",
+      "create an",
+      "create the",
+      "create triangle",
+      "create two",
+      "create z",
+      "critical",
+      "critical points",
+      "cross",
+      "cross the",
+      "crossing",
+      "crossing of",
+      "crossing points",
+      "cube",
+      "cube and",
+      "cube back",
+      "cube by",
+      "cube edge",
+      "cube from",
+      "cube have",
+      "cube num",
+      "cube orientation",
+      "cube towards",
+      "cube whose",
+      "cube with",
+      "cubed",
+      "cubic",
+      "cubic y",
+      "cuboid",
+      "cuboid along",
+      "cuboid diagonal",
+      "cuboid enclose",
+      "current",
+      "current construction",
+      "current graph",
+      "current scene",
+      "current triangle",
+      "current viewport",
+      "currently",
+      "currently selected",
+      "curve",
+      "curve between",
+      "curve dashed",
+      "curve r",
+      "curves",
+      "curves intersect",
+      "cylinder",
+      "cylinder radius",
+      "cylinder twice",
+      "d",
+      "d dx",
+      "d ripple",
+      "d rotation",
+      "d surface",
+      "d vectors",
+      "darker",
+      "darker graph",
+      "dashed",
+      "decimals",
+      "decreasing",
+      "default",
+      "default scene",
+      "defined",
+      "defined by",
+      "degree",
+      "degree angle",
+      "degrees",
+      "degrees about",
+      "degrees around",
+      "degrees clockwise",
+      "degrees is",
+      "delete",
+      "delete the",
+      "derivative",
+      "derivative at",
+      "derivative of",
+      "diagonal",
+      "diagonal for",
+      "diagonal of",
+      "diameter",
+      "diameter entity",
+      "diameter given",
+      "diameter num",
+      "did",
+      "did that",
+      "differentiable",
+      "differentiable at",
+      "differentiate",
+      "differentiate sqrt",
+      "differentiate y",
+      "dihedral",
+      "dihedral angle",
+      "display",
+      "display all",
+      "display the",
+      "display z",
+      "distance",
+      "distance between",
+      "distance from",
+      "divide",
+      "divide equally",
+      "do",
+      "do i",
+      "do not",
+      "do the",
+      "do y",
+      "does",
+      "does segment",
+      "does the",
+      "does this",
+      "does y",
+      "double",
+      "double the",
+      "down",
+      "down from",
+      "draw",
+      "draw a",
+      "draw an",
+      "draw another",
+      "draw it",
+      "draw saddle",
+      "draw tangents",
+      "draw the",
+      "draw triangle",
+      "draw two",
+      "draw y",
+      "draw z",
+      "drawing",
+      "drawing step",
+      "drew",
+      "duplicate",
+      "duplicate the",
+      "dx",
+      "dx for",
+      "dx from",
+      "dx of",
+      "dy",
+      "dy dx",
+      "e",
+      "e to",
+      "e x",
+      "each",
+      "each intersection",
+      "edge",
+      "edge total",
+      "edges",
+      "edges and",
+      "enclose",
+      "enclosed",
+      "enclosed by",
+      "endpoints",
+      "endpoints of",
+      "entity",
+      "entity and",
+      "entity apart",
+      "entity as",
+      "entity at",
+      "entity counterclockwise",
+      "entity distance",
+      "entity divide",
+      "entity entity",
+      "entity equals",
+      "entity fixed",
+      "entity formula",
+      "entity from",
+      "entity hill",
+      "entity if",
+      "entity in",
+      "entity increasing",
+      "entity into",
+      "entity is",
+      "entity now",
+      "entity num",
+      "entity passing",
+      "entity please",
+      "entity slope",
+      "entity sum",
+      "entity sums",
+      "entity the",
+      "entity theorem",
+      "entity this",
+      "entity through",
+      "entity to",
+      "entity with",
+      "entity x",
+      "entity y",
+      "equal",
+      "equal segments",
+      "equal sides",
+      "equal to",
+      "equally",
+      "equals",
+      "equals num",
+      "equation",
+      "equilateral",
+      "equilateral triangle",
+      "estimate",
+      "estimate integral",
+      "evaluate",
+      "evaluate the",
+      "excluding",
+      "excluding singularities",
+      "existing",
+      "existing cube",
+      "existing points",
+      "exp",
+      "exp x",
+      "explain",
+      "explain the",
+      "explain why",
+      "explode",
+      "explode the",
+      "exploded",
+      "exploded cube",
+      "exterior",
+      "exterior angle",
+      "externally",
+      "externally tangent",
+      "f",
+      "f prime",
+      "f x",
+      "faces",
+      "faces edges",
+      "faces of",
+      "fail",
+      "far",
+      "far are",
+      "far is",
+      "find",
+      "find angle",
+      "find area",
+      "find base",
+      "find critical",
+      "find intersection",
+      "find intersections",
+      "find solutions",
+      "find surface",
+      "find the",
+      "find volume",
+      "find x",
+      "first",
+      "first one",
+      "fit",
+      "fit all",
+      "five",
+      "five units",
+      "fixed",
+      "fixed at",
+      "floor",
+      "floor x",
+      "for",
+      "for a",
+      "for base",
+      "for entity",
+      "for f",
+      "for num",
+      "for segment",
+      "for side",
+      "for sin",
+      "for the",
+      "for this",
+      "for x",
+      "for y",
+      "for z",
+      "formed",
+      "formed by",
+      "formula",
+      "formula on",
+      "four",
+      "four decimals",
+      "fraction",
+      "fraction for",
+      "from",
+      "from above",
+      "from all",
+      "from an",
+      "from entity",
+      "from num",
+      "from point",
+      "from x",
+      "from zero",
+      "full",
+      "full line",
+      "function",
+      "function f",
+      "function y",
+      "give",
+      "give intersection",
+      "give me",
+      "give the",
+      "given",
+      "given radius",
+      "gradient",
+      "gradient here",
+      "gradient of",
+      "graph",
+      "graph blue",
+      "graph grid",
+      "graph the",
+      "graph touch",
+      "graph x",
+      "graph y",
+      "graph z",
+      "graphs",
+      "green",
+      "grid",
+      "half",
+      "half of",
+      "halfway",
+      "halfway along",
+      "halfway between",
+      "halfway point",
+      "halfway position",
+      "have",
+      "have positive",
+      "height",
+      "height num",
+      "height of",
+      "hemisphere",
+      "hemisphere radius",
+      "hemisphere z",
+      "here",
+      "hide",
+      "hide measurements",
+      "hide the",
+      "highlight",
+      "highlight positive",
+      "highlight the",
+      "hill",
+      "horizontal",
+      "how",
+      "how far",
+      "how many",
+      "how much",
+      "how steep",
+      "how the",
+      "hypotenuse",
+      "hypotenuse num",
+      "i",
+      "i have",
+      "i just",
+      "i meant",
+      "if",
+      "if entity",
+      "if x",
+      "in",
+      "in degrees",
+      "in the",
+      "in this",
+      "in triangle",
+      "in units",
+      "in y",
+      "incircle",
+      "incircle of",
+      "increasing",
+      "increasing or",
+      "inside",
+      "inside the",
+      "inside triangle",
+      "instantaneous",
+      "instantaneous gradient",
+      "instead",
+      "integral",
+      "integral accumulation",
+      "integral cos",
+      "integral num",
+      "integral of",
+      "integrate",
+      "integrate e",
+      "integrate the",
+      "integrate x",
+      "intercepts",
+      "intercepts of",
+      "interior",
+      "interior angles",
+      "intersect",
+      "intersect at",
+      "intersecting",
+      "intersecting lines",
+      "intersection",
+      "intersection coordinates",
+      "intersection entity",
+      "intersection is",
+      "intersection nearest",
+      "intersection of",
+      "intersection points",
+      "intersections",
+      "intersections in",
+      "intersections of",
+      "into",
+      "into two",
+      "is",
+      "is closest",
+      "is entity",
+      "is halfway",
+      "is horizontal",
+      "is lateral",
+      "is not",
+      "is num",
+      "is segment",
+      "is the",
+      "is this",
+      "isometric",
+      "isometric angle",
+      "isosceles",
+      "isosceles triangle",
+      "it",
+      "it larger",
+      "it num",
+      "it over",
+      "just",
+      "just drew",
+      "just the",
+      "just undid",
+      "kindly",
+      "kindly measure",
+      "l",
+      "l and",
+      "label",
+      "label each",
+      "label next",
+      "label the",
+      "labels",
+      "labels from",
+      "larger",
+      "largest",
+      "largest angle",
+      "last",
+      "last change",
+      "last graph",
+      "last line",
+      "last num",
+      "last object",
+      "last segment",
+      "last two",
+      "lateral",
+      "lateral area",
+      "left",
+      "left and",
+      "leg",
+      "leg num",
+      "legs",
+      "legs num",
+      "length",
+      "length between",
+      "line",
+      "line cross",
+      "line distance",
+      "line entity",
+      "line have",
+      "line i",
+      "line segment",
+      "line slope",
+      "line through",
+      "line to",
+      "line x",
+      "lines",
+      "lines l",
+      "ln",
+      "ln x",
+      "locate",
+      "locate the",
+      "logarithm",
+      "logarithm function",
+      "look",
+      "look down",
+      "m",
+      "make",
+      "make a",
+      "make an",
+      "make it",
+      "make the",
+      "make this",
+      "many",
+      "many degrees",
+      "many faces",
+      "mark",
+      "mark all",
+      "mark intersections",
+      "mark midpoint",
+      "mark the",
+      "marker",
+      "marker at",
+      "me",
+      "me the",
+      "meant",
+      "meant the",
+      "measure",
+      "measure angle",
+      "measure the",
+      "measured",
+      "measured angle",
+      "measurements",
+      "measurements on",
+      "meet",
+      "mesh",
+      "mesh num",
+      "middle",
+      "middle of",
+      "midpoint",
+      "midpoint between",
+      "midpoint coordinates",
+      "midpoint of",
+      "midpoint without",
+      "move",
+      "move the",
+      "moves",
+      "much",
+      "much volume",
+      "natural",
+      "natural logarithm",
+      "nearest",
+      "nearest x",
+      "negative",
+      "negative area",
+      "net",
+      "net integral",
+      "new",
+      "new one",
+      "newest",
+      "newest segment",
+      "newest solid",
+      "next",
+      "next to",
+      "no",
+      "no make",
+      "normal",
+      "normal to",
+      "not",
+      "not change",
+      "not differentiable",
+      "now",
+      "now show",
+      "num",
+      "num and",
+      "num at",
+      "num by",
+      "num circle",
+      "num cos",
+      "num cylinder",
+      "num d",
+      "num degree",
+      "num degrees",
+      "num dx",
+      "num entity",
+      "num equals",
+      "num for",
+      "num from",
+      "num have",
+      "num height",
+      "num instead",
+      "num meet",
+      "num num",
+      "num on",
+      "num only",
+      "num otherwise",
+      "num percent",
+      "num pi",
+      "num sin",
+      "num sphere",
+      "num theta",
+      "num to",
+      "num together",
+      "num units",
+      "num where",
+      "num with",
+      "num within",
+      "num x",
+      "num xy",
+      "num y",
+      "object",
+      "object across",
+      "object around",
+      "objects",
+      "obtuse",
+      "obtuse triangle",
+      "of",
+      "of a",
+      "of angle",
+      "of change",
+      "of circles",
+      "of cylinder",
+      "of diameter",
+      "of e",
+      "of entity",
+      "of line",
+      "of ln",
+      "of num",
+      "of radius",
+      "of segment",
+      "of side",
+      "of sin",
+      "of tan",
+      "of the",
+      "of them",
+      "of these",
+      "of this",
+      "of triangle",
+      "of x",
+      "of y",
+      "on",
+      "on entity",
+      "on num",
+      "on point",
+      "on sin",
+      "on the",
+      "on this",
+      "on y",
+      "one",
+      "one leg",
+      "one over",
+      "one right",
+      "only",
+      "only for",
+      "only positive",
+      "only the",
+      "opacity",
+      "or",
+      "or decreasing",
+      "or obtuse",
+      "orbit",
+      "orbit the",
+      "orientation",
+      "origin",
+      "origin between",
+      "other",
+      "other one",
+      "otherwise",
+      "otherwise x",
+      "out",
+      "out the",
+      "over",
+      "over num",
+      "over run",
+      "over there",
+      "over x",
+      "parabola",
+      "parabola y",
+      "paraboloid",
+      "paraboloid z",
+      "passing",
+      "passing through",
+      "per",
+      "per x",
+      "percent",
+      "percent opacity",
+      "percent see",
+      "pi",
+      "pi num",
+      "piecewise",
+      "piecewise function",
+      "place",
+      "place a",
+      "plane",
+      "plane z",
+      "planes",
+      "please",
+      "please find",
+      "plot",
+      "plot f",
+      "plot the",
+      "plot y",
+      "plot z",
+      "plotted",
+      "plotted curve",
+      "plotted curves",
+      "point",
+      "point a",
+      "point between",
+      "point entity",
+      "point for",
+      "point halfway",
+      "point is",
+      "point of",
+      "points",
+      "points entity",
+      "points of",
+      "polar",
+      "polar curve",
+      "polygon",
+      "polyhedron",
+      "position",
+      "position on",
+      "positive",
+      "positive and",
+      "positive slope",
+      "positive x",
+      "positive y",
+      "previous",
+      "previous graph",
+      "prime",
+      "prime for",
+      "prism",
+      "prism num",
+      "put",
+      "put a",
+      "put circle",
+      "put the",
+      "pyramid",
+      "pyramid to",
+      "pyramid volume",
+      "quadrilateral",
+      "r",
+      "r num",
+      "radius",
+      "radius as",
+      "radius equal",
+      "radius num",
+      "radius of",
+      "radius with",
+      "rate",
+      "rate of",
+      "rectangular",
+      "rectangular prism",
+      "red",
+      "red circle",
+      "red line",
+      "redo",
+      "redo what",
+      "region",
+      "region between",
+      "remove",
+      "remove labels",
+      "rename",
+      "rename the",
+      "render",
+      "render a",
+      "replace",
+      "replace the",
+      "reset",
+      "reset the",
+      "reset zoom",
+      "restore",
+      "restore the",
+      "right",
+      "right angle",
+      "right entity",
+      "right triangle",
+      "ripple",
+      "ripple z",
+      "rise",
+      "rise and",
+      "rise over",
+      "root",
+      "root of",
+      "roots",
+      "roots of",
+      "rotate",
+      "rotate both",
+      "rotate camera",
+      "rotate that",
+      "rotate the",
+      "rotated",
+      "rotated num",
+      "rotation",
+      "rule",
+      "rule approximation",
+      "run",
+      "run from",
+      "run separately",
+      "saddle",
+      "saddle z",
+      "same",
+      "same radius",
+      "save",
+      "save the",
+      "scale",
+      "scale num",
+      "scale the",
+      "scalene",
+      "scalene triangle",
+      "scene",
+      "scene colors",
+      "scene to",
+      "second",
+      "second derivative",
+      "second graph",
+      "second suggested",
+      "second triangle",
+      "see",
+      "see through",
+      "segment",
+      "segment entity",
+      "segments",
+      "selected",
+      "selected circle",
+      "selected convex",
+      "selected corner",
+      "selected cube",
+      "selected curve",
+      "selected curves",
+      "selected cylinder",
+      "selected function",
+      "selected graph",
+      "selected line",
+      "selected object",
+      "selected planes",
+      "selected point",
+      "selected segment",
+      "selected sphere",
+      "selected triangle",
+      "separately",
+      "separately for",
+      "separately on",
+      "separation",
+      "separation between",
+      "shade",
+      "shade area",
+      "shade the",
+      "shade under",
+      "shape",
+      "shape we",
+      "shift",
+      "shift the",
+      "show",
+      "show a",
+      "show angle",
+      "show cuboid",
+      "show derivative",
+      "show dy",
+      "show how",
+      "show integral",
+      "show me",
+      "show midpoint",
+      "show only",
+      "show rise",
+      "show slope",
+      "show surface",
+      "show the",
+      "show two",
+      "show where",
+      "show y",
+      "show z",
+      "showing",
+      "showing entity",
+      "showing the",
+      "side",
+      "side entity",
+      "side is",
+      "side num",
+      "sides",
+      "sides num",
+      "signed",
+      "signed area",
+      "similar",
+      "similar to",
+      "sin",
+      "sin num",
+      "sin sqrt",
+      "sin t",
+      "sin x",
+      "sin xy",
+      "sin y",
+      "sine",
+      "sine and",
+      "sine curve",
+      "sine wave",
+      "singularities",
+      "singularity",
+      "size",
+      "size of",
+      "sketch",
+      "sketch the",
+      "slant",
+      "slant height",
+      "slide",
+      "slide the",
+      "slope",
+      "slope as",
+      "slope at",
+      "slope between",
+      "slope connecting",
+      "slope does",
+      "slope from",
+      "slope of",
+      "slope on",
+      "slope triangle",
+      "slope undefined",
+      "slope value",
+      "slope zero",
+      "slopes",
+      "slopes of",
+      "small",
+      "small circle",
+      "smallest",
+      "smallest corner",
+      "so",
+      "so on",
+      "solid",
+      "solid five",
+      "solids",
+      "solids together",
+      "solutions",
+      "solutions to",
+      "sphere",
+      "sphere and",
+      "sphere diameter",
+      "sphere num",
+      "sphere radius",
+      "sphere transparent",
+      "spin",
+      "spin the",
+      "split",
+      "split entity",
+      "sqrt",
+      "sqrt num",
+      "sqrt x",
+      "square",
+      "square num",
+      "square root",
+      "squared",
+      "squared for",
+      "start",
+      "start again",
+      "stationary",
+      "stationary points",
+      "steep",
+      "steep is",
+      "step",
+      "step by",
+      "stopped",
+      "straight",
+      "straight line",
+      "stretch",
+      "stretch the",
+      "suggested",
+      "suggested answer",
+      "sum",
+      "sum for",
+      "sums",
+      "sums for",
+      "surface",
+      "surface area",
+      "surface for",
+      "surface z",
+      "surfaces",
+      "surfaces z",
+      "t",
+      "t y",
+      "tall",
+      "tan",
+      "tan x",
+      "tangent",
+      "tangent changes",
+      "tangent circles",
+      "tangent slope",
+      "tangent to",
+      "tangents",
+      "tangents at",
+      "tell",
+      "tell me",
+      "that",
+      "that fail",
+      "that intersect",
+      "that last",
+      "the",
+      "the absolute",
+      "the angle",
+      "the antiderivative",
+      "the area",
+      "the big",
+      "the bisecting",
+      "the blue",
+      "the camera",
+      "the canvas",
+      "the center",
+      "the change",
+      "the circle",
+      "the circumcircle",
+      "the cone",
+      "the constant",
+      "the coordinate",
+      "the crossing",
+      "the cube",
+      "the cubic",
+      "the cuboid",
+      "the current",
+      "the currently",
+      "the default",
+      "the derivative",
+      "the diagonal",
+      "the dihedral",
+      "the distance",
+      "the drawing",
+      "the endpoints",
+      "the entity",
+      "the equation",
+      "the existing",
+      "the exploded",
+      "the exterior",
+      "the faces",
+      "the first",
+      "the full",
+      "the function",
+      "the gradient",
+      "the graph",
+      "the halfway",
+      "the height",
+      "the incircle",
+      "the instantaneous",
+      "the integral",
+      "the intersection",
+      "the intersections",
+      "the largest",
+      "the last",
+      "the length",
+      "the line",
+      "the measured",
+      "the measurements",
+      "the mesh",
+      "the middle",
+      "the midpoint",
+      "the natural",
+      "the net",
+      "the new",
+      "the newest",
+      "the normal",
+      "the origin",
+      "the other",
+      "the parabola",
+      "the piecewise",
+      "the plane",
+      "the plotted",
+      "the polar",
+      "the polygon",
+      "the previous",
+      "the pyramid",
+      "the quadrilateral",
+      "the radius",
+      "the rate",
+      "the red",
+      "the region",
+      "the right",
+      "the roots",
+      "the same",
+      "the second",
+      "the selected",
+      "the separation",
+      "the shape",
+      "the signed",
+      "the sine",
+      "the singularity",
+      "the size",
+      "the slant",
+      "the slope",
+      "the smallest",
+      "the sphere",
+      "the square",
+      "the stationary",
+      "the straight",
+      "the surface",
+      "the tangent",
+      "the torus",
+      "the total",
+      "the triangle",
+      "the two",
+      "the upper",
+      "the viewport",
+      "the volume",
+      "the volumes",
+      "the x",
+      "the y",
+      "the yz",
+      "the z",
+      "them",
+      "theorem",
+      "there",
+      "these",
+      "these plotted",
+      "these two",
+      "theta",
+      "thicken",
+      "thicken the",
+      "this",
+      "this angle",
+      "this cone",
+      "this cuboid",
+      "this curve",
+      "this cylinder",
+      "this line",
+      "this object",
+      "this sphere",
+      "this triangle",
+      "this vertical",
+      "this with",
+      "three",
+      "through",
+      "through a",
+      "through entity",
+      "through num",
+      "through the",
+      "to",
+      "to e",
+      "to entity",
+      "to fit",
+      "to four",
+      "to green",
+      "to look",
+      "to num",
+      "to pi",
+      "to point",
+      "to sin",
+      "to the",
+      "to this",
+      "to three",
+      "to wireframe",
+      "to x",
+      "to y",
+      "together",
+      "together around",
+      "together for",
+      "torus",
+      "torus center",
+      "total",
+      "total area",
+      "total for",
+      "touch",
+      "touch the",
+      "towards",
+      "towards positive",
+      "transparent",
+      "trapezoid",
+      "trapezoid rule",
+      "triangle",
+      "triangle above",
+      "triangle centered",
+      "triangle congruent",
+      "triangle defined",
+      "triangle entity",
+      "triangle equilateral",
+      "triangle of",
+      "triangle red",
+      "triangle rotated",
+      "triangle showing",
+      "triangle similar",
+      "triangle using",
+      "triangle visible",
+      "triangle with",
+      "turn",
+      "turn the",
+      "twice",
+      "twice as",
+      "twice the",
+      "two",
+      "two circles",
+      "two equal",
+      "two externally",
+      "two graphs",
+      "two num",
+      "two segments",
+      "two selected",
+      "two surfaces",
+      "u",
+      "u and",
+      "undefined",
+      "under",
+      "under sin",
+      "under the",
+      "under y",
+      "undid",
+      "undo",
+      "undo that",
+      "undo the",
+      "unit",
+      "unit circle",
+      "unit for",
+      "units",
+      "units left",
+      "units up",
+      "up",
+      "upper",
+      "upper half",
+      "use",
+      "use a",
+      "use centimeters",
+      "use the",
+      "use x",
+      "using",
+      "using a",
+      "v",
+      "value",
+      "value graph",
+      "value is",
+      "value next",
+      "vectors",
+      "vectors u",
+      "verify",
+      "verify entity",
+      "vertex",
+      "vertex a",
+      "vertical",
+      "vertical line",
+      "vertices",
+      "vertices does",
+      "viewing",
+      "viewport",
+      "viewport on",
+      "visible",
+      "visible on",
+      "visualize",
+      "visualize trapezoid",
+      "visualize y",
+      "volume",
+      "volume does",
+      "volume for",
+      "volume of",
+      "volume together",
+      "volumes",
+      "volumes of",
+      "wave",
+      "wave surface",
+      "we",
+      "we are",
+      "we make",
+      "we stopped",
+      "what",
+      "what about",
+      "what are",
+      "what choices",
+      "what i",
+      "what is",
+      "what slope",
+      "where",
+      "where defined",
+      "where do",
+      "where does",
+      "where is",
+      "where num",
+      "where sine",
+      "where we",
+      "whether",
+      "whether angle",
+      "which",
+      "which intersection",
+      "which point",
+      "whose",
+      "whose side",
+      "why",
+      "why absolute",
+      "why did",
+      "why is",
+      "wireframe",
+      "with",
+      "with a",
+      "with base",
+      "with circle",
+      "with diameter",
+      "with entity",
+      "with equal",
+      "with hypotenuse",
+      "with interior",
+      "with legs",
+      "with num",
+      "with radius",
+      "with side",
+      "with sides",
+      "with the",
+      "with twice",
+      "with y",
+      "within",
+      "within num",
+      "without",
+      "without connecting",
+      "without showing",
+      "work",
+      "work out",
+      "x",
+      "x and",
+      "x axis",
+      "x between",
+      "x cos",
+      "x cubed",
+      "x dx",
+      "x excluding",
+      "x for",
+      "x from",
+      "x if",
+      "x intercepts",
+      "x intersection",
+      "x moves",
+      "x num",
+      "x over",
+      "x sin",
+      "x squared",
+      "x unit",
+      "x where",
+      "x with",
+      "x x",
+      "x y",
+      "xy",
+      "xy num",
+      "y",
+      "y as",
+      "y axes",
+      "y axis",
+      "y by",
+      "y cos",
+      "y e",
+      "y floor",
+      "y num",
+      "y one",
+      "y per",
+      "y sin",
+      "y sqrt",
+      "y square",
+      "y tan",
+      "y without",
+      "y x",
+      "you",
+      "you calculate",
+      "you graph",
+      "you measure",
+      "yz",
+      "yz plane",
+      "z",
+      "z axis",
+      "z cos",
+      "z exp",
+      "z ln",
+      "z num",
+      "z sin",
+      "z sqrt",
+      "z x",
+      "z xy",
+      "zero",
+      "zero on",
+      "zero to",
+      "zoom",
+      "zoom closer",
+      "zoom to"
+    ],
+    "model_sha256": "c35401139c185a4596ee5a591348ab792bacd40e22fee3c9130db0886ee2ae16",
+    "confidence_threshold": 0.9,
+    "margin_threshold": 0.4,
+    "source_workbook_sha256": "8f28a5ede4bf60a8f5bc8ced55a1f932178431eba6fb214a9b674d043251f144",
+    "normalize_source_sha256": "8e8489b8b5de26daff2d1550dc1ec080c4612204b7f7c65c54b868a8a9cc1bdb",
+    "training_records": 374,
+    "tensorflow_version": "2.20.0"
+  },
+  "point_slot_model": {
+    "version": 4,
+    "labels": [
+      "OTHER",
+      "POINT_1",
+      "POINT_2"
+    ],
+    "vocabulary": [
+      "after",
+      "after and",
+      "after apart",
+      "after are",
+      "after between",
+      "after boundary",
+      "after distance",
+      "after earlier",
+      "after entity",
+      "after far",
+      "after find",
+      "after from",
+      "after is",
+      "after me",
+      "after measure",
+      "after out",
+      "after point",
+      "after points",
+      "after the",
+      "after to",
+      "after you",
+      "and",
+      "and after",
+      "and before",
+      "and earlier",
+      "and later",
+      "apart",
+      "apart after",
+      "apart before",
+      "apart earlier",
+      "are",
+      "are after",
+      "are before",
+      "are earlier",
+      "are later",
+      "before",
+      "before and",
+      "before apart",
+      "before are",
+      "before between",
+      "before boundary",
+      "before calculate",
+      "before can",
+      "before compute",
+      "before distance",
+      "before entity",
+      "before far",
+      "before find",
+      "before from",
+      "before give",
+      "before how",
+      "before is",
+      "before me",
+      "before measure",
+      "before out",
+      "before please",
+      "before point",
+      "before points",
+      "before tell",
+      "before the",
+      "before to",
+      "before what",
+      "before work",
+      "before you",
+      "between",
+      "between after",
+      "between before",
+      "between earlier",
+      "between later",
+      "boundary",
+      "boundary after",
+      "boundary earlier",
+      "boundary later",
+      "calculate",
+      "calculate after",
+      "calculate before",
+      "calculate later",
+      "can",
+      "can after",
+      "can before",
+      "can later",
+      "compute",
+      "compute after",
+      "compute before",
+      "compute later",
+      "current",
+      "current and",
+      "current apart",
+      "current are",
+      "current before",
+      "current between",
+      "current calculate",
+      "current can",
+      "current compute",
+      "current distance",
+      "current entity",
+      "current far",
+      "current find",
+      "current from",
+      "current give",
+      "current how",
+      "current is",
+      "current me",
+      "current measure",
+      "current out",
+      "current please",
+      "current point",
+      "current points",
+      "current tell",
+      "current the",
+      "current to",
+      "current what",
+      "current work",
+      "current you",
+      "distance",
+      "distance after",
+      "distance before",
+      "distance earlier",
+      "distance later",
+      "earlier",
+      "earlier and",
+      "earlier are",
+      "earlier between",
+      "earlier boundary",
+      "earlier calculate",
+      "earlier can",
+      "earlier compute",
+      "earlier distance",
+      "earlier entity",
+      "earlier far",
+      "earlier find",
+      "earlier from",
+      "earlier give",
+      "earlier how",
+      "earlier is",
+      "earlier me",
+      "earlier measure",
+      "earlier out",
+      "earlier please",
+      "earlier point",
+      "earlier points",
+      "earlier tell",
+      "earlier the",
+      "earlier to",
+      "earlier what",
+      "earlier work",
+      "earlier you",
+      "entity",
+      "entity after",
+      "entity before",
+      "entity earlier",
+      "entity later",
+      "far",
+      "far after",
+      "far before",
+      "far earlier",
+      "far later",
+      "find",
+      "find after",
+      "find before",
+      "find earlier",
+      "find later",
+      "from",
+      "from after",
+      "from before",
+      "from earlier",
+      "from later",
+      "give",
+      "give after",
+      "give before",
+      "give later",
+      "how",
+      "how after",
+      "how before",
+      "how later",
+      "is",
+      "is after",
+      "is before",
+      "is earlier",
+      "is later",
+      "later",
+      "later and",
+      "later apart",
+      "later are",
+      "later between",
+      "later boundary",
+      "later distance",
+      "later entity",
+      "later from",
+      "later is",
+      "later measure",
+      "later point",
+      "later points",
+      "later the",
+      "later to",
+      "me",
+      "me after",
+      "me before",
+      "me earlier",
+      "me later",
+      "measure",
+      "measure after",
+      "measure before",
+      "measure earlier",
+      "measure later",
+      "out",
+      "out after",
+      "out before",
+      "out earlier",
+      "out later",
+      "please",
+      "please after",
+      "please before",
+      "please later",
+      "point",
+      "point after",
+      "point before",
+      "point earlier",
+      "point later",
+      "points",
+      "points after",
+      "points before",
+      "points earlier",
+      "points later",
+      "tell",
+      "tell after",
+      "tell before",
+      "tell later",
+      "the",
+      "the after",
+      "the before",
+      "the earlier",
+      "the later",
+      "to",
+      "to after",
+      "to before",
+      "to earlier",
+      "to later",
+      "what",
+      "what after",
+      "what before",
+      "what later",
+      "work",
+      "work after",
+      "work before",
+      "work later",
+      "you",
+      "you after",
+      "you before",
+      "you earlier",
+      "you later"
+    ],
+    "model_sha256": "2485c9840964135358f7dec47b0be64293d7460ef40c33d77d9a3cf7b3f2ea84",
+    "confidence_threshold": 0.9,
+    "margin_threshold": 0.4,
+    "source_workbook_sha256": "8f28a5ede4bf60a8f5bc8ced55a1f932178431eba6fb214a9b674d043251f144",
+    "normalize_source_sha256": "8e8489b8b5de26daff2d1550dc1ec080c4612204b7f7c65c54b868a8a9cc1bdb",
+    "training_records": 86,
+    "tensorflow_version": "2.20.0"
+  },
+  "seed_intent_fit": {
+    "total": 500,
+    "correct": 500,
+    "results": [
+      {
+        "id": 1,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9660528898239136,
+        "margin": 0.9527273774147034
+      },
+      {
+        "id": 2,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9965882301330566,
+        "margin": 0.9952033758163452
+      },
+      {
+        "id": 3,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9943631887435913,
+        "margin": 0.9925497770309448
+      },
+      {
+        "id": 4,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9917448163032532,
+        "margin": 0.9896295070648193
+      },
+      {
+        "id": 5,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9912335276603699,
+        "margin": 0.9887211918830872
+      },
+      {
+        "id": 6,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9690268039703369,
+        "margin": 0.9551748037338257
+      },
+      {
+        "id": 7,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977425336837769,
+        "margin": 0.9971249103546143
+      },
+      {
+        "id": 8,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.993141233921051,
+        "margin": 0.9915294647216797
+      },
+      {
+        "id": 9,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9741790294647217,
+        "margin": 0.9606746435165405
+      },
+      {
+        "id": 10,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9931349754333496,
+        "margin": 0.9907093644142151
+      },
+      {
+        "id": 11,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9034855961799622,
+        "margin": 0.8509532809257507
+      },
+      {
+        "id": 12,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9467537999153137,
+        "margin": 0.930651843547821
+      },
+      {
+        "id": 13,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899439811706543,
+        "margin": 0.9858807921409607
+      },
+      {
+        "id": 14,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9935238361358643,
+        "margin": 0.99065762758255
+      },
+      {
+        "id": 15,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9841205477714539,
+        "margin": 0.9776123762130737
+      },
+      {
+        "id": 16,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9933342933654785,
+        "margin": 0.990267813205719
+      },
+      {
+        "id": 17,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.994086742401123,
+        "margin": 0.9918436408042908
+      },
+      {
+        "id": 18,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9955816864967346,
+        "margin": 0.994098961353302
+      },
+      {
+        "id": 19,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9798219203948975,
+        "margin": 0.969511866569519
+      },
+      {
+        "id": 20,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9857429265975952,
+        "margin": 0.9767369627952576
+      },
+      {
+        "id": 21,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9863812327384949,
+        "margin": 0.9805367588996887
+      },
+      {
+        "id": 22,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9349697828292847,
+        "margin": 0.9150853157043457
+      },
+      {
+        "id": 23,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9009155035018921,
+        "margin": 0.8582190275192261
+      },
+      {
+        "id": 24,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9745104312896729,
+        "margin": 0.9647512435913086
+      },
+      {
+        "id": 25,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9919590950012207,
+        "margin": 0.9882612824440002
+      },
+      {
+        "id": 26,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9660528898239136,
+        "margin": 0.9527273774147034
+      },
+      {
+        "id": 27,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9965882301330566,
+        "margin": 0.9952033758163452
+      },
+      {
+        "id": 28,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9943631887435913,
+        "margin": 0.9925497770309448
+      },
+      {
+        "id": 29,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9917448163032532,
+        "margin": 0.9896295070648193
+      },
+      {
+        "id": 30,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9912335276603699,
+        "margin": 0.9887211918830872
+      },
+      {
+        "id": 31,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9690268039703369,
+        "margin": 0.9551748037338257
+      },
+      {
+        "id": 32,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977425336837769,
+        "margin": 0.9971249103546143
+      },
+      {
+        "id": 33,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.993141233921051,
+        "margin": 0.9915294647216797
+      },
+      {
+        "id": 34,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9741790294647217,
+        "margin": 0.9606746435165405
+      },
+      {
+        "id": 35,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9931349754333496,
+        "margin": 0.9907093644142151
+      },
+      {
+        "id": 36,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9034855961799622,
+        "margin": 0.8509532809257507
+      },
+      {
+        "id": 37,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9467537999153137,
+        "margin": 0.930651843547821
+      },
+      {
+        "id": 38,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899439811706543,
+        "margin": 0.9858807921409607
+      },
+      {
+        "id": 39,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9935238361358643,
+        "margin": 0.99065762758255
+      },
+      {
+        "id": 40,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9841205477714539,
+        "margin": 0.9776123762130737
+      },
+      {
+        "id": 41,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9933342933654785,
+        "margin": 0.990267813205719
+      },
+      {
+        "id": 42,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.994086742401123,
+        "margin": 0.9918436408042908
+      },
+      {
+        "id": 43,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9955816864967346,
+        "margin": 0.994098961353302
+      },
+      {
+        "id": 44,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9798219203948975,
+        "margin": 0.969511866569519
+      },
+      {
+        "id": 45,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9857429265975952,
+        "margin": 0.9767369627952576
+      },
+      {
+        "id": 46,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9863812327384949,
+        "margin": 0.9805367588996887
+      },
+      {
+        "id": 47,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9349697828292847,
+        "margin": 0.9150853157043457
+      },
+      {
+        "id": 48,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9009155035018921,
+        "margin": 0.8582190275192261
+      },
+      {
+        "id": 49,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9745104312896729,
+        "margin": 0.9647512435913086
+      },
+      {
+        "id": 50,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9919590950012207,
+        "margin": 0.9882612824440002
+      },
+      {
+        "id": 51,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9660528898239136,
+        "margin": 0.9527273774147034
+      },
+      {
+        "id": 52,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9965882301330566,
+        "margin": 0.9952033758163452
+      },
+      {
+        "id": 53,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9943631887435913,
+        "margin": 0.9925497770309448
+      },
+      {
+        "id": 54,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9917448163032532,
+        "margin": 0.9896295070648193
+      },
+      {
+        "id": 55,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9912335276603699,
+        "margin": 0.9887211918830872
+      },
+      {
+        "id": 56,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9690268039703369,
+        "margin": 0.9551748037338257
+      },
+      {
+        "id": 57,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977425336837769,
+        "margin": 0.9971249103546143
+      },
+      {
+        "id": 58,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.993141233921051,
+        "margin": 0.9915294647216797
+      },
+      {
+        "id": 59,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9741790294647217,
+        "margin": 0.9606746435165405
+      },
+      {
+        "id": 60,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9931349754333496,
+        "margin": 0.9907093644142151
+      },
+      {
+        "id": 61,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9034855961799622,
+        "margin": 0.8509532809257507
+      },
+      {
+        "id": 62,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9467537999153137,
+        "margin": 0.930651843547821
+      },
+      {
+        "id": 63,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899439811706543,
+        "margin": 0.9858807921409607
+      },
+      {
+        "id": 64,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9935238361358643,
+        "margin": 0.99065762758255
+      },
+      {
+        "id": 65,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9841205477714539,
+        "margin": 0.9776123762130737
+      },
+      {
+        "id": 66,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9933342933654785,
+        "margin": 0.990267813205719
+      },
+      {
+        "id": 67,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.994086742401123,
+        "margin": 0.9918436408042908
+      },
+      {
+        "id": 68,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9955816864967346,
+        "margin": 0.994098961353302
+      },
+      {
+        "id": 69,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9798219203948975,
+        "margin": 0.969511866569519
+      },
+      {
+        "id": 70,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9857429265975952,
+        "margin": 0.9767369627952576
+      },
+      {
+        "id": 71,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9863812327384949,
+        "margin": 0.9805367588996887
+      },
+      {
+        "id": 72,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9349697828292847,
+        "margin": 0.9150853157043457
+      },
+      {
+        "id": 73,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9009155035018921,
+        "margin": 0.8582190275192261
+      },
+      {
+        "id": 74,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9745104312896729,
+        "margin": 0.9647512435913086
+      },
+      {
+        "id": 75,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9919590950012207,
+        "margin": 0.9882612824440002
+      },
+      {
+        "id": 76,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9660528898239136,
+        "margin": 0.9527273774147034
+      },
+      {
+        "id": 77,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9965882301330566,
+        "margin": 0.9952033758163452
+      },
+      {
+        "id": 78,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9943631887435913,
+        "margin": 0.9925497770309448
+      },
+      {
+        "id": 79,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9917448163032532,
+        "margin": 0.9896295070648193
+      },
+      {
+        "id": 80,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9912335276603699,
+        "margin": 0.9887211918830872
+      },
+      {
+        "id": 81,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9690268039703369,
+        "margin": 0.9551748037338257
+      },
+      {
+        "id": 82,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977425336837769,
+        "margin": 0.9971249103546143
+      },
+      {
+        "id": 83,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.993141233921051,
+        "margin": 0.9915294647216797
+      },
+      {
+        "id": 84,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9741790294647217,
+        "margin": 0.9606746435165405
+      },
+      {
+        "id": 85,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9931349754333496,
+        "margin": 0.9907093644142151
+      },
+      {
+        "id": 86,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9034855961799622,
+        "margin": 0.8509532809257507
+      },
+      {
+        "id": 87,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9467537999153137,
+        "margin": 0.930651843547821
+      },
+      {
+        "id": 88,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899439811706543,
+        "margin": 0.9858807921409607
+      },
+      {
+        "id": 89,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9935238361358643,
+        "margin": 0.99065762758255
+      },
+      {
+        "id": 90,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9841205477714539,
+        "margin": 0.9776123762130737
+      },
+      {
+        "id": 91,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9933342933654785,
+        "margin": 0.990267813205719
+      },
+      {
+        "id": 92,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.994086742401123,
+        "margin": 0.9918436408042908
+      },
+      {
+        "id": 93,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9955816864967346,
+        "margin": 0.994098961353302
+      },
+      {
+        "id": 94,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9798219203948975,
+        "margin": 0.969511866569519
+      },
+      {
+        "id": 95,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9857429265975952,
+        "margin": 0.9767369627952576
+      },
+      {
+        "id": 96,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9863812327384949,
+        "margin": 0.9805367588996887
+      },
+      {
+        "id": 97,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9349697828292847,
+        "margin": 0.9150853157043457
+      },
+      {
+        "id": 98,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9009155035018921,
+        "margin": 0.8582190275192261
+      },
+      {
+        "id": 99,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9745104312896729,
+        "margin": 0.9647512435913086
+      },
+      {
+        "id": 100,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9919590950012207,
+        "margin": 0.9882612824440002
+      },
+      {
+        "id": 101,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9660528898239136,
+        "margin": 0.9527273774147034
+      },
+      {
+        "id": 102,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9965882301330566,
+        "margin": 0.9952033758163452
+      },
+      {
+        "id": 103,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9943631887435913,
+        "margin": 0.9925497770309448
+      },
+      {
+        "id": 104,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9917448163032532,
+        "margin": 0.9896295070648193
+      },
+      {
+        "id": 105,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9912335276603699,
+        "margin": 0.9887211918830872
+      },
+      {
+        "id": 106,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9690268039703369,
+        "margin": 0.9551748037338257
+      },
+      {
+        "id": 107,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977425336837769,
+        "margin": 0.9971249103546143
+      },
+      {
+        "id": 108,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.993141233921051,
+        "margin": 0.9915294647216797
+      },
+      {
+        "id": 109,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9741790294647217,
+        "margin": 0.9606746435165405
+      },
+      {
+        "id": 110,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9931349754333496,
+        "margin": 0.9907093644142151
+      },
+      {
+        "id": 111,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9034855961799622,
+        "margin": 0.8509532809257507
+      },
+      {
+        "id": 112,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9467537999153137,
+        "margin": 0.930651843547821
+      },
+      {
+        "id": 113,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899439811706543,
+        "margin": 0.9858807921409607
+      },
+      {
+        "id": 114,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9935238361358643,
+        "margin": 0.99065762758255
+      },
+      {
+        "id": 115,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9841205477714539,
+        "margin": 0.9776123762130737
+      },
+      {
+        "id": 116,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9933342933654785,
+        "margin": 0.990267813205719
+      },
+      {
+        "id": 117,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.994086742401123,
+        "margin": 0.9918436408042908
+      },
+      {
+        "id": 118,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9955816864967346,
+        "margin": 0.994098961353302
+      },
+      {
+        "id": 119,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9798219203948975,
+        "margin": 0.969511866569519
+      },
+      {
+        "id": 120,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9857429265975952,
+        "margin": 0.9767369627952576
+      },
+      {
+        "id": 121,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9863812327384949,
+        "margin": 0.9805367588996887
+      },
+      {
+        "id": 122,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9349697828292847,
+        "margin": 0.9150853157043457
+      },
+      {
+        "id": 123,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9009155035018921,
+        "margin": 0.8582190275192261
+      },
+      {
+        "id": 124,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9745104312896729,
+        "margin": 0.9647512435913086
+      },
+      {
+        "id": 125,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9919590950012207,
+        "margin": 0.9882612824440002
+      },
+      {
+        "id": 126,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9660528898239136,
+        "margin": 0.9527273774147034
+      },
+      {
+        "id": 127,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9965882301330566,
+        "margin": 0.9952033758163452
+      },
+      {
+        "id": 128,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9943631887435913,
+        "margin": 0.9925497770309448
+      },
+      {
+        "id": 129,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9917448163032532,
+        "margin": 0.9896295070648193
+      },
+      {
+        "id": 130,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9912335276603699,
+        "margin": 0.9887211918830872
+      },
+      {
+        "id": 131,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9690268039703369,
+        "margin": 0.9551748037338257
+      },
+      {
+        "id": 132,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9977425336837769,
+        "margin": 0.9971249103546143
+      },
+      {
+        "id": 133,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.993141233921051,
+        "margin": 0.9915294647216797
+      },
+      {
+        "id": 134,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9741790294647217,
+        "margin": 0.9606746435165405
+      },
+      {
+        "id": 135,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9931349754333496,
+        "margin": 0.9907093644142151
+      },
+      {
+        "id": 136,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9034855961799622,
+        "margin": 0.8509532809257507
+      },
+      {
+        "id": 137,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9467537999153137,
+        "margin": 0.930651843547821
+      },
+      {
+        "id": 138,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9899439811706543,
+        "margin": 0.9858807921409607
+      },
+      {
+        "id": 139,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9935238361358643,
+        "margin": 0.99065762758255
+      },
+      {
+        "id": 140,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9841205477714539,
+        "margin": 0.9776123762130737
+      },
+      {
+        "id": 141,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9933342933654785,
+        "margin": 0.990267813205719
+      },
+      {
+        "id": 142,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.994086742401123,
+        "margin": 0.9918436408042908
+      },
+      {
+        "id": 143,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9955816864967346,
+        "margin": 0.994098961353302
+      },
+      {
+        "id": 144,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9798219203948975,
+        "margin": 0.969511866569519
+      },
+      {
+        "id": 145,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9857429265975952,
+        "margin": 0.9767369627952576
+      },
+      {
+        "id": 146,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9863812327384949,
+        "margin": 0.9805367588996887
+      },
+      {
+        "id": 147,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9349697828292847,
+        "margin": 0.9150853157043457
+      },
+      {
+        "id": 148,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9009155035018921,
+        "margin": 0.8582190275192261
+      },
+      {
+        "id": 149,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9745104312896729,
+        "margin": 0.9647512435913086
+      },
+      {
+        "id": 150,
+        "expected": "MEASURE_DISTANCE",
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9919590950012207,
+        "margin": 0.9882612824440002
+      },
+      {
+        "id": 151,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9871949553489685,
+        "margin": 0.9811499714851379
+      },
+      {
+        "id": 152,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9692725539207458,
+        "margin": 0.957942545413971
+      },
+      {
+        "id": 153,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9355415105819702,
+        "margin": 0.9000186324119568
+      },
+      {
+        "id": 154,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.8889968395233154,
+        "margin": 0.8240705728530884
+      },
+      {
+        "id": 155,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9515016674995422,
+        "margin": 0.9325523972511292
+      },
+      {
+        "id": 156,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9655196070671082,
+        "margin": 0.9429270625114441
+      },
+      {
+        "id": 157,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9438539743423462,
+        "margin": 0.9281882047653198
+      },
+      {
+        "id": 158,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9987295269966125,
+        "margin": 0.9982346296310425
+      },
+      {
+        "id": 159,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9864435195922852,
+        "margin": 0.9815869331359863
+      },
+      {
+        "id": 160,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9129879474639893,
+        "margin": 0.8985296487808228
+      },
+      {
+        "id": 161,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9743070006370544,
+        "margin": 0.9571623206138611
+      },
+      {
+        "id": 162,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9794729351997375,
+        "margin": 0.9721986651420593
+      },
+      {
+        "id": 163,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9786898493766785,
+        "margin": 0.9735770225524902
+      },
+      {
+        "id": 164,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9815483689308167,
+        "margin": 0.9758734107017517
+      },
+      {
+        "id": 165,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9316458106040955,
+        "margin": 0.8879415988922119
+      },
+      {
+        "id": 166,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9178898334503174,
+        "margin": 0.8945393562316895
+      },
+      {
+        "id": 167,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9900190830230713,
+        "margin": 0.9859790802001953
+      },
+      {
+        "id": 168,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9010413289070129,
+        "margin": 0.8494925498962402
+      },
+      {
+        "id": 169,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9661272168159485,
+        "margin": 0.9579194188117981
+      },
+      {
+        "id": 170,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9434536695480347,
+        "margin": 0.9277913570404053
+      },
+      {
+        "id": 171,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9838808178901672,
+        "margin": 0.9794487357139587
+      },
+      {
+        "id": 172,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9438449740409851,
+        "margin": 0.9271112084388733
+      },
+      {
+        "id": 173,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9487690329551697,
+        "margin": 0.9387285113334656
+      },
+      {
+        "id": 174,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9688913226127625,
+        "margin": 0.9619975090026855
+      },
+      {
+        "id": 175,
+        "expected": "FIND_MIDPOINT",
+        "intent": "FIND_MIDPOINT",
+        "confidence": 0.9351270794868469,
+        "margin": 0.9115958213806152
+      },
+      {
+        "id": 176,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.991854190826416,
+        "margin": 0.9882320761680603
+      },
+      {
+        "id": 177,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9498057961463928,
+        "margin": 0.9365007877349854
+      },
+      {
+        "id": 178,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9182013869285583,
+        "margin": 0.8794874548912048
+      },
+      {
+        "id": 179,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9724500775337219,
+        "margin": 0.9672870635986328
+      },
+      {
+        "id": 180,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9084052443504333,
+        "margin": 0.8942403793334961
+      },
+      {
+        "id": 181,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9777307510375977,
+        "margin": 0.9718690514564514
+      },
+      {
+        "id": 182,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9521680474281311,
+        "margin": 0.9336618185043335
+      },
+      {
+        "id": 183,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9840644001960754,
+        "margin": 0.9803619384765625
+      },
+      {
+        "id": 184,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9535005688667297,
+        "margin": 0.9273292422294617
+      },
+      {
+        "id": 185,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9778268337249756,
+        "margin": 0.9726346731185913
+      },
+      {
+        "id": 186,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9254522323608398,
+        "margin": 0.8991600275039673
+      },
+      {
+        "id": 187,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9223615527153015,
+        "margin": 0.8725202679634094
+      },
+      {
+        "id": 188,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.95417720079422,
+        "margin": 0.9443989992141724
+      },
+      {
+        "id": 189,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9012301564216614,
+        "margin": 0.8846643567085266
+      },
+      {
+        "id": 190,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9777243733406067,
+        "margin": 0.9681805372238159
+      },
+      {
+        "id": 191,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.8756062388420105,
+        "margin": 0.8123239278793335
+      },
+      {
+        "id": 192,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9729149341583252,
+        "margin": 0.9672147035598755
+      },
+      {
+        "id": 193,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9260304570198059,
+        "margin": 0.8770298957824707
+      },
+      {
+        "id": 194,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9257939457893372,
+        "margin": 0.8974790573120117
+      },
+      {
+        "id": 195,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.8721197843551636,
+        "margin": 0.8129386901855469
+      },
+      {
+        "id": 196,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9579479098320007,
+        "margin": 0.9408067464828491
+      },
+      {
+        "id": 197,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9526321291923523,
+        "margin": 0.9400947093963623
+      },
+      {
+        "id": 198,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9490904211997986,
+        "margin": 0.9171054363250732
+      },
+      {
+        "id": 199,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9278251528739929,
+        "margin": 0.9060752391815186
+      },
+      {
+        "id": 200,
+        "expected": "CALCULATE_SLOPE",
+        "intent": "CALCULATE_SLOPE",
+        "confidence": 0.9648205041885376,
+        "margin": 0.9536118507385254
+      },
+      {
+        "id": 201,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9685443639755249,
+        "margin": 0.9619722366333008
+      },
+      {
+        "id": 202,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9961801767349243,
+        "margin": 0.9949456453323364
+      },
+      {
+        "id": 203,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9779825210571289,
+        "margin": 0.9738175868988037
+      },
+      {
+        "id": 204,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9428586959838867,
+        "margin": 0.9022063612937927
+      },
+      {
+        "id": 205,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9821836948394775,
+        "margin": 0.9772413969039917
+      },
+      {
+        "id": 206,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.8994920253753662,
+        "margin": 0.8784610033035278
+      },
+      {
+        "id": 207,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9904131293296814,
+        "margin": 0.9883121252059937
+      },
+      {
+        "id": 208,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.8939505219459534,
+        "margin": 0.858977198600769
+      },
+      {
+        "id": 209,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9514525532722473,
+        "margin": 0.9411885142326355
+      },
+      {
+        "id": 210,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9610440135002136,
+        "margin": 0.9499056935310364
+      },
+      {
+        "id": 211,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9850780963897705,
+        "margin": 0.9803965091705322
+      },
+      {
+        "id": 212,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9585666060447693,
+        "margin": 0.9466403126716614
+      },
+      {
+        "id": 213,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9753638505935669,
+        "margin": 0.9690986275672913
+      },
+      {
+        "id": 214,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9147674441337585,
+        "margin": 0.876181960105896
+      },
+      {
+        "id": 215,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9685443639755249,
+        "margin": 0.9619722366333008
+      },
+      {
+        "id": 216,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9707345962524414,
+        "margin": 0.9637014269828796
+      },
+      {
+        "id": 217,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9855715036392212,
+        "margin": 0.980476438999176
+      },
+      {
+        "id": 218,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9197017550468445,
+        "margin": 0.9022327065467834
+      },
+      {
+        "id": 219,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9880717992782593,
+        "margin": 0.9842894673347473
+      },
+      {
+        "id": 220,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9806675910949707,
+        "margin": 0.9746206998825073
+      },
+      {
+        "id": 221,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.990933895111084,
+        "margin": 0.9887280464172363
+      },
+      {
+        "id": 222,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9792582392692566,
+        "margin": 0.9749363660812378
+      },
+      {
+        "id": 223,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9574118256568909,
+        "margin": 0.9484224319458008
+      },
+      {
+        "id": 224,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9765584468841553,
+        "margin": 0.9709035754203796
+      },
+      {
+        "id": 225,
+        "expected": "MEASURE_ANGLE",
+        "intent": "MEASURE_ANGLE",
+        "confidence": 0.9835940003395081,
+        "margin": 0.9763365983963013
+      },
+      {
+        "id": 226,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9519224166870117,
+        "margin": 0.9258682727813721
+      },
+      {
+        "id": 227,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9900239109992981,
+        "margin": 0.9833796620368958
+      },
+      {
+        "id": 228,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9958565831184387,
+        "margin": 0.9947314858436584
+      },
+      {
+        "id": 229,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9825495481491089,
+        "margin": 0.9771360158920288
+      },
+      {
+        "id": 230,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9932044744491577,
+        "margin": 0.9918639063835144
+      },
+      {
+        "id": 231,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9894822835922241,
+        "margin": 0.9872439503669739
+      },
+      {
+        "id": 232,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9858231544494629,
+        "margin": 0.982353687286377
+      },
+      {
+        "id": 233,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.924747884273529,
+        "margin": 0.8976563811302185
+      },
+      {
+        "id": 234,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9373436570167542,
+        "margin": 0.8937280774116516
+      },
+      {
+        "id": 235,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9928968548774719,
+        "margin": 0.9893397092819214
+      },
+      {
+        "id": 236,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.977207601070404,
+        "margin": 0.9721792936325073
+      },
+      {
+        "id": 237,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.8510243892669678,
+        "margin": 0.8256898522377014
+      },
+      {
+        "id": 238,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9148774147033691,
+        "margin": 0.8900207877159119
+      },
+      {
+        "id": 239,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.974097490310669,
+        "margin": 0.96628338098526
+      },
+      {
+        "id": 240,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9648544788360596,
+        "margin": 0.9413815140724182
+      },
+      {
+        "id": 241,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9900051951408386,
+        "margin": 0.9877453446388245
+      },
+      {
+        "id": 242,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9911114573478699,
+        "margin": 0.9893955588340759
+      },
+      {
+        "id": 243,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9484383463859558,
+        "margin": 0.9347123503684998
+      },
+      {
+        "id": 244,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.8834705948829651,
+        "margin": 0.837028980255127
+      },
+      {
+        "id": 245,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.900939404964447,
+        "margin": 0.874306857585907
+      },
+      {
+        "id": 246,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9887633323669434,
+        "margin": 0.9835261106491089
+      },
+      {
+        "id": 247,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.970182478427887,
+        "margin": 0.9643925428390503
+      },
+      {
+        "id": 248,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9277589321136475,
+        "margin": 0.9040590524673462
+      },
+      {
+        "id": 249,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.9598054885864258,
+        "margin": 0.9393917918205261
+      },
+      {
+        "id": 250,
+        "expected": "CREATE_CIRCLE",
+        "intent": "CREATE_CIRCLE",
+        "confidence": 0.913711667060852,
+        "margin": 0.8783327341079712
+      },
+      {
+        "id": 251,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.8678256869316101,
+        "margin": 0.7690188884735107
+      },
+      {
+        "id": 252,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9706864356994629,
+        "margin": 0.9630811214447021
+      },
+      {
+        "id": 253,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9939612150192261,
+        "margin": 0.9919787645339966
+      },
+      {
+        "id": 254,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9422023892402649,
+        "margin": 0.926417350769043
+      },
+      {
+        "id": 255,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9944513440132141,
+        "margin": 0.9931084513664246
+      },
+      {
+        "id": 256,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9845037460327148,
+        "margin": 0.9752665758132935
+      },
+      {
+        "id": 257,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9289531707763672,
+        "margin": 0.9064603447914124
+      },
+      {
+        "id": 258,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9520339369773865,
+        "margin": 0.9341657757759094
+      },
+      {
+        "id": 259,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9835730195045471,
+        "margin": 0.9759817719459534
+      },
+      {
+        "id": 260,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.915580689907074,
+        "margin": 0.8849417567253113
+      },
+      {
+        "id": 261,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.98972088098526,
+        "margin": 0.9856969714164734
+      },
+      {
+        "id": 262,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9831112623214722,
+        "margin": 0.9792811870574951
+      },
+      {
+        "id": 263,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9726355075836182,
+        "margin": 0.95402592420578
+      },
+      {
+        "id": 264,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9960758090019226,
+        "margin": 0.9947633147239685
+      },
+      {
+        "id": 265,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9671872854232788,
+        "margin": 0.9457261562347412
+      },
+      {
+        "id": 266,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9555960297584534,
+        "margin": 0.9421601891517639
+      },
+      {
+        "id": 267,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9477487802505493,
+        "margin": 0.9160357117652893
+      },
+      {
+        "id": 268,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9936988353729248,
+        "margin": 0.9896374344825745
+      },
+      {
+        "id": 269,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.8538399934768677,
+        "margin": 0.7652462720870972
+      },
+      {
+        "id": 270,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9461644887924194,
+        "margin": 0.9286381006240845
+      },
+      {
+        "id": 271,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9846903681755066,
+        "margin": 0.9767774939537048
+      },
+      {
+        "id": 272,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9360095262527466,
+        "margin": 0.9178915619850159
+      },
+      {
+        "id": 273,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9620206952095032,
+        "margin": 0.9407304525375366
+      },
+      {
+        "id": 274,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.9647771716117859,
+        "margin": 0.9523044228553772
+      },
+      {
+        "id": 275,
+        "expected": "CREATE_TRIANGLE",
+        "intent": "CREATE_TRIANGLE",
+        "confidence": 0.982670247554779,
+        "margin": 0.9703812599182129
+      },
+      {
+        "id": 276,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9515149593353271,
+        "margin": 0.9350071549415588
+      },
+      {
+        "id": 277,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9361191987991333,
+        "margin": 0.9160130023956299
+      },
+      {
+        "id": 278,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8467399477958679,
+        "margin": 0.8094602227210999
+      },
+      {
+        "id": 279,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8669503331184387,
+        "margin": 0.8024486303329468
+      },
+      {
+        "id": 280,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.957398533821106,
+        "margin": 0.9408661127090454
+      },
+      {
+        "id": 281,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8854675889015198,
+        "margin": 0.8448963165283203
+      },
+      {
+        "id": 282,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9737748503684998,
+        "margin": 0.960652232170105
+      },
+      {
+        "id": 283,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8870021104812622,
+        "margin": 0.8601543307304382
+      },
+      {
+        "id": 284,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9587748646736145,
+        "margin": 0.9397879838943481
+      },
+      {
+        "id": 285,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9580046534538269,
+        "margin": 0.9477545619010925
+      },
+      {
+        "id": 286,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8959373831748962,
+        "margin": 0.863532304763794
+      },
+      {
+        "id": 287,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8548581004142761,
+        "margin": 0.812949001789093
+      },
+      {
+        "id": 288,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.8850555419921875,
+        "margin": 0.824761152267456
+      },
+      {
+        "id": 289,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9597726464271545,
+        "margin": 0.9469770193099976
+      },
+      {
+        "id": 290,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9514861106872559,
+        "margin": 0.9402719736099243
+      },
+      {
+        "id": 291,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9687642455101013,
+        "margin": 0.9632862210273743
+      },
+      {
+        "id": 292,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9653106927871704,
+        "margin": 0.9464073777198792
+      },
+      {
+        "id": 293,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9361191987991333,
+        "margin": 0.9160130023956299
+      },
+      {
+        "id": 294,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9251439571380615,
+        "margin": 0.8771687746047974
+      },
+      {
+        "id": 295,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.934295117855072,
+        "margin": 0.9021213054656982
+      },
+      {
+        "id": 296,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9464935064315796,
+        "margin": 0.922461986541748
+      },
+      {
+        "id": 297,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9630428552627563,
+        "margin": 0.9550081491470337
+      },
+      {
+        "id": 298,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.973691463470459,
+        "margin": 0.9651334285736084
+      },
+      {
+        "id": 299,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9057615399360657,
+        "margin": 0.8789756298065186
+      },
+      {
+        "id": 300,
+        "expected": "PLOT_FUNCTION_2D",
+        "intent": "PLOT_FUNCTION_2D",
+        "confidence": 0.9934220910072327,
+        "margin": 0.9908440113067627
+      },
+      {
+        "id": 301,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9626699686050415,
+        "margin": 0.9480322599411011
+      },
+      {
+        "id": 302,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9467889666557312,
+        "margin": 0.9266182780265808
+      },
+      {
+        "id": 303,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9209070801734924,
+        "margin": 0.9064291715621948
+      },
+      {
+        "id": 304,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9315533638000488,
+        "margin": 0.9163776636123657
+      },
+      {
+        "id": 305,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9892846941947937,
+        "margin": 0.9855444431304932
+      },
+      {
+        "id": 306,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.8676719069480896,
+        "margin": 0.7811017632484436
+      },
+      {
+        "id": 307,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9315245747566223,
+        "margin": 0.8968067169189453
+      },
+      {
+        "id": 308,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9266393184661865,
+        "margin": 0.888215184211731
+      },
+      {
+        "id": 309,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9015617370605469,
+        "margin": 0.8435120582580566
+      },
+      {
+        "id": 310,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.8986692428588867,
+        "margin": 0.860191822052002
+      },
+      {
+        "id": 311,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.8644872307777405,
+        "margin": 0.8324319124221802
+      },
+      {
+        "id": 312,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.930408239364624,
+        "margin": 0.9057318568229675
+      },
+      {
+        "id": 313,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9661715626716614,
+        "margin": 0.9541813135147095
+      },
+      {
+        "id": 314,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.956764817237854,
+        "margin": 0.9428544640541077
+      },
+      {
+        "id": 315,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9483202695846558,
+        "margin": 0.9248976111412048
+      },
+      {
+        "id": 316,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9140275716781616,
+        "margin": 0.8847247362136841
+      },
+      {
+        "id": 317,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9365028142929077,
+        "margin": 0.9246389865875244
+      },
+      {
+        "id": 318,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9287280440330505,
+        "margin": 0.9079758524894714
+      },
+      {
+        "id": 319,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9425176382064819,
+        "margin": 0.927477240562439
+      },
+      {
+        "id": 320,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9378822445869446,
+        "margin": 0.9257197380065918
+      },
+      {
+        "id": 321,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9285010695457458,
+        "margin": 0.9111806750297546
+      },
+      {
+        "id": 322,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9787760376930237,
+        "margin": 0.9721114039421082
+      },
+      {
+        "id": 323,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9329966902732849,
+        "margin": 0.8892446756362915
+      },
+      {
+        "id": 324,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9350695610046387,
+        "margin": 0.917028546333313
+      },
+      {
+        "id": 325,
+        "expected": "FIND_INTERSECTION",
+        "intent": "FIND_INTERSECTION",
+        "confidence": 0.9262498617172241,
+        "margin": 0.9108458757400513
+      },
+      {
+        "id": 326,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.8584280014038086,
+        "margin": 0.7969774007797241
+      },
+      {
+        "id": 327,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9624171853065491,
+        "margin": 0.9483205676078796
+      },
+      {
+        "id": 328,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.955883264541626,
+        "margin": 0.9346170425415039
+      },
+      {
+        "id": 329,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9809837937355042,
+        "margin": 0.9747325778007507
+      },
+      {
+        "id": 330,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9046858549118042,
+        "margin": 0.8887336254119873
+      },
+      {
+        "id": 331,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9249136447906494,
+        "margin": 0.9107050895690918
+      },
+      {
+        "id": 332,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9223564863204956,
+        "margin": 0.8919732570648193
+      },
+      {
+        "id": 333,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9846612811088562,
+        "margin": 0.9792818427085876
+      },
+      {
+        "id": 334,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9377357363700867,
+        "margin": 0.8867383003234863
+      },
+      {
+        "id": 335,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9323817491531372,
+        "margin": 0.9086459875106812
+      },
+      {
+        "id": 336,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9429513216018677,
+        "margin": 0.9192845225334167
+      },
+      {
+        "id": 337,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9274166822433472,
+        "margin": 0.8831685781478882
+      },
+      {
+        "id": 338,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9015896320343018,
+        "margin": 0.8382018208503723
+      },
+      {
+        "id": 339,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.782348096370697,
+        "margin": 0.6675384640693665
+      },
+      {
+        "id": 340,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9647977948188782,
+        "margin": 0.9550856947898865
+      },
+      {
+        "id": 341,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9272075295448303,
+        "margin": 0.8955968022346497
+      },
+      {
+        "id": 342,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9428152441978455,
+        "margin": 0.9266430735588074
+      },
+      {
+        "id": 343,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9908506274223328,
+        "margin": 0.9869627952575684
+      },
+      {
+        "id": 344,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.8935123085975647,
+        "margin": 0.8110426068305969
+      },
+      {
+        "id": 345,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.8466241955757141,
+        "margin": 0.8204353451728821
+      },
+      {
+        "id": 346,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9366199374198914,
+        "margin": 0.9057575464248657
+      },
+      {
+        "id": 347,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9179829359054565,
+        "margin": 0.8841343522071838
+      },
+      {
+        "id": 348,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9708595275878906,
+        "margin": 0.9642686247825623
+      },
+      {
+        "id": 349,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9742909669876099,
+        "margin": 0.9580555558204651
+      },
+      {
+        "id": 350,
+        "expected": "DIFFERENTIATE",
+        "intent": "DIFFERENTIATE",
+        "confidence": 0.9652477502822876,
+        "margin": 0.9545546174049377
+      },
+      {
+        "id": 351,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9684297442436218,
+        "margin": 0.9554111361503601
+      },
+      {
+        "id": 352,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9841594696044922,
+        "margin": 0.9792558550834656
+      },
+      {
+        "id": 353,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9851847887039185,
+        "margin": 0.9789788722991943
+      },
+      {
+        "id": 354,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.945458173751831,
+        "margin": 0.926243007183075
+      },
+      {
+        "id": 355,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9965745210647583,
+        "margin": 0.9957228302955627
+      },
+      {
+        "id": 356,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9841167330741882,
+        "margin": 0.9789400696754456
+      },
+      {
+        "id": 357,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9573972225189209,
+        "margin": 0.9412360787391663
+      },
+      {
+        "id": 358,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9566640257835388,
+        "margin": 0.9430208206176758
+      },
+      {
+        "id": 359,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9916433691978455,
+        "margin": 0.9891037940979004
+      },
+      {
+        "id": 360,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9340641498565674,
+        "margin": 0.9161756634712219
+      },
+      {
+        "id": 361,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9484463930130005,
+        "margin": 0.933842658996582
+      },
+      {
+        "id": 362,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9880993962287903,
+        "margin": 0.9836459755897522
+      },
+      {
+        "id": 363,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9439161419868469,
+        "margin": 0.9289472103118896
+      },
+      {
+        "id": 364,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.7326990365982056,
+        "margin": 0.6476461291313171
+      },
+      {
+        "id": 365,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.8594432473182678,
+        "margin": 0.7676745057106018
+      },
+      {
+        "id": 366,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9856079816818237,
+        "margin": 0.9798625707626343
+      },
+      {
+        "id": 367,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9240623116493225,
+        "margin": 0.8861761093139648
+      },
+      {
+        "id": 368,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9856125116348267,
+        "margin": 0.9773234128952026
+      },
+      {
+        "id": 369,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9881949424743652,
+        "margin": 0.9839605689048767
+      },
+      {
+        "id": 370,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9934451580047607,
+        "margin": 0.9894297122955322
+      },
+      {
+        "id": 371,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.945188581943512,
+        "margin": 0.9299227595329285
+      },
+      {
+        "id": 372,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9840133786201477,
+        "margin": 0.980762779712677
+      },
+      {
+        "id": 373,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9872890710830688,
+        "margin": 0.981839120388031
+      },
+      {
+        "id": 374,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9945482611656189,
+        "margin": 0.9920445680618286
+      },
+      {
+        "id": 375,
+        "expected": "INTEGRATE",
+        "intent": "INTEGRATE",
+        "confidence": 0.9996519088745117,
+        "margin": 0.9995646476745605
+      },
+      {
+        "id": 376,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9903547763824463,
+        "margin": 0.9842597842216492
+      },
+      {
+        "id": 377,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9869044423103333,
+        "margin": 0.9794507026672363
+      },
+      {
+        "id": 378,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9964595437049866,
+        "margin": 0.9946929812431335
+      },
+      {
+        "id": 379,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9153795838356018,
+        "margin": 0.851669192314148
+      },
+      {
+        "id": 380,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.7808157205581665,
+        "margin": 0.7472381591796875
+      },
+      {
+        "id": 381,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9688155651092529,
+        "margin": 0.9467737078666687
+      },
+      {
+        "id": 382,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9440538883209229,
+        "margin": 0.9315322041511536
+      },
+      {
+        "id": 383,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9983105659484863,
+        "margin": 0.9978231191635132
+      },
+      {
+        "id": 384,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9964858293533325,
+        "margin": 0.9953255653381348
+      },
+      {
+        "id": 385,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9761108756065369,
+        "margin": 0.9588122367858887
+      },
+      {
+        "id": 386,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9594364166259766,
+        "margin": 0.9373769760131836
+      },
+      {
+        "id": 387,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9761911630630493,
+        "margin": 0.9666064977645874
+      },
+      {
+        "id": 388,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9808837175369263,
+        "margin": 0.9737810492515564
+      },
+      {
+        "id": 389,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9686772227287292,
+        "margin": 0.9514577984809875
+      },
+      {
+        "id": 390,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9911766052246094,
+        "margin": 0.986027181148529
+      },
+      {
+        "id": 391,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9983692765235901,
+        "margin": 0.9978909492492676
+      },
+      {
+        "id": 392,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9835708141326904,
+        "margin": 0.9710570573806763
+      },
+      {
+        "id": 393,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9427781701087952,
+        "margin": 0.9277397394180298
+      },
+      {
+        "id": 394,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9928451180458069,
+        "margin": 0.9908515810966492
+      },
+      {
+        "id": 395,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9854443669319153,
+        "margin": 0.9810994267463684
+      },
+      {
+        "id": 396,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9804764986038208,
+        "margin": 0.9694546461105347
+      },
+      {
+        "id": 397,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9798453450202942,
+        "margin": 0.9719934463500977
+      },
+      {
+        "id": 398,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.989018976688385,
+        "margin": 0.9836529493331909
+      },
+      {
+        "id": 399,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9762787818908691,
+        "margin": 0.9714709520339966
+      },
+      {
+        "id": 400,
+        "expected": "PLOT_SURFACE_3D",
+        "intent": "PLOT_SURFACE_3D",
+        "confidence": 0.9927305579185486,
+        "margin": 0.989856481552124
+      },
+      {
+        "id": 401,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9896542429924011,
+        "margin": 0.9865413904190063
+      },
+      {
+        "id": 402,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9962896108627319,
+        "margin": 0.9950796961784363
+      },
+      {
+        "id": 403,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9485499858856201,
+        "margin": 0.9314178824424744
+      },
+      {
+        "id": 404,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9869065284729004,
+        "margin": 0.9839215278625488
+      },
+      {
+        "id": 405,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9909431338310242,
+        "margin": 0.9887482523918152
+      },
+      {
+        "id": 406,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9773563146591187,
+        "margin": 0.9725252985954285
+      },
+      {
+        "id": 407,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9967156648635864,
+        "margin": 0.9959107637405396
+      },
+      {
+        "id": 408,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9972882270812988,
+        "margin": 0.9963860511779785
+      },
+      {
+        "id": 409,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9557987451553345,
+        "margin": 0.9454008936882019
+      },
+      {
+        "id": 410,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9808995723724365,
+        "margin": 0.977066159248352
+      },
+      {
+        "id": 411,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9274823665618896,
+        "margin": 0.9070783853530884
+      },
+      {
+        "id": 412,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9167987704277039,
+        "margin": 0.8680602312088013
+      },
+      {
+        "id": 413,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9531542062759399,
+        "margin": 0.9392092823982239
+      },
+      {
+        "id": 414,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9969191551208496,
+        "margin": 0.995745062828064
+      },
+      {
+        "id": 415,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9891300201416016,
+        "margin": 0.9855430126190186
+      },
+      {
+        "id": 416,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.914852499961853,
+        "margin": 0.8969668745994568
+      },
+      {
+        "id": 417,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9840627908706665,
+        "margin": 0.976929247379303
+      },
+      {
+        "id": 418,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9174177050590515,
+        "margin": 0.8585582971572876
+      },
+      {
+        "id": 419,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9829024076461792,
+        "margin": 0.9783846735954285
+      },
+      {
+        "id": 420,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9410728812217712,
+        "margin": 0.9243451356887817
+      },
+      {
+        "id": 421,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9742486476898193,
+        "margin": 0.9669592380523682
+      },
+      {
+        "id": 422,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9916797280311584,
+        "margin": 0.9887908101081848
+      },
+      {
+        "id": 423,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9563620090484619,
+        "margin": 0.9459474682807922
+      },
+      {
+        "id": 424,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.9486222863197327,
+        "margin": 0.9241064786911011
+      },
+      {
+        "id": 425,
+        "expected": "MEASURE_SOLID",
+        "intent": "MEASURE_SOLID",
+        "confidence": 0.8957686424255371,
+        "margin": 0.856560230255127
+      },
+      {
+        "id": 426,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9858208894729614,
+        "margin": 0.9832034111022949
+      },
+      {
+        "id": 427,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.937560498714447,
+        "margin": 0.9141214489936829
+      },
+      {
+        "id": 428,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9858415722846985,
+        "margin": 0.9832267761230469
+      },
+      {
+        "id": 429,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9312314987182617,
+        "margin": 0.8989207744598389
+      },
+      {
+        "id": 430,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.956405520439148,
+        "margin": 0.9374239444732666
+      },
+      {
+        "id": 431,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9495066404342651,
+        "margin": 0.9314705729484558
+      },
+      {
+        "id": 432,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9460229873657227,
+        "margin": 0.929511308670044
+      },
+      {
+        "id": 433,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8922873139381409,
+        "margin": 0.8516715168952942
+      },
+      {
+        "id": 434,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9772850275039673,
+        "margin": 0.9704471826553345
+      },
+      {
+        "id": 435,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8748396039009094,
+        "margin": 0.8225249648094177
+      },
+      {
+        "id": 436,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8642740845680237,
+        "margin": 0.7957690358161926
+      },
+      {
+        "id": 437,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9267152547836304,
+        "margin": 0.8992540240287781
+      },
+      {
+        "id": 438,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.926006555557251,
+        "margin": 0.9049221873283386
+      },
+      {
+        "id": 439,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9158644676208496,
+        "margin": 0.8876994848251343
+      },
+      {
+        "id": 440,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.953061044216156,
+        "margin": 0.9397550225257874
+      },
+      {
+        "id": 441,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9444026947021484,
+        "margin": 0.9228152632713318
+      },
+      {
+        "id": 442,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9336142539978027,
+        "margin": 0.9166092276573181
+      },
+      {
+        "id": 443,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9444611668586731,
+        "margin": 0.9305769205093384
+      },
+      {
+        "id": 444,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9475007653236389,
+        "margin": 0.9358124732971191
+      },
+      {
+        "id": 445,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9336001873016357,
+        "margin": 0.9059785604476929
+      },
+      {
+        "id": 446,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9424882531166077,
+        "margin": 0.9269256591796875
+      },
+      {
+        "id": 447,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.903874397277832,
+        "margin": 0.8566773533821106
+      },
+      {
+        "id": 448,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9115318655967712,
+        "margin": 0.8727157711982727
+      },
+      {
+        "id": 449,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.9409497976303101,
+        "margin": 0.9217907786369324
+      },
+      {
+        "id": 450,
+        "expected": "TRANSFORM_3D",
+        "intent": "TRANSFORM_3D",
+        "confidence": 0.8988588452339172,
+        "margin": 0.8695793151855469
+      },
+      {
+        "id": 451,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.942154586315155,
+        "margin": 0.9063887000083923
+      },
+      {
+        "id": 452,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8658046126365662,
+        "margin": 0.8354601860046387
+      },
+      {
+        "id": 453,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9322927594184875,
+        "margin": 0.9122544527053833
+      },
+      {
+        "id": 454,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8222450613975525,
+        "margin": 0.761131763458252
+      },
+      {
+        "id": 455,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8739222884178162,
+        "margin": 0.8215198516845703
+      },
+      {
+        "id": 456,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8854587078094482,
+        "margin": 0.8618426322937012
+      },
+      {
+        "id": 457,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9051265716552734,
+        "margin": 0.8605920076370239
+      },
+      {
+        "id": 458,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9192419052124023,
+        "margin": 0.9018558859825134
+      },
+      {
+        "id": 459,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8774190545082092,
+        "margin": 0.8327160477638245
+      },
+      {
+        "id": 460,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8219060897827148,
+        "margin": 0.764792799949646
+      },
+      {
+        "id": 461,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8346429467201233,
+        "margin": 0.7738786339759827
+      },
+      {
+        "id": 462,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9205554723739624,
+        "margin": 0.891959547996521
+      },
+      {
+        "id": 463,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8207733631134033,
+        "margin": 0.7368061542510986
+      },
+      {
+        "id": 464,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9332239031791687,
+        "margin": 0.9165263175964355
+      },
+      {
+        "id": 465,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8760414719581604,
+        "margin": 0.8450385332107544
+      },
+      {
+        "id": 466,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9245530962944031,
+        "margin": 0.8979783654212952
+      },
+      {
+        "id": 467,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8744742274284363,
+        "margin": 0.8112505674362183
+      },
+      {
+        "id": 468,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9189714193344116,
+        "margin": 0.8987008333206177
+      },
+      {
+        "id": 469,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9145352244377136,
+        "margin": 0.873564600944519
+      },
+      {
+        "id": 470,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9227349162101746,
+        "margin": 0.895917534828186
+      },
+      {
+        "id": 471,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8881989121437073,
+        "margin": 0.8363226652145386
+      },
+      {
+        "id": 472,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8898546099662781,
+        "margin": 0.8655410408973694
+      },
+      {
+        "id": 473,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9088729023933411,
+        "margin": 0.8666735291481018
+      },
+      {
+        "id": 474,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.8778225779533386,
+        "margin": 0.8206973671913147
+      },
+      {
+        "id": 475,
+        "expected": "EDIT_SCENE",
+        "intent": "EDIT_SCENE",
+        "confidence": 0.9323015809059143,
+        "margin": 0.9111101031303406
+      },
+      {
+        "id": 476,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.7637452483177185,
+        "margin": 0.7138791084289551
+      },
+      {
+        "id": 477,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9441379308700562,
+        "margin": 0.9305588006973267
+      },
+      {
+        "id": 478,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8334735035896301,
+        "margin": 0.7872266173362732
+      },
+      {
+        "id": 479,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9230207204818726,
+        "margin": 0.8967027068138123
+      },
+      {
+        "id": 480,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9385543465614319,
+        "margin": 0.9171689748764038
+      },
+      {
+        "id": 481,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9585902690887451,
+        "margin": 0.9482215642929077
+      },
+      {
+        "id": 482,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9402318000793457,
+        "margin": 0.9170034527778625
+      },
+      {
+        "id": 483,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8137463331222534,
+        "margin": 0.7867183685302734
+      },
+      {
+        "id": 484,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8780004978179932,
+        "margin": 0.8333833813667297
+      },
+      {
+        "id": 485,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8567219972610474,
+        "margin": 0.8343017101287842
+      },
+      {
+        "id": 486,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9291962385177612,
+        "margin": 0.9133240580558777
+      },
+      {
+        "id": 487,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9432376027107239,
+        "margin": 0.9312909245491028
+      },
+      {
+        "id": 488,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.58072429895401,
+        "margin": 0.22544237971305847
+      },
+      {
+        "id": 489,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9264388084411621,
+        "margin": 0.9127724170684814
+      },
+      {
+        "id": 490,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.911986231803894,
+        "margin": 0.8903347849845886
+      },
+      {
+        "id": 491,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8947017192840576,
+        "margin": 0.8451417088508606
+      },
+      {
+        "id": 492,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9484069347381592,
+        "margin": 0.9299038648605347
+      },
+      {
+        "id": 493,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9128457903862,
+        "margin": 0.8879178166389465
+      },
+      {
+        "id": 494,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9490762948989868,
+        "margin": 0.939824640750885
+      },
+      {
+        "id": 495,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.8976701498031616,
+        "margin": 0.8549214005470276
+      },
+      {
+        "id": 496,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.816949188709259,
+        "margin": 0.72408527135849
+      },
+      {
+        "id": 497,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9246023297309875,
+        "margin": 0.9119538068771362
+      },
+      {
+        "id": 498,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9089707136154175,
+        "margin": 0.8685662150382996
+      },
+      {
+        "id": 499,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9424033164978027,
+        "margin": 0.9338725209236145
+      },
+      {
+        "id": 500,
+        "expected": "DIALOGUE_CONTEXT",
+        "intent": "DIALOGUE_CONTEXT",
+        "confidence": 0.9271248579025269,
+        "margin": 0.9007119536399841
+      }
+    ]
+  },
+  "unseen_labels": {
+    "total": 150,
+    "correct": 150,
+    "feature_invariant": true
+  },
+  "heldout_slot_templates": {
+    "total": 7,
+    "correct": 7,
+    "results": [
+      {
+        "text": "Could you calculate the distance from point Vertex_907 to point Omega_811?",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Could",
+            "intent": "OTHER",
+            "confidence": 0.9955659508705139,
+            "margin": 0.992396354675293
+          },
+          {
+            "token": "you",
+            "intent": "OTHER",
+            "confidence": 0.9974111914634705,
+            "margin": 0.9954553246498108
+          },
+          {
+            "token": "calculate",
+            "intent": "OTHER",
+            "confidence": 0.9952133893966675,
+            "margin": 0.9920450448989868
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9974115490913391,
+            "margin": 0.9955735802650452
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9971511960029602,
+            "margin": 0.9947404861450195
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.990790843963623,
+            "margin": 0.9823625087738037
+          },
+          {
+            "token": "point",
+            "intent": "OTHER",
+            "confidence": 0.9559195637702942,
+            "margin": 0.9130108952522278
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.8788469433784485,
+            "margin": 0.7698907852172852
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9756959080696106,
+            "margin": 0.9536978602409363
+          },
+          {
+            "token": "point",
+            "intent": "OTHER",
+            "confidence": 0.9554345011711121,
+            "margin": 0.9137220978736877
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9513139128684998,
+            "margin": 0.9203287363052368
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.99261075258255,
+            "margin": 0.9855931401252747
+          }
+        ]
+      },
+      {
+        "text": "What is the straight-line distance from Vertex_907 to Omega_811?",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "What",
+            "intent": "OTHER",
+            "confidence": 0.9987725615501404,
+            "margin": 0.9979362487792969
+          },
+          {
+            "token": "is",
+            "intent": "OTHER",
+            "confidence": 0.9981702566146851,
+            "margin": 0.9969070553779602
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9842830896377563,
+            "margin": 0.9720755815505981
+          },
+          {
+            "token": "straight",
+            "intent": "OTHER",
+            "confidence": 0.9888119697570801,
+            "margin": 0.9815104007720947
+          },
+          {
+            "token": "-",
+            "intent": "OTHER",
+            "confidence": 0.9962722063064575,
+            "margin": 0.9935882091522217
+          },
+          {
+            "token": "line",
+            "intent": "OTHER",
+            "confidence": 0.982249915599823,
+            "margin": 0.9686116576194763
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9507283568382263,
+            "margin": 0.9032014012336731
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.9942030310630798,
+            "margin": 0.9894377589225769
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9933465719223022,
+            "margin": 0.9889936447143555
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9968315958976746,
+            "margin": 0.9942282438278198
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9968454241752625,
+            "margin": 0.9946602582931519
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.9904471635818481,
+            "margin": 0.9815235137939453
+          }
+        ]
+      },
+      {
+        "text": "Find the Euclidean distance between Vertex_907 and Omega_811",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Find",
+            "intent": "OTHER",
+            "confidence": 0.9987478256225586,
+            "margin": 0.9978057146072388
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9993540644645691,
+            "margin": 0.9989180564880371
+          },
+          {
+            "token": "Euclidean",
+            "intent": "OTHER",
+            "confidence": 0.998305082321167,
+            "margin": 0.9970423579216003
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9949283599853516,
+            "margin": 0.9902045726776123
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9971018433570862,
+            "margin": 0.994713306427002
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.99741131067276,
+            "margin": 0.9955437779426575
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9987794756889343,
+            "margin": 0.9980289340019226
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9974485039710999,
+            "margin": 0.9951785206794739
+          }
+        ]
+      },
+      {
+        "text": "What is the separation between Vertex_907 and Omega_811?",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "What",
+            "intent": "OTHER",
+            "confidence": 0.9987725615501404,
+            "margin": 0.9979362487792969
+          },
+          {
+            "token": "is",
+            "intent": "OTHER",
+            "confidence": 0.9981702566146851,
+            "margin": 0.9969070553779602
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9856497645378113,
+            "margin": 0.9729447960853577
+          },
+          {
+            "token": "separation",
+            "intent": "OTHER",
+            "confidence": 0.9886089563369751,
+            "margin": 0.9780623316764832
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9980952143669128,
+            "margin": 0.9967636466026306
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.990872859954834,
+            "margin": 0.9857519865036011
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9942861199378967,
+            "margin": 0.9888208508491516
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9974237680435181,
+            "margin": 0.995330274105072
+          },
+          {
+            "token": "?",
+            "intent": "OTHER",
+            "confidence": 0.976161539554596,
+            "margin": 0.9527656435966492
+          }
+        ]
+      },
+      {
+        "text": "Find the length between Vertex_907 and Omega_811",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Find",
+            "intent": "OTHER",
+            "confidence": 0.9987478256225586,
+            "margin": 0.9978057146072388
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9989326596260071,
+            "margin": 0.9982828497886658
+          },
+          {
+            "token": "length",
+            "intent": "OTHER",
+            "confidence": 0.9900525212287903,
+            "margin": 0.9811225533485413
+          },
+          {
+            "token": "between",
+            "intent": "OTHER",
+            "confidence": 0.9980952143669128,
+            "margin": 0.9967636466026306
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.990872859954834,
+            "margin": 0.9857519865036011
+          },
+          {
+            "token": "and",
+            "intent": "OTHER",
+            "confidence": 0.9987794756889343,
+            "margin": 0.9980289340019226
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9974485039710999,
+            "margin": 0.9951785206794739
+          }
+        ]
+      },
+      {
+        "text": "distance from Vertex_907 to Omega_811 now",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9973599314689636,
+            "margin": 0.9950288534164429
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.9992958307266235,
+            "margin": 0.9989053010940552
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9933465719223022,
+            "margin": 0.9889936447143555
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9968315958976746,
+            "margin": 0.9942282438278198
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.9930204749107361,
+            "margin": 0.9882674217224121
+          },
+          {
+            "token": "now",
+            "intent": "OTHER",
+            "confidence": 0.9793483018875122,
+            "margin": 0.9596661329269409
+          }
+        ]
+      },
+      {
+        "text": "Kindly measure the distance from Vertex_907 to Omega_811 in units",
+        "expected": [
+          "Vertex_907",
+          "Omega_811"
+        ],
+        "actual": [
+          [
+            "Vertex_907"
+          ],
+          [
+            "Omega_811"
+          ]
+        ],
+        "correct": true,
+        "predictions": [
+          {
+            "token": "Kindly",
+            "intent": "OTHER",
+            "confidence": 0.9985437393188477,
+            "margin": 0.9974496364593506
+          },
+          {
+            "token": "measure",
+            "intent": "OTHER",
+            "confidence": 0.9992488026618958,
+            "margin": 0.9987565279006958
+          },
+          {
+            "token": "the",
+            "intent": "OTHER",
+            "confidence": 0.9974110722541809,
+            "margin": 0.9955746531486511
+          },
+          {
+            "token": "distance",
+            "intent": "OTHER",
+            "confidence": 0.9951152801513672,
+            "margin": 0.9905183911323547
+          },
+          {
+            "token": "from",
+            "intent": "OTHER",
+            "confidence": 0.9985958933830261,
+            "margin": 0.99750816822052
+          },
+          {
+            "token": "Vertex_907",
+            "intent": "POINT_1",
+            "confidence": 0.9933465719223022,
+            "margin": 0.9889936447143555
+          },
+          {
+            "token": "to",
+            "intent": "OTHER",
+            "confidence": 0.9968315958976746,
+            "margin": 0.9942282438278198
+          },
+          {
+            "token": "Omega_811",
+            "intent": "POINT_2",
+            "confidence": 0.961672842502594,
+            "margin": 0.9320045113563538
+          },
+          {
+            "token": "in",
+            "intent": "OTHER",
+            "confidence": 0.9882166981697083,
+            "margin": 0.9783545136451721
+          },
+          {
+            "token": "units",
+            "intent": "OTHER",
+            "confidence": 0.576420783996582,
+            "margin": 0.15359815955162048
+          }
+        ]
+      }
+    ]
+  },
+  "full_engine_completion": false,
+  "note": "All 500 seeds train intent recognition. Slot templates 19\u201325 and their point labels are excluded from slot training. Recognizing an intent does not prove execution or follow-up handling."
+}

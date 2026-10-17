@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiSurfaceLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:34.356Z" hostname="INDIANSERVERS" time="0.161">
+  <properties/>
+  <testcase name="unseenCoefficientsAndIndependentRectangularBoundsProduceNewCoordinates" classname="com.indianservers.aiexplorer.RuhiSurfaceLanguageTest" time="0.013"/>
+  <testcase name="original25SurfaceRowsKeepUnchangedSlotsAndIndependentNativeMeshIdentities" classname="com.indianservers.aiexplorer.RuhiSurfaceLanguageTest" time="0.129"/>
+  <testcase name="polesBetweenFiniteSamplesNeverGetTrianglesAndRemovableHolesStayContinuous" classname="com.indianservers.aiexplorer.RuhiSurfaceLanguageTest" time="0.009"/>
+  <testcase name="missingParametersAskForValuesAndWireframeRemainsNative" classname="com.indianservers.aiexplorer.RuhiSurfaceLanguageTest" time="0.004"/>
+  <testcase name="pairedSurfacesAreAtomicPersistAndUndoRedoTogether" classname="com.indianservers.aiexplorer.RuhiSurfaceLanguageTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

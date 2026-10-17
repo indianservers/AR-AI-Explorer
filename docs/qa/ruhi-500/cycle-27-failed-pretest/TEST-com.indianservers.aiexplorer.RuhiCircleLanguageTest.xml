@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiCircleLanguageTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:26:50.286Z" hostname="INDIANSERVERS" time="0.261">
+  <properties/>
+  <testcase name="triangleCirclesAndAxisTangencyFollowTheirActualParentCoordinates" classname="com.indianservers.aiexplorer.RuhiCircleLanguageTest" time="0.01"/>
+  <testcase name="unseenPointNamesIncludingNumberWordsAndOriginAreEntityReferences" classname="com.indianservers.aiexplorer.RuhiCircleLanguageTest" time="0.004"/>
+  <testcase name="missingNamedCenterResumesFromCoordinatesAndOneUndoRemovesTheWholeAnswer" classname="com.indianservers.aiexplorer.RuhiCircleLanguageTest" time="0.002"/>
+  <testcase name="invalidDimensionsConflictingConstraintsAndDegenerateTrianglesNeverMutateTheScene" classname="com.indianservers.aiexplorer.RuhiCircleLanguageTest" time="0.006"/>
+  <testcase name="relatedCirclesKeepTheirRelationsAfterTheirParentRadiusChanges" classname="com.indianservers.aiexplorer.RuhiCircleLanguageTest" time="0.003"/>
+  <testcase name="everyCircleRowPreservesOriginalSlotsAndSurvivesUndoRedoAndSaveLoad" classname="com.indianservers.aiexplorer.RuhiCircleLanguageTest" time="0.235"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

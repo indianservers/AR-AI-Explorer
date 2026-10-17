@@ -56,6 +56,7 @@ enum class PointDependencyType {
     Midpoint, Centroid, Circumcenter, Incenter, Orthocenter, Intersection,
     PointOnObject, TangentPoint,
     Translate, Rotate, ReflectX, Dilate,
+    CircleRadius, CircleOffset, CircleAxisTangent, TriangleVertex,
 }
 
 data class PointDependency(
@@ -170,6 +171,7 @@ data class WorkspaceState(
     val solids: List<Solid> = emptyList(),
     val vectors3D: List<Vector3D> = emptyList(),
     val points3D: List<Point3D> = emptyList(),
+    val planes3D: List<Plane3DObject> = emptyList(),
     val graphRowMetadata: Map<String, GraphRowMetadataState> = emptyMap(),
     val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
     val graph2DView: Graph2DViewState = Graph2DViewState(),
@@ -624,20 +626,20 @@ data class ReplaceSolidsCommand(
 
 data class AddPoint3DCommand(val point: Point3D) : WorkspaceCommand {
     override val label = "Add 3D point"
-    override fun apply(state: WorkspaceState) = state.copy(points3D = state.points3D + point, modifiedAt = System.currentTimeMillis())
-    override fun undo(state: WorkspaceState) = state.copy(points3D = state.points3D.dropLast(1), modifiedAt = System.currentTimeMillis())
+    override fun apply(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D + point, modifiedAt = System.currentTimeMillis()))
+    override fun undo(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.dropLast(1), modifiedAt = System.currentTimeMillis()))
 }
 
-data class DeletePoint3DCommand(val index: Int, val point: Point3D) : WorkspaceCommand {
+data class DeletePoint3DCommand(val index: Int, val point: Point3D,val planesBefore:List<Plane3DObject>?=null) : WorkspaceCommand {
     override val label = "Delete 3D point"
-    override fun apply(state: WorkspaceState) = state.copy(points3D = state.points3D.filterIndexed { pointIndex, _ -> pointIndex != index }, modifiedAt = System.currentTimeMillis())
-    override fun undo(state: WorkspaceState) = state.copy(points3D = state.points3D.toMutableList().apply { add(index.coerceIn(0, size), point) }, modifiedAt = System.currentTimeMillis())
+    override fun apply(state: WorkspaceState):WorkspaceState {require(planesBefore!=null||state.planes3D.none{point.id in it.pointIds}){"Provide the plane snapshot when deleting a plane's defining point."};return GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.filterIndexed { pointIndex, _ -> pointIndex != index },planes3D=state.planes3D.filter{point.id !in it.pointIds},modifiedAt = System.currentTimeMillis()))}
+    override fun undo(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.toMutableList().apply { add(index.coerceIn(0, size), point) },planes3D=planesBefore ?: state.planes3D,modifiedAt = System.currentTimeMillis()))
 }
 
 data class TransformPoint3DCommand(val index: Int, val from: Point3D, val to: Point3D) : WorkspaceCommand {
     override val label = "Transform 3D point"
-    override fun apply(state: WorkspaceState) = state.copy(points3D = state.points3D.replace(index, to), modifiedAt = System.currentTimeMillis())
-    override fun undo(state: WorkspaceState) = state.copy(points3D = state.points3D.replace(index, from), modifiedAt = System.currentTimeMillis())
+    override fun apply(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.replace(index, to), modifiedAt = System.currentTimeMillis()))
+    override fun undo(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.replace(index, from), modifiedAt = System.currentTimeMillis()))
 }
 
 data class AddVector3DCommand(val vector: Vector3D) : WorkspaceCommand {
@@ -697,6 +699,12 @@ class CommandHistory(private val limit: Int = 80) {
     }
 
     fun undo(state: WorkspaceState): WorkspaceState = if (canUndo) undoMany(state, 1) else state
+    /** A scoped undo removes only the matched transaction; its undo must preserve later independent edits. */
+    fun undoMatching(state:WorkspaceState,predicate:(WorkspaceCommand)->Boolean):WorkspaceState? {
+        val index=undoStack.indexOfLast(predicate);if(index<0)return null
+        val command=undoStack[index];val next=command.undo(state)
+        undoStack.removeAt(index);redoStack.addLast(command);return next
+    }
     fun redo(state: WorkspaceState): WorkspaceState = if (canRedo) redoMany(state, 1) else state
     fun undoMany(state: WorkspaceState, count: Int): WorkspaceState {
         require(count in 1..undoStack.size)
@@ -749,7 +757,7 @@ object WorkspaceJson {
         appendLine("  \"graphRowMetadata\": [${state.graphRowMetadata.entries.joinToString { "{\"rowId\":\"${it.key.jsonEscaped()}\",\"collapsed\":${it.value.collapsed},\"folder\":\"${it.value.folder.jsonEscaped()}\",\"note\":\"${it.value.note.jsonEscaped()}\"}" }}],")
         appendLine("  \"graphSliderMetadata\": [${state.graphSliderMetadata.entries.joinToString { "{\"parameter\":\"${it.key.jsonEscaped()}\",\"speed\":${it.value.speed},\"mode\":\"${it.value.mode}\",\"direction\":${it.value.direction},\"value\":${it.value.value ?: "null"}}" }}],")
         appendLine("  \"graph2DView\": {\"centerX\":${state.graph2DView.centerX},\"centerY\":${state.graph2DView.centerY},\"zoom\":${state.graph2DView.zoom},\"xName\":\"${state.graph2DView.xName.jsonEscaped()}\",\"yName\":\"${state.graph2DView.yName.jsonEscaped()}\",\"xUnit\":\"${state.graph2DView.xUnit.jsonEscaped()}\",\"yUnit\":\"${state.graph2DView.yUnit.jsonEscaped()}\",\"numberFormat\":\"${state.graph2DView.numberFormat.jsonEscaped()}\",\"gridVisible\":${state.graph2DView.gridVisible},\"xLogarithmic\":${state.graph2DView.xLogarithmic},\"yLogarithmic\":${state.graph2DView.yLogarithmic}},")
-        appendLine("  \"solids\": [${state.solids.joinToString { "{\"type\":\"${it.type}\",\"width\":${it.width},\"height\":${it.height},\"depth\":${it.depth},\"radius\":${it.radius},\"topRadius\":${it.topRadius},\"position\":{\"x\":${it.position.x},\"y\":${it.position.y},\"z\":${it.position.z}},\"rotation\":{\"x\":${it.rotation.x},\"y\":${it.rotation.y},\"z\":${it.rotation.z}}}" }}],")
+        appendLine("  \"solids\": [${state.solids.joinToString { "{\"type\":\"${it.type}\",\"width\":${it.width},\"height\":${it.height},\"depth\":${it.depth},\"radius\":${it.radius},\"topRadius\":${it.topRadius},\"mirrorX\":${it.mirrorX},\"position\":{\"x\":${it.position.x},\"y\":${it.position.y},\"z\":${it.position.z}},\"rotation\":{\"x\":${it.rotation.x},\"y\":${it.rotation.y},\"z\":${it.rotation.z}}}" }}],")
         appendLine("  \"vectors3D\": [${state.vectors3D.joinToString { "{\"id\":\"${it.id.jsonEscaped()}\",\"name\":\"${it.name.jsonEscaped()}\",\"start\":{\"x\":${it.start.x},\"y\":${it.start.y},\"z\":${it.start.z}},\"end\":{\"x\":${it.end.x},\"y\":${it.end.y},\"z\":${it.end.z}}}" }}],")
         appendLine("  \"surfaceExpression\": \"${state.surfaceExpression.jsonEscaped()}\",")
         appendLine("  \"surfaceLayers\": [${state.surfaceLayers.joinToString { layer -> "{\"id\":\"${layer.id.jsonEscaped()}\",\"kind\":\"${layer.kind}\",\"expression\":\"${layer.expression.jsonEscaped()}\",\"expressionY\":\"${layer.expressionY.jsonEscaped()}\",\"expressionZ\":\"${layer.expressionZ.jsonEscaped()}\",\"visible\":${layer.visible},\"material\":\"${layer.material}\",\"domain\":{\"uMin\":${layer.domain.uMin},\"uMax\":${layer.domain.uMax},\"vMin\":${layer.domain.vMin},\"vMax\":${layer.domain.vMax}},\"quality\":\"${layer.quality}\",\"opacity\":${layer.opacity},\"paletteKey\":\"${layer.paletteKey.jsonEscaped()}\",\"colorIndex\":${layer.colorIndex},\"textureKey\":\"${layer.textureKey.jsonEscaped()}\",\"glow\":${layer.glow},\"renderMode\":\"${layer.renderMode}\"}" }}],")
@@ -862,5 +870,9 @@ fun resolvePointDependency(
             val center = Vec2(parameters.getOrElse(1) { 0.0 }, parameters.getOrElse(2) { 0.0 })
             center + (point - center) * factor
         }
+        PointDependencyType.TriangleVertex -> if(p.size>=2){val d=p[1]-p[0];p[0]+d*parameters.getOrElse(0){.5}+Vec2(-d.y,d.x)*parameters.getOrElse(1){kotlin.math.sqrt(3.0)/2}}else null
+        PointDependencyType.CircleRadius -> if(p.size>=3)p[2]+Vec2(p[0].distanceTo(p[1])*parameters.getOrElse(0){1.0},0.0)else null
+        PointDependencyType.CircleOffset -> if(p.size>=2)p[0]+Vec2(p[0].distanceTo(p[1])*parameters.getOrElse(0){1.0},0.0)else null
+        PointDependencyType.CircleAxisTangent -> p.firstOrNull()?.let{it+Vec2(if(parameters.firstOrNull()==1.0)kotlin.math.abs(it.x)else kotlin.math.abs(it.y),0.0)}
     }
 }

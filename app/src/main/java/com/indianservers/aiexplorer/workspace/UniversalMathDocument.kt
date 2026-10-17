@@ -177,7 +177,7 @@ data class UniversalMathDocument(
         return result
     }
 
-    companion object { const val CURRENT_SCHEMA = 3 }
+    companion object { const val CURRENT_SCHEMA = 4 }
 }
 
 data class UniversalDocumentValidation(
@@ -395,13 +395,15 @@ object UniversalWorkspaceBridge {
         }
         state.solids.forEachIndexed { index, solid -> objects += solidObject(index, solid) }
         state.vectors3D.forEach { vector -> objects += vectorObject(vector) }
+        state.points3D.forEach { point->objects+=UniversalMathObject("point3d-${point.id}",UniversalMathKind.Point3D,point.name,UniversalMathPayload.Coordinates(listOf(point.position.x,point.position.y,point.position.z)),sourceView="geometry3d/point",presentation=UniversalMathPresentation(visible=point.visible,locked=point.locked,styleKey=point.styleKey)) }
+        state.planes3D.forEach { plane->val refs=plane.pointIds.map{"point3d-$it"};objects+=UniversalMathObject("plane3d-${plane.id}",UniversalMathKind.Plane,plane.name,UniversalMathPayload.Properties(mapOf("type" to "Plane3D")),dependencies=refs.toSet(),sourceView="geometry3d/plane",definition=UniversalMathDefinition.Construction("PlaneThrough3DPoints",refs),presentation=UniversalMathPresentation(visible=plane.visible,locked=plane.locked,styleKey=plane.styleKey)) }
         state.surfaceLayers.forEachIndexed { index, layer ->
             objects += surfaceObject(layer.copy(id = if (index == 0) "surface-main" else layer.id), index)
         }
         val surfaceIds = state.surfaceLayers.indices.map { index -> if (index == 0) "surface-main" else state.surfaceLayers[index].id }
         objects += UniversalMathObject("spatial-scene", UniversalMathKind.SpatialScene, "AR spatial scene", UniversalMathPayload.Properties(mapOf(
             "anchorId" to state.spatialPlacement.anchorId, "scale" to state.spatialPlacement.pose.uniformScale.toString(), "metersPerUnit" to state.spatialPlacement.metersPerMathUnit.toString(),
-        )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + surfaceIds).toSet(), sourceView = "AR")
+        )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + state.points3D.map{"point3d-${it.id}"}+state.planes3D.map{"plane3d-${it.id}"}+surfaceIds).toSet(), sourceView = "AR")
         val generated = UniversalMathDocument(id = "math-${state.id}", revision = state.modifiedAt.coerceAtLeast(0), objects = objects.associateBy { it.id }, modifiedAt = state.modifiedAt)
         val stored = state.universalMathDocument ?: return generated
         // Stored authoritative objects win over projections rebuilt from legacy WorkspaceState fields.
@@ -451,6 +453,7 @@ object UniversalWorkspaceBridge {
                 topRadius = properties["topRadius"]?.toDoubleOrNull() ?: solid.topRadius,
                 position = properties["position"]?.toVec3OrNull() ?: solid.position,
                 rotation = properties["rotation"]?.toVec3OrNull() ?: solid.rotation,
+                mirrorX = properties["mirrorX"]?.toBooleanStrictOrNull() ?: solid.mirrorX,
             )
         }
         val vectors = state.vectors3D.map { vector ->
@@ -465,7 +468,13 @@ object UniversalWorkspaceBridge {
                 shape.copy(visible = presentation.visible, locked = presentation.locked, styleKey = presentation.styleKey)
             } ?: shape
         }
-        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, surfaceExpression = surface, surfaceLayers = surfaceLayers, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
+        val nativePoints=document.objects.values.filter{it.sourceView=="geometry3d/point"&&it.kind==UniversalMathKind.Point3D}
+        val pointSource=state.points3D+nativePoints.filter{obj->state.points3D.none{"point3d-${it.id}"==obj.id}}.mapNotNull{obj->val p=(obj.payload as? UniversalMathPayload.Coordinates)?.values ?: return@mapNotNull null;if(p.size!=3)return@mapNotNull null;Point3D(obj.id.removePrefix("point3d-"),obj.name,Vec3(p[0],p[1],p[2]))}
+        val points3D=pointSource.mapNotNull{point->val obj=document.objects["point3d-${point.id}"] ?: return@mapNotNull null;val p=(obj.payload as? UniversalMathPayload.Coordinates)?.values ?: return@mapNotNull null;if(p.size!=3)return@mapNotNull null;point.copy(name=obj.name,position=Vec3(p[0],p[1],p[2]),visible=obj.presentation.visible,locked=obj.presentation.locked,styleKey=obj.presentation.styleKey)}
+        val nativePlanes=document.objects.values.filter{it.sourceView=="geometry3d/plane"&&it.kind==UniversalMathKind.Plane}
+        val planeSource=state.planes3D+nativePlanes.filter{obj->state.planes3D.none{"plane3d-${it.id}"==obj.id}}.mapNotNull{obj->val d=obj.definition as? UniversalMathDefinition.Construction ?: return@mapNotNull null;if(d.command!="PlaneThrough3DPoints"||d.arguments.size!=3)return@mapNotNull null;Plane3DObject(obj.id.removePrefix("plane3d-"),obj.name,d.arguments.map{it.removePrefix("point3d-")})}
+        val planes3D=planeSource.mapNotNull{plane->document.objects["plane3d-${plane.id}"]?.let{obj->plane.copy(name=obj.name,visible=obj.presentation.visible,locked=obj.presentation.locked,styleKey=obj.presentation.styleKey)}}
+        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, points3D=points3D,planes3D=planes3D,surfaceExpression = surface, surfaceLayers = surfaceLayers, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
     }
 
     private fun surfaceObject(layer: SpatialSurfaceLayer, index: Int): UniversalMathObject {
@@ -511,7 +520,7 @@ object UniversalWorkspaceBridge {
     }
 
     private fun solidObject(index: Int, solid: Solid) = UniversalMathObject("solid-$index", UniversalMathKind.Solid, solid.type.name,
-        UniversalMathPayload.Properties(mapOf("type" to solid.type.name, "width" to solid.width.toString(), "height" to solid.height.toString(), "depth" to solid.depth.toString(), "radius" to solid.radius.toString(), "topRadius" to solid.topRadius.toString(), "position" to solid.position.csv(), "rotation" to solid.rotation.csv())), sourceView = "3D geometry")
+        UniversalMathPayload.Properties(mapOf("type" to solid.type.name, "width" to solid.width.toString(), "height" to solid.height.toString(), "depth" to solid.depth.toString(), "radius" to solid.radius.toString(), "topRadius" to solid.topRadius.toString(), "position" to solid.position.csv(), "rotation" to solid.rotation.csv(), "mirrorX" to solid.mirrorX.toString())), sourceView = "3D geometry")
 
     private fun vectorObject(vector: Vector3D) = UniversalMathObject("vector-${vector.id}", UniversalMathKind.Vector, vector.name,
         UniversalMathPayload.Coordinates(listOf(vector.start.x, vector.start.y, vector.start.z, vector.end.x, vector.end.y, vector.end.z), listOf("x1", "y1", "z1", "x2", "y2", "z2")), sourceView = "3D/vector")
@@ -556,6 +565,10 @@ object UniversalWorkspaceBridge {
             PointDependencyType.Rotate -> "Rotate(${names.joinToString()},${dependency.parameters.joinToString()})"
             PointDependencyType.ReflectX -> "Reflect(${names.joinToString()},xAxis)"
             PointDependencyType.Dilate -> "Dilate(${names.joinToString()},${dependency.parameters.joinToString()})"
+            PointDependencyType.CircleRadius -> "CircleRadius(${names.joinToString()},${dependency.parameters.joinToString()})"
+            PointDependencyType.CircleOffset -> "CircleOffset(${names.joinToString()},${dependency.parameters.joinToString()})"
+            PointDependencyType.CircleAxisTangent -> "CircleAxisTangent(${names.joinToString()},${dependency.parameters.joinToString()})"
+            PointDependencyType.TriangleVertex -> "TriangleVertex(${names.joinToString()},${dependency.parameters.joinToString()})"
         }
     }
 
@@ -620,8 +633,8 @@ object UniversalMathDocumentCodec {
 
     private fun encodeObject(value: UniversalMathObject): String = listOf(
         pack(value.id), value.kind.name, pack(value.name), pack(encodePayload(value.payload)),
-        pack(value.dependencies.sorted().joinToString(",")), pack(encodeAssumptions(value.assumptions)),
-        value.objectRevision.toString(), pack(value.sourceView), "3",
+        pack(value.dependencies.sorted().joinToString(",",transform=::pack)), pack(encodeAssumptions(value.assumptions)),
+        value.objectRevision.toString(), pack(value.sourceView), "4",
         pack(encodeDefinition(value.definition)), pack(encodeValueState(value.valueState)), pack(encodePresentation(value.presentation)),
     ).joinToString(".")
 
@@ -629,7 +642,7 @@ object UniversalMathDocumentCodec {
         val fields = record.split('.')
         require(fields.size >= 8) { "record has ${fields.size} fields" }
         val id = unpack(fields[0]); val kind = UniversalMathKind.valueOf(fields[1]); val name = unpack(fields[2])
-        val payload = decodePayload(unpack(fields[3])); val dependencies = unpack(fields[4]).split(',').filter(String::isNotBlank).toSet()
+        val payload = decodePayload(unpack(fields[3])); val dependencies = unpack(fields[4]).split(',').filter(String::isNotBlank).map{if((fields.getOrNull(8)?.toIntOrNull() ?: 1)>=4)unpack(it)else it}.toSet()
         val assumptions = decodeAssumptions(unpack(fields[5])); val revision = fields[6].toLong(); val sourceView = unpack(fields[7])
         val definition = fields.getOrNull(9)?.let(::unpack)?.let(::decodeDefinition)
         val valueState = fields.getOrNull(10)?.let(::unpack)?.let(::decodeValueState)
@@ -645,7 +658,7 @@ object UniversalMathDocumentCodec {
     private fun encodeDefinition(definition: UniversalMathDefinition): String = when (definition) {
         is UniversalMathDefinition.Symbolic -> "S|${pack(definition.source)}"
         is UniversalMathDefinition.Coordinates -> "C|${definition.dimensions}|${pack(definition.construction.orEmpty())}"
-        is UniversalMathDefinition.Construction -> "G|${pack(definition.command)}|${pack(definition.arguments.joinToString(","))}"
+        is UniversalMathDefinition.Construction -> "G4|${pack(definition.command)}|${pack(definition.arguments.joinToString(",",transform=::pack))}"
         is UniversalMathDefinition.Properties -> "P|${pack(definition.type)}"
     }
 
@@ -655,6 +668,7 @@ object UniversalMathDocumentCodec {
             "S" -> UniversalMathDefinition.Symbolic(unpack(parts.getOrElse(1) { "" }))
             "C" -> UniversalMathDefinition.Coordinates(parts.getOrElse(1) { "0" }.toInt(), unpack(parts.getOrElse(2) { "" }).takeIf(String::isNotBlank))
             "G" -> UniversalMathDefinition.Construction(unpack(parts.getOrElse(1) { "" }), unpack(parts.getOrElse(2) { "" }).split(',').filter(String::isNotBlank))
+            "G4" -> UniversalMathDefinition.Construction(unpack(parts.getOrElse(1) { "" }), unpack(parts.getOrElse(2) { "" }).split(',').filter(String::isNotBlank).map(::unpack))
             "P" -> UniversalMathDefinition.Properties(unpack(parts.getOrElse(1) { "" }))
             else -> error("unknown definition type")
         }

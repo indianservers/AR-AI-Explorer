@@ -13,6 +13,7 @@ data class GraphWorkspaceCommand(val from: WorkspaceState, val to: WorkspaceStat
             target.labSessionValues[key]?.let { values[key] = it } ?: values.remove(key)
         }
         val merged = state.copy(
+            name = if(from.name!=to.name)target.name else state.name,
             points = if(from.points!=to.points) target.points else state.points,
             shapes = if(from.shapes!=to.shapes) target.shapes else state.shapes,
             pointDependencies = if(from.pointDependencies!=to.pointDependencies) target.pointDependencies else state.pointDependencies,
@@ -21,6 +22,7 @@ data class GraphWorkspaceCommand(val from: WorkspaceState, val to: WorkspaceStat
             solids = if(from.solids!=to.solids) target.solids else state.solids,
             vectors3D=if(from.vectors3D!=to.vectors3D) target.vectors3D else state.vectors3D,
             points3D=if(from.points3D!=to.points3D) target.points3D else state.points3D,
+            planes3D=if(from.planes3D!=to.planes3D) target.planes3D else state.planes3D,
             spatialPlacement=if(from.spatialPlacement!=to.spatialPlacement) target.spatialPlacement else state.spatialPlacement,
             graphSliderMetadata=if(from.graphSliderMetadata!=to.graphSliderMetadata) target.graphSliderMetadata else state.graphSliderMetadata,
             functions = if (from.functions != to.functions) target.functions else state.functions,

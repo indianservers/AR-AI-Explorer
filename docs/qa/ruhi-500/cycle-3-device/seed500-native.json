@@ -1,0 +1,4008 @@
+{
+  "rows": 500,
+  "correct_intents": 500,
+  "distance_behaviors_verified": 150,
+  "full_behavior_completion": false,
+  "results": [
+    {
+      "id": 1,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 2,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 3,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 4,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 5,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 6,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 7,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 8,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 9,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 10,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 11,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 12,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 13,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 14,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 15,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 16,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 17,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 18,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 19,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 20,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 21,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 22,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 23,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 24,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 25,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance C to D = 5.0990195135927845 units. √(1.0² + 5.0²)."
+    },
+    {
+      "id": 26,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 27,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 28,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 29,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 30,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 31,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 32,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 33,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 34,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 35,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 36,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 37,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 38,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 39,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 40,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 41,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 42,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 43,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 44,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 45,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 46,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 47,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 48,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 49,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 50,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A to B = 1.4142135623730951 units. √(1.0² + 1.0²)."
+    },
+    {
+      "id": 51,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 52,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 53,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 54,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 55,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 56,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 57,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 58,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 59,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 60,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 61,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 62,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 63,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 64,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 65,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 66,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 67,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 68,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 69,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 70,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 71,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 72,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 73,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 74,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 75,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance D to C = 5.0990195135927845 units. √(-1.0² + -5.0²)."
+    },
+    {
+      "id": 76,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 77,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 78,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 79,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 80,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 81,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 82,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 83,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 84,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 85,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 86,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 87,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 88,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 89,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 90,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 91,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 92,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 93,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 94,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 95,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 96,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 97,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 98,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 99,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 100,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance P to Q = 3.1622776601683795 units. √(1.0² + -3.0²)."
+    },
+    {
+      "id": 101,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 102,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 103,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 104,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 105,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 106,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 107,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 108,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 109,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 110,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 111,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 112,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 113,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 114,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 115,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 116,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 117,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 118,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 119,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 120,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 121,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 122,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 123,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 124,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 125,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance A1 to B2 = 2.23606797749979 units. √(1.0² + 2.0²)."
+    },
+    {
+      "id": 126,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 127,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 128,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 129,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 130,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 131,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 132,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 133,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 134,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 135,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 136,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 137,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 138,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 139,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 140,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 141,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 142,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 143,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 144,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 145,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 146,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 147,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 148,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 149,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 150,
+      "expected_intent": "MEASURE_DISTANCE",
+      "actual_intent": "MEASURE_DISTANCE",
+      "status": "APPLIED",
+      "behavior_verified": true,
+      "message": "Distance M to N = 8.06225774829855 units. √(1.0² + 8.0²)."
+    },
+    {
+      "id": 151,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Midpoint = (0.5, 0.5); it remains dependent on both endpoints."
+    },
+    {
+      "id": 152,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 153,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 154,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 155,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 156,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 157,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 158,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 159,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 160,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 161,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 162,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 163,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 164,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 165,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 166,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 167,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 168,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 169,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 170,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 171,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 172,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 173,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 174,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 175,
+      "expected_intent": "FIND_MIDPOINT",
+      "actual_intent": "FIND_MIDPOINT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 176,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 177,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 178,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 179,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 180,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 181,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 182,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 183,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 184,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 185,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 186,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 187,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 188,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 189,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 190,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 191,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 192,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 193,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 194,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 195,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 196,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 197,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 198,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 199,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 200,
+      "expected_intent": "CALCULATE_SLOPE",
+      "actual_intent": "CALCULATE_SLOPE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 201,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 202,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 203,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 204,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 205,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 206,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 207,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 208,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 209,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 210,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 211,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 212,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 213,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 214,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 215,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 216,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 217,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 218,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 219,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 220,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 221,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 222,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 223,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 224,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 225,
+      "expected_intent": "MEASURE_ANGLE",
+      "actual_intent": "MEASURE_ANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 226,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Created circle with the specified dimensions. Measurements use the same control points as touch editing."
+    },
+    {
+      "id": 227,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 228,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 229,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 230,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 231,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 232,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 233,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 234,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 235,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 236,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 237,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 238,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 239,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Specify 2D Graph or 3D Graph for this equation; the engine proposal was not confident enough to switch studios."
+    },
+    {
+      "id": 240,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 241,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 242,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 243,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 244,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 245,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 246,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 247,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 248,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 249,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 250,
+      "expected_intent": "CREATE_CIRCLE",
+      "actual_intent": "CREATE_CIRCLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 251,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Created triangle with the specified dimensions. Measurements use the same control points as touch editing."
+    },
+    {
+      "id": 252,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 253,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 254,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 255,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 256,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 257,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 258,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 259,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 260,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Provide the target, a numeric value and the required axis or direction."
+    },
+    {
+      "id": 261,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 262,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 263,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 264,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 265,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Provide the target, a numeric value and the required axis or direction."
+    },
+    {
+      "id": 266,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 267,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 268,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 269,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 270,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 271,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Provide the target, a numeric value and the required axis or direction."
+    },
+    {
+      "id": 272,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 273,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 274,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 275,
+      "expected_intent": "CREATE_TRIANGLE",
+      "actual_intent": "CREATE_TRIANGLE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 276,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 277,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 278,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 279,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 280,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 281,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 282,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 283,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 284,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 285,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 286,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 287,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 288,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 289,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 290,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 291,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 292,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 293,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 294,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 295,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 296,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 297,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 298,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "Missing closing parenthesis"
+    },
+    {
+      "id": 299,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 300,
+      "expected_intent": "PLOT_FUNCTION_2D",
+      "actual_intent": "PLOT_FUNCTION_2D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "Missing closing parenthesis"
+    },
+    {
+      "id": 301,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 302,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 303,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 304,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 305,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 306,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 307,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 308,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 309,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 310,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 311,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 312,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 313,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 314,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 315,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 316,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 317,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 318,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 319,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 320,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 321,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 322,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 323,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 324,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 325,
+      "expected_intent": "FIND_INTERSECTION",
+      "actual_intent": "FIND_INTERSECTION",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 326,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 327,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 328,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 329,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "Missing closing parenthesis"
+    },
+    {
+      "id": 330,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 331,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 332,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 333,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 334,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "Missing closing parenthesis"
+    },
+    {
+      "id": 335,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 336,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 337,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 338,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 339,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 340,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 341,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 2D Graph: 1 action(s)."
+    },
+    {
+      "id": 342,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 343,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 344,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 345,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 346,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "Missing closing parenthesis"
+    },
+    {
+      "id": 347,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 348,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 349,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 350,
+      "expected_intent": "DIFFERENTIATE",
+      "actual_intent": "DIFFERENTIATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 351,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 352,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 353,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 354,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 355,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 356,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 357,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 358,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 359,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 360,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 361,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 362,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 363,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 364,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 365,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 366,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 367,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 368,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 369,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 370,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 371,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 372,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Which object do you mean?"
+    },
+    {
+      "id": 373,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 374,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 375,
+      "expected_intent": "INTEGRATE",
+      "actual_intent": "INTEGRATE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 2D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 376,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 377,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable surface in the current domain."
+    },
+    {
+      "id": 378,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 379,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 380,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 381,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 382,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 383,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 384,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 385,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 386,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 387,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable surface in the current domain."
+    },
+    {
+      "id": 388,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable surface in the current domain."
+    },
+    {
+      "id": 389,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 390,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 3D Graph: 1 action(s)."
+    },
+    {
+      "id": 391,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 392,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "Expected number, variable, or function"
+    },
+    {
+      "id": 393,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 394,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 395,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 396,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable surface in the current domain."
+    },
+    {
+      "id": 397,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 398,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable surface in the current domain."
+    },
+    {
+      "id": 399,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 400,
+      "expected_intent": "PLOT_SURFACE_3D",
+      "actual_intent": "PLOT_SURFACE_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "This instruction is not supported in 3D graph. Ruhi can plot equations, add supported solid surfaces, delete\/select\/duplicate graph layers, set visibility, opacity, wireframe or material, clear, reset, Undo and Redo. Numeric movement, scaling, rotation and grouping are supported. Geometric constructions and animation are not connected to Graph workspaces."
+    },
+    {
+      "id": 401,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "V = 4πr^3\/3; A = 4πr^2; C = 2πr; dimensions 6.0, 6.0, 6.0, r=3.0; Volume = 113.09733552923254 cubic units"
+    },
+    {
+      "id": 402,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Select the object to measure or name its supported shape type."
+    },
+    {
+      "id": 403,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "24.0 square units"
+    },
+    {
+      "id": 404,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 405,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Select the object to measure or name its supported shape type."
+    },
+    {
+      "id": 406,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 407,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 408,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Select the object to measure or name its supported shape type."
+    },
+    {
+      "id": 409,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 410,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "3.4641016151377544 units"
+    },
+    {
+      "id": 411,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Select the solid first."
+    },
+    {
+      "id": 412,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Specify a positive size or scale factor."
+    },
+    {
+      "id": 413,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 414,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 415,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "There are no matching solids. Create one first."
+    },
+    {
+      "id": 416,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "There are no matching solids. Create one first."
+    },
+    {
+      "id": 417,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 418,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "INVALID",
+      "behavior_verified": false,
+      "message": "This equation produces no drawable curve in the current domain."
+    },
+    {
+      "id": 419,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "125.66370614359172 square units"
+    },
+    {
+      "id": 420,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 421,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "4.0 units"
+    },
+    {
+      "id": 422,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "12.566370614359172 square units"
+    },
+    {
+      "id": 423,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 424,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Cube: 12 vertices. Curved surfaces are counted separately from flat faces in school conventions."
+    },
+    {
+      "id": 425,
+      "expected_intent": "MEASURE_SOLID",
+      "actual_intent": "MEASURE_SOLID",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 426,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 1 solid. Cube center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 427,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 428,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 1 solid. Sphere center Vec3(x=0.0, y=0.0, z=3.0)."
+    },
+    {
+      "id": 429,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 1 solid. Cylinder center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 430,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated the selected cube using validated dimensions and coordinates."
+    },
+    {
+      "id": 431,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 1 solid. Cone center Vec3(x=0.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 432,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated 1 solid. Cube center Vec3(x=-5.0, y=0.0, z=0.0)."
+    },
+    {
+      "id": 433,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 434,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 435,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 436,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 437,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 438,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 439,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 440,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "There are no matching solids. Create one first."
+    },
+    {
+      "id": 441,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 442,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 443,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 444,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 445,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 446,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 447,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 448,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 449,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 450,
+      "expected_intent": "TRANSFORM_3D",
+      "actual_intent": "TRANSFORM_3D",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "I understand this 3D geometry request, but its construction or control is not connected to the native engine yet. No objects were changed."
+    },
+    {
+      "id": 451,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 452,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 453,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 454,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 455,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 456,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 457,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 458,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 459,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 460,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 461,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 462,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 463,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 464,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 465,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 466,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 467,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 468,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 469,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 470,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 471,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 472,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Provide the target, a numeric value and the required axis or direction."
+    },
+    {
+      "id": 473,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 474,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 475,
+      "expected_intent": "EDIT_SCENE",
+      "actual_intent": "EDIT_SCENE",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 476,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "What would you like to graph?"
+    },
+    {
+      "id": 477,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Updated the selected shape; shared points and dependent measurements recompute in the geometry engine."
+    },
+    {
+      "id": 478,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Provide the target, a numeric value and the required axis or direction."
+    },
+    {
+      "id": 479,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 480,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 481,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 482,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 483,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 484,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 485,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "APPLIED",
+      "behavior_verified": false,
+      "message": "Cancelled the pending request. The scene is unchanged."
+    },
+    {
+      "id": 486,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 487,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 488,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 489,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 490,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 491,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 492,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 493,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "Give two functions separated by ‘and’."
+    },
+    {
+      "id": 494,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 495,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 496,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 497,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 498,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "CLARIFICATION",
+      "behavior_verified": false,
+      "message": "No scene edit was made. State the action you want to perform."
+    },
+    {
+      "id": 499,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    },
+    {
+      "id": 500,
+      "expected_intent": "DIALOGUE_CONTEXT",
+      "actual_intent": "DIALOGUE_CONTEXT",
+      "status": "UNSUPPORTED",
+      "behavior_verified": false,
+      "message": "That operation is not connected to this studio adapter yet. Existing tools remain available."
+    }
+  ]
+}

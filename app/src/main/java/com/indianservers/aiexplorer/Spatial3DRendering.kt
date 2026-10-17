@@ -554,6 +554,16 @@ internal fun Projected3DCanvas(
     onResetCamera: () -> Unit,
     onEmptyTap: () -> Unit,
     onGestureModeChange: (GestureMode) -> Unit,
+    ruhiAngles: List<com.indianservers.aiexplorer.assistant.workspace.RuhiSpatialAngleLanguage.Drawing> = emptyList(),
+    selectedVectorIds: Set<String> = emptySet(),
+    planePatches:List<com.indianservers.aiexplorer.workspace.NativePlaneGeometry.Plane> = emptyList(),
+    selectedPlaneIds:Set<String> = emptySet(),
+    ruhiMeasurements: com.indianservers.aiexplorer.assistant.workspace.RuhiSolidMeasureLanguage.Drawing? = null,
+    measurementUnits: com.indianservers.aiexplorer.workspace.GeometryMeasurementUnits.Context = com.indianservers.aiexplorer.workspace.GeometryMeasurementUnits.Context(),
+    solidOpacities: Map<Int,Float> = emptyMap(),
+    wireframeSolidIndices: Set<Int> = emptySet(),
+    solidExplosions: Map<Int,Double> = emptyMap(),
+    showPointLabels:Boolean = true,
 ) {
     var lastTapAt by remember { mutableStateOf(0L) }
     var lastSubPickAt by remember { mutableStateOf(0L) }
@@ -866,28 +876,56 @@ internal fun Projected3DCanvas(
     ) {
         val center = Offset(size.width * .52f, size.height * .45f) + cameraPan
         if (showGrid) drawPerspectiveGrid(center, gridSize, visualEffects, axisStyle)
+        val planeLabelBounds=mutableListOf<androidx.compose.ui.geometry.Rect>()
+        planePatches.forEachIndexed { index,plane->
+            val color=if(plane.id in selectedPlaneIds)WorkspaceVisualStyles.ReferenceYellow else WorkspaceVisualStyles.spectralColor(index+2)
+            fun screen(v:Vec3)=project(rotate(v,rx,ry,rz),center,74f*zoom,perspective)
+            val path=Path();plane.patch.forEachIndexed{i,v->val p=screen(v);if(i==0)path.moveTo(p.x,p.y)else path.lineTo(p.x,p.y)};path.close()
+            drawPath(path,color.copy(alpha=.13f));drawPath(path,color.copy(alpha=.7f),style=Stroke(if(plane.id in selectedPlaneIds)3f else 1.5f))
+            val anchor=screen(plane.patch.reduce{a,b->a+b}*.25)
+            if(anchor.x in 0f..size.width&&anchor.y in 0f..size.height) {
+                val x=(anchor.x-190f).coerceIn(4f,(size.width-195f).coerceAtLeast(4f));val y=(anchor.y-60f-index*48f).coerceIn(4f,(size.height-46f).coerceAtLeast(4f))
+                val candidates=sequenceOf(y)+(1..24).asSequence().flatMap{sequenceOf(y-it*52f,y+it*52f)}
+                val labelY=candidates.firstOrNull{candidate->candidate>=4f&&candidate+42f<=size.height-4f&&planeLabelBounds.none{it.overlaps(androidx.compose.ui.geometry.Rect(Offset(x,candidate),Size(190f,42f)))}}
+                if(labelY!=null){val position=Offset(x,labelY);planeLabelBounds+=androidx.compose.ui.geometry.Rect(position,Size(190f,42f));drawGraphLabel(plane.name,position,color)}
+            }
+        }
         points3D.forEachIndexed { index, point ->
             if (!point.visible) return@forEachIndexed
             val pointColor = if (index == selectedPoint3DIndex) WorkspaceVisualStyles.ReferenceYellow else WorkspaceVisualStyles.spectralColor(index + vectors.size)
-            drawPoint3D(point, rx, ry, rz, center, 74f * zoom, pointColor, index == selectedPoint3DIndex, perspective)
+            drawPoint3D(point, rx, ry, rz, center, 74f * zoom, pointColor, index == selectedPoint3DIndex, perspective,showPointLabels)
         }
         vectors.forEachIndexed { index, vector ->
-            val vectorColor = if (index == selectedVectorIndex) {
+            val vectorColor = if (index == selectedVectorIndex||vector.id in selectedVectorIds) {
                 WorkspaceVisualStyles.ReferenceYellow
             } else {
                 WorkspaceVisualStyles.spectralColor(index)
             }
-            drawVector3D(vector, rx, ry, rz, center, 74f * zoom, vectorColor, index == selectedVectorIndex, perspective)
+            drawVector3D(vector, rx, ry, rz, center, 74f * zoom, vectorColor, index == selectedVectorIndex||vector.id in selectedVectorIds, perspective,index==selectedVectorIndex)
+        }
+        ruhiAngles.forEach { angle ->
+            fun screen(v:Vec3)=project(rotate(v,rx,ry,rz),center,74f*zoom,perspective)
+            val color=WorkspaceVisualStyles.ReferenceYellow
+            val anchor=screen(angle.center)
+            drawLine(color.copy(.5f),anchor,screen(angle.first),2f)
+            drawLine(color.copy(.5f),anchor,screen(angle.second),2f)
+            val path=Path();angle.arc.forEachIndexed{i,v->val p=screen(v);if(i==0)path.moveTo(p.x,p.y)else path.lineTo(p.x,p.y)}
+            drawPath(path,color,style=Stroke(3f))
+            val label=screen(angle.arc[angle.arc.size/2])+Offset(18f,24f)
+            if(anchor.x in 0f..size.width&&anchor.y in 0f..size.height)drawGraphLabel("%.4g°".format(java.util.Locale.US,angle.degrees),Offset(label.x.coerceIn(4f,(size.width-195f).coerceAtLeast(4f)),label.y.coerceIn(4f,(size.height-46f).coerceAtLeast(4f))),color)
         }
         solids.forEachIndexed { index, solid ->
             if (index !in visibleSolidIndices) return@forEachIndexed
             val appearance = solidAppearances[index] ?: defaultAppearance.copy(colorIndex = index)
             val color = if (index == stylusHoverSolid) WorkspaceVisualStyles.ReferenceYellow else appearance.color
+            val opacity=(solidOpacities[index] ?: 1f).coerceIn(0f,1f)
+            if(opacity<1f)drawContext.canvas.saveLayer(androidx.compose.ui.geometry.Rect(Offset.Zero,size),androidx.compose.ui.graphics.Paint().apply{alpha=opacity})
             drawSolidProjection(
-                solid, solid.position, rx, ry, rz, center, 74f * zoom, color, visualMode, index == selectedIndex,
+                solid, solid.position, rx, ry, rz, center, 74f * zoom, color, if(index in wireframeSolidIndices)SpatialVisualMode.Wireframe else visualMode, index == selectedIndex,
                 perspective, subSelection?.takeIf { it.solidIndex == index }, sectionEnabled && index == selectedIndex,
-                sectionPlane, clipSection && index == selectedIndex, appearance,
+                sectionPlane, clipSection && index == selectedIndex, appearance,solidExplosions[index] ?: 0.0,
             )
+            if(opacity<1f)drawContext.canvas.restore()
             if (index == stylusHoverSolid) {
                 val hover = project(rotate(solid.position, rx, ry, rz), center, 74f * zoom, perspective)
                 drawGraphLabel("Stylus preview · ${solid.type.name}", hover + Offset(14f, -22f), Amber)
@@ -900,6 +938,11 @@ internal fun Projected3DCanvas(
                     drawCircle(Color.White, 9f, handle.end)
                     drawGraphLabel("drag plane", handle.end + Offset(10f, -10f), Amber)
                 }
+            }
+        }
+        ruhiMeasurements?.let { drawing ->
+            drawRuhiSolidMeasurements(drawing, solids, visibleSolidIndices, measurementUnits) { world ->
+                project(rotate(world,rx,ry,rz),center,74f*zoom,perspective)
             }
         }
     }
@@ -1475,6 +1518,8 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(
     settings: GraphAxisSettings = GraphAxisSettings(),
     effects: AppVisualEffects = AppVisualEffects.Standard,
     axisStyle: WorkspaceAxisStyle = WorkspaceVisualStyles.Spectral.axes,
+    axesVisible:Boolean = true,
+    contrast:Float = 1f,
 ) {
     if (!scale.isFinite() || scale <= 0f) return
     val minX = (-origin.x / scale).toDouble()
@@ -1485,20 +1530,21 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGrid(
     val yTicks = GraphViewport.ticks(minY, maxY)
     xTicks.forEach { value ->
         val x = origin.x + value.toFloat() * scale
-        if (settings.gridVisible || value == 0.0) {
+        if ((value!=0.0&&settings.gridVisible)||(value==0.0&&axesVisible)) {
             if (value == 0.0 && effects.enhanced) drawLine(axisStyle.y.copy(alpha = effects.gridGlowAlpha), Offset(x, 0f), Offset(x, size.height), 7f)
-            val gridColor = if (value == 0.0) axisStyle.y.copy(.9f) else axisStyle.grid
+            val gridColor = if (value == 0.0) axisStyle.y.copy(.9f) else axisStyle.grid.copy(alpha=(axisStyle.grid.alpha*contrast).coerceIn(0f,1f))
             drawLine(gridColor, Offset(x, 0f), Offset(x, size.height), if (value == 0.0) 2f else 1f)
         }
     }
     yTicks.forEach { value ->
         val y = origin.y - value.toFloat() * scale
-        if (settings.gridVisible || value == 0.0) {
+        if ((value!=0.0&&settings.gridVisible)||(value==0.0&&axesVisible)) {
             if (value == 0.0 && effects.enhanced) drawLine(axisStyle.x.copy(alpha = effects.gridGlowAlpha), Offset(0f, y), Offset(size.width, y), 7f)
-            val gridColor = if (value == 0.0) axisStyle.x.copy(.9f) else axisStyle.grid
+            val gridColor = if (value == 0.0) axisStyle.x.copy(.9f) else axisStyle.grid.copy(alpha=(axisStyle.grid.alpha*contrast).coerceIn(0f,1f))
             drawLine(gridColor, Offset(0f, y), Offset(size.width, y), if (value == 0.0) 2f else 1f)
         }
     }
+    if(!axesVisible)return
     val labelAxisY = origin.y.coerceIn(24f, size.height - 8f)
     val labelAxisX = origin.x.coerceIn(8f, size.width - 38f)
     drawContext.canvas.nativeCanvas.apply {
@@ -1644,6 +1690,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawVector3D(
     color: Color,
     selected: Boolean,
     perspective: Boolean,
+    showComponents:Boolean=true,
 ) {
     val start = project(rotate(vector.start, rx, ry, rz), center, scale, perspective)
     val end = project(rotate(vector.end, rx, ry, rz), center, scale, perspective)
@@ -1672,7 +1719,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawVector3D(
     drawCircle(color, 7f, start)
     drawCircle(Color.White, 3f, start)
     drawGraphLabel("${vector.name} |v|=${trim(vector.magnitude)}", end + Offset(16f, -54f), color)
-    if (selected) {
+    if (selected&&showComponents) {
         drawGraphLabel("<${trim(vector.components.x)}, ${trim(vector.components.y)}, ${trim(vector.components.z)}>", start + Offset(14f, 16f), color)
     }
 }
@@ -1687,6 +1734,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPoint3D(
     color: Color,
     selected: Boolean,
     perspective: Boolean,
+    showLabel:Boolean = true,
 ) {
     val screen = project(rotate(point.position, rx, ry, rz), center, scale, perspective)
     if (selected) {
@@ -1697,7 +1745,7 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPoint3D(
     drawCircle(color.copy(.22f), if (selected) 18f else 12f, screen)
     drawCircle(color, if (selected) 8f else 6f, screen)
     drawCircle(Color.White.copy(.90f), if (selected) 3f else 2f, screen)
-    drawGraphLabel(
+    if(showLabel)drawGraphLabel(
         "${point.name} (${trim(point.position.x)}, ${trim(point.position.y)}, ${trim(point.position.z)})",
         screen + Offset(12f, -34f),
         color,
@@ -1724,6 +1772,7 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjectio
     sectionPlane: EditableSectionPlane,
     clipSection: Boolean,
     appearance: WorkspaceAppearance = WorkspaceAppearance(),
+    explosion:Double = 0.0,
 ) {
     fun p(v: Vec3): Offset {
         return project(rotate(solidLocalToWorld(solid.copy(position = offset), v), rx, ry, rz), center, scale, perspective)
@@ -1738,7 +1787,7 @@ internal fun androidx.compose.ui.graphics.drawscope.DrawScope.drawSolidProjectio
         drawCircle(Brush.radialGradient(listOf(color.copy(.28f), Color.Transparent), anchor, 112f), radius = 112f, center = anchor)
         drawCircle(color.copy(.80f), radius = 64f, center = anchor, style = Stroke(2.4f))
     }
-    val mesh = SolidMeshFactory.create(solid)
+    val mesh = SolidMeshFactory.exploded(solid,explosion)
     val rotatedVertices = mesh.vertices.map { rotate(solidLocalToWorld(solid.copy(position = offset), it), rx, ry, rz) }
     val vertices = rotatedVertices.map { project(it, center, scale, perspective) }
     if (visualMode != SpatialVisualMode.Wireframe && !clipSection) {

@@ -548,6 +548,12 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
     val dataTableEngine = remember { ProfessionalGraphTableEngine(engine) }
     var traceX by remember { mutableFloatStateOf(2f) }
     var graphTool by remember { mutableStateOf(GraphTool.Plot) }
+    val derivativeRecord=vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.RuhiDerivativeLanguage.MARK]
+    val derivativeSliderActive=remember(derivativeRecord){derivativeRecord?.let{runCatching{com.indianservers.aiexplorer.assistant.workspace.RuhiDerivativeLanguage.decode(it).mode=="slider"}.getOrDefault(false)} ?: false}
+    LaunchedEffect(derivativeRecord) {
+        if(derivativeSliderActive){graphTool=GraphTool.Tangent;if(!vm.showBottomPanel)vm.togglePanel(PanelSlot.Bottom)}else if(derivativeRecord!=null&&graphTool==GraphTool.Tangent)graphTool=GraphTool.Plot
+    }
+    LaunchedEffect(traceX){vm.setLabValue(com.indianservers.aiexplorer.workspace.MathModule.Graph2D,"ruhi.derivative.trace_x",traceX.toString())}
     var parameterA by remember { mutableFloatStateOf(1f) }
     var graphParameterValues by remember { mutableStateOf<Map<String, Double>>(emptyMap()) }
     var playingParameters by remember { mutableStateOf<Set<String>>(emptySet()) }
@@ -832,6 +838,8 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
             forwardRequest = graphForwardRequest,
             initialView = GraphViewState(Vec2(savedGraphView.centerX, savedGraphView.centerY), savedGraphView.zoom),
             axisSettings = graphAxisSettings,
+            sceneAxesVisible = com.indianservers.aiexplorer.assistant.workspace.RuhiSceneEditLanguage.flag(vm.state,"axes"),
+            sceneGridContrast = com.indianservers.aiexplorer.assistant.workspace.RuhiSceneEditLanguage.contrast(vm.state).toFloat(),
             domains = graphDomains,
             styles = graphStyles,
             labelOffsets = graphLabelOffsets,
@@ -841,7 +849,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
             parameterHandleEnabled = parameterHandleEnabled,
             parameterValues = objectGraphSnapshot.parameterRows.associate { it.name to it.value },
             previewExpression = directCurveDelta?.let { delta -> selectedFunction?.let { GraphDirectManipulationEngine.translate(it.expression, delta) } }
-                ?: selectedFunction?.let { graphTransformationPreview(it.expression, vm.showBottomPanel || animateGraphTransform, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
+                ?: selectedFunction?.takeUnless{derivativeSliderActive}?.let { graphTransformationPreview(it.expression, vm.showBottomPanel || animateGraphTransform, graphTransformKind, graphTransformAmount.toDouble().let { amount -> if (graphTransformKind in setOf(GraphTransformKind.StretchX, GraphTransformKind.StretchY)) kotlin.math.abs(amount).coerceAtLeast(.1) else amount }) },
             brushInterval = brushInterval,
             sketchPoints = sketchPoints,
             pinnedTracePoints = (pinnedTracePoints + com.indianservers.aiexplorer.assistant.workspace.RuhiDialogueMath.markers(vm.state) + vm.state.functions.mapNotNull { row ->
@@ -900,6 +908,10 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
                 vm.updateGraph2DView { current -> current.copy(centerX = it.center.x, centerY = it.center.y, zoom = it.zoom) }
             },
             onContextMenu = { id, point -> contextMenuFunctionId = id; contextMenuPosition = point },
+            intersectionDrawing = com.indianservers.aiexplorer.assistant.workspace.RuhiIntersectionLanguage.drawing(vm.state),
+            integralDrawing = com.indianservers.aiexplorer.assistant.workspace.RuhiIntegralLanguage.drawing(vm.state),
+            derivativeDrawing = remember(vm.state.functions,vm.state.points,vm.state.labSessionValues.filterKeys{it.startsWith(com.indianservers.aiexplorer.assistant.workspace.RuhiDerivativeLanguage.POINT_PREFIX)},vm.state.graph2DView,traceX,vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.RuhiDerivativeLanguage.MARK],vm.state.labSessionValues[com.indianservers.aiexplorer.assistant.workspace.RuhiIntersectionLanguage.ASPECT]) { com.indianservers.aiexplorer.assistant.workspace.RuhiDerivativeLanguage.drawing(vm.state,traceX.toDouble()) },
+            onViewportAspect = { vm.setLabValue(com.indianservers.aiexplorer.workspace.MathModule.Graph2D,"ruhi.viewport.aspect",it.toString()) },
         )
         if (presentationMode) {
             GlowButton("Exit presentation") { presentationMode = false }
@@ -1344,7 +1356,7 @@ internal fun Graph2DScreen(vm: ExplorerViewModel, onRequestClearAll: () -> Unit)
             PanelHeader("Graph Controls", vm::hidePanels, Ink)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Trace x = ${trim(traceX.toDouble())}", color = Muted, modifier = Modifier.width(120.dp))
-                Slider(value = traceX, onValueChange = { traceX = it }, valueRange = -6f..6f, modifier = Modifier.weight(1f))
+                Slider(value = traceX, onValueChange = { traceX = it }, valueRange = -6f..6f, modifier = Modifier.weight(1f).semantics { contentDescription="Graph trace x" })
             }
             if (vm.state.functions.any { Regex("\\ba\\b").containsMatchIn(it.expression) }) {
                 AxisSlider("Parameter a", parameterA, -8f..8f) { parameterA = it }

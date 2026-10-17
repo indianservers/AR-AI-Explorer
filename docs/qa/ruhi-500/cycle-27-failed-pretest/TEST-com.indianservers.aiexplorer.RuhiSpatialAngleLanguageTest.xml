@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiSpatialAngleLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:27:03.189Z" hostname="INDIANSERVERS" time="0.014">
+  <properties/>
+  <testcase name="zeroParallelAntiparallelAndDuplicateNamesHaveDeterministicSafeOutcomes" classname="com.indianservers.aiexplorer.RuhiSpatialAngleLanguageTest" time="0.004"/>
+  <testcase name="source220PreservesItsSelectedPairSlotsAndPassesIndependentThreeDimensionalOracle" classname="com.indianservers.aiexplorer.RuhiSpatialAngleLanguageTest" time="0.001"/>
+  <testcase name="changedVectorSceneAndCancellationNeverExecuteAnOldPairAnswer" classname="com.indianservers.aiexplorer.RuhiSpatialAngleLanguageTest" time="0.002"/>
+  <testcase name="unseenNamesStableIdsAndChangedCoordinatesProduceLiveSpatialArcs" classname="com.indianservers.aiexplorer.RuhiSpatialAngleLanguageTest" time="0.004"/>
+  <testcase name="missingPairQuestionSurvivesSaveLoadAndResumesItsOriginalActionWithoutExtraUndo" classname="com.indianservers.aiexplorer.RuhiSpatialAngleLanguageTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

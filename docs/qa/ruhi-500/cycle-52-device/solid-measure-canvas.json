@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "measurement_pixels": 20599,
+  "parent_edit_pixels": 348860,
+  "actual_solid_chip": true,
+  "live_radius": true,
+  "literal_reference_without_creation": true,
+  "native_cube_topology": true,
+  "persistence": true
+}

@@ -1,0 +1,10 @@
+{
+  "named_center_changed_pixels": 841331,
+  "missing_point_resumed_circle": true,
+  "named_center_follows_parent": true,
+  "incircle_and_circumcircle_follow_triangle": true,
+  "externally_tangent_after_radius_edit": true,
+  "red_pixels": 1536,
+  "persistence": true,
+  "passed": true
+}

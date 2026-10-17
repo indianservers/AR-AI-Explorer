@@ -1,0 +1,42 @@
+// Read-only compiled behavior audit; no app source, model or APK mutation.
+gradle.projectsEvaluated {
+    def appProject = gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiAbsoluteValueCoordinates') {
+        doLast {
+            def runtime = appProject.tasks.named('testDebugUnitTest').get().classpath
+            def loader = new URLClassLoader(runtime.files.collect { it.toURI().toURL() } as URL[], ClassLoader.getSystemClassLoader())
+            try {
+                def prefix = 'com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture = loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def manager = loader.loadClass(prefix+'RuhiDialogueManager').getDeclaredConstructor().newInstance()
+                def historyClass = loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality = loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def inputs = [
+                    [text:'Explain why absolute value is not differentiable at zero', x:0.0d],
+                    [text:'Explain why absolute value is not differentiable at x = 2', x:2.0d],
+                    [text:'Explain why absolute value is not differentiable at x = -3', x:-3.0d],
+                    [text:'Explain why absolute value is not differentiable at 2', x:2.0d]
+                ]
+                def records = inputs.collect { input ->
+                    def s = fixture.state('GRAPH_2D',350)
+                    def c = fixture.context(350,s)
+                    def history = historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def result = manager.execute(s,input.text,history,c,modality)
+                    def actualX = result.semanticFrame?.parameters?.get('at_x')
+                    def coordinateMatched = actualX instanceof Number && Math.abs(actualX.doubleValue()-input.x)<1e-12
+                    def expectedSlope = input.x == 0.0d ? null : input.x > 0.0d ? 1.0d : -1.0d
+                    [source_row:350, input:input.text, expected_x:input.x, actual_x:actualX,
+                     expected_differentiable:input.x!=0.0d, expected_slope:expectedSlope,
+                     coordinate_matched:coordinateMatched, status:result.status.name(), reply:result.message,
+                     note:'Independent abs(x) rule: derivative is +1 for x>0, -1 for x<0, undefined at zero. Coordinate agreement is a necessary check, not a complete explanation oracle.']
+                }
+                def derivativeSource = new File(appProject.rootDir,'app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeLanguage.kt')
+                def sourceHash = java.security.MessageDigest.getInstance('SHA-256').digest(derivativeSource.bytes).encodeHex().toString()
+                def output = [source_row:350, source_sha256:sourceHash, scope:'Original zero-coordinate utterance and three explicit-coordinate variations; development counterexamples, not a held-out NLP benchmark.',
+                              source_files_unchanged:true, results:records]
+                new File(appProject.rootDir,'docs/qa/ruhi-500/absolute-value-coordinate-audit.json').text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(output))
+                records.each { println('x='+it.expected_x+', extracted='+it.actual_x+', coordinate_match='+it.coordinate_matched+': '+it.reply) }
+            } finally { loader.close() }
+        }
+    }
+}

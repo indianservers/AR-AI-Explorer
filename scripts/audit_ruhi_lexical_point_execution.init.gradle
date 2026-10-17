@@ -1,0 +1,54 @@
+// Compiled parser/engine replay only. Android TensorFlow services are not installed here.
+gradle.projectsEvaluated {
+    def appProject = gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiLexicalPointExecution') {
+        doLast {
+            def runtime = appProject.tasks.named('testDebugUnitTest').get().classpath
+            def loader = new URLClassLoader(runtime.files.collect { it.toURI().toURL() } as URL[], ClassLoader.getSystemClassLoader())
+            try {
+                def prefix = 'com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture = loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def codec = loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceProjectCodec').getField('INSTANCE').get(null)
+                def historyClass = loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def managerClass = loader.loadClass(prefix+'RuhiDialogueManager')
+                def modality = loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def records = []
+                ['GEOMETRY_2D','GEOMETRY_3D'].each { engine ->
+                    ['Vertex907','distance','point','line','slope','and','from','alpha'].each { first ->
+                        ['distance between '+first+' and Omega811','how far is '+first+' from Omega811'].each { text ->
+                            def manager = managerClass.getDeclaredConstructor().newInstance()
+                            def history = historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                            def state = fixture.state(engine,1)
+                            def context = fixture.context(1,state)
+                            def a = engine=='GEOMETRY_3D' ? '(1,2,3)' : '(1,2)'
+                            def b = engine=='GEOMETRY_3D' ? '(4,6,15)' : '(4,6)'
+                            def expected = engine=='GEOMETRY_3D' ? 13.0d : 5.0d
+                            def created = manager.execute(state,'Create point '+first+' at '+a,history,context,modality)
+                            if(created.status.name()!='APPLIED')throw new GradleException('Could not create first point: '+created.message)
+                            created = manager.execute(created.state,'Create point Omega811 at '+b,history,context,modality)
+                            if(created.status.name()!='APPLIED')throw new GradleException('Could not create second point: '+created.message)
+                            state = codec.decode(codec.encode(created.state),false).state
+                            if(state==null)throw new GradleException('Could not restore scene.')
+                            def before2d=state.points;def before3d=state.points3D
+                            def entries=history.forModule(state.module).protocol.size()
+                            def result=manager.execute(state,text,history,context,modality)
+                            def params=result.semanticFrame?.parameters ?: [:]
+                            def value=params.get('distance_native')
+                            def passed=result.status.name()=='APPLIED' && value instanceof Number && Math.abs(value.doubleValue()-expected)<1e-10 && params.get('point1')==first && params.get('point2')=='Omega811' && result.state.points==before2d && result.state.points3D==before3d && history.forModule(state.module).protocol.size()==entries
+                            records << [engine:engine,input:text,expected_distance:expected,status:result.status.name(),actual_distance:value,passed:passed,reply:result.message]
+                        }
+                    }
+                }
+                def passed=records.every{it.passed}
+                def sources=['RuhiPointLanguage.kt','RuhiGeometry2DLanguage.kt','RuhiDialogue.kt','RuhiEndpointConversation.kt'].collectEntries { name ->
+                    def relative='app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/'+name
+                    [(relative):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,relative).bytes).encodeHex().toString()]
+                }
+                def report=[passed:passed,cases:records.size(),source_sha256:sources,results:records,scope:'Compiled dialogue-manager/parser/engine with restored actual scene points; no Android TensorFlow installation or UI. Separate from the model-head probe and full installed-assistant integration.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/lexical-point-execution-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(report))
+                println('Lexical point parser/engine replay: '+records.count{it.passed}+'/'+records.size())
+                if(!passed)throw new GradleException('Lexical point parser/engine replay found a failure; inspect retained records.')
+            } finally {loader.close()}
+        }
+    }
+}

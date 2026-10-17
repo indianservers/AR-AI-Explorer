@@ -1,0 +1,24 @@
+﻿
+com.indianservers.aiexplorer.RuhiSeed500RenderingTest:...
+Error in intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(com.indianservers.aiexplorer.RuhiSeed500RenderingTest):
+java.lang.AssertionError: Visible blue marker missing near (624,950) for Vec2(x=1.4142135623730951, y=1.4142135623730951)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$assertVisibleMarkers(RuhiSeed500RenderingTest.kt:92)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(RuhiSeed500RenderingTest.kt:96)
+........
+com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest:..
+
+Time: 184.94
+There was 1 failure:
+1) intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(com.indianservers.aiexplorer.RuhiSeed500RenderingTest)
+java.lang.AssertionError: Visible blue marker missing near (624,950) for Vec2(x=1.4142135623730951, y=1.4142135623730951)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning$lambda$0$assertVisibleMarkers(RuhiSeed500RenderingTest.kt:92)
+	at com.indianservers.aiexplorer.RuhiSeed500RenderingTest.intersectionsUseVisibleSelectionAndFollowNativeCurveAndGeometryEditsAndPanning(RuhiSeed500RenderingTest.kt:96)
+
+FAILURES!!!
+Tests run: 14,  Failures: 1
+
+

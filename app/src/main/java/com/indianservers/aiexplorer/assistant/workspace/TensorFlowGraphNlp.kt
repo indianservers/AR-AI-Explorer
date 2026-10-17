@@ -47,6 +47,18 @@ class TensorFlowGraphNlp(context:Context):GraphIntentClassifier,AutoCloseable {
                 private val delegate by lazy { TensorFlowTextModel(app,"ruhi_dialogue_nlp") }
                 override fun predict(text:String)=delegate.predict(text)
             }
+            if(RuhiLanguageServices.geometryClassifier==null) RuhiLanguageServices.geometryClassifier=object:GraphIntentClassifier {
+                private val delegate by lazy { TensorFlowTextModel(app,"ruhi_geometry3d_nlp") }
+                override fun predict(text:String)=delegate.predict(text)
+            }
+            if(RuhiLanguageServices.semanticClassifier==null) RuhiLanguageServices.semanticClassifier=object:GraphIntentClassifier {
+                private val delegate by lazy { TensorFlowTextModel(app,"ruhi_semantic_nlp") }
+                override fun predict(text:String)=delegate.predict(text)
+            }
+            if(RuhiLanguageServices.pointSlotClassifier==null) RuhiLanguageServices.pointSlotClassifier=object:RuhiPointSlotClassifier {
+                private val delegate by lazy { TensorFlowTextModel(app,"ruhi_point_slots") }
+                override fun predict(source:String)=RuhiPointSlotInput.tokens(source).map{token->val p=delegate.predict(token.features);RuhiPointSlot(p.intent,token.value,token.start,token.end,p.confidence,p.margin)}
+            }
         }
     }
 }

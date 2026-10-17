@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiGraphTransformTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-16T14:23:07.910Z" hostname="INDIANSERVERS" time="0.023">
+  <properties/>
+  <testcase name="saveAndLinkedProjectionRoundTripTransformsAndGroups" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.002"/>
+  <testcase name="languageModelCannotSupplyArgumentsOrBypassConfidenceAndIntentGates" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.001"/>
+  <testcase name="meshUsesLocalScaleThenRotationThenTranslation" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.0"/>
+  <testcase name="completeCompoundGroupEditIsAtomicAndKeepsSurvivingIdentities" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.005"/>
+  <testcase name="distantMoveKeepsCoordinatesAndExpandsView" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.002"/>
+  <testcase name="multiLayerBudgetPreservesSingleLayerQualityAndEveryLayer" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.007"/>
+  <testcase name="invalidAndUnderspecifiedTransformsDoNotTouchSceneOrHistory" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.001"/>
+  <testcase name="groupRotationAndTranslationPreserveDistancesAndUndoExactly" classname="com.indianservers.aiexplorer.RuhiGraphTransformTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

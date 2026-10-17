@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiDialogueTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-16T14:23:06.749Z" hostname="INDIANSERVERS" time="0.063">
+  <properties/>
+  <testcase name="invalidAnswerRecoversAndEssentialDistanceIsFilled" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.002"/>
+  <testcase name="defaultsAndCylinderParametersSurviveCorrectionsAndUndo" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.002"/>
+  <testcase name="triangleDefaultsTypesDimensionsAnglesAndRotation" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.001"/>
+  <testcase name="cancelAndInvalidValuesNeverMutateGeometry" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.001"/>
+  <testcase name="ambiguityUsesActualObjectsAndBothIsAtomic" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.039"/>
+  <testcase name="comparisonSurvivesInterruptionAndRoundTrip" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.007"/>
+  <testcase name="pendingTargetsCannotRetargetAfterNativeSceneChange" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.002"/>
+  <testcase name="functionFamilyFillsSlotBeforeSpokenEquationAndRoots" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.003"/>
+  <testcase name="incompleteGraphChipAnswerThenModifyWithoutDuplicate" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.001"/>
+  <testcase name="copyAndNamedReferenceDimensionsPreserveOriginal" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.004"/>
+  <testcase name="missingExplicitReferenceCannotFallBackToLastModifiedCurve" classname="com.indianservers.aiexplorer.RuhiDialogueTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

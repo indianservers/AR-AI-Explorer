@@ -1,0 +1,7 @@
+gradlew.bat : 
+At C:\Indian Servers\AIExplorer\scripts\run_ruhi_seed500_cycle.ps1:11 char:1
++ & .\gradlew.bat @testArgs *> (Join-Path $folder "pre-cycle-$Cycle-tes ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

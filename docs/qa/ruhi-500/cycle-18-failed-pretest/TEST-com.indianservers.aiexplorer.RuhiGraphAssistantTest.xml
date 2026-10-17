@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiGraphAssistantTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:46:37.789Z" hostname="INDIANSERVERS" time="0.81">
+  <properties/>
+  <testcase name="commandRoutingDoesNotCaptureLessonOrSolverQuestions" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <testcase name="compoundCommandsRollbackAndNeverPolluteHistoryOnFailure" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.034"/>
+  <testcase name="twoDCommandsProduceRealSampledCurvesAndRestoreAppearanceOnUndo" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.003"/>
+  <testcase name="ambiguousReferencesAskForOneTargetAndHistoryDoesNotPartiallyUndo" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <testcase name="supplied150CommandsHaveHonestSceneAndMeshOutcomes" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.75"/>
+  <testcase name="graphUndoPreservesOtherModuleEditsAndSelection" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <testcase name="singularitiesHaveNoFabricatedCellsAndRemovableHolesRemainContinuous" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.006"/>
+  <testcase name="editsRetainUnrelatedAuthoritativeLinkedObjects" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.002"/>
+  <testcase name="parametricSurfacesUseNativeGeometryAndColorSurvivesProjectRoundTrip" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.003"/>
+  <testcase name="nativeLayerEditsPreserveAssistantSemanticReferences" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.007"/>
+  <testcase name="failedHistoryBatchDoesNotChangeStacks" classname="com.indianservers.aiexplorer.RuhiGraphAssistantTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,86 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:preBuild UP-TO-DATE
+> Task :ar3dgraph:preDebugBuild UP-TO-DATE
+> Task :ar3dgraph:processDebugNavigationResources UP-TO-DATE
+> Task :arengine:preBuild UP-TO-DATE
+> Task :arengine:preDebugBuild UP-TO-DATE
+> Task :arengine:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :ar3dgraph:generateDebugResources UP-TO-DATE
+> Task :ar3dgraph:packageDebugResources UP-TO-DATE
+> Task :ar3dgraph:parseDebugLocalResources UP-TO-DATE
+> Task :ar3dgraph:generateDebugRFile UP-TO-DATE
+> Task :arengine:generateDebugResources UP-TO-DATE
+> Task :arengine:packageDebugResources UP-TO-DATE
+> Task :arengine:parseDebugLocalResources UP-TO-DATE
+> Task :arengine:generateDebugRFile UP-TO-DATE
+> Task :arengine:compileDebugKotlin UP-TO-DATE
+> Task :arengine:javaPreCompileDebug UP-TO-DATE
+> Task :arengine:compileDebugJavaWithJavac NO-SOURCE
+> Task :arengine:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :ar3dgraph:compileDebugKotlin UP-TO-DATE
+> Task :ar3dgraph:javaPreCompileDebug UP-TO-DATE
+> Task :ar3dgraph:compileDebugJavaWithJavac NO-SOURCE
+> Task :ar3dgraph:bundleLibCompileToJarDebug UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:86:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:87:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:93:74 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:94:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:130:58 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCircleOracle.kt:23:71 Unnecessary safe call on a non-null receiver of type 'RuhiSemanticFrame'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFunctionOracle.kt:15:74 Unnecessary safe call on a non-null receiver of type 'RuhiSemanticFrame'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntersectionOracle.kt:13:75 Unnecessary safe call on a non-null receiver of type 'RuhiSemanticFrame'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTriangleOracle.kt:13:73 Unnecessary safe call on a non-null receiver of type 'RuhiSemanticFrame'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt:995:64 'fun announceForAccessibility(p0: CharSequence!): Unit' is deprecated. Deprecated in Java.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:772:57 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt:777:64 Unnecessary safe call on a non-null receiver of type 'FunctionDefinition'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/KnowledgeHubUi.kt:1075:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:8891:41 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:10262:34 Unnecessary safe call on a non-null receiver of type 'Solid'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11688:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11689:107 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11693:76 Unnecessary safe call on a non-null receiver of type 'ArAnchorHandle'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11699:140 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:11699:197 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArCadSnap'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14679:49 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14684:60 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14732:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PointerInputChange'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:14775:82 Condition is always 'true'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15804:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15806:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15807:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15809:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15851:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15852:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15854:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt:15855:25 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCircleLanguage.kt:71:147 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCircleLanguage.kt:125:173 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Shape2D'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:86:30 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:87:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:93:74 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:94:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt:130:58 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RuhiPending'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/spatial/SpatialRenderer.kt:294:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArDepthSnapshot'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/spatial/SpatialRenderer.kt:301:27 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArDepthSnapshot'.
+w: file:///C:/Indian%20Servers/AIExplorer/app/src/main/java/com/indianservers/aiexplorer/workspace/ProjectInteroperability.kt:134:17 Condition is always 'false'.
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 50s
+23 actionable tasks: 1 executed, 22 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html

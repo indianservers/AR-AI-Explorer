@@ -1,0 +1,12 @@
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+adb: error: failed to get feature set: device 'emulator-5556' not found
+Missing device evidence: seed500-native.json
+At C:\Indian Servers\AIExplorer\scripts\verify_ruhi_seed500_device.ps1:26 char:29
++     if($LASTEXITCODE -ne 0){throw "Missing device evidence: $name"}
++                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Missing device ...500-native.json:String) [], RuntimeException
+    + FullyQualifiedErrorId : Missing device evidence: seed500-native.json
+ 

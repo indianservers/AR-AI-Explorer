@@ -1,0 +1,23 @@
+[
+    {
+        "source_row": 482,
+        "case_name": "blue_target_after_applied_action",
+        "behavior_verified": true,
+        "prerequisite_status": "APPLIED",
+        "actual_status": "APPLIED",
+        "actual_reply": "Restored the original object. Applied 3D position.",
+        "expected": "Atomically restore the wrongly targeted edit and apply it to the actual blue object when the validated prior operation and unique target exist."
+    },
+    {
+        "source_row": 497,
+        "case_name": "point_distance_after_centimeter_display",
+        "behavior_verified": true,
+        "expected_distance_cm": 600.0,
+        "prerequisite_status": "APPLIED",
+        "unit_status": "APPLIED",
+        "unit_reply": "Displaying measurements in cm. Coordinates remain in m. Distance Anchor_0 to End_0 = 600.0 cm; area 120000 cm\u00b2; perimeter 1721.110255 cm",
+        "actual_status": "APPLIED",
+        "actual_reply": "Distance Anchor_0 to End_0 = 600.0 cm. Native-coordinate formula: \u221a((6.0)\u00b2 + (0.0)\u00b2) m. 1 m = 100.0 cm.",
+        "expected": "Native points stay (0,0)/(6,0) meters; immediate conversion and the next point-distance answer display 600 cm. Existing segment annotations should agree."
+    }
+]

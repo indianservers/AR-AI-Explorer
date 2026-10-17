@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ScientificCalculatorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:34.862Z" hostname="INDIANSERVERS" time="0.003">
+  <properties/>
+  <testcase name="evaluatesTrigonometryInRadianMode" classname="com.indianservers.aiexplorer.ScientificCalculatorTest" time="0.0"/>
+  <testcase name="evaluatesTrigonometryInDegreeMode" classname="com.indianservers.aiexplorer.ScientificCalculatorTest" time="0.001"/>
+  <testcase name="supportsDegreeSymbolAsRadiansLiteral" classname="com.indianservers.aiexplorer.ScientificCalculatorTest" time="0.001"/>
+  <testcase name="exposesConstantsReferenceCardsAndConversions" classname="com.indianservers.aiexplorer.ScientificCalculatorTest" time="0.0"/>
+  <testcase name="supportsPercentFactorialAndScientificNotationViews" classname="com.indianservers.aiexplorer.ScientificCalculatorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

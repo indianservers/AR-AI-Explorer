@@ -1,0 +1,642 @@
+{
+  "app/src/main/assets/ruhi_semantic_nlp/metadata.json": {
+    "sha256": "79cf2c69e1789164b95b434bdf700ac67d8434f3515a1a031b6fd218fcbdc33f",
+    "bytes": 30480
+  },
+  "app/src/main/assets/ruhi_semantic_nlp/model.tflite": {
+    "sha256": "9f61ff43d68f2b9ca8d9c3971a83f1eead9d370961da23f36e76f5f867ce3a78",
+    "bytes": 99752
+  },
+  "app/src/main/assets/ruhi_semantic_nlp/seed_examples.json": {
+    "sha256": "585f05765e4385598a9047ee285fd8f6fe01045aa605a1d74f1d65b3bbfcb163",
+    "bytes": 305756
+  },
+  "app/src/main/assets/ruhi_semantic_nlp/slot_probes.json": {
+    "sha256": "af99ca1d309ea172ba4e9759f4cf6caf1b2eb07e643868989975c0ee32897da9",
+    "bytes": 1458
+  },
+  "app/src/main/assets/ruhi_point_slots/metadata.json": {
+    "sha256": "17b5c1d560af96c682b606bd4fd13e39d6aa4a27c89540d5cb3c046f73799779",
+    "bytes": 12138
+  },
+  "app/src/main/assets/ruhi_point_slots/model.tflite": {
+    "sha256": "e68423020086154decd15e7befd84d2555935e41acdb387a87a3903cc4fc285f",
+    "bytes": 10392
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPointLanguage.kt": {
+    "sha256": "c282a53f337eaeef07b2df026a513edd22e9835a17ace957f6d11a96f4b992a2",
+    "bytes": 20216
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": {
+    "sha256": "7f12dd8e405c2d9e30c1b3743cc9ddf520b64852ecda110e75d88dcc8d7818b5",
+    "bytes": 48870
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCommandContract.kt": {
+    "sha256": "c250f98810bc129a96ebbaf9e4d3d07130afceb1cc06907825010e3d19fc75a7",
+    "bytes": 4812
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/TensorFlowGraphNlp.kt": {
+    "sha256": "e954cf3984ef9dacfa74f85d8f55e5249aae7e17b844b98b104aa56171f94d6f",
+    "bytes": 5118
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSeed500Fixture.kt": {
+    "sha256": "e26aa55b7b29bd5fbb3e58e6165bc99b1f2ef77d93d76a425643f766e3f50484",
+    "bytes": 9434
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiSeed500AuditTest.kt": {
+    "sha256": "0acf02857b41817c93d620b8de3d946bfc7f3e8661ce20c2de381848fa64de92",
+    "bytes": 2747
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiPointLanguageTest.kt": {
+    "sha256": "90e9f6e0da4d3e307a61058e1d490119c966af960494e31288223588559ad571",
+    "bytes": 6561
+  },
+  "app/src/androidTest/java/com/indianservers/aiexplorer/RuhiSeed500RenderingTest.kt": {
+    "sha256": "bdb7922ccab98f37aab0a280fa29cefb70c5f319b62b13ce6037c4ef5ce454a6",
+    "bytes": 207719
+  },
+  "scripts/build_ruhi_seed500_report.py": {
+    "sha256": "84aa4c0c3d8d29b777b91b142cfb58b470a716161d88e0f5f6151f527b80a36f",
+    "bytes": 143239
+  },
+  "scripts/import_ruhi_500.py": {
+    "sha256": "a1b25012bfde31068203a52df2c3c0575f21bf36388143c3d843d45094472b1c",
+    "bytes": 2318
+  },
+  "scripts/run_ruhi_seed500_cycle.ps1": {
+    "sha256": "de9a56e7d3fce065c4007d840fc7f89e15cf4b57ae664fab9064d87e4e600923",
+    "bytes": 10135
+  },
+  "scripts/train_ruhi_seed500.py": {
+    "sha256": "32af5a6db22b59c1297642becac188a1d1a6408e301181e7cffb9d3a7219647e",
+    "bytes": 11870
+  },
+  "scripts/verify_ruhi_seed500_device.ps1": {
+    "sha256": "ccbc236317f8d36c7d814da0129a56acfac69b61384b0c9f767e25e90dfad430",
+    "bytes": 19009
+  },
+  "scripts/verify_ruhi_seed500_source.py": {
+    "sha256": "44e5fa3bbeffe0fbef15c6bd72ad96e168bb3cc066373ac834b9463508d2b68e",
+    "bytes": 3520
+  },
+  "app/build/outputs/apk/debug/app-debug.apk": {
+    "sha256": "d12321dcb84ea0b9bb184f215e3dee7cb2da1ca9d87c5b34da5ed882149e8710",
+    "bytes": 254355084
+  },
+  "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk": {
+    "sha256": "9297aa00cb3641b6e5c03eb64d4490a391870d2166502082a907007144f93c83",
+    "bytes": 4307579
+  },
+  "app/build.gradle.kts": {
+    "sha256": "66fd1a1d431fc5d5519988e14eaa6cf209cab6f84017c91dae2ef54b3f2b1ea6",
+    "bytes": 4327
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntersectionLanguage.kt": {
+    "sha256": "937bc55b4102b68dac7e985caac9961d76e7ea8f6033755d965e04226839cfff",
+    "bytes": 23560
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntersectionMath.kt": {
+    "sha256": "8826b8bbbd79a3525abe1d67087860e20fd8f36f06af06b290a2036d2214107a",
+    "bytes": 10601
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntersectionOracle.kt": {
+    "sha256": "97936b3a8c622d6cbf0c9a51d386c26b37a74b26b798d302900312375c267e0d",
+    "bytes": 5535
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiIntersectionLanguageTest.kt": {
+    "sha256": "f1fb6bd035b9c6c454c064e71790353dc735135b93af7f5fa7e2f14665d08d23",
+    "bytes": 15271
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/RuhiIntersectionRendering.kt": {
+    "sha256": "6e8e8c11195990e2437fbff92704e02835225831b73ba34080a5992ee363a38a",
+    "bytes": 3495
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/Graph2DWorkspaceUi.kt": {
+    "sha256": "93b5de58ee52a28c9432cbc513fef2d5a79a3ae5edf1156f89da63f50a6d2b85",
+    "bytes": 103962
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/GraphProductionTest.kt": {
+    "sha256": "f6ec369300eecd59a3faacf737a762ac5b7aaeb921ea984b557695da7489647b",
+    "bytes": 7566
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/Graph2DStrengthenedEngineTest.kt": {
+    "sha256": "bc18fcfa7522ba8fcb3cda02f9fe056028e79baf59fa80a9a940f870fcd5f017",
+    "bytes": 4774
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/MathKeyboardGraph2D150Test.kt": {
+    "sha256": "c8e3e8dfecacbdd740c0797a69e3176e8c4b6e448a2b6bf57ec928d9e20ef2eb",
+    "bytes": 600
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/AdvancedGraphFeatureEngineTest.kt": {
+    "sha256": "34824e7c2475f8d3706fee35cb7b3ae3059d78d3526ee34b5a60e72889bd1c3f",
+    "bytes": 2854
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/ScientificCalculatorTest.kt": {
+    "sha256": "fa6b59c64b02f67b8efb0c908912acef2e20c441ee99cb2adabfbaaddd649dfc",
+    "bytes": 1982
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/ScientificCalculatorPhase1Test.kt": {
+    "sha256": "459e1e5829aab66a61cddc8b63a8a9de92eb78763620b8d20cc0752a4693d20b",
+    "bytes": 3846
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/ScientificCalculatorPhase2Test.kt": {
+    "sha256": "f8a4b98555f33cdd381a0392da6940986c1eabbe7471a43df2f1cb5c698a8fbc",
+    "bytes": 3256
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/ScientificCalculatorPhase3Test.kt": {
+    "sha256": "0121f70982d325d1183a44396e83158899078b3ec058b218ca90e2d1c9791c8d",
+    "bytes": 3745
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFunctionLanguage.kt": {
+    "sha256": "124ee137172565f7779835a7b05ccc132974fa1596d283cec789ef2bfb4b7033",
+    "bytes": 9472
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFunctionOracle.kt": {
+    "sha256": "982fedbbe4435bff2b854a9860f9dac5d52f48251ae4590894586b116c2e1fdb",
+    "bytes": 6982
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiFunctionLanguageTest.kt": {
+    "sha256": "04ba5eb982a6a2d56b6fb7493ad8c0cd670d9cfba679872f1d5d6f72bf053d03",
+    "bytes": 8516
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/core/MathModels.kt": {
+    "sha256": "5278121ed3da983f3d0b86724ba81bd11e0c1d5d3ecbbeaa2efe5c9d7a75a68b",
+    "bytes": 62820
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/core/AdvancedGraphing.kt": {
+    "sha256": "a49eeb91e48db32e094700d4ac05d526d36b22fa3ca21c691052bbe43cab3eb8",
+    "bytes": 8854
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/core/GraphProduction.kt": {
+    "sha256": "4ccca3a2113b443a44a242b3da1919c4a6127d570f826cfed6144ad664ae2405",
+    "bytes": 50014
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/GraphTrigRendering.kt": {
+    "sha256": "5c5bf47a43488f0a4665105ea773ffddf3bcc30d3a93d08c956ebd1f4ee7b598",
+    "bytes": 103254
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTriangleLanguage.kt": {
+    "sha256": "520744352e25fcac970816499ae7d3b742e12dacbf5233e03c2a2d28ab786794",
+    "bytes": 17125
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTriangleOracle.kt": {
+    "sha256": "031f1ed9fa2cad19dd86fa0760e6698140bdfc438b872d6c6eb301e29e69461e",
+    "bytes": 7920
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiTriangleLanguageTest.kt": {
+    "sha256": "df4e2e9cb5ee4fdedf2b32d0fa17a6946e8c18015378bb5d919affde16f2710d",
+    "bytes": 7439
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiStudioAssistant.kt": {
+    "sha256": "33c296fc90c3a11062739531a199c7b053aac40d247da53ef9fe8bc6e5301bc1",
+    "bytes": 30127
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCircleLanguage.kt": {
+    "sha256": "682be61f337108ee114144402e1ef8ac65e8fee4966fa4e7e7974e34b0a49f4d",
+    "bytes": 19505
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiCircleOracle.kt": {
+    "sha256": "f2bb76fd4c93cbca11cb6b116b799e210eb27efa86cf04f7e0a891e057cb5f08",
+    "bytes": 7563
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiCircleLanguageTest.kt": {
+    "sha256": "d7a41ad400fd534c8422731ae59520283438813963b005554ced8e7693ee8404",
+    "bytes": 9358
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/GeometryGraphEquationProjector.kt": {
+    "sha256": "3803b0bd9b8d8c33469a2624f1cd5afd34cf13fa9a0868f9415498c09e551143",
+    "bytes": 11860
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/NativePlaneGeometry.kt": {
+    "sha256": "5339e51267ee88804f34a82ffaa8a5f863e6f8e9853876157ffcf6c6d8160c6b",
+    "bytes": 3043
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/Workspace.kt": {
+    "sha256": "284ecb7019c2fe5ea537db28118321c63bbaa81c56b90e81f13cbb69b347bbd0",
+    "bytes": 47865
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/GraphWorkspaceCommand.kt": {
+    "sha256": "c0e0488d58284974a1ebb8bc005d73ed5c687b87d4a1f963069d1ee3cc44839a",
+    "bytes": 4304
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/WorkspaceProjectCodec.kt": {
+    "sha256": "9815b353d401ab1c4a720ef5692bdb3cbd9a8ddaa24769b71bddce9a3ebe325e",
+    "bytes": 21315
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSpatialPlaneLanguage.kt": {
+    "sha256": "7f08c9a0630a98a9af6acdaed7d7cdd9f3eacf56b95e2dd1e6fc470087d33fde",
+    "bytes": 9015
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPlaneAngleOracle.kt": {
+    "sha256": "617513901aef2a94d8edb7e62c778ec416a35d2707411eca70f1339f14a93cbe",
+    "bytes": 3190
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiPlaneLanguageTest.kt": {
+    "sha256": "8fdc7ea4e9f75757a309a25fd8ee8c963e44fcb91f13c969e1540e41451f5790",
+    "bytes": 8022
+  },
+  "app/src/main/assets/ruhi_geometry3d_nlp/command_examples.json": {
+    "sha256": "9b4319f348a39240280577cdd27ed4051a6040ba10fc7ed560ecd3df9a9d842f",
+    "bytes": 43330
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometryKidAudit.kt": {
+    "sha256": "6e913f672905d53c3966972ce272a09a3f42f3417cce9922864aaeddae48654f",
+    "bytes": 12704
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSpatialAngleLanguage.kt": {
+    "sha256": "90c4d4dd6cbe179cae5695e7590c17bee9e81ef5c9f07a6bc2f89717ecbe9ca3",
+    "bytes": 8049
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSpatialAngleOracle.kt": {
+    "sha256": "47e1f6144525a0c7d55555273ca25133476219e572e51ff957a9d18d078bc465",
+    "bytes": 2778
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiSpatialAngleLanguageTest.kt": {
+    "sha256": "ca807b5aafbf3a8a955d934117c0ce70f384a7d06e425881dff7d0ce5b50052e",
+    "bytes": 6399
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/Spatial3DRendering.kt": {
+    "sha256": "b1d620b8da37fb9d4eecf3dc48c70fe624aabe36745179e291d1da0dfd972629",
+    "bytes": 115093
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/UniversalMathDocument.kt": {
+    "sha256": "61d18ce62e1c51f291847c4c7f454e4ababf2e86fd6398ba8ec1fa6275ddc2db",
+    "bytes": 54699
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/UniversalGeometryGraphSchemaTest.kt": {
+    "sha256": "fc84124434377b73d046812e3bb3a8d11a665dd4a587f23fe5e0da6371d79af8",
+    "bytes": 6562
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiReferenceAngleLanguage.kt": {
+    "sha256": "9cab6cd92a38fc6b3b04e43b5be1f8ff843b0478fa794f9b28c8567ced05aba3",
+    "bytes": 7363
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiReferenceAngleOracle.kt": {
+    "sha256": "a173e9856d658ea846def3c29702eb7427b773ae3c2cf45810f74b1ac1782557",
+    "bytes": 4557
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiReferenceAngleLanguageTest.kt": {
+    "sha256": "7793edb8c97d766d26cc83945967e8788bc94fa6db5f43b5c298baabb0b22c82",
+    "bytes": 6258
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiAngleLanguage.kt": {
+    "sha256": "9036f59a38d8319b1faa8925cf9bbd8da4fdce169e156ee9174f8a2d02cb4055",
+    "bytes": 16542
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiAngleLanguageTest.kt": {
+    "sha256": "2ac1634ad6e006e6c25fa495a790ab453bb3c24620460dc1bfde498742d9855c",
+    "bytes": 12715
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": {
+    "sha256": "92a26705b9e28ed66aaf9a2d7da51cf903453c83a8e40563b2494e68562835be",
+    "bytes": 12883
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": {
+    "sha256": "136d491687fab2f3d545034f864c65f21b79f02d7f49641c53e2be490ec585c3",
+    "bytes": 8077
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/Geometry2DRendering.kt": {
+    "sha256": "d9c44e86f5633b5cd3b500ca732770a0fb0d675e7ded59700bb89d4786343729",
+    "bytes": 14260
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/MainActivity.kt": {
+    "sha256": "5593ad53f7603566e947ff6972da647b389b763015815ea37866896eefc1b833",
+    "bytes": 1004489
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/StudioReferenceMetadata.kt": {
+    "sha256": "0c900800d1c189ad1e8f6af923ddf9b97db8513cde65cedf22a6e5a26b39cc39",
+    "bytes": 4114
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSeedBehaviorOracle.kt": {
+    "sha256": "4c1aa887fc38d2d87093cd4290ed4996579b21f76385f7967bc27d0e5da2fff8",
+    "bytes": 17917
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiMidpointLanguageTest.kt": {
+    "sha256": "6309e84c613afb9bab2a39edb62f74657fc7e0e734a157df9809b2c2b0210558",
+    "bytes": 4293
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiSlopeLanguageTest.kt": {
+    "sha256": "5cb428f8f76fa7507f9cf24051d77e8798f7b2b3e2ed0e99f18e5f1931119902",
+    "bytes": 4382
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeLanguage.kt": {
+    "sha256": "f6b1e5b15409c1d16a25a5bb3ca456b32e8372c79d14d9407587d227a40fc7ca",
+    "bytes": 20745
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeMath.kt": {
+    "sha256": "fe75e8edf404f393a1e774833b3c599699220c2ef9edfb9cc4895fde3670543d",
+    "bytes": 5406
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeOracle.kt": {
+    "sha256": "5c6c1df320417f44c4d835a006d7d43cea577c1b0cb4b47c9281338d7e589db6",
+    "bytes": 5519
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativeLanguageTest.kt": {
+    "sha256": "5ab013b5c96d24ec516d90b0ec6c9c280142e234e4a01d46934b3f355780aede",
+    "bytes": 4505
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralLanguage.kt": {
+    "sha256": "99c6b2c1d3228c5b7563591a0b6202dbce6de933aed7206fa37abdb4c5b6f78a",
+    "bytes": 19720
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralMath.kt": {
+    "sha256": "ab8c1703de4188bb96cbeeed0d4dab7bc0f27b281e469fbd4790458a0b48e113",
+    "bytes": 5038
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/RuhiIntegralRendering.kt": {
+    "sha256": "c1929a750b9273d04bab6c0c77a74d8f31c86c47750eb713c98bb9b98d838818",
+    "bytes": 1433
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralOracle.kt": {
+    "sha256": "969cba4325faa7af9fe01ae7d41083324a2e66a70602c18ed1d60e95fb588f02",
+    "bytes": 7031
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiIntegralLanguageTest.kt": {
+    "sha256": "c9836a0e1458b728f7ec84ad0b16942318f7541f04f24efaaec12e0610f61339",
+    "bytes": 6343
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSurfaceLanguage.kt": {
+    "sha256": "c84fada2e9055ec366a6890e68fb02a67849e58cfe229844410a9d86906670cd",
+    "bytes": 7896
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSurfaceOracle.kt": {
+    "sha256": "a48e43805d3ab3b678aa2bef2de0b2a7c957c9ec0403b282150b0beed668def7",
+    "bytes": 5499
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiSurfaceLanguageTest.kt": {
+    "sha256": "a8f5a8ac40fae2e6f1dab17af60c793ec1a69bb2db3583207f977659ed9b9fe2",
+    "bytes": 4728
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/core/GraphSurfaceGeometry.kt": {
+    "sha256": "741a8400efd0be34cc4fa8caedf66ca9f06f6481e8e2f77209d1dde62f371910",
+    "bytes": 2144
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSolidMeasureLanguage.kt": {
+    "sha256": "f5fa3190195d5ff09080bf3811ebf92339993cfe6c0693e0287b53cfc17b907f",
+    "bytes": 18147
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSolidMeasureMath.kt": {
+    "sha256": "13935632cd69810a3409897afa6cfc0e3bf824e4b6a83027829742150b42e087",
+    "bytes": 4222
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/RuhiSolidMeasureRendering.kt": {
+    "sha256": "21516d0ef6671210583f3ba9e7078c7fc81589cdc66632dfac14b87f78542095",
+    "bytes": 3364
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSolidMeasureOracle.kt": {
+    "sha256": "fdb0d25a6404ac38bee0ea932460fd84502d28be4ce56ee66460a54e8c904dfc",
+    "bytes": 5381
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiSolidMeasureLanguageTest.kt": {
+    "sha256": "fdcb4c6bf85820f88c848de2270d60bc4ffad8971e89b58a78b2d67d59ba4789",
+    "bytes": 6110
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DLanguage.kt": {
+    "sha256": "44656d1e0997598b728633c9d2017aaccf64dcbeb9036f1d55c5e0f3681defbc",
+    "bytes": 19544
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/core/SolidPoseMath.kt": {
+    "sha256": "98b86d4194696f88418043836f38871e19b327c1ea925a90e301ac7e8dcfa2ae",
+    "bytes": 853
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/RuhiSolidTransformCommand.kt": {
+    "sha256": "9645e42887b97549cc8f52f9ba6edd6436156394d4b607f2cea77693a5edc5b1",
+    "bytes": 1823
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiTransform3DOracle.kt": {
+    "sha256": "941ad411fc79e301c8a9ff3049044e81ce53f4709fc005fe96ccdb7b93245fc4",
+    "bytes": 6746
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiTransform3DLanguageTest.kt": {
+    "sha256": "3897dc9622f2b577c2921ad9cc358d468af53e81f016a02925e75ad7cd9e9e3c",
+    "bytes": 9156
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditLanguage.kt": {
+    "sha256": "70e32975ba71bde416f9bed828347d61d6941d9fe845ae6f99751a0583644ba1",
+    "bytes": 18595
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPreparedSceneGuard.kt": {
+    "sha256": "116328830b88deffa938f124ff20064d2b1a52fb0cb51d250766d09de0ffd427",
+    "bytes": 657
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/RuhiSceneEditRendering.kt": {
+    "sha256": "d9dfa656d1ef942cf32c228baedc4154329afa9ddd20e8556a66f7039a44c8aa",
+    "bytes": 1322
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSceneEditOracle.kt": {
+    "sha256": "6cc5c16c40db38831fd97c84e5acdce55b3b5ef9c84ba73310ed7a40255cfa05",
+    "bytes": 7904
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiSceneEditLanguageTest.kt": {
+    "sha256": "a8341f7c2d93c9346ff61640411241938ac62e2aa8bdba70eed51bff69631b64",
+    "bytes": 9094
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiConstructionConversation.kt": {
+    "sha256": "cc314ea663356edff7d4f67524761b9411ae4ba8e91097878c14507a9255bed1",
+    "bytes": 17063
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiConstructionConversationTest.kt": {
+    "sha256": "4735015d2776a759d2214f26faebecf81140f748f6b31e3c777f059ebabae2ca",
+    "bytes": 19165
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/GeometrySelectionMeasurements.kt": {
+    "sha256": "c6291f2ae3ff943c1a1ddd20143b552eb8f7e257b9bf43ef32766b605cc01f02",
+    "bytes": 3757
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/GeometrySelectionMeasurementsTest.kt": {
+    "sha256": "a7256be41b6dbe3773a2599945fce550155fa596eaebf22bc966ed92fc422f72",
+    "bytes": 5208
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiColorTargetTest.kt": {
+    "sha256": "11eab39097494f8ace0b7bb4cf107aaa425b88b07b900a7039c499d28be11d1e",
+    "bytes": 4483
+  },
+  "scripts/audit_ruhi_context_gaps.init.gradle": {
+    "sha256": "36e5cd097b4d522beb102287b78de31cb073cb9ae5bfd28a77964cadcac8046d",
+    "bytes": 4339
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiActionContext.kt": {
+    "sha256": "cd29a704919a4d932cbc796b14ad0126d1f9a7e3f3d3db2930a8a5979cfd9807",
+    "bytes": 9012
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiOtherObjectTest.kt": {
+    "sha256": "ea9f01c4f33836a6b24b48460fcf25e249749005e622b5e605e3e0f37ed7f112",
+    "bytes": 6215
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPreserveCubeLanguage.kt": {
+    "sha256": "b32e6feb359598937d16611bbe2bef81de10e57d3ea6b00af16a0f4a542dae1d",
+    "bytes": 7856
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiPreserveCubeTest.kt": {
+    "sha256": "6d284dc0ae29065e8ee4022c0d3eb6145eca34ef613db65b2f95b9e2f3095659",
+    "bytes": 7264
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/workspace/GeometryMeasurementUnits.kt": {
+    "sha256": "afda83d7d67050931a976cdce86872fdcd760dd3e5f07bef2c7511121a19b69e",
+    "bytes": 2236
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiMeasurementUnitLanguage.kt": {
+    "sha256": "bee6ef9a3c0cc7e12acc7c5d7c8a8f0737c8756aeaa0c627dc0fd2eba9f7ee06",
+    "bytes": 5374
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiMeasurementUnitTest.kt": {
+    "sha256": "633e7c28274d3731753d17d0f1136f8cc1b5e57856f7fa28c83fb9d26bbf9c77",
+    "bytes": 9937
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogueSemantics.kt": {
+    "sha256": "c2c2c1d736e4153763dad383469dc9ca404dc9d04199729310c0564fffd53114",
+    "bytes": 3586
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogueSeedFixture.kt": {
+    "sha256": "0de99e2113ad87347a84614c5b8989ad00a9b3a79a8a3d76e4854694f772b4f9",
+    "bytes": 5879
+  },
+  "app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogueSeedOracle.kt": {
+    "sha256": "01c18395840810128771ac68fd1f816ce86016c41c8e1004f860b1056881b03a",
+    "bytes": 13799
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDialogueSeedMatrixTest.kt": {
+    "sha256": "bf771e86ccab5a670de8a0c2ff1be02b9e28c83c7d1d00795fee80a5519a96d0",
+    "bytes": 4226
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiPointDistanceUnitTest.kt": {
+    "sha256": "ed6d1deef95590f06590ecf7518141faf092667527b34f453cdee94a235b7dd8",
+    "bytes": 8540
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativePointContextTest.kt": {
+    "sha256": "a204b95870be76254fa56243f9151b811610d2145c592c6a64ffa331074febcf",
+    "bytes": 6924
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativePendingSlotsTest.kt": {
+    "sha256": "96bcc921b6ccd0f499446b9c12bdbcf99ced4a094a0a318c753e18395237c938",
+    "bytes": 8278
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativeDomainFollowUpTest.kt": {
+    "sha256": "adefbf13734e78ce11b10f38c190f17c65def728fc47e2dbc2125ee2713bec8c",
+    "bytes": 6523
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDistancePolicyMatrixTest.kt": {
+    "sha256": "3408d5bd0181de8157d35b0aaa40e1cf0214237cd7441ce67ff0929131a54061",
+    "bytes": 5743
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiChoosePointTest.kt": {
+    "sha256": "409352aea01588096421cb1d8bc1a4045a54491c5a4749f35a4fbb5bb41c24d7",
+    "bytes": 6977
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiAbsoluteValueExplanationTest.kt": {
+    "sha256": "febdcac984e812558d0c95ec59e446974e4af1c02f032e9eac2d122b3b711e39",
+    "bytes": 4908
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiLexicalPointLabelTest.kt": {
+    "sha256": "d3be9b0a4f5693ea6d92beb384a2f559bbbf20de723c4edd70a308bf849ca660",
+    "bytes": 6532
+  },
+  "scripts/audit_ruhi_absolute_value.init.gradle": {
+    "sha256": "3dd90e1d9791780fd6dc5898ac8d54032b922d59c57675be25e94265144aeaa7",
+    "bytes": 3561
+  },
+  "scripts/audit_ruhi_lexical_point_execution.init.gradle": {
+    "sha256": "9b7f66f3cd89413494ae040e20bf54e03124d4a1af8b0897e6b259cc82b0d921",
+    "bytes": 5056
+  },
+  "scripts/audit_ruhi_point_label_heads.py": {
+    "sha256": "798c2f324d66074d4dc2a6b65d36a2919f8f510c1f9248a1b69ac90274694d05",
+    "bytes": 4648
+  },
+  "scripts/audit_ruhi_critical_points.init.gradle": {
+    "sha256": "d811d6dcc5c48c3a2e1c8b0fd1837f1a89f3cdcb0e35e436125aa2ab3b9d28c6",
+    "bytes": 4285
+  },
+  "scripts/audit_ruhi_empty_integral.init.gradle": {
+    "sha256": "c3fcd91ecb88da5a9bd63c69cb311e8aaaf2f2efa7d1c8f99688afaed6a92ba7",
+    "bytes": 3967
+  },
+  "scripts/audit_ruhi_formula_reply_language.init.gradle": {
+    "sha256": "2834ccf895b36779e52777c803849c3fb5db3976af196ce181fa11bb6bd26e8c",
+    "bytes": 4377
+  },
+  "scripts/audit_ruhi_endpoint_pair_followups.init.gradle": {
+    "sha256": "b486c7629f78842d2ed1b8607f3891f12a3ff9339fb3a83574555a9a2edbe19b",
+    "bytes": 4704
+  },
+  "scripts/audit_ruhi_midpoint_label_followup.init.gradle": {
+    "sha256": "efe32148f158d636e474271d5d20da14b0960b803afbd490430fd2ba33ffeeae",
+    "bytes": 4925
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": {
+    "sha256": "d6b2e629194e07d072a4e870b4b382743154dae220e5e5bfa2f811e85b390c8f",
+    "bytes": 5042
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiEndpointClarificationTest.kt": {
+    "sha256": "34cdacf5f926b2a99ae579c576176926912730ec3268426b3dda04ad25d61125",
+    "bytes": 7041
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFormulaReply.kt": {
+    "sha256": "ad2479f33a1ac24fbfadadc5cc86cef803d52afffc786aa72d549c9c66d84f49",
+    "bytes": 1299
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiFormulaReplyLanguageTest.kt": {
+    "sha256": "1b0b72e78ffd02acc66b3a4d3515ddf47a72cf17576a56b02e69561307b5abbc",
+    "bytes": 6074
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiIntegralFormulaFollowUpTest.kt": {
+    "sha256": "977cb1b7019b6652e956ac3991b4728c9a197536a6ff306ea1b4217122243b50",
+    "bytes": 7048
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDerivativeFormulaFollowUpTest.kt": {
+    "sha256": "59c871c2aae8482c2cfc4f1965c61858a2cfdcacdb405269dcc8cf729f3db113",
+    "bytes": 6802
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeBranches.kt": {
+    "sha256": "6331b6b4bf46310c40bbf16594b7a3c9361b60d1b5604b66ce95b2f1752911bd",
+    "bytes": 5811
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/core/SymbolicCalculus.kt": {
+    "sha256": "56fff2aeb699d6e4a2297d3513824dc9b1de0d03bf24fbdc68a0f52ec4c5c23e",
+    "bytes": 20597
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiCriticalPointTest.kt": {
+    "sha256": "c55995a072db7c78361e83d58153b3494c970387f6b12cdcd3df1999aea8e187",
+    "bytes": 4724
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiAppliedTargetCorrection.kt": {
+    "sha256": "ef8de79303c0e7bb15e81e1d7dc318e8e91abe41b926f0d49c1089e5d4aa19b5",
+    "bytes": 7563
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiAppliedTargetCorrectionTest.kt": {
+    "sha256": "9eb341181411f45223413c09d570428775640c16468bcf8a952eceb820962820",
+    "bytes": 8199
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiContextualGraphLanguage.kt": {
+    "sha256": "4c16dbe210a8f0797aa911bb2e51344278863f4cffeda194857728e9d97fe236",
+    "bytes": 5502
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiContextualGraphTest.kt": {
+    "sha256": "f52bdc819cc37d20e1a136eaa4e969152f9add5267ce61120a68a44c4ebb69a5",
+    "bytes": 5966
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiContextualAngleLanguage.kt": {
+    "sha256": "cdff24718562392aa61a36ed0acd6b93951d6a1c2e276d4f63056d8e4c92adbf",
+    "bytes": 6537
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiContextualAngleTest.kt": {
+    "sha256": "329725e14bfb0a9c977e0e5a051ab17801dc10c09da19a519ff7cccc8e6c74d9",
+    "bytes": 7799
+  },
+  "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogueFollowUp.kt": {
+    "sha256": "fbf39333e59d3fd6cc6905e472f053702219f0168800ac954978195cb121be57",
+    "bytes": 2231
+  },
+  "app/src/test/java/com/indianservers/aiexplorer/RuhiDialogueFollowUpTest.kt": {
+    "sha256": "e01f2df177b228dd62b80bc111ca82b3775840e08368477c52b79992a883d124",
+    "bytes": 12586
+  },
+  "app/src/androidTest/java/com/indianservers/aiexplorer/CommittedCanvasCapture.kt": {
+    "sha256": "1c6ebf16f2ce2ef18ec3941f3bdb71431b2cf729555a036af4b0cacffeec27a5",
+    "bytes": 2513
+  },
+  "app/src/androidTest/java/com/indianservers/aiexplorer/RuhiGeometryKidRenderingTest.kt": {
+    "sha256": "d9c13429f68c8fa7b39915a6357cc8696a1ba967cc6f60eaaa3eaf0d60116678",
+    "bytes": 6033
+  }
+}

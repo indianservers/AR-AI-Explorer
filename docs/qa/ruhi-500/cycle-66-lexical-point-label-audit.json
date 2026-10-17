@@ -1,0 +1,949 @@
+{
+  "cycle": 66,
+  "intent_model_sha256": "9f61ff43d68f2b9ca8d9c3971a83f1eead9d370961da23f36e76f5f867ce3a78",
+  "slot_model_sha256": "e68423020086154decd15e7befd84d2555935e41acdb387a87a3903cc4fc285f",
+  "cases": 16,
+  "correct_intents": 16,
+  "correct_slots": 15,
+  "results": [
+    {
+      "text": "distance between Vertex907 and Omega811",
+      "first": "Vertex907",
+      "second": "Omega811",
+      "normalized": "distance between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "Vertex907"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9987936019897461,
+          "margin": 0.9978577494621277
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.9997124075889587,
+          "margin": 0.9995250105857849
+        },
+        {
+          "token": "Vertex907",
+          "intent": "POINT_1",
+          "confidence": 0.9989651441574097,
+          "margin": 0.9980563521385193
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9997311234474182,
+          "margin": 0.999578058719635
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9879481196403503,
+          "margin": 0.9795702695846558
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "Vertex907"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "how far is Vertex907 from Omega811",
+      "first": "Vertex907",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "Vertex907"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.996253252029419,
+          "margin": 0.9937321543693542
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.997389018535614,
+          "margin": 0.9950793385505676
+        },
+        {
+          "token": "Vertex907",
+          "intent": "POINT_1",
+          "confidence": 0.9941874742507935,
+          "margin": 0.9901838302612305
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9998356103897095,
+          "margin": 0.999760627746582
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9527491927146912,
+          "margin": 0.9247690439224243
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "Vertex907"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "distance between distance and Omega811",
+      "first": "distance",
+      "second": "Omega811",
+      "normalized": "entity between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.5977559685707092,
+        "margin": 0.40466105937957764
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "distance"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9986892342567444,
+          "margin": 0.998104989528656
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.996180534362793,
+          "margin": 0.9939965605735779
+        },
+        {
+          "token": "distance",
+          "intent": "POINT_1",
+          "confidence": 0.8994097709655762,
+          "margin": 0.7989014983177185
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9977464079856873,
+          "margin": 0.9961575269699097
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.8924930095672607,
+          "margin": 0.8448544144630432
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [],
+      "accepted_second": []
+    },
+    {
+      "text": "how far is distance from Omega811",
+      "first": "distance",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "distance"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.9960675239562988,
+          "margin": 0.9943224787712097
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.9664266109466553,
+          "margin": 0.9358152747154236
+        },
+        {
+          "token": "distance",
+          "intent": "POINT_1",
+          "confidence": 0.7024466395378113,
+          "margin": 0.40534040331840515
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9990829229354858,
+          "margin": 0.9986319541931152
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.5147411227226257,
+          "margin": 0.2905902564525604
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [],
+      "accepted_second": []
+    },
+    {
+      "text": "distance between point and Omega811",
+      "first": "point",
+      "second": "Omega811",
+      "normalized": "distance between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "point"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9982706308364868,
+          "margin": 0.9971951246261597
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.9963892698287964,
+          "margin": 0.994227409362793
+        },
+        {
+          "token": "point",
+          "intent": "POINT_1",
+          "confidence": 0.9249978065490723,
+          "margin": 0.8500597476959229
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9881858825683594,
+          "margin": 0.9806970953941345
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9279329776763916,
+          "margin": 0.8786676526069641
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "point"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "how far is point from Omega811",
+      "first": "point",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "point"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.9941237568855286,
+          "margin": 0.9912311434745789
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.9703837037086487,
+          "margin": 0.9443740248680115
+        },
+        {
+          "token": "point",
+          "intent": "POINT_1",
+          "confidence": 0.7356078028678894,
+          "margin": 0.47180676460266113
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9932445883750916,
+          "margin": 0.9874470829963684
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.638655960559845,
+          "margin": 0.36203205585479736
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [],
+      "accepted_second": []
+    },
+    {
+      "text": "distance between line and Omega811",
+      "first": "line",
+      "second": "Omega811",
+      "normalized": "distance between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "line"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9989140033721924,
+          "margin": 0.9984064102172852
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.9965912103652954,
+          "margin": 0.9945813417434692
+        },
+        {
+          "token": "line",
+          "intent": "POINT_1",
+          "confidence": 0.9096411466598511,
+          "margin": 0.819352388381958
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9983129501342773,
+          "margin": 0.9973292946815491
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.8778789043426514,
+          "margin": 0.7899713516235352
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [
+        "line"
+      ],
+      "accepted_second": []
+    },
+    {
+      "text": "how far is line from Omega811",
+      "first": "line",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "line"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.995893120765686,
+          "margin": 0.993605375289917
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.9717232584953308,
+          "margin": 0.9475135803222656
+        },
+        {
+          "token": "line",
+          "intent": "POINT_1",
+          "confidence": 0.6942605376243591,
+          "margin": 0.38922202587127686
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9991590976715088,
+          "margin": 0.9986867308616638
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.5107451677322388,
+          "margin": 0.09349793195724487
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [],
+      "accepted_second": []
+    },
+    {
+      "text": "distance between slope and Omega811",
+      "first": "slope",
+      "second": "Omega811",
+      "normalized": "distance between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "slope"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9987936019897461,
+          "margin": 0.9978577494621277
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.9997124075889587,
+          "margin": 0.9995250105857849
+        },
+        {
+          "token": "slope",
+          "intent": "POINT_1",
+          "confidence": 0.9989651441574097,
+          "margin": 0.9980563521385193
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9997311234474182,
+          "margin": 0.999578058719635
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9879481196403503,
+          "margin": 0.9795702695846558
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "slope"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "how far is slope from Omega811",
+      "first": "slope",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "slope"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.996253252029419,
+          "margin": 0.9937321543693542
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.997389018535614,
+          "margin": 0.9950793385505676
+        },
+        {
+          "token": "slope",
+          "intent": "POINT_1",
+          "confidence": 0.9941874742507935,
+          "margin": 0.9901838302612305
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9998356103897095,
+          "margin": 0.999760627746582
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9527491927146912,
+          "margin": 0.9247690439224243
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "slope"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "distance between and and Omega811",
+      "first": "and",
+      "second": "Omega811",
+      "normalized": "distance between entity entity entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.7623302340507507,
+        "margin": 0.7008317708969116
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "and"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9982264637947083,
+          "margin": 0.9972348809242249
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.9569712281227112,
+          "margin": 0.9156850576400757
+        },
+        {
+          "token": "and",
+          "intent": "POINT_1",
+          "confidence": 0.9211689829826355,
+          "margin": 0.8424121737480164
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9914987683296204,
+          "margin": 0.984318733215332
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9880328178405762,
+          "margin": 0.9820036888122559
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "and"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "how far is and from Omega811",
+      "first": "and",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": false,
+      "actual_first": [
+        "is",
+        "and"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.9937161803245544,
+          "margin": 0.9910444617271423
+        },
+        {
+          "token": "is",
+          "intent": "POINT_1",
+          "confidence": 0.5347963571548462,
+          "margin": 0.07473114132881165
+        },
+        {
+          "token": "and",
+          "intent": "POINT_1",
+          "confidence": 0.8514968156814575,
+          "margin": 0.7037463188171387
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9785401821136475,
+          "margin": 0.9576621055603027
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9861977696418762,
+          "margin": 0.9805546998977661
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "distance between from and Omega811",
+      "first": "from",
+      "second": "Omega811",
+      "normalized": "distance between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "from"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9976062774658203,
+          "margin": 0.99605792760849
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.977108359336853,
+          "margin": 0.9578213095664978
+        },
+        {
+          "token": "from",
+          "intent": "POINT_1",
+          "confidence": 0.9746911525726318,
+          "margin": 0.9494256377220154
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9671691060066223,
+          "margin": 0.9468923211097717
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9636945128440857,
+          "margin": 0.9443234205245972
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "from"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "how far is from from Omega811",
+      "first": "from",
+      "second": "Omega811",
+      "normalized": "how far is entity entity entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.48373788595199585,
+        "margin": 0.2709755301475525
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "from"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.9919781684875488,
+          "margin": 0.9878199100494385
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.9160153269767761,
+          "margin": 0.8375630378723145
+        },
+        {
+          "token": "from",
+          "intent": "POINT_1",
+          "confidence": 0.753175675868988,
+          "margin": 0.5071173906326294
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9936716556549072,
+          "margin": 0.9890483021736145
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.6486790180206299,
+          "margin": 0.3724934160709381
+        }
+      ],
+      "accepted_slots_correct": false,
+      "accepted_first": [],
+      "accepted_second": []
+    },
+    {
+      "text": "distance between alpha and Omega811",
+      "first": "alpha",
+      "second": "Omega811",
+      "normalized": "distance between entity and entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9682344198226929,
+        "margin": 0.954520046710968
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "alpha"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "distance",
+          "intent": "OTHER",
+          "confidence": 0.9987936019897461,
+          "margin": 0.9978577494621277
+        },
+        {
+          "token": "between",
+          "intent": "OTHER",
+          "confidence": 0.9997124075889587,
+          "margin": 0.9995250105857849
+        },
+        {
+          "token": "alpha",
+          "intent": "POINT_1",
+          "confidence": 0.9989651441574097,
+          "margin": 0.9980563521385193
+        },
+        {
+          "token": "and",
+          "intent": "OTHER",
+          "confidence": 0.9997311234474182,
+          "margin": 0.999578058719635
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9879481196403503,
+          "margin": 0.9795702695846558
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "alpha"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    },
+    {
+      "text": "how far is alpha from Omega811",
+      "first": "alpha",
+      "second": "Omega811",
+      "normalized": "how far is entity from entity",
+      "intent": {
+        "intent": "MEASURE_DISTANCE",
+        "confidence": 0.9028270244598389,
+        "margin": 0.8507360816001892
+      },
+      "slots_correct": true,
+      "actual_first": [
+        "alpha"
+      ],
+      "actual_second": [
+        "Omega811"
+      ],
+      "slot_predictions": [
+        {
+          "token": "how",
+          "intent": "OTHER",
+          "confidence": 0.997140645980835,
+          "margin": 0.9957321286201477
+        },
+        {
+          "token": "far",
+          "intent": "OTHER",
+          "confidence": 0.996253252029419,
+          "margin": 0.9937321543693542
+        },
+        {
+          "token": "is",
+          "intent": "OTHER",
+          "confidence": 0.997389018535614,
+          "margin": 0.9950793385505676
+        },
+        {
+          "token": "alpha",
+          "intent": "POINT_1",
+          "confidence": 0.9941874742507935,
+          "margin": 0.9901838302612305
+        },
+        {
+          "token": "from",
+          "intent": "OTHER",
+          "confidence": 0.9998356103897095,
+          "margin": 0.999760627746582
+        },
+        {
+          "token": "Omega811",
+          "intent": "POINT_2",
+          "confidence": 0.9527491927146912,
+          "margin": 0.9247690439224243
+        }
+      ],
+      "accepted_slots_correct": true,
+      "accepted_first": [
+        "alpha"
+      ],
+      "accepted_second": [
+        "Omega811"
+      ]
+    }
+  ],
+  "scope": "Development probe of valid labels colliding with ordinary lexical features; head predictions only, not a whole-assistant execution verdict or held-out benchmark.",
+  "correct_confidence_gated_slots": 9
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiDistancePolicyMatrixTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:25.248Z" hostname="INDIANSERVERS" time="2.103">
+  <properties/>
+  <testcase name="renamedEndpointFollowUpsDoNotRequireTrainingPointNames" classname="com.indianservers.aiexplorer.RuhiDistancePolicyMatrixTest" time="0.416"/>
+  <testcase name="everyOriginalRowAsksOnlyForTheMissingEndpointAndResumesAfterRestore" classname="com.indianservers.aiexplorer.RuhiDistancePolicyMatrixTest" time="0.736"/>
+  <testcase name="allOriginalRequestsRejectInvalidCoordinatesAndCancelWithoutCreatingPoints" classname="com.indianservers.aiexplorer.RuhiDistancePolicyMatrixTest" time="0.359"/>
+  <testcase name="bothMissingEndpointsAreCreatedOnlyAfterExplicitCoordinateAnswers" classname="com.indianservers.aiexplorer.RuhiDistancePolicyMatrixTest" time="0.592"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

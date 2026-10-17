@@ -229,13 +229,11 @@ class SymbolicCalculusEngine {
     }
 
     private fun format(value: Double): String {
-        val rounded = round(value)
-        return if (abs(value - rounded) < 1e-10) rounded.toLong().toString()
-        else String.format(java.util.Locale.US, "%.8f", value).trimEnd('0').trimEnd('.')
+        return java.math.BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()
     }
 
-    private fun isZero(node: Sym) = node is Sym.Number && abs(node.value) < 1e-12
-    private fun isOne(node: Sym) = node is Sym.Number && abs(node.value - 1.0) < 1e-12
+    private fun isZero(node: Sym) = node is Sym.Number && node.value == 0.0
+    private fun isOne(node: Sym) = node is Sym.Number && node.value == 1.0
     private val zero = Sym.Number(0.0)
     private val one = Sym.Number(1.0)
 }

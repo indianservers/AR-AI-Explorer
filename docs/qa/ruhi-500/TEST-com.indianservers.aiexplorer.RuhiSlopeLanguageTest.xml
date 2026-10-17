@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiSlopeLanguageTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:34.256Z" hostname="INDIANSERVERS" time="0.033">
+  <properties/>
+  <testcase name="annotationReferencesRemapOrDisappearWhenNativePointsAreRemoved" classname="com.indianservers.aiexplorer.RuhiSlopeLanguageTest" time="0.002"/>
+  <testcase name="all25SlopeRowsMatchTheSourceSlotsAndIndependentRiseOverRun" classname="com.indianservers.aiexplorer.RuhiSlopeLanguageTest" time="0.026"/>
+  <testcase name="verticalAndCoincidentPointsAndNonlinearCurvesAreHandledHonestly" classname="com.indianservers.aiexplorer.RuhiSlopeLanguageTest" time="0.003"/>
+  <testcase name="negativeInstructionsCannotCreateMidpointsOrSlopeAnnotations" classname="com.indianservers.aiexplorer.RuhiSlopeLanguageTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.UniversalMathRuntimeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-16T16:07:01.187Z" hostname="INDIANSERVERS" time="0.005">
+  <properties/>
+  <testcase name="reverseIndexSelectsOnlyChangedObjectAndDescendants" classname="com.indianservers.aiexplorer.UniversalMathRuntimeTest" time="0.0"/>
+  <testcase name="failedEvaluationBecomesNumericallyUnstableInsteadOfCrashing" classname="com.indianservers.aiexplorer.UniversalMathRuntimeTest" time="0.002"/>
+  <testcase name="recomputeIsTopologicalIncrementalAndInstrumented" classname="com.indianservers.aiexplorer.UniversalMathRuntimeTest" time="0.002"/>
+  <testcase name="missingAndCyclicObjectsRemainVisibleWithExplicitStates" classname="com.indianservers.aiexplorer.UniversalMathRuntimeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

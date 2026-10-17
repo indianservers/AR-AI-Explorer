@@ -1,0 +1,2900 @@
+{
+  "model_sha256": "fb04323dc618bbe18c60b0b3e9383313e9836b4c21366aaa255faa7f45f0221e",
+  "supplied_training_fit": {
+    "total": 300,
+    "correct": 300,
+    "accepted": 300,
+    "accepted_errors": 0,
+    "results": [
+      {
+        "text": "Can you draw a cube for me?",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9707057476043701,
+        "margin": 0.9638432860374451,
+        "accepted": true
+      },
+      {
+        "text": "Make a ball.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9712236523628235,
+        "margin": 0.9666467308998108,
+        "accepted": true
+      },
+      {
+        "text": "Draw a cone like an ice cream cone.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9750619530677795,
+        "margin": 0.967333197593689,
+        "accepted": true
+      },
+      {
+        "text": "Can you make a cylinder like a tin can?",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9623485803604126,
+        "margin": 0.9566161036491394,
+        "accepted": true
+      },
+      {
+        "text": "Draw a box that is longer than it is tall.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9949393272399902,
+        "margin": 0.9936645030975342,
+        "accepted": true
+      },
+      {
+        "text": "Make a pyramid with a square bottom.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9948275685310364,
+        "margin": 0.993084192276001,
+        "accepted": true
+      },
+      {
+        "text": "Draw a pyramid with a triangle bottom.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9892085194587708,
+        "margin": 0.9812408089637756,
+        "accepted": true
+      },
+      {
+        "text": "Can you draw a triangular prism?",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9813910722732544,
+        "margin": 0.9748041033744812,
+        "accepted": true
+      },
+      {
+        "text": "Make a ring like a doughnut.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9835110902786255,
+        "margin": 0.9809309244155884,
+        "accepted": true
+      },
+      {
+        "text": "Draw half a ball.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9693023562431335,
+        "margin": 0.9626498222351074,
+        "accepted": true
+      },
+      {
+        "text": "Make an egg-shaped solid.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.964388370513916,
+        "margin": 0.957973837852478,
+        "accepted": true
+      },
+      {
+        "text": "Can you draw a capsule shape?",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9736360907554626,
+        "margin": 0.9659491181373596,
+        "accepted": true
+      },
+      {
+        "text": "Draw a hollow tube.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9781342148780823,
+        "margin": 0.9703719019889832,
+        "accepted": true
+      },
+      {
+        "text": "Make a cone with its top cut off.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9954908490180969,
+        "margin": 0.9946947693824768,
+        "accepted": true
+      },
+      {
+        "text": "Draw a cube with sides of 4 units.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.99528568983078,
+        "margin": 0.9936402440071106,
+        "accepted": true
+      },
+      {
+        "text": "Make a sphere with radius 3.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9963809847831726,
+        "margin": 0.9953136444091797,
+        "accepted": true
+      },
+      {
+        "text": "Draw a cylinder with radius 2 and height 5.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9962561130523682,
+        "margin": 0.9939499497413635,
+        "accepted": true
+      },
+      {
+        "text": "Make a cone with radius 3 and height 6.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9960737228393555,
+        "margin": 0.9939248561859131,
+        "accepted": true
+      },
+      {
+        "text": "Draw a box that is 6 long, 4 wide, and 2 high.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.994188666343689,
+        "margin": 0.9925593137741089,
+        "accepted": true
+      },
+      {
+        "text": "Make a square pyramid with base side 4 and height 7.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9948810338973999,
+        "margin": 0.9928461909294128,
+        "accepted": true
+      },
+      {
+        "text": "Draw a triangular prism that is 5 units long.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9970985651016235,
+        "margin": 0.996566116809845,
+        "accepted": true
+      },
+      {
+        "text": "Make a sphere with diameter 10.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9937043786048889,
+        "margin": 0.9912490248680115,
+        "accepted": true
+      },
+      {
+        "text": "Draw a cube with side length 2.5.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9957348704338074,
+        "margin": 0.9934276342391968,
+        "accepted": true
+      },
+      {
+        "text": "Make a cylinder that is 8 units tall.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.994961142539978,
+        "margin": 0.9938107132911682,
+        "accepted": true
+      },
+      {
+        "text": "Draw a point at (1, 2, 3).",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.9923601746559143,
+        "margin": 0.9884359240531921,
+        "accepted": true
+      },
+      {
+        "text": "Put a point at the origin.",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.9935634136199951,
+        "margin": 0.9911752343177795,
+        "accepted": true
+      },
+      {
+        "text": "Add a point called A at (2, 0, 0).",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.9989882111549377,
+        "margin": 0.9987660646438599,
+        "accepted": true
+      },
+      {
+        "text": "Add a point called B at (0, 3, 0).",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.9982911944389343,
+        "margin": 0.9974037408828735,
+        "accepted": true
+      },
+      {
+        "text": "Add a point called C at (0, 0, 4).",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.9986186027526855,
+        "margin": 0.9980679154396057,
+        "accepted": true
+      },
+      {
+        "text": "Draw a line from A to B.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.985273540019989,
+        "margin": 0.9783122539520264,
+        "accepted": true
+      },
+      {
+        "text": "Join B and C with a segment.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9866467714309692,
+        "margin": 0.9801815152168274,
+        "accepted": true
+      },
+      {
+        "text": "Draw a ray starting at A and going through C.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9913928508758545,
+        "margin": 0.9876279830932617,
+        "accepted": true
+      },
+      {
+        "text": "Make an arrow from the origin to (2, 3, 4).",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9901236891746521,
+        "margin": 0.9869389533996582,
+        "accepted": true
+      },
+      {
+        "text": "Draw a plane through A, B, and C.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9663785099983215,
+        "margin": 0.9427680373191833,
+        "accepted": true
+      },
+      {
+        "text": "Show me the xy-plane.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9648649096488953,
+        "margin": 0.9572537541389465,
+        "accepted": true
+      },
+      {
+        "text": "Draw a plane parallel to the floor at z = 3.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9887816309928894,
+        "margin": 0.9828671813011169,
+        "accepted": true
+      },
+      {
+        "text": "Draw a triangle using A, B, and C.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9887815117835999,
+        "margin": 0.9837104678153992,
+        "accepted": true
+      },
+      {
+        "text": "Make a tetrahedron using four points.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9850324392318726,
+        "margin": 0.9768345952033997,
+        "accepted": true
+      },
+      {
+        "text": "Draw two cubes next to each other.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9870309233665466,
+        "margin": 0.9829190969467163,
+        "accepted": true
+      },
+      {
+        "text": "Make three spheres with different sizes.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9832120537757874,
+        "margin": 0.9786592125892639,
+        "accepted": true
+      },
+      {
+        "text": "How many solids are on my screen?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9908787608146667,
+        "margin": 0.9884456992149353,
+        "accepted": true
+      },
+      {
+        "text": "How many cubes did I draw?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9763195514678955,
+        "margin": 0.9692215323448181,
+        "accepted": true
+      },
+      {
+        "text": "How many spheres are there?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9798455834388733,
+        "margin": 0.9747690558433533,
+        "accepted": true
+      },
+      {
+        "text": "What is this shape called?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9479432702064514,
+        "margin": 0.9375377893447876,
+        "accepted": true
+      },
+      {
+        "text": "Which shape looks like a ball?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.972604513168335,
+        "margin": 0.9576092958450317,
+        "accepted": true
+      },
+      {
+        "text": "Which solid has a pointy top?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9776735305786133,
+        "margin": 0.9714555740356445,
+        "accepted": true
+      },
+      {
+        "text": "Which solid has two circular ends?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9682546854019165,
+        "margin": 0.9584927558898926,
+        "accepted": true
+      },
+      {
+        "text": "Which objects have only flat faces?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9925580024719238,
+        "margin": 0.9910696744918823,
+        "accepted": true
+      },
+      {
+        "text": "Which objects have curved surfaces?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9878925085067749,
+        "margin": 0.9853113889694214,
+        "accepted": true
+      },
+      {
+        "text": "Which objects have both flat and curved surfaces?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9935389161109924,
+        "margin": 0.9919214248657227,
+        "accepted": true
+      },
+      {
+        "text": "How many faces does this cube have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9989860653877258,
+        "margin": 0.9986467957496643,
+        "accepted": true
+      },
+      {
+        "text": "How many edges does this cube have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9971469044685364,
+        "margin": 0.996184766292572,
+        "accepted": true
+      },
+      {
+        "text": "How many corners does this cube have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.997936487197876,
+        "margin": 0.9971935749053955,
+        "accepted": true
+      },
+      {
+        "text": "How many faces does this box have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9965032339096069,
+        "margin": 0.9941556453704834,
+        "accepted": true
+      },
+      {
+        "text": "How many edges does this triangular prism have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9968917965888977,
+        "margin": 0.9955900311470032,
+        "accepted": true
+      },
+      {
+        "text": "How many corners does this square pyramid have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9973803162574768,
+        "margin": 0.9964495301246643,
+        "accepted": true
+      },
+      {
+        "text": "How many faces does this tetrahedron have?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9988019466400146,
+        "margin": 0.9984499216079712,
+        "accepted": true
+      },
+      {
+        "text": "Does a sphere have any corners?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9801784157752991,
+        "margin": 0.9716629385948181,
+        "accepted": true
+      },
+      {
+        "text": "Does a cylinder have any vertices?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9846891164779663,
+        "margin": 0.9786891937255859,
+        "accepted": true
+      },
+      {
+        "text": "Is this object a cube or a cuboid?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9754104614257812,
+        "margin": 0.9694053530693054,
+        "accepted": true
+      },
+      {
+        "text": "Are all the faces of this cube squares?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9626702070236206,
+        "margin": 0.9524575471878052,
+        "accepted": true
+      },
+      {
+        "text": "Are these two solids the same kind of shape?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9655362367630005,
+        "margin": 0.956991970539093,
+        "accepted": true
+      },
+      {
+        "text": "Which object has the most vertices?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9701790809631348,
+        "margin": 0.9647323489189148,
+        "accepted": true
+      },
+      {
+        "text": "Which objects have a circular base?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9941430687904358,
+        "margin": 0.9924341440200806,
+        "accepted": true
+      },
+      {
+        "text": "What is the name of the selected object?",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.9555606245994568,
+        "margin": 0.9381274580955505,
+        "accepted": true
+      },
+      {
+        "text": "What are A\u2019s coordinates?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9475139379501343,
+        "margin": 0.9379251003265381,
+        "accepted": true
+      },
+      {
+        "text": "Where is point B?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9670155048370361,
+        "margin": 0.9555614590644836,
+        "accepted": true
+      },
+      {
+        "text": "Which point is at (1, 2, 3)?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.980853259563446,
+        "margin": 0.9681181907653809,
+        "accepted": true
+      },
+      {
+        "text": "Which point is closest to (2, 3, 4)?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9945382475852966,
+        "margin": 0.9934405088424683,
+        "accepted": true
+      },
+      {
+        "text": "Is any point exactly at the origin?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9836776256561279,
+        "margin": 0.9784777164459229,
+        "accepted": true
+      },
+      {
+        "text": "What is the distance from A to B?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.976901113986969,
+        "margin": 0.9684691429138184,
+        "accepted": true
+      },
+      {
+        "text": "How far is C from the origin?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9912952184677124,
+        "margin": 0.9884665608406067,
+        "accepted": true
+      },
+      {
+        "text": "How far apart are these two points?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9642944931983948,
+        "margin": 0.9525583982467651,
+        "accepted": true
+      },
+      {
+        "text": "What is the midpoint of AB?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9386622905731201,
+        "margin": 0.9117499589920044,
+        "accepted": true
+      },
+      {
+        "text": "Mark the halfway point between A and C.",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9745154976844788,
+        "margin": 0.9670938849449158,
+        "accepted": true
+      },
+      {
+        "text": "Which point is highest?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.990898847579956,
+        "margin": 0.98838871717453,
+        "accepted": true
+      },
+      {
+        "text": "Which point has the smallest x-coordinate?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9761402010917664,
+        "margin": 0.9707615971565247,
+        "accepted": true
+      },
+      {
+        "text": "Which point is closest to the xy-plane?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9937897324562073,
+        "margin": 0.9897969961166382,
+        "accepted": true
+      },
+      {
+        "text": "Is A above the xy-plane?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9710854291915894,
+        "margin": 0.9622253775596619,
+        "accepted": true
+      },
+      {
+        "text": "Is B on the z-axis?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9960208535194397,
+        "margin": 0.9949638843536377,
+        "accepted": true
+      },
+      {
+        "text": "Do A and B have the same height?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9821785092353821,
+        "margin": 0.9780631065368652,
+        "accepted": true
+      },
+      {
+        "text": "Which points have z equal to zero?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9745409488677979,
+        "margin": 0.9682904481887817,
+        "accepted": true
+      },
+      {
+        "text": "How far is A from the x-axis?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9904849529266357,
+        "margin": 0.9857227206230164,
+        "accepted": true
+      },
+      {
+        "text": "How far is B from the yz-plane?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9897822141647339,
+        "margin": 0.9832398295402527,
+        "accepted": true
+      },
+      {
+        "text": "Are A, B, and C on one straight line?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.980674684047699,
+        "margin": 0.9713175892829895,
+        "accepted": true
+      },
+      {
+        "text": "Are these four points on the same plane?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9728988409042358,
+        "margin": 0.959467351436615,
+        "accepted": true
+      },
+      {
+        "text": "Is A inside this sphere?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9617018699645996,
+        "margin": 0.9504926204681396,
+        "accepted": true
+      },
+      {
+        "text": "Is B on the surface of this sphere?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9780047535896301,
+        "margin": 0.9612606167793274,
+        "accepted": true
+      },
+      {
+        "text": "Is C inside this box?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9556330442428589,
+        "margin": 0.9343559741973877,
+        "accepted": true
+      },
+      {
+        "text": "Which points are outside the selected solid?",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9783881306648254,
+        "margin": 0.9713692665100098,
+        "accepted": true
+      },
+      {
+        "text": "What is the volume of this cube?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9985746145248413,
+        "margin": 0.9981106519699097,
+        "accepted": true
+      },
+      {
+        "text": "How much space is inside this box?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9727507829666138,
+        "margin": 0.9530975818634033,
+        "accepted": true
+      },
+      {
+        "text": "What is the volume of the sphere?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9871518611907959,
+        "margin": 0.9808279871940613,
+        "accepted": true
+      },
+      {
+        "text": "Find the volume of this cylinder.",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9960107803344727,
+        "margin": 0.9952202439308167,
+        "accepted": true
+      },
+      {
+        "text": "How much space does this cone take up?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9813585877418518,
+        "margin": 0.9752428531646729,
+        "accepted": true
+      },
+      {
+        "text": "What is the volume of this square pyramid?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9983447790145874,
+        "margin": 0.9979093670845032,
+        "accepted": true
+      },
+      {
+        "text": "Find the volume of this triangular prism.",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9917353987693787,
+        "margin": 0.9898185729980469,
+        "accepted": true
+      },
+      {
+        "text": "What is the total surface area of this cube?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9990090131759644,
+        "margin": 0.9986881613731384,
+        "accepted": true
+      },
+      {
+        "text": "How much wrapping paper would cover this box?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9853799939155579,
+        "margin": 0.9822381734848022,
+        "accepted": true
+      },
+      {
+        "text": "What is the surface area of the sphere?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9852775931358337,
+        "margin": 0.9785876274108887,
+        "accepted": true
+      },
+      {
+        "text": "Find the total surface area of this cylinder.",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9972521662712097,
+        "margin": 0.996688723564148,
+        "accepted": true
+      },
+      {
+        "text": "What is the curved surface area of this cylinder?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.999485969543457,
+        "margin": 0.9993447065353394,
+        "accepted": true
+      },
+      {
+        "text": "Find the curved surface area of this cone.",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9969044327735901,
+        "margin": 0.9961859583854675,
+        "accepted": true
+      },
+      {
+        "text": "What is the total surface area of this cone?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9996283054351807,
+        "margin": 0.9995293617248535,
+        "accepted": true
+      },
+      {
+        "text": "What is the area of the pyramid\u2019s base?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.988595187664032,
+        "margin": 0.9840729236602783,
+        "accepted": true
+      },
+      {
+        "text": "How big is one face of this cube?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9774527549743652,
+        "margin": 0.9689069986343384,
+        "accepted": true
+      },
+      {
+        "text": "What is the area of the cylinder\u2019s circular base?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.990359902381897,
+        "margin": 0.9868736267089844,
+        "accepted": true
+      },
+      {
+        "text": "How long is the edge of this cube?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.980734646320343,
+        "margin": 0.9688190817832947,
+        "accepted": true
+      },
+      {
+        "text": "What is the height of this cone?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9899213314056396,
+        "margin": 0.9870840311050415,
+        "accepted": true
+      },
+      {
+        "text": "What is the radius of this sphere?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9409779906272888,
+        "margin": 0.9090794324874878,
+        "accepted": true
+      },
+      {
+        "text": "What is the diameter of this cylinder?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9862923622131348,
+        "margin": 0.9826343059539795,
+        "accepted": true
+      },
+      {
+        "text": "What are this box\u2019s length, width, and height?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9609988331794739,
+        "margin": 0.9496645331382751,
+        "accepted": true
+      },
+      {
+        "text": "How long is the diagonal across this box?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9901009798049927,
+        "margin": 0.9829756021499634,
+        "accepted": true
+      },
+      {
+        "text": "What is the diagonal across one cube face?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9709720611572266,
+        "margin": 0.9614604711532593,
+        "accepted": true
+      },
+      {
+        "text": "How long is the sloping side of this cone?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.989078938961029,
+        "margin": 0.9803369641304016,
+        "accepted": true
+      },
+      {
+        "text": "Where is the center of this sphere?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9746968150138855,
+        "margin": 0.9640424847602844,
+        "accepted": true
+      },
+      {
+        "text": "Where is the center of this box?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9936463832855225,
+        "margin": 0.9909014105796814,
+        "accepted": true
+      },
+      {
+        "text": "What is the distance between the centers of these spheres?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9648663401603699,
+        "margin": 0.9563087821006775,
+        "accepted": true
+      },
+      {
+        "text": "Which solid has the biggest volume?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9558154344558716,
+        "margin": 0.930508553981781,
+        "accepted": true
+      },
+      {
+        "text": "Which solid has the smallest surface area?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9649289846420288,
+        "margin": 0.9475420713424683,
+        "accepted": true
+      },
+      {
+        "text": "Is this cube bigger than that sphere by volume?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9713837504386902,
+        "margin": 0.9548392295837402,
+        "accepted": true
+      },
+      {
+        "text": "Do these two boxes have the same volume?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9541811347007751,
+        "margin": 0.9446285367012024,
+        "accepted": true
+      },
+      {
+        "text": "How much bigger is this cylinder than that cone?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.992374837398529,
+        "margin": 0.9905460476875305,
+        "accepted": true
+      },
+      {
+        "text": "If their bases and heights match, is the cone one-third of the cylinder?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9897000789642334,
+        "margin": 0.9874279499053955,
+        "accepted": true
+      },
+      {
+        "text": "Can you show the volume formula using this solid\u2019s numbers?",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9818273186683655,
+        "margin": 0.9775350689888,
+        "accepted": true
+      },
+      {
+        "text": "Move the cube 2 units to the right.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9979562759399414,
+        "margin": 0.9973853826522827,
+        "accepted": true
+      },
+      {
+        "text": "Move the sphere 3 units up the z-axis.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9977867603302002,
+        "margin": 0.9966578483581543,
+        "accepted": true
+      },
+      {
+        "text": "Push the cone 4 units along the y-axis.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9871987700462341,
+        "margin": 0.9794711470603943,
+        "accepted": true
+      },
+      {
+        "text": "Move the cylinder 2 units in the negative x direction.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9948387742042542,
+        "margin": 0.993218719959259,
+        "accepted": true
+      },
+      {
+        "text": "Put the sphere\u2019s center at (3, 2, 1).",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.988784670829773,
+        "margin": 0.9858015179634094,
+        "accepted": true
+      },
+      {
+        "text": "Move point A to (4, 5, 6).",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.964731752872467,
+        "margin": 0.9575784802436829,
+        "accepted": true
+      },
+      {
+        "text": "Move B one unit closer to the xy-plane.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9825873970985413,
+        "margin": 0.9723673462867737,
+        "accepted": true
+      },
+      {
+        "text": "Put the cube\u2019s center at the origin.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9803431630134583,
+        "margin": 0.9750669002532959,
+        "accepted": true
+      },
+      {
+        "text": "Move all spheres 2 units along the x-axis.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9967526197433472,
+        "margin": 0.9958279728889465,
+        "accepted": true
+      },
+      {
+        "text": "Move both cubes up by 3 units.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9945758581161499,
+        "margin": 0.9926789999008179,
+        "accepted": true
+      },
+      {
+        "text": "Move only the selected solid.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9534905552864075,
+        "margin": 0.9291920065879822,
+        "accepted": true
+      },
+      {
+        "text": "Move the box by (1, 2, 3).",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.975790798664093,
+        "margin": 0.9700698256492615,
+        "accepted": true
+      },
+      {
+        "text": "Bring the cone back to where it was.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9751344919204712,
+        "margin": 0.9649283289909363,
+        "accepted": true
+      },
+      {
+        "text": "Put the two spheres next to each other without overlap.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9876960515975952,
+        "margin": 0.9788318276405334,
+        "accepted": true
+      },
+      {
+        "text": "Move this sphere until it just touches that sphere.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9823645353317261,
+        "margin": 0.9763564467430115,
+        "accepted": true
+      },
+      {
+        "text": "Put the cube on the xy-plane.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9811868667602539,
+        "margin": 0.9766377806663513,
+        "accepted": true
+      },
+      {
+        "text": "Put the cone on top of the box.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9831353425979614,
+        "margin": 0.9753018617630005,
+        "accepted": true
+      },
+      {
+        "text": "Line up the centers of these three spheres.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9714807271957397,
+        "margin": 0.9578877091407776,
+        "accepted": true
+      },
+      {
+        "text": "Leave an equal gap between these cubes.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9711629152297974,
+        "margin": 0.9646061658859253,
+        "accepted": true
+      },
+      {
+        "text": "Move everything 5 units along the z-axis.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9970203042030334,
+        "margin": 0.9962556958198547,
+        "accepted": true
+      },
+      {
+        "text": "Rotate the cube 90 degrees around the z-axis.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9995182752609253,
+        "margin": 0.9993157386779785,
+        "accepted": true
+      },
+      {
+        "text": "Turn the box 45 degrees around the x-axis.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9998729228973389,
+        "margin": 0.9998371005058289,
+        "accepted": true
+      },
+      {
+        "text": "Spin the cone 180 degrees around the y-axis.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9965105652809143,
+        "margin": 0.9944179058074951,
+        "accepted": true
+      },
+      {
+        "text": "Rotate the selected solid by 30 degrees.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9922696352005005,
+        "margin": 0.9897367358207703,
+        "accepted": true
+      },
+      {
+        "text": "Turn the cube around its own center.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9898999333381653,
+        "margin": 0.9864761829376221,
+        "accepted": true
+      },
+      {
+        "text": "Rotate the triangle around line AB.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9886714220046997,
+        "margin": 0.98663330078125,
+        "accepted": true
+      },
+      {
+        "text": "Rotate point A 90 degrees around the z-axis.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9986244440078735,
+        "margin": 0.9979702234268188,
+        "accepted": true
+      },
+      {
+        "text": "Rotate both cubes together around the origin.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9881141781806946,
+        "margin": 0.9846664071083069,
+        "accepted": true
+      },
+      {
+        "text": "Turn the cylinder so it lies along the x-axis.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9935503005981445,
+        "margin": 0.9916931986808777,
+        "accepted": true
+      },
+      {
+        "text": "Make the cone point downward.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9520073533058167,
+        "margin": 0.9210932850837708,
+        "accepted": true
+      },
+      {
+        "text": "Flip the pyramid upside down.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9703081250190735,
+        "margin": 0.9641993045806885,
+        "accepted": true
+      },
+      {
+        "text": "Rotate the box one full turn.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.98685222864151,
+        "margin": 0.984190046787262,
+        "accepted": true
+      },
+      {
+        "text": "Turn it another 15 degrees.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9867231249809265,
+        "margin": 0.9822171926498413,
+        "accepted": true
+      },
+      {
+        "text": "Turn it back by 15 degrees.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9923740029335022,
+        "margin": 0.9908487200737,
+        "accepted": true
+      },
+      {
+        "text": "Does rotating this solid change its volume?",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9768285751342773,
+        "margin": 0.9699124693870544,
+        "accepted": true
+      },
+      {
+        "text": "Reflect A across the xy-plane.",
+        "expected": "REFLECT",
+        "actual": "REFLECT",
+        "correct": true,
+        "confidence": 0.9956951141357422,
+        "margin": 0.9942995309829712,
+        "accepted": true
+      },
+      {
+        "text": "Flip the cube across the yz-plane.",
+        "expected": "REFLECT",
+        "actual": "REFLECT",
+        "correct": true,
+        "confidence": 0.9948208332061768,
+        "margin": 0.9933722019195557,
+        "accepted": true
+      },
+      {
+        "text": "Reflect the triangle across the xz-plane.",
+        "expected": "REFLECT",
+        "actual": "REFLECT",
+        "correct": true,
+        "confidence": 0.9980712532997131,
+        "margin": 0.9977911710739136,
+        "accepted": true
+      },
+      {
+        "text": "Make a mirror copy of this cone across the xy-plane.",
+        "expected": "REFLECT",
+        "actual": "REFLECT",
+        "correct": true,
+        "confidence": 0.996669590473175,
+        "margin": 0.9958109855651855,
+        "accepted": true
+      },
+      {
+        "text": "Reflect the sphere\u2019s center through the origin.",
+        "expected": "REFLECT",
+        "actual": "REFLECT",
+        "correct": true,
+        "confidence": 0.9938116073608398,
+        "margin": 0.9916414618492126,
+        "accepted": true
+      },
+      {
+        "text": "Make this cube twice as big in every direction.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.988324761390686,
+        "margin": 0.9845333695411682,
+        "accepted": true
+      },
+      {
+        "text": "Shrink the sphere to half its size.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9814314842224121,
+        "margin": 0.9749090671539307,
+        "accepted": true
+      },
+      {
+        "text": "Make the cylinder twice as tall.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9801369309425354,
+        "margin": 0.9685180187225342,
+        "accepted": true
+      },
+      {
+        "text": "Make the box wider without changing its height.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9895864725112915,
+        "margin": 0.9838268160820007,
+        "accepted": true
+      },
+      {
+        "text": "Change the cube\u2019s side length to 5.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9907011985778809,
+        "margin": 0.9870656728744507,
+        "accepted": true
+      },
+      {
+        "text": "Change the sphere\u2019s radius to 4.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9889624714851379,
+        "margin": 0.9852713942527771,
+        "accepted": true
+      },
+      {
+        "text": "Set the cylinder\u2019s diameter to 6.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9933180809020996,
+        "margin": 0.9911460280418396,
+        "accepted": true
+      },
+      {
+        "text": "Make the cone\u2019s height 10.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9703283309936523,
+        "margin": 0.956454336643219,
+        "accepted": true
+      },
+      {
+        "text": "Set the box dimensions to 8 by 5 by 3.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9848551154136658,
+        "margin": 0.9785416126251221,
+        "accepted": true
+      },
+      {
+        "text": "Enlarge the selected solid by a factor of 1.5.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9849360585212708,
+        "margin": 0.9800300002098083,
+        "accepted": true
+      },
+      {
+        "text": "Make every sphere twice its current radius.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9863142967224121,
+        "margin": 0.9797259569168091,
+        "accepted": true
+      },
+      {
+        "text": "Give all cubes a side length of 3.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9867727160453796,
+        "margin": 0.9838148951530457,
+        "accepted": true
+      },
+      {
+        "text": "Keep the cylinder\u2019s radius the same and halve its height.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.995668888092041,
+        "margin": 0.9943400621414185,
+        "accepted": true
+      },
+      {
+        "text": "If I double this cube\u2019s sides, what happens to its volume?",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9930253028869629,
+        "margin": 0.9909011721611023,
+        "accepted": true
+      },
+      {
+        "text": "If I double this sphere\u2019s radius, what happens to its surface area?",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9976212382316589,
+        "margin": 0.9962353110313416,
+        "accepted": true
+      },
+      {
+        "text": "Color the cube red.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9645348787307739,
+        "margin": 0.9561129212379456,
+        "accepted": true
+      },
+      {
+        "text": "Make the sphere blue.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.950208306312561,
+        "margin": 0.9381133913993835,
+        "accepted": true
+      },
+      {
+        "text": "Change all spheres to green.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9694375395774841,
+        "margin": 0.9598316550254822,
+        "accepted": true
+      },
+      {
+        "text": "Paint every cube orange.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9814821481704712,
+        "margin": 0.9781938791275024,
+        "accepted": true
+      },
+      {
+        "text": "Make only the selected cone purple.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9755600690841675,
+        "margin": 0.9699804186820984,
+        "accepted": true
+      },
+      {
+        "text": "Change all blue solids to yellow.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9932692646980286,
+        "margin": 0.9911590814590454,
+        "accepted": true
+      },
+      {
+        "text": "Give the box a pink outline.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9673439860343933,
+        "margin": 0.9595925211906433,
+        "accepted": true
+      },
+      {
+        "text": "Make the cylinder partly transparent.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9638686776161194,
+        "margin": 0.9503841400146484,
+        "accepted": true
+      },
+      {
+        "text": "Make the sphere completely see-through.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9734030961990356,
+        "margin": 0.9602778553962708,
+        "accepted": true
+      },
+      {
+        "text": "Show only the edges of the cube.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9785447120666504,
+        "margin": 0.97210294008255,
+        "accepted": true
+      },
+      {
+        "text": "Show the cube\u2019s faces again.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9847132563591003,
+        "margin": 0.9798272252082825,
+        "accepted": true
+      },
+      {
+        "text": "Make the selected object\u2019s edges thicker.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9733101725578308,
+        "margin": 0.96365886926651,
+        "accepted": true
+      },
+      {
+        "text": "Change all solid outlines to black.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9846689105033875,
+        "margin": 0.9822893142700195,
+        "accepted": true
+      },
+      {
+        "text": "Hide the cone.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9046891331672668,
+        "margin": 0.8707805275917053,
+        "accepted": true
+      },
+      {
+        "text": "Show the cone again.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9652800559997559,
+        "margin": 0.9582286477088928,
+        "accepted": true
+      },
+      {
+        "text": "Hide every sphere.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9509018659591675,
+        "margin": 0.9406615495681763,
+        "accepted": true
+      },
+      {
+        "text": "Show all hidden solids.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.966447651386261,
+        "margin": 0.9573313593864441,
+        "accepted": true
+      },
+      {
+        "text": "Hide everything except the selected cube.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9874182939529419,
+        "margin": 0.9821160435676575,
+        "accepted": true
+      },
+      {
+        "text": "Lock the box so I cannot move it.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9739187955856323,
+        "margin": 0.9610556364059448,
+        "accepted": true
+      },
+      {
+        "text": "Unlock every cube.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.961921751499176,
+        "margin": 0.9549846649169922,
+        "accepted": true
+      },
+      {
+        "text": "Rename this sphere Ball.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9809157252311707,
+        "margin": 0.9783159494400024,
+        "accepted": true
+      },
+      {
+        "text": "Call this cube MyCube.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9757468700408936,
+        "margin": 0.9703515768051147,
+        "accepted": true
+      },
+      {
+        "text": "Show the names of all points.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9843957424163818,
+        "margin": 0.9762717485427856,
+        "accepted": true
+      },
+      {
+        "text": "Hide the object labels.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9702114462852478,
+        "margin": 0.953007161617279,
+        "accepted": true
+      },
+      {
+        "text": "Select all spheres.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9820059537887573,
+        "margin": 0.9749583005905151,
+        "accepted": true
+      },
+      {
+        "text": "Select the smallest cube.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9878734946250916,
+        "margin": 0.9837808012962341,
+        "accepted": true
+      },
+      {
+        "text": "Select the red cone.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9853891730308533,
+        "margin": 0.9797003269195557,
+        "accepted": true
+      },
+      {
+        "text": "Select both boxes.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9850223660469055,
+        "margin": 0.9826372861862183,
+        "accepted": true
+      },
+      {
+        "text": "Clear my selection.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9757545590400696,
+        "margin": 0.9727730751037598,
+        "accepted": true
+      },
+      {
+        "text": "Make a copy of the selected pyramid.",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9803920388221741,
+        "margin": 0.9742454886436462,
+        "accepted": true
+      },
+      {
+        "text": "How long is segment AB?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9887899160385132,
+        "margin": 0.9845948815345764,
+        "accepted": true
+      },
+      {
+        "text": "Which way does vector AB point?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9896620512008667,
+        "margin": 0.9868314266204834,
+        "accepted": true
+      },
+      {
+        "text": "What are the three components of this vector?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9867956638336182,
+        "margin": 0.9817161560058594,
+        "accepted": true
+      },
+      {
+        "text": "How long is this arrow?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9784279465675354,
+        "margin": 0.9688146114349365,
+        "accepted": true
+      },
+      {
+        "text": "Make a unit vector pointing the same way.",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.988243043422699,
+        "margin": 0.9839545488357544,
+        "accepted": true
+      },
+      {
+        "text": "Add these two vectors.",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9833916425704956,
+        "margin": 0.9804891347885132,
+        "accepted": true
+      },
+      {
+        "text": "Subtract vector AC from vector AB.",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9936989545822144,
+        "margin": 0.9929094910621643,
+        "accepted": true
+      },
+      {
+        "text": "What is the angle between these two arrows?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9706085920333862,
+        "margin": 0.9521670341491699,
+        "accepted": true
+      },
+      {
+        "text": "Are these vectors perpendicular?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.984039843082428,
+        "margin": 0.9769412279129028,
+        "accepted": true
+      },
+      {
+        "text": "Are these vectors parallel?",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9788999557495117,
+        "margin": 0.9688757061958313,
+        "accepted": true
+      },
+      {
+        "text": "Find the dot product of these vectors.",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9960979223251343,
+        "margin": 0.9949820637702942,
+        "accepted": true
+      },
+      {
+        "text": "Find a vector perpendicular to both arrows.",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.9927148222923279,
+        "margin": 0.9916791915893555,
+        "accepted": true
+      },
+      {
+        "text": "Does point C lie on line AB?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9815738797187805,
+        "margin": 0.9755896329879761,
+        "accepted": true
+      },
+      {
+        "text": "Are these two 3D lines parallel?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9765917658805847,
+        "margin": 0.9676876664161682,
+        "accepted": true
+      },
+      {
+        "text": "Do these two lines meet?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9705131649971008,
+        "margin": 0.9639227986335754,
+        "accepted": true
+      },
+      {
+        "text": "Where do these lines cross?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9802356958389282,
+        "margin": 0.9706570506095886,
+        "accepted": true
+      },
+      {
+        "text": "Are these lines skew?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9689903855323792,
+        "margin": 0.9614005088806152,
+        "accepted": true
+      },
+      {
+        "text": "What is the shortest distance between these lines?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9871653318405151,
+        "margin": 0.9810488820075989,
+        "accepted": true
+      },
+      {
+        "text": "How far is point A from this line?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9808799624443054,
+        "margin": 0.9647119641304016,
+        "accepted": true
+      },
+      {
+        "text": "Mark the closest point on the line to A.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9729958772659302,
+        "margin": 0.9591710567474365,
+        "accepted": true
+      },
+      {
+        "text": "Draw a line through A parallel to BC.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9856882095336914,
+        "margin": 0.9782875776290894,
+        "accepted": true
+      },
+      {
+        "text": "Draw a line through A perpendicular to this plane.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9997084736824036,
+        "margin": 0.9995779991149902,
+        "accepted": true
+      },
+      {
+        "text": "Draw a plane through A parallel to the xy-plane.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9889388084411621,
+        "margin": 0.9802021384239197,
+        "accepted": true
+      },
+      {
+        "text": "Draw a plane through A, B, and C.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9663785099983215,
+        "margin": 0.9427680373191833,
+        "accepted": true
+      },
+      {
+        "text": "What is the equation of this plane?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9554969668388367,
+        "margin": 0.9248217344284058,
+        "accepted": true
+      },
+      {
+        "text": "Is point D on this plane?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.986862301826477,
+        "margin": 0.9782187342643738,
+        "accepted": true
+      },
+      {
+        "text": "Is this line parallel to the plane?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9834092855453491,
+        "margin": 0.9689257144927979,
+        "accepted": true
+      },
+      {
+        "text": "Where does this line go through the plane?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9817490577697754,
+        "margin": 0.9655757546424866,
+        "accepted": true
+      },
+      {
+        "text": "How far is A from this plane?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9793805480003357,
+        "margin": 0.9615457057952881,
+        "accepted": true
+      },
+      {
+        "text": "Drop a perpendicular from A to the plane.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.97251296043396,
+        "margin": 0.962731122970581,
+        "accepted": true
+      },
+      {
+        "text": "Are these two planes perpendicular?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9561052918434143,
+        "margin": 0.9364913702011108,
+        "accepted": true
+      },
+      {
+        "text": "Are these two planes parallel?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9657747149467468,
+        "margin": 0.9534131288528442,
+        "accepted": true
+      },
+      {
+        "text": "What is the angle between these planes?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9417939782142639,
+        "margin": 0.9022647142410278,
+        "accepted": true
+      },
+      {
+        "text": "Draw the line where these planes meet.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9952341914176941,
+        "margin": 0.994073748588562,
+        "accepted": true
+      },
+      {
+        "text": "Which direction is straight out from this plane?",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9904264807701111,
+        "margin": 0.9859505295753479,
+        "accepted": true
+      },
+      {
+        "text": "Slice the cube with a horizontal plane.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9904283285140991,
+        "margin": 0.9881395101547241,
+        "accepted": true
+      },
+      {
+        "text": "What shape is this cube\u2019s cross-section?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9740892052650452,
+        "margin": 0.9636818170547485,
+        "accepted": true
+      },
+      {
+        "text": "Slice the sphere through its center.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9837697744369507,
+        "margin": 0.9798475503921509,
+        "accepted": true
+      },
+      {
+        "text": "What is the radius of that circular slice?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9602499604225159,
+        "margin": 0.9405718445777893,
+        "accepted": true
+      },
+      {
+        "text": "Move the slicing plane upward by one unit.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9796441793441772,
+        "margin": 0.9665419459342957,
+        "accepted": true
+      },
+      {
+        "text": "Can a tilted slice through this cylinder make an ellipse?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9843851327896118,
+        "margin": 0.9764887094497681,
+        "accepted": true
+      },
+      {
+        "text": "Cut the cone with a plane parallel to its base.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9801298379898071,
+        "margin": 0.9735985398292542,
+        "accepted": true
+      },
+      {
+        "text": "Show the sphere and plane\u2019s intersection.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9847636818885803,
+        "margin": 0.9767900109291077,
+        "accepted": true
+      },
+      {
+        "text": "Does this plane touch the sphere at just one point?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9906332492828369,
+        "margin": 0.9873917102813721,
+        "accepted": true
+      },
+      {
+        "text": "Draw a tangent plane at this point on the sphere.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9861288070678711,
+        "margin": 0.9798055291175842,
+        "accepted": true
+      },
+      {
+        "text": "Are these two spheres touching?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9680419564247131,
+        "margin": 0.9589006900787354,
+        "accepted": true
+      },
+      {
+        "text": "Are these spheres overlapping?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9572563767433167,
+        "margin": 0.9471626281738281,
+        "accepted": true
+      },
+      {
+        "text": "Is the small sphere completely inside the big sphere?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9814069271087646,
+        "margin": 0.9739063382148743,
+        "accepted": true
+      },
+      {
+        "text": "Where do these two spheres intersect?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.971322238445282,
+        "margin": 0.9614543914794922,
+        "accepted": true
+      },
+      {
+        "text": "Does this line pass through the sphere?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9763914942741394,
+        "margin": 0.9665462374687195,
+        "accepted": true
+      },
+      {
+        "text": "Mark where the line enters and leaves the sphere.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9901047348976135,
+        "margin": 0.9880964159965515,
+        "accepted": true
+      },
+      {
+        "text": "Is this line tangent to the sphere?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9791572690010071,
+        "margin": 0.9716410040855408,
+        "accepted": true
+      },
+      {
+        "text": "Is the cube completely inside the sphere?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.980564296245575,
+        "margin": 0.9695947170257568,
+        "accepted": true
+      },
+      {
+        "text": "Are the box and the plane intersecting?",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9740639925003052,
+        "margin": 0.9676230549812317,
+        "accepted": true
+      },
+      {
+        "text": "Show me a net of this cube.",
+        "expected": "INTERSECTION",
+        "actual": "INTERSECTION",
+        "correct": true,
+        "confidence": 0.9610736966133118,
+        "margin": 0.9531583786010742,
+        "accepted": true
+      },
+      {
+        "text": "Draw another one like that.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.978488564491272,
+        "margin": 0.9729107618331909,
+        "accepted": true
+      },
+      {
+        "text": "Make the new one smaller.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.97038334608078,
+        "margin": 0.9622727036476135,
+        "accepted": true
+      },
+      {
+        "text": "No, I meant the first sphere.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9783610105514526,
+        "margin": 0.9720728993415833,
+        "accepted": true
+      },
+      {
+        "text": "Change that one to red too.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9837369322776794,
+        "margin": 0.9803999662399292,
+        "accepted": true
+      },
+      {
+        "text": "Move them together.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9559251070022583,
+        "margin": 0.9435721039772034,
+        "accepted": true
+      },
+      {
+        "text": "Keep the other objects where they are.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9847238063812256,
+        "margin": 0.9820923209190369,
+        "accepted": true
+      },
+      {
+        "text": "Do the same thing to the second cube.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9834096431732178,
+        "margin": 0.9781014323234558,
+        "accepted": true
+      },
+      {
+        "text": "What about the blue sphere?",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9725396633148193,
+        "margin": 0.9631053805351257,
+        "accepted": true
+      },
+      {
+        "text": "Tell me its volume now.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9751687049865723,
+        "margin": 0.9692882895469666,
+        "accepted": true
+      },
+      {
+        "text": "Why did that answer change?",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9891858696937561,
+        "margin": 0.9838505983352661,
+        "accepted": true
+      },
+      {
+        "text": "Show me the steps for that answer.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9877235889434814,
+        "margin": 0.9816057682037354,
+        "accepted": true
+      },
+      {
+        "text": "Can you explain that more simply?",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.980449378490448,
+        "margin": 0.9779133200645447,
+        "accepted": true
+      },
+      {
+        "text": "Which object did you just change?",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9801381230354309,
+        "margin": 0.9707856178283691,
+        "accepted": true
+      },
+      {
+        "text": "Did you change both cubes or only one?",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9894260168075562,
+        "margin": 0.9869087338447571,
+        "accepted": true
+      },
+      {
+        "text": "Keep A fixed while moving B.",
+        "expected": "FOLLOW_UP",
+        "actual": "FOLLOW_UP",
+        "correct": true,
+        "confidence": 0.9836281538009644,
+        "margin": 0.979997992515564,
+        "accepted": true
+      },
+      {
+        "text": "Draw a sphere with radius minus 3.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9969044327735901,
+        "margin": 0.9951632022857666,
+        "accepted": true
+      },
+      {
+        "text": "Make a cube with side length zero.",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9933235049247742,
+        "margin": 0.9899944067001343,
+        "accepted": true
+      },
+      {
+        "text": "Draw a plane through these three points on one straight line.",
+        "expected": "LINE_PLANE",
+        "actual": "LINE_PLANE",
+        "correct": true,
+        "confidence": 0.9953746199607849,
+        "margin": 0.9935486912727356,
+        "accepted": true
+      },
+      {
+        "text": "Draw a line using the same point twice.",
+        "expected": "CONSTRUCT",
+        "actual": "CONSTRUCT",
+        "correct": true,
+        "confidence": 0.9926168322563171,
+        "margin": 0.9910030364990234,
+        "accepted": true
+      },
+      {
+        "text": "Find the distance from A to Z when Z is not on the board.",
+        "expected": "POINT_QUERY",
+        "actual": "POINT_QUERY",
+        "correct": true,
+        "confidence": 0.9967922568321228,
+        "margin": 0.9957494139671326,
+        "accepted": true
+      },
+      {
+        "text": "Change all cones to red when there are no cones.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9907275438308716,
+        "margin": 0.9869348406791687,
+        "accepted": true
+      },
+      {
+        "text": "Color the selected solid blue when I have selected nothing.",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9900822043418884,
+        "margin": 0.987525999546051,
+        "accepted": true
+      },
+      {
+        "text": "Move the locked cube 2 units right.",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.9952351450920105,
+        "margin": 0.9939234256744385,
+        "accepted": true
+      },
+      {
+        "text": "Give this box a height of 1000000000.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9830636382102966,
+        "margin": 0.9771087765693665,
+        "accepted": true
+      },
+      {
+        "text": "Put a 3D point at (2, 3).",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.9978343844413757,
+        "margin": 0.9967600703239441,
+        "accepted": true
+      },
+      {
+        "text": "Make it bigger, but ask me how much first.",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9834563136100769,
+        "margin": 0.979203999042511,
+        "accepted": true
+      },
+      {
+        "text": "Rotate it, but ask me which axis first.",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9864518642425537,
+        "margin": 0.9836069941520691,
+        "accepted": true
+      },
+      {
+        "text": "Undo the last thing you did.",
+        "expected": "HISTORY",
+        "actual": "HISTORY",
+        "correct": true,
+        "confidence": 0.996536374092102,
+        "margin": 0.9950856566429138,
+        "accepted": true
+      },
+      {
+        "text": "Redo that change.",
+        "expected": "HISTORY",
+        "actual": "HISTORY",
+        "correct": true,
+        "confidence": 0.9911503791809082,
+        "margin": 0.9863227009773254,
+        "accepted": true
+      },
+      {
+        "text": "Undo only the last color change.",
+        "expected": "HISTORY",
+        "actual": "HISTORY",
+        "correct": true,
+        "confidence": 0.997467041015625,
+        "margin": 0.9960453510284424,
+        "accepted": true
+      },
+      {
+        "text": "Delete the selected sphere.",
+        "expected": "DELETE",
+        "actual": "DELETE",
+        "correct": true,
+        "confidence": 0.9941710829734802,
+        "margin": 0.9921464920043945,
+        "accepted": true
+      },
+      {
+        "text": "Clear all solids but keep my points and lines.",
+        "expected": "DELETE",
+        "actual": "DELETE",
+        "correct": true,
+        "confidence": 0.997979462146759,
+        "margin": 0.9971352219581604,
+        "accepted": true
+      },
+      {
+        "text": "Save this 3D scene.",
+        "expected": "SAVE_LOAD",
+        "actual": "SAVE_LOAD",
+        "correct": true,
+        "confidence": 0.9968733191490173,
+        "margin": 0.9964990019798279,
+        "accepted": true
+      },
+      {
+        "text": "Load my saved scene and keep the colors and sizes.",
+        "expected": "SAVE_LOAD",
+        "actual": "SAVE_LOAD",
+        "correct": true,
+        "confidence": 0.9985187649726868,
+        "margin": 0.9982061982154846,
+        "accepted": true
+      },
+      {
+        "text": "Reset the camera so I can see all my objects.",
+        "expected": "CAMERA",
+        "actual": "CAMERA",
+        "correct": true,
+        "confidence": 0.9991357922554016,
+        "margin": 0.9987536072731018,
+        "accepted": true
+      }
+    ]
+  },
+  "heldout": {
+    "total": 20,
+    "correct": 17,
+    "accepted": 11,
+    "accepted_errors": 0,
+    "results": [
+      {
+        "text": "construct a sphere with radius 7",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9349051117897034,
+        "margin": 0.915692150592804,
+        "accepted": true
+      },
+      {
+        "text": "draw a cube whose side length is 6",
+        "expected": "CREATE_SOLID",
+        "actual": "CREATE_SOLID",
+        "correct": true,
+        "confidence": 0.9854474067687988,
+        "margin": 0.9824004173278809,
+        "accepted": true
+      },
+      {
+        "text": "put point E at (7, 8, 9)",
+        "expected": "CREATE_POINT",
+        "actual": "CREATE_POINT",
+        "correct": true,
+        "confidence": 0.7771560549736023,
+        "margin": 0.6106686592102051,
+        "accepted": false
+      },
+      {
+        "text": "count the cubes on the screen",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "TRANSLATE",
+        "correct": false,
+        "confidence": 0.2119467854499817,
+        "margin": 0.010894343256950378,
+        "accepted": false
+      },
+      {
+        "text": "how many corners are on the box",
+        "expected": "DESCRIBE_SOLID",
+        "actual": "DESCRIBE_SOLID",
+        "correct": true,
+        "confidence": 0.8270697593688965,
+        "margin": 0.7401620745658875,
+        "accepted": false
+      },
+      {
+        "text": "what is the surface area of my cylinder",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.9873027801513672,
+        "margin": 0.9804210662841797,
+        "accepted": true
+      },
+      {
+        "text": "calculate the volume of the red sphere",
+        "expected": "MEASURE_SOLID",
+        "actual": "MEASURE_SOLID",
+        "correct": true,
+        "confidence": 0.6698962450027466,
+        "margin": 0.47221213579177856,
+        "accepted": false
+      },
+      {
+        "text": "move the cone 7 units right",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.996640682220459,
+        "margin": 0.9959732890129089,
+        "accepted": true
+      },
+      {
+        "text": "shift the cube along the x-axis by 6 units",
+        "expected": "TRANSLATE",
+        "actual": "TRANSLATE",
+        "correct": true,
+        "confidence": 0.8879045844078064,
+        "margin": 0.8074169754981995,
+        "accepted": true
+      },
+      {
+        "text": "rotate my sphere 25 degrees about the z-axis",
+        "expected": "ROTATE",
+        "actual": "ROTATE",
+        "correct": true,
+        "confidence": 0.9303091764450073,
+        "margin": 0.8990920186042786,
+        "accepted": true
+      },
+      {
+        "text": "reflect the box across the xy-plane",
+        "expected": "REFLECT",
+        "actual": "REFLECT",
+        "correct": true,
+        "confidence": 0.9940504431724548,
+        "margin": 0.9921200275421143,
+        "accepted": true
+      },
+      {
+        "text": "enlarge this cylinder by a factor of 3",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.9438248872756958,
+        "margin": 0.9298659563064575,
+        "accepted": true
+      },
+      {
+        "text": "set the radius of the sphere to 7",
+        "expected": "RESIZE",
+        "actual": "RESIZE",
+        "correct": true,
+        "confidence": 0.938644528388977,
+        "margin": 0.900649905204773,
+        "accepted": true
+      },
+      {
+        "text": "paint the sphere purple",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.4783911406993866,
+        "margin": 0.19400057196617126,
+        "accepted": false
+      },
+      {
+        "text": "color every cube yellow",
+        "expected": "APPEARANCE",
+        "actual": "APPEARANCE",
+        "correct": true,
+        "confidence": 0.9556713700294495,
+        "margin": 0.947742223739624,
+        "accepted": true
+      },
+      {
+        "text": "select the biggest sphere",
+        "expected": "SELECT_COPY",
+        "actual": "SELECT_COPY",
+        "correct": true,
+        "confidence": 0.9087454080581665,
+        "margin": 0.8931751847267151,
+        "accepted": true
+      },
+      {
+        "text": "find the dot product of both arrows",
+        "expected": "VECTOR_MATH",
+        "actual": "VECTOR_MATH",
+        "correct": true,
+        "confidence": 0.8370881080627441,
+        "margin": 0.7818381786346436,
+        "accepted": false
+      },
+      {
+        "text": "where do the planes intersect",
+        "expected": "LINE_PLANE",
+        "actual": "FOLLOW_UP",
+        "correct": false,
+        "confidence": 0.27664023637771606,
+        "margin": 0.09235316514968872,
+        "accepted": false
+      },
+      {
+        "text": "save my scene",
+        "expected": "SAVE_LOAD",
+        "actual": "SAVE_LOAD",
+        "correct": true,
+        "confidence": 0.33834394812583923,
+        "margin": 0.13119061291217804,
+        "accepted": false
+      },
+      {
+        "text": "reset the camera to see everything",
+        "expected": "CAMERA",
+        "actual": "APPEARANCE",
+        "correct": false,
+        "confidence": 0.3095228672027588,
+        "margin": 0.15563638508319855,
+        "accepted": false
+      }
+    ]
+  },
+  "note": "Small related-template holdout; not broad NLP accuracy. All 300 supplied examples were training data. Unsupported operations remain unsupported."
+}

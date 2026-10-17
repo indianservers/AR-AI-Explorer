@@ -1,0 +1,7 @@
+gradlew.bat : The message received from the daemon indicates that the daemon has disappeared.
+At C:\Indian Servers\AIExplorer\scripts\run_ruhi_geometry3d_audit.ps1:10 char:1
++ & .\gradlew.bat @arguments *> (Join-Path $folder 'build.log')
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (The message rec...as disappeared.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

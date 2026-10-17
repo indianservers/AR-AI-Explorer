@@ -62,6 +62,7 @@ class AdvancedGraphEngine(private val expressions: ExpressionEngine = Expression
         require(definition.kind == AdvancedGraphKind.Explicit)
         require(tolerance > 0.0 && maximumDepth in 1..18 && seedIntervals in 2..512)
         val compiled = expressions.compile(stripEquation(definition.expression))
+        val stepwise=Regex("(?i)\\b(?:floor|ceil|if)\\s*\\(").containsMatchIn(definition.expression)
         var evaluations = 0
         var discontinuities = 0
         fun evaluate(x: Double): Vec2? {
@@ -95,10 +96,11 @@ class AdvancedGraphEngine(private val expressions: ExpressionEngine = Expression
             val scale = max(1.0, max(abs(a.y), max(abs(b.y), abs(midpoint.y))))
             val error = abs(midpoint.y - linearY) / scale
             val jump = abs(b.y - a.y) > 80.0 * scale.coerceAtMost(10.0)
-            if (depth < maximumDepth && (error > tolerance || jump)) {
+            val unresolved=error>tolerance || (stepwise && abs(midpoint.y-linearY)>tolerance)
+            if (depth < maximumDepth && (unresolved || jump)) {
                 refine(a, midpoint, depth + 1)
                 refine(midpoint, b, depth + 1)
-            } else if (jump) {
+            } else if (jump || unresolved) {
                 breakSegment()
             } else {
                 append(a)

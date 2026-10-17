@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:16.464Z" hostname="INDIANSERVERS" time="0.09">
+  <properties/>
+  <testcase name="versionSixPendingRecordsStillReadWithNoSavedSlots" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.002"/>
+  <testcase name="selectionChangesDoNotReplaceTheCurveAlreadyBoundToPendingQuestion" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.007"/>
+  <testcase name="cancellationAndNewDerivativeRequestDoNotReuseAbandonedX" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.005"/>
+  <testcase name="selectedPointSurvivesCurveQuestionWithoutReselectingAfterRestore" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.005"/>
+  <testcase name="invalidXRetainsQuestionAndValidCurveBindingWithoutAddingHistory" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.011"/>
+  <testcase name="suppliedXSurvivesNextCurveQuestionAndSavedSession" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.006"/>
+  <testcase name="plainNumericAndNamedRepliesResumeBothOriginalRequestsWithoutLosingX" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.034"/>
+  <testcase name="choosingAnOffCurveFunctionRetainsThatChoiceDuringTheNextXQuestion" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.012"/>
+  <testcase name="sceneEditsInvalidateSavedSlotsAndOldChoicesWithoutAnEdit" classname="com.indianservers.aiexplorer.RuhiDerivativePendingSlotsTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+adb: error: failed to copy '/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/seed500-native.json' to 'C:\Indian Servers\AIExplorer\docs\qa\ruhi-500\cycle-61-device\seed500-native.json': remote open failed: Software caused connection abort
+Missing device evidence: seed500-native.json
+At C:\Indian Servers\AIExplorer\scripts\verify_ruhi_seed500_device.ps1:26 char:29
++     if($LASTEXITCODE -ne 0){throw "Missing device evidence: $name"}
++                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Missing device ...500-native.json:String) [], RuntimeException
+    + FullyQualifiedErrorId : Missing device evidence: seed500-native.json
+ 
