@@ -29,7 +29,7 @@ gradle.projectsEvaluated {
                     def matched=r.status.name()=='APPLIED' && points.size()==input.expected.size() && input.expected.every{expected->points.any{actual->Math.abs(actual[0]-expected[0])<1e-6 && Math.abs(actual[1]-expected[1])<1e-6}}
                     [source_row:344,input:input.text,expected_points:input.expected,actual_points:points,reason:input.reason,status:r.status.name(),reply:r.message,behavior_verified:matched]
                 }
-                def sources=['assistant/workspace/RuhiDerivativeLanguage.kt','assistant/workspace/RuhiDerivativeMath.kt','assistant/workspace/RuhiDerivativeBranches.kt','core/SymbolicCalculus.kt'].collectEntries{name->
+                def sources=['assistant/workspace/RuhiDerivativeLanguage.kt','assistant/workspace/RuhiDerivativeMath.kt','assistant/workspace/RuhiDerivativeBranches.kt','core/SymbolicCalculus.kt','core/SymbolicCas.kt'].collectEntries{name->
                     def path='app/src/main/java/com/indianservers/aiexplorer/'+name
                     [(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]
                 }

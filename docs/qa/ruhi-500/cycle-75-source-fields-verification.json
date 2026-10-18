@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "cycle": 75,
+  "source_sha256": "8f28a5ede4bf60a8f5bc8ced55a1f932178431eba6fb214a9b674d043251f144",
+  "rows": 500,
+  "unique_commands": 500,
+  "fields_per_row": [
+    "id",
+    "category",
+    "text",
+    "intent",
+    "engine",
+    "expected",
+    "parameters",
+    "follow_up",
+    "suggestions"
+  ],
+  "seed_rows_match": true,
+  "android_asset_rows_match": true,
+  "replay_fields_match": true,
+  "errors": [],
+  "scope": "Read-only comparison with original workbook and pinned hash, all nine source fields and all replay columns; no mathematical behavior claim."
+}

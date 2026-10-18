@@ -29,6 +29,17 @@ class SymbolicCalculusEngine {
         return SymbolicCalculusResult(source, variable, render(result), rules.toList())
     }
 
+    private fun integerPower(node:Sym):Double?=(node as? Sym.Number)?.value?.takeIf{it.isFinite()&&it in 1.0..64.0&&it==round(it)}
+    private fun absolutePower(node:Sym):Pair<Sym,Double>? = when(node) {
+        is Sym.Function->if(node.name=="abs")node.argument to 1.0 else null
+        is Sym.Power->{val base=node.base as? Sym.Function;val n=integerPower(node.exponent);if(base?.name=="abs"&&n!=null)base.argument to n else null}
+        else->null
+    }
+    private fun smoothAbsoluteProduct(a:Sym,b:Sym):Triple<Sym,Double,Double>? {
+        val (inner,k)=absolutePower(b) ?: return null
+        val m=if(a==inner)1.0 else if(a is Sym.Power&&a.base==inner)integerPower(a.exponent) ?: return null else return null
+        return Triple(inner,m,k)
+    }
     private fun derivative(node: Sym, variable: String, rules: MutableSet<String>): Sym = when (node) {
         is Sym.Number -> { rules += "Constant rule: d(c)/d$variable = 0"; zero }
         is Sym.Variable -> {
@@ -40,7 +51,12 @@ class SymbolicCalculusEngine {
         is Sym.Subtract -> { rules += "Difference rule: differentiate each term"; Sym.Subtract(derivative(node.left, variable, rules), derivative(node.right, variable, rules)) }
         is Sym.Multiply -> {
             rules += "Product rule: (uv)' = u'v + uv'"
-            Sym.Add(Sym.Multiply(derivative(node.left, variable, rules), node.right), Sym.Multiply(node.left, derivative(node.right, variable, rules)))
+            val smooth=smoothAbsoluteProduct(node.left,node.right) ?: smoothAbsoluteProduct(node.right,node.left)
+            if(smooth!=null) {
+                val (inner,m,k)=smooth
+                rules += "Combine matching real powers before differentiation at their smooth zeros"
+                Sym.Multiply(Sym.Number(m+k),Sym.Multiply(Sym.Multiply(Sym.Power(inner,Sym.Number(m-1)),Sym.Power(Sym.Function("abs",inner),Sym.Number(k))),derivative(inner,variable,rules)))
+            }else Sym.Add(Sym.Multiply(derivative(node.left, variable, rules), node.right), Sym.Multiply(node.left, derivative(node.right, variable, rules)))
         }
         is Sym.Divide -> {
             rules += "Quotient rule: (u/v)' = (u'v − uv')/v²"
@@ -53,7 +69,12 @@ class SymbolicCalculusEngine {
             if (node.exponent is Sym.Number) {
                 rules += "Power and chain rules: d(uⁿ) = n·uⁿ⁻¹·u'"
                 val n = node.exponent.value
-                Sym.Multiply(Sym.Multiply(Sym.Number(n), Sym.Power(node.base, Sym.Number(n - 1.0))), derivative(node.base, variable, rules))
+                val absolute=node.base as? Sym.Function
+                if(absolute?.name=="abs"&&integerPower(node.exponent)?.let{it>=2}==true) {
+                    val inner=absolute.argument
+                    rules += "Real absolute powers of degree at least two have smooth first derivatives at zero"
+                    Sym.Multiply(Sym.Number(n),Sym.Multiply(Sym.Multiply(inner,Sym.Power(Sym.Function("abs",inner),Sym.Number(n-2))),derivative(inner,variable,rules)))
+                }else Sym.Multiply(Sym.Multiply(Sym.Number(n), Sym.Power(node.base, Sym.Number(n - 1.0))), derivative(node.base, variable, rules))
             } else {
                 rules += "General power rule: d(uᵛ) = uᵛ(v'ln(u) + vu'/u)"
                 Sym.Multiply(node, Sym.Add(
@@ -213,7 +234,7 @@ class SymbolicCalculusEngine {
     }
 
     private fun render(node: Sym, parentPrecedence: Int = 0): String {
-        val precedence = when (node) { is Sym.Add, is Sym.Subtract -> 1; is Sym.Multiply, is Sym.Divide -> 2; is Sym.Power -> 3; is Sym.Negate -> 4; else -> 5 }
+        val precedence = when (node) { is Sym.Number->if(node.value<0)4 else 5;is Sym.Add, is Sym.Subtract -> 1; is Sym.Multiply, is Sym.Divide -> 2; is Sym.Power -> 3; is Sym.Negate -> 4; else -> 5 }
         val text = when (node) {
             is Sym.Number -> format(node.value)
             is Sym.Variable -> node.name
@@ -222,7 +243,7 @@ class SymbolicCalculusEngine {
             is Sym.Subtract -> "${render(node.left, precedence)} - ${render(node.right, precedence + 1)}"
             is Sym.Multiply -> "${render(node.left, precedence)}*${render(node.right, precedence)}"
             is Sym.Divide -> "${render(node.left, precedence)}/${render(node.right, precedence + 1)}"
-            is Sym.Power -> "${render(node.base, precedence)}^${render(node.exponent, precedence)}"
+            is Sym.Power -> "${render(node.base, 5)}^${render(node.exponent, precedence)}"
             is Sym.Function -> "${node.name}(${render(node.argument)})"
         }
         return if (precedence < parentPrecedence) "($text)" else text

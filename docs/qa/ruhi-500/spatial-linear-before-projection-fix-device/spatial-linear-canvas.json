@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "kind": "Line",
+      "point_ids": [
+        "anchor-907",
+        "beta-811"
+      ],
+      "negative_parameter": true,
+      "beyond_second_point": true
+    },
+    {
+      "kind": "Segment",
+      "point_ids": [
+        "beta-811",
+        "gamma-662"
+      ],
+      "negative_parameter": false,
+      "beyond_second_point": false
+    },
+    {
+      "kind": "Ray",
+      "point_ids": [
+        "anchor-907",
+        "gamma-662"
+      ],
+      "negative_parameter": false,
+      "beyond_second_point": true
+    }
+  ],
+  "changed_pixels": [
+    22623,
+    16080,
+    9220,
+    248447
+  ],
+  "current_parent": true,
+  "canonical_dependencies": true,
+  "persistence": true,
+  "no_helper_vectors_or_points": true,
+  "committed_capture": true
+}

@@ -31,11 +31,40 @@ if($Cycle -ge 65){
     $installedEvidence | ConvertTo-Json -Depth 4 | Set-Content (Join-Path $folder "cycle-$Cycle-installed-apk-verification.json") -Encoding utf8
     if(-not $installedEvidence.passed){throw 'Installed app/test APKs do not match this cycle build.'}
 }
-$expectedNativeTests=if($Cycle -ge 73){49}elseif($Cycle -ge 72){48}elseif($Cycle -ge 71){47}elseif($Cycle -ge 70){46}elseif($Cycle -ge 69){45}elseif($Cycle -ge 68){44}elseif($Cycle -ge 67){43}elseif($Cycle -ge 66){42}elseif($Cycle -ge 64){41}elseif($Cycle -ge 62){39}elseif($Cycle -ge 61){38}elseif($Cycle -ge 60){37}elseif($Cycle -ge 58){36}elseif($Cycle -ge 57){35}elseif($Cycle -ge 55){34}elseif($Cycle -ge 53){32}elseif($Cycle -ge 52){30}elseif($Cycle -ge 51){29}elseif($Cycle -ge 50){28}else{27}
-$output=& $auditAdb -s $DeviceSerial shell am instrument -w -e class com.indianservers.aiexplorer.RuhiSeed500RenderingTest,com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest com.indianservers.aiexplorer.test/androidx.test.runner.AndroidJUnitRunner
-$output | Set-Content (Join-Path $folder "cycle-$Cycle-device.log") -Encoding utf8
+$expectedNativeTests=if($Cycle -ge 78){54}elseif($Cycle -ge 77){53}elseif($Cycle -ge 76){52}elseif($Cycle -ge 75){51}elseif($Cycle -ge 74){50}elseif($Cycle -ge 73){49}elseif($Cycle -ge 72){48}elseif($Cycle -ge 71){47}elseif($Cycle -ge 70){46}elseif($Cycle -ge 69){45}elseif($Cycle -ge 68){44}elseif($Cycle -ge 67){43}elseif($Cycle -ge 66){42}elseif($Cycle -ge 64){41}elseif($Cycle -ge 62){39}elseif($Cycle -ge 61){38}elseif($Cycle -ge 60){37}elseif($Cycle -ge 58){36}elseif($Cycle -ge 57){35}elseif($Cycle -ge 55){34}elseif($Cycle -ge 53){32}elseif($Cycle -ge 52){30}elseif($Cycle -ge 51){29}elseif($Cycle -ge 50){28}else{27}
+$output=& $auditAdb -s $DeviceSerial shell am instrument -w -e class com.indianservers.aiexplorer.RuhiSeed500RenderingTest,com.indianservers.aiexplorer.RuhiGeometryKidRenderingTest com.indianservers.aiexplorer.test/androidx.test.runner.AndroidJUnitRunner | Tee-Object -FilePath (Join-Path $folder "cycle-$Cycle-device.log")
 if(($output -join "`n") -notmatch "OK \($expectedNativeTests tests\)" -or ($output -join "`n") -match 'FAILURES!!!|INSTRUMENTATION_FAILED|INSTRUMENTATION_ABORTED|Process crashed'){throw 'Emulator tests failed. Inspect the device log before collecting or trusting artifacts.'}
 $device=Join-Path $folder "cycle-$Cycle-device";New-Item -ItemType Directory -Path $device -Force > $null
+if($Cycle -ge 78){
+    foreach($name in @('missing-prior-context-native.json','missing-prior-spatial-question.png','missing-prior-graph-question.png','missing-prior-spatial-applied.png','missing-prior-graph-applied.png')){
+        & $auditAdb -s $DeviceSerial pull "/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/$name" (Join-Path $device $name)
+        if($LASTEXITCODE -ne 0){throw "Missing prior-context conversation evidence: $name"}
+    }
+}
+if($Cycle -ge 77){
+    foreach($name in @('spatial-linear-canvas.json','spatial-linear-before.png','spatial-linear-line.png','spatial-linear-segment.png','spatial-linear-ray.png','spatial-linear-edited.png')){
+        & $auditAdb -s $DeviceSerial pull "/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/$name" (Join-Path $device $name)
+        if($LASTEXITCODE -ne 0){throw "Missing native point-linked line/segment/ray evidence: $name"}
+    }
+}
+if($Cycle -ge 76){
+    foreach($name in @('radical-helper-canvas.json','radical-helper-before.png','radical-helper-smooth-zero.png','radical-helper-edited.png','radical-helper-answer.png')){
+        & $auditAdb -s $DeviceSerial pull "/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/$name" (Join-Path $device $name)
+        if($LASTEXITCODE -ne 0){throw "Missing plotted radical derivative-helper evidence: $name"}
+    }
+}
+if($Cycle -ge 75){
+    foreach($name in @('radical-critical-canvas.json','radical-critical-corner.png','radical-critical-edited.png','radical-critical-answer.png')){
+        & $auditAdb -s $DeviceSerial pull "/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/$name" (Join-Path $device $name)
+        if($LASTEXITCODE -ne 0){throw "Missing real radical critical-point evidence: $name"}
+    }
+}
+if($Cycle -ge 74){
+    foreach($name in @('segment-selection-canvas.json','segment-selection-question.png','segment-selection-midpoint.png','segment-selection-midpoint-live.png','segment-selection-slope-answer.png')){
+        & $auditAdb -s $DeviceSerial pull "/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/$name" (Join-Path $device $name)
+        if($LASTEXITCODE -ne 0){throw "Missing native segment selection evidence: $name"}
+    }
+}
 if($Cycle -ge 73){
     foreach($name in @('midpoint-label-canvas.json','midpoint-label-question.png','midpoint-label-answer.png','midpoint-label-live.png','midpoint-label-chip-created.png')){
         & $auditAdb -s $DeviceSerial pull "/sdcard/Android/data/com.indianservers.aiexplorer/files/ruhi-seed500/$name" (Join-Path $device $name)

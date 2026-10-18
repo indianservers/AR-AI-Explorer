@@ -266,11 +266,11 @@ object RuhiGeometry3DLanguage {
         private fun sceneCommands():RuhiExecutionResult? {
             if(t=="clear all solids but keep my points and lines")return response(s.copy(solids=emptyList(),labSessionValues=s.labSessionValues.filterKeys{!it.startsWith("ruhi.studio.appearance.")&&!it.startsWith(RuhiMotionEngine.PREFIX)&&!it.startsWith(PREFIX+"name.")&&it!=SELECTION}),"Cleared solids; kept points and vectors.")
             if(t=="save this 3d scene") {val snapshot=s.copy(labSessionValues=s.labSessionValues-SAVED-RuhiDialogueMemory.KEY);val encoded=WorkspaceProjectCodec.encode(snapshot);require(encoded.length<1000000);return response(s.copy(labSessionValues=s.labSessionValues+(SAVED to encoded)),"Saved this scene in the workspace, including sizes, positions, colors, points and vectors.")}
-            if(t.startsWith("load my saved scene")) {
+            if(t.startsWith("load my saved scene") || t in setOf("load the saved 3d scene","restore the saved 3d scene")) {
                 val snapshot=s.labSessionValues[SAVED] ?: throw Missing("Save a scene first.");val restored=WorkspaceProjectCodec.decode(snapshot).state ?: throw IllegalArgumentException("The saved scene is invalid.");require(restored.id==s.id);selected=RuhiSceneContext()
                 fun own(key:String)=key.startsWith(PREFIX)||key.startsWith("ruhi.studio.appearance.")||key.startsWith(RuhiMotionEngine.PREFIX)||key=="ruhi.studio.selected.solid"
                 val values=s.labSessionValues.filterKeys{!own(it)}+restored.labSessionValues.filterKeys{own(it)}+(SAVED to snapshot)
-                return response(s.copy(solids=restored.solids,points3D=restored.points3D,vectors3D=restored.vectors3D,labSessionValues=values),"Restored the saved 3D scene, colors and dimensions.")
+                return response(s.copy(solids=restored.solids,points3D=restored.points3D,vectors3D=restored.vectors3D,planes3D=restored.planes3D,linears3D=restored.linears3D,labSessionValues=values),"Restored the saved 3D scene, colors and dimensions.")
             }
             if(t.startsWith("delete the selected sphere")) {
                 val ids=targets().toSet();val kept=s.solids.indices.filter{it !in ids};val remap=kept.withIndex().associate{it.value to it.index};val values=s.labSessionValues.filterKeys{!it.startsWith("ruhi.studio.appearance.")&&!it.startsWith(RuhiMotionEngine.PREFIX)&&!it.startsWith(PREFIX+"name.")&&!it.startsWith(RuhiTransform3DLanguage.PREFIX)&&it!=SELECTION}.toMutableMap()

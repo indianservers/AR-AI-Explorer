@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "native_surface_pixels": 427188,
+  "parent_edit_pixels": 372652,
+  "wireframe": true,
+  "hemisphere_domain": true,
+  "odd_density_pole_gap": true,
+  "independent_xy_domains": true,
+  "two_surface_transaction": true,
+  "persistence": true
+}

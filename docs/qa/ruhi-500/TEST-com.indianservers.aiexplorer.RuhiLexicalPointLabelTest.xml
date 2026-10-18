@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:30.299Z" hostname="INDIANSERVERS" time="2.12">
+<testsuite name="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:08.537Z" hostname="INDIANSERVERS" time="2.209">
   <properties/>
-  <testcase name="intentNormalizationMasksEntityOccurrencesWithoutErasingOperationWords" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.003"/>
-  <testcase name="actualOriginNamedPointUsesSceneCoordinatesWhileAbsentOriginRemainsVirtual" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.008"/>
-  <testcase name="lexicalNamesDoNotRedirectDistanceOrAddSlopeAnnotations" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.056"/>
-  <testcase name="tokenFeaturesAreInvariantWhenSceneLabelsAreAlsoLexicalTokens" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.007"/>
-  <testcase name="ordinarySlopeAndMidpointCommandsStillKeepTheirOwnOperations" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.019"/>
-  <testcase name="all150OriginalDistanceRowsPreserveIntentAndMathForLexicalAndUnicodeLabels" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="2.027"/>
+  <testcase name="intentNormalizationMasksEntityOccurrencesWithoutErasingOperationWords" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.002"/>
+  <testcase name="actualOriginNamedPointUsesSceneCoordinatesWhileAbsentOriginRemainsVirtual" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.006"/>
+  <testcase name="lexicalNamesDoNotRedirectDistanceOrAddSlopeAnnotations" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.059"/>
+  <testcase name="tokenFeaturesAreInvariantWhenSceneLabelsAreAlsoLexicalTokens" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.003"/>
+  <testcase name="ordinarySlopeAndMidpointCommandsStillKeepTheirOwnOperations" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="0.022"/>
+  <testcase name="all150OriginalDistanceRowsPreserveIntentAndMathForLexicalAndUnicodeLabels" classname="com.indianservers.aiexplorer.RuhiLexicalPointLabelTest" time="2.117"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

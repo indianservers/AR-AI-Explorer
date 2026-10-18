@@ -29,7 +29,7 @@ data class WorkspaceProjectRecovery(
 
 /** Complete, deterministic workspace snapshot embedded beside the canonical maths document. */
 object WorkspaceSnapshotCodec {
-    const val currentSchema = 15
+    const val currentSchema = 16
     private const val maximumChars = 8_000_000
 
     fun encode(state: WorkspaceState): String {
@@ -63,6 +63,7 @@ object WorkspaceSnapshotCodec {
                 add(listOf("V", pack(vector.id), pack(vector.name), vector.start.x, vector.start.y, vector.start.z,
                     vector.end.x, vector.end.y, vector.end.z).joinToString("|"))
             }
+            state.linears3D.forEach { obj->add(listOf("I3",pack(obj.id),pack(obj.name),obj.kind.name,obj.pointIds.joinToString(",",transform=::pack),obj.visible,obj.locked,pack(obj.styleKey)).joinToString("|")) }
             state.planes3D.forEach { plane->add(listOf("N",pack(plane.id),pack(plane.name),plane.pointIds.joinToString(",",transform=::pack),plane.visible,plane.locked,pack(plane.styleKey)).joinToString("|")) }
             state.points3D.forEach { point ->
                 add(listOf("Q", pack(point.id), pack(point.name), point.position.x, point.position.y, point.position.z, point.visible, point.locked, pack(point.styleKey)).joinToString("|"))
@@ -122,7 +123,7 @@ object WorkspaceSnapshotCodec {
         return runCatching {
             val points = mutableListOf<Vec2>(); val shapes = mutableListOf<Shape2D>(); val dependencies = mutableListOf<PointDependency>(); val constraints = mutableListOf<GeometryConstraint2D>(); val groups = mutableListOf<GeometryGroup2D>()
             val functions = mutableListOf<FunctionDefinition>(); val rows = linkedMapOf<String, GraphRowMetadataState>()
-            val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>(); val points3D = mutableListOf<Point3D>(); val planes3D=mutableListOf<Plane3DObject>();val surfaceLayers = mutableListOf<SpatialSurfaceLayer>()
+            val sliders = linkedMapOf<String, GraphSliderMetadataState>(); val solids = mutableListOf<Solid>(); val vectors = mutableListOf<Vector3D>(); val points3D = mutableListOf<Point3D>(); val planes3D=mutableListOf<Plane3DObject>();val linears3D=mutableListOf<Linear3DObject>();val surfaceLayers = mutableListOf<SpatialSurfaceLayer>()
             val labSessionValues = linkedMapOf<String, String>()
             var placement = SpatialScenePlacement()
             var graph3DView = Graph3DViewState()
@@ -150,6 +151,7 @@ object WorkspaceSnapshotCodec {
                         "O" -> solids += Solid(SolidType.valueOf(f[1]), f[2].toDouble(), f[3].toDouble(), f[4].toDouble(), f[5].toDouble(), f[6].toDouble(), Vec3(f[7].toDouble(), f[8].toDouble(), f[9].toDouble()), Vec3(f[10].toDouble(), f[11].toDouble(), f[12].toDouble()), f.getOrNull(13)?.toBooleanStrictOrNull() ?: false)
                         "V" -> vectors += Vector3D(unpack(f[1]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), Vec3(f[6].toDouble(), f[7].toDouble(), f[8].toDouble()), unpack(f[2]))
                         "Q" -> points3D += Point3D(unpack(f[1]), unpack(f[2]), Vec3(f[3].toDouble(), f[4].toDouble(), f[5].toDouble()), f.getOrNull(6)?.toBooleanStrictOrNull() ?: true, f.getOrNull(7)?.toBooleanStrictOrNull() ?: false, f.getOrNull(8)?.let(::unpack) ?: "default")
+                        "I3" -> linears3D+=Linear3DObject(unpack(f[1]),unpack(f[2]),Linear3DKind.valueOf(f[3]),f[4].split(',').map(::unpack),f[5].toBooleanStrict(),f[6].toBooleanStrict(),unpack(f[7]))
                         "N" -> planes3D+=Plane3DObject(unpack(f[1]),unpack(f[2]),f[3].split(',').map(::unpack),f[4].toBooleanStrict(),f[5].toBooleanStrict(),unpack(f[6]))
                         "H" -> surfaceLayers += SpatialSurfaceLayer(
                             id = unpack(f[1]), expression = unpack(f[2]), visible = f[3].toBoolean(),
@@ -185,7 +187,7 @@ object WorkspaceSnapshotCodec {
             }
             WorkspaceState(id = unpack(workspace[1]), name = unpack(workspace[2]), module = MathModule.valueOf(workspace[3]),
                 points = points, shapes = shapes, pointDependencies = dependencies, geometryConstraints = constraints, geometryGroups = groups, functions = functions,
-                solids = solids, vectors3D = vectors, points3D = points3D, planes3D=planes3D,graphRowMetadata = rows, graphSliderMetadata = sliders,
+                solids = solids, vectors3D = vectors, points3D = points3D, planes3D=planes3D,linears3D=linears3D,graphRowMetadata = rows, graphSliderMetadata = sliders,
                 surfaceExpression = unpack(workspace[5]),
                 surfaceLayers = if (schema >= 7) surfaceLayers else listOf(SpatialSurfaceLayer("surface-main", unpack(workspace[5]))),
                 graph3DView = graph3DView,

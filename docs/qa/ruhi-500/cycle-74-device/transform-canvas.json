@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "visible_scoped_undo": true,
+  "pose_pixels": 191161,
+  "opacity_pixels": 191075,
+  "wireframe_pixels": 35296,
+  "explosion_pixels": 242093,
+  "assembly_pixels": 241459,
+  "camera_pixels": 229304,
+  "group_motion_pixels": 180219,
+  "stopped_group": true,
+  "persistence": true
+}

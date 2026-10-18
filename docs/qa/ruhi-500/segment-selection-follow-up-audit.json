@@ -1,11 +1,11 @@
 {
     "cases": 4,
-    "verified": 2,
+    "verified": 4,
     "source_sha256": {
-        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "d95467e852f416f7afb0265ce29fff843a1bd2237eb83c3d8c01d70431d7618b",
-        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": "136d491687fab2f3d545034f864c65f21b79f02d7f49641c53e2be490ec585c3",
-        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": "fe3fed7aee46af3366be3879fd3e12d04318986b92b532556fa907bcbece17e3",
-        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "7f8e4272fb68034537d27ff668cf0089e2d97e099ccb34df2bca6af136e7aee4"
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "b3fb01e7740fe45422b8c2429b583227a6a993af4e008748e612514be194ba26",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": "77e2aa5ae4e7510ecf73ceb96ecef9c59c424b1520371add0ae897de9f53e003",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": "62eca03eba02a84dc471af060e2fe1df3d95e7bbbe51344c4337c02409e5af98",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "d0cad57c59406026a2ef891e02d2588d52d2908b944a2b47248dadf3df0efbe2"
     },
     "results": [
         {
@@ -49,15 +49,18 @@
             "question_status": "CLARIFICATION",
             "question_reply": "Select a line segment first.",
             "question_suggestions": [
-                
+                "AB"
             ],
-            "actual_status": "UNSUPPORTED",
-            "actual_intent": null,
-            "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
-            "actual_point": null,
+            "actual_status": "APPLIED",
+            "actual_intent": "FIND_MIDPOINT",
+            "actual_reply": "Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+            "actual_point": [
+                0.5,
+                0.5
+            ],
             "actual_slope": null,
-            "history_entries": 0,
-            "behavior_verified": false
+            "history_entries": 1,
+            "behavior_verified": true
         },
         {
             "source_row": 179,
@@ -91,15 +94,15 @@
             "question_status": "CLARIFICATION",
             "question_reply": "Select a line segment first.",
             "question_suggestions": [
-                
+                "AB"
             ],
-            "actual_status": "UNSUPPORTED",
-            "actual_intent": null,
-            "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+            "actual_status": "APPLIED",
+            "actual_intent": "CALCULATE_SLOPE",
+            "actual_reply": "Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).",
             "actual_point": null,
-            "actual_slope": null,
+            "actual_slope": 1.0,
             "history_entries": 0,
-            "behavior_verified": false
+            "behavior_verified": true
         }
     ],
     "scope": "Original selected-segment midpoint/slope rows 162 and 179, valid selected controls and missing-selection AB-label replies. Current native segment AB exists. Independent values, original target roles and history checks. Compiled parser/engine probe without Android TensorFlow or UI."

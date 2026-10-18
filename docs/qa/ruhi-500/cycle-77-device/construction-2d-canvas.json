@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "initial_area": 9,
+  "edited_area": 15,
+  "actual_dependency_steps": true,
+  "measurement_label": "Selected measurements: area 9 - perimeter 14.485281",
+  "type_aware_measurements": true,
+  "measurement_pixels": 17989,
+  "copy_center": [
+    8,
+    4
+  ],
+  "independent_copy": true,
+  "undo_restored": true
+}

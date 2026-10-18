@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:34.837Z" hostname="INDIANSERVERS" time="0.022">
+<testsuite name="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:15.135Z" hostname="INDIANSERVERS" time="0.051">
   <properties/>
-  <testcase name="programmerFinanceAndConstantsAreAvailable" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.002"/>
-  <testcase name="unitsDimensionsUncertaintyAndSigFigsAreSafe" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.002"/>
-  <testcase name="matrixAndVectorOperationsAreVerified" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.001"/>
-  <testcase name="recognitionFavouritesAndHandoffsFormProductionAdapters" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.008"/>
-  <testcase name="statisticsAndProbabilityReturnRichResults" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.009"/>
+  <testcase name="programmerFinanceAndConstantsAreAvailable" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.004"/>
+  <testcase name="unitsDimensionsUncertaintyAndSigFigsAreSafe" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.003"/>
+  <testcase name="matrixAndVectorOperationsAreVerified" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.002"/>
+  <testcase name="recognitionFavouritesAndHandoffsFormProductionAdapters" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.019"/>
+  <testcase name="statisticsAndProbabilityReturnRichResults" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.023"/>
   <testcase name="sharedSmartCalculatorRoutesProfessionalCommands" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase3Test" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

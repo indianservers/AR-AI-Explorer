@@ -1,0 +1,40 @@
+// Read-only architecture probe: production validators run against disposable history/state results.
+// Never adopt the returned staged scene. Real scene/history must remain byte-identical/empty.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiErrorPreview') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def codec=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceSnapshotCodec').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def records=[
+                    [text:'Create a sphere with radius -3',expected:'INVALID',size:4],
+                    [text:'Create a sphere with radius 3',expected:'APPLIED',size:5],
+                    [text:'Clear the canvas',expected:'APPLIED',size:0],
+                    [text:'Move the cube to (3, 2, 1)',expected:'APPLIED',size:4],
+                ].collect { input ->
+                    def s=fixture.state('GEOMETRY_3D',null)
+                    def c=fixture.context(null,s)
+                    def before=codec.encode(s)
+                    def real=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def disposable=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def stage=managerClass.getDeclaredConstructor().newInstance().execute(s,input.text,disposable,c,modality)
+                    def unchanged=before==codec.encode(s)
+                    def realEntries=real.forModule(s.module).protocol.size()
+                    def verified=stage.status.name()==input.expected && stage.state.solids.size()==input.size && unchanged && realEntries==0
+                    [input:input.text,expected_status:input.expected,actual_status:stage.status.name(),validation_reply:stage.message,staged_solid_count:stage.state.solids.size(),staged_history_entries:disposable.forModule(s.module).protocol.size(),real_scene_byte_identical:unchanged,real_history_entries:realEntries,verified:verified]
+                }
+                def sources=new File(appProject.rootDir,'app/src/main/java/com/indianservers/aiexplorer/assistant/workspace').listFiles().findAll{it.name.endsWith('.kt')}.collectEntries { f -> [(appProject.rootDir.toPath().relativize(f.toPath()).toString().replace('\\','/')):java.security.MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString()] }
+                ['scripts/audit_ruhi_error_preview.init.gradle','app/src/main/java/com/indianservers/aiexplorer/workspace/GraphWorkspaceCommand.kt','app/src/main/java/com/indianservers/aiexplorer/workspace/Workspace.kt','app/src/main/java/com/indianservers/aiexplorer/workspace/WorkspaceProjectCodec.kt'].each { path -> sources[path]=java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString() }
+                def result=[source_sha256:sources,cases:records.size(),verified:records.count{it.verified},results:records,scope:'Compiled validator architecture probe for a future error-explanation conversation. Only disposable results/history are evaluated, never adopted. Does not implement or verify the missing-error question/reply, Android TensorFlow, UI or arbitrary-command preview safety.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/error-preview-architecture-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result))
+                records.each{println(it.actual_status+' '+it.input+'; actual scene unchanged='+it.real_scene_byte_identical)}
+            }finally{loader.close()}
+        }
+    }
+}

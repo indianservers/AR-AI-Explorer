@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:16.559Z" hostname="INDIANSERVERS" time="0.031">
+<testsuite name="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:52.922Z" hostname="INDIANSERVERS" time="0.034">
   <properties/>
-  <testcase name="offCurveClarificationRestoresAndAcceptsExplicitXWithoutBindingFalsePoint" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.004"/>
-  <testcase name="annotationUndoRedoRestoresBindingAndLeavesSourceGeometryUntouched" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.004"/>
+  <testcase name="offCurveClarificationRestoresAndAcceptsExplicitXWithoutBindingFalsePoint" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.005"/>
+  <testcase name="annotationUndoRedoRestoresBindingAndLeavesSourceGeometryUntouched" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.005"/>
   <testcase name="oldVersionOneAnnotationsRetainTheirExplicitCoordinateMeaning" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.001"/>
-  <testcase name="bothOriginalSelectedPointRequestsUseCurrentCurveAndCurrentPoint" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.01"/>
+  <testcase name="bothOriginalSelectedPointRequestsUseCurrentCurveAndCurrentPoint" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.011"/>
   <testcase name="nativeCompactionRemapsBindingAndDeletedAnchorNeverRetargetsNextPoint" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.002"/>
   <testcase name="selectedPointAnnotationFollowsCurrentCoordinatesAfterRestore" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.003"/>
-  <testcase name="offCurveSelectedPointAsksInsteadOfEvaluatingUnrelatedProjection" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.001"/>
+  <testcase name="offCurveSelectedPointAsksInsteadOfEvaluatingUnrelatedProjection" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.002"/>
   <testcase name="functionEditOrOffCurveDragSuppressesStalePointUntilItReturnsToCurve" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.003"/>
   <testcase name="explicitXRequestsRemainFixedWhileSelectedPointAnnotationsTrack" classname="com.indianservers.aiexplorer.RuhiDerivativePointContextTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>

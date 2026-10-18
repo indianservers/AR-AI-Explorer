@@ -1,0 +1,487 @@
+{
+  "passed": true,
+  "cases": 68,
+  "tensorflow_roles_above_gate": true,
+  "both_studios": true,
+  "visible_slope_named_point_distance": 5,
+  "points_and_history_preserved": true,
+  "committed_capture": true,
+  "results": [
+    {
+      "engine": "Geometry2D",
+      "name": "distance",
+      "source": "distance between distance and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "distance",
+      "source": "how far is distance from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "point",
+      "source": "distance between point and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "point",
+      "source": "how far is point from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "line",
+      "source": "distance between line and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "line",
+      "source": "how far is line from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "slope",
+      "source": "distance between slope and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "slope",
+      "source": "how far is slope from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "and",
+      "source": "distance between and and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "and",
+      "source": "how far is and from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "from",
+      "source": "distance between from and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "from",
+      "source": "how far is from from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "midpoint",
+      "source": "distance between midpoint and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "midpoint",
+      "source": "how far is midpoint from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "gradient",
+      "source": "distance between gradient and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "gradient",
+      "source": "how far is gradient from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "is",
+      "source": "distance between is and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "is",
+      "source": "how far is is from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "circle",
+      "source": "distance between circle and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "circle",
+      "source": "how far is circle from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "triangle",
+      "source": "distance between triangle and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "triangle",
+      "source": "how far is triangle from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "angle",
+      "source": "distance between angle and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "angle",
+      "source": "how far is angle from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "Vertex907",
+      "source": "distance between Vertex907 and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "Vertex907",
+      "source": "how far is Vertex907 from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "alpha",
+      "source": "distance between alpha and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "alpha",
+      "source": "how far is alpha from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "Δelta42",
+      "source": "distance between Δelta42 and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "Δelta42",
+      "source": "how far is Δelta42 from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "点甲",
+      "source": "distance between 点甲 and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "点甲",
+      "source": "how far is 点甲 from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "origin",
+      "source": "distance between origin and Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry2D",
+      "name": "origin",
+      "source": "how far is origin from Omega811",
+      "distance": 5,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "distance",
+      "source": "distance between distance and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "distance",
+      "source": "how far is distance from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "point",
+      "source": "distance between point and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "point",
+      "source": "how far is point from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "line",
+      "source": "distance between line and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "line",
+      "source": "how far is line from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "slope",
+      "source": "distance between slope and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "slope",
+      "source": "how far is slope from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "and",
+      "source": "distance between and and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "and",
+      "source": "how far is and from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "from",
+      "source": "distance between from and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "from",
+      "source": "how far is from from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "midpoint",
+      "source": "distance between midpoint and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "midpoint",
+      "source": "how far is midpoint from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "gradient",
+      "source": "distance between gradient and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "gradient",
+      "source": "how far is gradient from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "is",
+      "source": "distance between is and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "is",
+      "source": "how far is is from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "circle",
+      "source": "distance between circle and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "circle",
+      "source": "how far is circle from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "triangle",
+      "source": "distance between triangle and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "triangle",
+      "source": "how far is triangle from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "angle",
+      "source": "distance between angle and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "angle",
+      "source": "how far is angle from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "Vertex907",
+      "source": "distance between Vertex907 and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "Vertex907",
+      "source": "how far is Vertex907 from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "alpha",
+      "source": "distance between alpha and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "alpha",
+      "source": "how far is alpha from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "Δelta42",
+      "source": "distance between Δelta42 and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "Δelta42",
+      "source": "how far is Δelta42 from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "点甲",
+      "source": "distance between 点甲 and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "点甲",
+      "source": "how far is 点甲 from Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "origin",
+      "source": "distance between origin and Omega811",
+      "distance": 13,
+      "passed": true
+    },
+    {
+      "engine": "Geometry3D",
+      "name": "origin",
+      "source": "how far is origin from Omega811",
+      "distance": 13,
+      "passed": true
+    }
+  ]
+}

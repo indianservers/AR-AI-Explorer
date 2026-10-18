@@ -1,0 +1,105 @@
+{
+  "cases": 4,
+  "verified": 4,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "b3fb01e7740fe45422b8c2429b583227a6a993af4e008748e612514be194ba26",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": "77e2aa5ae4e7510ecf73ceb96ecef9c59c424b1520371add0ae897de9f53e003",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": "62eca03eba02a84dc471af060e2fe1df3d95e7bbbe51344c4337c02409e5af98",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "cfc8a23d064b4ddbc120d134951950b843368766aaea985302fe1e5d6970fa1b"
+  },
+  "results": [
+    {
+      "source_row": 162,
+      "case_name": "valid_selected_control",
+      "input": "Mark the midpoint of the selected segment",
+      "selection_reply": null,
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "expected_slope": null,
+      "expected_target": "selected_segment",
+      "question_status": "APPLIED",
+      "question_reply": "Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "question_suggestions": [],
+      "actual_status": "APPLIED",
+      "actual_intent": "FIND_MIDPOINT",
+      "actual_reply": "Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "actual_point": [
+        0.5,
+        0.5
+      ],
+      "actual_slope": null,
+      "history_entries": 1,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 162,
+      "case_name": "missing_selection_reply",
+      "input": "Mark the midpoint of the selected segment",
+      "selection_reply": "AB",
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "expected_slope": null,
+      "expected_target": "selected_segment",
+      "question_status": "CLARIFICATION",
+      "question_reply": "Select a line segment first.",
+      "question_suggestions": [
+        "AB"
+      ],
+      "actual_status": "APPLIED",
+      "actual_intent": "FIND_MIDPOINT",
+      "actual_reply": "Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "actual_point": [
+        0.5,
+        0.5
+      ],
+      "actual_slope": null,
+      "history_entries": 1,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 179,
+      "case_name": "valid_selected_control",
+      "input": "Measure the slope of the selected line",
+      "selection_reply": null,
+      "expected_point": null,
+      "expected_slope": 1.0,
+      "expected_target": "selected_line",
+      "question_status": "APPLIED",
+      "question_reply": "Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).",
+      "question_suggestions": [],
+      "actual_status": "APPLIED",
+      "actual_intent": "CALCULATE_SLOPE",
+      "actual_reply": "Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).",
+      "actual_point": null,
+      "actual_slope": 1.0,
+      "history_entries": 0,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 179,
+      "case_name": "missing_selection_reply",
+      "input": "Measure the slope of the selected line",
+      "selection_reply": "AB",
+      "expected_point": null,
+      "expected_slope": 1.0,
+      "expected_target": "selected_line",
+      "question_status": "CLARIFICATION",
+      "question_reply": "Select a line segment first.",
+      "question_suggestions": [
+        "AB"
+      ],
+      "actual_status": "APPLIED",
+      "actual_intent": "CALCULATE_SLOPE",
+      "actual_reply": "Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).",
+      "actual_point": null,
+      "actual_slope": 1.0,
+      "history_entries": 0,
+      "behavior_verified": true
+    }
+  ],
+  "scope": "Original selected-segment midpoint/slope rows 162 and 179, valid selected controls and missing-selection AB-label replies. Current native segment AB exists. Independent values, original target roles and history checks. Compiled parser/engine probe without Android TensorFlow or UI."
+}

@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "cases": 8,
+  "results": [
+    {
+      "input": "Find critical points of y = abs(x)",
+      "expected_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "actual_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = sqrt(x^2)",
+      "expected_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "actual_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = sqrt((x-1.25)^2)+2*x",
+      "expected_points": [
+        [
+          1.25,
+          2.5
+        ]
+      ],
+      "actual_points": [
+        [
+          1.25,
+          2.5
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find the stationary points of sqrt(x^2)",
+      "expected_points": [],
+      "actual_points": [],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = sqrt(x^4)",
+      "expected_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "actual_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find the stationary points of sqrt(x^4)",
+      "expected_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "actual_points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = sqrt(x^2)-sqrt(x^2)+x",
+      "expected_points": [],
+      "actual_points": [],
+      "passed": true
+    },
+    {
+      "input": "Find critical points of y = 1\/sqrt(x^2)",
+      "expected_points": [],
+      "actual_points": [],
+      "passed": true
+    }
+  ],
+  "original_domain_preserved": true,
+  "native_current_curve": true,
+  "actual_rendered_coordinates": true,
+  "initial_point": [
+    0,
+    0
+  ],
+  "edited_point": [
+    2,
+    4
+  ],
+  "committed_capture": true
+}

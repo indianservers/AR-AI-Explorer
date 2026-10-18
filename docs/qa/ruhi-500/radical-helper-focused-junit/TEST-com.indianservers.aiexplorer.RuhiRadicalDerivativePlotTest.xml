@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-18T16:28:15.994Z" hostname="INDIANSERVERS" time="0.398">
+  <properties/>
+  <testcase name="firstAndSecondAbsolutePowerRulesHaveFiniteSmoothZeros" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.083"/>
+  <testcase name="hiddenOrDeletedReferencedCurveCannotSilentlyRebindToAnotherCurve" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.111"/>
+  <testcase name="trueAbsoluteValueCornersKeepUndefinedDerivativesAndTheirTwoDifferentSides" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.021"/>
+  <testcase name="originalPolesAndCanceledSourceDomainsAreStillExcluded" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.026"/>
+  <testcase name="originalDevelopmentProbeRepairsFiniteHolesButPreservesTheTrueCusp" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.033"/>
+  <testcase name="negativeTinyAndFractionalCoefficientsKeepTheirActualSlopeValues" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.013"/>
+  <testcase name="unaryPowersAndRadicalCanonicalizationPreserveConventionalPrecedence" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.011"/>
+  <testcase name="symbolicNestedPowerDerivativesKeepTheirIndependentNumericMeaning" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.004"/>
+  <testcase name="savedSelectedCurveUsesTheSameIdentityAndLiveFormulaAfterReorderAndUndo" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.033"/>
+  <testcase name="matchingAbsoluteProductsUseValidSmoothRulesWithoutFusingDifferentArguments" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.005"/>
+  <testcase name="plottedSmoothEvenRadicalsAgreeWithTheirIndependentRealDerivatives" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.042"/>
+  <testcase name="canceledEquivalentAbsoluteValuesLeaveNoInventedHole" classname="com.indianservers.aiexplorer.RuhiRadicalDerivativePlotTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

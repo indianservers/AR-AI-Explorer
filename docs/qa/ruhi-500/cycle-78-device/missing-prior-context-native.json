@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "source_row": 480,
+      "module": "Geometry3D",
+      "question_saved": true,
+      "empty_until_instruction": true,
+      "applied": true,
+      "value": 3
+    },
+    {
+      "source_row": 481,
+      "module": "Geometry3D",
+      "question_saved": true,
+      "empty_until_instruction": true,
+      "applied": true,
+      "value": 3
+    },
+    {
+      "source_row": 483,
+      "module": "Geometry3D",
+      "question_saved": true,
+      "empty_until_instruction": true,
+      "applied": true,
+      "value": 3
+    },
+    {
+      "source_row": 486,
+      "module": "Graph2D",
+      "question_saved": true,
+      "empty_until_instruction": true,
+      "applied": true,
+      "value": 4
+    },
+    {
+      "source_row": 490,
+      "module": "Graph2D",
+      "question_saved": true,
+      "empty_until_instruction": true,
+      "applied": true,
+      "value": 4
+    },
+    {
+      "source_row": 491,
+      "module": "Graph2D",
+      "question_saved": true,
+      "empty_until_instruction": true,
+      "applied": true,
+      "value": 4
+    }
+  ],
+  "saved_question": true,
+  "resume_and_partial_reply": true,
+  "no_fabricated_choices": true,
+  "no_geometry_until_complete_instruction": true,
+  "committed_capture": true
+}

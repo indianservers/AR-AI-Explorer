@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiColorTargetTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:15.270Z" hostname="INDIANSERVERS" time="0.035">
+<testsuite name="com.indianservers.aiexplorer.RuhiColorTargetTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:51.783Z" hostname="INDIANSERVERS" time="0.024">
   <properties/>
-  <testcase name="multipleBlueObjectsAskAndDisplayedAnswerStillCompletesOriginalAction" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.013"/>
-  <testcase name="originalCorrectionBindsNativeColorAndOpaqueIdAfterRestoreWithOneUndo" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.012"/>
-  <testcase name="solidCorrectionUsesAppearanceAndValidatedTransformNotArrayDefault" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.008"/>
+  <testcase name="multipleBlueObjectsAskAndDisplayedAnswerStillCompletesOriginalAction" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.011"/>
+  <testcase name="originalCorrectionBindsNativeColorAndOpaqueIdAfterRestoreWithOneUndo" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.005"/>
+  <testcase name="solidCorrectionUsesAppearanceAndValidatedTransformNotArrayDefault" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.006"/>
   <testcase name="absentBlueAndStaleSceneDoNotInventAnEditOrLoseOrdinaryPendingChoice" classname="com.indianservers.aiexplorer.RuhiColorTargetTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

@@ -1,0 +1,487 @@
+{
+  "source_cycle": 78,
+  "cases": 80,
+  "scope": "Original supplied requests currently UNSUPPORTED in last accepted native replay; safe rejection is not implemented behavior. Preserve original command labels and fields.",
+  "rows": [
+    {
+      "id": 13,
+      "text": "Draw a hollow tube.",
+      "intent": "CREATE_SOLID",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 35,
+      "text": "Show me the xy-plane.",
+      "intent": "CONSTRUCT",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 36,
+      "text": "Draw a plane parallel to the floor at z = 3.",
+      "intent": "CONSTRUCT",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 37,
+      "text": "Draw a triangle using A, B, and C.",
+      "intent": "CONSTRUCT",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 38,
+      "text": "Make a tetrahedron using four points.",
+      "intent": "CONSTRUCT",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 87,
+      "text": "Is A inside this sphere?",
+      "intent": "POINT_QUERY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 88,
+      "text": "Is B on the surface of this sphere?",
+      "intent": "POINT_QUERY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 89,
+      "text": "Is C inside this box?",
+      "intent": "POINT_QUERY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 90,
+      "text": "Which points are outside the selected solid?",
+      "intent": "POINT_QUERY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 138,
+      "text": "Bring the cone back to where it was.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 139,
+      "text": "Put the two spheres next to each other without overlap.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 140,
+      "text": "Move this sphere until it just touches that sphere.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 141,
+      "text": "Put the cube on the xy-plane.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 142,
+      "text": "Put the cone on top of the box.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 143,
+      "text": "Line up the centers of these three spheres.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 144,
+      "text": "Leave an equal gap between these cubes.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 151,
+      "text": "Rotate the triangle around line AB.",
+      "intent": "ROTATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 153,
+      "text": "Rotate both cubes together around the origin.",
+      "intent": "ROTATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 163,
+      "text": "Reflect the triangle across the xz-plane.",
+      "intent": "REFLECT",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 164,
+      "text": "Make a mirror copy of this cone across the xy-plane.",
+      "intent": "REFLECT",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 187,
+      "text": "Give the box a pink outline.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 189,
+      "text": "Make the sphere completely see-through.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 190,
+      "text": "Show only the edges of the cube.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 191,
+      "text": "Show the cube’s faces again.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 192,
+      "text": "Make the selected object’s edges thicker.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 193,
+      "text": "Change all solid outlines to black.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 194,
+      "text": "Hide the cone.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 195,
+      "text": "Show the cone again.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 196,
+      "text": "Hide every sphere.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 197,
+      "text": "Show all hidden solids.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 198,
+      "text": "Hide everything except the selected cube.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 199,
+      "text": "Lock the box so I cannot move it.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 200,
+      "text": "Unlock every cube.",
+      "intent": "APPEARANCE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 203,
+      "text": "Show the names of all points.",
+      "intent": "SELECT_COPY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 204,
+      "text": "Hide the object labels.",
+      "intent": "SELECT_COPY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 223,
+      "text": "Does point C lie on line AB?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 224,
+      "text": "Are these two 3D lines parallel?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 225,
+      "text": "Do these two lines meet?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 226,
+      "text": "Where do these lines cross?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 227,
+      "text": "Are these lines skew?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 228,
+      "text": "What is the shortest distance between these lines?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 229,
+      "text": "How far is point A from this line?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 230,
+      "text": "Mark the closest point on the line to A.",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 231,
+      "text": "Draw a line through A parallel to BC.",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 232,
+      "text": "Draw a line through A perpendicular to this plane.",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 233,
+      "text": "Draw a plane through A parallel to the xy-plane.",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 235,
+      "text": "What is the equation of this plane?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 236,
+      "text": "Is point D on this plane?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 237,
+      "text": "Is this line parallel to the plane?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 238,
+      "text": "Where does this line go through the plane?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 239,
+      "text": "How far is A from this plane?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 240,
+      "text": "Drop a perpendicular from A to the plane.",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 241,
+      "text": "Are these two planes perpendicular?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 242,
+      "text": "Are these two planes parallel?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 243,
+      "text": "What is the angle between these planes?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 244,
+      "text": "Draw the line where these planes meet.",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 245,
+      "text": "Which direction is straight out from this plane?",
+      "intent": "LINE_PLANE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 246,
+      "text": "Slice the cube with a horizontal plane.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 247,
+      "text": "What shape is this cube’s cross-section?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 248,
+      "text": "Slice the sphere through its center.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 249,
+      "text": "What is the radius of that circular slice?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 250,
+      "text": "Move the slicing plane upward by one unit.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 251,
+      "text": "Can a tilted slice through this cylinder make an ellipse?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 252,
+      "text": "Cut the cone with a plane parallel to its base.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 253,
+      "text": "Show the sphere and plane’s intersection.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 254,
+      "text": "Does this plane touch the sphere at just one point?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 255,
+      "text": "Draw a tangent plane at this point on the sphere.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 256,
+      "text": "Are these two spheres touching?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 257,
+      "text": "Are these spheres overlapping?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 258,
+      "text": "Is the small sphere completely inside the big sphere?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 259,
+      "text": "Where do these two spheres intersect?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 260,
+      "text": "Does this line pass through the sphere?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 261,
+      "text": "Mark where the line enters and leaves the sphere.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 262,
+      "text": "Is this line tangent to the sphere?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 263,
+      "text": "Is the cube completely inside the sphere?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 264,
+      "text": "Are the box and the plane intersecting?",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 265,
+      "text": "Show me a net of this cube.",
+      "intent": "INTERSECTION",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 288,
+      "text": "Move the locked cube 2 units right.",
+      "intent": "TRANSLATE",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 295,
+      "text": "Undo only the last color change.",
+      "intent": "HISTORY",
+      "expected_status": "UNSUPPORTED"
+    },
+    {
+      "id": 300,
+      "text": "Reset the camera so I can see all my objects.",
+      "intent": "CAMERA",
+      "expected_status": "UNSUPPORTED"
+    }
+  ]
+}

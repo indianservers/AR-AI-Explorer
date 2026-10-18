@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:16.203Z" hostname="INDIANSERVERS" time="0.072">
+<testsuite name="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:52.607Z" hostname="INDIANSERVERS" time="0.068">
   <properties/>
-  <testcase name="choosingCurveWithUndefinedEarlierXAsksNewXAndRetainsCurveAfterRestore" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.014"/>
-  <testcase name="repeatedUndefinedXKeepsCurveAndDoesNotCreateUndoEntries" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.01"/>
+  <testcase name="choosingCurveWithUndefinedEarlierXAsksNewXAndRetainsCurveAfterRestore" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.012"/>
+  <testcase name="repeatedUndefinedXKeepsCurveAndDoesNotCreateUndoEntries" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.009"/>
   <testcase name="curveEditsInvalidateSavedDomainChoicesInsteadOfUsingStaleExamples" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.004"/>
-  <testcase name="examplesRespectLogSquareRootReciprocalAndAbsoluteValueDomains" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.026"/>
-  <testcase name="logarithmQuestionOffersOnlyPositiveFiniteDerivativeExamples" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.002"/>
-  <testcase name="nonsmoothSelectedPointAsksForAnotherLocationWithoutProjectingOrAddingHistory" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.008"/>
+  <testcase name="examplesRespectLogSquareRootReciprocalAndAbsoluteValueDomains" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.027"/>
+  <testcase name="logarithmQuestionOffersOnlyPositiveFiniteDerivativeExamples" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.001"/>
+  <testcase name="nonsmoothSelectedPointAsksForAnotherLocationWithoutProjectingOrAddingHistory" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.007"/>
   <testcase name="literalUndefinedEvaluationRemainsAnHonestRejection" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.002"/>
   <testcase name="unavailableSampleLocationsProduceNoFabricatedValidChips" classname="com.indianservers.aiexplorer.RuhiDerivativeDomainFollowUpTest" time="0.005"/>
   <system-out><![CDATA[]]></system-out>

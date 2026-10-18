@@ -177,19 +177,19 @@
     "id": 30,
     "text": "Draw a line from A to B.",
     "intent": "CONSTRUCT",
-    "expected_status": "UNSUPPORTED"
+    "expected_status": "APPLIED"
   },
   {
     "id": 31,
     "text": "Join B and C with a segment.",
     "intent": "CONSTRUCT",
-    "expected_status": "UNSUPPORTED"
+    "expected_status": "APPLIED"
   },
   {
     "id": 32,
     "text": "Draw a ray starting at A and going through C.",
     "intent": "CONSTRUCT",
-    "expected_status": "UNSUPPORTED"
+    "expected_status": "APPLIED"
   },
   {
     "id": 33,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:10.921Z" hostname="INDIANSERVERS" time="0.032">
+  <properties/>
+  <testcase name="actualPendingTasksStillUseTheirRealRolesChoicesAndSavedQuestion" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.017"/>
+  <testcase name="absentEquationTaskDoesNotInventAnExistingGraph" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.002"/>
+  <testcase name="absentSuggestionDoesNotInventAnAnswerChoice" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.002"/>
+  <testcase name="absentPendingTaskAsksWhatToResume" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.001"/>
+  <testcase name="absentNumericSlotDoesNotGuessWhichDimensionToChange" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.001"/>
+  <testcase name="absentPairDoesNotInventTwoObjectsOrTheirAction" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.002"/>
+  <testcase name="absentRadiusContextAsksPurposeBeforeCreatingAnything" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.006"/>
+  <testcase name="partialAnswersCancellationAndStaleWorkspaceNeverChangeGeometry" classname="com.indianservers.aiexplorer.RuhiMissingPriorContextTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

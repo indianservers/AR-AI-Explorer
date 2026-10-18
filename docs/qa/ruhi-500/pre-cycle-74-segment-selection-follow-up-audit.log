@@ -1,0 +1,18 @@
+
+> Task :app:auditRuhiSegmentSelectionFollowUp
+162 valid_selected_control: true APPLIED Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.
+162 missing_selection_reply: true APPLIED Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.
+179 valid_selected_control: true APPLIED Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).
+179 missing_selection_reply: true APPLIED Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1s
+1 actionable task: 1 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html

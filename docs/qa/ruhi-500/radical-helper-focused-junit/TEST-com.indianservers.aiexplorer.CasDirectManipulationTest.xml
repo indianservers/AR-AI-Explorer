@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.CasDirectManipulationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-18T16:28:16.519Z" hostname="INDIANSERVERS" time="0.013">
+  <properties/>
+  <testcase name="rowPayloadCanReplaceASelectedSubexpressionOrAppend" classname="com.indianservers.aiexplorer.CasDirectManipulationTest" time="0.004"/>
+  <testcase name="transformationsPreviewBeforeCommitAndRemainUndoable" classname="com.indianservers.aiexplorer.CasDirectManipulationTest" time="0.004"/>
+  <testcase name="parameterHandlesScrubWithoutFlatteningOriginalExpression" classname="com.indianservers.aiexplorer.CasDirectManipulationTest" time="0.004"/>
+  <testcase name="cancellingPreviewDoesNotCreateHistory" classname="com.indianservers.aiexplorer.CasDirectManipulationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

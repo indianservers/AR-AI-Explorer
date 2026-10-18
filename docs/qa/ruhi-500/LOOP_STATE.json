@@ -1,6 +1,6 @@
 {
   "goal_complete": false,
-  "cycle": 72,
+  "cycle": 78,
   "source_rows": 500,
   "native_correct_intents": 500,
   "behavior_verified": 500,
@@ -10,7 +10,7 @@
     {
       "requirement": "Import all 500 original rows and preserve every label, parameter, expected behavior, follow-up and suggestion",
       "state": "VERIFIED",
-      "evidence": "cycle-72-source-fields-verification.json; verify_ruhi_seed500_source.py compares the original pinned workbook with all nine seed/Android fields and every replay column."
+      "evidence": "cycle-78-source-fields-verification.json; verify_ruhi_seed500_source.py compares the original pinned workbook with all nine seed/Android fields and every replay column."
     },
     {
       "requirement": "Execute every source row before training",
@@ -20,12 +20,12 @@
     {
       "requirement": "Train and run TensorFlow intent recognition on all 500 seeds",
       "state": "VERIFIED",
-      "evidence": "cycle-72-model.json and cycle-72-device/seed500-native.json"
+      "evidence": "cycle-78-model.json and cycle-78-device/seed500-native.json"
     },
     {
       "requirement": "Learn point roles without relying on A/B/C/D names and recompute from arbitrary current coordinates",
       "state": "VERIFIED",
-      "evidence": "cycle-72-device/unseen-labels-native.json and RuhiPointLanguageTest"
+      "evidence": "cycle-78-device/unseen-labels-native.json and RuhiPointLanguageTest"
     },
     {
       "requirement": "Execute all 500 workbook mathematical actions and structured parameters correctly",
@@ -41,7 +41,7 @@
     {
       "requirement": "Verify the installed models and visible assistant in Android emulator",
       "state": "VERIFIED",
-      "evidence": "cycle-72-device.log and cycle-72-device/visible-assistant.json"
+      "evidence": "cycle-78-device.log and cycle-78-device/visible-assistant.json"
     },
     {
       "requirement": "Complete contextual intersection support and independent tests for polar/parametric and other implicit graph types",
@@ -76,51 +76,81 @@
     {
       "requirement": "Resume original selected derivative, stationary and tangent-slider requests from an empty graph workspace through saved formula replies",
       "state": "VERIFIED",
-      "evidence": "RuhiDerivativeFormulaFollowUpTest: seven methods; cycle-72-device/derivative-formula-canvas.json. Native creation and linked analysis are atomic; invalid saved x reasks before creation. Broader interrupted/domain policies remain separate requirements."
+      "evidence": "RuhiDerivativeFormulaFollowUpTest: seven methods; cycle-78-device/derivative-formula-canvas.json. Native creation and linked analysis are atomic; invalid saved x reasks before creation. Broader interrupted/domain policies remain separate requirements."
     },
     {
       "requirement": "Resume original selected integration/shading rows 364 and 372 from an empty graph workspace through saved formula and required-bounds replies",
       "state": "VERIFIED",
-      "evidence": "RuhiIntegralFormulaFollowUpTest: seven methods; pre-cycle-72-empty-integral-follow-up-audit.json and cycle-72-device/integral-formula-canvas.json. Native function and shaded analysis are atomic; invalid intervals do not create a curve. Broader integration/domain policies remain separate requirements."
+      "evidence": "RuhiIntegralFormulaFollowUpTest: seven methods; pre-cycle-78-empty-integral-follow-up-audit.json and cycle-78-device/integral-formula-canvas.json. Native function and shaded analysis are atomic; invalid intervals do not create a curve. Broader integration/domain policies remain separate requirements."
     },
     {
       "requirement": "Normalize mathematical-word formula replies for original selected derivative/integration analyses while preserving context and invalid-input boundaries",
       "state": "VERIFIED",
-      "evidence": "RuhiFormulaReplyLanguageTest: seven methods; pre-cycle-72-formula-reply-language-audit.json and cycle-72-device/formula-word-canvas.json. Six formal/word native tuples plus varied-coefficient visible answers; text input, not microphone certification."
+      "evidence": "RuhiFormulaReplyLanguageTest: seven methods; pre-cycle-78-formula-reply-language-audit.json and cycle-78-device/formula-word-canvas.json. Six formal/word native tuples plus varied-coefficient visible answers; text input, not microphone certification."
     },
     {
       "requirement": "Resume original midpoint/slope endpoint clarification replies with actual named current points, saved operation and correct scene/history behavior",
       "state": "VERIFIED",
-      "evidence": "RuhiEndpointClarificationTest: eight methods; pre-cycle-72-endpoint-pair-follow-up-audit.json and cycle-72-device/endpoint-pair-canvas.json. Scope includes unknown segment references, saved multi-segment comparisons, current-coordinate replies and live native midpoint dependencies."
+      "evidence": "RuhiEndpointClarificationTest: eight methods; pre-cycle-78-endpoint-pair-follow-up-audit.json and cycle-78-device/endpoint-pair-canvas.json. Scope includes unknown segment references, saved multi-segment comparisons, current-coordinate replies and live native midpoint dependencies."
+    },
+    {
+      "requirement": "Resume original midpoint row 168 through replacement-label conflicts and composed saved endpoint/label questions without overwriting existing points",
+      "state": "VERIFIED",
+      "evidence": "RuhiMidpointLabelFollowUpTest: eight methods; pre-cycle-78-midpoint-label-follow-up-audit.json and cycle-78-device/midpoint-label-canvas.json. Current parent bindings, unused labels and one reversible dependent construction verified; broader policies remain separate."
+    },
+    {
+      "requirement": "Resume original selected native-segment midpoint/slope rows 162/179 through saved compatible object choices and current-name replies",
+      "state": "VERIFIED",
+      "evidence": "RuhiSegmentSelectionFollowUpTest: eight methods; pre-cycle-78-segment-selection-follow-up-audit.json and cycle-78-device/segment-selection-canvas.json. Current native parents, original selected-target roles, stable object choices, midpoint undo and read-only slope verified; broader policies remain separate."
+    },
+    {
+      "requirement": "Preserve real even-power radical critical/stationary identities and fractional-power numerical meaning through exact CAS rendering",
+      "state": "VERIFIED",
+      "evidence": "RuhiRadicalCriticalPointTest: ten methods plus shared CAS regression and 1,200 solver cases; pre-cycle-78-radical-critical-point-audit.json and cycle-78-device/radical-critical-canvas.json. Current-domain and finite two-sided branch cases verified; general fractional/domain/nonisolated analyses remain incomplete."
     },
     {
       "requirement": "Resolve the two reproduced contextual counterexamples beyond the declared source replay",
       "state": "VERIFIED",
-      "evidence": "pre-cycle-72-context-gap-counterexamples.json and cycle-72-device point-distance/completed-blue evidence; scope is the two retained cycle-54 counterexamples, not every possible context."
+      "evidence": "pre-cycle-78-context-gap-counterexamples.json and cycle-78-device point-distance/completed-blue evidence; scope is the two retained cycle-54 counterexamples, not every possible context."
     },
     {
       "requirement": "Verify creation-based missing-point recovery, invalid-input cancellation and renamed endpoints for all 150 distance rows in both geometry studios",
       "state": "VERIFIED",
-      "evidence": "cycle-72-device/distance-policy-matrix.json: exact 1200 row/module/scenario tuples; RuhiDistancePolicyMatrixTest. This scope does not include choosing another existing point."
+      "evidence": "cycle-78-device/distance-policy-matrix.json: exact 1200 row/module/scenario tuples; RuhiDistancePolicyMatrixTest. This scope does not include choosing another existing point."
     },
     {
       "requirement": "Complete and independently verify the Choose point alternative in the original 150 distance rows",
       "state": "VERIFIED",
-      "evidence": "cycle-72-device/choose-point-matrix.json and choose-point-canvas.json: 900 original-row/module/scenario workflows and visible restored chip/current-coordinate proof for uniquely named existing points. Ambiguous names ask for unique names."
+      "evidence": "cycle-78-device/choose-point-matrix.json and choose-point-canvas.json: 900 original-row/module/scenario workflows and visible restored chip/current-coordinate proof for uniquely named existing points. Ambiguous names ask for unique names."
     },
     {
       "requirement": "Verify confidence-gated TensorFlow endpoint roles for valid point labels colliding with lexical words",
       "state": "VERIFIED",
-      "evidence": "cycle-72-lexical-point-label-audit.json; head-level development probe, not whole-assistant failure or held-out NLP accuracy."
+      "evidence": "cycle-78-lexical-point-label-audit.json; head-level development probe, not whole-assistant failure or held-out NLP accuracy."
     },
     {
       "requirement": "Verify that valid named-point lexical values do not change mathematical dispatch",
       "state": "VERIFIED",
-      "evidence": "cycle-72-lexical-point-execution-audit.json: restored 2D/3D parser/engine replay; Android integration is separate."
+      "evidence": "cycle-78-lexical-point-execution-audit.json: restored 2D/3D parser/engine replay; Android integration is separate."
+    },
+    {
+      "requirement": "Keep plotted derivative helper values consistent with finite real radical derivatives at removable formula holes",
+      "state": "VERIFIED",
+      "evidence": "cycle-78-radical-derivative-plot-audit.json; compiled helper values, not pixel certification."
+    },
+    {
+      "requirement": "Clarify an error-explanation request when no failed command/error is recorded",
+      "state": "INCOMPLETE",
+      "evidence": "cycle-78-missing-contexts-audit.json row499; do not interpret a supplied failed command as an edit request."
+    },
+    {
+      "requirement": "Ask for missing prior context for original follow-up rows 480,481,483,486,490,491",
+      "state": "VERIFIED",
+      "evidence": "cycle-78-missing-contexts-audit.json; independent absent-prior-context policy oracle."
     }
   ],
   "next_work": [
-    "Fix original row 168 replacement-label clarification: retain midpoint purpose and any resolved endpoint bindings when M already exists, offer unused valid labels, accept Center907 across saves, preserve the existing M point and commit one dependent construction. Verify the composed endpoint-then-label workflow independently.",
+    "Handle source499 without a recorded error: ask for the failed command/error and inspect it without replaying a potentially mutating instruction; retain current real-error explanations.",
     "Extend intersection context-type coverage to polar/parametric and other implicit curves; retain this as an explicit gap while progressing the original workbook families.",
     "Complete nonsmooth critical-point/domain analysis and all derivative contextual and follow-up policies; maintain independent tests against unchanged source constraints.",
     "Finish the remaining missing-context, literal-unit-input and engine/scene policies; the original dialogue rows have declared valid-context fixtures, not exhaustive context coverage.",
@@ -131,36 +161,14 @@
   "behavior_verification_scope": "Declared valid source contexts, not exhaustive context or conditional follow-up coverage",
   "known_context_counterexamples": [
     {
-      "source_row": 168,
-      "case_name": "existing_label",
-      "input": "Label the middle of AB as M",
-      "label_reply": "Center907",
-      "expected_label": "Center907",
-      "expected_point": [
-        0.5,
-        0.5
-      ],
-      "actual_point": null,
-      "actual_status": "UNSUPPORTED",
-      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "source_row": 499,
+      "case_name": "explanation_without_failed_command",
+      "input": "Why did that fail?",
+      "actual_status": "APPLIED",
+      "actual_reply": "There is no recorded failed request in this conversation.",
+      "expected": "Ask which command failed when no failure is recorded. A supplied failed command is reference material to inspect, not authorization to replay it.",
       "behavior_verified": false,
-      "scope": "Original row 168 valid control and existing-label clarification, including a preceding unresolved-endpoint answer. Independent coordinates and preservation/history checks. Compiled parser/engine probe without Android TensorFlow or UI."
-    },
-    {
-      "source_row": 168,
-      "case_name": "endpoint_then_label",
-      "input": "Label the middle of AB as M",
-      "label_reply": "Center907",
-      "expected_label": "Center907",
-      "expected_point": [
-        3.0,
-        4.0
-      ],
-      "actual_point": null,
-      "actual_status": "UNSUPPORTED",
-      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
-      "behavior_verified": false,
-      "scope": "Original row 168 valid control and existing-label clarification, including a preceding unresolved-endpoint answer. Independent coordinates and preservation/history checks. Compiled parser/engine probe without Android TensorFlow or UI."
+      "scope": "Original source missing-prerequisite clarification policy in fresh conversation/history."
     }
   ],
   "absolute_value_coordinate_audit_current": true,

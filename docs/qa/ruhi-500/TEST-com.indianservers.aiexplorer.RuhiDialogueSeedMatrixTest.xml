@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:24.660Z" hostname="INDIANSERVERS" time="0.518">
+<testsuite name="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:02.705Z" hostname="INDIANSERVERS" time="0.558">
   <properties/>
-  <testcase name="contextlessResponsesCannotPassTheOriginalDialogueOracle" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.017"/>
-  <testcase name="correctSemanticTagsCannotHideMissingGeometryOrCannedReadonlyAnswers" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.041"/>
+  <testcase name="contextlessResponsesCannotPassTheOriginalDialogueOracle" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.011"/>
+  <testcase name="correctSemanticTagsCannotHideMissingGeometryOrCannedReadonlyAnswers" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.045"/>
   <testcase name="eachContextualMutationHasOneUndoWhileExplanationsAndQuestionsHaveNone" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.043"/>
-  <testcase name="eightCurrentSceneVariantsPerOriginalUtteranceRecomputeInheritedRoles" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.374"/>
-  <testcase name="allOriginalDialogueRowsUseRealRestoredPrerequisitesAndSourceParameters" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.043"/>
+  <testcase name="eightCurrentSceneVariantsPerOriginalUtteranceRecomputeInheritedRoles" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.414"/>
+  <testcase name="allOriginalDialogueRowsUseRealRestoredPrerequisitesAndSourceParameters" classname="com.indianservers.aiexplorer.RuhiDialogueSeedMatrixTest" time="0.045"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

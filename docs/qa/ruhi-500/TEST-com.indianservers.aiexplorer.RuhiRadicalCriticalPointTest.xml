@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:11.381Z" hostname="INDIANSERVERS" time="1.418">
+  <properties/>
+  <testcase name="originalDomainsRemainAuthoritativeAfterEvenPowerIdentities" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.013"/>
+  <testcase name="rationalPowersRetainIndependentNumericMeaningThroughCasRendering" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.003"/>
+  <testcase name="squareRadicalsHaveTheSameFiniteCornersAsTheirRealAbsoluteValueIdentities" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.649"/>
+  <testcase name="positiveFactorsAndProductsRetainBothCornersAndInteriorSmoothZeros" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.072"/>
+  <testcase name="halfPowerSpellingAndNestedSquareRootsPreserveTheirRealBranches" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.097"/>
+  <testcase name="oneSidedSlopesStayExactNearCornersAndFiniteAtSmoothRemovableFormulaHoles" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.002"/>
+  <testcase name="cancellationAndReciprocalPolesDoNotInventCriticalOrStationaryPoints" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.084"/>
+  <testcase name="savedCurrentCurveAnalysisFollowsRadicalEditsAndKeepsAtomicAnnotationHistory" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.022"/>
+  <testcase name="higherEvenPowersRetainSmoothStationaryOriginsAndShiftedParents" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.47"/>
+  <testcase name="exactCasRadicalDerivativesAgreeWithElementarySlopesOnTheirRealDomain" classname="com.indianservers.aiexplorer.RuhiRadicalCriticalPointTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

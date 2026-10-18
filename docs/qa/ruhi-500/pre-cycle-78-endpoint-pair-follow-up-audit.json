@@ -1,0 +1,72 @@
+{
+    "cases": 2,
+    "verified": 2,
+    "source_sha256": {
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPointLanguage.kt": "c282a53f337eaeef07b2df026a513edd22e9835a17ace957f6d11a96f4b992a2",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "b3fb01e7740fe45422b8c2429b583227a6a993af4e008748e612514be194ba26",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": "77e2aa5ae4e7510ecf73ceb96ecef9c59c424b1520371add0ae897de9f53e003",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "d0cad57c59406026a2ef891e02d2588d52d2908b944a2b47248dadf3df0efbe2",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": "62eca03eba02a84dc471af060e2fe1df3d95e7bbbe51344c4337c02409e5af98"
+    },
+    "results": [
+        {
+            "source_row": 151,
+            "input": "Find the midpoint of AB",
+            "clarification_reply": "Sun907 and Moon811",
+            "expected": "Native dependent midpoint (3,4), with actual Sun907/Moon811 endpoint roles and one reversible construction.",
+            "question_status": "CLARIFICATION",
+            "question_reply": "Which two endpoints define AB? Write their names separated by \u2018and\u2019.",
+            "question_suggestions": [
+                "Sun907 + Moon811"
+            ],
+            "actual_status": "APPLIED",
+            "actual_intent": "FIND_MIDPOINT",
+            "actual_reply": "Midpoint Mid1 = (3.0, 4.0). Marked on the canvas; it follows both endpoints.",
+            "actual_points": [
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    6.0,
+                    8.0
+                ],
+                [
+                    3.0,
+                    4.0
+                ]
+            ],
+            "actual_slope": null,
+            "history_entries": 1,
+            "behavior_verified": true
+        },
+        {
+            "source_row": 176,
+            "input": "Find the slope of AB",
+            "clarification_reply": "Sun907 and Moon811",
+            "expected": "Slope 4/3, rise 8 and run 6 for actual Sun907/Moon811, no scene/history edit.",
+            "question_status": "CLARIFICATION",
+            "question_reply": "Which two endpoints define AB? Write their names separated by \u2018and\u2019.",
+            "question_suggestions": [
+                "Sun907 + Moon811"
+            ],
+            "actual_status": "APPLIED",
+            "actual_intent": "CALCULATE_SLOPE",
+            "actual_reply": "Slope = 1.3333333333333333; rise = 8.0, run = 6.0. Increasing (positive slope).",
+            "actual_points": [
+                [
+                    0.0,
+                    0.0
+                ],
+                [
+                    6.0,
+                    8.0
+                ]
+            ],
+            "actual_slope": 1.3333333333333333,
+            "history_entries": 0,
+            "behavior_verified": true
+        }
+    ],
+    "scope": "Original rows 151/176 with absent AB and two current uniquely named native endpoints; response to the assistant-requested endpoint clarification. Independent midpoint and slope expectations. Compiled parser/engine probe without Android TensorFlow or UI."
+}

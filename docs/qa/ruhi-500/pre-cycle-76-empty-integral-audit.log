@@ -1,0 +1,16 @@
+
+> Task :app:auditRuhiEmptyIntegralFollowUps
+364: APPLIED Signed integral = 2.6666666666666665; absolute area = 2.6666666666666665; positive area = 2.6666666666666665; negative area = 0.0; numerical error estimate = 2.459783678826488E-19.
+372: APPLIED Signed integral = 21.0; absolute area = 21.0; positive area = 21.0; negative area = 0.0; numerical error estimate = 0.0.
+
+[Incubating] Problems report is available at: file:///C:/Indian%20Servers/AIExplorer/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.6.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1s
+1 actionable task: 1 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.1/userguide/configuration_cache_enabling.html

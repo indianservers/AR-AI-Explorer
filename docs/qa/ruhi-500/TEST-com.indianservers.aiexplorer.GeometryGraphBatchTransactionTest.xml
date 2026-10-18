@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:06.339Z" hostname="INDIANSERVERS" time="0.035">
+<testsuite name="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:44.230Z" hostname="INDIANSERVERS" time="0.031">
   <properties/>
-  <testcase name="multiPointTransformUsesOneRevisionAndOneRecomputeBoundary" classname="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" time="0.028"/>
-  <testcase name="invalidMemberRejectsWholeBatchWithoutChangingDocument" classname="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" time="0.002"/>
-  <testcase name="batchEngineRejectsDuplicateAndStaleTransactions" classname="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" time="0.005"/>
+  <testcase name="multiPointTransformUsesOneRevisionAndOneRecomputeBoundary" classname="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" time="0.024"/>
+  <testcase name="invalidMemberRejectsWholeBatchWithoutChangingDocument" classname="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" time="0.003"/>
+  <testcase name="batchEngineRejectsDuplicateAndStaleTransactions" classname="com.indianservers.aiexplorer.GeometryGraphBatchTransactionTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

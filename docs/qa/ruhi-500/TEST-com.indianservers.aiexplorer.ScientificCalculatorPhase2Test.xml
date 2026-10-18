@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:34.816Z" hostname="INDIANSERVERS" time="0.019">
+<testsuite name="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:15.104Z" hostname="INDIANSERVERS" time="0.028">
   <properties/>
-  <testcase name="modularArithmeticIsExact" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.002"/>
-  <testcase name="supportsLimitsTaylorAndLinearOdeFoundation" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.008"/>
-  <testcase name="complexRectangularPolarProductsAndRootsAreAvailable" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.002"/>
-  <testcase name="decomposesTwoDistinctLinearFactors" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.001"/>
+  <testcase name="modularArithmeticIsExact" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.003"/>
+  <testcase name="supportsLimitsTaylorAndLinearOdeFoundation" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.012"/>
+  <testcase name="complexRectangularPolarProductsAndRootsAreAvailable" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.004"/>
+  <testcase name="decomposesTwoDistinctLinearFactors" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.002"/>
   <testcase name="phaseTwoTemplatesAndExamplesCoverEveryMode" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.0"/>
-  <testcase name="numericalMethodsConvergeWithVerification" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.0"/>
+  <testcase name="numericalMethodsConvergeWithVerification" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.001"/>
   <testcase name="evaluatesHyperbolicFunctionsAndArbitraryBaseLogs" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.002"/>
-  <testcase name="performsSymbolicDifferentiationIntegrationAndPolynomialOperations" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.003"/>
+  <testcase name="performsSymbolicDifferentiationIntegrationAndPolynomialOperations" classname="com.indianservers.aiexplorer.ScientificCalculatorPhase2Test" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

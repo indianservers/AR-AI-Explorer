@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:05.282Z" hostname="INDIANSERVERS" time="0.167">
+<testsuite name="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:43.159Z" hostname="INDIANSERVERS" time="0.1">
   <properties/>
-  <testcase name="cubicReportsMonotonicityConcavityAndSingleInflection" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.055"/>
-  <testcase name="rationalFunctionDetectsDomainSplitAndAsymptotes" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.017"/>
-  <testcase name="tangentNormalAndVerticalNormalAreExplicit" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.01"/>
-  <testcase name="areaBetweenCurvesReturnsSignedAndGeometricEvidence" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.012"/>
-  <testcase name="sharedMathGraphCarriesAdvancedFeatures" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.073"/>
+  <testcase name="cubicReportsMonotonicityConcavityAndSingleInflection" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.035"/>
+  <testcase name="rationalFunctionDetectsDomainSplitAndAsymptotes" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.011"/>
+  <testcase name="tangentNormalAndVerticalNormalAreExplicit" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.006"/>
+  <testcase name="areaBetweenCurvesReturnsSignedAndGeometricEvidence" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.002"/>
+  <testcase name="sharedMathGraphCarriesAdvancedFeatures" classname="com.indianservers.aiexplorer.AdvancedGraphFeatureEngineTest" time="0.046"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

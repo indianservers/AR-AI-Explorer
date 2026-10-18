@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiContextualAngleTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:15.417Z" hostname="INDIANSERVERS" time="0.045">
+<testsuite name="com.indianservers.aiexplorer.RuhiContextualAngleTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:51.920Z" hostname="INDIANSERVERS" time="0.055">
   <properties/>
-  <testcase name="differentRequestedAnglesPreserveArmLengthsAndClockwiseSide" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.018"/>
-  <testcase name="incidentalImportedPointSelectionDoesNotHideTheOnlyMarkedAngle" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.005"/>
-  <testcase name="dependentAndLockedArmsAreNotSilentlyDetachedOrMoved" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.002"/>
-  <testcase name="impossibleInteriorAnglesAndMissingConstructionDoNotEditOrInventPoints" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.002"/>
+  <testcase name="differentRequestedAnglesPreserveArmLengthsAndClockwiseSide" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.024"/>
+  <testcase name="incidentalImportedPointSelectionDoesNotHideTheOnlyMarkedAngle" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.004"/>
+  <testcase name="dependentAndLockedArmsAreNotSilentlyDetachedOrMoved" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.003"/>
+  <testcase name="impossibleInteriorAnglesAndMissingConstructionDoNotEditOrInventPoints" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.003"/>
   <testcase name="originalSixtyDegreeRequestMovesNativeArmAndUpdatesDependentPointWithUndo" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.005"/>
   <testcase name="orientedAndExteriorRequestsSetTheMeasuredAngleRatherThanJustItsLabel" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.006"/>
-  <testcase name="actualAngleChoicesSurviveRestorationAndRejectChangedGeometry" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.007"/>
+  <testcase name="actualAngleChoicesSurviveRestorationAndRejectChangedGeometry" classname="com.indianservers.aiexplorer.RuhiContextualAngleTest" time="0.01"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

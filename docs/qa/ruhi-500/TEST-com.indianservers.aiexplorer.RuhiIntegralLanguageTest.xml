@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:29.570Z" hostname="INDIANSERVERS" time="0.359">
+<testsuite name="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:07.890Z" hostname="INDIANSERVERS" time="0.345">
   <properties/>
-  <testcase name="ambiguousCurveChipsBindStableIdsAndAnUnrelatedPlotCanInterruptTheQuestion" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.014"/>
-  <testcase name="newCoefficientsReversedBoundsAndUndefinedDomainsUseNativeMathematics" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.029"/>
-  <testcase name="boundsQuestionRestoresResumesCustomAndViewportChoicesWithoutInventingAnInterval" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.013"/>
-  <testcase name="original25RowsKeepTheirSlotsAndIndependentlyCheckedAreasOrRequiredBoundsQuestions" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.289"/>
-  <testcase name="selectedRenamedFunctionsFollowEditsAndAnnotationsPersistUndoAndRedo" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.013"/>
+  <testcase name="ambiguousCurveChipsBindStableIdsAndAnUnrelatedPlotCanInterruptTheQuestion" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.01"/>
+  <testcase name="newCoefficientsReversedBoundsAndUndefinedDomainsUseNativeMathematics" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.031"/>
+  <testcase name="boundsQuestionRestoresResumesCustomAndViewportChoicesWithoutInventingAnInterval" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.018"/>
+  <testcase name="original25RowsKeepTheirSlotsAndIndependentlyCheckedAreasOrRequiredBoundsQuestions" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.274"/>
+  <testcase name="selectedRenamedFunctionsFollowEditsAndAnnotationsPersistUndoAndRedo" classname="com.indianservers.aiexplorer.RuhiIntegralLanguageTest" time="0.012"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

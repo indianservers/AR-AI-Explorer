@@ -48,6 +48,11 @@ $filters+='RuhiIntegralFormulaFollowUpTest'
 $filters+='RuhiFormulaReplyLanguageTest'
 $filters+='RuhiEndpointClarificationTest'
 $filters+='RuhiMidpointLabelFollowUpTest'
+if($Cycle -ge 74){$filters+='RuhiSegmentSelectionFollowUpTest'}
+if($Cycle -ge 75){$filters+=@('RuhiRadicalCriticalPointTest','SymbolicCasTest','ComputationalBreadthCasTest','CasInteractionExperienceTest','CasDirectManipulationTest','CasNotebookInteractionsTest','SolverCasStaticGoldenDatasetTest')}
+if($Cycle -ge 76){$filters+='RuhiRadicalDerivativePlotTest'}
+if($Cycle -ge 77){$filters+=@('RuhiSpatialLinearLanguageTest','SpatialPerspectiveProjectionTest')}
+if($Cycle -ge 78){$filters+='RuhiMissingPriorContextTest'}
 $filters+=@('GraphProductionTest','Graph2DStrengthenedEngineTest','MathKeyboardGraph2D150Test','AdvancedGraphFeatureEngineTest','ScientificCalculatorTest','ScientificCalculatorPhase1Test','ScientificCalculatorPhase2Test','ScientificCalculatorPhase3Test')
 $testArgs=@(':app:testDebugUnitTest','--max-workers=1');foreach($filter in $filters){$testArgs+=@('--tests',"*$filter")};$testArgs+='--console=plain'
 $env:RUHI_AUDIT_CYCLE="pre-cycle-$Cycle"
@@ -56,6 +61,14 @@ $ErrorActionPreference='Continue'
 $preTestExit=$LASTEXITCODE
 $ErrorActionPreference='Stop'
 if($preTestExit -ne 0){throw 'Pre-training tests failed; fix the implementation before retraining.'}
+if($Cycle -ge 78){
+    & .\gradlew.bat -I scripts/audit_ruhi_missing_contexts.init.gradle :app:auditRuhiMissingContexts --max-workers=1 *> (Join-Path $folder "pre-cycle-$Cycle-missing-contexts-audit.log")
+    if($LASTEXITCODE -ne 0){throw 'Compiled missing-context probe failed.'}
+    $missing=Get-Content (Join-Path $folder 'missing-contexts-audit.json') -Raw | ConvertFrom-Json
+    if($missing.cases -ne 500 -or $missing.named_endpoint_policy_verified -ne 173 -or $missing.prior_context_policy_cases -ne 6 -or $missing.prior_context_policy_verified -ne 6 -or $missing.rejected_mutations -ne 0){throw 'Missing-context policies remain incorrect; fix them before retraining.'}
+    Copy-Item (Join-Path $folder 'missing-contexts-audit.json') (Join-Path $folder "pre-cycle-$Cycle-missing-contexts-audit.json")
+}
+
 if($Cycle -ge 55){
     $ErrorActionPreference='Continue'
     & .\gradlew.bat -I scripts/audit_ruhi_context_gaps.init.gradle :app:auditRuhiContextGaps --max-workers=1 *> (Join-Path $folder "pre-cycle-$Cycle-context-audit.log")
@@ -129,6 +142,36 @@ if($Cycle -ge 73){
     $label=Get-Content (Join-Path $folder 'midpoint-label-follow-up-audit.json') -Raw | ConvertFrom-Json
     if($label.cases -ne 3 -or $label.verified -ne 3){throw 'Original midpoint replacement-label cases fail before training.'}
     Copy-Item (Join-Path $folder 'midpoint-label-follow-up-audit.json') (Join-Path $folder "pre-cycle-$Cycle-midpoint-label-follow-up-audit.json") -Force
+}
+if($Cycle -ge 74){
+    $ErrorActionPreference='Continue'
+    & .\gradlew.bat -I scripts/audit_ruhi_segment_selection_followup.init.gradle :app:auditRuhiSegmentSelectionFollowUp --max-workers=1 *> (Join-Path $folder "pre-cycle-$Cycle-segment-selection-follow-up-audit.log")
+    $segmentExit=$LASTEXITCODE
+    $ErrorActionPreference='Stop'
+    if($segmentExit -ne 0){throw 'Compiled native-segment clarification audit could not run.'}
+    $segment=Get-Content (Join-Path $folder 'segment-selection-follow-up-audit.json') -Raw | ConvertFrom-Json
+    if($segment.cases -ne 4 -or $segment.verified -ne 4){throw 'Original selected-segment reply cases fail before training.'}
+    Copy-Item (Join-Path $folder 'segment-selection-follow-up-audit.json') (Join-Path $folder "pre-cycle-$Cycle-segment-selection-follow-up-audit.json") -Force
+}
+if($Cycle -ge 75){
+    $ErrorActionPreference='Continue'
+    & .\gradlew.bat -I scripts/audit_ruhi_radical_critical_points.init.gradle :app:auditRuhiRadicalCriticalPoints --max-workers=1 *> (Join-Path $folder "pre-cycle-$Cycle-radical-critical-point-audit.log")
+    $radicalExit=$LASTEXITCODE
+    $ErrorActionPreference='Stop'
+    if($radicalExit -ne 0){throw 'Compiled real-radical critical-point audit could not run.'}
+    $radical=Get-Content (Join-Path $folder 'radical-critical-point-audit.json') -Raw | ConvertFrom-Json
+    if($radical.cases -ne 8 -or $radical.verified -ne 8){throw 'Real-radical critical/stationary cases fail before training.'}
+    Copy-Item (Join-Path $folder 'radical-critical-point-audit.json') (Join-Path $folder "pre-cycle-$Cycle-radical-critical-point-audit.json") -Force
+}
+if($Cycle -ge 76){
+    $ErrorActionPreference='Continue'
+    & .\gradlew.bat -I scripts/audit_ruhi_radical_derivative_plot.init.gradle :app:auditRuhiRadicalDerivativePlot --max-workers=1 *> (Join-Path $folder "pre-cycle-$Cycle-radical-derivative-plot-audit.log")
+    $helperExit=$LASTEXITCODE
+    $ErrorActionPreference='Stop'
+    if($helperExit -ne 0){throw 'Compiled radical derivative-helper audit could not run.'}
+    $helper=Get-Content (Join-Path $folder 'radical-derivative-plot-audit.json') -Raw | ConvertFrom-Json
+    if($helper.cases -ne 8 -or $helper.verified -ne 8){throw 'Actual radical derivative-helper values fail before training.'}
+    Copy-Item (Join-Path $folder 'radical-derivative-plot-audit.json') (Join-Path $folder "pre-cycle-$Cycle-radical-derivative-plot-audit.json") -Force
 }
 $oldErrorPreference=$ErrorActionPreference
 $ErrorActionPreference='Continue' # TensorFlow sends informational/deprecation messages to stderr.

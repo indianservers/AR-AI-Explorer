@@ -172,6 +172,7 @@ data class WorkspaceState(
     val vectors3D: List<Vector3D> = emptyList(),
     val points3D: List<Point3D> = emptyList(),
     val planes3D: List<Plane3DObject> = emptyList(),
+    val linears3D: List<Linear3DObject> = emptyList(),
     val graphRowMetadata: Map<String, GraphRowMetadataState> = emptyMap(),
     val graphSliderMetadata: Map<String, GraphSliderMetadataState> = emptyMap(),
     val graph2DView: Graph2DViewState = Graph2DViewState(),
@@ -630,10 +631,10 @@ data class AddPoint3DCommand(val point: Point3D) : WorkspaceCommand {
     override fun undo(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.dropLast(1), modifiedAt = System.currentTimeMillis()))
 }
 
-data class DeletePoint3DCommand(val index: Int, val point: Point3D,val planesBefore:List<Plane3DObject>?=null) : WorkspaceCommand {
+data class DeletePoint3DCommand(val index: Int, val point: Point3D,val planesBefore:List<Plane3DObject>?=null,val linearsBefore:List<Linear3DObject>?=null) : WorkspaceCommand {
     override val label = "Delete 3D point"
-    override fun apply(state: WorkspaceState):WorkspaceState {require(planesBefore!=null||state.planes3D.none{point.id in it.pointIds}){"Provide the plane snapshot when deleting a plane's defining point."};return GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.filterIndexed { pointIndex, _ -> pointIndex != index },planes3D=state.planes3D.filter{point.id !in it.pointIds},modifiedAt = System.currentTimeMillis()))}
-    override fun undo(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.toMutableList().apply { add(index.coerceIn(0, size), point) },planes3D=planesBefore ?: state.planes3D,modifiedAt = System.currentTimeMillis()))
+    override fun apply(state: WorkspaceState):WorkspaceState {require(planesBefore!=null||state.planes3D.none{point.id in it.pointIds}){"Provide the plane snapshot when deleting a plane's defining point."};require(linearsBefore!=null||state.linears3D.none{point.id in it.pointIds}){"Provide the linear-object snapshot when deleting a defining point."};return GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.filterIndexed { pointIndex, _ -> pointIndex != index },planes3D=state.planes3D.filter{point.id !in it.pointIds},linears3D=state.linears3D.filter{point.id !in it.pointIds},modifiedAt = System.currentTimeMillis()))}
+    override fun undo(state: WorkspaceState) = GraphWorkspaceCommand.reconcileDocument(state,state.copy(points3D = state.points3D.toMutableList().apply { add(index.coerceIn(0, size), point) },planes3D=planesBefore ?: state.planes3D,linears3D=linearsBefore ?: state.linears3D,modifiedAt = System.currentTimeMillis()))
 }
 
 data class TransformPoint3DCommand(val index: Int, val from: Point3D, val to: Point3D) : WorkspaceCommand {

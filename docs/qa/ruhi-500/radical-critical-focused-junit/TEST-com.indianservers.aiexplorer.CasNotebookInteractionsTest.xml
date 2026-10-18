@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.CasNotebookInteractionsTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:38:33.146Z" hostname="INDIANSERVERS" time="0.117">
+  <properties/>
+  <testcase name="everyResultExportsPortableAndStructuredFormats" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.039"/>
+  <testcase name="subexpressionsSupportTargetedActionsAndRowTransfer" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.005"/>
+  <testcase name="everyIntermediateStepHasProgressiveHintRuleWorkedLineAndCheck" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.014"/>
+  <testcase name="voiceHandwritingAndPhotoCandidatesRemainReviewable" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.011"/>
+  <testcase name="naturalLanguageAndAmbiguityProduceSelectableInterpretations" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.01"/>
+  <testcase name="structuredFilesSupportJsonWhitespaceAndMatrixMarketWithPreviews" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.018"/>
+  <testcase name="evaluationBuildsInteractivePodsHintsWarningsAndScopedRows" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.013"/>
+  <testcase name="unitCheckingRejectsInvalidAdditiveDimensions" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.004"/>
+  <testcase name="csvAndTsvImportsCreateScopedMatrixVariables" classname="com.indianservers.aiexplorer.CasNotebookInteractionsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

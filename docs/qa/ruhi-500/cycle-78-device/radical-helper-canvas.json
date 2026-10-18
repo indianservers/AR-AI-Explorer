@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "cases": 8,
+  "results": [
+    {
+      "formula": "x^2",
+      "x": 0,
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "formula": "sqrt(x^4)",
+      "x": 0,
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "formula": "sqrt(x^4)",
+      "x": 2,
+      "expected": 4,
+      "actual": 4,
+      "passed": true
+    },
+    {
+      "formula": "sqrt((x-1.25)^4)",
+      "x": 1.25,
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "formula": "sqrt(x^2)-abs(x)+x",
+      "x": 0,
+      "expected": 1,
+      "actual": 1,
+      "passed": true
+    },
+    {
+      "formula": "sqrt(x^2)",
+      "x": 0,
+      "expected": null,
+      "actual": null,
+      "passed": true
+    },
+    {
+      "formula": "sqrt(x^6)",
+      "x": 0,
+      "expected": 0,
+      "actual": 0,
+      "passed": true
+    },
+    {
+      "formula": "sqrt(x^2)",
+      "x": -2,
+      "expected": -1,
+      "actual": -1,
+      "passed": true
+    }
+  ],
+  "actual_helper_values": true,
+  "true_cusp_preserved": true,
+  "original_curve_preserved": true,
+  "native_sampler_bridges_smooth_zero": true,
+  "current_saved_curve": true,
+  "sample_points": 65,
+  "changed_pixels": 199394,
+  "edited_zero": 1.25,
+  "committed_capture": true
+}

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:34.291Z" hostname="INDIANSERVERS" time="0.046">
+<testsuite name="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:14.439Z" hostname="INDIANSERVERS" time="0.054">
   <properties/>
-  <testcase name="unseenDimensionsUseActualNativeBoxAndCircularFormulas" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.004"/>
-  <testcase name="liveDimensionsAndPosesPersistUndoRedoAndStructuralChangesInvalidateReferences" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.005"/>
-  <testcase name="original25RowsPreserveSlotsAndHaveIndependentFormulaUnitAndTopologyChecks" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.026"/>
-  <testcase name="missingDimensionsAccumulateAndInvalidDimensionsNeverFallBackToScene" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.006"/>
-  <testcase name="ambiguousTargetsRestoreRealChipsAndComparisonRetainsBothChoices" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.005"/>
+  <testcase name="unseenDimensionsUseActualNativeBoxAndCircularFormulas" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.003"/>
+  <testcase name="liveDimensionsAndPosesPersistUndoRedoAndStructuralChangesInvalidateReferences" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.004"/>
+  <testcase name="original25RowsPreserveSlotsAndHaveIndependentFormulaUnitAndTopologyChecks" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.033"/>
+  <testcase name="missingDimensionsAccumulateAndInvalidDimensionsNeverFallBackToScene" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.004"/>
+  <testcase name="ambiguousTargetsRestoreRealChipsAndComparisonRetainsBothChoices" classname="com.indianservers.aiexplorer.RuhiSolidMeasureLanguageTest" time="0.009"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:16.278Z" hostname="INDIANSERVERS" time="0.061">
+<testsuite name="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:52.677Z" hostname="INDIANSERVERS" time="0.052">
   <properties/>
-  <testcase name="cancellationSceneChangesAndNewLiteralRequestsDoNotConsumeFormulaSlots" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.009"/>
+  <testcase name="cancellationSceneChangesAndNewLiteralRequestsDoNotConsumeFormulaSlots" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.008"/>
   <testcase name="originalGradientRequestsRetainNumericReplyAcrossFormulaQuestionAndRestore" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.012"/>
-  <testcase name="formulaWithUndefinedSavedXAsksForValidXBeforeAtomicCreation" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.006"/>
-  <testcase name="originalStationaryAndSliderRequestsKeepTheirModesAndCurrentFunctionIdentity" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.017"/>
+  <testcase name="formulaWithUndefinedSavedXAsksForValidXBeforeAtomicCreation" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.004"/>
+  <testcase name="originalStationaryAndSliderRequestsKeepTheirModesAndCurrentFunctionIdentity" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.01"/>
   <testcase name="validFormulaIsNotRejectedBecauseItsDomainMissesTheDefaultSampleCoordinates" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.003"/>
-  <testcase name="invalidAndNonExplicitFormulasKeepTheQuestionWithoutCreatingCurves" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.009"/>
-  <testcase name="originalSelectedDerivativeRequestOffersFormulaExamplesAndResumesAfterSave" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.005"/>
+  <testcase name="invalidAndNonExplicitFormulasKeepTheQuestionWithoutCreatingCurves" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.008"/>
+  <testcase name="originalSelectedDerivativeRequestOffersFormulaExamplesAndResumesAfterSave" classname="com.indianservers.aiexplorer.RuhiDerivativeFormulaFollowUpTest" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -1,0 +1,44 @@
+// Inspect the actual derivative helper supplied to the graph, independently of pointwise slope recovery.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiRadicalDerivativePlot') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def derivative=loader.loadClass(prefix+'RuhiDerivativeLanguage').getField('INSTANCE').get(null)
+                def engine=loader.loadClass('com.indianservers.aiexplorer.core.ExpressionEngine').getDeclaredConstructor().newInstance()
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def inputs=[
+                    [formula:'x^2',x:0.0d,expected:0.0d],
+                    [formula:'sqrt(x^4)',x:0.0d,expected:0.0d],
+                    [formula:'sqrt(x^4)',x:2.0d,expected:4.0d],
+                    [formula:'sqrt((x-1.25)^4)',x:1.25d,expected:0.0d],
+                    [formula:'sqrt(x^2)-abs(x)+x',x:0.0d,expected:1.0d],
+                    [formula:'sqrt(x^2)',x:0.0d,expected:null],
+                    [formula:'sqrt(x^6)',x:0.0d,expected:0.0d],
+                    [formula:'sqrt(x^2)',x:-2.0d,expected:-1.0d]
+                ]
+                def records=inputs.collect{input->
+                    def s=fixture.state('GRAPH_2D',326);def c=fixture.context(326,s)
+                    def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80);def manager=managerClass.getDeclaredConstructor().newInstance()
+                    def source='Differentiate '+input.formula;def r=manager.execute(s,source,h,c,modality)
+                    def drawing=derivative.drawing(r.state,2.0d);def helper=drawing?.helpers?.find{it.name=='Derivative'}
+                    def raw=null;def error=null
+                    try{if(helper!=null)raw=engine.compile(helper.curve.expression).eval(['x':input.x])}catch(Exception e){error=e.message}
+                    def actual=raw!=null&&Double.isFinite(raw as double)?raw:null
+                    def verified=r.status.name()=='APPLIED'&&r.semanticFrame?.intent=='DIFFERENTIATE'&&helper!=null&&(input.expected==null?actual==null:actual!=null&&Math.abs(actual-input.expected)<1e-8)
+                    [source_row:326,input:source,evaluate_x:input.x,expected_derivative:input.expected,actual_derivative:actual,actual_helper:helper?.curve?.expression,helper_restriction:helper?.curve?.restriction,diagnostic:drawing?.diagnostic,error:error,status:r.status.name(),reply:r.message,behavior_verified:verified]
+                }
+                def paths=['assistant/workspace/RuhiDerivativeLanguage.kt','assistant/workspace/RuhiDerivativeMath.kt','assistant/workspace/RuhiDerivativeBranches.kt','assistant/workspace/RuhiDialogue.kt','core/SymbolicCalculus.kt','core/SymbolicCas.kt']
+                def sources=paths.collectEntries{name->def path='app/src/main/java/com/indianservers/aiexplorer/'+name;[(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]}
+                def report=[cases:records.size(),verified:records.count{it.behavior_verified},source_sha256:sources,results:records,scope:'Original differentiation/plot-derivative family with eight explicit development formula/coordinate contexts. Actual derivative helper expression supplied to the graph is evaluated independently; correct pointwise slope alone is insufficient. Original workbook rows/labels unchanged. Compiled parser/engine probe without Android TensorFlow or pixel certification.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/radical-derivative-plot-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(report))
+                records.each{println(it.behavior_verified.toString()+': '+it.input+' at '+it.evaluate_x+' -> '+it.actual_derivative+' expected '+it.expected_derivative)}
+            }finally{loader.close()}
+        }
+    }
+}

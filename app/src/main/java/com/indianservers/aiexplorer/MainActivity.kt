@@ -1372,7 +1372,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             module = MathModule.Geometry3D,
             solids = listOf(defaultSolid(type)),
             vectors3D = emptyList(),
-            points3D = emptyList(), planes3D = emptyList(),
+            points3D = emptyList(), planes3D = emptyList(), linears3D = emptyList(),
             modifiedAt = System.currentTimeMillis(),
         )
         selectedSolid = 0
@@ -3087,7 +3087,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
 
     fun deletePoint3D(index: Int) {
         val point = state.points3D.getOrNull(index) ?: return
-        state = history.execute(state, DeletePoint3DCommand(index, point,state.planes3D))
+        state = history.execute(state, DeletePoint3DCommand(index, point,state.planes3D,state.linears3D))
         selectedPoint3D = when {
             state.points3D.isEmpty() -> -1
             index <= state.points3D.lastIndex -> index
@@ -3713,10 +3713,10 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             MathModule.Geometry3D, MathModule.SpatialAR -> state.copy(
                 solids = emptyList(),
                 vectors3D = emptyList(),
-                points3D = emptyList(), planes3D = emptyList(),
+                points3D = emptyList(), planes3D = emptyList(), linears3D = emptyList(),
                 spatialPlacement = com.indianservers.aiexplorer.spatial.SpatialScenePlacement(),
             )
-            MathModule.VectorLab -> state.copy(vectors3D = emptyList(), points3D = emptyList(),planes3D = emptyList())
+            MathModule.VectorLab -> state.copy(vectors3D = emptyList(), points3D = emptyList(),planes3D = emptyList(), linears3D = emptyList())
             MathModule.Graph2D -> state.copy(
                 functions = emptyList(),
                 graphRowMetadata = emptyMap(),
@@ -3779,7 +3779,7 @@ class ExplorerViewModel(private val savedStateHandle: SavedStateHandle) : ViewMo
             ArMathWorkspaceMode.Geometry3D -> state.copy(
                 solids = emptyList(),
                 vectors3D = emptyList(),
-                points3D = emptyList(), planes3D = emptyList(),
+                points3D = emptyList(), planes3D = emptyList(), linears3D = emptyList(),
                 spatialPlacement = com.indianservers.aiexplorer.spatial.SpatialScenePlacement(),
             )
             ArMathWorkspaceMode.VectorLab -> state.copy(vectors3D = emptyList())
@@ -9908,6 +9908,7 @@ private fun Geometry3DWorkspace(vm: ExplorerViewModel, compact: Boolean, onReque
             measurementUnits = com.indianservers.aiexplorer.workspace.GeometryMeasurementUnits.read(vm.state),
             showPointLabels = com.indianservers.aiexplorer.assistant.workspace.RuhiSceneEditLanguage.flag(vm.state,"labels"),
             planePatches = com.indianservers.aiexplorer.assistant.workspace.RuhiSpatialPlaneLanguage.patches(vm.state),
+            linearObjects = com.indianservers.aiexplorer.workspace.NativeLinearGeometry.drawings(vm.state,8.0),
             selectedPlaneIds = com.indianservers.aiexplorer.assistant.workspace.RuhiSpatialPlaneLanguage.selected(vm.state).toSet(),
             selectedPoint3DIndex = selectedPoint3DIndex,
             rx = rotateX,

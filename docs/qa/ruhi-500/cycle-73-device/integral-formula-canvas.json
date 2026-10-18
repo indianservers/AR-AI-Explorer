@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "source_rows": [
+    364,
+    372
+  ],
+  "restored_formula_chip": true,
+  "bounds_preserved": true,
+  "required_bounds_resumed": true,
+  "invalid_bounds_no_creation": true,
+  "atomic_undo_redo": true,
+  "native_function_created": true,
+  "shading_pixels": 117628,
+  "initial_area": 21,
+  "edited_area": 63,
+  "required_bounds_area": 2.6666666666666665,
+  "committed_capture": true
+}

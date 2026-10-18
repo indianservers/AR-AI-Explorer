@@ -1,0 +1,44 @@
+// Read-only source-linked critical/stationary semantics audit of compiled code.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiRadicalCriticalPoints') {
+        doLast {
+            def runtime=appProject.tasks.named('testDebugUnitTest').get().classpath
+            def loader=new URLClassLoader(runtime.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def derivative=loader.loadClass(prefix+'RuhiDerivativeLanguage').getField('INSTANCE').get(null)
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def cases=[
+                    [text:'Find critical points of y = abs(x)',expected:[[0.0d,0.0d]],reason:'Literal control: |x| has one finite corner at zero.'],
+                    [text:'Find critical points of y = sqrt(x^2)',expected:[[0.0d,0.0d]],reason:'sqrt(x^2)=|x| for all real x, with unequal -1/+1 slopes at zero.'],
+                    [text:'Find critical points of y = sqrt((x-1.25)^2)+2*x',expected:[[1.25d,2.5d]],reason:'Equivalent shifted absolute value with finite non-extremum corner and +1/+3 one-sided slopes.'],
+                    [text:'Find the stationary points of sqrt(x^2)',expected:[],reason:'The corner is not stationary; other slopes are -1 or +1.'],
+                    [text:'Find critical points of y = sqrt(x^4)',expected:[[0.0d,0.0d]],reason:'sqrt(x^4)=x^2 on the real line; the smooth stationary point is zero.'],
+                    [text:'Find the stationary points of sqrt(x^4)',expected:[[0.0d,0.0d]],reason:'Smooth real identity x^2, derivative zero at zero despite unsimplified 0/0 formula.'],
+                    [text:'Find critical points of y = sqrt(x^2)-sqrt(x^2)+x',expected:[],reason:'Cancellation leaves x; no stationary or nonsmooth critical points.'],
+                    [text:'Find critical points of y = 1/sqrt(x^2)',expected:[],reason:'The finite reciprocal has nonzero slopes on its domain; zero is excluded.']
+                ]
+                def records=cases.collect{input->
+                    def s=fixture.state('GRAPH_2D',344);def c=fixture.context(344,s)
+                    def manager=managerClass.getDeclaredConstructor().newInstance();def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def r=manager.execute(s,input.text,h,c,modality)
+                    def drawing=derivative.drawing(r.state,2.0d)
+                    def points=drawing?.points?.collect{[it.x,it.y]} ?: []
+                    def matched=r.status.name()=='APPLIED' && points.size()==input.expected.size() && input.expected.every{expected->points.any{actual->Math.abs(actual[0]-expected[0])<1e-6 && Math.abs(actual[1]-expected[1])<1e-6}}
+                    [source_row:input.text.startsWith('Find the stationary')?336:344,input:input.text,expected_points:input.expected,actual_points:points,reason:input.reason,status:r.status.name(),reply:r.message,behavior_verified:matched]
+                }
+                def sources=['assistant/workspace/RuhiDerivativeLanguage.kt','assistant/workspace/RuhiDerivativeMath.kt','assistant/workspace/RuhiDerivativeBranches.kt','core/SymbolicCalculus.kt','core/SymbolicCas.kt'].collectEntries{name->
+                    def path='app/src/main/java/com/indianservers/aiexplorer/'+name
+                    [(path):java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString()]
+                }
+                def report=[source_rows:[336,344],source_sha256:sources,cases:records.size(),verified:records.count{it.behavior_verified},results:records,scope:'Original critical-point language pattern and eight real radical/absolute-value development contexts with independent exact identities and elementary calculus. Source rows 336 and 344 remain unchanged. Compiled parser/engine only, no Android TensorFlow or UI.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/radical-critical-point-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(report))
+                records.each{println(it.behavior_verified.toString()+': '+it.input+' -> '+it.actual_points)}
+            } finally {loader.close()}
+        }
+    }
+}

@@ -16,7 +16,7 @@ object RuhiDerivativeMath {
         require(source.length<=1200&&order in 1..2){"Use a formula within 1200 characters and derivative order 1 or 2."}
         val typed=TypedGraphExpressionParser.parse(source)
         require(typed is TypedGraphExpression.Explicit&&typed.parameters.isEmpty()){"Choose an explicit function with numeric parameters for differentiation."}
-        val derivative=SymbolicCalculusEngine().differentiate(typed.expression,order=order).expression
+        val derivative=SymbolicCalculusEngine().differentiate(RuhiDerivativeBranches.derivativeSource(typed.expression),order=order).expression
         ExpressionEngine().compile(derivative)
         return Result(typed.expression,derivative,order,typed.restriction)
     }
@@ -49,13 +49,36 @@ object RuhiDerivativeMath {
         val m=if(normal)-1/s.value else s.value
         return RuhiIntersectionMath.Curve.Scalar("($m)*(x-(${s.point.x}))+(${s.point.y})")
     }
+    private fun refineBranchStationary(r:Result,start:Double,low:Double,high:Double):Double {
+        var x=start
+        repeat(28){iteration->
+            val value=slope(r,x).value
+            if(value==0.0)return x
+            val h=max(1e-11,1e-4*2.0.pow(-iteration))*max(1.0,abs(x))
+            val left=runCatching{slope(r,x-h).value}.getOrNull() ?: return x
+            val right=runCatching{slope(r,x+h).value}.getOrNull() ?: return x
+            val scale=max(abs(value),max(abs(left),abs(right)))
+            if(!scale.isFinite()||scale==0.0)return x
+            val v=value/scale;val l=left/scale;val r=right/scale
+            val first=(r-l)/2
+            if(first==0.0)return x
+            val curvature=r-2*v+l
+            val denominator=1-v*curvature/(first*first)
+            val multiplicity=(1/denominator).takeIf{it.isFinite()&&it in .5..64.0} ?: 1.0
+            val next=x-h*v/first*multiplicity
+            if(!next.isFinite()||next !in low..high||next==x)return x
+            x=next
+        }
+        return x
+    }
     fun stationary(r:Result,low:Double,high:Double):List<Vec2> {
         require(r.order==1)
         if(runCatching{SymbolicCasEngine().simplify(r.derivative).exact=="0"}.getOrDefault(false))throw IllegalArgumentException("The slope is zero throughout the function's domain; stationary points are not an isolated list.")
         val compiled=ExpressionEngine().compile(r.derivative)
         val scale=(0..16).mapNotNull{i->val x=low+(high-low)*i/16;runCatching{if(value(r,x)==null)null else compiled.eval(mapOf("x" to x)).takeIf{it.isFinite()}?.let(::abs)}.getOrNull()}.maxOrNull() ?: 0.0
         require(scale>0.0){"The sampled slope is zero throughout this range; stationary interval analysis is required."}
-        val ordinary=RobustGraphAnalysisEngine().roots("y=(${r.derivative})/($scale)",low,high).mapNotNull{root->runCatching{slope(r,root.point.x)}.getOrNull()?.takeIf{abs(it.value)<=1e-8*scale}?.point}
+        val branchAware=RuhiDerivativeBranches.present(r)
+        val ordinary=RobustGraphAnalysisEngine().roots("y=(${r.derivative})/($scale)",low,high).mapNotNull{root->runCatching{slope(r,if(branchAware)refineBranchStationary(r,root.point.x,low,high)else root.point.x)}.getOrNull()?.takeIf{abs(it.value)<=1e-8*scale}?.point}
         val branches=RuhiDerivativeBranches.candidates(r,low,high).mapNotNull{c->
             val y=value(r,c.x) ?: return@mapNotNull null
             val sides=runCatching{RuhiDerivativeBranches.sides(r,c.x,c.zeros)}.getOrNull() ?: return@mapNotNull null

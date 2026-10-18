@@ -57,7 +57,8 @@ class RuhiDialogueManager(private val studio:RuhiStudioAssistant=RuhiStudioAssis
     fun restoredView(s:WorkspaceState):RuhiDialogueView? {
         val saved=RuhiDialogueMemory.read(s)
         val p=saved.pending ?: return null
-        if(p.kind in setOf("endpoint_reference","midpoint_label"))return RuhiEndpointConversation.restored(s,p)
+        if(p.kind==RuhiDialogueFollowUp.MISSING_CONTEXT)return RuhiDialogueView(RuhiDialogueAction.ASK_CLARIFICATION,pending=true)
+        if(p.kind in setOf("endpoint_reference","midpoint_label","endpoint_shape"))return RuhiEndpointConversation.restored(s,p)
         if(p.kind=="measurement_units")return RuhiMeasurementUnitLanguage.restored()
         if(p.kind=="preserve_cube")return RuhiPreserveCubeLanguage.restored(s,p)
         if(saved.lastChoices.isNotEmpty())return RuhiDialogueView(RuhiDialogueAction.ASK_CLARIFICATION,saved.lastChoices,true)
@@ -111,6 +112,7 @@ class RuhiDialogueManager(private val studio:RuhiStudioAssistant=RuhiStudioAssis
         if(RuhiAppliedTargetCorrection.accepts(source))return true
         if(RuhiMeasurementUnitLanguage.accepts(source))return true
         if(RuhiPreserveCubeLanguage.accepts(source))return true
+        if(RuhiDialogueFollowUp.missingContextQuestion(source)!=null)return true
         if(RuhiActionContext.accepts(source))return true
         if(s.module in setOf(MathModule.Geometry2D,MathModule.Geometry3D)&&RuhiConstructionConversation.accepts(source))return true
         if(s.module==MathModule.Graph2D&&RuhiContextualGraphLanguage.accepts(source))return true
@@ -225,12 +227,22 @@ class RuhiDialogueManager(private val studio:RuhiStudioAssistant=RuhiStudioAssis
         if(RuhiDialogueFollowUp.asksError(source))return reply(memory.lastError.takeIf{it.isNotBlank()}?.let{"The last request failed because: $it"} ?: "There is no recorded failed request in this conversation.",GraphCommandStatus.APPLIED,RuhiDialogueAction.EXPLAIN)
         val equationChips=listOf("y = x^2","y = sin(x)","y = 2*x + 3").map{RuhiAnswerChip(it,it)}
         if(text in setOf("cancel","cancel it","cancel pending","never mind","nevermind","forget it")) { memory=memory.copy(pending=null);return reply("Cancelled the pending request. The scene is unchanged.",GraphCommandStatus.APPLIED,RuhiDialogueAction.CANCEL_PENDING) }
+        if(memory.pending?.kind==RuhiDialogueFollowUp.MISSING_CONTEXT) {
+            if(!RuhiDialogueFollowUp.completeInstruction(source))
+                return reply(memory.pendingPrompt.ifBlank{"What would you like to do? Give the complete command."})
+            val ready=initial.copy(labSessionValues=initial.labSessionValues+(RuhiDialogueMemory.KEY to memory.copy(pending=null,pendingPrompt="",lastChoices=emptyList()).encode()))
+            return execute(ready,source,histories,context,modality)
+        }
+        if(memory.pending==null)RuhiDialogueFollowUp.missingContextQuestion(source)?.let { question ->
+            return ask(RuhiDialogueFollowUp.MISSING_CONTEXT,source,question,emptyList())
+        }
         RuhiPreserveCubeLanguage.execute(initial,source,histories,context,modality,memory)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
         if(Regex("^(?:do not|don't|never)\\b").containsMatchIn(text))return reply("No scene edit was made. State the action you want me to perform.")
         RuhiMeasurementUnitLanguage.execute(initial,source,histories,context,modality,memory)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
         RuhiConstructionConversation.execute(initial,source,histories,context,modality,memory)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
         RuhiContextualGraphLanguage.execute(initial,source,context,modality,memory.pending)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
         RuhiContextualAngleLanguage.execute(initial,source,histories,context,modality,memory.pending)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
+        RuhiSpatialLinearLanguage.execute(initial,source,histories,context,modality,memory.pending)?.let{result->return finish(result,RuhiDialogueView(if(result.status==GraphCommandStatus.CLARIFICATION)RuhiDialogueAction.ASK_CLARIFICATION else if(result.status==GraphCommandStatus.INVALID)RuhiDialogueAction.ASK_CLARIFICATION else RuhiDialogueAction.EXECUTE))}
         RuhiSpatialPlaneLanguage.execute(initial,if(text in setOf("resume","continue"))text else source,histories,context,modality,memory.pending)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
         RuhiSpatialAngleLanguage.execute(initial,if(text in setOf("resume","continue"))text else source,histories,context,modality,memory.pending)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}
         RuhiAngleConversation.execute(initial,when(text){"cancel","cancel it","cancel pending","never mind","nevermind","forget it"->"cancel";"resume","continue"->text;else->source},histories,context,modality,memory.pending)?.let{outcome->memory=memory.copy(pending=outcome.pending);return finish(outcome.result,outcome.result.dialogue ?: RuhiDialogueView(RuhiDialogueAction.EXECUTE))}

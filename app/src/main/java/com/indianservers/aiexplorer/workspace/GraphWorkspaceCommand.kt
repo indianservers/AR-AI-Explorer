@@ -23,6 +23,7 @@ data class GraphWorkspaceCommand(val from: WorkspaceState, val to: WorkspaceStat
             vectors3D=if(from.vectors3D!=to.vectors3D) target.vectors3D else state.vectors3D,
             points3D=if(from.points3D!=to.points3D) target.points3D else state.points3D,
             planes3D=if(from.planes3D!=to.planes3D) target.planes3D else state.planes3D,
+            linears3D=if(from.linears3D!=to.linears3D) target.linears3D else state.linears3D,
             spatialPlacement=if(from.spatialPlacement!=to.spatialPlacement) target.spatialPlacement else state.spatialPlacement,
             graphSliderMetadata=if(from.graphSliderMetadata!=to.graphSliderMetadata) target.graphSliderMetadata else state.graphSliderMetadata,
             functions = if (from.functions != to.functions) target.functions else state.functions,

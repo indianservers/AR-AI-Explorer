@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "restored_pending": true,
+  "cube_unchanged": true,
+  "cube_color": "blue",
+  "sphere_radius": 3,
+  "sphere_volume": 113.09733552923255,
+  "undo_restored": true,
+  "changed_pixels": 252225
+}

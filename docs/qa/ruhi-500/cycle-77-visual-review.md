@@ -1,0 +1,14 @@
+# Cycle77 visual review
+
+Controller64565 exited0. Full native OK(53 tests),826.345 seconds,0 failed/ignored. All689 JVM regression methods pass before and after TensorFlow intent/point-role training, including the unchanged1200-case solver corpus. Pinned workbook/seed/Android/replay nine-field comparisons, compiled gates, lexical heads, packaged model/source hashes, installed app/test APK hashes and native artifact/report guards pass. App source stayed frozen until terminal acceptance.
+
+Fresh final cycle-77-device captures opened and inspected:
+
+- spatial-linear-line.png: magenta extended line passes through both Anchor_907 and Beta_811 point centers. The upper arrow is visible; the lower extension leaves the viewport. This fixes the previous non-projective depth-lift discrepancy. The independent before-fix collinearity test retained23.9574-pixel error; current perspective and orthographic collinearity checks pass.
+- spatial-linear-segment.png: pink finite segment joins Beta_811 and Gamma_662 without extending beyond its defining points. Original infinite line and all points remain.
+- spatial-linear-ray.png: orange ray starts at Anchor_907 and passes through Gamma_662. Existing point/line/ray labels overlap and obscure part of the short initial ray; no full annotation-layout claim is made.
+- spatial-linear-edited.png: after current Gamma edit and save/reload to(0,-2,2), the same pink segment ends at Gamma and orange ray passes through it, extending downward. Anchor/Beta positions and the magenta line stay fixed. Selected Gamma's native label/length and touch controls are visible. This clearer scene confirms extension and live endpoint placement.
+
+Installed-runtime records verify ordered stable endpoint IDs, exact Line/Segment/Ray domains, canonical kind/dependencies, current parents, persistence and no helper points/vectors. Four changed-pixel counts:22321,15560,14155,241545. Shared original300 audit independently verifies coordinates at t=2 or midpoint plus each domain. Fresh original300 outcomes:191 APPLIED,23 CLARIFICATION,6 INVALID,80 UNSUPPORTED. Recognition of300 supplied examples remains seed fit rather than broad NLP generalization.
+
+Full goal is incomplete. New read-only500-row empty-context observation passes173 missing named-endpoint policies and rejects without geometry/history edits, but retains6 original absent-prior-context dialogue failures(480,481,483,486,490,491). Report/LOOP_STATE include those counterexamples rather than hiding them behind valid-context500/500 results. The audit ran during native verification, after cycle77 training; it is a pre-training gate from78. Next priority is these6 shared dialogue policies, alongside the preserved80 unsupported original constructions and broader context/domain/interaction requirements. UI layout and lesson content unchanged.

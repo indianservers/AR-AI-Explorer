@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "source_rows": [
+    151,
+    176
+  ],
+  "restored_endpoint_chip": true,
+  "current_coordinates": true,
+  "midpoint": [
+    2,
+    3
+  ],
+  "edited_midpoint": [
+    1,
+    2
+  ],
+  "native_parent_dependency": true,
+  "atomic_undo_redo": true,
+  "slope": 1.5,
+  "slope_query_no_undo": true,
+  "original_operation_preserved": true,
+  "committed_capture": true
+}

@@ -16,3 +16,6 @@ Implemented a structured midpoint_label conversation role. It retains endpoint b
 Eight JVM methods and the 36-method focused batch pass. The source-hashed original-row probe verifies 3/3 cases. The focused Android test passes in 19.27 seconds, including current-parent creation, preserved M, atomic undo/redo, parent edits/reload and a restored unused-label chip. Full cycle 73 terminal and fresh visual verification are recorded separately once available; this paragraph alone is not terminal evidence.
 
 Development failures remain retained: the initial new JVM batch failed to compile because of a size() versus size property typo, not eight behavioral failures. A later behavioral test exposed malformed encoded labels being dispatched as new operations; that routing was corrected and the batch rerun. The historical cycle 72 behavioral probe remains the before-fix evidence (1/3).
+
+
+Full resumed cycle 73 now passes: 602 JVM methods, 49 native methods, installed model/APK and original-field guards. Final captures inspected; see cycle-73-visual-review.md. Both label counterexamples are resolved with unchanged source expectations. Selected-segment follow-up failures remain separate next-loop work.

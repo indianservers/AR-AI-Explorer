@@ -47,7 +47,7 @@ object RuhiGeometryKidAudit {
         verify(r.status.name==case.expected,"expected ${case.expected}, got ${r.status}: ${r.message}")
         verify(r.state.module==MathModule.Geometry3D,"Changed workspace")
         verify(r.state.functions==before.functions && r.state.shapes==before.shapes && r.state.surfaceLayers==before.surfaceLayers,"Changed unrelated workspace data")
-        if(r.status!=GraphCommandStatus.APPLIED) verify(r.state.solids==before.solids && r.state.points3D==before.points3D && r.state.planes3D==before.planes3D && r.state.vectors3D==before.vectors3D,"Failed request mutated scene")
+        if(r.status!=GraphCommandStatus.APPLIED) verify(r.state.solids==before.solids && r.state.points3D==before.points3D && r.state.planes3D==before.planes3D && r.state.linears3D==before.linears3D && r.state.vectors3D==before.vectors3D,"Failed request mutated scene")
         if(r.status==GraphCommandStatus.APPLIED) {
             val q=r.state.solids.lastOrNull()
             val kinds=mapOf(1 to SolidType.Cube,2 to SolidType.Sphere,3 to SolidType.Cone,4 to SolidType.Cylinder,5 to SolidType.Cuboid,6 to SolidType.Pyramid,7 to SolidType.TriangularPyramid,8 to SolidType.TriangularPrism,9 to SolidType.Torus,10 to SolidType.Hemisphere,11 to SolidType.Ellipsoid,12 to SolidType.Capsule,14 to SolidType.Frustum,15 to SolidType.Cube,16 to SolidType.Sphere,17 to SolidType.Cylinder,18 to SolidType.Cone,19 to SolidType.Cuboid,20 to SolidType.Pyramid,21 to SolidType.TriangularPrism,22 to SolidType.Sphere,23 to SolidType.Cube,24 to SolidType.Cylinder)
@@ -67,6 +67,20 @@ object RuhiGeometryKidAudit {
             when(case.id){
                 in 1..24->{verify(r.state.solids.size==1,"Expected one created solid");verify(q!=null && SolidMeshFactory.create(q).vertices.isNotEmpty(),"Missing native mesh")}
                 in 25..29->verify(r.state.points3D.size==1,"Point was not created")
+                30,31,32->{
+                    val kind=when(case.id){30->Linear3DKind.Line;31->Linear3DKind.Segment;else->Linear3DKind.Ray}
+                    val refs=when(case.id){30->listOf("a","b");31->listOf("b","c");else->listOf("a","c")}
+                    val obj=r.state.linears3D.singleOrNull()
+                    verify(obj?.kind==kind&&obj.pointIds==refs,"Linear construction must retain the exact kind and ordered point IDs")
+                    verify(r.state.points3D==before.points3D&&r.state.vectors3D==before.vectors3D&&r.state.solids==before.solids,"Linear construction changed other geometry")
+                    val linear=obj?.let{runCatching{NativeLinearGeometry.evaluate(r.state,it)}.getOrNull()}
+                    verify(linear!=null,"Missing current linear evaluation")
+                    if(linear!=null) {
+                        verify(linear.containsParameter(-1.0)==(case.id==30)&&linear.containsParameter(2.0)==(case.id!=31),"Wrong line/segment/ray mathematical domain")
+                        val expected=when(case.id){30->Vec3(-2.0,6.0,0.0);31->Vec3(0.0,1.5,2.0);else->Vec3(-2.0,0.0,8.0)}
+                        verify(linear.at(if(case.id==31).5 else 2.0)==expected,"Incorrect independently calculated linear coordinates")
+                    }
+                }
                 33->verify(r.state.vectors3D.size==before.vectors3D.size+1 && r.state.vectors3D.last().end==Vec3(2.0,3.0,4.0),"Wrong vector endpoint")
                 34,234->{
                     verify(r.state.planes3D.size==1&&r.state.planes3D.single().pointIds==listOf("a","b","c"),"Plane must reference A/B/C without adding helper points")

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.GraphProductionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:07.140Z" hostname="INDIANSERVERS" time="0.564">
+<testsuite name="com.indianservers.aiexplorer.GraphProductionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:44.759Z" hostname="INDIANSERVERS" time="0.427">
   <properties/>
-  <testcase name="regressionFamiliesExposeResidualsBandsAndModelGuidance" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.43"/>
-  <testcase name="transformationsFoldersNotesAndAudioSummariesReuseGraphState" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.04"/>
-  <testcase name="pointsOfInterestAreDeterministicSortedAndKeyboardReachable" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.012"/>
-  <testcase name="canvasHandlesCoverEveryFreeAndLinkedParameter" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.006"/>
-  <testcase name="everyGraphFormUsesOneTypedExpressionModel" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.038"/>
-  <testcase name="professionalTablesAcceptThousandsOfCsvTsvRowsAndCalculatedColumns" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.038"/>
+  <testcase name="regressionFamiliesExposeResidualsBandsAndModelGuidance" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.338"/>
+  <testcase name="transformationsFoldersNotesAndAudioSummariesReuseGraphState" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.021"/>
+  <testcase name="pointsOfInterestAreDeterministicSortedAndKeyboardReachable" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.008"/>
+  <testcase name="canvasHandlesCoverEveryFreeAndLinkedParameter" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.004"/>
+  <testcase name="everyGraphFormUsesOneTypedExpressionModel" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.024"/>
+  <testcase name="professionalTablesAcceptThousandsOfCsvTsvRowsAndCalculatedColumns" classname="com.indianservers.aiexplorer.GraphProductionTest" time="0.032"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

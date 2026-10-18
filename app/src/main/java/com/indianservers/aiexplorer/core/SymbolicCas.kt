@@ -300,6 +300,7 @@ class SymbolicCasEngine {
 
     fun render(expression: SymbolicExpression, parentPrecedence: Int = 0): String {
         val precedence = when (expression) {
+            is SymbolicExpression.Number -> if (expression.value.denominator != BigInteger.ONE) 2 else if (expression.value.numerator.signum()<0) 4 else 5
             is SymbolicExpression.Sum -> 1
             is SymbolicExpression.Product -> 2
             is SymbolicExpression.Power -> 3
@@ -312,7 +313,7 @@ class SymbolicCasEngine {
             is SymbolicExpression.UnaryMinus -> "-${render(expression.value, precedence)}"
             is SymbolicExpression.Sum -> expression.terms.joinToString(" + ") { render(it, precedence) }.replace("+ -", "- ")
             is SymbolicExpression.Product -> expression.factors.joinToString("*") { render(it, precedence) }
-            is SymbolicExpression.Power -> "${render(expression.base, precedence)}^${render(expression.exponent, precedence)}"
+            is SymbolicExpression.Power -> "${render(expression.base, 5)}^${render(expression.exponent, precedence)}"
             is SymbolicExpression.Function -> "${expression.name}(${expression.arguments.joinToString { render(it) }})"
         }
         return if (precedence < parentPrecedence) "($text)" else text
@@ -503,22 +504,22 @@ private class CasParser(private val source: String) {
     }
 
     private fun parseTerm(): SymbolicExpression {
-        val factors = mutableListOf(parsePower())
+        val factors = mutableListOf(parseUnary())
         while (true) {
             skip()
             when {
-                match('*') -> factors += parsePower()
-                match('/') -> factors += SymbolicExpression.Power(parsePower(), SymbolicExpression.Number(ExactRational.of(-1)))
-                shouldImplicitMultiply() -> factors += parsePower()
+                match('*') -> factors += parseUnary()
+                match('/') -> factors += SymbolicExpression.Power(parseUnary(), SymbolicExpression.Number(ExactRational.of(-1)))
+                shouldImplicitMultiply() -> factors += parseUnary()
                 else -> return if (factors.size == 1) factors.single() else SymbolicExpression.Product(factors)
             }
         }
     }
 
     private fun parsePower(): SymbolicExpression {
-        var node = parseUnary()
+        var node = parsePrimary()
         skip()
-        if (match('^')) node = SymbolicExpression.Power(node, parsePower())
+        if (match('^')) node = SymbolicExpression.Power(node, parseUnary())
         return node
     }
 
@@ -527,7 +528,7 @@ private class CasParser(private val source: String) {
         return when {
             match('-') -> SymbolicExpression.UnaryMinus(parseUnary())
             match('+') -> parseUnary()
-            else -> parsePrimary()
+            else -> parsePower()
         }
     }
 

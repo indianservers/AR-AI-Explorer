@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiMidpointLanguageTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:07:52.305Z" hostname="INDIANSERVERS" time="0.253">
+  <properties/>
+  <testcase name="unseenEndpointNamesAndDraggingParentsUpdateTheSameMarker" classname="com.indianservers.aiexplorer.RuhiMidpointLanguageTest" time="0.005"/>
+  <testcase name="missingEndpointsResumeAfterCreationAndUndoTheWholeLastAnswer" classname="com.indianservers.aiexplorer.RuhiMidpointLanguageTest" time="0.005"/>
+  <testcase name="labelCollisionsAndAmbiguousCompoundSegmentsNeverOverwritePoints" classname="com.indianservers.aiexplorer.RuhiMidpointLanguageTest" time="0.029"/>
+  <testcase name="everyMidpointRowSatisfiesTheOriginalSlotsMarkerHistoryAndPersistence" classname="com.indianservers.aiexplorer.RuhiMidpointLanguageTest" time="0.214"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

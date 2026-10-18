@@ -396,6 +396,14 @@ object UniversalWorkspaceBridge {
         state.solids.forEachIndexed { index, solid -> objects += solidObject(index, solid) }
         state.vectors3D.forEach { vector -> objects += vectorObject(vector) }
         state.points3D.forEach { point->objects+=UniversalMathObject("point3d-${point.id}",UniversalMathKind.Point3D,point.name,UniversalMathPayload.Coordinates(listOf(point.position.x,point.position.y,point.position.z)),sourceView="geometry3d/point",presentation=UniversalMathPresentation(visible=point.visible,locked=point.locked,styleKey=point.styleKey)) }
+        state.linears3D.forEachIndexed { index,obj ->
+            val refs=obj.pointIds.map{"point3d-$it"}
+            objects+=UniversalMathObject("linear3d-${obj.id}",UniversalMathKind.valueOf(obj.kind.name),obj.name,
+                UniversalMathPayload.Properties(mapOf("type" to "Linear3D","domain" to obj.kind.name)),
+                dependencies=refs.toSet(),sourceView="geometry3d/linear",
+                definition=UniversalMathDefinition.Construction("${obj.kind.name}Through3DPoints",refs),
+                presentation=UniversalMathPresentation(visible=obj.visible,locked=obj.locked,styleKey=obj.styleKey,layer=index))
+        }
         state.planes3D.forEach { plane->val refs=plane.pointIds.map{"point3d-$it"};objects+=UniversalMathObject("plane3d-${plane.id}",UniversalMathKind.Plane,plane.name,UniversalMathPayload.Properties(mapOf("type" to "Plane3D")),dependencies=refs.toSet(),sourceView="geometry3d/plane",definition=UniversalMathDefinition.Construction("PlaneThrough3DPoints",refs),presentation=UniversalMathPresentation(visible=plane.visible,locked=plane.locked,styleKey=plane.styleKey)) }
         state.surfaceLayers.forEachIndexed { index, layer ->
             objects += surfaceObject(layer.copy(id = if (index == 0) "surface-main" else layer.id), index)
@@ -403,7 +411,7 @@ object UniversalWorkspaceBridge {
         val surfaceIds = state.surfaceLayers.indices.map { index -> if (index == 0) "surface-main" else state.surfaceLayers[index].id }
         objects += UniversalMathObject("spatial-scene", UniversalMathKind.SpatialScene, "AR spatial scene", UniversalMathPayload.Properties(mapOf(
             "anchorId" to state.spatialPlacement.anchorId, "scale" to state.spatialPlacement.pose.uniformScale.toString(), "metersPerUnit" to state.spatialPlacement.metersPerMathUnit.toString(),
-        )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + state.points3D.map{"point3d-${it.id}"}+state.planes3D.map{"plane3d-${it.id}"}+surfaceIds).toSet(), sourceView = "AR")
+        )), dependencies = (state.solids.indices.map { "solid-$it" } + state.vectors3D.map { "vector-${it.id}" } + state.points3D.map{"point3d-${it.id}"}+state.planes3D.map{"plane3d-${it.id}"}+state.linears3D.map{"linear3d-${it.id}"}+surfaceIds).toSet(), sourceView = "AR")
         val generated = UniversalMathDocument(id = "math-${state.id}", revision = state.modifiedAt.coerceAtLeast(0), objects = objects.associateBy { it.id }, modifiedAt = state.modifiedAt)
         val stored = state.universalMathDocument ?: return generated
         // Stored authoritative objects win over projections rebuilt from legacy WorkspaceState fields.
@@ -474,7 +482,14 @@ object UniversalWorkspaceBridge {
         val nativePlanes=document.objects.values.filter{it.sourceView=="geometry3d/plane"&&it.kind==UniversalMathKind.Plane}
         val planeSource=state.planes3D+nativePlanes.filter{obj->state.planes3D.none{"plane3d-${it.id}"==obj.id}}.mapNotNull{obj->val d=obj.definition as? UniversalMathDefinition.Construction ?: return@mapNotNull null;if(d.command!="PlaneThrough3DPoints"||d.arguments.size!=3)return@mapNotNull null;Plane3DObject(obj.id.removePrefix("plane3d-"),obj.name,d.arguments.map{it.removePrefix("point3d-")})}
         val planes3D=planeSource.mapNotNull{plane->document.objects["plane3d-${plane.id}"]?.let{obj->plane.copy(name=obj.name,visible=obj.presentation.visible,locked=obj.presentation.locked,styleKey=obj.presentation.styleKey)}}
-        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, points3D=points3D,planes3D=planes3D,surfaceExpression = surface, surfaceLayers = surfaceLayers, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
+        val nativeLinears=document.objects.values.filter{it.sourceView=="geometry3d/linear" && it.kind.name in Linear3DKind.entries.map{v->v.name}}
+        val linears3D=nativeLinears.sortedWith(compareBy<UniversalMathObject>{it.presentation.layer}.thenBy{it.id}).mapNotNull { obj ->
+            val d=obj.definition as? UniversalMathDefinition.Construction ?: return@mapNotNull null
+            val kind=Linear3DKind.valueOf(obj.kind.name)
+            if(d.command!="${kind.name}Through3DPoints" || d.arguments.size!=2)return@mapNotNull null
+            Linear3DObject(obj.id.removePrefix("linear3d-"),obj.name,kind,d.arguments.map{it.removePrefix("point3d-")},obj.presentation.visible,obj.presentation.locked,obj.presentation.styleKey)
+        }
+        return state.copy(functions = functions, points = points, shapes = shapes, solids = solids, vectors3D = vectors, points3D=points3D,planes3D=planes3D,linears3D=linears3D,surfaceExpression = surface, surfaceLayers = surfaceLayers, universalMathDocument = document, modifiedAt = document.modifiedAt).recomputed()
     }
 
     private fun surfaceObject(layer: SpatialSurfaceLayer, index: Int): UniversalMathObject {

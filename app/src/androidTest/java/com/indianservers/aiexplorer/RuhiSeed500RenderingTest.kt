@@ -41,6 +41,108 @@ class RuhiSeed500RenderingTest {
         val screenshot=InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot();File(folder,"$name.png").outputStream().use{screenshot.compress(Bitmap.CompressFormat.PNG,100,it)};screenshot.recycle()
         androidx.test.espresso.Espresso.closeSoftKeyboard();compose.onNodeWithContentDescription("Close AI Assistant").performClick();compose.waitForIdle()
     }
+    @Test fun realRadicalDerivativeHelpersHaveFiniteSmoothZerosAndFollowSavedCurrentCurves() {
+        TensorFlowGraphNlp.install(context)
+        val inputs=listOf(Triple("x^2",0.0,0.0),Triple("sqrt(x^4)",0.0,0.0),Triple("sqrt(x^4)",2.0,4.0),Triple("sqrt((x-1.25)^4)",1.25,0.0),Triple("sqrt(x^2)-abs(x)+x",0.0,1.0),Triple("sqrt(x^2)",0.0,null),Triple("sqrt(x^6)",0.0,0.0),Triple("sqrt(x^2)",-2.0,-1.0))
+        val records=JSONArray();val engine=ExpressionEngine()
+        fun derivative(s:WorkspaceState)=RuhiDerivativeLanguage.drawing(s)!!.helpers.single{it.name=="Derivative"}.curve as RuhiIntersectionMath.Curve.Scalar
+        for((formula,x,expected) in inputs) {
+            val initial=WorkspaceState(module=MathModule.Graph2D,functions=emptyList(),surfaceLayers=emptyList());val r=RuhiDialogueManager().execute(initial,"Differentiate $formula",WorkspaceHistoryByModule())
+            assertEquals(r.message,GraphCommandStatus.APPLIED,r.status);assertEquals(initial.functions,r.state.functions);val c=derivative(r.state);val raw=engine.compile(c.expression).eval(mapOf("x" to x));val actual=raw.takeIf{it.isFinite()}
+            if(expected==null)assertNull(actual)else assertEquals(formula,expected,actual!!,1e-10)
+            records.put(JSONObject().put("formula",formula).put("x",x).put("expected",expected ?: JSONObject.NULL).put("actual",actual ?: JSONObject.NULL).put("passed",true))
+        }
+        ActivityScenario.launch<GraphVerificationActivity>(Intent(context,GraphVerificationActivity::class.java).putExtra("verify_ux_workspace","graph2d")).use{scenario->
+            val matcher=hasContentDescription("Interactive graphing canvas with axes, curves, trace point, and annotations")
+            compose.waitUntil(30_000){compose.onAllNodes(matcher,useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
+            val initial=WorkspaceState(module=MathModule.Graph2D,functions=listOf(FunctionDefinition("root-helper,/907","Root907","y=sqrt(x^4)","cyan")),surfaceLayers=emptyList())
+            scenario.onActivity{it.verificationViewModel.importWorkspace(initial,false,emptyList())};compose.waitForIdle();val before=captureCanvas(matcher,"radical-helper-before")
+            askConstruction(scenario,"Plot the derivative of the selected curve","Derivative")
+            fun sampled(center:Double):Int {
+                var count=0
+                scenario.onActivity{val s=it.verificationViewModel.state;val c=derivative(s);assertEquals(0.0,engine.compile(c.expression).eval(mapOf("x" to center)),0.0);assertEquals(1,s.functions.size)
+                    val native="y=${c.expression}"+(c.restriction?.let{" {$it}"} ?: "")
+                    val sample=TypedGraphEngine().sample(TypedGraphExpressionParser.parse(native),GraphDomain(center-2,center+2),GraphDomain(-5.0,5.0,"y"),samples=256)
+                    assertTrue(sample.curves.any{segment->segment.points.any{it.x<center}&&segment.points.any{it.x>center}});assertTrue(sample.curves.flatMap{it.points}.all{abs(it.y-2*(it.x-center))<1e-8});count=sample.curves.sumOf{it.points.size}}
+                return count
+            }
+            val samples=sampled(0.0);val after=captureCanvas(matcher,"radical-helper-smooth-zero");val a=IntArray(before.width*before.height);val b=IntArray(a.size);before.getPixels(a,0,before.width,0,0,before.width,before.height);after.getPixels(b,0,after.width,0,0,after.width,after.height);val pixels=a.indices.count{a[it]!=b[it]};assertTrue(pixels>100)
+            scenario.onActivity{val vm=it.verificationViewModel;vm.updateFunction(0){it.copy(expression="y=sqrt((x-1.25)^4)")};vm.importWorkspace(WorkspaceProjectCodec.decode(WorkspaceProjectCodec.encode(vm.state)).state!!,false,emptyList())};compose.waitForIdle()
+            sampled(1.25);captureCanvas(matcher,"radical-helper-edited").recycle();askConstruction(scenario,"Plot the derivative of the selected curve","Derivative");captureDistanceReply("Derivative","radical-helper-answer")
+            File(folder,"radical-helper-canvas.json").writeText(JSONObject().put("passed",true).put("cases",8).put("results",records).put("actual_helper_values",true).put("true_cusp_preserved",true).put("original_curve_preserved",true).put("native_sampler_bridges_smooth_zero",true).put("current_saved_curve",true).put("sample_points",samples).put("changed_pixels",pixels).put("edited_zero",1.25).put("committed_capture",true).toString(2));before.recycle();after.recycle()
+        }
+    }
+
+    @Test fun realRadicalCriticalAndStationaryPointsPreserveDomainsAndFollowCurrentCurveEdits() {
+        TensorFlowGraphNlp.install(context)
+        val inputs=listOf(
+            "Find critical points of y = abs(x)" to listOf(Vec2(0.0,0.0)),
+            "Find critical points of y = sqrt(x^2)" to listOf(Vec2(0.0,0.0)),
+            "Find critical points of y = sqrt((x-1.25)^2)+2*x" to listOf(Vec2(1.25,2.5)),
+            "Find the stationary points of sqrt(x^2)" to emptyList(),
+            "Find critical points of y = sqrt(x^4)" to listOf(Vec2(0.0,0.0)),
+            "Find the stationary points of sqrt(x^4)" to listOf(Vec2(0.0,0.0)),
+            "Find critical points of y = sqrt(x^2)-sqrt(x^2)+x" to emptyList(),
+            "Find critical points of y = 1/sqrt(x^2)" to emptyList())
+        val records=JSONArray()
+        for((source,expected) in inputs) {
+            val s=RuhiSeed500Fixture.state("GRAPH_2D",344);val r=RuhiDialogueManager().execute(s,source,WorkspaceHistoryByModule(),RuhiSeed500Fixture.context(344,s))
+            assertEquals(r.message,GraphCommandStatus.APPLIED,r.status);assertEquals(s.functions,r.state.functions);assertEquals(s.points,r.state.points)
+            val actual=RuhiDerivativeLanguage.drawing(r.state)!!.points;assertEquals(source,expected.size,actual.size);assertTrue(source,expected.all{e->actual.any{it.distanceTo(e)<1e-6}})
+            records.put(JSONObject().put("input",source).put("expected_points",JSONArray(expected.map{listOf(it.x,it.y)})).put("actual_points",JSONArray(actual.map{listOf(it.x,it.y)})).put("passed",true))
+        }
+        ActivityScenario.launch<GraphVerificationActivity>(Intent(context,GraphVerificationActivity::class.java).putExtra("verify_ux_workspace","graph2d")).use{scenario->
+            val matcher=hasContentDescription("Interactive graphing canvas with axes, curves, trace point, and annotations")
+            compose.waitUntil(30_000){compose.onAllNodes(matcher,useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
+            val initial=WorkspaceState(module=MathModule.Graph2D,functions=listOf(FunctionDefinition("radical,/907","Root907","y=sqrt(x^2)","cyan")),surfaceLayers=emptyList())
+            scenario.onActivity{it.verificationViewModel.importWorkspace(initial,false,emptyList())};compose.waitForIdle()
+            askConstruction(scenario,"Find critical points of the selected curve","Critical points")
+            fun point(expected:Vec2) {
+                scenario.onActivity{assertEquals(listOf(expected),RuhiDerivativeLanguage.drawing(it.verificationViewModel.state)!!.points);assertTrue(it.verificationViewModel.state.points.isEmpty())}
+                val rendered=compose.onNode(matcher,useUnmergedTree=true).fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.StateDescription];assertTrue(rendered,rendered.contains("(${expected.x}, ${expected.y})"))
+            }
+            point(Vec2(0.0,0.0));captureCanvas(matcher,"radical-critical-corner").recycle()
+            scenario.onActivity{val vm=it.verificationViewModel;vm.updateFunction(0){it.copy(expression="y=sqrt((x-2)^2)+2*x")};vm.importWorkspace(WorkspaceProjectCodec.decode(WorkspaceProjectCodec.encode(vm.state)).state!!,false,emptyList())};compose.waitForIdle()
+            point(Vec2(2.0,4.0));captureCanvas(matcher,"radical-critical-edited").recycle()
+            askConstruction(scenario,"Find critical points of the selected curve","Critical points");captureDistanceReply("(2.0, 4.0)","radical-critical-answer")
+            File(folder,"radical-critical-canvas.json").writeText(JSONObject().put("passed",true).put("cases",8).put("results",records).put("original_domain_preserved",true).put("native_current_curve",true).put("actual_rendered_coordinates",true).put("initial_point",JSONArray(listOf(0,0))).put("edited_point",JSONArray(listOf(2,4))).put("committed_capture",true).toString(2))
+        }
+    }
+
+    @Test fun selectedNativeSegmentRepliesResumeSavedMidpointAndSlopeWithoutEndpointSubstitution() {
+        TensorFlowGraphNlp.install(context)
+        for((id,source) in listOf(162 to "Mark the midpoint of the selected segment",179 to "Measure the slope of the selected line")) {
+            val initial=RuhiSeed500Fixture.state("GEOMETRY_2D",id);val manager=RuhiDialogueManager();val history=WorkspaceHistoryByModule()
+            val q=manager.execute(initial,source,history);assertEquals(GraphCommandStatus.CLARIFICATION,q.status)
+            val r=manager.execute(WorkspaceProjectCodec.decode(WorkspaceProjectCodec.encode(q.state)).state!!,"AB",history)
+            assertEquals(r.message,GraphCommandStatus.APPLIED,r.status);assertEquals(if(id==162)"FIND_MIDPOINT"else"CALCULATE_SLOPE",r.semanticFrame!!.intent)
+            assertEquals(if(id==162)"selected_segment"else"selected_line",r.semanticFrame!!.parameters["target"]);assertEquals("line-ab",r.context.selectedShapeId)
+            if(id==162){assertEquals(Vec2(.5,.5),r.state.points.last());assertEquals(1,history.forModule(initial.module).protocol.size)}
+            else {assertTrue(r.message.contains("Slope = 1.0"));assertEquals(initial.points,r.state.points);assertEquals(initial.shapes,r.state.shapes);assertTrue(history.forModule(initial.module).protocol.isEmpty())}
+        }
+        ActivityScenario.launch<GraphVerificationActivity>(Intent(context,GraphVerificationActivity::class.java).putExtra("verify_ux_workspace","geometry2d")).use{scenario->
+            val matcher=hasContentDescription("Interactive coordinate geometry canvas.",substring=true)
+            compose.waitUntil(30_000){compose.onAllNodes(matcher,useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
+            val initial=WorkspaceState(module=MathModule.Geometry2D,points=listOf(Vec2(0.0,0.0),Vec2(6.0,8.0)),shapes=listOf(Shape2D("native-segment,/907",Shape2DType.Segment,listOf(0,1),"SunMoon907")),labSessionValues=mapOf("ruhi.studio.point.Sun907" to "0","ruhi.studio.point.Moon811" to "1"))
+            fun reset(){scenario.onActivity{val vm=it.verificationViewModel;vm.importWorkspace(initial,false,emptyList());vm.selectShape(-1)};compose.waitForIdle()}
+            fun restore(){scenario.onActivity{val vm=it.verificationViewModel;vm.importWorkspace(WorkspaceProjectCodec.decode(WorkspaceProjectCodec.encode(vm.state)).state!!,false,emptyList());vm.selectShape(-1)};compose.waitForIdle()}
+            reset();askConstruction(scenario,"Mark the midpoint of the selected segment","Select a line segment");restore()
+            scenario.onActivity{val vm=it.verificationViewModel;assertEquals("endpoint_shape",RuhiDialogueMemory.read(vm.state).pending!!.kind);vm.movePoint(1,Vec2(4.0,6.0))};compose.waitForIdle()
+            compose.onNodeWithContentDescription("Open AI Assistant").performClick();awaitRuhiInput();compose.onAllNodesWithText("SunMoon907",substring=false).onLast().performScrollTo().assertIsDisplayed();captureCanvas(matcher,"segment-selection-question").recycle();compose.onAllNodesWithText("SunMoon907",substring=false).onLast().performClick()
+            compose.waitUntil(30_000){var done=false;scenario.onActivity{done=RuhiDialogueMemory.read(it.verificationViewModel.state).turns.last().assistant.contains("Midpoint Mid1 = (2.0, 3.0)")};done}
+            androidx.test.espresso.Espresso.closeSoftKeyboard();compose.onNodeWithContentDescription("Close AI Assistant").performClick();compose.waitForIdle()
+            scenario.onActivity{val vm=it.verificationViewModel;assertEquals(Vec2(2.0,3.0),vm.state.points.last());assertEquals(listOf(0,1),vm.state.pointDependencies.single().inputIndices);assertEquals(initial.shapes,vm.state.shapes);vm.undo();assertEquals(listOf(Vec2(0.0,0.0),Vec2(4.0,6.0)),vm.state.points);vm.redo();assertEquals(Vec2(2.0,3.0),vm.state.points.last())};compose.waitForIdle()
+            captureCanvas(matcher,"segment-selection-midpoint").recycle()
+            scenario.onActivity{val vm=it.verificationViewModel;vm.movePoint(1,Vec2(2.0,4.0));assertEquals(Vec2(1.0,2.0),vm.state.points.last())};restore();captureCanvas(matcher,"segment-selection-midpoint-live").recycle()
+            reset();askConstruction(scenario,"Measure the slope of the selected line","Select a line segment");restore();scenario.onActivity{it.verificationViewModel.movePoint(1,Vec2(4.0,6.0))};compose.waitForIdle()
+            askConstruction(scenario,"SunMoon907","Slope = 1.5; rise = 6.0, run = 4.0")
+            scenario.onActivity{val vm=it.verificationViewModel;assertEquals(2,vm.state.points.size);assertEquals(initial.shapes,vm.state.shapes);assertTrue(vm.state.pointDependencies.isEmpty());assertNull(RuhiDialogueMemory.read(vm.state).pending)}
+            captureDistanceReply("Slope = 1.5; rise = 6.0, run = 4.0","segment-selection-slope-answer")
+            scenario.onActivity{val vm=it.verificationViewModel;vm.undo();assertEquals(initial.points,vm.state.points)}
+            File(folder,"segment-selection-canvas.json").writeText(JSONObject().put("passed",true).put("source_rows",JSONArray(listOf(162,179))).put("saved_object_chip",true).put("plain_name_reply",true).put("native_shape_id","native-segment,/907").put("original_target_roles",true).put("current_coordinates",true).put("midpoint",JSONArray(listOf(2,3))).put("edited_midpoint",JSONArray(listOf(1,2))).put("native_parent_dependency",true).put("atomic_undo_redo",true).put("slope",1.5).put("slope_query_no_undo",true).put("shapes_preserved",true).put("committed_capture",true).toString(2))
+        }
+    }
+
     @Test fun midpointReplacementLabelsPreserveExistingPointsAndSavedEndpointBindings() {
         TensorFlowGraphNlp.install(context)
         ActivityScenario.launch<GraphVerificationActivity>(Intent(context,GraphVerificationActivity::class.java).putExtra("verify_ux_workspace","geometry2d")).use{scenario->
@@ -1331,4 +1433,119 @@ class RuhiSeed500RenderingTest {
             listOf(before,midpoint,triangle,moved).forEach(Bitmap::recycle)
         }
     }
+    @Test fun nativePointLinkedLinesSegmentsAndRaysRenderAndFollowSavedParentEdits() {
+        ActivityScenario.launch<GraphVerificationActivity>(Intent(context,GraphVerificationActivity::class.java).putExtra("verify_ux_workspace","geometry3d")).use { scenario ->
+            val matcher=hasContentDescription("Interactive 3D geometry canvas")
+            compose.waitUntil(30_000){compose.onAllNodes(matcher,useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
+            val initial=WorkspaceState(module=MathModule.Geometry3D,points3D=listOf(
+                Point3D("anchor-907","Anchor_907",Vec3(-2.0,-1.0,0.0)),
+                Point3D("beta-811","Beta_811",Vec3(1.0,1.0,0.0)),
+                Point3D("gamma-662","Gamma_662",Vec3(0.0,0.0,2.0))))
+            scenario.onActivity{it.verificationViewModel.importWorkspace(initial.copy(universalMathDocument=UniversalWorkspaceBridge.fromWorkspace(initial)),false,emptyList())}
+            compose.waitForIdle()
+            fun capture(name:String)=captureCanvas(matcher,name)
+            fun ask(text:String,answer:String) {
+                compose.onNodeWithContentDescription("Open AI Assistant").performClick()
+                compose.onNodeWithText("Ask anything in maths").performTextClearance()
+                compose.onNodeWithText("Ask anything in maths").performTextInput(text)
+                compose.onNodeWithText("Ask anything in maths").performImeAction()
+                compose.waitUntil(30_000){compose.onAllNodesWithText(answer,substring=true).fetchSemanticsNodes().isNotEmpty()}
+                androidx.test.espresso.Espresso.closeSoftKeyboard()
+                compose.onNodeWithContentDescription("Close AI Assistant").performClick();compose.waitForIdle()
+            }
+            fun changed(a:Bitmap,b:Bitmap):Int {
+                assertEquals(a.width,b.width);assertEquals(a.height,b.height)
+                val x=IntArray(a.width*a.height);val y=IntArray(x.size)
+                a.getPixels(x,0,a.width,0,0,a.width,a.height);b.getPixels(y,0,b.width,0,0,b.width,b.height)
+                return x.indices.count{x[it]!=y[it]}
+            }
+            val before=capture("spatial-linear-before")
+            ask("Draw a line from Anchor_907 to Beta_811.","Created line Line1")
+            val lineImage=capture("spatial-linear-line")
+            ask("Join Beta_811 and Gamma_662 with a segment.","Created segment Segment1")
+            val segmentImage=capture("spatial-linear-segment")
+            ask("Draw a ray starting at Anchor_907 and going through Gamma_662.","Created ray Ray1")
+            val rayImage=capture("spatial-linear-ray")
+            val records=JSONArray()
+            scenario.onActivity { activity ->
+                val vm=activity.verificationViewModel
+                assertEquals(3,vm.state.linears3D.size);assertEquals(initial.points3D,vm.state.points3D)
+                assertTrue(vm.state.solids.isEmpty());assertTrue(vm.state.vectors3D.isEmpty())
+                val expected=listOf(listOf("anchor-907","beta-811"),listOf("beta-811","gamma-662"),listOf("anchor-907","gamma-662"))
+                vm.state.linears3D.forEachIndexed { index,obj ->
+                    assertEquals(expected[index],obj.pointIds)
+                    val linear=NativeLinearGeometry.evaluate(vm.state,obj)
+                    assertEquals(initial.points3D.single{it.id==obj.pointIds[0]}.position,linear.at(0.0))
+                    assertEquals(initial.points3D.single{it.id==obj.pointIds[1]}.position,linear.at(1.0))
+                    assertEquals(index==0,linear.containsParameter(-1.0));assertEquals(index!=1,linear.containsParameter(2.0))
+                    val canonical=vm.state.universalMathDocument!!.objects.getValue("linear3d-${obj.id}")
+                    assertEquals(UniversalMathKind.valueOf(obj.kind.name),canonical.kind)
+                    assertEquals(obj.pointIds.map{"point3d-$it"}.toSet(),canonical.dependencies)
+                    records.put(JSONObject().put("kind",obj.kind.name).put("point_ids",JSONArray(obj.pointIds)).put("negative_parameter",linear.containsParameter(-1.0)).put("beyond_second_point",linear.containsParameter(2.0)))
+                }
+                vm.transformPoint3D(2){it.copy(position=Vec3(0.0,-2.0,2.0))}
+                val edited=NativeLinearGeometry.evaluate(vm.state,vm.state.linears3D.last())
+                assertEquals(Vec3(2.0,-1.0,2.0),edited.direction)
+                assertEquals(initial.points3D.take(2),vm.state.points3D.take(2))
+                val saved=WorkspaceProjectCodec.decode(WorkspaceProjectCodec.encode(vm.state),recover=false)
+                assertNotNull(saved.diagnostics.toString(),saved.state);assertEquals(vm.state.linears3D,saved.state!!.linears3D)
+                assertEquals(edited,NativeLinearGeometry.evaluate(saved.state!!,saved.state!!.linears3D.last()))
+                vm.importWorkspace(saved.state!!,false,emptyList())
+            }
+            compose.waitForIdle();val editedImage=capture("spatial-linear-edited")
+            val pixels=listOf(changed(before,lineImage),changed(lineImage,segmentImage),changed(segmentImage,rayImage),changed(rayImage,editedImage))
+            assertTrue("Each native construction and current parent edit must change the actual canvas: $pixels",pixels.all{it>100})
+            File(folder,"spatial-linear-canvas.json").writeText(JSONObject().put("passed",true).put("cases",records).put("changed_pixels",JSONArray(pixels)).put("current_parent",true).put("canonical_dependencies",true).put("persistence",true).put("no_helper_vectors_or_points",true).put("committed_capture",true).toString(2))
+            listOf(before,lineImage,segmentImage,rayImage,editedImage).forEach(Bitmap::recycle)
+        }
+    }
+
+    @Test fun missingPriorContextQuestionsRestoreResumeAndRequireCompleteInstructions() {
+        val rows=listOf(480 to "Use the same radius as before",481 to "No, make it 7 instead",483 to "Both of them",486 to "Continue where we stopped",490 to "Use x squared for the equation",491 to "Choose the second suggested answer")
+        val records=JSONArray()
+        for(isSpatial in listOf(true,false)) {
+            ActivityScenario.launch<GraphVerificationActivity>(Intent(context,GraphVerificationActivity::class.java).putExtra("verify_ux_workspace",if(isSpatial)"geometry3d"else"graph2d")).use { scenario ->
+                val matcher=hasContentDescription(if(isSpatial)"Interactive 3D geometry canvas"else"Interactive graphing canvas with axes, curves, trace point, and annotations")
+                compose.waitUntil(30_000){compose.onAllNodes(matcher,useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty()}
+                fun open(){compose.onNodeWithContentDescription("Open AI Assistant").performClick()}
+                fun close(){androidx.test.espresso.Espresso.closeSoftKeyboard();compose.onNodeWithContentDescription("Close AI Assistant").performClick();compose.waitForIdle()}
+                fun submit(t:String){compose.onNodeWithText("Ask anything in maths").performTextClearance();compose.onNodeWithText("Ask anything in maths").performTextInput(t);compose.onNodeWithText("Ask anything in maths").performImeAction()}
+                fun waitText(t:String){compose.waitUntil(30_000){compose.onAllNodesWithText(t,substring=true).fetchSemanticsNodes().isNotEmpty()}}
+                for((id,text) in rows.filter{(it.first in setOf(480,481,483))==isSpatial}) {
+                    val initial=WorkspaceState(module=if(isSpatial)MathModule.Geometry3D else MathModule.Graph2D,surfaceLayers=emptyList())
+                    scenario.onActivity{it.verificationViewModel.importWorkspace(initial,false,emptyList())};compose.waitForIdle()
+                    open();submit(text)
+                    val question=RuhiDialogueFollowUp.missingContextQuestion(text)!!;waitText(question)
+                    if(id==480||id==490) {
+                        val bitmap=InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+                        File(folder,if(isSpatial)"missing-prior-spatial-question.png"else"missing-prior-graph-question.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)};bitmap.recycle()
+                    }
+                    close()
+                    scenario.onActivity { activity ->
+                        val vm=activity.verificationViewModel;val memory=RuhiDialogueMemory.read(vm.state)
+                        assertEquals("missing_prior_context",memory.pending!!.kind);assertEquals(text,memory.pending!!.source)
+                        assertTrue(memory.lastChoices.isEmpty());assertTrue(vm.state.solids.isEmpty());assertTrue(vm.state.functions.isEmpty())
+                        val saved=WorkspaceProjectCodec.decode(WorkspaceProjectCodec.encode(vm.state),recover=false).state!!
+                        assertEquals(question,RuhiDialogueMemory.read(saved).pendingPrompt)
+                        vm.importWorkspace(saved,false,emptyList())
+                    }
+                    compose.waitForIdle();open();waitText(question);submit("Continue");waitText(question)
+                    submit("7");waitText(question)
+                    scenario.onActivity{assertTrue(it.verificationViewModel.state.solids.isEmpty());assertTrue(it.verificationViewModel.state.functions.isEmpty());assertTrue(it.verificationViewModel.state.points.isEmpty())}
+                    submit(if(isSpatial)"Create a sphere with radius 3"else"Plot y = x^2")
+                    waitText("Ruhi — Applied");close()
+                    scenario.onActivity { activity ->
+                        val state=activity.verificationViewModel.state;assertNull(RuhiDialogueMemory.read(state).pending)
+                        val value=if(isSpatial){assertEquals(1,state.solids.size);state.solids.single().radius}
+                            else {assertEquals(1,state.functions.size);com.indianservers.aiexplorer.core.ExpressionEngine().compile(state.functions.single().expression.substringAfter('=')).eval(mapOf("x" to 2.0))}
+                        assertEquals(if(isSpatial)3.0 else 4.0,value,1e-9)
+                        records.put(JSONObject().put("source_row",id).put("module",state.module.name).put("question_saved",true).put("empty_until_instruction",true).put("applied",true).put("value",value))
+                    }
+                    if(id==480||id==490){val image=captureCanvas(matcher,if(isSpatial)"missing-prior-spatial-applied"else"missing-prior-graph-applied");image.recycle()}
+                }
+            }
+        }
+        File(folder,"missing-prior-context-native.json").writeText(JSONObject().put("passed",true).put("cases",records).put("saved_question",true).put("resume_and_partial_reply",true).put("no_fabricated_choices",true).put("no_geometry_until_complete_instruction",true).put("committed_capture",true).toString(2))
+    }
+
 }

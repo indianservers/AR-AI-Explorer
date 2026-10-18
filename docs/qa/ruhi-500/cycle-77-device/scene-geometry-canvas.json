@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "pixel_checks": [
+    83635,
+    17803,
+    40972,
+    40045,
+    15946,
+    10138,
+    231673,
+    444182,
+    160054,
+    1004171,
+    471023
+  ],
+  "native_geometry_preserved": true,
+  "real_project_library": true,
+  "sqlite_reopened": true,
+  "undo_clear": true,
+  "live_viewport": true
+}

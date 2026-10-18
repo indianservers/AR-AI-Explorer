@@ -62,7 +62,7 @@ object RuhiSlopeLanguage {
             val type=when{value==null->"Vertical line: slope is undefined because run = 0.";value==0.0->"Horizontal line.";value>0->"Increasing (positive slope).";else->"Decreasing (negative slope)."}
             val exact=if(fraction&&value!=null)(ExactRational.parse(rise.toString())/ExactRational.parse(run.toString())).let{" Fraction = ${it.numerator}/${it.denominator}."} else ""
             return result(state,"Slope = ${value ?: "undefined"}; rise = $rise, run = $run. $type$exact${if(visualize)" The rise/run triangle is shown on the canvas." else if(annotate)" Annotated next to the line." else ""}")
-        }catch(e:RuhiReferenceQuestion){return RuhiExecutionResult(s,GraphCommandStatus.CLARIFICATION,e.message ?: "Choose a line.",context=c,dialogue=RuhiDialogueView(RuhiDialogueAction.ASK_CLARIFICATION,e.missing.map{RuhiAnswerChip("Create point $it","Create point $it at ")}),semanticFrame=if(e.endpointToken==null)frame else frame.copy(parameters=frame.parameters+("endpoint_reference" to e.endpointToken)))}
+        }catch(e:RuhiReferenceQuestion){return RuhiExecutionResult(s,GraphCommandStatus.CLARIFICATION,e.message ?: "Choose a line.",context=c,dialogue=RuhiDialogueView(RuhiDialogueAction.ASK_CLARIFICATION,e.missing.map{RuhiAnswerChip("Create point $it","Create point $it at ")}),semanticFrame=when{e.segmentSelection->frame.copy(parameters=frame.parameters+("segment_selection" to true));e.endpointToken!=null->frame.copy(parameters=frame.parameters+("endpoint_reference" to e.endpointToken));else->frame})}
          catch(e:IllegalArgumentException){return RuhiExecutionResult(s,GraphCommandStatus.INVALID,e.message ?: "Invalid slope input.",context=c,semanticFrame=frame)}
     }
 }

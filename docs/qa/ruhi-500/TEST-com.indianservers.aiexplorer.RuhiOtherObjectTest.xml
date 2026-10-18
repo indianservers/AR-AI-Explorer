@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiOtherObjectTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:32.605Z" hostname="INDIANSERVERS" time="0.02">
+<testsuite name="com.indianservers.aiexplorer.RuhiOtherObjectTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:10.955Z" hostname="INDIANSERVERS" time="0.023">
   <properties/>
-  <testcase name="stableShapeIdsSurviveReorderingAndMeasurementsUseEditedControls" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.005"/>
-  <testcase name="severalOtherObjectsAskBoundChoicesAndSecondChoiceSurvivesRestore" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.004"/>
-  <testcase name="scaleUsesValidatedFactorOnOtherCurrentSolidAfterRestoreWithOneUndo" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.002"/>
-  <testcase name="genericMultiObjectScaleDoesNotBecomeSingleTargetActionMemory" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.001"/>
-  <testcase name="solidMeasurementRecomputesOtherNativeSolidWithoutChangingGeometry" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.002"/>
+  <testcase name="stableShapeIdsSurviveReorderingAndMeasurementsUseEditedControls" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.004"/>
+  <testcase name="severalOtherObjectsAskBoundChoicesAndSecondChoiceSurvivesRestore" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.005"/>
+  <testcase name="scaleUsesValidatedFactorOnOtherCurrentSolidAfterRestoreWithOneUndo" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.003"/>
+  <testcase name="genericMultiObjectScaleDoesNotBecomeSingleTargetActionMemory" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.002"/>
+  <testcase name="solidMeasurementRecomputesOtherNativeSolidWithoutChangingGeometry" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.003"/>
   <testcase name="missingDeletedOrUnrecordedActionDoesNotReplayOldScale" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.002"/>
-  <testcase name="multiAxisTranslationKeepsItsVectorRatherThanReusingDestination" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.003"/>
+  <testcase name="multiAxisTranslationKeepsItsVectorRatherThanReusingDestination" classname="com.indianservers.aiexplorer.RuhiOtherObjectTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

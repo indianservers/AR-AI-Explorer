@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:27.395Z" hostname="INDIANSERVERS" time="0.172">
+<testsuite name="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:05.824Z" hostname="INDIANSERVERS" time="0.191">
   <properties/>
-  <testcase name="formalAndMathematicalWordRepliesKeepBothOriginalSelectedAnalyses" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.069"/>
-  <testcase name="contextualUsePrefixKeepsExplicitIntegralBoundsAndDomainValidatedSuggestions" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.026"/>
-  <testcase name="savedGradientXSurvivesPoliteCubicWordReply" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.002"/>
-  <testcase name="squareRootWordReplyUsesOriginalDomainForMathematicsAndRecovery" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.015"/>
-  <testcase name="invalidWordEquationsRetainTheirPendingAnalysisWithoutSceneEdits" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.007"/>
-  <testcase name="variedNumericCoefficientsAndWordOperatorsUseIndependentCurrentMathematics" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.05"/>
+  <testcase name="formalAndMathematicalWordRepliesKeepBothOriginalSelectedAnalyses" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.08"/>
+  <testcase name="contextualUsePrefixKeepsExplicitIntegralBoundsAndDomainValidatedSuggestions" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.023"/>
+  <testcase name="savedGradientXSurvivesPoliteCubicWordReply" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.004"/>
+  <testcase name="squareRootWordReplyUsesOriginalDomainForMathematicsAndRecovery" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.021"/>
+  <testcase name="invalidWordEquationsRetainTheirPendingAnalysisWithoutSceneEdits" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.005"/>
+  <testcase name="variedNumericCoefficientsAndWordOperatorsUseIndependentCurrentMathematics" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.055"/>
   <testcase name="unrelatedNewCommandsAreNotConsumedAsFormulaReplies" classname="com.indianservers.aiexplorer.RuhiFormulaReplyLanguageTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

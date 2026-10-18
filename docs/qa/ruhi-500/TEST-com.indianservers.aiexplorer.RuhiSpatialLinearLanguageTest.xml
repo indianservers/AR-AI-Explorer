@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:14.517Z" hostname="INDIANSERVERS" time="0.024">
+  <properties/>
+  <testcase name="lineThroughArbitraryNamedPointsIsApplied" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.001"/>
+  <testcase name="lexicalAndUnicodeNamesRemainEntitiesAndDuplicateNamesAreRejected" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.002"/>
+  <testcase name="rayRetainsOrderedOriginAndThroughPoint" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.001"/>
+  <testcase name="segmentBetweenArbitraryNamedPointsIsApplied" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.001"/>
+  <testcase name="coincidentParentsCannotDefineUniqueLinearObjects" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.001"/>
+  <testcase name="canonicalProjectionPreservesCreationOrderAfterSerializationWithUnsortedIds" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.002"/>
+  <testcase name="exactDomainsAndSlabClippingDistinguishLineRayAndSegment" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.005"/>
+  <testcase name="sceneClearAndSavedSceneRestoreDoNotLeaveDanglingLinearParents" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.006"/>
+  <testcase name="unknownOrAmbiguousParentsNeedClarificationWithoutSceneEdits" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.001"/>
+  <testcase name="clippingParallelAxesOutsideTheBoxDoesNotFabricateVisibleSegments" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.0"/>
+  <testcase name="creationAndParentDeletionUndoRestoreStableIdsAndDoNotTouchOtherGeometry" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.001"/>
+  <testcase name="linkedDefinitionsFollowCurrentParentsAndCanonicalSaveProjection" classname="com.indianservers.aiexplorer.RuhiSpatialLinearLanguageTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

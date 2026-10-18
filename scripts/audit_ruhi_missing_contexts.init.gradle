@@ -1,0 +1,52 @@
+// Observe all original commands without prerequisite scene objects. No app source/APK mutation.
+gradle.projectsEvaluated {
+    def appProject=gradle.rootProject.project(':app')
+    appProject.tasks.register('auditRuhiMissingContexts') {
+        doLast {
+            def loader=new URLClassLoader(appProject.tasks.named('testDebugUnitTest').get().classpath.files.collect{it.toURI().toURL()} as URL[],ClassLoader.getSystemClassLoader())
+            try {
+                def prefix='com.indianservers.aiexplorer.assistant.workspace.'
+                def fixture=loader.loadClass(prefix+'RuhiSeed500Fixture').getField('INSTANCE').get(null)
+                def codec=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceSnapshotCodec').getField('INSTANCE').get(null)
+                def managerClass=loader.loadClass(prefix+'RuhiDialogueManager')
+                def contextClass=loader.loadClass(prefix+'RuhiSceneContext')
+                def historyClass=loader.loadClass('com.indianservers.aiexplorer.workspace.WorkspaceHistoryByModule')
+                def modality=loader.loadClass(prefix+'RuhiInputModality').getField('TEXT').get(null)
+                def rows=new groovy.json.JsonSlurper().parse(new File(appProject.rootDir,'docs/qa/ruhi-500/seed-rows.json'),'UTF-8')
+                def geometry={s->[points:s.points,shapes:s.shapes,dependencies:s.pointDependencies,constraints:s.geometryConstraints,groups:s.geometryGroups,points3D:s.points3D,vectors:s.vectors3D,planes:s.planes3D,linears:s.linears3D,solids:s.solids,functions:s.functions,surfaces:s.surfaceLayers]}
+                def records=rows.collect { row ->
+                    def valid=fixture.state(row.engine,row.id as Integer)
+                    def encoded=codec.encode(valid)
+                    def header=encoded.readLines().first().split('[|]')
+                    def body=encoded.readLines().find{it.startsWith('W|')}
+                    def digest=java.security.MessageDigest.getInstance('SHA-256').digest(body.getBytes('UTF-8')).encodeHex().toString()
+                    def s=codec.decode('AIEXPLORER_WORKSPACE|'+header[1]+'|'+digest+'\n'+body,false).state
+                    if(s==null || geometry(s).values().any{!it.isEmpty()})throw new GradleException('Could not establish empty scene for row '+row.id)
+                    def manager=managerClass.getDeclaredConstructor().newInstance()
+                    def c=contextClass.getDeclaredConstructor().newInstance()
+                    def h=historyClass.getDeclaredConstructor(Integer.TYPE).newInstance(80)
+                    def r=manager.execute(s,row.text,h,c,modality)
+                    def expectedClarification=row.intent=='MEASURE_DISTANCE' || (row.intent=='FIND_MIDPOINT' && !row.parameters.containsKey('aCoords'))
+                    def missingPrior=[480,481,483,486,490,491].contains(row.id as Integer)
+                    def untouched=geometry(s)==geometry(r.state)
+                    def rejectedMutation=r.status.name()!='APPLIED' && (!untouched || h.forModule(s.module).protocol.size()!=0)
+                    [source_row:row.id,intent:row.intent,input:row.text,module:s.module.name(),actual_status:r.status.name(),actual_reply:r.message,
+                     suggestions:r.dialogue?.suggestions?.collect{[label:it.label,answer:it.answer]} ?: [],
+                     missing_prior_context_policy:missingPrior,prior_context_policy_verified:missingPrior ? (r.status.name()=='CLARIFICATION' && untouched && h.forModule(s.module).protocol.size()==0) : null,
+                     pending:r.dialogue?.pending ?: false,scene_unchanged:untouched,history_entries:h.forModule(s.module).protocol.size(),
+                     missing_named_endpoint_policy:expectedClarification,
+                     policy_verified:expectedClarification ? (r.status.name()=='CLARIFICATION' && untouched && h.forModule(s.module).protocol.size()==0) : null,
+                     rejected_request_mutated_geometry:rejectedMutation]
+                }
+                def sources=new File(appProject.rootDir,'app/src/main/java/com/indianservers/aiexplorer/assistant/workspace').listFiles().findAll{it.name.endsWith('.kt')}.collectEntries{f->[(appProject.rootDir.toPath().relativize(f.toPath()).toString().replace('\\','/')):java.security.MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString()]}
+                ['scripts/audit_ruhi_missing_contexts.init.gradle','app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSeed500Fixture.kt','app/src/debug/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogueSeedFixture.kt','app/src/main/java/com/indianservers/aiexplorer/workspace/WorkspaceProjectCodec.kt','app/src/main/java/com/indianservers/aiexplorer/workspace/Workspace.kt'].each { path -> sources[path]=java.security.MessageDigest.getInstance('SHA-256').digest(new File(appProject.rootDir,path).bytes).encodeHex().toString() }
+                def result=[cases:records.size(),named_endpoint_policy_cases:records.count{it.missing_named_endpoint_policy},named_endpoint_policy_verified:records.count{it.policy_verified==true},
+                    prior_context_policy_cases:records.count{it.missing_prior_context_policy},prior_context_policy_verified:records.count{it.prior_context_policy_verified==true},
+                    rejected_mutations:records.count{it.rejected_request_mutated_geometry},source_sha256:sources,results:records,
+                    scope:'All 500 unchanged commands in empty native workspaces and fresh conversation/history. Explicit oracle only for missing named distance/midpoint endpoints and no mutation on rejected requests; six original follow-up rows requiring absent prior context are separately checked for clarification; other statuses are exploratory, not verified mathematical behavior or full clarification/reply certification. Compiled production parser/engine; no Android TensorFlow/UI claim.']
+                new File(appProject.rootDir,'docs/qa/ruhi-500/missing-contexts-audit.json').text=groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(result))
+                println('Observed '+records.size()+' rows; named-endpoint policies '+result.named_endpoint_policy_verified+'/'+result.named_endpoint_policy_cases+'; rejected mutations '+result.rejected_mutations)
+            }finally{loader.close()}
+        }
+    }
+}

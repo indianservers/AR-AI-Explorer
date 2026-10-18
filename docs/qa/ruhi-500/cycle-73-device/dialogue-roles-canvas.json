@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "prior_native_radius": 2.75,
+  "cylinder_height_preserved": 6,
+  "corrected_cone_height": 7,
+  "cone_radius_preserved": 2,
+  "existing_native_solids_preserved": true,
+  "pending_restored": true
+}

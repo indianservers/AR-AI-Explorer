@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiCriticalPointTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:15.495Z" hostname="INDIANSERVERS" time="0.7">
+<testsuite name="com.indianservers.aiexplorer.RuhiCriticalPointTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:52.027Z" hostname="INDIANSERVERS" time="0.574">
   <properties/>
-  <testcase name="shiftedAndScaledNonExtremumCornersUseCurrentExpressions" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.333"/>
-  <testcase name="savedSelectedAnalysisFollowsFormulaEditsAndAnnotationUndoRedo" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.037"/>
-  <testcase name="domainPolesAreExcludedWhileFiniteRationalCornersRemain" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.051"/>
-  <testcase name="stationaryExcludesCornersEvenAtSmallAmplitudeAndIncludesSmoothBranchZeros" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.117"/>
-  <testcase name="canceledBranchesDoNotInventCriticalPointsAndNestedBranchesStaySmooth" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.067"/>
-  <testcase name="branchAwareSlopesAcceptSmoothZerosAndNearCornerCoordinatesButRejectCorners" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.003"/>
-  <testcase name="criticalIncludesOriginalPolynomialFiniteCornersAndSmoothAbsSquare" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.091"/>
+  <testcase name="shiftedAndScaledNonExtremumCornersUseCurrentExpressions" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.296"/>
+  <testcase name="savedSelectedAnalysisFollowsFormulaEditsAndAnnotationUndoRedo" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.034"/>
+  <testcase name="domainPolesAreExcludedWhileFiniteRationalCornersRemain" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.05"/>
+  <testcase name="stationaryExcludesCornersEvenAtSmallAmplitudeAndIncludesSmoothBranchZeros" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.1"/>
+  <testcase name="canceledBranchesDoNotInventCriticalPointsAndNestedBranchesStaySmooth" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.028"/>
+  <testcase name="branchAwareSlopesAcceptSmoothZerosAndNearCornerCoordinatesButRejectCorners" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.002"/>
+  <testcase name="criticalIncludesOriginalPolynomialFiniteCornersAndSmoothAbsSquare" classname="com.indianservers.aiexplorer.RuhiCriticalPointTest" time="0.064"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

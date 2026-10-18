@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiPreserveCubeTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:32.961Z" hostname="INDIANSERVERS" time="0.023">
+<testsuite name="com.indianservers.aiexplorer.RuhiPreserveCubeTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:11.351Z" hostname="INDIANSERVERS" time="0.028">
   <properties/>
-  <testcase name="privateValidationRejectsBroadEditThatWouldStillChangeProtectedCube" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.004"/>
-  <testcase name="contradictoryCubeOnlyPendingEditDoesNotExecuteAndCanBeCancelled" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.003"/>
-  <testcase name="preservingCubeRetainsExistingAnimationAndAppearanceRatherThanFreezingIt" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.002"/>
+  <testcase name="privateValidationRejectsBroadEditThatWouldStillChangeProtectedCube" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.003"/>
+  <testcase name="contradictoryCubeOnlyPendingEditDoesNotExecuteAndCanBeCancelled" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.004"/>
+  <testcase name="preservingCubeRetainsExistingAnimationAndAppearanceRatherThanFreezingIt" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.003"/>
   <testcase name="noPendingActionOrNoCubeAsksEssentialQuestionWithoutInventingEdit" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.001"/>
   <testcase name="staleConstraintClearsItsBindingsAndDoesNotMoveCurrentSolids" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.001"/>
-  <testcase name="severalRemainingTargetsRestoreBoundChoicesAndRejectProtectedTarget" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.004"/>
-  <testcase name="originalConstraintCompletesOnlyRemainingTargetAndUsesOneUndo" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.003"/>
-  <testcase name="twoCubesAskWhichToProtectThenApplyOnlyToTheOtherCube" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.004"/>
+  <testcase name="severalRemainingTargetsRestoreBoundChoicesAndRejectProtectedTarget" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.005"/>
+  <testcase name="originalConstraintCompletesOnlyRemainingTargetAndUsesOneUndo" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.005"/>
+  <testcase name="twoCubesAskWhichToProtectThenApplyOnlyToTheOtherCube" classname="com.indianservers.aiexplorer.RuhiPreserveCubeTest" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

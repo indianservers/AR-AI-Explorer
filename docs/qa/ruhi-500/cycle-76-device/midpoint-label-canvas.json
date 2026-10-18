@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "source_row": 168,
+  "saved_label_question": true,
+  "endpoint_bindings_preserved": true,
+  "unused_label_chip_clicked": true,
+  "existing_M_preserved": true,
+  "atomic_undo_redo": true,
+  "new_label": "Center907",
+  "created_point": [
+    2,
+    3
+  ],
+  "live_point": [
+    1,
+    2
+  ],
+  "chip_point": [
+    3,
+    4
+  ],
+  "native_parent_dependency": true,
+  "committed_capture": true
+}

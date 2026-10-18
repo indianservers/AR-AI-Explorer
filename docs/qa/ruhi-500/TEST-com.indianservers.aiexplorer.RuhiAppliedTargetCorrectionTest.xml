@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:11.723Z" hostname="INDIANSERVERS" time="0.316">
+<testsuite name="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:48.734Z" hostname="INDIANSERVERS" time="0.224">
   <properties/>
-  <testcase name="completedPositionRestoresWrongTargetAndMovesBlueWithTwoSeparateUndoSteps" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.069"/>
-  <testcase name="failedBlueReplayDoesNotPartiallyRestoreOriginalEditOrAddHistory" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.014"/>
-  <testcase name="restoredMultipleBlueChoicesAreBoundAndPreserveUnrelatedObjects" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.031"/>
-  <testcase name="missingSnapshotOrReadOnlyLatestTaskDoesNotInventRestoration" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.039"/>
-  <testcase name="noBlueDoesNotApplyOrCreateAnUndoEntry" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.011"/>
-  <testcase name="changingCoordinatesColorOrOrderRejectsStaleCorrectionWithoutUndoEntry" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.02"/>
-  <testcase name="translationAndRotationReplayOnActualBlueTargetPreservingItsOriginalPose" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.031"/>
-  <testcase name="twoDimensionalScalingRestoresControlPointsAndUsesBlueStableId" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.039"/>
-  <testcase name="unitDisplayBetweenEditAndCorrectionIsPreserved" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.024"/>
-  <testcase name="scaleUsesExactPreimageAndOriginalFactorOnDifferentBlueDimensions" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.038"/>
+  <testcase name="completedPositionRestoresWrongTargetAndMovesBlueWithTwoSeparateUndoSteps" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.054"/>
+  <testcase name="failedBlueReplayDoesNotPartiallyRestoreOriginalEditOrAddHistory" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.011"/>
+  <testcase name="restoredMultipleBlueChoicesAreBoundAndPreserveUnrelatedObjects" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.018"/>
+  <testcase name="missingSnapshotOrReadOnlyLatestTaskDoesNotInventRestoration" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.017"/>
+  <testcase name="noBlueDoesNotApplyOrCreateAnUndoEntry" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.007"/>
+  <testcase name="changingCoordinatesColorOrOrderRejectsStaleCorrectionWithoutUndoEntry" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.019"/>
+  <testcase name="translationAndRotationReplayOnActualBlueTargetPreservingItsOriginalPose" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.028"/>
+  <testcase name="twoDimensionalScalingRestoresControlPointsAndUsesBlueStableId" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.03"/>
+  <testcase name="unitDisplayBetweenEditAndCorrectionIsPreserved" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.013"/>
+  <testcase name="scaleUsesExactPreimageAndOriginalFactorOnDifferentBlueDimensions" classname="com.indianservers.aiexplorer.RuhiAppliedTargetCorrectionTest" time="0.026"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

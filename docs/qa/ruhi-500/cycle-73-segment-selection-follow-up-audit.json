@@ -1,0 +1,98 @@
+{
+  "cases": 4,
+  "verified": 2,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "d95467e852f416f7afb0265ce29fff843a1bd2237eb83c3d8c01d70431d7618b",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiSlopeLanguage.kt": "136d491687fab2f3d545034f864c65f21b79f02d7f49641c53e2be490ec585c3",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": "fe3fed7aee46af3366be3879fd3e12d04318986b92b532556fa907bcbece17e3",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "7f8e4272fb68034537d27ff668cf0089e2d97e099ccb34df2bca6af136e7aee4"
+  },
+  "results": [
+    {
+      "source_row": 162,
+      "case_name": "valid_selected_control",
+      "input": "Mark the midpoint of the selected segment",
+      "selection_reply": null,
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "expected_slope": null,
+      "expected_target": "selected_segment",
+      "question_status": "APPLIED",
+      "question_reply": "Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "question_suggestions": [],
+      "actual_status": "APPLIED",
+      "actual_intent": "FIND_MIDPOINT",
+      "actual_reply": "Midpoint Mid1 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "actual_point": [
+        0.5,
+        0.5
+      ],
+      "actual_slope": null,
+      "history_entries": 1,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 162,
+      "case_name": "missing_selection_reply",
+      "input": "Mark the midpoint of the selected segment",
+      "selection_reply": "AB",
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "expected_slope": null,
+      "expected_target": "selected_segment",
+      "question_status": "CLARIFICATION",
+      "question_reply": "Select a line segment first.",
+      "question_suggestions": [],
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "actual_point": null,
+      "actual_slope": null,
+      "history_entries": 0,
+      "behavior_verified": false
+    },
+    {
+      "source_row": 179,
+      "case_name": "valid_selected_control",
+      "input": "Measure the slope of the selected line",
+      "selection_reply": null,
+      "expected_point": null,
+      "expected_slope": 1.0,
+      "expected_target": "selected_line",
+      "question_status": "APPLIED",
+      "question_reply": "Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).",
+      "question_suggestions": [],
+      "actual_status": "APPLIED",
+      "actual_intent": "CALCULATE_SLOPE",
+      "actual_reply": "Slope = 1.0; rise = 1.0, run = 1.0. Increasing (positive slope).",
+      "actual_point": null,
+      "actual_slope": 1.0,
+      "history_entries": 0,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 179,
+      "case_name": "missing_selection_reply",
+      "input": "Measure the slope of the selected line",
+      "selection_reply": "AB",
+      "expected_point": null,
+      "expected_slope": 1.0,
+      "expected_target": "selected_line",
+      "question_status": "CLARIFICATION",
+      "question_reply": "Select a line segment first.",
+      "question_suggestions": [],
+      "actual_status": "UNSUPPORTED",
+      "actual_intent": null,
+      "actual_reply": "That operation is not connected to this studio adapter yet. Existing tools remain available.",
+      "actual_point": null,
+      "actual_slope": null,
+      "history_entries": 0,
+      "behavior_verified": false
+    }
+  ],
+  "scope": "Original selected-segment midpoint/slope rows 162 and 179, valid selected controls and missing-selection AB-label replies. Current native segment AB exists. Independent values, original target roles and history checks. Compiled parser/engine probe without Android TensorFlow or UI."
+}

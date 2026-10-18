@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "cases": 6,
+  "results": [
+    {
+      "family": "derivative",
+      "formula_reply": "y=x^2",
+      "expected": 4,
+      "actual": 4,
+      "passed": true
+    },
+    {
+      "family": "derivative",
+      "formula_reply": "y equals x squared",
+      "expected": 4,
+      "actual": 4,
+      "passed": true
+    },
+    {
+      "family": "derivative",
+      "formula_reply": "x squared",
+      "expected": 4,
+      "actual": 4,
+      "passed": true
+    },
+    {
+      "family": "integral",
+      "formula_reply": "y=x^2",
+      "expected": 2.6666666666666665,
+      "actual": 2.6666666666666665,
+      "passed": true
+    },
+    {
+      "family": "integral",
+      "formula_reply": "y equals x squared",
+      "expected": 2.6666666666666665,
+      "actual": 2.6666666666666665,
+      "passed": true
+    },
+    {
+      "family": "integral",
+      "formula_reply": "x squared",
+      "expected": 2.6666666666666665,
+      "actual": 2.6666666666666665,
+      "passed": true
+    }
+  ],
+  "original_wording_preserved": true,
+  "saved_pending_roles": true,
+  "derivative_x": 1.5,
+  "derivative_y": 9.75,
+  "derivative_slope": 11,
+  "integral_area": 21,
+  "integral_bounds": [
+    1,
+    4
+  ],
+  "native_shading": true,
+  "committed_capture": true
+}

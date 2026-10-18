@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:07:52.595Z" hostname="INDIANSERVERS" time="0.117">
+  <properties/>
+  <testcase name="cancellationModuleChangeAndNewPurposeDoNotConsumeAbandonedSegmentQuestion" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.011"/>
+  <testcase name="invalidStaleAmbiguousAndIncompatibleRepliesDoNotSubstitutePointPairsOrCreateAnything" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.016"/>
+  <testcase name="removedOrChangedSelectedObjectReasksButPreservesChosenReplacementLabel" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.01"/>
+  <testcase name="lexicalUnicodeAndSpacedObjectNamesStaySelectionEntities" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.06"/>
+  <testcase name="originalSelectedLineSlopeChipUsesStableIdAfterRenameAndReorderWithoutHistory" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.004"/>
+  <testcase name="selectedObjectIdSurvivesLabelQuestionAndIgnoresUnrelatedNewSelection" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.007"/>
+  <testcase name="coloredSelectionKeepsColorConstraintAndRejectsWrongNativeObject" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.003"/>
+  <testcase name="originalSelectedSegmentMidpointResumesPlainNameAfterReloadWithCurrentParentsAndOneUndo" classname="com.indianservers.aiexplorer.RuhiSegmentSelectionFollowUpTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

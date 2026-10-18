@@ -1,0 +1,90 @@
+{
+  "cases": 3,
+  "verified": 3,
+  "source_sha256": {
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiGeometry2DLanguage.kt": "d95467e852f416f7afb0265ce29fff843a1bd2237eb83c3d8c01d70431d7618b",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiPointLanguage.kt": "c282a53f337eaeef07b2df026a513edd22e9835a17ace957f6d11a96f4b992a2",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiEndpointConversation.kt": "fe3fed7aee46af3366be3879fd3e12d04318986b92b532556fa907bcbece17e3",
+    "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "7f8e4272fb68034537d27ff668cf0089e2d97e099ccb34df2bca6af136e7aee4"
+  },
+  "results": [
+    {
+      "source_row": 168,
+      "case_name": "original_valid_control",
+      "input": "Label the middle of AB as M",
+      "label_reply": null,
+      "expected_label": "M",
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "actual_point": [
+        0.5,
+        0.5
+      ],
+      "question_status": "APPLIED",
+      "question_reply": "Midpoint M = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "question_suggestions": [],
+      "actual_status": "APPLIED",
+      "actual_intent": "FIND_MIDPOINT",
+      "actual_reply": "Midpoint M = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "history_entries": 1,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 168,
+      "case_name": "existing_label",
+      "input": "Label the middle of AB as M",
+      "label_reply": "Center907",
+      "expected_label": "Center907",
+      "expected_point": [
+        0.5,
+        0.5
+      ],
+      "actual_point": [
+        0.5,
+        0.5
+      ],
+      "question_status": "CLARIFICATION",
+      "question_reply": "Point M already exists. Choose an unused midpoint label.",
+      "question_suggestions": [
+        "Mid1",
+        "Mid2",
+        "Mid3"
+      ],
+      "actual_status": "APPLIED",
+      "actual_intent": "FIND_MIDPOINT",
+      "actual_reply": "Midpoint Center907 = (0.5, 0.5). Marked on the canvas; it follows both endpoints.",
+      "history_entries": 1,
+      "behavior_verified": true
+    },
+    {
+      "source_row": 168,
+      "case_name": "endpoint_then_label",
+      "input": "Label the middle of AB as M",
+      "label_reply": "Center907",
+      "expected_label": "Center907",
+      "expected_point": [
+        3.0,
+        4.0
+      ],
+      "actual_point": [
+        3.0,
+        4.0
+      ],
+      "question_status": "CLARIFICATION",
+      "question_reply": "Point M already exists. Choose an unused midpoint label.",
+      "question_suggestions": [
+        "Mid1",
+        "Mid2",
+        "Mid3"
+      ],
+      "actual_status": "APPLIED",
+      "actual_intent": "FIND_MIDPOINT",
+      "actual_reply": "Midpoint Center907 = (3.0, 4.0). Marked on the canvas; it follows both endpoints.",
+      "history_entries": 1,
+      "behavior_verified": true
+    }
+  ],
+  "scope": "Original row 168 valid control and existing-label clarification, including a preceding unresolved-endpoint answer. Independent coordinates and preservation/history checks. Compiled parser/engine probe without Android TensorFlow or UI."
+}

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:32.469Z" hostname="INDIANSERVERS" time="0.042">
+<testsuite name="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:10.775Z" hostname="INDIANSERVERS" time="0.032">
   <properties/>
-  <testcase name="savedSuggestedLabelThatBecameOccupiedIsReaskedWithoutAnEdit" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.008"/>
-  <testcase name="invalidOrUsedReplacementLabelsPreserveQuestionWithoutPointOrHistoryChanges" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.008"/>
-  <testcase name="cancellationNewOperationAndStudioChangeDoNotCreateAnAbandonedMidpoint" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.003"/>
-  <testcase name="lexicalUnicodeAndNumberWordLabelsAreValuesRatherThanNewCommands" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.013"/>
-  <testcase name="chosenReplacementLabelSurvivesAnotherEndpointQuestionAfterParentNamesChange" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.003"/>
+  <testcase name="savedSuggestedLabelThatBecameOccupiedIsReaskedWithoutAnEdit" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.004"/>
+  <testcase name="invalidOrUsedReplacementLabelsPreserveQuestionWithoutPointOrHistoryChanges" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.007"/>
+  <testcase name="cancellationNewOperationAndStudioChangeDoNotCreateAnAbandonedMidpoint" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.002"/>
+  <testcase name="lexicalUnicodeAndNumberWordLabelsAreValuesRatherThanNewCommands" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.01"/>
+  <testcase name="chosenReplacementLabelSurvivesAnotherEndpointQuestionAfterParentNamesChange" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.002"/>
   <testcase name="originalLabelCollisionOffersUnusedNamesAndResumesSavedConstructionAtomically" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.002"/>
-  <testcase name="endpointThenLabelQuestionRetainsBindingsAndReadsCurrentParentsAfterRestore" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.003"/>
+  <testcase name="endpointThenLabelQuestionRetainsBindingsAndReadsCurrentParentsAfterRestore" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.002"/>
   <testcase name="unlabelledNativeFallbackNamesAreAlsoReservedAndOriginalFreeLabelStillExecutes" classname="com.indianservers.aiexplorer.RuhiMidpointLabelFollowUpTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

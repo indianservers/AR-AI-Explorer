@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "source_rows": [
+    162,
+    179
+  ],
+  "saved_object_chip": true,
+  "plain_name_reply": true,
+  "native_shape_id": "native-segment,\/907",
+  "original_target_roles": true,
+  "current_coordinates": true,
+  "midpoint": [
+    2,
+    3
+  ],
+  "edited_midpoint": [
+    1,
+    2
+  ],
+  "native_parent_dependency": true,
+  "atomic_undo_redo": true,
+  "slope": 1.5,
+  "slope_query_no_undo": true,
+  "shapes_preserved": true,
+  "committed_capture": true
+}

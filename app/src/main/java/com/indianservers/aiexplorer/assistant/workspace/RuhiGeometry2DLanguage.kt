@@ -4,13 +4,24 @@ import com.indianservers.aiexplorer.core.*
 import com.indianservers.aiexplorer.workspace.*
 import kotlin.math.*
 
-internal class RuhiReferenceQuestion(message:String,val missing:List<String> = emptyList(),val choices:List<RuhiAnswerChip> = emptyList(),val endpointToken:String?=null,val midpointLabel:String?=null):IllegalStateException(message)
+internal class RuhiReferenceQuestion(message:String,val missing:List<String> = emptyList(),val choices:List<RuhiAnswerChip> = emptyList(),val endpointToken:String?=null,val midpointLabel:String?=null,val segmentSelection:Boolean=false):IllegalStateException(message)
 internal data class RuhiEndpoint(val name:String,val position:Vec2,val index:Int?)
 internal data class RuhiEndpointPair(val first:RuhiEndpoint,val second:RuhiEndpoint,val parameters:Map<String,Any>)
 
 /** Resolve references from the current scene. No A/B/C/D vocabulary is built into this resolver. */
 internal class RuhiEndpointResolver(private val s:WorkspaceState,private val c:RuhiSceneContext,private val bindings:Map<String,Pair<String,String>> = emptyMap()) {
     companion object {
+        fun selectableShapes(s:WorkspaceState,source:String):List<Shape2D> {
+            val lower=source.lowercase()
+            val color=when { lower.contains("blue line")->"blue";lower.contains("red line")->"red";else->null }
+            return s.shapes.filter{shape->
+                shape.type in setOf(Shape2DType.Segment,Shape2DType.Line,Shape2DType.Ray)&&
+                    shape.id.length in 1..2000&&s.shapes.count{it.id==shape.id}==1&&
+                    shape.pointIndices.size==2&&shape.pointIndices.distinct().size==2&&
+                    shape.pointIndices.all{i->i in s.points.indices&&listOf(s.points[i].x,s.points[i].y).all{it.isFinite()&&abs(it)<=10000}}&&
+                    (color==null||shape.styleKey.equals(color,true)||shape.styleKey.equals(if(color=="blue")"#0000FF" else "#FF0000",true))
+            }
+        }
         fun references(s:WorkspaceState):List<Pair<String,Int>> {
             val named=s.labSessionValues.entries.filter{it.key.startsWith(StudioReferenceMetadata.POINT_PREFIX)}.mapNotNull{e->e.value.toIntOrNull()?.takeIf{it in s.points.indices}?.let{e.key.removePrefix(StudioReferenceMetadata.POINT_PREFIX) to it}}
             return named+s.points.indices.filter{i->named.none{it.second==i}}.map{"P${it+1}" to it}
@@ -54,16 +65,16 @@ internal class RuhiEndpointResolver(private val s:WorkspaceState,private val c:R
             val p=tuples.map{m->val values=m.groupValues[1].split(',').map{it.trim().toDoubleOrNull() ?: throw IllegalArgumentException("Use numeric coordinates.")};require(values.size==2&&values.all{it.isFinite()&&abs(it)<=10000}){"Provide two finite 2D coordinates within 10000 units."};Vec2(values[0],values[1])}
             return RuhiEndpointPair(RuhiEndpoint("given first point",p[0],null),RuhiEndpoint("given second point",p[1],null),mapOf("aCoords" to listOf(p[0].x,p[0].y),"bCoords" to listOf(p[1].x,p[1].y)))
         }
-        val lines=s.shapes.filter{it.type in setOf(Shape2DType.Segment,Shape2DType.Line,Shape2DType.Ray)&&it.pointIndices.size==2}
+        val lines=selectableShapes(s,source)
         if(lower.contains("blue line")||lower.contains("red line")) {
             val color=if(lower.contains("blue"))"blue" else "red";val hex=if(color=="blue")"#0000FF" else "#FF0000"
             val choices=lines.filter{it.styleKey.equals(color,true)||it.styleKey.equals(hex,true)}
-            val chosen=choices.singleOrNull() ?: choices.singleOrNull{it.id==c.selectedShapeId} ?: throw RuhiReferenceQuestion("Choose one $color segment first.")
+            val chosen=choices.singleOrNull() ?: choices.singleOrNull{it.id==c.selectedShapeId} ?: throw RuhiReferenceQuestion("Choose one $color segment first.",segmentSelection=true)
             return fromShape(chosen,if(color=="blue")"blue_segment" else "red_line")
         }
         if(Regex("\\b(last|newest) (?:line|segment)\\b|line i just drew").containsMatchIn(lower))return fromShape(lines.lastOrNull() ?: throw RuhiReferenceQuestion("Draw a segment first."),if(lower.contains("last line"))"last_line" else "last_segment")
         if(Regex("\\b(selected|this|current) (?:vertical |horizontal )?(?:line|segment|graph)\\b|without showing the full line").containsMatchIn(lower)) {
-            val selected=lines.singleOrNull{it.id==c.selectedShapeId} ?: throw RuhiReferenceQuestion("Select a line segment first.")
+            val selected=lines.singleOrNull{it.id==c.selectedShapeId} ?: throw RuhiReferenceQuestion("Select a line segment first.",segmentSelection=true)
             return fromShape(selected,if(lower.contains("segment")||lower.contains("without showing"))"selected_segment" else "selected_line")
         }
         Regex("(?i)\\b(?:between|from|connecting) (?:points? )?($label) (?:and|to) (?:point )?($label)\\b").find(t)?.let{m->val a=point(m.groupValues[1]);val b=point(m.groupValues[2]);return RuhiEndpointPair(a,b,mapOf("a" to a.name,"b" to b.name))}
@@ -124,7 +135,7 @@ object RuhiGeometry2DLanguage {
             return RuhiExecutionResult(committed,GraphCommandStatus.APPLIED,"Midpoint $name = (${p.x}, ${p.y}). Marked on the canvas${if(dependency.isNotEmpty())"; it follows both endpoints" else ""}${if(split)" and divided the segment into two equal parts" else ""}.",RuhiCommand(engine=RuhiEngine.GEOMETRY_2D,operation=RuhiOperation.PointQuery(frame),modality=modality,intentProposal=cue),c,RuhiDialogueView(RuhiDialogueAction.EXECUTE,languageProposal=cue),frame)
         } catch(e:RuhiReferenceQuestion) {
             val chips=e.missing.distinct().take(2).map{RuhiAnswerChip("Create point $it","Create point $it at ")}
-            return RuhiExecutionResult(s,GraphCommandStatus.CLARIFICATION,e.message ?: "Choose the endpoints.",context=c,dialogue=RuhiDialogueView(RuhiDialogueAction.ASK_CLARIFICATION,chips,languageProposal=cue),semanticFrame=when{e.midpointLabel!=null->frame.copy(parameters=frame.parameters+("midpoint_label" to e.midpointLabel));e.endpointToken!=null->frame.copy(parameters=frame.parameters+("endpoint_reference" to e.endpointToken));else->frame})
+            return RuhiExecutionResult(s,GraphCommandStatus.CLARIFICATION,e.message ?: "Choose the endpoints.",context=c,dialogue=RuhiDialogueView(RuhiDialogueAction.ASK_CLARIFICATION,chips,languageProposal=cue),semanticFrame=when{e.segmentSelection->frame.copy(parameters=frame.parameters+("segment_selection" to true));e.midpointLabel!=null->frame.copy(parameters=frame.parameters+("midpoint_label" to e.midpointLabel));e.endpointToken!=null->frame.copy(parameters=frame.parameters+("endpoint_reference" to e.endpointToken));else->frame})
         } catch(e:IllegalArgumentException){return RuhiExecutionResult(s,GraphCommandStatus.INVALID,e.message ?: "Invalid midpoint input.",context=c,semanticFrame=frame)}
     }
 }

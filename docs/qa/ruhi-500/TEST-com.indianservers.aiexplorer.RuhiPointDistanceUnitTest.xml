@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-17T19:17:32.659Z" hostname="INDIANSERVERS" time="0.017">
+<testsuite name="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:33:11.013Z" hostname="INDIANSERVERS" time="0.016">
   <properties/>
   <testcase name="coincidentNamedEndpointsStillProduceZeroCentimeters" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.001"/>
   <testcase name="legacySchemaFiveMemoryStillReadsWithoutDistanceBindings" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.0"/>
@@ -7,10 +7,10 @@
   <testcase name="distanceBindingsStaySeparateAcrossWorkspaceModules" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.002"/>
   <testcase name="unitUndoAndModuleScopeAreObservedByTheNextPointQuery" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.002"/>
   <testcase name="sameUtteranceUsesCurrentCoordinatesInBothDimensionsAndNeverCubicScaling" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.002"/>
-  <testcase name="confirmedCentimeterCounterexampleReturnsConvertedDistanceAndTypedRoles" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.001"/>
-  <testcase name="currentDistanceConvertsImmediatelyAfterRestorationAndParentEditWithoutRequery" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.003"/>
-  <testcase name="unknownCoordinateUnitsRetainGenericUnitsWithoutAssumingMeters" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.0"/>
-  <testcase name="lostEndpointDoesNotReuseCachedDistanceDuringUnitConversion" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.001"/>
+  <testcase name="confirmedCentimeterCounterexampleReturnsConvertedDistanceAndTypedRoles" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.0"/>
+  <testcase name="currentDistanceConvertsImmediatelyAfterRestorationAndParentEditWithoutRequery" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.002"/>
+  <testcase name="unknownCoordinateUnitsRetainGenericUnitsWithoutAssumingMeters" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.001"/>
+  <testcase name="lostEndpointDoesNotReuseCachedDistanceDuringUnitConversion" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.002"/>
   <testcase name="pointQueryAndExistingSelectedSegmentLabelAgreeAfterSaveAndParentEdit" classname="com.indianservers.aiexplorer.RuhiPointDistanceUnitTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

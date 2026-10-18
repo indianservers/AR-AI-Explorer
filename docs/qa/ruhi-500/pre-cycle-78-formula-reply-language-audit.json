@@ -1,0 +1,99 @@
+{
+    "cases": 6,
+    "verified": 6,
+    "source_sha256": {
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiIntegralLanguage.kt": "99c6b2c1d3228c5b7563591a0b6202dbce6de933aed7206fa37abdb4c5b6f78a",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDerivativeLanguage.kt": "f1946aacd827ace5b5bde14ad050f507d8e8a1d6b72e8bb89571fc5dd87dc5ba",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFunctionLanguage.kt": "124ee137172565f7779835a7b05ccc132974fa1596d283cec789ef2bfb4b7033",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiMathLanguage.kt": "16323bacd60c8c15a467aa214c00b2a44bfc5d75d3ed7d0c1cea680c1e5804c7",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiDialogue.kt": "d0cad57c59406026a2ef891e02d2588d52d2908b944a2b47248dadf3df0efbe2",
+        "app/src/main/java/com/indianservers/aiexplorer/assistant/workspace/RuhiFormulaReply.kt": "ad2479f33a1ac24fbfadadc5cc86cef803d52afffc786aa72d549c9c66d84f49"
+    },
+    "results": [
+        {
+            "source_row": 364,
+            "intent": "INTEGRATE",
+            "input": "Integrate the selected function",
+            "formula_reply": "y=x^2",
+            "expected_value": 2.6666666666666665,
+            "actual_value": 2.6666666666666665,
+            "formula_status": "CLARIFICATION",
+            "formula_reply_message": "What lower and upper x bounds should I use?",
+            "actual_status": "APPLIED",
+            "actual_intent": "INTEGRATE",
+            "actual_reply": "Signed integral = 2.6666666666666665; absolute area = 2.6666666666666665; positive area = 2.6666666666666665; negative area = 0.0; numerical error estimate = 2.459783678826488E-19.",
+            "behavior_verified": true
+        },
+        {
+            "source_row": 364,
+            "intent": "INTEGRATE",
+            "input": "Integrate the selected function",
+            "formula_reply": "y equals x squared",
+            "expected_value": 2.6666666666666665,
+            "actual_value": 2.6666666666666665,
+            "formula_status": "CLARIFICATION",
+            "formula_reply_message": "What lower and upper x bounds should I use?",
+            "actual_status": "APPLIED",
+            "actual_intent": "INTEGRATE",
+            "actual_reply": "Signed integral = 2.6666666666666665; absolute area = 2.6666666666666665; positive area = 2.6666666666666665; negative area = 0.0; numerical error estimate = 2.459783678826488E-19.",
+            "behavior_verified": true
+        },
+        {
+            "source_row": 364,
+            "intent": "INTEGRATE",
+            "input": "Integrate the selected function",
+            "formula_reply": "x squared",
+            "expected_value": 2.6666666666666665,
+            "actual_value": 2.6666666666666665,
+            "formula_status": "CLARIFICATION",
+            "formula_reply_message": "What lower and upper x bounds should I use?",
+            "actual_status": "APPLIED",
+            "actual_intent": "INTEGRATE",
+            "actual_reply": "Signed integral = 2.6666666666666665; absolute area = 2.6666666666666665; positive area = 2.6666666666666665; negative area = 0.0; numerical error estimate = 2.459783678826488E-19.",
+            "behavior_verified": true
+        },
+        {
+            "source_row": 330,
+            "intent": "DIFFERENTIATE",
+            "input": "Plot the derivative of the selected curve",
+            "formula_reply": "y=x^2",
+            "expected_value": 4.0,
+            "actual_value": 4.0,
+            "formula_status": "APPLIED",
+            "formula_reply_message": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+            "actual_status": "APPLIED",
+            "actual_intent": "DIFFERENTIATE",
+            "actual_reply": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+            "behavior_verified": true
+        },
+        {
+            "source_row": 330,
+            "intent": "DIFFERENTIATE",
+            "input": "Plot the derivative of the selected curve",
+            "formula_reply": "y equals x squared",
+            "expected_value": 4.0,
+            "actual_value": 4.0,
+            "formula_status": "APPLIED",
+            "formula_reply_message": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+            "actual_status": "APPLIED",
+            "actual_intent": "DIFFERENTIATE",
+            "actual_reply": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+            "behavior_verified": true
+        },
+        {
+            "source_row": 330,
+            "intent": "DIFFERENTIATE",
+            "input": "Plot the derivative of the selected curve",
+            "formula_reply": "x squared",
+            "expected_value": 4.0,
+            "actual_value": 4.0,
+            "formula_status": "APPLIED",
+            "formula_reply_message": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+            "actual_status": "APPLIED",
+            "actual_intent": "DIFFERENTIATE",
+            "actual_reply": "Derivative: 2*x. Defined where the original function and derivative are finite.",
+            "behavior_verified": true
+        }
+    ],
+    "scope": "Original selected-analysis rows 330 and 364 with formal/control and mathematical-word formula replies. Independent derivative at x=2 and definite integral on [0,2]. Compiled parser/engine development probe, without Android TensorFlow, microphone or UI."
+}

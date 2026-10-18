@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.indianservers.aiexplorer.ComputationalBreadthCasTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-18T17:32:43.885Z" hostname="INDIANSERVERS" time="0.085">
+  <properties/>
+  <testcase name="evaluatesExactFiniteSumsAndProducts" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.013"/>
+  <testcase name="domainAndBranchAnalysisFollowsNotebookExpressions" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.003"/>
+  <testcase name="solvesRecurrencesOptimizationAndClassifiesPdes" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.004"/>
+  <testcase name="matrixBreadthIncludesEigenvectorsJordanAndSvd" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.016"/>
+  <testcase name="solvesFactoredPolynomialAndRationalInequalitiesByExactSignCharts" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.013"/>
+  <testcase name="supportsFourierPairsSpecialFunctionsAndNumberTheory" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.008"/>
+  <testcase name="broadensIntegrationLimitsAndDifferentialEquationsWithVerificationSteps" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.006"/>
+  <testcase name="computesSeriesAndAsymptoticsWithExplicitRemainders" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.006"/>
+  <testcase name="exposesFiniteAlgebraAndExactAlgebraicRootObjects" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.002"/>
+  <testcase name="solvesMultiVariableNonlinearSystemsThroughDependencyElimination" classname="com.indianservers.aiexplorer.ComputationalBreadthCasTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -557,6 +557,7 @@ internal fun Projected3DCanvas(
     ruhiAngles: List<com.indianservers.aiexplorer.assistant.workspace.RuhiSpatialAngleLanguage.Drawing> = emptyList(),
     selectedVectorIds: Set<String> = emptySet(),
     planePatches:List<com.indianservers.aiexplorer.workspace.NativePlaneGeometry.Plane> = emptyList(),
+    linearObjects:List<com.indianservers.aiexplorer.workspace.NativeLinearGeometry.Display> = emptyList(),
     selectedPlaneIds:Set<String> = emptySet(),
     ruhiMeasurements: com.indianservers.aiexplorer.assistant.workspace.RuhiSolidMeasureLanguage.Drawing? = null,
     measurementUnits: com.indianservers.aiexplorer.workspace.GeometryMeasurementUnits.Context = com.indianservers.aiexplorer.workspace.GeometryMeasurementUnits.Context(),
@@ -586,7 +587,7 @@ internal fun Projected3DCanvas(
     val currentSectionPlane by rememberUpdatedState(sectionPlane)
     val currentSelectedIndex by rememberUpdatedState(selectedIndex)
     val currentVisibleSolidIndices by rememberUpdatedState(visibleSolidIndices)
-    val structuredDescription = remember(solids, vectors, points3D, subSelection, selectedIndex, selectedVectorIndex, selectedPoint3DIndex) {
+    val structuredDescription = remember(solids, vectors, points3D, linearObjects, subSelection, selectedIndex, selectedVectorIndex, selectedPoint3DIndex) {
         val selectedHit = subSelection?.let { selection ->
             solids.getOrNull(selection.solidIndex)?.let { solid ->
                 val mode = when (selection.mode) { Selection3DMode.Vertex -> SpatialSubObjectType.Vertex; Selection3DMode.Edge -> SpatialSubObjectType.Edge; Selection3DMode.Face -> SpatialSubObjectType.Face; Selection3DMode.Object -> SpatialSubObjectType.Face }
@@ -596,7 +597,8 @@ internal fun Projected3DCanvas(
         val solidDescription = com.indianservers.aiexplorer.core.SpatialAccessibilityEngine.describe(solids, selectedHit).joinToString(". ") { node -> node.description + ". " + node.measurements.joinToString() }
         val vectorDescription = vectors.joinToString(". ") { vector -> "Vector ${vector.name} from (${trim(vector.start.x)}, ${trim(vector.start.y)}, ${trim(vector.start.z)}) to (${trim(vector.end.x)}, ${trim(vector.end.y)}, ${trim(vector.end.z)})" }
         val pointDescription = points3D.joinToString(". ") { point -> "Point ${point.name} at (${trim(point.position.x)}, ${trim(point.position.y)}, ${trim(point.position.z)})" }
-        listOf(solidDescription, vectorDescription, pointDescription).filter { it.isNotBlank() }.joinToString(". ")
+        val linearDescription=linearObjects.joinToString(". "){"${it.linear.kind} ${it.linear.name}, linked to current defining points"}
+        listOf(solidDescription, vectorDescription, pointDescription, linearDescription).filter { it.isNotBlank() }.joinToString(". ")
     }
     Canvas(
         modifier
@@ -876,6 +878,27 @@ internal fun Projected3DCanvas(
     ) {
         val center = Offset(size.width * .52f, size.height * .45f) + cameraPan
         if (showGrid) drawPerspectiveGrid(center, gridSize, visualEffects, axisStyle)
+        linearObjects.forEachIndexed { index,obj ->
+            fun screen(v:Vec3)=project(rotate(v,rx,ry,rz),center,74f*zoom,perspective)
+            val start=screen(obj.start);val end=screen(obj.end)
+            if(listOf(start.x,start.y,end.x,end.y).all{it.isFinite()}) {
+                val color=WorkspaceVisualStyles.spectralColor(index+3)
+                drawLine(color,start,end,3f)
+                fun arrow(tip:Offset,other:Offset) {
+                    val d=tip-other;val length=d.getDistance()
+                    if(length>1f) {
+                        val u=d/length;val n=Offset(-u.y,u.x)
+                        drawLine(color,tip,tip-u*14f+n*7f,3f)
+                        drawLine(color,tip,tip-u*14f-n*7f,3f)
+                    }
+                }
+                if(obj.arrowStart)arrow(start,end)
+                if(obj.arrowEnd)arrow(end,start)
+                val middle=(start+end)*.5f
+                if(middle.x in 0f..size.width && middle.y in 0f..size.height)
+                    drawGraphLabel("${obj.linear.kind} ${obj.linear.name}",middle+Offset(12f,-18f),color)
+            }
+        }
         val planeLabelBounds=mutableListOf<androidx.compose.ui.geometry.Rect>()
         planePatches.forEachIndexed { index,plane->
             val color=if(plane.id in selectedPlaneIds)WorkspaceVisualStyles.ReferenceYellow else WorkspaceVisualStyles.spectralColor(index+2)
@@ -2059,10 +2082,12 @@ internal fun Float.wrapDegrees(): Float {
     return value
 }
 
-private fun project(p: Vec3, center: Offset, scale: Float, perspective: Boolean = true): Offset {
+private fun project(p: Vec3, center: Offset, scale: Float, perspective: Boolean = true): Offset = projectSpatialPoint(p,center,scale,perspective)
+
+internal fun projectSpatialPoint(p: Vec3, center: Offset, scale: Float, perspective: Boolean = true): Offset {
     val depthScale = if (perspective) 1.0 / (1.0 + (p.z + 5.0) * 0.08) else 1.0
     val depthLift = if (perspective) p.z * 18 else p.z * 10
-    return Offset((center.x + p.x * scale * depthScale).toFloat(), (center.y - p.y * scale * depthScale + depthLift).toFloat())
+    return Offset((center.x + p.x * scale * depthScale).toFloat(), (center.y + (-p.y * scale + depthLift) * depthScale).toFloat())
 }
 
 internal fun snapAngle(value: Float): Float = (kotlin.math.round(value / 1f) * 1f).coerceIn(-180f, 180f)
