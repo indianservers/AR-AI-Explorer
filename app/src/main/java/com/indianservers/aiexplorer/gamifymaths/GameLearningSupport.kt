@@ -36,7 +36,7 @@ internal object GameLearningCoach {
             "median" in normalized ->
                 Triple("Find the centre of an ordered data set.", "Sort first. For an even count, average the two middle values.", "Count equally inward from both ends of the ordered list.")
             "range" in normalized ->
-                Triple("Measure the spread from the smallest to largest value.", "Identify the maximum and minimum before subtracting.", "Your range cannot exceed the maximum or be negative.")
+                Triple("Measure the spread from the smallest to largest value.", "Identify the maximum and minimum before subtracting.", "Range = maximum − minimum, even for negative readings; it cannot be negative.")
             "probab" in normalized || "chance" in normalized || "coin" in normalized || "die" in normalized || "card" in normalized ->
                 Triple("Compare favourable outcomes with all equally likely outcomes.", "Write the sample space, then mark favourable outcomes.", "Probability = favourable ÷ total; confirm it lies from 0 to 1.")
             "fraction" in normalized || "/" in prompt ->

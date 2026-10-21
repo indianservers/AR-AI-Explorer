@@ -1,0 +1,98 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest:
+INSTRUMENTATION_STATUS: test=wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Overflow: [function-machine / level=119 scroll=8.0, function-machine / level=120 scroll=8.0, function-machine / level=121 scroll=8.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: Overflow: [function-machine / level=119 scroll=8.0, function-machine / level=120 scroll=8.0, function-machine / level=121 scroll=8.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=5
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 45.025
+There was 1 failure:
+1) expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: Overflow: [function-machine / level=119 scroll=8.0, function-machine / level=120 scroll=8.0, function-machine / level=121 scroll=8.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+
+FAILURES!!!
+Tests run: 5,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

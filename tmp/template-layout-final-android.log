@@ -1,0 +1,41 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Overflow: [balance / level=119 scroll=3.0, balance / level=120 scroll=3.0, balance / level=121 scroll=3.0, vectors / level=119 scroll=20.666666, vectors / level=120 scroll=20.666666, vectors / level=121 scroll=20.666666, patterns / level=119 scroll=25.333334, patterns / level=120 scroll=25.333334, patterns / level=121 scroll=25.333334, chance / level=119 scroll=14.0, chance / level=120 scroll=14.0, chance / level=121 scroll=14.0, logic / level=120 scroll=5.6666665, logic / level=121 scroll=5.6666665, times-table / level=121 scroll=6.0, function-machine / level=119 scroll=26.0, function-machine / level=120 scroll=26.0, function-machine / level=121 scroll=26.0, calculus-climber / level=119 scroll=5.0, calculus-climber / level=120 scroll=5.0, calculus-climber / level=121 scroll=5.0, number-theory / level=119 scroll=2.0, number-theory / level=120 scroll=22.0, number-theory / level=121 scroll=22.0, combinatorics / level=119 scroll=23.0, combinatorics / level=120 scroll=42.0, combinatorics / level=121 scroll=42.0, optimization-arena / level=120 scroll=20.0, optimization-arena / level=121 scroll=20.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: Overflow: [balance / level=119 scroll=3.0, balance / level=120 scroll=3.0, balance / level=121 scroll=3.0, vectors / level=119 scroll=20.666666, vectors / level=120 scroll=20.666666, vectors / level=121 scroll=20.666666, patterns / level=119 scroll=25.333334, patterns / level=120 scroll=25.333334, patterns / level=121 scroll=25.333334, chance / level=119 scroll=14.0, chance / level=120 scroll=14.0, chance / level=121 scroll=14.0, logic / level=120 scroll=5.6666665, logic / level=121 scroll=5.6666665, times-table / level=121 scroll=6.0, function-machine / level=119 scroll=26.0, function-machine / level=120 scroll=26.0, function-machine / level=121 scroll=26.0, calculus-climber / level=119 scroll=5.0, calculus-climber / level=120 scroll=5.0, calculus-climber / level=121 scroll=5.0, number-theory / level=119 scroll=2.0, number-theory / level=120 scroll=22.0, number-theory / level=121 scroll=22.0, combinatorics / level=119 scroll=23.0, combinatorics / level=120 scroll=42.0, combinatorics / level=121 scroll=42.0, optimization-arena / level=120 scroll=20.0, optimization-arena / level=121 scroll=20.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_RESULT: stream=
+
+Time: 15.627
+There was 1 failure:
+1) expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: Overflow: [balance / level=119 scroll=3.0, balance / level=120 scroll=3.0, balance / level=121 scroll=3.0, vectors / level=119 scroll=20.666666, vectors / level=120 scroll=20.666666, vectors / level=121 scroll=20.666666, patterns / level=119 scroll=25.333334, patterns / level=120 scroll=25.333334, patterns / level=121 scroll=25.333334, chance / level=119 scroll=14.0, chance / level=120 scroll=14.0, chance / level=121 scroll=14.0, logic / level=120 scroll=5.6666665, logic / level=121 scroll=5.6666665, times-table / level=121 scroll=6.0, function-machine / level=119 scroll=26.0, function-machine / level=120 scroll=26.0, function-machine / level=121 scroll=26.0, calculus-climber / level=119 scroll=5.0, calculus-climber / level=120 scroll=5.0, calculus-climber / level=121 scroll=5.0, number-theory / level=119 scroll=2.0, number-theory / level=120 scroll=22.0, number-theory / level=121 scroll=22.0, combinatorics / level=119 scroll=23.0, combinatorics / level=120 scroll=42.0, combinatorics / level=121 scroll=42.0, optimization-arena / level=120 scroll=20.0, optimization-arena / level=121 scroll=20.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+INSTRUMENTATION_CODE: -1

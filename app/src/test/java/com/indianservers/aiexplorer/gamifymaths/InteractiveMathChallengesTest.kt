@@ -63,6 +63,8 @@ class InteractiveMathChallengesTest {
         assertEquals(10.0,evaluateMathAssembly(listOf("5","C","2"))!!.value,0.0)
         assertEquals(20.0,evaluateMathAssembly(listOf("5","P","2"))!!.value,0.0)
         assertEquals(.5,evaluateMathAssembly(listOf("sin","30"))!!.value,1e-10)
+        assertEquals(2*Math.PI,evaluateMathAssembly(listOf("2","×","π"))!!.value,1e-10)
+        assertEquals(Math.E+1,evaluateMathAssembly(listOf("e","+","1"))!!.value,1e-10)
         assertNull(evaluateMathAssembly(listOf("2","÷","0")))
         assertNull(evaluateMathAssembly(listOf("√","−","1")))
         assertNull(evaluateMathAssembly(listOf("tan","90")))

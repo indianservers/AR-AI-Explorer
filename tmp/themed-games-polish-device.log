@@ -1,0 +1,68 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest:
+INSTRUMENTATION_STATUS: test=restoredPotionKeepsBothVolumes
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restoredPotionKeepsBothVolumes
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stack=java.lang.IllegalStateException: UiAutomationService android.accessibilityservice.IAccessibilityServiceClient$Stub$Proxy@59ee4cbalready registered!
+	at android.os.Parcel.createExceptionOrNull(Parcel.java:3250)
+	at android.os.Parcel.createException(Parcel.java:3226)
+	at android.os.Parcel.readException(Parcel.java:3209)
+	at android.os.Parcel.readException(Parcel.java:3151)
+	at android.app.IUiAutomationConnection$Stub$Proxy.connect(IUiAutomationConnection.java:527)
+	at android.app.UiAutomation.connectWithTimeout(UiAutomation.java:385)
+	at android.app.Instrumentation.getUiAutomation(Instrumentation.java:2558)
+	at android.app.Instrumentation.getUiAutomation(Instrumentation.java:2503)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:42)
+
+INSTRUMENTATION_STATUS: stream=
+Error in captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest):
+java.lang.IllegalStateException: UiAutomationService android.accessibilityservice.IAccessibilityServiceClient$Stub$Proxy@59ee4cbalready registered!
+	at android.os.Parcel.createExceptionOrNull(Parcel.java:3250)
+	at android.os.Parcel.createException(Parcel.java:3226)
+	at android.os.Parcel.readException(Parcel.java:3209)
+	at android.os.Parcel.readException(Parcel.java:3151)
+	at android.app.IUiAutomationConnection$Stub$Proxy.connect(IUiAutomationConnection.java:527)
+	at android.app.UiAutomation.connectWithTimeout(UiAutomation.java:385)
+	at android.app.Instrumentation.getUiAutomation(Instrumentation.java:2558)
+	at android.app.Instrumentation.getUiAutomation(Instrumentation.java:2503)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:42)
+
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=themedFlasksStarsPrimeChainCargoAndFlightUseRealMath
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=themedFlasksStarsPrimeChainCargoAndFlightUseRealMath
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: shortMsg=Process crashed.
+INSTRUMENTATION_CODE: 0

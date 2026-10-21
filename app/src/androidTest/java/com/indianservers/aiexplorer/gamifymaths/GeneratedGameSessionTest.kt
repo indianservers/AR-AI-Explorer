@@ -49,9 +49,7 @@ class GeneratedGameSessionTest {
             val round=generateWorkshopChallenge(id,level,0,42L)
             when(round.kind) {
                 WorkshopKind.Expression->{
-                    tap("Place number ${roundNumber(round.source!!.operands[0])}")
-                    tap("Place operation +")
-                    tap("Place number ${roundNumber(round.source.operands[1])}")
+                    round.witness.forEach{token->tap(if(token.toDoubleOrNull()!=null)"Place number $token"else "Place operation $token")}
                     compose.onNodeWithText("Check").performClick()
                 }
                 WorkshopKind.Pieces->{
@@ -126,6 +124,7 @@ class GeneratedGameSessionTest {
         val keys=games.map{"difficulty_${it.id}"}
         val previous=keys.associateWith{preferences.all[it]}
         val cases=games.flatMap{game->listOf(game to 119,game to 120,game to 121)}
+        val overflow=mutableListOf<String>()
         var index by mutableIntStateOf(0)
         fun configure(i:Int) { preferences.edit().putInt("difficulty_${cases[i].first.id}",3).commit() }
         try {
@@ -138,8 +137,9 @@ class GeneratedGameSessionTest {
                 compose.waitForIdle()
                 val scroll=compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.VerticalScrollAxisRange)).fetchSemanticsNodes()
                     .maxOfOrNull{it.config[SemanticsProperties.VerticalScrollAxisRange].maxValue()/it.layoutInfo.density.density} ?: 0f
-                assertTrue("${game.id} / level=$level scroll=$scroll",scroll<=1f)
+                if(scroll>1f)overflow+="${game.id} / level=$level scroll=$scroll"
             }
+        assertTrue("Overflow: $overflow",overflow.isEmpty())
         } finally {
             val editor=preferences.edit()
             previous.forEach{(key,value)->if(value is Int)editor.putInt(key,value)else editor.remove(key)}
@@ -151,7 +151,8 @@ class GeneratedGameSessionTest {
         val preferences=InstrumentationRegistry.getInstrumentation().targetContext.getSharedPreferences("maths_games",0)
         val key="difficulty_fractions"
         val previous=preferences.all[key]
-        preferences.edit().putInt(key,0).commit()
+        val previousFocus=preferences.all["focus_fractions"]
+        preferences.edit().putInt(key,0).putInt("focus_fractions",-1).commit()
         try {
             val game=gamifyGamesForAudit().first{it.id=="fractions"}
             val round=generateWorkshopChallenge(game.id,0,0,42L)
@@ -161,7 +162,7 @@ class GeneratedGameSessionTest {
                 GeneratedMathGameScreen(game,0,{}, { completions++ },initiallyPlaying=true,initialSeed=42L)
             } }
             fun hasPrompt()=compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.Text)).fetchSemanticsNodes()
-                .any{node -> node.config[SemanticsProperties.Text].any{it.text==round.prompt}}
+                .any{node -> node.config[SemanticsProperties.Text].any{it.text==round.playerPrompt().substringBeforeLast("\n")}}
             assertTrue(hasPrompt())
             state.emulateSavedInstanceStateRestore()
             assertTrue(hasPrompt())
@@ -170,7 +171,9 @@ class GeneratedGameSessionTest {
             round.witness.map(String::toInt).forEachIndexed { index,value ->
                 val core=compose.onNodeWithContentDescription("Add $value/$unit core").performScrollTo()
                 if(index==0) {
-                    core.performTouchInput { swipe(center,center-Offset(0f,100f),400) }
+                    val sourceBounds=core.fetchSemanticsNode().boundsInRoot
+                    val target=compose.onNodeWithContentDescription("Construction drop zone").fetchSemanticsNode().boundsInRoot
+                    core.performTouchInput { swipe(center,target.center-sourceBounds.topLeft,400) }
                     state.emulateSavedInstanceStateRestore()
                 } else core.performClick()
             }
@@ -178,12 +181,14 @@ class GeneratedGameSessionTest {
             assertEquals(1,completions)
             state.emulateSavedInstanceStateRestore()
             assertEquals(1,completions)
-            compose.onNodeWithText("Next level").performClick()
-            assertFalse(hasPrompt())
+            compose.onNodeWithText("Next level").performScrollTo().performClick()
+            compose.waitForIdle()
+            assertFalse("Next level should replace the previous prompt. " + compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.Text)).fetchSemanticsNodes().flatMap{it.config[SemanticsProperties.Text]}.joinToString{it.text},hasPrompt())
             assertEquals(1,completions)
         } finally {
             val editor=preferences.edit()
             if(previous is Int)editor.putInt(key,previous)else editor.remove(key)
+            if(previousFocus is Int)editor.putInt("focus_fractions",previousFocus)else editor.remove("focus_fractions")
             editor.commit()
         }
     }

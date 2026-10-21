@@ -29,15 +29,24 @@ import kotlin.math.*
 
 @Composable
 internal fun MathWorkshopBoard(game:MathsGame,round:WorkshopChallenge,solved:Boolean,onAttempt:(Boolean)->Unit={},onSolved:()->Unit) {
+    if (game.id in themedMathGameIds) {
+        ThemedWorkshopBoard(game,round,solved,onAttempt,onSolved)
+        return
+    }
+    if (game.id in lightMathGameIds) {
+        LightWorkshopBoard(game, round, solved, onAttempt, onSolved)
+        return
+    }
     var selection by rememberSaveable{mutableStateOf(arrayListOf<Int>())}
     var assembly by rememberSaveable{mutableStateOf(arrayListOf<String>())}
     var marks by rememberSaveable{mutableStateOf(arrayListOf<Int>())}
     var custom by rememberSaveable{mutableStateOf("")}
     var valueEditor by rememberSaveable{mutableStateOf(false)}
     var status by rememberSaveable{mutableStateOf("Build your solution on the board")}
+    var checked by rememberSaveable{mutableStateOf(false)}
     fun add(value:Int){if(!solved){selection=ArrayList(selection+value);status="Construction updated"}}
     fun addToken(token:String){if(!solved && assembly.size<80){assembly=ArrayList(assembly+token);status="Method updated"}}
-    fun check(){val passed=round.accepts(selection,assembly,marks);onAttempt(passed);if(passed){status="Construction verified";onSolved()}else status="Not complete yet. Check every condition and try another move."}
+    fun check(){val passed=round.accepts(selection,assembly,marks);onAttempt(passed);checked=true;status=round.attemptFeedback(selection,assembly,marks);if(passed)onSolved()}
     WorkshopScene(game,round,selection,assembly)
     when(round.kind) {
         WorkshopKind.Expression -> {
@@ -174,20 +183,22 @@ internal fun MathWorkshopBoard(game:MathsGame,round:WorkshopChallenge,solved:Boo
             }
         }
     }
-    Text(status,color=if(solved)GameGreen else GameMuted,fontSize=11.sp)
+    if(status.isNotEmpty())MathFeedbackCue(status,status=="Construction verified")
+    if(checked)MathSolutionFeedback(round,game.id)
 }
 
 @Composable
 private fun WorkshopChip(label:String,color:Color,modifier:Modifier=Modifier,enabled:Boolean=true,description:String=label,onPlace:()->Unit) {
+    val category=mathTokenCategory(label)
     var dragX by remember{mutableFloatStateOf(0f)};var dragY by remember{mutableFloatStateOf(0f)}
     val place by rememberUpdatedState(onPlace)
     Box(modifier.heightIn(min=44.dp).graphicsLayer{translationX=dragX;translationY=dragY}
-        .clip(RoundedCornerShape(13.dp)).background(Brush.verticalGradient(listOf(color.copy(if(enabled).35f else .08f),GamePanel)))
-        .border(1.dp,color.copy(if(enabled).65f else .12f),RoundedCornerShape(13.dp))
+        .clip(RoundedCornerShape(13.dp)).background(if(category!=null)Brush.verticalGradient(listOf(Color.White,category.fill))else Brush.verticalGradient(listOf(color.copy(if(enabled).35f else .08f),GamePanel)))
+        .border(1.dp,(category?.ink ?: color).copy(if(enabled).65f else .12f),RoundedCornerShape(13.dp))
         .semantics{contentDescription=description}
         .pointerInput(enabled,label){if(enabled)detectDragGestures(onDragEnd={val placed=dragY < -24;dragX=0f;dragY=0f;if(placed)place()},onDragCancel={dragX=0f;dragY=0f}){change,amount->change.consume();dragX+=amount.x;dragY+=amount.y}}
         .clickable(enabled=enabled,onClick=onPlace).padding(horizontal=12.dp,vertical=7.dp),contentAlignment=Alignment.Center) {
-        Text(label,color=if(enabled)GameInk else GameMuted.copy(.45f),fontSize=14.sp,maxLines=1)
+        Text(label,color=if(enabled)category?.ink ?: GameInk else GameMuted.copy(.45f),fontSize=14.sp,maxLines=1)
     }
 }
 

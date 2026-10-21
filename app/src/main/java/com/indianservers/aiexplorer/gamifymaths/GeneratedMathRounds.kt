@@ -21,6 +21,7 @@ internal data class GeneratedRound(
     val operands: List<Double> = emptyList(),
     val weights: Map<Int, Int> = emptyMap(),
     val capacity: Int = 0,
+    val visuals: Map<String,Double> = emptyMap(),
 ) {
     val signature: String get() = "$prompt|${pieces.sorted().joinToString()}|$weights"
     fun accepts(input: String): Boolean {

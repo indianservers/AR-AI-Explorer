@@ -1,0 +1,585 @@
+--------- beginning of main
+10-20 20:45:22.107   353   353 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+10-20 20:45:22.134   353   353 I AndroidRuntime: Using default boot image
+10-20 20:45:22.134   353   353 I AndroidRuntime: Leaving lock profiling enabled
+10-20 20:45:31.985   833   833 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-20 20:46:40.377  3290  3290 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 20:46:40.397  3290  3290 I AndroidRuntime: Using default boot image
+10-20 20:46:40.397  3290  3290 I AndroidRuntime: Leaving lock profiling enabled
+10-20 20:46:40.647  3290  3290 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 20:46:42.184  3300  3319 I TestRunner: run started: 2 tests
+10-20 20:46:42.186  3300  3319 I TestRunner: started: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 20:46:47.135  3300  3319 I TestRunner: finished: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 20:46:47.167  3300  3319 I TestRunner: started: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 20:46:49.733  3300  3319 I TestRunner: finished: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 20:46:49.751  3300  3319 I TestRunner: run finished: 2 tests, 0 failed, 0 ignored
+10-20 20:46:49.783  3290  3290 I AndroidRuntime: VM exiting with result code 0.
+10-20 20:47:18.026  3424  3424 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 20:47:18.040  3424  3424 I AndroidRuntime: Using default boot image
+10-20 20:47:18.040  3424  3424 I AndroidRuntime: Leaving lock profiling enabled
+10-20 20:47:18.236  3424  3424 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 20:47:19.690  3436  3458 I TestRunner: run started: 1 tests
+10-20 20:47:19.691  3436  3458 I TestRunner: started: reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory(com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest)
+10-20 20:47:41.671  3436  3458 I TestRunner: finished: reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory(com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest)
+10-20 20:47:41.681  3436  3458 I TestRunner: run finished: 1 tests, 0 failed, 0 ignored
+10-20 20:47:41.708  3424  3424 I AndroidRuntime: VM exiting with result code 0.
+10-20 20:54:53.574  4119  4119 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 20:54:53.582  4119  4119 I AndroidRuntime: Using default boot image
+10-20 20:54:53.582  4119  4119 I AndroidRuntime: Leaving lock profiling enabled
+10-20 20:54:53.819  4119  4119 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 20:54:55.070  4138  4180 I TestRunner: run started: 4 tests
+10-20 20:54:55.070  4138  4180 I TestRunner: started: functionsNumbersBracketsAndConstantsKeepTheirIdentityAndEvaluate(com.indianservers.aiexplorer.gamifymaths.MathTokenColorsTest)
+10-20 20:55:00.130  4138  4180 I TestRunner: finished: functionsNumbersBracketsAndConstantsKeepTheirIdentityAndEvaluate(com.indianservers.aiexplorer.gamifymaths.MathTokenColorsTest)
+10-20 20:55:00.141  4138  4180 I TestRunner: started: glossyExpressionsAndRobotsKeepDragUndoRunAndRestorationWorking(com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest)
+10-20 20:55:09.465  4138  4180 I TestRunner: finished: glossyExpressionsAndRobotsKeepDragUndoRunAndRestorationWorking(com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest)
+10-20 20:55:09.472  4138  4180 I TestRunner: started: captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest)
+10-20 20:55:50.797  4138  4180 I TestRunner: finished: captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest)
+10-20 20:55:50.811  4138  4180 I TestRunner: started: expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest)
+10-20 20:55:53.902  4138  4180 I TestRunner: finished: expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest)
+10-20 20:55:53.914  4138  4180 I TestRunner: run finished: 4 tests, 0 failed, 0 ignored
+10-20 20:55:53.963  4119  4119 I AndroidRuntime: VM exiting with result code 0.
+10-20 20:58:06.049  5070  5070 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 20:58:06.052  5070  5070 I AndroidRuntime: Using default boot image
+10-20 20:58:06.052  5070  5070 I AndroidRuntime: Leaving lock profiling enabled
+10-20 20:58:06.123  5070  5070 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 20:58:06.877  5080  5118 I TestRunner: run started: 1 tests
+10-20 20:58:06.878  5080  5118 I TestRunner: started: everyGameOpensAndBothBackButtonsReturnToCatalogue(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 20:59:59.948  5080  5118 I TestRunner: finished: everyGameOpensAndBothBackButtonsReturnToCatalogue(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 20:59:59.975  5080  5118 I TestRunner: run finished: 1 tests, 0 failed, 0 ignored
+10-20 20:59:59.997  5070  5070 I AndroidRuntime: VM exiting with result code 0.
+10-20 21:15:26.112  6381  6381 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 21:15:26.120  6381  6381 I AndroidRuntime: Using default boot image
+10-20 21:15:26.120  6381  6381 I AndroidRuntime: Leaving lock profiling enabled
+10-20 21:15:26.342  6381  6381 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 21:15:27.560  6393  6418 I TestRunner: run started: 5 tests
+10-20 21:15:27.561  6393  6418 I TestRunner: started: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:32.895  6393  6418 I TestRunner: finished: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:32.899  6393  6418 I TestRunner: started: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:44.100  6393  6418 I TestRunner: finished: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:44.115  6393  6418 I TestRunner: started: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:50.791  6393  6418 I TestRunner: finished: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:50.796  6393  6418 I TestRunner: started: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:52.487  6393  6418 I TestRunner: finished: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 21:15:52.515  6393  6418 I TestRunner: started: functionsNumbersBracketsAndConstantsKeepTheirIdentityAndEvaluate(com.indianservers.aiexplorer.gamifymaths.MathTokenColorsTest)
+10-20 21:15:56.217  6393  6418 I TestRunner: finished: functionsNumbersBracketsAndConstantsKeepTheirIdentityAndEvaluate(com.indianservers.aiexplorer.gamifymaths.MathTokenColorsTest)
+10-20 21:15:56.220  6393  6418 I TestRunner: run finished: 5 tests, 0 failed, 0 ignored
+10-20 21:15:56.266  6381  6381 I AndroidRuntime: VM exiting with result code 0.
+10-20 21:16:45.271  6715  6715 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 21:16:45.283  6715  6715 I AndroidRuntime: Using default boot image
+10-20 21:16:45.283  6715  6715 I AndroidRuntime: Leaving lock profiling enabled
+10-20 21:16:45.613  6715  6715 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 21:16:47.698  6731  6778 I TestRunner: run started: 1 tests
+10-20 21:16:47.701  6731  6778 I TestRunner: started: everyGameOpensAndBothBackButtonsReturnToCatalogue(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 21:18:50.281  6731  6778 I TestRunner: finished: everyGameOpensAndBothBackButtonsReturnToCatalogue(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 21:18:50.299  6731  6778 I TestRunner: run finished: 1 tests, 0 failed, 0 ignored
+10-20 21:18:50.321  6715  6715 I AndroidRuntime: VM exiting with result code 0.
+10-20 21:53:09.975  7869  7869 D AndroidRuntime: Shutting down VM
+--------- beginning of crash
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: FATAL EXCEPTION: main
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: Process: com.google.android.gms, PID: 7869
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: ihlg: rethrowing error from lowpool[35]
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at brsb.run(:com.google.android.gms@264032038@26.40.32 (260800-995630914):27)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:959)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:100)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at dota.lP(:com.google.android.gms@264032038@26.40.32 (260800-995630914):1)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at dota.dispatchMessage(:com.google.android.gms@264032038@26.40.32 (260800-995630914):145)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:232)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:317)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8705)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:580)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:886)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	Suppressed: hyog: 
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 		at tk_trace.icing-IndexWorkerChimeraService_onStartCommand(Unknown Source:0)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: Caused by: java.lang.ExceptionInInitializerError
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at cvjw.c(:com.google.android.gms@264032038@26.40.32 (260800-995630914):747)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at cvjw.a(:com.google.android.gms@264032038@26.40.32 (260800-995630914):1)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at cvwx.k(:com.google.android.gms@264032038@26.40.32 (260800-995630914):95)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at cvwu.run(:com.google.android.gms@264032038@26.40.32 (260800-995630914):71)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at brst.d(:com.google.android.gms@264032038@26.40.32 (260800-995630914):40)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at brst.c(:com.google.android.gms@264032038@26.40.32 (260800-995630914):5)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at brst.run(:com.google.android.gms@264032038@26.40.32 (260800-995630914):33)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at bryx.run(:com.google.android.gms@264032038@26.40.32 (260800-995630914):8)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1012)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: Caused by: java.lang.ArrayIndexOutOfBoundsException: length=65557; index=95127
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.zip.ZipUtils.SH(ZipUtils.java:203)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.zip.ZipUtils.CENNAM(ZipUtils.java:272)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.zip.ZipFile$Source.getEntryPos(ZipFile.java:1782)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.zip.ZipFile$Source.-$$Nest$mgetEntryPos(Unknown Source:0)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.zip.ZipFile.getEntry(ZipFile.java:372)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.util.jar.JarFile.getEntry(JarFile.java:264)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at libcore.io.ClassPathURLStreamHandler.isEntryStored(ClassPathURLStreamHandler.java:83)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at dalvik.system.DexPathList$NativeLibraryElement.findNativeLibrary(DexPathList.java:897)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at dalvik.system.DexPathList.findLibrary(DexPathList.java:594)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at dalvik.system.BaseDexClassLoader.findLibrary(BaseDexClassLoader.java:371)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.lang.Runtime.loadLibrary0(Runtime.java:1055)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.lang.Runtime.loadLibrary0(Runtime.java:1003)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at java.lang.System.loadLibrary(System.java:1765)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	at com.google.android.gms.icing.nativeindex.NativeIndex.<clinit>(:com.google.android.gms@264032038@26.40.32 (260800-995630914):3)
+10-20 21:53:10.003  7869  7869 E AndroidRuntime: 	... 13 more
+10-20 21:53:10.604  8209  8209 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 21:53:10.645  8209  8209 I AndroidRuntime: Using default boot image
+10-20 21:53:10.645  8209  8209 I AndroidRuntime: Leaving lock profiling enabled
+10-20 21:53:11.995  8209  8209 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 21:53:15.750  8268  8335 I TestRunner: run started: 2 tests
+10-20 21:53:15.752  8268  8335 I TestRunner: started: immediateStopCancelsPendingPlaybackAndCallbacks(com.indianservers.hearingtest.TonePlaybackTest)
+10-20 21:53:16.849  8268  8335 I TestRunner: finished: immediateStopCancelsPendingPlaybackAndCallbacks(com.indianservers.hearingtest.TonePlaybackTest)
+10-20 21:53:16.874  8268  8335 I TestRunner: started: originalMp3sDecodeAndCompleteWithoutErrors(com.indianservers.hearingtest.TonePlaybackTest)
+10-20 21:54:00.631  8268  8335 I TestRunner: finished: originalMp3sDecodeAndCompleteWithoutErrors(com.indianservers.hearingtest.TonePlaybackTest)
+10-20 21:54:00.636  8268  8335 I TestRunner: run finished: 2 tests, 0 failed, 0 ignored
+10-20 21:54:00.658  8209  8209 I AndroidRuntime: VM exiting with result code 0.
+10-20 22:06:58.732  8975  8975 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 22:06:58.739  8975  8975 I AndroidRuntime: Using default boot image
+10-20 22:06:58.739  8975  8975 I AndroidRuntime: Leaving lock profiling enabled
+10-20 22:07:00.995  8975  8975 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 22:07:05.176  9008  9044 I TestRunner: run started: 6 tests
+10-20 22:07:05.177  9008  9044 I TestRunner: started: wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints(com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest)
+10-20 22:07:15.052  9008  9044 I TestRunner: finished: wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints(com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest)
+10-20 22:07:15.057  9008  9044 I TestRunner: started: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:17.953  9008  9044 E TestRunner: failed: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:17.956  9008  9044 E TestRunner: ----- begin exception -----
+10-20 22:07:17.956  9008  9044 E TestRunner: java.lang.AssertionError
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.Assert.fail(Assert.java:87)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.Assert.assertTrue(Assert.java:42)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.Assert.assertTrue(Assert.java:53)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(GeneratedGameSessionTest.kt:163)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at java.lang.reflect.Method.invoke(Native Method)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$testWithDisposal$1.evaluate(AndroidComposeTestRule.android.kt:418)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:54)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invokeSuspend(AndroidComposeTestRule.android.kt:438)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:8)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:4)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invokeSuspend(ComposeUiTest.android.kt:682)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:8)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:2)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.EspressoLink.withStrategy(EspressoLink.android.kt:69)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invokeSuspend(ComposeUiTest.android.kt:679)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:8)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:4)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$1.invokeSuspend(TestBuilders.kt:317)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestDispatcher.processEvent$kotlinx_coroutines_test(TestDispatcher.kt:24)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestCoroutineScheduler.tryRunNextTaskUnless$kotlinx_coroutines_test(TestCoroutineScheduler.kt:99)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$workRunner$1.invokeSuspend(TestBuilders.kt:326)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersJvmKt.createTestResult(TestBuildersJvm.kt:10)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:309)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:167)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.runTest(ComposeUiTest.android.kt:658)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1.evaluate(AndroidComposeTestRule.android.kt:438)
+10-20 22:07:17.956  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)
+10-20 22:07:17.957  9008  9044 E TestRunner: 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-20 22:07:17.957  9008  9044 E TestRunner: ----- end exception -----
+10-20 22:07:17.994  9008  9044 I TestRunner: finished: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:18.000  9008  9044 I TestRunner: started: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:20.739  9008  9044 E TestRunner: failed: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:20.741  9008  9044 E TestRunner: ----- begin exception -----
+10-20 22:07:20.741  9008  9044 E TestRunner: java.lang.AssertionError: forge / level=120 scroll=5.6666665
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.Assert.fail(Assert.java:89)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.Assert.assertTrue(Assert.java:42)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:139)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at java.lang.reflect.Method.invoke(Native Method)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$testWithDisposal$1.evaluate(AndroidComposeTestRule.android.kt:418)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:54)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invokeSuspend(AndroidComposeTestRule.android.kt:438)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:8)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:4)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invokeSuspend(ComposeUiTest.android.kt:682)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:8)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:2)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.EspressoLink.withStrategy(EspressoLink.android.kt:69)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invokeSuspend(ComposeUiTest.android.kt:679)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:8)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:4)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$1.invokeSuspend(TestBuilders.kt:317)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestDispatcher.processEvent$kotlinx_coroutines_test(TestDispatcher.kt:24)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestCoroutineScheduler.tryRunNextTaskUnless$kotlinx_coroutines_test(TestCoroutineScheduler.kt:99)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$workRunner$1.invokeSuspend(TestBuilders.kt:326)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersJvmKt.createTestResult(TestBuildersJvm.kt:10)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:309)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:167)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.runTest(ComposeUiTest.android.kt:658)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1.evaluate(AndroidComposeTestRule.android.kt:438)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)
+10-20 22:07:20.741  9008  9044 E TestRunner: 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-20 22:07:20.741  9008  9044 E TestRunner: ----- end exception -----
+10-20 22:07:20.742  9008  9044 I TestRunner: finished: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:20.818  9008  9044 I TestRunner: started: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:34.234  9008  9044 I TestRunner: finished: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:34.326  9008  9044 I TestRunner: started: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:37.732  9008  9044 I TestRunner: finished: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:07:37.758  9008  9044 I TestRunner: started: reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory(com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest)
+10-20 22:08:06.637  9008  9044 I TestRunner: finished: reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory(com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest)
+10-20 22:08:06.650  9008  9044 I TestRunner: run finished: 6 tests, 2 failed, 0 ignored
+10-20 22:08:06.772  8975  8975 I AndroidRuntime: VM exiting with result code 0.
+10-20 22:12:59.686  9245  9245 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 22:12:59.693  9245  9245 I AndroidRuntime: Using default boot image
+10-20 22:12:59.693  9245  9245 I AndroidRuntime: Leaving lock profiling enabled
+10-20 22:13:00.120  9245  9245 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 22:13:01.857  9272  9294 I TestRunner: run started: 7 tests
+10-20 22:13:01.858  9272  9294 I TestRunner: started: wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints(com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest)
+10-20 22:13:10.780  9272  9294 I TestRunner: finished: wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints(com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest)
+10-20 22:13:10.843  9272  9294 I TestRunner: started: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:15.216  9272  9294 I TestRunner: finished: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:15.236  9272  9294 I TestRunner: started: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:19.069  9272  9294 E TestRunner: failed: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:19.085  9272  9294 E TestRunner: ----- begin exception -----
+10-20 22:13:19.085  9272  9294 E TestRunner: java.lang.AssertionError: potions / level=120 scroll=18.0
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.Assert.fail(Assert.java:89)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.Assert.assertTrue(Assert.java:42)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:139)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at java.lang.reflect.Method.invoke(Native Method)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$testWithDisposal$1.evaluate(AndroidComposeTestRule.android.kt:418)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:54)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invokeSuspend(AndroidComposeTestRule.android.kt:438)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:8)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:4)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invokeSuspend(ComposeUiTest.android.kt:682)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:8)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:2)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.EspressoLink.withStrategy(EspressoLink.android.kt:69)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invokeSuspend(ComposeUiTest.android.kt:679)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:8)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:4)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$1.invokeSuspend(TestBuilders.kt:317)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestDispatcher.processEvent$kotlinx_coroutines_test(TestDispatcher.kt:24)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestCoroutineScheduler.tryRunNextTaskUnless$kotlinx_coroutines_test(TestCoroutineScheduler.kt:99)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$workRunner$1.invokeSuspend(TestBuilders.kt:326)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersJvmKt.createTestResult(TestBuildersJvm.kt:10)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:309)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:167)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.runTest(ComposeUiTest.android.kt:658)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1.evaluate(AndroidComposeTestRule.android.kt:438)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:13:19.085  9272  9294 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)
+10-20 22:13:19.092  9272  9294 E TestRunner: 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-20 22:13:19.092  9272  9294 E TestRunner: ----- end exception -----
+10-20 22:13:19.094  9272  9294 I TestRunner: finished: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:19.110  9272  9294 I TestRunner: started: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:31.244  9272  9294 I TestRunner: finished: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:31.256  9272  9294 I TestRunner: started: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:34.333  9272  9294 I TestRunner: finished: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:13:34.357  9272  9294 I TestRunner: started: reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory(com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest)
+10-20 22:14:00.933  9272  9294 I TestRunner: finished: reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory(com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest)
+10-20 22:14:00.936  9272  9294 I TestRunner: started: selectedFormationAndMasterySettingsControlTheLiveGame(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 22:14:03.081  9272  9294 I TestRunner: finished: selectedFormationAndMasterySettingsControlTheLiveGame(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 22:14:03.099  9272  9294 I TestRunner: run finished: 7 tests, 1 failed, 0 ignored
+10-20 22:14:03.183  9245  9245 I AndroidRuntime: VM exiting with result code 0.
+10-20 22:14:36.177  9612  9612 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 22:14:36.187  9612  9612 I AndroidRuntime: Using default boot image
+10-20 22:14:36.187  9612  9612 I AndroidRuntime: Leaving lock profiling enabled
+10-20 22:14:36.754  9612  9612 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 22:14:38.591  9626  9658 I TestRunner: run started: 1 tests
+10-20 22:14:38.593  9626  9658 I TestRunner: started: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:14:54.098  9626  9658 E TestRunner: failed: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:14:54.099  9626  9658 E TestRunner: ----- begin exception -----
+10-20 22:14:54.099  9626  9658 E TestRunner: java.lang.AssertionError: Overflow: [balance / level=119 scroll=3.0, balance / level=120 scroll=3.0, balance / level=121 scroll=3.0, vectors / level=119 scroll=20.666666, vectors / level=120 scroll=20.666666, vectors / level=121 scroll=20.666666, patterns / level=119 scroll=25.333334, patterns / level=120 scroll=25.333334, patterns / level=121 scroll=25.333334, chance / level=119 scroll=14.0, chance / level=120 scroll=14.0, chance / level=121 scroll=14.0, logic / level=120 scroll=5.6666665, logic / level=121 scroll=5.6666665, times-table / level=121 scroll=6.0, function-machine / level=119 scroll=26.0, function-machine / level=120 scroll=26.0, function-machine / level=121 scroll=26.0, calculus-climber / level=119 scroll=5.0, calculus-climber / level=120 scroll=5.0, calculus-climber / level=121 scroll=5.0, number-theory / level=119 scroll=2.0, number-theory / level=120 scroll=22.0, number-theory / level=121 scroll=22.0, combinatorics / level=119 scroll=23.0, combinatorics / level=120 scroll=42.0, combinatorics / level=121 scroll=42.0, optimization-arena / level=120 scroll=20.0, optimization-arena / level=121 scroll=20.0]
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.Assert.fail(Assert.java:89)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.Assert.assertTrue(Assert.java:42)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at java.lang.reflect.Method.invoke(Native Method)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$testWithDisposal$1.evaluate(AndroidComposeTestRule.android.kt:418)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:54)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invokeSuspend(AndroidComposeTestRule.android.kt:438)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:8)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:4)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invokeSuspend(ComposeUiTest.android.kt:682)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:8)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:2)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.EspressoLink.withStrategy(EspressoLink.android.kt:69)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invokeSuspend(ComposeUiTest.android.kt:679)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:8)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:4)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$1.invokeSuspend(TestBuilders.kt:317)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestDispatcher.processEvent$kotlinx_coroutines_test(TestDispatcher.kt:24)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestCoroutineScheduler.tryRunNextTaskUnless$kotlinx_coroutines_test(TestCoroutineScheduler.kt:99)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$workRunner$1.invokeSuspend(TestBuilders.kt:326)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-20 22:14:54.099  9626  9658 E TestRunner: 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersJvmKt.createTestResult(TestBuildersJvm.kt:10)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:309)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:167)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.runTest(ComposeUiTest.android.kt:658)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1.evaluate(AndroidComposeTestRule.android.kt:438)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)
+10-20 22:14:54.100  9626  9658 E TestRunner: 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-20 22:14:54.100  9626  9658 E TestRunner: ----- end exception -----
+10-20 22:14:54.148  9626  9658 I TestRunner: finished: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:14:54.218  9626  9658 I TestRunner: run finished: 1 tests, 1 failed, 0 ignored
+10-20 22:14:54.474  9612  9612 I AndroidRuntime: VM exiting with result code 0.
+10-20 22:16:26.999  9825  9825 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 22:16:27.008  9825  9825 I AndroidRuntime: Using default boot image
+10-20 22:16:27.009  9825  9825 I AndroidRuntime: Leaving lock profiling enabled
+10-20 22:16:27.291  9825  9825 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 22:16:28.683  9840  9866 I TestRunner: run started: 5 tests
+10-20 22:16:28.685  9840  9866 I TestRunner: started: wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints(com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest)
+10-20 22:16:40.531  9840  9866 I TestRunner: finished: wrongChecksShowVerifiedAnswersAndMethodsWithoutAwardingPoints(com.indianservers.aiexplorer.gamifymaths.MathTemplateGameplayTest)
+10-20 22:16:40.698  9840  9866 I TestRunner: started: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:16:47.390  9840  9866 I TestRunner: finished: questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:16:47.391  9840  9866 I TestRunner: started: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:02.362  9840  9866 E TestRunner: failed: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:02.364  9840  9866 E TestRunner: ----- begin exception -----
+10-20 22:17:02.364  9840  9866 E TestRunner: java.lang.AssertionError: Overflow: [function-machine / level=119 scroll=8.0, function-machine / level=120 scroll=8.0, function-machine / level=121 scroll=8.0]
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.Assert.fail(Assert.java:89)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.Assert.assertTrue(Assert.java:42)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:142)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at java.lang.reflect.Method.invoke(Native Method)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$testWithDisposal$1.evaluate(AndroidComposeTestRule.android.kt:418)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:54)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invokeSuspend(AndroidComposeTestRule.android.kt:438)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:8)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1$evaluate$1.invoke(Unknown Source:4)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invokeSuspend(ComposeUiTest.android.kt:682)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:8)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1$1$1$1.invoke(Unknown Source:2)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.EspressoLink.withStrategy(EspressoLink.android.kt:69)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invokeSuspend(ComposeUiTest.android.kt:679)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:8)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$runTest$1$1.invoke(Unknown Source:4)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$1.invokeSuspend(TestBuilders.kt:317)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestDispatcher.processEvent$kotlinx_coroutines_test(TestDispatcher.kt:24)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestCoroutineScheduler.tryRunNextTaskUnless$kotlinx_coroutines_test(TestCoroutineScheduler.kt:99)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$workRunner$1.invokeSuspend(TestBuilders.kt:326)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersJvmKt.createTestResult(TestBuildersJvm.kt:10)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:309)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt.runTest-8Mi8wO0(TestBuilders.kt:167)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at kotlinx.coroutines.test.TestBuildersKt.runTest-8Mi8wO0(Unknown Source:1)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.runTest(ComposeUiTest.android.kt:658)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1.evaluate(AndroidComposeTestRule.android.kt:438)
+10-20 22:17:02.364  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:467)
+10-20 22:17:02.370  9840  9866 E TestRunner: 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-20 22:17:02.370  9840  9866 E TestRunner: ----- end exception -----
+10-20 22:17:02.373  9840  9866 I TestRunner: finished: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:02.397  9840  9866 I TestRunner: started: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:11.419  9840  9866 I TestRunner: finished: allTenMechanicsCanBeSolvedUsingTheirTouchControls(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:11.441  9840  9866 I TestRunner: started: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:13.702  9840  9866 I TestRunner: finished: sprintQuestionAndPlacedCoreSurviveRestoration(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:17:13.708  9840  9866 I TestRunner: run finished: 5 tests, 1 failed, 0 ignored
+10-20 22:17:13.764  9825  9825 I AndroidRuntime: VM exiting with result code 0.
+10-20 22:17:57.760 10170 10170 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 22:17:57.784 10170 10170 I AndroidRuntime: Using default boot image
+10-20 22:17:57.784 10170 10170 I AndroidRuntime: Leaving lock profiling enabled
+10-20 22:17:58.137 10170 10170 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 22:18:00.398 10193 10235 I TestRunner: run started: 1 tests
+10-20 22:18:00.399 10193 10235 I TestRunner: started: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:18:20.870 10193 10235 I TestRunner: finished: expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+10-20 22:18:20.903 10193 10235 I TestRunner: run finished: 1 tests, 0 failed, 0 ignored
+10-20 22:18:20.937 10170 10170 I AndroidRuntime: VM exiting with result code 0.
+10-20 22:18:53.319 10471 10471 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-20 22:18:53.331 10471 10471 I AndroidRuntime: Using default boot image
+10-20 22:18:53.332 10471 10471 I AndroidRuntime: Leaving lock profiling enabled
+10-20 22:18:53.506 10471 10471 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-20 22:18:54.772 10485 10529 I TestRunner: run started: 1 tests
+10-20 22:18:54.773 10485 10529 I TestRunner: started: everyGameOpensAndBothBackButtonsReturnToCatalogue(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 22:21:07.470 10485 10529 I TestRunner: finished: everyGameOpensAndBothBackButtonsReturnToCatalogue(com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest)
+10-20 22:21:07.475 10485 10529 I TestRunner: run finished: 1 tests, 0 failed, 0 ignored
+10-20 22:21:07.511 10471 10471 I AndroidRuntime: VM exiting with result code 0.
+10-21 11:12:47.845 11938 11938 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 11:12:47.864 11938 11938 I AndroidRuntime: Using default boot image
+10-21 11:12:47.871 11938 11938 I AndroidRuntime: Leaving lock profiling enabled
+10-21 11:12:49.270 11938 11938 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+10-21 11:13:06.141 11977 12149 I TestRunner: run started: 6 tests
+10-21 11:13:06.143 11977 12149 I TestRunner: started: allGamesOfferAccessiblePlanCheckAndReflectionWithoutReplacingTheQuestion(com.indianservers.aiexplorer.gamifymaths.MathTeachingStudioUiTest)

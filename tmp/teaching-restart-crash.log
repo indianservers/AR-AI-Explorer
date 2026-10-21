@@ -1,0 +1,7 @@
+--------- beginning of crash
+10-21 11:29:06.546  1382  1382 E AndroidRuntime: FATAL EXCEPTION: main
+10-21 11:29:06.546  1382  1382 E AndroidRuntime: Process: com.google.android.apps.wellbeing, PID: 1382
+10-21 11:29:06.546  1382  1382 E AndroidRuntime: kly: 
+10-21 11:29:06.546  1382  1382 E AndroidRuntime: 	at tk_trace.handleBroadcast(Unknown Source:0)
+10-21 11:29:06.546  1382  1382 E AndroidRuntime: 	at tk_trace.Broadcast to com.google.android.apps.wellbeing.common.receiver.coalescedreceivers.LockedBootCompletedCoalescedBroadcast_Receiver android.intent.action.LOCKED_BOOT_COMPLETED(Unknown Source:0)
+10-21 11:29:06.546  1382  1382 E AndroidRuntime: Caused by: lhl: Timed out (timeout delayed by 47162 ms after scheduled time): ntt@182e8af[status=PENDING, delegate=[lhi@dfc94bc[status=PENDING]]]

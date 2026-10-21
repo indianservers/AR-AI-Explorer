@@ -1,0 +1,189 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest:
+INSTRUMENTATION_STATUS: test=expressionUsesRealDropBoundsAndRunDoesNotAwardPoints
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag(LightMathGamesTest.kt:51)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(LightMathGamesTest.kt:67)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest):
+java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag(LightMathGamesTest.kt:51)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(LightMathGamesTest.kt:67)
+
+INSTRUMENTATION_STATUS: test=expressionUsesRealDropBoundsAndRunDoesNotAwardPoints
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=captureTenGamesAndTheirAdvancedBoards
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=captureTenGamesAndTheirAdvancedBoards
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=fractionsAndRobotsAcceptDraggingInBothDirections
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag(LightMathGamesTest.kt:51)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag$default(LightMathGamesTest.kt:50)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.fractionsAndRobotsAcceptDraggingInBothDirections(LightMathGamesTest.kt:92)
+
+INSTRUMENTATION_STATUS: stream=
+Error in fractionsAndRobotsAcceptDraggingInBothDirections(com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest):
+java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag(LightMathGamesTest.kt:51)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag$default(LightMathGamesTest.kt:50)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.fractionsAndRobotsAcceptDraggingInBothDirections(LightMathGamesTest.kt:92)
+
+INSTRUMENTATION_STATUS: test=fractionsAndRobotsAcceptDraggingInBothDirections
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(GeneratedGameSessionTest.kt:184)
+
+INSTRUMENTATION_STATUS: stream=
+Error in questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(GeneratedGameSessionTest.kt:184)
+
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: balance / level=119 scroll=15.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: balance / level=119 scroll=15.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 33.453
+There were 4 failures:
+1) expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest)
+java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag(LightMathGamesTest.kt:51)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.expressionUsesRealDropBoundsAndRunDoesNotAwardPoints(LightMathGamesTest.kt:67)
+2) fractionsAndRobotsAcceptDraggingInBothDirections(com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest)
+java.lang.AssertionError: Semantic Node has no parent layout with a Scroll SemanticsAction
+	at androidx.compose.ui.test.ActionsKt.scrollToNode(Actions.kt:96)
+	at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag(LightMathGamesTest.kt:51)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.drag$default(LightMathGamesTest.kt:50)
+	at com.indianservers.aiexplorer.gamifymaths.LightMathGamesTest.fractionsAndRobotsAcceptDraggingInBothDirections(LightMathGamesTest.kt:92)
+3) questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh(GeneratedGameSessionTest.kt:184)
+4) expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: balance / level=119 scroll=15.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+FAILURES!!!
+Tests run: 7,  Failures: 4
+
+
+INSTRUMENTATION_CODE: -1

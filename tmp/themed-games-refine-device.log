@@ -1,0 +1,169 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest:
+INSTRUMENTATION_STATUS: test=restoredPotionKeepsBothVolumes
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restoredPotionKeepsBothVolumes
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 2000 ms
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.waitUntil(WindowCapture.android.kt:178)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.forceRedraw(WindowCapture.android.kt:124)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0$0(WindowCapture.android.kt:49)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.$r8$lambda$iHid2j_FY4377TREZHs4ymdKCqs(Unknown Source:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda0.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.withDrawingEnabled(WindowCapture.android.kt:89)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0(WindowCapture.android.kt:47)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda4.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.runWithRetryWhenNoData(WindowCapture.android.kt:64)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage(WindowCapture.android.kt:45)
+	at androidx.compose.ui.test.AndroidImageHelpers_androidKt.captureToImage(AndroidImageHelpers.android.kt:101)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:42)
+
+INSTRUMENTATION_STATUS: stream=
+Error in captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 2000 ms
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.waitUntil(WindowCapture.android.kt:178)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.forceRedraw(WindowCapture.android.kt:124)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0$0(WindowCapture.android.kt:49)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.$r8$lambda$iHid2j_FY4377TREZHs4ymdKCqs(Unknown Source:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda0.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.withDrawingEnabled(WindowCapture.android.kt:89)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0(WindowCapture.android.kt:47)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda4.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.runWithRetryWhenNoData(WindowCapture.android.kt:64)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage(WindowCapture.android.kt:45)
+	at androidx.compose.ui.test.AndroidImageHelpers_androidKt.captureToImage(AndroidImageHelpers.android.kt:101)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:42)
+
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=themedFlasksStarsPrimeChainCargoAndFlightUseRealMath
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=themedFlasksStarsPrimeChainCargoAndFlightUseRealMath
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: times-table / level=119 scroll=12.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: times-table / level=119 scroll=12.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 258.765
+There were 2 failures:
+1) captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 2000 ms
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.waitUntil(WindowCapture.android.kt:178)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.forceRedraw(WindowCapture.android.kt:124)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0$0(WindowCapture.android.kt:49)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.$r8$lambda$iHid2j_FY4377TREZHs4ymdKCqs(Unknown Source:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda0.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.withDrawingEnabled(WindowCapture.android.kt:89)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage$lambda$0(WindowCapture.android.kt:47)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt$$ExternalSyntheticLambda4.invoke(D8$$SyntheticClass:0)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.runWithRetryWhenNoData(WindowCapture.android.kt:64)
+	at androidx.compose.ui.test.android.WindowCapture_androidKt.captureRegionToImage(WindowCapture.android.kt:45)
+	at androidx.compose.ui.test.AndroidImageHelpers_androidKt.captureToImage(AndroidImageHelpers.android.kt:101)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:42)
+2) expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: times-table / level=119 scroll=12.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+FAILURES!!!
+Tests run: 7,  Failures: 2
+
+
+INSTRUMENTATION_CODE: -1

@@ -24,57 +24,57 @@ internal fun GeneratedMathGameScreen(game:MathsGame,completed:Int,onBack:()->Uni
     var playing by rememberSaveable(game.id){mutableStateOf(initiallyPlaying)}
     var difficulty by rememberSaveable(game.id){mutableIntStateOf(preferences.getInt("difficulty_${game.id}",0).coerceIn(0,3))}
     var hints by rememberSaveable(game.id){mutableStateOf(preferences.getBoolean("hints_${game.id}",true))}
+    var focus by rememberSaveable(game.id){mutableIntStateOf(preferences.getInt("focus_${game.id}",-1).takeIf { it in -1 until gameSetupProfile(game.id).topics.size } ?: -1)}
+    var board by rememberSaveable(game.id){mutableIntStateOf(0)}
     var level by rememberSaveable(game.id){mutableIntStateOf(completed.coerceIn(0,GeneratedLevelCount-1))}
     var seed by rememberSaveable(game.id){mutableLongStateOf(initialSeed?:Random.nextLong())}
-    var history by rememberSaveable(game.id){mutableStateOf(arrayListOf<String>())}
+    var history by rememberSaveable(game.id){mutableStateOf(ArrayList(preferences.getString("recent_questions_${game.id}","").orEmpty().split('\n').filter{it.isNotBlank()}.takeLast(RecentMathQuestionCount)))}
     var showHint by rememberSaveable(seed,level){mutableStateOf(false)}
     var solved by rememberSaveable(seed,level,difficulty){mutableStateOf(false)}
-    val round=remember(game.id,level,difficulty,seed){generateWorkshopChallenge(game.id,level,difficulty,seed)}
-    LaunchedEffect(difficulty,hints){preferences.edit().putInt("difficulty_${game.id}",difficulty).putBoolean("hints_${game.id}",hints).apply()}
-    fun start(index:Int) {level=index;seed=Random.nextLong();playing=true;solved=false}
-    fun next() {
-        history=ArrayList((history+round.signature).takeLast(GeneratedLevelCount))
-        level=(level+1)%GeneratedLevelCount
-        var newSeed=Random.nextLong()
-        var candidate=generateWorkshopChallenge(game.id,level,difficulty,newSeed)
-        var attempts=0
-        while((candidate.signature in history || (round.kind==WorkshopKind.Pieces && candidate.prompt==round.prompt)) && attempts++<1000){newSeed=Random.nextLong();candidate=generateWorkshopChallenge(game.id,level,difficulty,newSeed)}
-        seed=newSeed
+    val round=remember(game.id,level,difficulty,seed,focus){generateWorkshopChallenge(game.id,level,difficulty,seed,focus)}
+    LaunchedEffect(playing,round.signature) {
+        if(playing) {
+            history=rememberMathQuestion(history,workshopQuestionHistoryKey(round))
+            preferences.edit().putString("recent_questions_${game.id}",history.joinToString("\n")).apply()
+        }
     }
-    GameScreen(game.title,level+1,game.accent,3,{if(playing)playing=false else onBack()},{if(hints && playing)showHint=!showHint}) {
-        if(!playing) {
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(10.dp)) {
-                GameEmblem(game,Modifier.size(58.dp))
-                Column(Modifier.weight(1f)) {
-                    Text("122 LEVELS • INTERACTIVE OFFLINE PLAY",color=game.accent,fontSize=12.sp,fontWeight=FontWeight.Bold)
-                    Text("Build, move, mix and test. Every mission is generated from a fresh seed.",color=GameInk,fontSize=14.sp)
-                }
-            }
-            Text("Difficulty",color=GameMuted)
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(4.dp)) {
-                listOf("Easy","Medium","Hard","Expert").forEachIndexed{index,label->
-                    Button(onClick={difficulty=index;solved=false},modifier=Modifier.weight(1f),contentPadding=PaddingValues(3.dp),
-                        colors=ButtonDefaults.buttonColors(containerColor=if(difficulty==index)game.accent else GamePanel)){Text(label,fontSize=11.sp,color=GameInk)}
-                }
-            }
-            Button(onClick={hints=!hints}){Text(if(hints)"Hints: on" else "Hints: off")}
-            Text("120 progressive missions + 2 advanced mastery boards. Worked solutions appear only after your construction passes.",color=GameMuted,fontSize=12.sp)
-            Button(onClick={playing=true},modifier=Modifier.fillMaxWidth(),colors=ButtonDefaults.buttonColors(containerColor=game.accent)){
-                Text(if(completed==0)"Start playing" else "Continue at level ${level+1}",color=GameSpace,fontWeight=FontWeight.Bold)
-            }
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
-                Button(onClick={start(120)},modifier=Modifier.weight(1f)){Text("Mastery I",fontSize=12.sp)}
-                Button(onClick={start(121)},modifier=Modifier.weight(1f)){Text("Mastery II",fontSize=12.sp)}
-            }
-            if(completed>0) TextButton(onClick={start(0)}){Text("Replay from level 1 • fresh missions",color=game.accent)}
-        } else {
+    LaunchedEffect(difficulty,hints,focus){preferences.edit().putInt("focus_${game.id}",focus).putInt("difficulty_${game.id}",difficulty).putBoolean("hints_${game.id}",hints).apply()}
+    fun start(index:Int) {
+        val fresh=freshWorkshopQuestion(game.id,index,difficulty,focus,history)
+        level=index;seed=fresh.seed;playing=true;solved=false
+    }
+    fun next() {
+        history=rememberMathQuestion(history,workshopQuestionHistoryKey(round))
+        val nextLevel=if(level>=120) level else (level+1)%120
+        val fresh=freshWorkshopQuestion(game.id,nextLevel,difficulty,focus,history)
+        level=nextLevel;seed=fresh.seed
+    }
+    if(!playing) {
+        LearningGameSettings(game, completed, difficulty, hints, focus, board,
+            {difficulty=it;solved=false}, {hints=it}, {focus=it}, {board=it}, onBack,
+            {start(if(board>0) 119+board else level.coerceAtMost(119))}, {start(0)})
+        return
+    }
+    if (game.id in themedMathGameIds) {
+        ThemedLearningGame(game,round,level,solved,showHint,hints,{showHint=!showHint},onBack,
+            {board=if(level>=120)level-119 else 0;playing=false},
+            {if(!solved){solved=true;onComplete(level+1)}},::next)
+        return
+    }
+    if (game.id in lightMathGameIds) {
+        LightLearningGame(game, round, level, solved, showHint, hints, {showHint=!showHint}, onBack,
+            {board=if(level>=120) level-119 else 0;playing=false},
+            {if(!solved){solved=true;onComplete(level+1)}}, ::next)
+        return
+    }
+    GameScreen(game.title,level+1,game.accent,3,onBack,{if(hints)showHint=!showHint}) {
             Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(GamePanel).padding(10.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
                 Row(Modifier.fillMaxWidth()) {
                     Text(if(round.mastery>0)"ADVANCED MASTERY ${round.mastery} • ${round.title.uppercase()}" else "${round.title.uppercase()} • STAGE ${level/30+1}/4",
                         color=game.accent,fontSize=11.sp,fontWeight=FontWeight.Bold,modifier=Modifier.weight(1f))
-                    TextButton(onClick={playing=false},contentPadding=PaddingValues(0.dp),modifier=Modifier.height(24.dp).semantics{contentDescription="Game session settings"}){Text("⚙",color=game.accent,fontSize=20.sp)}
+                    TextButton(onClick={board=if(level>=120) level-119 else 0;playing=false},contentPadding=PaddingValues(0.dp),modifier=Modifier.height(24.dp).semantics{contentDescription="Game session settings"}){Text("⚙",color=game.accent,fontSize=20.sp)}
                 }
-                Text(round.prompt,color=GameInk,fontSize=16.sp,fontWeight=FontWeight.Bold)
+                Text(round.playerPrompt(),color=GameInk,fontSize=16.sp,fontWeight=FontWeight.Bold)
             }
             if(showHint)Text(round.hint,color=GameGold,fontSize=12.sp)
             key(game.id,seed,level,difficulty) {
@@ -83,9 +83,8 @@ internal fun GeneratedMathGameScreen(game:MathsGame,completed:Int,onBack:()->Uni
             if(solved) {
                 Text("Mission complete! ${round.explanation}",color=GameGreen,fontSize=12.sp)
                 Button(onClick={next()},modifier=Modifier.fillMaxWidth(),colors=ButtonDefaults.buttonColors(containerColor=game.accent)){
-                    Text(if(level==GeneratedLevelCount-1)"Start a fresh expedition" else "Next level",color=GameSpace)
+                    Text(if(level>=120)"New mastery mission" else "Next level",color=GameSpace)
                 }
             }
-        }
     }
 }

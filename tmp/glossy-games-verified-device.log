@@ -1,0 +1,101 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest:
+INSTRUMENTATION_STATUS: test=glossyExpressionsAndRobotsKeepDragUndoRunAndRestorationWorking
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=glossyExpressionsAndRobotsKeepDragUndoRunAndRestorationWorking
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Glossy game overflow: [Calculus Climber/121=4.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(GlossyMathGamesTest.kt:60)
+
+INSTRUMENTATION_STATUS: stream=
+Error in captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest):
+java.lang.AssertionError: Glossy game overflow: [Calculus Climber/121=4.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(GlossyMathGamesTest.kt:60)
+
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: calculus-climber / level=121 scroll=4.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: calculus-climber / level=121 scroll=4.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest:
+INSTRUMENTATION_STATUS: test=everyGameOpensAndBothBackButtonsReturnToCatalogue
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GameNavigationScreenshotTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=everyGameOpensAndBothBackButtonsReturnToCatalogue
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 102.596
+There were 2 failures:
+1) captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest)
+java.lang.AssertionError: Glossy game overflow: [Calculus Climber/121=4.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GlossyMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(GlossyMathGamesTest.kt:60)
+2) expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: calculus-climber / level=121 scroll=4.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+FAILURES!!!
+Tests run: 4,  Failures: 2
+
+
+INSTRUMENTATION_CODE: -1

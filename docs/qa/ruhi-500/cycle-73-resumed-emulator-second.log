@@ -110,3 +110,113 @@ INFO         | GPU Vendor=[Google (Google Inc.)]
 INFO         | GPU Renderer=[Android Emulator OpenGL ES Translator (Google SwiftShader)]
 INFO         | GPU Version=[OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1)]
 INFO         | Boot completed in 36728 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+WARNING      | adb command 'C:\Users\saisa\AppData\Local\Android\Sdk\platform-tools\adb.exe -s emulator-5556 shell settings put system screen_off_timeout 2147483647 ' failed: 'adb.exe: device 'emulator-5556' not found'
+WARNING      | adb command 'C:\Users\saisa\AppData\Local\Android\Sdk\platform-tools\adb.exe -s emulator-5556 shell settings put system screen_off_timeout 2147483647 ' failed: 'adb.exe: device 'emulator-5556' not found'
+WARNING      | adb command 'C:\Users\saisa\AppData\Local\Android\Sdk\platform-tools\adb.exe -s emulator-5556 shell settings put system screen_off_timeout 2147483647 ' failed: 'adb.exe: device 'emulator-5556' not found'
+WARNING      | adb command 'C:\Users\saisa\AppData\Local\Android\Sdk\platform-tools\adb.exe -s emulator-5556 shell settings put system screen_off_timeout 2147483647 ' failed: 'adb.exe: device 'emulator-5556' not found'
+WARNING      | adb command 'C:\Users\saisa\AppData\Local\Android\Sdk\platform-tools\adb.exe -s emulator-5556 shell settings put system screen_off_timeout 2147483647 ' failed: 'adb.exe: device offline'
+INFO         | IPv4 server found: 192.168.100.1
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | IPv4 server found: 192.168.100.1
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | IPv4 server found: 192.168.100.1
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 4080:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 3088:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 488e:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+INFO         | Ignore IPv6 address: 78a1:6819:7f01:0:4080:6819:7f01:0
+ERROR        | Failed to find ColorBuffer: 1213
+ERROR        | Failed to bind to texture: invalid color buffer.
+ERROR        | SDKCtl multi-touch: Invalid packet signature 444b4300 for packet type 512, size 8019
+INFO         | IPv4 server found: 192.168.200.1
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | IPv4 server found: 192.168.200.1
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | IPv4 server found: 192.168.200.1
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: d0ff:bce2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: f007:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 80e:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | Ignore IPv6 address: 5023:bde2:8001:0:d0ff:bce2:8001:0
+INFO         | IPv4 server found: 192.168.200.1
+INFO         | Ignore IPv6 address: 80f8:b1cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 80f8:b1cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 80f8:b1cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: a000:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: a000:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: a000:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: b806:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: b806:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: b806:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 1c:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 1c:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 1c:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | IPv4 server found: 192.168.200.1
+INFO         | Ignore IPv6 address: 80f8:b1cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 80f8:b1cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: 80f8:b1cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: a000:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: a000:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: a000:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: b806:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore IPv6 address: b806:b2cb:8001:0:80f8:b1cb:8001:0
+INFO         | Ignore 

@@ -48,6 +48,8 @@ private class AssemblyParser(private val tokens:List<String>) {
         var value=when(token) {
             "("->{val result=expression(0);require(position<tokens.size && tokens[position++]==")");result}
             "−"->-atom()
+            "π"->Math.PI
+            "e"->Math.E
             "√"->{operations++;val result=atom();require(result>=0);sqrt(result)}
             "sin","cos","tan"->{operations++;val angle=Math.toRadians(atom());when(token){"sin"->kotlin.math.sin(angle);"cos"->kotlin.math.cos(angle);else->{require(kotlin.math.abs(kotlin.math.cos(angle))>1e-9);kotlin.math.tan(angle)}}}
             else->token.toDoubleOrNull()?.also{require(it.isFinite())} ?: throw IllegalArgumentException()

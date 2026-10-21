@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: longMsg=Process ProcessRecord{8ad52a0 6054:com.indianservers.aiexplorer/u0a209} failed to attach
+INSTRUMENTATION_RESULT: shortMsg=failed to attach
+INSTRUMENTATION_CODE: 0

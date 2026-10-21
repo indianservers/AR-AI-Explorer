@@ -1,0 +1,8 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.MathTeachingStudioUiTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=6
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.MathTeachingStudioUiTest:
+INSTRUMENTATION_STATUS: test=allGamesOfferAccessiblePlanCheckAndReflectionWithoutReplacingTheQuestion
+INSTRUMENTATION_STATUS_CODE: 1

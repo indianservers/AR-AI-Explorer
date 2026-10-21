@@ -1,5 +1,7 @@
 package com.indianservers.aiexplorer.gamifymaths
 
+import androidx.activity.compose.BackHandler
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
@@ -215,6 +217,12 @@ fun GamifyMathsRoot(onExit: () -> Unit) {
     var compactPlay by remember { mutableStateOf(preferences.getBoolean("compact_play", true)) }
     val destination = GameDestination.valueOf(destinationName)
     val selectedGame = Games.firstOrNull { it.id == selectedGameId }
+
+    // Consume Android back inside a game before the app-level navigation handler.
+    // Once the catalogue is visible, back exits the module to the app home.
+    BackHandler {
+        if (selectedGameId != null) selectedGameId = null else onExit()
+    }
 
     Box(
         Modifier

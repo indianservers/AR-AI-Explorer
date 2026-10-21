@@ -1,0 +1,8 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=3
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.DynamicMathQuestionSessionTest:
+INSTRUMENTATION_STATUS: test=reopeningEachOfThe29GamesShowsFreshContentAndSavesItsHistory
+INSTRUMENTATION_STATUS_CODE: 1

@@ -17,6 +17,8 @@ internal data class WorkshopChallenge(
     val examples:List<Pair<Double,Double>> = emptyList(),
     val witness:List<String> = emptyList(),
     val mastery:Int=0,
+    val templateId:String="",
+    val rules:Map<String,Int> = emptyMap(),
 ) {
     val signature:String get()="$kind|$prompt|$parameters|$numbers|$moves|$examples|${source?.signature}"
     fun accepts(selection:List<Int>, assembly:List<String> = emptyList(), marks:List<Int> = emptyList()):Boolean = when(kind) {
@@ -36,7 +38,10 @@ internal data class WorkshopChallenge(
         WorkshopKind.Mixture -> selection.size==2 && selection.all{it>=0} && selection.sum()==parameters[2] && selection[0]*parameters[1]==selection[1]*parameters[0]
         WorkshopKind.Grid -> selection.size==2 && selection.all{it in 1..40} && selection[0]*selection[1]==parameters[0] &&
             (parameters[1]==0 || selection[0]==parameters[1]) && (parameters[2]==0 || 2*selection.sum()==parameters[2]) &&
-            (mastery!=2 || selection[0]-selection[1]==parameters[3])
+            (mastery!=2 || selection[0]-selection[1]==parameters[3]) &&
+            (rules["columns"]==null || selection[1]==rules["columns"]) &&
+            (rules["difference"]==null || selection[0]-selection[1]==rules["difference"]) &&
+            (rules["rowRatio"]==null || selection[0]*rules.getValue("columnRatio")==selection[1]*rules.getValue("rowRatio"))
         WorkshopKind.Machine -> examples.all { (input,output)->machineOutput(input,assembly)?.let{abs(it-output)<1e-7}==true } && assembly.size>=2
         WorkshopKind.Sort -> {
             val values=selection.mapNotNull{numbers.getOrNull(it)}
@@ -52,9 +57,19 @@ internal data class WorkshopChallenge(
         WorkshopKind.Configurations -> {
             val configurations=assembly.map{key->key.split(',').map{it.toIntOrNull() ?: -1}}
             configurations.all{it.size==parameters[1] && it.distinct().size==it.size && it.all{value->value in 0 until parameters[0]}} &&
-                (mastery==0 || configurations.all{team->team.sumOf{numbers[it].toInt()}%parameters[4]==parameters[5]}) &&
+                configurations.all(::validConfiguration) &&
                 configurations.map{if(parameters[2]==0) it.sorted() else it}.distinct().size==parameters[3] && configurations.size==parameters[3]
         }
+    }
+    fun validConfiguration(team:List<Int>):Boolean {
+        if(team.size!=parameters[1] || team.distinct().size!=team.size || team.any{it !in 0 until parameters[0]})return false
+        val energy=team.sumOf{numbers.getOrNull(it)?.toInt() ?: 0}
+        return (parameters.getOrElse(4){1}<=1 || energy%parameters[4]==parameters[5]) &&
+            (rules["requiredRobot"]==null || rules.getValue("requiredRobot") in team) &&
+            (rules["excludedRobot"]==null || rules.getValue("excludedRobot") !in team) &&
+            (rules["firstRobot"]==null || team.first()==rules["firstRobot"]) &&
+            (rules["minEnergy"]==null || energy>=rules.getValue("minEnergy")) &&
+            (rules["maxEnergy"]==null || energy<=rules.getValue("maxEnergy"))
     }
     fun balanceState(assembly:List<String>):List<Double>? {
         val state=numbers.take(4).toMutableList()
@@ -82,7 +97,7 @@ internal data class WorkshopChallenge(
     }
 }
 
-internal fun generateWorkshopChallenge(id:String, level:Int, difficulty:Int, seed:Long, focus:Int = -1):WorkshopChallenge {
+internal fun generateBaseWorkshopChallenge(id:String, level:Int, difficulty:Int, seed:Long, focus:Int = -1):WorkshopChallenge {
     require(level in 0 until GeneratedLevelCount && difficulty in 0..3)
     val random=Random(seed)
     val mastery=if(level>=120) level-119 else 0
@@ -94,35 +109,39 @@ internal fun generateWorkshopChallenge(id:String, level:Int, difficulty:Int, see
     val variant=if(focus>=0 && mastery==0) focus else level
     if(id in listOf("vectors","integer-expedition","matrix-mission")) {
         val startX=n(-3,3);val startY=if(id=="integer-expedition") 0 else n(-3,3)
-        val span=if(mastery==2) 5 else 3
-        val first=if(id=="integer-expedition") (if(mastery==2) 10 else 5) to 0 else if(mastery>0 || id=="matrix-mission") n(1,span) to n(1,span) else 1 to 0
-        var second=if(id=="integer-expedition") (if(mastery==2) 3 else 1) to 0 else if(mastery>0 || id=="matrix-mission") n(-span,-1) to n(1,span) else 0 to 1
+        val span=if(mastery==2 || (mastery==0 && id=="matrix-mission" && focus==1)) 5 else if(mastery==0 && id=="matrix-mission" && focus==0) 2 else 3
+        val basis=mastery>0 || id=="matrix-mission" || (id=="vectors" && (focus==1 || (focus<0 && level%2==1)))
+        val largeSteps=mastery==2 || (mastery==0 && id=="integer-expedition" && (focus==1 || (focus<0 && level%2==1)))
+        val first=if(id=="integer-expedition") (if(largeSteps) 10 else 5) to 0 else if(basis) n(1,span) to n(1,span) else 1 to 0
+        var second=if(id=="integer-expedition") (if(largeSteps) 3 else 1) to 0 else if(basis) n(-span,-1) to n(1,span) else 0 to 1
         if(id!="integer-expedition" && first.first*second.second==first.second*second.first)second=0 to 1
         val moves=listOf(first,second,-first.first to -first.second,-second.first to -second.second)
         val a=n(1,if(mastery==2) 7 else if(mastery==1) 5 else 3);val b=n(1,if(mastery==2) 7 else if(mastery==1) 5 else 3)
         val sign=if(random.nextBoolean()) 1 else -1
         val x=startX+a*first.first+sign*b*second.first;val y=startY+a*first.second+sign*b*second.second
         val witness=List(a){"0"}+List(b){if(sign>0) "1" else "3"}
-        return challenge(WorkshopKind.Navigation,"Vector flight", "Pilot from ($startX,$startY) to ($x,$y) in at most ${a+b} moves. Each arrow applies its labelled vector.",
+        return challenge(WorkshopKind.Navigation,"Vector flight", "Move the ship from ($startX,$startY) to ($x,$y). Use no more than ${a+b} moves.",
             "Plan the displacement before moving. Undo a move to explore another route.","Your programmed vector moves reach the destination within the move budget. Every displacement contributes to the final coordinates.",
             listOf(startX,startY,x,y,a+b),moves=moves,witness=witness)
     }
     if(id=="balance") {
-        val x=n(2,if(mastery>0) 25 else 12)*(if(mastery==2 && random.nextBoolean()) -1 else 1);val left=n(2,if(mastery>0) 15 else 7);val right=if(mastery>0 || variant%3==2)n(1,left-1) else 0
+        val x=n(2,if(mastery>0) 25 else 12)*(if(mastery==2 && random.nextBoolean()) -1 else 1);val left=n(2,if(mastery>0) 15 else 7);val right=if(mastery>0 || (if(focus>=0) focus==1 else variant%3==2))n(1,left-1) else 0
         val offset=n(2,20);val result=(left-right)*x+offset
-        return challenge(WorkshopKind.Balance,"Balance workshop","Isolate x. Apply every operation to BOTH plates: ${left}x + $offset = ${if(right==0) "" else "${right}x + "}$result.",
+        return challenge(WorkshopKind.Balance,"Balance workshop","Find x by keeping both sides equal: ${left}x + $offset = ${if(right==0) "" else "${right}x + "}$result.",
             "Remove any x terms on the right, remove the constant, then scale both plates equally.","Equal operations preserve the original balance. With one x alone on the left, the right plate shows its generated value.",
             numbers=listOf(left.toDouble(),offset.toDouble(),right.toDouble(),result.toDouble(),x.toDouble()),
             witness=(if(right>0) listOf("−x",right.toString()) else emptyList())+listOf("−",offset.toString(),"÷",(left-right).toString()))
     }
     if(id in listOf("potions","ratio-rangers")) {
-        val a=n(1,if(mastery==2) 20 else if(mastery==1) 12 else 5);val b=n(1,if(mastery==2) 20 else if(mastery==1) 12 else 5);val scale=n(2,if(mastery==2) 12 else if(mastery==1) 9 else 4)
-        return challenge(WorkshopKind.Mixture,"Mixture lab","Pour ${(a+b)*scale} ml in total. Blue:red must be $a:$b. Adjust BOTH flasks to create a valid batch.",
+        val ratioLimit=if(mastery==2) 20 else if(mastery==1 || focus==1 || (focus<0 && random.nextBoolean())) 12 else 5
+        val a=n(1,ratioLimit);val b=n(1,ratioLimit);val scale=n(2,if(mastery==2) 12 else if(mastery==1) 9 else 4)
+        return challenge(WorkshopKind.Mixture,"Mixture lab","Make ${(a+b)*scale} ml of mixture. For every $a parts of blue, use $b parts of red. Match this ratio and the total amount.",
             "One ratio batch has ${a+b} parts. Scale both ingredients by the same factor.","The mixed volumes satisfy both the total volume and the requested ratio. Matching only one condition would not preserve the recipe.",
             listOf(a,b,(a+b)*scale),witness=listOf((a*scale).toString(),(b*scale).toString()))
     }
     if(id=="times-table") {
-        val rows=n(2,if(mastery>0) 18 else 9);val cols=n(2,if(mastery>0) 18 else 9)
+        val dimensionLimit=if(mastery>0) 18 else if(focus==1 || (focus<0 && level%2==1)) 12 else 9
+        val rows=n(2,dimensionLimit);val cols=n(2,dimensionLimit)
         val perimeter=if(mastery==1) 2*(rows+cols) else 0
         val difference=if(mastery==2) rows-cols else 0
         val clue=if(mastery==1) "The perimeter must be $perimeter units." else if(mastery==2) "Rows minus columns must equal $difference." else "Use exactly $rows rows."
@@ -135,7 +154,7 @@ internal fun generateWorkshopChallenge(id:String, level:Int, difficulty:Int, see
             (if(quadratic) listOf("²","2") else emptyList())+listOf("×",coefficient.toString(),"+",offset.toString())
         val inputs=List(3){n(1,8)}.distinct().let{ if(it.size<3) listOf(1,3,7) else it }
         fun output(x:Int)=if(mastery==2) (coefficient*x+offset)*(coefficient*x+offset) else coefficient*(if(quadratic)x*x else x)+offset
-        return challenge(WorkshopKind.Machine,"Machine circuit","Build one circuit that matches ALL input/output examples. Order matters. Use up to six blocks.",
+        return challenge(WorkshopKind.Machine,"Machine circuit","Build a rule that changes each input number into the output shown beside it. The same steps must work for all examples.",
             "Compare the examples. Squaring before scaling gives a different machine from squaring after adding.","Your assembled circuit reproduces every example, so it models the underlying generated function rather than fitting just one input.",
             numbers=listOf(coefficient.toDouble(),offset.toDouble(),2.0),examples=inputs.map{it.toDouble() to output(it).toDouble()},witness=steps)
     }
@@ -146,18 +165,18 @@ internal fun generateWorkshopChallenge(id:String, level:Int, difficulty:Int, see
         val sorted=if(descending) values.sortedDescending() else values.sorted()
         val order=values.indices.sortedBy{if(descending) -values[it] else values[it]}
         val marks=if(mode) sorted.indices.filter{sorted[it]==values[0]} else listOf((values.size-1)/2,values.size/2).distinct()
-        return challenge(WorkshopKind.Sort,"Evidence conveyor","Arrange ALL observations ${if(descending) "largest to smallest" else "smallest to largest"}. Then mark ${if(mode) "every occurrence of the mode" else if(values.size%2==0) "both middle observations" else "the median"}.",
+        return challenge(WorkshopKind.Sort,"Evidence conveyor","Arrange ALL observations ${if(descending) "largest to smallest" else "smallest to largest"}. Then mark ${if(mode) "every copy of the most common number (the mode)" else if(values.size%2==0) "both middle observations" else "the middle number (the median)"}.",
             "Place every observation once. Mark the relevant slots only after ordering the data.","The conveyor contains a valid ordering and correctly marked central or modal observations. This checks the complete data arrangement.",
             listOf(if(descending) 1 else 0,if(mode) 1 else 0),numbers=values,witness=order.map(Int::toString)+listOf("|")+marks.map(Int::toString))
     }
     if(id=="number-theory") {
-        val primes=listOf(2,3,5,7,11,13);val factors=List(if(mastery==2) 7 else if(mastery==1) 5 else 3){primes.take(if(mastery>0) 6 else 4).random(random)}
+        val primes=listOf(2,3,5,7,11,13);val factors=List(if(mastery==2) 7 else if(mastery==1) 5 else 3){primes.take(if(mastery>0 || focus==1 || (focus<0 && level%2==1)) 6 else 4).random(random)}
         val target=factors.fold(1){product,value->product*value}
-        return challenge(WorkshopKind.Factors,"Prime crypt","Assemble a prime-factor chain whose product unlocks $target. Prime cores can repeat.",
+        return challenge(WorkshopKind.Factors,"Prime crypt","Multiply prime numbers to make $target. You can use the same prime more than once.",
             "Try dividing the target by a prime. Continue factoring the remaining quotient.","Multiplying the assembled prime factors reproduces the generated code. Every selected core is prime, so the factorization is complete.",listOf(target),witness=factors.map(Int::toString))
     }
     if(id in listOf("logic","combinatorics")) {
-        val count=if(mastery>0) n(4,5) else n(3,7);val choose=if(mastery==2) 3 else if(mastery==1) 2 else n(2,3);val ordered=mastery==2 || (mastery==0 && count<=4 && random.nextBoolean())
+        val count=if(mastery>0) n(4,5) else if(focus==1) n(3,4) else n(3,7);val choose=if(mastery==2) 3 else if(mastery==1) 2 else n(2,3);val ordered=mastery==2 || (mastery==0 && (if(focus>=0) focus==1 else count<=4 && random.nextBoolean()))
         val energies=if(mastery>0) (1..40).shuffled(random).take(count) else emptyList()
         val modulus=if(mastery>0) n(2,5) else 1
         val remainder=if(mastery>0) energies.take(choose).sum()%modulus else 0
@@ -170,8 +189,8 @@ internal fun generateWorkshopChallenge(id:String, level:Int, difficulty:Int, see
             listOf(count,choose,if(ordered) 1 else 0,configurations.size,modulus,remainder),numbers=energies.map(Int::toDouble),witness=configurations.map{it.joinToString(",")})
     }
     if(id=="fractions") {
-        val unit=if(mastery>0) 60 else 12
-        val denominations=if(mastery>0) listOf(2,3,4,5,6,10) else listOf(2,3,4,6)
+        val unit=if(mastery>0 || focus==1 || (focus<0 && level%2==1)) 60 else 12
+        val denominations=if(unit==60) listOf(2,3,4,5,6,10) else listOf(2,3,4,6)
         val tiles=List(if(mastery>0) 9 else 6){unit/denominations.random(random)}
         val chosen=tiles.shuffled(random).take(if(mastery>0) 4 else 3);val target=chosen.sum()
         val source=GeneratedRound("Fraction mosaic","Fill $target/$unit of a whole with exactly ${chosen.size} fraction tiles. Each tile is available once.",target.toDouble(),

@@ -1,0 +1,142 @@
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest:
+INSTRUMENTATION_STATUS: test=restoredPotionKeepsBothVolumes
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=restoredPotionKeepsBothVolumes
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: Reference theme overflow: [Potion Lab/0=6.0, Potion Lab/120=6.0, Potion Lab/121=6.0, Vector Voyager/0=30.666666, Vector Voyager/120=30.666666, Vector Voyager/121=30.666666, Times Table Galaxy/0=56.666668, Times Table Galaxy/120=56.666668, Times Table Galaxy/121=56.666668, Number Theory Crypt/0=14.0, Number Theory Crypt/120=14.0, Number Theory Crypt/121=14.0, Optimization Arena/0=2.0, Optimization Arena/120=48.0, Optimization Arena/121=48.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:49)
+
+INSTRUMENTATION_STATUS: stream=
+Error in captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest):
+java.lang.AssertionError: Reference theme overflow: [Potion Lab/0=6.0, Potion Lab/120=6.0, Potion Lab/121=6.0, Vector Voyager/0=30.666666, Vector Voyager/120=30.666666, Vector Voyager/121=30.666666, Times Table Galaxy/0=56.666668, Times Table Galaxy/120=56.666668, Times Table Galaxy/121=56.666668, Number Theory Crypt/0=14.0, Number Theory Crypt/120=14.0, Number Theory Crypt/121=14.0, Optimization Arena/0=2.0, Optimization Arena/120=48.0, Optimization Arena/121=48.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:49)
+
+INSTRUMENTATION_STATUS: test=captureReferenceThemesAndEveryMasteryOnCompactPhone
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=themedFlasksStarsPrimeChainCargoAndFlightUseRealMath
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=themedFlasksStarsPrimeChainCargoAndFlightUseRealMath
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest:
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=questionAndCheckedAnswerSurviveRestorationThenNextLevelIsFresh
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=5
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stack=java.lang.AssertionError: potions / level=119 scroll=6.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: stream=
+Error in expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest):
+java.lang.AssertionError: potions / level=119 scroll=6.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+INSTRUMENTATION_STATUS: test=expertAndMasteryScreensFitEveryWorld
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=6
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=allTenMechanicsCanBeSolvedUsingTheirTouchControls
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest
+INSTRUMENTATION_STATUS: current=7
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=7
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sprintQuestionAndPlacedCoreSurviveRestoration
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 130.223
+There were 2 failures:
+1) captureReferenceThemesAndEveryMasteryOnCompactPhone(com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest)
+java.lang.AssertionError: Reference theme overflow: [Potion Lab/0=6.0, Potion Lab/120=6.0, Potion Lab/121=6.0, Vector Voyager/0=30.666666, Vector Voyager/120=30.666666, Vector Voyager/121=30.666666, Times Table Galaxy/0=56.666668, Times Table Galaxy/120=56.666668, Times Table Galaxy/121=56.666668, Number Theory Crypt/0=14.0, Number Theory Crypt/120=14.0, Number Theory Crypt/121=14.0, Optimization Arena/0=2.0, Optimization Arena/120=48.0, Optimization Arena/121=48.0]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.ThemedMathGamesTest.captureReferenceThemesAndEveryMasteryOnCompactPhone(ThemedMathGamesTest.kt:49)
+2) expertAndMasteryScreensFitEveryWorld(com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest)
+java.lang.AssertionError: potions / level=119 scroll=6.0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at com.indianservers.aiexplorer.gamifymaths.GeneratedGameSessionTest.expertAndMasteryScreensFitEveryWorld(GeneratedGameSessionTest.kt:141)
+
+FAILURES!!!
+Tests run: 7,  Failures: 2
+
+
+INSTRUMENTATION_CODE: -1
